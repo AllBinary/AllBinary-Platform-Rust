@@ -1,0 +1,11 @@
+[package]
+name = "fullscreennonejavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "fullscreennonejavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

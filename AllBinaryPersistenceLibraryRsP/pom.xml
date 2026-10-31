@@ -1,0 +1,59 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.allbinary</groupId>
+    <artifactId>AllBinaryPersistenceLibraryPRs</artifactId>
+    <packaging>pom</packaging>
+    <!-- AllBinary Platform Version Start -->
+    <version>1.0.0-SNAPSHOT</version>
+    <!-- AllBinary Platform Version End -->
+
+    <name>AllBinaryPersistenceLibraryPRs</name>
+    <url>http://www.allbinary.com/</url>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>AllBinary Snapshots Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>AllBinary Releases Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+    
+    <properties>
+        <buildLabel>${project.version}</buildLabel>
+        <assemblyPluginVersion>2.2-beta-1</assemblyPluginVersion>
+    </properties>
+
+    <modules>
+        
+        <!--
+        -->
+        <module>../allbinary_src/cache/AllBinaryCacheLibraryRsM</module>
+        <module>../allbinary_src/PermutationsJavaLibraryRsM</module>
+        <module>../allbinary_src/logic/BasePreloaderFileJavaLibraryRsM</module>
+        <module>../allbinary_src/logic/data/file/FileJavaLibraryRsM</module>
+        <module>../allbinary_src/logic/data/file/FileJ2SEJavaLibraryRsM</module>
+        <module>../allbinary_src/data/DataJavaLibraryRsM</module>
+        <module>../allbinary_src/logic/data/file/FileUnamedJavaLibraryRsM</module>
+        <module>../allbinary_src/logic/data/file/FileAdvancedJavaLibraryRsM</module>
+        <module>../allbinary_src/PreLoaderJavaLibraryRsM</module>
+        <module>../allbinary_src/FileInitInfoJavaLibraryRsM</module>
+        <module>../allbinary_src/PreLoaderFileJavaLibraryRsM</module>
+        <module>../allbinary_src/PreLoaderLicenseJavaLibraryRsM</module>
+        <module>../j2me/PCResourceLibraryRsM</module>
+        <module>../j2me/ProgressJ2MEJavaLibraryRsM</module>
+        <module>../allbinary_src/licensing/ClientInfoBaseJavaLibraryRsM</module>
+        <module>../allbinary_src/licensing/RemoteXmlRpcJavaLibraryRsM</module>
+        <module>../allbinary_src/licensing/LicenseClientJavaLibraryRsM</module>
+
+        <!--
+        <module>../allbinary_src/PreLoaderLicenseJavaLibraryRsM</module>
+        -->
+    </modules>
+
+</project>
+

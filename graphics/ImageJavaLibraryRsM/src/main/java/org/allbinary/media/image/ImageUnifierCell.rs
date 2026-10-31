@@ -1,0 +1,71 @@
+//
+// AllBinary Open License Version 1
+// Copyright (c) 2011 AllBinary
+// 
+// By agreeing to this license you and any business entity you represent are
+// legally bound to the AllBinary Open License Version 1 legal agreement.
+// 
+// You may obtain the AllBinary Open License Version 1 legal agreement from
+// AllBinary or the root directory of AllBinary's AllBinary Platform repository.
+// 
+// Created By: Travis Berthelot
+//  
+// Generated Code Do Not Modify
+// package org.allbinary.media.image
+#![allow(non_snake_case, non_camel_case_types, non_upper_case_globals, unused, unused_mut, static_mut_refs)]
+
+use std::cell::RefCell;
+use std::rc::Rc;
+use super::*;
+
+// Borrows the object of a Java reference
+macro_rules! jcall {
+    ($value:expr) => {
+        $value.as_ref().expect("null reference").borrow_mut()
+    };
+}
+
+pub struct ImageUnifierCell {
+    pub width: Option<i32>,
+    pub height: Option<i32>,
+}
+
+
+impl ImageUnifierCell {
+    
+
+    pub fn new_struct(mut width: Option<i32>, mut height: Option<i32>) -> Self {
+        let mut this = Self {
+            width: None,
+            height: None,
+        };
+        this.setWidth(width.clone());
+        this.setHeight(height.clone());
+        this
+    }
+
+    pub fn new(mut width: Option<i32>, mut height: Option<i32>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct(width, height))))
+    }
+    
+
+    pub fn getWidth(&mut self) -> Option<i32> {
+        return self.width.clone();
+    }
+    
+
+    pub fn setWidth(&mut self, mut width: Option<i32>) {
+        self.width = width.clone();
+    }
+    
+
+    pub fn getHeight(&mut self) -> Option<i32> {
+        return self.height.clone();
+    }
+    
+
+    pub fn setHeight(&mut self, mut height: Option<i32>) {
+        self.height = height.clone();
+    }
+}
+

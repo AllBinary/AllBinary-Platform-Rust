@@ -1,0 +1,11 @@
+[package]
+name = "gameinputmemotionjavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "gameinputmemotionjavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

@@ -1,0 +1,11 @@
+[package]
+name = "motioninputapi5andupandroidjavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "motioninputapi5andupandroidjavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

@@ -1,0 +1,11 @@
+[package]
+name = "loggingj2meexceptionrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "loggingj2meexceptionrs"
+path = "lib.rs"
+crate-type = ["rlib"]

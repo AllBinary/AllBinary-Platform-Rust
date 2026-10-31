@@ -1,0 +1,11 @@
+[package]
+name = "bliskettaghelperfactoriesjavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "bliskettaghelperfactoriesjavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

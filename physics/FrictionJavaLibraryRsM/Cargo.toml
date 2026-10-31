@@ -1,0 +1,11 @@
+[package]
+name = "frictionjavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "frictionjavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

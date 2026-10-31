@@ -1,0 +1,11 @@
+[package]
+name = "j2mecolorjavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "j2mecolorjavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

@@ -1,0 +1,11 @@
+[package]
+name = "imagetooljavaapplicationrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "imagetooljavaapplicationrs"
+path = "lib.rs"
+crate-type = ["rlib"]

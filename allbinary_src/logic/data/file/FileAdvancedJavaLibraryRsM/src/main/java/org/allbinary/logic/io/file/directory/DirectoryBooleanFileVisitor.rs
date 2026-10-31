@@ -1,0 +1,62 @@
+//
+// AllBinary Open License Version 1
+// Copyright (c) 2011 AllBinary
+// 
+// By agreeing to this license you and any business entity you represent are
+// legally bound to the AllBinary Open License Version 1 legal agreement.
+// 
+// You may obtain the AllBinary Open License Version 1 legal agreement from
+// AllBinary or the root directory of AllBinary's AllBinary Platform repository.
+// 
+// Created By: Travis Berthelot
+//   
+// Generated Code Do Not Modify
+// package org.allbinary.logic.io.file.directory
+#![allow(non_snake_case, non_camel_case_types, non_upper_case_globals, unused, unused_mut, static_mut_refs)]
+
+use std::cell::RefCell;
+use std::rc::Rc;
+use super::*;
+use crate::org::allbinary::logic::io::file::AbFile::AbFile;
+use crate::org::allbinary::logic::util::visitor::VisitorInterface::VisitorInterface;
+
+// Borrows the object of a Java reference
+macro_rules! jcall {
+    ($value:expr) => {
+        $value.as_ref().expect("null reference").borrow_mut()
+    };
+}
+
+pub struct DirectoryBooleanFileVisitor {
+}
+
+// impl VisitorInterface for DirectoryBooleanFileVisitor with the methods of the trait
+
+impl DirectoryBooleanFileVisitor {
+    
+
+    pub fn new_struct() -> Self {
+        let mut this = Self {
+        };
+        this
+    }
+
+    pub fn new() -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct())))
+    }
+    
+
+    pub fn visit(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
+        return (self.visit((anyType).clone() /* as AbFile */)).clone() /* as Any */;
+    }
+    
+
+    // Java overloaded method: Rust needs a different name
+    pub fn visit(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<bool> {
+        if jcall!(file).isDirectory() {
+            return true;
+        }
+        return false;
+    }
+}
+

@@ -1,0 +1,11 @@
+[package]
+name = "entityuserjavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "entityuserjavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

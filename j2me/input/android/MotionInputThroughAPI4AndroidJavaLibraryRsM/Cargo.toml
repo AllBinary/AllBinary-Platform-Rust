@@ -1,0 +1,11 @@
+[package]
+name = "motioninputthroughapi4androidjavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "motioninputthroughapi4androidjavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

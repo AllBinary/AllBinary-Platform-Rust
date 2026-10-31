@@ -1,0 +1,11 @@
+[package]
+name = "j2meonlyjavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "j2meonlyjavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

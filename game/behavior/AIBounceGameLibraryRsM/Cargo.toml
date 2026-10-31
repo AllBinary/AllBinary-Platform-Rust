@@ -1,0 +1,11 @@
+[package]
+name = "aibouncegamelibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "aibouncegamelibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

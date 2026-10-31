@@ -1,0 +1,11 @@
+[package]
+name = "nullcustomuibasejavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "nullcustomuibasejavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

@@ -1,0 +1,88 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.allbinary</groupId>
+    <artifactId>AllBinaryBaseLibraryPOMRs</artifactId>
+    <packaging>pom</packaging>
+    <!-- AllBinary Platform Version Start -->
+    <version>1.0.0-SNAPSHOT</version>
+    <!-- AllBinary Platform Version End -->
+
+    <name>AllBinaryBaseLibraryPOMRs</name>
+    <url>http://www.allbinary.com/</url>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>AllBinary Snapshots Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>AllBinary Releases Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+    
+    <properties>
+        <buildLabel>${project.version}</buildLabel>
+        <assemblyPluginVersion>2.2-beta-1</assemblyPluginVersion>
+    </properties>
+
+    <modules>
+        <module>../CommonJavaLibraryRsM</module>
+        <module>../TempBaseJavaLibraryRsM</module>
+        
+        <module>../../allbinary_src/LogRsM</module>
+        <module>../../allbinary_src/allbinary_src_designpatterns_srcRsM</module>
+        <module>../../allbinary_src/data/BaseDataJavaLibraryRsM</module>
+        <module>../../allbinary_src/cache/BaseCacheJavaLibraryRsM</module>
+        <module>../../allbinary_src/logic/BasePreloaderJavaLibraryRsM</module>
+        <module>../../allbinary_src/logic/BasePreloaderJ2MEJavaLibraryRsM</module>
+
+        <module>../ExceptionHTMLJavaLibraryRsM</module>
+        <module>../J2MEExceptionLibraryRsM</module>
+        <module>../../allbinary_src/J2SEExceptionLibraryRsM</module>
+        <module>../J2MEUtilJavaLibraryRsM</module>
+        <module>../J2MEColorJavaLibraryRsM</module>
+        <module>../EventJ2MELibraryRsM</module>
+
+        <module>../../allbinary_src/LogNoPlatformJavaLibraryRsM</module>
+        <module>../../allbinary_src/LogJ2MEJavaLibraryRsM</module>
+        <module>../../allbinary_src/LogJ2SEJavaLibraryRsM</module>
+<!--        <module>../../allbinary_src/LogAndroidJavaLibraryRsM</module>-->
+        <module>../logging/LoggingNoneRsM</module>
+        <module>../logging/LoggingJ2MEAllRsM</module>
+        <module>../logging/LoggingJ2MEExceptionRsM</module>
+<!--        <module>../logging/LoggingAndroidAllRsM</module>-->
+        <!--
+        //While it is a possible dependency option it really does not fit here
+        //as such it is actually build in the final POM builds instead
+        <module>../logging/LoggingRemoteExceptionRsM</module>  
+        -->
+        
+        <module>../J2MEWindowingJavaLibraryRsM</module>
+        
+        <module>../lib/BaseMathLibraryRsM</module>
+        <module>../lib/BasicMathLibraryRsM</module>
+        
+        <module>../../allbinary_src/ThreadLibraryRsM</module>
+        <module>../../allbinary_src/ThreadHTMLLibraryRsM</module>
+        <module>../../replace_these_stub_projects/allbinary_src/NoneOnlyJavaLibraryRsM</module>
+        <module>../../allbinary_src/ThreadJ2MELibraryRsM</module>
+        <module>../time/TimeJavaLibraryRsM</module>
+
+        <module>../statistics/ApplicationStatisticsJ2SELibraryRsM</module>
+        <module>../statistics/ApplicationStatisticsJ2MELibraryRsM</module>
+        <module>../statistics/ApplicationStatisticsJavaLibraryRsM</module>
+
+        <module>../../allbinary_src/logging/BasicLogConfigTypeJavaLibraryRsM</module>
+        <module>../../allbinary_src/logging/LogConfigTypeGameClientJavaLibraryRsM</module>
+
+        <module>../../allbinary_src/hardware/HardwareLibraryPORsM</module>
+
+        <module>../lib/TrigBaseLibraryRsM</module>
+
+    </modules>
+
+</project>
+

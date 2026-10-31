@@ -1,0 +1,12 @@
+[package]
+name = "common_java_library_rs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+# build.rs generates the module tree from the Java package directories of the generated sources
+build = "build.rs"
+
+[lib]
+name = "common_java_library_rs"
+path = "lib.rs"
+crate-type = ["rlib"]

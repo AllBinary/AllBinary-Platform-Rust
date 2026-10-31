@@ -1,0 +1,11 @@
+[package]
+name = "allbinarygraphicsjavaapplicationrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "allbinarygraphicsjavaapplicationrs"
+path = "lib.rs"
+crate-type = ["rlib"]

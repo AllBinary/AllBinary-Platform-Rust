@@ -1,0 +1,11 @@
+[package]
+name = "androidapi16upto19javalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "androidapi16upto19javalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

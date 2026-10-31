@@ -1,0 +1,11 @@
+[package]
+name = "openglnoneother2javalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "openglnoneother2javalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

@@ -1,0 +1,11 @@
+[package]
+name = "soundj2melibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "soundj2melibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

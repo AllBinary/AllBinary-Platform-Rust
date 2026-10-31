@@ -1,0 +1,11 @@
+[package]
+name = "virtualkeyboarddynamicjavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "virtualkeyboarddynamicjavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

@@ -1,0 +1,11 @@
+[package]
+name = "applicationstatisticsj2selibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "applicationstatisticsj2selibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

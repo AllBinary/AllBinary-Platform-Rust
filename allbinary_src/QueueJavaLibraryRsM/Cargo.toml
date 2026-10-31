@@ -1,0 +1,11 @@
+[package]
+name = "queuejavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "queuejavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

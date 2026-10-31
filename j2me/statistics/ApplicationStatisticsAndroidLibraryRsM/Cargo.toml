@@ -1,0 +1,11 @@
+[package]
+name = "applicationstatisticsandroidlibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "applicationstatisticsandroidlibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

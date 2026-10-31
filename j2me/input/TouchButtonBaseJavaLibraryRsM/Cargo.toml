@@ -1,0 +1,11 @@
+[package]
+name = "touchbuttonbasejavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "touchbuttonbasejavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

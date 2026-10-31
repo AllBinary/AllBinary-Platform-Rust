@@ -1,0 +1,11 @@
+[package]
+name = "inputautomationjavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "inputautomationjavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

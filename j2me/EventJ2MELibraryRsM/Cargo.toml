@@ -1,0 +1,11 @@
+[package]
+name = "eventj2melibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "eventj2melibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

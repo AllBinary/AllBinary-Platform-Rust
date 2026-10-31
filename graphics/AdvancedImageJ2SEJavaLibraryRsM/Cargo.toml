@@ -1,0 +1,11 @@
+[package]
+name = "advancedimagej2sejavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "advancedimagej2sejavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

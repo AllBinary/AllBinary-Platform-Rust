@@ -1,0 +1,11 @@
+[package]
+name = "allbinaryhtml2imageanimationrotationjavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "allbinaryhtml2imageanimationrotationjavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

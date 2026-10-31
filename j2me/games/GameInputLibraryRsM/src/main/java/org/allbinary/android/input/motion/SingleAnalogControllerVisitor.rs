@@ -1,0 +1,75 @@
+//
+// AllBinary Open License Version 1
+// Copyright (c) 2011 AllBinary
+// 
+// By agreeing to this license you and any business entity you represent are
+// legally bound to the AllBinary Open License Version 1 legal agreement.
+// 
+// You may obtain the AllBinary Open License Version 1 legal agreement from
+// AllBinary or the root directory of AllBinary's AllBinary Platform repository.
+// 
+// Created By: Travis Berthelot
+//   
+// Generated Code Do Not Modify
+// package org.allbinary.android.input.motion
+#![allow(non_snake_case, non_camel_case_types, non_upper_case_globals, unused, unused_mut, static_mut_refs)]
+
+use std::cell::RefCell;
+use std::rc::Rc;
+use super::*;
+use crate::org::allbinary::game::input::analog::AnalogLocationInput::AnalogLocationInput;
+use crate::org::allbinary::game::input::analog::AnalogLocationInputFactory::AnalogLocationInputFactory;
+use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
+use super::AnalogControllerVisitor::AnalogControllerVisitor;
+use super::AnalogLocationInputProcessor::AnalogLocationInputProcessor;
+
+// Borrows the object of a Java reference
+macro_rules! jcall {
+    ($value:expr) => {
+        $value.as_ref().expect("null reference").borrow_mut()
+    };
+}
+
+pub struct SingleAnalogControllerVisitor {
+    pub base: AnalogControllerVisitor,
+    pub playerInputId: i32,
+}
+
+
+impl SingleAnalogControllerVisitor {
+    
+
+    pub fn new_struct(mut playerInputId: i32) -> Self {
+        let mut this = Self {
+            base: AnalogControllerVisitor::new_struct(),
+            playerInputId: 0,
+        };
+        this.playerInputId = playerInputId.clone();
+        this
+    }
+
+    pub fn new(mut playerInputId: i32) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct(playerInputId))))
+    }
+    
+
+    pub fn process(&mut self, mut allbinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut analogLocationInputProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::android::input::motion::AnalogLocationInputProcessor::AnalogLocationInputProcessorDyn>>>) {
+        let mut analogLocationInput: Option<Rc<RefCell<AnalogLocationInput>>> = jcall!(AnalogLocationInputFactory::getInstance()).getInstanceForPlayer(self.playerInputId.clone());
+        jcall!(analogLocationInputProcessor).process(allbinaryLayerManager.clone(), analogLocationInput.clone());
+    }
+}
+impl std::ops::Deref for SingleAnalogControllerVisitor {
+    type Target = AnalogControllerVisitor;
+    fn deref(&self) -> &Self::Target { &self.base }
+}
+impl std::ops::DerefMut for SingleAnalogControllerVisitor {
+    fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
+}
+
+impl crate::org::allbinary::android::input::motion::AnalogControllerVisitor::AnalogControllerVisitorDyn for SingleAnalogControllerVisitor {
+    fn as_AnalogControllerVisitor(&self) -> &crate::org::allbinary::android::input::motion::AnalogControllerVisitor::AnalogControllerVisitor { &self.base }
+    fn as_AnalogControllerVisitor_mut(&mut self) -> &mut crate::org::allbinary::android::input::motion::AnalogControllerVisitor::AnalogControllerVisitor { &mut self.base }
+    fn process(&mut self, mut allbinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut analogLocationInputProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::android::input::motion::AnalogLocationInputProcessor::AnalogLocationInputProcessorDyn>>>) { Self::process(self, allbinaryLayerManager, analogLocationInputProcessor) }
+}
+
+

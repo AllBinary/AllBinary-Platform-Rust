@@ -1,0 +1,11 @@
+[package]
+name = "allbinary_src_designpatterns_srcrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "allbinary_src_designpatterns_srcrs"
+path = "lib.rs"
+crate-type = ["rlib"]

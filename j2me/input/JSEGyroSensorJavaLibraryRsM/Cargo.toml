@@ -1,0 +1,11 @@
+[package]
+name = "jsegyrosensorjavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "jsegyrosensorjavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

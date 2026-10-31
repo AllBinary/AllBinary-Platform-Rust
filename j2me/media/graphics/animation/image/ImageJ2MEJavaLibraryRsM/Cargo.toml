@@ -1,0 +1,11 @@
+[package]
+name = "imagej2mejavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "imagej2mejavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

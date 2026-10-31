@@ -1,0 +1,11 @@
+[package]
+name = "entityorderhistoryjavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "entityorderhistoryjavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

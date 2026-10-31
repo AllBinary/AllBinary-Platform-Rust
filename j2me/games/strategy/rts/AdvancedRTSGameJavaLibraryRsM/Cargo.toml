@@ -1,0 +1,11 @@
+[package]
+name = "advancedrtsgamejavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "advancedrtsgamejavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

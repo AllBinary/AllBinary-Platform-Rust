@@ -1,0 +1,11 @@
+[package]
+name = "touchscreenj2menonejavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "touchscreenj2menonejavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

@@ -1,0 +1,11 @@
+[package]
+name = "screencapturejavalibraryrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "screencapturejavalibraryrs"
+path = "lib.rs"
+crate-type = ["rlib"]

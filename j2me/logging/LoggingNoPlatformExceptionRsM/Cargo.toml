@@ -1,0 +1,11 @@
+[package]
+name = "loggingnoplatformexceptionrs"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "loggingnoplatformexceptionrs"
+path = "lib.rs"
+crate-type = ["rlib"]

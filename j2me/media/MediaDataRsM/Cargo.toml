@@ -1,0 +1,11 @@
+[package]
+name = "mediadatars"
+version = "1.0.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[lib]
+name = "mediadatars"
+path = "lib.rs"
+crate-type = ["rlib"]
