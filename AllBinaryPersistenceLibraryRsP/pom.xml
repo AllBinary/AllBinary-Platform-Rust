@@ -37,18 +37,18 @@
         <module>../allbinary_src/logic/BasePreloaderFileJavaLibraryRsM</module>
         <module>../allbinary_src/logic/data/file/FileJavaLibraryRsM</module>
         <module>../allbinary_src/logic/data/file/FileJ2SEJavaLibraryRsM</module>
-        <module>../allbinary_src/data/DataJavaLibraryRsM</module>
-        <module>../allbinary_src/logic/data/file/FileUnamedJavaLibraryRsM</module>
-        <module>../allbinary_src/logic/data/file/FileAdvancedJavaLibraryRsM</module>
-        <module>../allbinary_src/PreLoaderJavaLibraryRsM</module>
-        <module>../allbinary_src/FileInitInfoJavaLibraryRsM</module>
-        <module>../allbinary_src/PreLoaderFileJavaLibraryRsM</module>
-        <module>../allbinary_src/PreLoaderLicenseJavaLibraryRsM</module>
+        <!--<module>../allbinary_src/data/DataJavaLibraryRsM</module>-->
+        <!--<module>../allbinary_src/logic/data/file/FileUnamedJavaLibraryRsM</module>-->
+        <!--<module>../allbinary_src/logic/data/file/FileAdvancedJavaLibraryRsM</module>-->
+        <!--<module>../allbinary_src/PreLoaderJavaLibraryRsM</module>-->
+        <!--<module>../allbinary_src/FileInitInfoJavaLibraryRsM</module>-->
+        <!--<module>../allbinary_src/PreLoaderFileJavaLibraryRsM</module>-->
+        <!--<module>../allbinary_src/PreLoaderLicenseJavaLibraryRsM</module>-->
         <module>../j2me/PCResourceLibraryRsM</module>
         <module>../j2me/ProgressJ2MEJavaLibraryRsM</module>
         <module>../allbinary_src/licensing/ClientInfoBaseJavaLibraryRsM</module>
-        <module>../allbinary_src/licensing/RemoteXmlRpcJavaLibraryRsM</module>
-        <module>../allbinary_src/licensing/LicenseClientJavaLibraryRsM</module>
+        <!--<module>../allbinary_src/licensing/RemoteXmlRpcJavaLibraryRsM</module>-->
+        <!--<module>../allbinary_src/licensing/LicenseClientJavaLibraryRsM</module>-->
 
         <!--
         <module>../allbinary_src/PreLoaderLicenseJavaLibraryRsM</module>
