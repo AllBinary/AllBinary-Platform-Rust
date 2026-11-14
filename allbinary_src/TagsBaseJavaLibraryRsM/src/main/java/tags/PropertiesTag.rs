@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use super::CommandTag::CommandTag;
@@ -33,7 +32,7 @@ macro_rules! jcall {
 pub struct PropertiesTag {
     pub base: CommandTag,
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
-    pub propertiesHashMap: Option<Rc<RefCell<HashMap>>>,
+    pub propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 
@@ -47,10 +46,10 @@ impl PropertiesTag {
             propertiesHashMap: None,
         };
         this.logUtil = LogUtil::getInstance();
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).JSPTAG.clone()) {
-            jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).JSPTAG.clone(); java_field }.clone()) {
+            jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         }
-        this.propertiesHashMap = jcall!(StdUtil::getInstance()).createHashMap();
+        this.propertiesHashMap = { let java_value = (jcall!(StdUtil::getInstance()).createHashMap()).clone(); java_value };
         this
     }
 
@@ -59,16 +58,16 @@ impl PropertiesTag {
     }
     
 
-    pub fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return self.propertiesHashMap.clone();
     }
     
 
     pub fn doEndTag(&mut self) -> i32 {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).JSPTAG.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).JSPTAG.clone(); java_field }.clone()) {
             jcall!(self.logUtil).putF(String::from("Tag Ended"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("doEndTag"));
         }
-        self.propertiesHashMap = jcall!(StdUtil::getInstance()).createHashMap();
+        self.propertiesHashMap = { let java_value = (jcall!(StdUtil::getInstance()).createHashMap()).clone(); java_value };
         return EVAL_PAGE.clone();
     }
 }
@@ -83,7 +82,7 @@ impl std::ops::DerefMut for PropertiesTag {
 pub trait PropertiesTagDyn: crate::tags::CommandTag::CommandTagDyn {
     fn as_PropertiesTag(&self) -> &PropertiesTag;
     fn as_PropertiesTag_mut(&mut self) -> &mut PropertiesTag;
-    fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { PropertiesTag::getPropertiesHashMap(self.as_PropertiesTag_mut()) }
+    fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { PropertiesTag::getPropertiesHashMap(self.as_PropertiesTag_mut()) }
     fn doEndTag(&mut self) -> i32 { PropertiesTag::doEndTag(self.as_PropertiesTag_mut()) }
 }
 impl PropertiesTagDyn for PropertiesTag {

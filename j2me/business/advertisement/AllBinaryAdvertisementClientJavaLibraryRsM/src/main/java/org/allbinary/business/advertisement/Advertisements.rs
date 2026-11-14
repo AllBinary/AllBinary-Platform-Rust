@@ -39,14 +39,18 @@ pub struct Advertisements {
 
 impl Advertisements {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             bannerList: None,
             pageList: None,
             myRandomFactory: None,
         };
-        this.bannerList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.pageList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.bannerList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.pageList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.myRandomFactory = MyRandomFactory::getInstance();
         this
     }
@@ -56,7 +60,7 @@ impl Advertisements {
     }
     
 
-    pub fn addPage(&mut self, mut advertisementProcessorInterface: Option<Rc<RefCell<dyn AdvertisementProcessorInterface>>>) {
+    pub fn addPage(&mut self, mut advertisementProcessorInterface: Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>>) {
         if !jcall!(self.pageList).contains(crate::java_into_object(advertisementProcessorInterface.clone())) {
             jcall!(self.pageList).add(crate::java_into_object(advertisementProcessorInterface.clone()));
         }
@@ -67,7 +71,7 @@ impl Advertisements {
         let mut size: i32 = jcall!(self.pageList).size();
         if size > 0 {
             let mut random: i32 = jcall!(self.myRandomFactory).getAbsoluteNextInt(size.clone());
-            let mut advertisementProcessorInterface: Option<Rc<RefCell<dyn AdvertisementProcessorInterface>>> = { let java_object = (jcall!(self.pageList).as_BasicArrayList_mut().objectArray[(random) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>>>().expect("ClassCastException").clone()) };
+            let mut advertisementProcessorInterface: Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>> = { let java_object = (jcall!(self.pageList).as_BasicArrayList_mut().objectArray[(random) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>>>().expect("ClassCastException").clone()) };
             jcall!(advertisementProcessorInterface).start();
         }
     }
@@ -78,7 +82,7 @@ impl Advertisements {
             let mut size: i32 = jcall!(self.pageList).size();
             if size > 0 {
                 let mut random: i32 = jcall!(self.myRandomFactory).getAbsoluteNextInt(size.clone());
-                let mut advertisementProcessorInterface: Option<Rc<RefCell<dyn AdvertisementProcessorInterface>>> = { let java_object = (jcall!(self.pageList).as_BasicArrayList_mut().objectArray[(random) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>>>().expect("ClassCastException").clone()) };
+                let mut advertisementProcessorInterface: Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>> = { let java_object = (jcall!(self.pageList).as_BasicArrayList_mut().objectArray[(random) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>>>().expect("ClassCastException").clone()) };
                 jcall!(advertisementProcessorInterface).process();
             }
         }
@@ -89,14 +93,14 @@ impl Advertisements {
         {
             let mut index: i32 = jcall!(self.pageList).size();
             while { index -= 1; index } >= 0 {
-            let mut advertisementProcessorInterface: Option<Rc<RefCell<dyn AdvertisementProcessorInterface>>> = { let java_object = (jcall!(self.pageList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>>>().expect("ClassCastException").clone()) };
+            let mut advertisementProcessorInterface: Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>> = { let java_object = (jcall!(self.pageList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>>>().expect("ClassCastException").clone()) };
             jcall!(advertisementProcessorInterface).stop();
             }
         }
     }
     
 
-    pub fn addBanner(&mut self, mut advertisementProcessorInterface: Option<Rc<RefCell<dyn AdvertisementProcessorInterface>>>) {
+    pub fn addBanner(&mut self, mut advertisementProcessorInterface: Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>>) {
         if !jcall!(self.bannerList).contains(crate::java_into_object(advertisementProcessorInterface.clone())) {
             jcall!(self.bannerList).add(crate::java_into_object(advertisementProcessorInterface.clone()));
         }
@@ -107,7 +111,7 @@ impl Advertisements {
         {
             let mut index: i32 = jcall!(self.bannerList).size();
             while { index -= 1; index } >= 0 {
-            let mut advertisementProcessorInterface: Option<Rc<RefCell<dyn AdvertisementProcessorInterface>>> = { let java_object = (jcall!(self.bannerList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>>>().expect("ClassCastException").clone()) };
+            let mut advertisementProcessorInterface: Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>> = { let java_object = (jcall!(self.bannerList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>>>().expect("ClassCastException").clone()) };
             jcall!(advertisementProcessorInterface).start();
             }
         }
@@ -118,15 +122,15 @@ impl Advertisements {
         {
             let mut index: i32 = jcall!(self.bannerList).size();
             while { index -= 1; index } >= 0 {
-            let mut advertisementProcessorInterface: Option<Rc<RefCell<dyn AdvertisementProcessorInterface>>> = { let java_object = (jcall!(self.bannerList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>>>().expect("ClassCastException").clone()) };
+            let mut advertisementProcessorInterface: Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>> = { let java_object = (jcall!(self.bannerList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>>>().expect("ClassCastException").clone()) };
             jcall!(advertisementProcessorInterface).stop();
             }
         }
     }
     
 
-    pub fn getBanner(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn AdvertisementProcessorInterface>>> {
-        let mut advertisementProcessorInterface: Option<Rc<RefCell<dyn AdvertisementProcessorInterface>>> = { let java_object = (jcall!(self.bannerList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>>>().expect("ClassCastException").clone()) };
+    pub fn getBanner(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>> {
+        let mut advertisementProcessorInterface: Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>> = { let java_object = (jcall!(self.bannerList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdvertisementProcessorInterface::AdvertisementProcessorInterfaceDyn>>>>().expect("ClassCastException").clone()) };
         return advertisementProcessorInterface.clone();
     }
     

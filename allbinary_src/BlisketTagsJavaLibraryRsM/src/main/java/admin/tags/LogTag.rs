@@ -39,8 +39,8 @@ impl LogTag {
         let mut this = Self {
             base: TableTag::new_struct(),
         };
-        this.setTagHelperFactory(LogHelperFactory::new());
-        this.setTagRequestHelperFactory(LogHelperFactory::new());
+        this.setTagHelperFactory(LogHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(LogHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 

@@ -25,9 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait IndexedAnimationInterfaceCompositeInterface {
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+pub trait IndexedAnimationInterfaceCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
 }
 
 

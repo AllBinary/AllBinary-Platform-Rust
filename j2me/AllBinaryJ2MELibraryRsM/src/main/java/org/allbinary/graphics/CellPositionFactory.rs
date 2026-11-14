@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::CellPosition::CellPosition;
 
 // Borrows the object of a Java reference
@@ -40,6 +41,10 @@ pub struct CellPositionFactory {
 pub static mut CellPositionFactory_SINGLETON: std::cell::LazyCell<Option<Rc<RefCell<CellPositionFactory>>>> = std::cell::LazyCell::new(|| CellPositionFactory::new());
 
 impl CellPositionFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<CellPositionFactory>>> {
@@ -73,7 +78,7 @@ impl CellPositionFactory {
         jcall!(stringBuffer).appendint(columns.clone());
         jcall!(stringBuffer).append(String::from(" rows: "));
         jcall!(stringBuffer).appendint(rows.clone());
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         self.cellPositionArray = vec![vec![None; (rows) as usize]; (columns) as usize];
         self.columns = columns.clone();
         self.rows = rows.clone();
@@ -86,18 +91,19 @@ impl CellPositionFactory {
     
 
     pub fn getInstanceColRow(&mut self, mut i_column: i32, mut i_row: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            return self.cellPositionArray[(i_column) as usize][(i_row) as usize].clone();
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            return Some(self.cellPositionArray[(i_column) as usize][(i_row) as usize].clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("columns: ")).appendint(self.getColumns()).append(String::from(" rows: ")).appendint(self.getRows()).append(String::from(" col: ")).appendint(i_column.clone()).append(String::from(" row: ")).appendint(i_row.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_argument = jcall!(StringMaker::new()).append(String::from("columns: ")).appendint(self.getColumns()).append(String::from(" rows: ")).appendint(self.getRows()).append(String::from(" col: ")).appendint(i_column.clone()).append(String::from(" row: ")).appendint(i_row.clone()).toString(); java_argument }, crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
             return self.NONE.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -105,7 +111,7 @@ impl CellPositionFactory {
         let mut cellPositionCanBeNull: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>> = self.cellPositionArray[(i_column) as usize][(i_row) as usize].clone();
         if cellPositionCanBeNull.is_none() {
             cellPositionCanBeNull = CellPosition::new(i_column.clone(), i_row.clone(), self.columns.clone(), self.rows.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>);
-            self.cellPositionArray[(i_column) as usize][(i_row) as usize] = cellPositionCanBeNull.clone();
+            { let java_index = (i_row) as usize; self.cellPositionArray[(i_column) as usize][java_index] = cellPositionCanBeNull.clone(); };
         }
         return cellPositionCanBeNull.clone();
     }

@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
+use crate::java::lang::Exception::*;
 use super::TrackingEventListenerInterface::TrackingEventListenerInterface;
 use super::TrackingEvent::TrackingEvent;
 
@@ -58,8 +59,8 @@ impl TrackingEventHandler {
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut trackingEventListenerInterface: Option<Rc<RefCell<dyn TrackingEventListenerInterface>>> = panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn TrackingEventListenerInterface");
-        jcall!(trackingEventListenerInterface).onMovement((eventObject).clone() /* as TrackingEvent */);
+        let mut trackingEventListenerInterface: Option<Rc<RefCell<dyn TrackingEventListenerInterface>>> = (|| -> Option<Rc<RefCell<dyn TrackingEventListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn TrackingEventListenerInterface") })();
+        jcall!(trackingEventListenerInterface).onMovement((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<TrackingEvent>() }, "ClassCastException: not a TrackingEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<TrackingEvent>) } }));
     }
 }
 impl std::ops::Deref for TrackingEventHandler {

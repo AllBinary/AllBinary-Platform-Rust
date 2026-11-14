@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::business::context::modules::storefront::StoreFront::StoreFront;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontData::StoreFrontData;
@@ -47,28 +46,28 @@ pub struct StoreFrontHelper {
 impl StoreFrontHelper {
     
 
-    pub fn new_struct(mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
+    pub fn new_struct(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
         let mut this = Self {
             base: TagHelper::new_struct(),
             storeFrontInterface: None,
             currentLocation: String::new(),
             currentHomeLocation: String::new(),
         };
-        let mut storeName: String = (jcall!(hashMap).get(jcall!(StoreFrontData::getInstance()).NAME.clone())).clone() /* as String */;
+        let mut storeName: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if true {
-            this.storeFrontInterface = StoreFrontFactory::getInstance(storeName.clone());
-            this.currentLocation = jcall!(Replace::new2(jcall!(CommonSeps::getInstance()).SPACE.clone(), String::from("%20"))).all(jcall!(this.storeFrontInterface).getCurrentHostName() + jcall!(this.storeFrontInterface).getCurrentHostNamePath());
-            this.currentHomeLocation = jcall!(Replace::new2(jcall!(CommonSeps::getInstance()).SPACE.clone(), String::from("%20"))).all(jcall!(this.storeFrontInterface).getCurrentHomeHostName() + jcall!(this.storeFrontInterface).getCurrentHomeHostNamePath());
+            this.storeFrontInterface = { let java_value = (StoreFrontFactory::getInstance(storeName.clone())).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
+            this.currentLocation = { let java_value = (jcall!(Replace::new2({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone(), String::from("%20"))).all(jcall!(this.storeFrontInterface).getCurrentHostName() + jcall!(this.storeFrontInterface).getCurrentHostNamePath())).clone(); java_value };
+            this.currentHomeLocation = { let java_value = (jcall!(Replace::new2({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone(), String::from("%20"))).all(jcall!(this.storeFrontInterface).getCurrentHomeHostName() + jcall!(this.storeFrontInterface).getCurrentHomeHostNamePath())).clone(); java_value };
         } else {
             let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
             this.storeFrontInterface = StoreFront::new().map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
-            this.currentLocation = jcall!(stringUtil).EMPTY_STRING.clone();
-            this.currentHomeLocation = jcall!(stringUtil).EMPTY_STRING.clone();
+            this.currentLocation = { let java_value = ({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }).clone(); java_value }.clone();
+            this.currentHomeLocation = { let java_value = ({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }).clone(); java_value }.clone();
         }
         this
     }
 
-    pub fn new(mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(hashMap, pageContext))))
     }
     

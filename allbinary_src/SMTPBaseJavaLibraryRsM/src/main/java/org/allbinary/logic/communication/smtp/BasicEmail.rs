@@ -16,14 +16,14 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::mail::internet::MimeMessage::MimeMessage;
 use crate::org::allbinary::logic::communication::smtp::info::BasicEmailInfo::BasicEmailInfo;
 use crate::org::allbinary::logic::communication::smtp::info::EmailInfo::EmailInfo;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::EmailInterface::EmailInterface;
 use super::AbEmail::AbEmail;
 use super::Email::Email;
@@ -52,6 +52,10 @@ impl crate::org::allbinary::data::tree::dom::document::mapping::DomDocumentMappi
 }
 
 impl BasicEmail {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut emailInfo: Option<Rc<RefCell<EmailInfo>>>, mut to: String) -> Self {
@@ -59,7 +63,7 @@ impl BasicEmail {
             email: None,
         };
         let mut basicEmailInfo: Option<Rc<RefCell<dyn crate::org::allbinary::logic::communication::smtp::info::BasicEmailInfo::BasicEmailInfoDyn>>> = jcall!(emailInfo).getBasicEmailInfo();
-        this.email = AbEmail::new(jcall!(jcall!(basicEmailInfo).getEmailServerConfigurationInterface()).getSmtpServer(), jcall!(jcall!(basicEmailInfo).getEmailServerConfigurationInterface()).getAccountName(), to.clone(), jcall!(basicEmailInfo).getSubject(), jcall!(basicEmailInfo).getTextBody(), jcall!(emailInfo).getHtmlAttachment(), jcall!(emailInfo).getContentBase());
+        this.email = { let java_value = (AbEmail::new(jcall!(jcall!(basicEmailInfo).getEmailServerConfigurationInterface()).getSmtpServer(), jcall!(jcall!(basicEmailInfo).getEmailServerConfigurationInterface()).getAccountName(), to.clone(), jcall!(basicEmailInfo).getSubject(), jcall!(basicEmailInfo).getTextBody(), jcall!(emailInfo).getHtmlAttachment(), jcall!(emailInfo).getContentBase())).clone(); java_value };
         this
     }
 
@@ -69,7 +73,7 @@ impl BasicEmail {
     
 
     pub fn getEmail(&mut self) -> Option<Rc<RefCell<Email>>> {
-        return (jcall!(self.email).getEmail()).clone() /* as Email */;
+        return (jcall!(self.email).getEmail()).clone();
     }
     
 
@@ -90,7 +94,7 @@ impl BasicEmail {
     
 
     // throws Exception
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return jcall!(self.email).toHashMap();
     }
     

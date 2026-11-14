@@ -45,6 +45,10 @@ pub struct FREEBLISKET_PATH_GLOBALS {
 thread_local! { pub static FREEBLISKET_PATH_GLOBALS_instance: Option<Rc<RefCell<FREEBLISKET_PATH_GLOBALS>>> = FREEBLISKET_PATH_GLOBALS::new(); }
 
 impl FREEBLISKET_PATH_GLOBALS {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<FREEBLISKET_PATH_GLOBALS>>> {
@@ -67,37 +71,37 @@ impl FREEBLISKET_PATH_GLOBALS {
             LICENSEERRORPAGE: String::new(),
             ERRORPAGE: String::new(),
         };
-        this.TEMPLATEPATH = format!("{}{}", String::from("template"), jcall!(AbPathData::getInstance()).SEPARATOR);
-        this.STYLEPATH = format!("{}{}", format!("{}{}", this.TEMPLATEPATH, String::from("style")), jcall!(AbPathData::getInstance()).SEPARATOR);
-        this.THEMEPATH = format!("{}{}", format!("{}{}", this.STYLEPATH, String::from("theme")), jcall!(AbPathData::getInstance()).SEPARATOR);
-        this.DBINITPATH = format!("{}{}", format!("{}{}", jcall!(jcall!(PATH_GLOBALS).getInstance()).INIT_PATH, String::from("db")), jcall!(AbPathData::getInstance()).SEPARATOR);
-        this.LINEDATAPATH = format!("{}{}", format!("{}{}", jcall!(jcall!(PATH_GLOBALS).getInstance()).INIT_PATH, String::from("lineData")), jcall!(AbPathData::getInstance()).SEPARATOR);
+        this.TEMPLATEPATH = format!("{}{}", String::from("template"), { let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field });
+        this.STYLEPATH = format!("{}{}", format!("{}{}", this.TEMPLATEPATH, String::from("style")), { let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field });
+        this.THEMEPATH = format!("{}{}", format!("{}{}", this.STYLEPATH, String::from("theme")), { let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field });
+        this.DBINITPATH = format!("{}{}", format!("{}{}", { let java_field = jcall!(PATH_GLOBALS::PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field }, String::from("db")), { let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field });
+        this.LINEDATAPATH = format!("{}{}", format!("{}{}", { let java_field = jcall!(PATH_GLOBALS::PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field }, String::from("lineData")), { let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field });
         this.LICENSEERRORPAGE = String::from("LicensingError.jsp");
         this.ERRORPAGE = String::from("Error.jsp");
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(String::from("install"));
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-        this.INSTALLPATH = jcall!(stringBuffer).toString();
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+        this.INSTALLPATH = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
-        jcall!(stringBuffer).append(jcall!(jcall!(PATH_GLOBALS).getInstance()).INIT_PATH.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(PATH_GLOBALS::PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("views"));
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-        this.XSLPATH = jcall!(stringBuffer).toString();
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+        this.XSLPATH = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(this.XSLPATH.clone());
         jcall!(stringBuffer).append(String::from("configuration"));
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-        this.CONFIGURATIONPATH = jcall!(stringBuffer).toString();
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+        this.CONFIGURATIONPATH = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(this.CONFIGURATIONPATH.clone());
         jcall!(stringBuffer).append(String::from("user"));
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-        this.USERCONFIGURATIONPATH = jcall!(stringBuffer).toString();
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+        this.USERCONFIGURATIONPATH = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(this.CONFIGURATIONPATH.clone());
         jcall!(stringBuffer).append(String::from("context"));
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-        this.CONTEXTCONFIGURATIONPATH = jcall!(stringBuffer).toString();
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+        this.CONTEXTCONFIGURATIONPATH = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         this
     }

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
 use crate::org::allbinary::animation::NullAnimationFactory::NullAnimationFactory;
 use crate::org::allbinary::animation::NullIndexedAnimationFactory::NullIndexedAnimationFactory;
@@ -61,6 +61,7 @@ use crate::org::allbinary::media::graphics::geography::map::GeographicMapComposi
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapDirectionUtil::GeographicMapDirectionUtil;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::view::ViewPositionBase::ViewPositionBase;
+use crate::java::lang::Exception::*;
 use super::RTSLayer::RTSLayer;
 use super::PathFindingLayerInterface::PathFindingLayerInterface;
 use super::WaypointBehaviorBase::WaypointBehaviorBase;
@@ -85,11 +86,106 @@ pub struct AdvancedRTSGameLayer {
 }
 
 // impl DestroyedEventListenerInterface for AdvancedRTSGameLayer with the methods of the trait
+impl PathFindingLayerInterface for AdvancedRTSGameLayer {
+    fn getEndGeographicMapCellPositionList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::getEndGeographicMapCellPositionList(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+    fn shouldHandleStartSameAsEnd(&mut self) -> bool { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::shouldHandleStartSameAsEnd(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+    fn getGeographicMapCellPositionArea(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::GeographicMapCellPositionAreaBase::GeographicMapCellPositionAreaBaseDyn>>> { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::getGeographicMapCellPositionArea(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+    fn getHudPaintable(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn>>> { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::getHudPaintable(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+    fn handleCost(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>>) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::handleCost(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self), p1) }
+    fn getParentLayer(&mut self) -> Option<Rc<RefCell<dyn PathFindingLayerInterface>>> { Self::getParentLayer(self) }
+    fn getRTSLayer2LogHelper(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer2LogHelper::RTSLayer2LogHelperDyn>>> { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::getRTSLayer2LogHelper(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+    fn setTarget(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>>) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::setTarget(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self), p1) }
+}
+impl crate::org::allbinary::game::identification::GroupInterfaceCompositeInterface::GroupInterfaceCompositeInterface for AdvancedRTSGameLayer {
+    fn getGroupInterface(&mut self) -> Vec<Option<Rc<RefCell<crate::org::allbinary::game::identification::Group::Group>>>> { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::getGroupInterface(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self)) }
+}
+impl crate::org::allbinary::game::layer::waypoint::WaypointLayerInterface::WaypointLayerInterface for AdvancedRTSGameLayer {
+    fn init(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::media::graphics::geography::map::GeographicMapCellHistory::GeographicMapCellHistory>>>, p2: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::init(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self), p1, p2) }
+    fn getMoveOutOfBuildAreaPath(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::getMoveOutOfBuildAreaPath(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self), p1) }
+    fn setClosestGeographicMapCellHistory(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::setClosestGeographicMapCellHistory(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self), p1) }
+    fn teleportTo(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::teleportTo(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self), p1) }
+    fn setLoad(&mut self, p1: i32) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::setLoad(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self), p1) }
+    fn getSurroundingGeographicMapCellPositionList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::getSurroundingGeographicMapCellPositionList(self) }
+    fn isSelected(&mut self) -> bool { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::isSelected(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+    fn shouldAddWaypointFromBuilding(&mut self) -> bool { Self::shouldAddWaypointFromBuilding(self) }
+    fn isShowMoreCaptionStates(&mut self) -> bool { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::isShowMoreCaptionStates(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+    fn trackTo(&mut self, p1: String) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::trackTo(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self), p1) }
+    fn trackToDXY(&mut self, p1: i32, p2: i32) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::trackToDXY(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self), p1, p2) }
+    fn buildingChase(&mut self, mut allbinaryLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut cellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> bool { Self::buildingChase(self, allbinaryLayer, cellPosition) }
+    fn getTrackingEvent(&mut self) -> Option<Rc<RefCell<crate::org::allbinary::game::tracking::TrackingEvent::TrackingEvent>>> { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::getTrackingEvent(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+    fn allStop(&mut self) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::allStop(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+    fn isWaypointListEmptyOrOnlyTargets(&mut self) -> bool { Self::isWaypointListEmptyOrOnlyTargets(self) }
+    fn getCurrentGeographicMapCellPosition(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::getCurrentGeographicMapCellPosition(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+    fn getTopLeftGeographicMapCellPosition(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::getTopLeftGeographicMapCellPosition(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+    fn getCaptionAnimationHelper(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::caption::CaptionAnimationHelperBase::CaptionAnimationHelperBaseDyn>>> { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::getCaptionAnimationHelper(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+    fn getWaypointBehavior(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>> { Self::getWaypointBehavior(self) }
+    fn getWaypointLogHelper(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointLogHelper::WaypointLogHelperDyn>>> { Self::getWaypointLogHelper(self) }
+    fn getWaypoint2LogHelper(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::Waypoint2LogHelper::Waypoint2LogHelperDyn>>> { Self::getWaypoint2LogHelper(self) }
+    fn getWaypointRunnableLogHelper(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointRunnableLogHelper::WaypointRunnableLogHelperDyn>>> { Self::getWaypointRunnableLogHelper(self) }
+}
+impl TickableInterface for AdvancedRTSGameLayer {
+    fn processTick(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::processTick(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self), p1) }
+}
+impl crate::org::allbinary::layer::LayerInterface::LayerInterface for AdvancedRTSGameLayer {
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getHeight(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getWidth(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getHalfHeight(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getHalfHeight(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getHalfWidth(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getHalfWidth(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getXP(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getXP(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getYP(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getYP(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getZP(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getZP(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getX2(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getX2(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getY2(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getY2(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getZ2(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getZ2(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn isVisible(&mut self) -> bool { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::isVisible(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn moveDXYZ(&mut self, p1: i32, p2: i32, p3: i32) { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::moveDXYZ(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self), p1, p2, p3) }
+    fn setVisible(&mut self, p1: bool) { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::setVisible(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self), p1) }
+    fn implmentsTickableInterface(&mut self) -> bool { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::implmentsTickableInterface(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+    fn implmentsCollidableInterface(&mut self) -> bool { crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayer::implmentsCollidableInterface(crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn::as_CollidableCompositeLayer_mut(self)) }
+    fn implmentsGameInputInterface(&mut self) -> bool { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::implmentsGameInputInterface(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+    fn implmentsArtificialIntelligenceCompositeInterface(&mut self) -> bool { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::implmentsArtificialIntelligenceCompositeInterface(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getType(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getType(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+}
 impl crate::org::allbinary::layer::NamedInterface::NamedInterface for AdvancedRTSGameLayer {
-    fn getName(&mut self) -> String { self.base.getName() }
+    fn getName(&mut self) -> String { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getName(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+}
+impl crate::org::allbinary::layer::PositionInterface::PositionInterface for AdvancedRTSGameLayer {
+    fn setPosition(&mut self, p1: i32, p2: i32, p3: i32) { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::setPosition(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self), p1, p2, p3) }
+}
+impl crate::org::allbinary::game::input::GameInputInterface::GameInputInterface for AdvancedRTSGameLayer {
+    fn processInput(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::processInput(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self), p1) }
+    fn initInputProcessors(&mut self) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::initInputProcessors(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for AdvancedRTSGameLayer {
+    fn onEvent(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayer::onEvent(crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayerDyn::as_AllBinaryGameLayer_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for AdvancedRTSGameLayer {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::paint(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::paintThreed(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self), p1) }
+}
+impl crate::org::allbinary::view::event::ViewPositionEventListenerInterface::ViewPositionEventListenerInterface for AdvancedRTSGameLayer {
+    fn onChangeEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::view::event::ViewPositionEvent::ViewPositionEvent>>>) { crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayer::onChangeEvent(crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayerDyn::as_AllBinaryGameLayer_mut(self), p1) }
+}
+impl crate::org::allbinary::game::layer::special::SpecialGameInputInterface::SpecialGameInputInterface for AdvancedRTSGameLayer {
+    fn up(&mut self) { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::up(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self)) }
+    fn down(&mut self) { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::down(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self)) }
+    fn right(&mut self) { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::right(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self)) }
+    fn left(&mut self) { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::left(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self)) }
+    fn strafeLeft(&mut self) { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::strafeLeft(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self)) }
+    fn strafeRight(&mut self) { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::strafeRight(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self)) }
+    fn fire(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, p2: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::fire(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self), p1, p2) }
+    fn special1(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, p2: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::special1(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self), p1, p2) }
+    fn special2(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, p2: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::special2(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self), p1, p2) }
+    fn special3(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, p2: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::special3(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self), p1, p2) }
+    fn special4(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, p2: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::special4(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self), p1, p2) }
+    fn special5(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, p2: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::special5(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self), p1, p2) }
 }
 impl crate::org::allbinary::game::combat::destroy::DestroyableInterface::DestroyableInterface for AdvancedRTSGameLayer {
-    fn isDestroyed(&mut self) -> bool { self.base.isDestroyed() }
+    fn isDestroyed(&mut self) -> bool { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::isDestroyed(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+}
+impl crate::org::allbinary::game::combat::damage::DamageableInterface::DamageableInterface for AdvancedRTSGameLayer {
+    fn damage(&mut self, p1: i32, p2: i32) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::damage(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self), p1, p2) }
+    fn getDamage(&mut self, p1: i32) -> i32 { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::getDamage(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self), p1) }
 }
 
 impl AdvancedRTSGameLayer {
@@ -97,9 +193,9 @@ impl AdvancedRTSGameLayer {
 
     // throws Exception
     pub fn createSimulated() -> Option<Rc<RefCell<dyn AdvancedRTSGameLayerDyn>>> {
-        let mut nullAnimationInterfaceFactoryInterface: Option<Rc<RefCell<dyn AnimationInterfaceFactoryInterface>>> = NullAnimationFactory::getFactoryInstance();
-        let mut nullIndexedAnimationInterfaceFactoryInterface: Option<Rc<RefCell<dyn AnimationInterfaceFactoryInterface>>> = NullIndexedAnimationFactory::getFactoryInstance();
-        return AdvancedRTSGameLayer::new(crate::org::allbinary::game::multiplayer::layer::RemoteInfo::RemoteInfo_REMOTE_INFO.with(Clone::clone).clone(), NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone(), AdvancedRTSProperties::createPropertiesSimulated(), jcall!(GroupFactory::getInstance()).NULL_GROUP_ARRAY.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), crate::org::allbinary::game::health::Health::Health_NULL_HEALTH.with(Clone::clone).clone(), NullRTSFormInputFactory::getInstance(), nullAnimationInterfaceFactoryInterface.clone(), nullIndexedAnimationInterfaceFactoryInterface.clone(), nullAnimationInterfaceFactoryInterface.clone(), nullAnimationInterfaceFactoryInterface.clone(), nullIndexedAnimationInterfaceFactoryInterface.clone(), NullIndexedAnimationFactory::getFactoryInstance(), crate::org::allbinary::graphics::RectangleFactory::RectangleFactory_SINGLETON.with(Clone::clone).clone(), 0, 0, TileLayerPositionIntoViewPosition::new()).map(|reference| reference as Rc<RefCell<dyn AdvancedRTSGameLayerDyn>>);
+        let mut nullAnimationInterfaceFactoryInterface: Option<Rc<RefCell<dyn AnimationInterfaceFactoryInterface>>> = NullAnimationFactory::getFactoryInstance().map(|reference| reference as Rc<RefCell<dyn AnimationInterfaceFactoryInterface>>);
+        let mut nullIndexedAnimationInterfaceFactoryInterface: Option<Rc<RefCell<dyn AnimationInterfaceFactoryInterface>>> = NullIndexedAnimationFactory::getFactoryInstance().map(|reference| reference as Rc<RefCell<dyn AnimationInterfaceFactoryInterface>>);
+        return AdvancedRTSGameLayer::new(crate::org::allbinary::game::multiplayer::layer::RemoteInfo::RemoteInfo_REMOTE_INFO.with(Clone::clone).clone(), NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of NullPathFindingLayer does not have PathFindingLayerInterface as a base trait") }), AdvancedRTSProperties::createPropertiesSimulated(), { let java_field = jcall!(GroupFactory::getInstance()).NULL_GROUP_ARRAY.clone(); java_field }.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::org::allbinary::game::health::Health::Health_NULL_HEALTH.with(Clone::clone).clone(), NullRTSFormInputFactory::getInstance(), nullAnimationInterfaceFactoryInterface.clone(), nullIndexedAnimationInterfaceFactoryInterface.clone(), nullAnimationInterfaceFactoryInterface.clone(), nullAnimationInterfaceFactoryInterface.clone(), nullIndexedAnimationInterfaceFactoryInterface.clone(), NullIndexedAnimationFactory::getFactoryInstance().map(|reference| reference as Rc<RefCell<dyn ProceduralAnimationInterfaceFactoryInterface>>), crate::org::allbinary::graphics::RectangleFactory::RectangleFactory_SINGLETON.with(Clone::clone).clone(), 0, 0, TileLayerPositionIntoViewPosition::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>)).map(|reference| reference as Rc<RefCell<dyn AdvancedRTSGameLayerDyn>>);
     }
     
 
@@ -112,14 +208,14 @@ impl AdvancedRTSGameLayer {
             parentLayer: None,
             waypointBehaviorBase: None,
         };
-        this.parentLayer = NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone();
-        this.waypointBehaviorBase = NullTickable::getInstance();
+        this.parentLayer = NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of NullPathFindingLayer does not have PathFindingLayerInterface as a base trait") });
+        this.waypointBehaviorBase = NullTickable::getInstance().map(|reference| reference as Rc<RefCell<dyn TickableInterface>>);
         // super(...) is in the struct literal above
         this.setVisible(false);
         this.setWaypointBehavior(WaypointBehaviorBase::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>));
-        this.shakeListener = jcall!(advancedRTSProperties).shakeListener.clone();
-        this.vibration = jcall!(advancedRTSProperties).vibration.clone();
-        this.duration = jcall!(advancedRTSProperties).duration.clone();
+        this.shakeListener = { let java_value = ({ let java_field = jcall!(advancedRTSProperties).shakeListener.clone(); java_field }).clone(); java_value }.clone();
+        this.vibration = { let java_value = ({ let java_field = jcall!(advancedRTSProperties).vibration.clone(); java_field }).clone(); java_value }.clone();
+        this.duration = { let java_value = ({ let java_field = jcall!(advancedRTSProperties).duration.clone(); java_field }).clone(); java_value }.clone();
         this.setParentLayer(parentLayer.clone());
         this
     }
@@ -131,14 +227,14 @@ impl AdvancedRTSGameLayer {
 
     // throws Exception
     pub fn updateWaypointBehavior(&mut self, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>) {
-        self.base.updateWaypointBehavior(geographicMapInterface.clone());
+        { let java_arguments = (geographicMapInterface.clone(),); self.base.updateWaypointBehavior(java_arguments.0) };
         jcall!(jcall!(self.getWaypointBehavior()).getWaypoint()).setAllBinaryGameLayerManager(self.allBinaryGameLayerManagerP.clone());
     }
     
 
     pub fn initVisibility(&mut self, mut rtsPlayerLayerInterface: Option<Rc<RefCell<dyn RTSPlayerLayerInterface>>>) {
-        let mut advancedRTSPlayerLayerInterface: Option<Rc<RefCell<dyn AdvancedRTSPlayerLayerInterface>>> = panic!("ClassCastException: a Rust dyn RTSPlayerLayerInterface cannot be cast to dyn AdvancedRTSPlayerLayerInterface");
-        if jcall!(advancedRTSPlayerLayerInterface).isLocalPlayer() || match (&jcall!(advancedRTSPlayerLayerInterface).getGameType(), &jcall!(GameTypeFactory::getInstance()).BOT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        let mut advancedRTSPlayerLayerInterface: Option<Rc<RefCell<dyn AdvancedRTSPlayerLayerInterface>>> = (|| -> Option<Rc<RefCell<dyn AdvancedRTSPlayerLayerInterface>>> { panic!("ClassCastException: a Rust dyn RTSPlayerLayerInterface cannot be cast to dyn AdvancedRTSPlayerLayerInterface") })();
+        if jcall!(advancedRTSPlayerLayerInterface).isLocalPlayer() || match (&jcall!(advancedRTSPlayerLayerInterface).getGameType(), &{ let java_field = jcall!(GameTypeFactory::getInstance()).BOT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             self.setVisible(true);
         } else {
             self.setVisible(false);
@@ -148,20 +244,20 @@ impl AdvancedRTSGameLayer {
 
     // throws Exception
     pub fn construct(&mut self, mut rtsPlayerLayerInterface: Option<Rc<RefCell<dyn RTSPlayerLayerInterface>>>) {
-        self.base.construct(rtsPlayerLayerInterface.clone());
+        { let java_arguments = (rtsPlayerLayerInterface.clone(),); self.base.construct(java_arguments.0) };
         self.initVisibility(rtsPlayerLayerInterface.clone());
-        jcall!(BuildingEventHandler::getInstance()).addListenerInterface(jcall!(self.getWaypointBehavior()).getWaypoint());
+        jcall!(BuildingEventHandler::getInstance()).addListenerInterface({ let java_argument = jcall!(self.getWaypointBehavior()).getWaypoint().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>); java_argument });
     }
     
 
     // throws Exception
     pub fn setDestroyed(&mut self, mut destroyed: bool) {
-        self.base.setDestroyed(destroyed.clone());
+        { let java_arguments = (destroyed.clone(),); self.base.setDestroyed(java_arguments.0) };
         if self.isDestroyed() {
-            jcall!(BuildingEventHandler::getInstance()).removeListener(jcall!(self.getWaypointBehavior()).getWaypoint());
+            jcall!(BuildingEventHandler::getInstance()).removeListener({ let java_argument = jcall!(self.getWaypointBehavior()).getWaypoint().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>); java_argument });
             jcall!(BuildingEventHandler::getInstance()).removeListener(None /* Java this: a &mut self method has no Rc of itself */);
             jcall!(DestroyedEventHandler::getInstance()).addListener(None /* Java this: a &mut self method has no Rc of itself */);
-            jcall!(RTSLayerUtil::RTSLayerUtil::getInstance()).destroyAndClear(jcall!(self.getWaypointBehavior()).getOwnedWaypointList());
+            jcall!(RTSLayerUtil::RTSLayerUtil::getInstance()).destroyAndClear({ let java_argument = jcall!(self.getWaypointBehavior()).getOwnedWaypointList(); java_argument });
         }
     }
     
@@ -177,12 +273,12 @@ impl AdvancedRTSGameLayer {
     
 
     pub fn getWaypointBehavior(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>> {
-        return (self.waypointBehaviorBase).clone() /* as WaypointBehaviorBase */;
+        return (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>> { panic!("ClassCastException: a Rust dyn TickableInterface cannot be cast to WaypointBehaviorBase") })();
     }
     
 
     pub fn setWaypointBehavior(&mut self, mut unitWaypointHelper: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>>) {
-        self.waypointBehaviorBase = unitWaypointHelper.clone().map(|reference| reference as Rc<RefCell<dyn TickableInterface>>);
+        self.waypointBehaviorBase = unitWaypointHelper.clone().map(|_java_reference| -> Rc<RefCell<dyn TickableInterface>> { panic!("ClassCastException: the Rust trait of WaypointBehaviorBase does not have TickableInterface as a base trait") });
     }
     
 
@@ -203,7 +299,7 @@ impl AdvancedRTSGameLayer {
 
     pub fn shouldAddWaypointFromBuilding(&mut self) -> bool {
         if !match (&self.parentLayer, &NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            let mut parentAdvancedRTSGameLayer: Option<Rc<RefCell<dyn AdvancedRTSGameLayerDyn>>> = (self.parentLayer).clone() /* as AdvancedRTSGameLayer */;
+            let mut parentAdvancedRTSGameLayer: Option<Rc<RefCell<dyn AdvancedRTSGameLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn AdvancedRTSGameLayerDyn>>> { panic!("ClassCastException: a Rust dyn PathFindingLayerInterface cannot be cast to AdvancedRTSGameLayer") })();
             if jcall!(parentAdvancedRTSGameLayer).getType() != UnitLayer::getStaticType() {
                 return true;
             }
@@ -213,7 +309,7 @@ impl AdvancedRTSGameLayer {
     
 
     pub fn isWaypointListEmptyOrOnlyTargets(&mut self) -> bool {
-        if !match (&self.getType(), &UnitLayer::getStaticType()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if self.getType() != { let java_value = UnitLayer::getStaticType(); java_value } {
             return true;
         }
         return false;
@@ -227,62 +323,62 @@ impl AdvancedRTSGameLayer {
         let mut angleInfo: Option<Rc<RefCell<AngleInfo>>> = jcall!(self.getRotationAnimationInterface()).getAngleInfoP();
         let mut angle: i32 = jcall!(FrameUtil::getInstance()).adjustAngleToFrameAngle(((jcall!(angleInfo).getAngle()) as i32) + 90);
         let mut gameKeyEventFactory: Option<Rc<RefCell<GameKeyEventFactory>>> = GameKeyEventFactory::getInstance();
-        if match (&buildingDirection, &jcall!(DirectionFactory::getInstance()).UP) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&buildingDirection, &{ let java_field = jcall!(DirectionFactory::getInstance()).UP.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             jcall!(self.rtsLayer2LogHelper).buildingAbove(None /* Java this: a &mut self method has no Rc of itself */);
             if angle > 180 && angle < 360 {
                 jcall!(self.rtsLayer2LogHelper).buildingChaseLeft(None /* Java this: a &mut self method has no Rc of itself */, angle.clone());
-                jcall!(self.getGameKeyEventList()).add(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone()));
+                jcall!(self.getGameKeyEventList()).add(crate::java_into_object(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone).clone())));
                 if angle <= 190 {
                     return true;
                 }
             } else {
                 jcall!(self.rtsLayer2LogHelper).buildingChaseRight(None /* Java this: a &mut self method has no Rc of itself */, angle.clone());
-                jcall!(self.getGameKeyEventList()).add(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone()));
+                jcall!(self.getGameKeyEventList()).add(crate::java_into_object(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone).clone())));
                 if angle >= 170 {
                     return true;
                 }
             }
-        } else if match (&buildingDirection, &jcall!(DirectionFactory::getInstance()).DOWN) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        } else if match (&buildingDirection, &{ let java_field = jcall!(DirectionFactory::getInstance()).DOWN.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             jcall!(self.rtsLayer2LogHelper).buildingDown(None /* Java this: a &mut self method has no Rc of itself */);
             if angle > 180 && angle < 360 {
                 jcall!(self.rtsLayer2LogHelper).buildingChaseLeft(None /* Java this: a &mut self method has no Rc of itself */, angle.clone());
-                jcall!(self.getGameKeyEventList()).add(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone()));
+                jcall!(self.getGameKeyEventList()).add(crate::java_into_object(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone).clone())));
                 if angle > 315 {
                     return true;
                 }
             } else {
                 jcall!(self.rtsLayer2LogHelper).buildingChaseRight(None /* Java this: a &mut self method has no Rc of itself */, angle.clone());
-                jcall!(self.getGameKeyEventList()).add(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone()));
+                jcall!(self.getGameKeyEventList()).add(crate::java_into_object(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone).clone())));
                 if angle < 45 {
                     return true;
                 }
             }
-        } else if match (&buildingDirection, &jcall!(DirectionFactory::getInstance()).LEFT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        } else if match (&buildingDirection, &{ let java_field = jcall!(DirectionFactory::getInstance()).LEFT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             jcall!(self.rtsLayer2LogHelper).buildingLeft();
             if angle > 90 && angle < 270 {
                 jcall!(self.rtsLayer2LogHelper).buildingChaseDown(None /* Java this: a &mut self method has no Rc of itself */, angle.clone());
-                jcall!(self.getGameKeyEventList()).add(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone()));
+                jcall!(self.getGameKeyEventList()).add(crate::java_into_object(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone).clone())));
                 if angle < 135 {
                     return true;
                 }
             } else {
                 jcall!(self.rtsLayer2LogHelper).buildingChaseUp(None /* Java this: a &mut self method has no Rc of itself */, angle.clone());
-                jcall!(self.getGameKeyEventList()).add(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone()));
+                jcall!(self.getGameKeyEventList()).add(crate::java_into_object(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone).clone())));
                 if angle > 45 {
                     return true;
                 }
             }
-        } else if match (&buildingDirection, &jcall!(DirectionFactory::getInstance()).RIGHT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        } else if match (&buildingDirection, &{ let java_field = jcall!(DirectionFactory::getInstance()).RIGHT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             jcall!(self.rtsLayer2LogHelper).buildingRight();
             if angle > 90 && angle < 270 {
                 jcall!(self.rtsLayer2LogHelper).buildingChaseDown(None /* Java this: a &mut self method has no Rc of itself */, angle.clone());
-                jcall!(self.getGameKeyEventList()).add(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone()));
+                jcall!(self.getGameKeyEventList()).add(crate::java_into_object(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone).clone())));
                 if angle > 225 {
                     return true;
                 }
             } else {
                 jcall!(self.rtsLayer2LogHelper).buildingChaseUp(None /* Java this: a &mut self method has no Rc of itself */, angle.clone());
-                jcall!(self.getGameKeyEventList()).add(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone()));
+                jcall!(self.getGameKeyEventList()).add(crate::java_into_object(jcall!(gameKeyEventFactory).getInstanceForKey(None /* Java this: a &mut self method has no Rc of itself */, crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone).clone())));
                 if angle < 315 && angle > 180 {
                     return true;
                 }
@@ -296,24 +392,24 @@ impl AdvancedRTSGameLayer {
 
     // throws Exception
     pub fn getSurroundingGeographicMapCellPositionList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (self.allBinaryGameLayerManagerP).clone() /* as GeographicMapCompositeInterface */;
+        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryGameLayerManager cannot be cast to GeographicMapCompositeInterface") })();
         let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
-        jcall!(self.geographicMapCellPositionAreaBase).update(geographicMapInterface.clone());
-        return jcall!(self.geographicMapCellPositionAreaBase).getSurroundingGeographicMapCellPositionList();
+        jcall!(self.geographicMapCellPositionAreaBase).as_GeographicMapCellPositionAreaBase_mut().update(geographicMapInterface.clone());
+        return jcall!(self.geographicMapCellPositionAreaBase).as_GeographicMapCellPositionAreaBase_mut().getSurroundingGeographicMapCellPositionList();
     }
     
 
     pub fn setSelected(&mut self, mut selected: bool) {
-        self.base.setSelected(selected.clone());
+        { let java_arguments = (selected.clone(),); self.base.setSelected(java_arguments.0) };
         if self.debug {
             if selected {
-                self.waypointLogHelperP = WaypointSelectedLogHelper::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointLogHelper::WaypointLogHelperDyn>>);
-                self.waypoint2LogHelperP = Waypoint2SelectedLogHelper::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::Waypoint2LogHelper::Waypoint2LogHelperDyn>>);
-                self.waypointRunnableLogHelperP = WaypointRunnableSelectedLogHelper::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointRunnableLogHelper::WaypointRunnableLogHelperDyn>>);
+                self.waypointLogHelperP = { let java_value = (WaypointSelectedLogHelper::getInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointLogHelper::WaypointLogHelperDyn>>);
+                self.waypoint2LogHelperP = { let java_value = (Waypoint2SelectedLogHelper::getInstance()).clone(); java_value };
+                self.waypointRunnableLogHelperP = { let java_value = (WaypointRunnableSelectedLogHelper::getInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointRunnableLogHelper::WaypointRunnableLogHelperDyn>>);
             } else {
-                self.waypointLogHelperP = WaypointLogHelper::getInstance();
-                self.waypoint2LogHelperP = Waypoint2LogHelper::getInstance();
-                self.waypointRunnableLogHelperP = WaypointRunnableLogHelper::getInstance();
+                self.waypointLogHelperP = { let java_value = (WaypointLogHelper::getInstance()).clone(); java_value };
+                self.waypoint2LogHelperP = { let java_value = (Waypoint2LogHelper::getInstance()).clone(); java_value };
+                self.waypointRunnableLogHelperP = { let java_value = (WaypointRunnableLogHelper::getInstance()).clone(); java_value };
             }
         }
     }
@@ -324,15 +420,15 @@ impl AdvancedRTSGameLayer {
             let mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = jcall!(destroyedEvent).getLayerInterface();
             if match &(layerInterface) { Some(reference) => std::ptr::addr_eq(&*self as *const Self, reference.as_ptr()), None => false } {
                 jcall!(DestroyedEventHandler::getInstance()).removeListener(None /* Java this: a &mut self method has no Rc of itself */);
-                let mut waypoint: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointBase::WaypointBaseDyn>>> = (jcall!(self.getWaypointBehavior()).getWaypoint()).clone() /* as WaypointBase */;
+                let mut waypoint: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointBase::WaypointBaseDyn>>> = (jcall!(self.getWaypointBehavior()).getWaypoint()).clone();
                 jcall!(waypoint).reset();
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onDestroyed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onDestroyed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -392,6 +488,7 @@ impl crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn for Advance
     fn as_AllBinaryLayer(&self) -> &crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer { &self.base.base.base.base.base.base }
     fn as_AllBinaryLayer_mut(&mut self) -> &mut crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer { &mut self.base.base.base.base.base.base }
     fn onChangeEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::view::event::ViewPositionEvent::ViewPositionEvent>>>) { crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayer::onChangeEvent(crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayerDyn::as_AllBinaryGameLayer_mut(self), p1) }
+    fn getGroupInterface(&mut self) -> Vec<Option<Rc<RefCell<crate::org::allbinary::game::identification::Group::Group>>>> { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::getGroupInterface(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self)) }
     fn implmentsTickableInterface(&mut self) -> bool { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::implmentsTickableInterface(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
     fn implmentsGameInputInterface(&mut self) -> bool { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::implmentsGameInputInterface(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
     fn implmentsCollidableInterface(&mut self) -> bool { crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayer::implmentsCollidableInterface(crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn::as_CollidableCompositeLayer_mut(self)) }
@@ -400,6 +497,16 @@ impl crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn for Advance
 impl crate::org::allbinary::layer::Layer::LayerDyn for AdvancedRTSGameLayer {
     fn as_Layer(&self) -> &crate::org::allbinary::layer::Layer::Layer { &self.base.base.base.base.base.base.base }
     fn as_Layer_mut(&mut self) -> &mut crate::org::allbinary::layer::Layer::Layer { &mut self.base.base.base.base.base.base.base }
+    fn setPosition(&mut self, p1: i32, p2: i32, p3: i32) { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::setPosition(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self), p1, p2, p3) }
+    fn moveDXYZ(&mut self, p1: i32, p2: i32, p3: i32) { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::moveDXYZ(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self), p1, p2, p3) }
+    fn getXP(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getXP(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getYP(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getYP(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getZP(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getZP(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getWidth(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getHeight(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn setVisible(&mut self, p1: bool) { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::setVisible(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self), p1) }
+    fn isVisible(&mut self) -> bool { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::isVisible(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::paint(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self), p1) }
     fn toStringAppend(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::logic::string::StringMaker::StringMaker>>>) { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::toStringAppend(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self), p1) }
 }
 impl crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn for AdvancedRTSGameLayer {
@@ -427,14 +534,14 @@ impl crate::org::allbinary::game::layer::RTSInterface::RTSInterface for Advanced
 impl crate::org::allbinary::game::multiplayer::layer::MultiPlayerGameLayerInterface::MultiPlayerGameLayerInterface for AdvancedRTSGameLayer {
     fn getMultiplayerBehavior(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::multiplayer::layer::MultiplayerBehavior::MultiplayerBehaviorDyn>>> { crate::org::allbinary::game::multiplayer::layer::MultiPlayerGameLayer::MultiPlayerGameLayer::getMultiplayerBehavior(crate::org::allbinary::game::multiplayer::layer::MultiPlayerGameLayer::MultiPlayerGameLayerDyn::as_MultiPlayerGameLayer_mut(self)) }
 }
+impl crate::org::allbinary::game::input::GameKeyEventSourceInterface::GameKeyEventSourceInterface for AdvancedRTSGameLayer {
+    fn getSourceId(&mut self) -> i32 { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::getSourceId(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
+}
 impl crate::org::allbinary::game::collision::CollidableInterfaceCompositeInterface::CollidableInterfaceCompositeInterface for AdvancedRTSGameLayer {
     fn getCollidableInferface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn>>> { crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayer::getCollidableInferface(crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn::as_CollidableCompositeLayer_mut(self)) }
 }
 impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface for AdvancedRTSGameLayer {
     fn set(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::khronos::opengles::GL::GL>>>) { crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayer::set(crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayerDyn::as_AllBinaryGameLayer_mut(self), p1) }
-}
-impl crate::org::allbinary::game::input::GameKeyEventSourceInterface::GameKeyEventSourceInterface for AdvancedRTSGameLayer {
-    fn getSourceId(&mut self) -> i32 { crate::org::allbinary::game::layer::RTSLayer::RTSLayer::getSourceId(crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn::as_RTSLayer_mut(self)) }
 }
 impl crate::org::allbinary::game::layer::pickup::PickupCompositeInterface::PickupCompositeInterface for AdvancedRTSGameLayer {
     fn getPickupBehavior(&mut self) -> Option<Rc<RefCell<crate::org::allbinary::game::layer::pickup::PickupBehavior::PickupBehavior>>> { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer::getPickupBehavior(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn::as_CollidableDestroyableDamageableLayer_mut(self)) }

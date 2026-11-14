@@ -29,6 +29,7 @@ use crate::org::allbinary::media::image::ImageUtil::ImageUtil;
 use crate::org::allbinary::media::image::cache::BufferedImageFrameCacheable::BufferedImageFrameCacheable;
 use crate::org::allbinary::media::image::io::ImageIOInterface::ImageIOInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -47,6 +48,10 @@ impl ImageIOInterface for CapturedImageInputOutput {
 
 impl CapturedImageInputOutput {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,
@@ -63,8 +68,8 @@ impl CapturedImageInputOutput {
     // throws Exception
     pub fn save(&mut self, mut frame: Option<i64>) {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        let mut capturedBufferedImageCacheable: Option<Rc<RefCell<BufferedImageFrameCacheable>>> = ((jcall!(((CapturedBufferedImagesCacheSingleton::CapturedBufferedImagesCacheSingleton::getInstance()).clone() /* as AutomaticCacheInterface */)).get(frame.clone())).clone() /* as BufferedImageFrameCacheable */);
-        { let java_receiver = self.logUtil.clone(); let java_arguments = ((format!("{}{}", String::from("Saving: "), jcall!(capturedBufferedImageCacheable).toString())).clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).SAVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        let mut capturedBufferedImageCacheable: Option<Rc<RefCell<BufferedImageFrameCacheable>>> = ((jcall!(((|| -> Option<Rc<RefCell<dyn AutomaticCacheInterface>>> { panic!("ClassCastException: a Rust dyn CacheInterface cannot be cast to dyn AutomaticCacheInterface") })())).get(crate::java_into_object((frame.clone()).expect("NullPointerException")))).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<BufferedImageFrameCacheable>() }, "ClassCastException: not a BufferedImageFrameCacheable"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<BufferedImageFrameCacheable>) } }));
+        { let java_receiver = self.logUtil.clone(); let java_arguments = ((format!("{}{}", String::from("Saving: "), jcall!(capturedBufferedImageCacheable).toString())).clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).SAVE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         { let java_arguments = (jcall!(capturedBufferedImageCacheable).getBufferedImage(), frame.clone(),); self.save2(java_arguments.0, java_arguments.1) };
     }
     
@@ -76,9 +81,9 @@ impl CapturedImageInputOutput {
         let mut filePathStringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(filePathStringBuffer).append(crate::org::allbinary::input::automation::ImageOutputData::ImageOutputData_SAVE_PATH.with(Clone::clone).clone());
         jcall!(filePathStringBuffer).append(LongUtil::fillIn((frame).expect("NullPointerException").to_string()));
-        jcall!(filePathStringBuffer).append(jcall!(jcall!(MediaDataFactory::getInstance()).JPG).getExtension());
+        jcall!(filePathStringBuffer).append(jcall!({ let java_field = jcall!(MediaDataFactory::getInstance()).JPG.clone(); java_field }).getExtension());
         let mut filePath: String = jcall!(filePathStringBuffer).toString();
-        { let java_receiver = self.logUtil.clone(); let java_arguments = ((format!("{}{}", format!("{}{}", String::from("Image File Path: "), filePath), jcall!(imageUtil).toString(bufferedImage.clone()))).clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).SAVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = ((format!("{}{}", format!("{}{}", String::from("Image File Path: "), filePath), jcall!(imageUtil).toString(bufferedImage.clone()))).clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).SAVE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut imagePersistanceUtil: Option<Rc<RefCell<ImagePersistanceUtil>>> = ImagePersistanceUtil::getInstance();
         jcall!(imagePersistanceUtil).saveWithImageIO(filePath.clone(), bufferedImage.clone());
     }

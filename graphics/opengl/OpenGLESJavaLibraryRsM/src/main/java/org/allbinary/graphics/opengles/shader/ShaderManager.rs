@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 
@@ -39,6 +39,10 @@ pub struct ShaderManager {
 thread_local! { pub static ShaderManager_instance: Option<Rc<RefCell<dyn ShaderManagerDyn>>> = ShaderManager::new(-1, -1).map(|reference| reference as Rc<RefCell<dyn ShaderManagerDyn>>); }
 
 impl ShaderManager {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn ShaderManagerDyn>>> {
@@ -76,11 +80,9 @@ impl ShaderManager {
         return -1;
     }
 }
-pub trait ShaderManagerDyn {
+pub trait ShaderManagerDyn: std::any::Any {
     fn as_ShaderManager(&self) -> &ShaderManager;
     fn as_ShaderManager_mut(&mut self) -> &mut ShaderManager;
-    fn load(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut resource: String, mut shaderAsStringArray: Vec<String>, mut shaderType: i32) -> i32 { ShaderManager::load(self.as_ShaderManager_mut(), gl, resource, shaderAsStringArray, shaderType) }
-    fn loadShader(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut resource: String, mut stringList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut shaderType: i32) -> i32 { ShaderManager::loadShader(self.as_ShaderManager_mut(), gl, resource, stringList, shaderType) }
     fn load(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut resource: String, mut shaderAsStringArray: Vec<String>, mut shaderType: i32) -> i32 { ShaderManager::load(self.as_ShaderManager_mut(), gl, resource, shaderAsStringArray, shaderType) }
     fn loadShader(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut resource: String, mut stringList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut shaderType: i32) -> i32 { ShaderManager::loadShader(self.as_ShaderManager_mut(), gl, resource, stringList, shaderType) }
 }

@@ -31,15 +31,19 @@ pub struct LastFetchHighScoresFactory {
     pub highScoresArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>>>,
 }
 
-pub static mut LastFetchHighScoresFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut LastFetchHighScoresFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl LastFetchHighScoresFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
             highScoresArray: Vec::new(),
         };
-        this.highScoresArray = jcall!(NoHighScoresFactory::NoHighScoresFactory::getInstance()).NO_HIGH_SCORES.clone();
+        this.highScoresArray = { let java_field = jcall!(NoHighScoresFactory::NoHighScoresFactory::getInstance()).NO_HIGH_SCORES.clone(); java_field }.clone();
         this
     }
 
@@ -49,10 +53,10 @@ impl LastFetchHighScoresFactory {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LastFetchHighScoresFactory>>> {
-        if match (&unsafe { LastFetchHighScoresFactory_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *LastFetchHighScoresFactory_instance = LastFetchHighScoresFactory::new() };
+        if match (&unsafe { LastFetchHighScoresFactory_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *LastFetchHighScoresFactory_instance = crate::java_into_object(LastFetchHighScoresFactory::new()) };
         }
-        return (unsafe { LastFetchHighScoresFactory_instance.clone() }).clone() /* as LastFetchHighScoresFactory */;
+        return { let java_object = (unsafe { LastFetchHighScoresFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LastFetchHighScoresFactory>>>>().expect("ClassCastException").clone()) };
     }
 }
 

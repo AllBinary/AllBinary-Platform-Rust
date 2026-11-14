@@ -22,6 +22,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::MouseActionScriptInputInterface::MouseActionScriptInputInterface;
 
 // Borrows the object of a Java reference
@@ -36,6 +37,10 @@ pub struct MouseInputAutomationProcessor {
 
 
 impl MouseInputAutomationProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -53,9 +58,9 @@ impl MouseInputAutomationProcessor {
     pub fn process(mut mouseActionScriptInputInterface: Option<Rc<RefCell<dyn MouseActionScriptInputInterface>>>) {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(logUtil).putF(jcall!(StringMaker::new()).append(String::from("Start - Processing Mouse Input at: ")).append(jcall!(jcall!(mouseActionScriptInputInterface).getPoint()).toString()).append(String::from(" clicks: ")).appendint(jcall!(mouseActionScriptInputInterface).getButtonClicks()).toString(), crate::java_into_object(String::from("MouseInputAutomationProcessor")), jcall!(commonStrings).PROCESS.clone());
+        jcall!(logUtil).putF(jcall!(StringMaker::new()).append(String::from("Start - Processing Mouse Input at: ")).append(jcall!(jcall!(mouseActionScriptInputInterface).getPoint()).toString()).append(String::from(" clicks: ")).appendint(jcall!(mouseActionScriptInputInterface).getButtonClicks()).toString(), crate::java_into_object(String::from("MouseInputAutomationProcessor")), { let java_field = jcall!(commonStrings).PROCESS.clone(); java_field }.clone());
         let mut inputRobotInterface: Option<Rc<RefCell<dyn InputRobotInterface>>> = jcall!(mouseActionScriptInputInterface).getInputRobotInterface();
-        if jcall!(jcall!(mouseActionScriptInputInterface).getPoint()).x != -1 && jcall!(jcall!(mouseActionScriptInputInterface).getPoint()).y != -1 {
+        if { let java_field = jcall!(jcall!(mouseActionScriptInputInterface).getPoint()).x.clone(); java_field } != -1 && { let java_field = jcall!(jcall!(mouseActionScriptInputInterface).getPoint()).y.clone(); java_field } != -1 {
             jcall!(inputRobotInterface).mouseMove(jcall!(mouseActionScriptInputInterface).getPoint());
         }
         std::thread::sleep(std::time::Duration::from_millis((jcall!(mouseActionScriptInputInterface).getTime()) as u64));

@@ -17,9 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::NullImage::NullImage;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::NullImage::NullImage;
 use crate::android::app::Activity::Activity;
 use crate::org::allbinary::AndroidUtil::AndroidUtil;
 use crate::org::allbinary::image::GameFeatureImageCacheFactory::GameFeatureImageCacheFactory;
@@ -44,6 +44,7 @@ use crate::org::allbinary::data::resource::ResourceUtil::ResourceUtil;
 use crate::org::allbinary::logic::util::event::EventStrings::EventStrings;
 use crate::org::allbinary::thread::ARunnable::ARunnable;
 use crate::org::allbinary::thread::NullRunnable::NullRunnable;
+use crate::java::lang::Exception::*;
 use super::ProgressCanvas::ProgressCanvas;
 use super::ShowTitleProgressBarRunnable::ShowTitleProgressBarRunnable;
 use super::DismissTitleProgressBarRunnable::DismissTitleProgressBarRunnable;
@@ -65,8 +66,8 @@ pub struct AndroidBasicTitleProgressBar {
     pub titleProgressDialogSetProgressRunnable: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ARunnable::ARunnableDyn>>>,
     pub midletActivity: Option<Rc<RefCell<Activity>>>,
     pub portion: i32,
-    pub IMAGE: Vec<Option<Rc<RefCell<Image>>>>,
-    pub image: Option<Rc<RefCell<Image>>>,
+    pub IMAGE: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>,
+    pub image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
     pub animation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>,
 }
 
@@ -78,8 +79,13 @@ impl DisplayChangeEventListener for AndroidBasicTitleProgressBar {
 impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for AndroidBasicTitleProgressBar {
     fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, eventObject) }
 }
+impl crate::org::allbinary::thread::RunnableInterface::RunnableInterface for AndroidBasicTitleProgressBar {
+    fn isRunning(&mut self) -> bool { crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas::isRunning(crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn::as_RunnableCanvas_mut(self)) }
+    fn setRunning(&mut self, p1: bool) { crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas::setRunning(crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn::as_RunnableCanvas_mut(self), p1) }
+    fn setThread(&mut self, p1: Option<Rc<RefCell<crate::java::lang::Thread::Thread>>>) { crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas::setThread(crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn::as_RunnableCanvas_mut(self), p1) }
+}
 impl crate::Runnable for AndroidBasicTitleProgressBar {
-    fn run(&mut self) { self.base.run() }
+    fn run(&mut self) { crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas::run(crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn::as_RunnableCanvas_mut(self)) }
 }
 
 impl AndroidBasicTitleProgressBar {
@@ -98,10 +104,10 @@ impl AndroidBasicTitleProgressBar {
             image: None,
             animation: None,
         };
-        this.showTitleProgressBarRunnable = NullRunnable::getInstance();
-        this.dismissTitleProgressBarRunnable = NullRunnable::getInstance();
-        this.titleProgressDialogPortionSetProgressRunnable = NullRunnable::getInstance();
-        this.titleProgressDialogSetProgressRunnable = NullRunnable::getInstance();
+        this.showTitleProgressBarRunnable = NullRunnable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ARunnable::ARunnableDyn>>);
+        this.dismissTitleProgressBarRunnable = NullRunnable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ARunnable::ARunnableDyn>>);
+        this.titleProgressDialogPortionSetProgressRunnable = NullRunnable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ARunnable::ARunnableDyn>>);
+        this.titleProgressDialogSetProgressRunnable = NullRunnable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ARunnable::ARunnableDyn>>);
         this.midletActivity = crate::org::allbinary::AndroidUtil::AndroidUtil_NULL_ACTIVITY.with(Clone::clone).clone();
         this.portion = 0;
         this.IMAGE = vec![None; (4) as usize];
@@ -109,16 +115,16 @@ impl AndroidBasicTitleProgressBar {
         this.animation = jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0);
         // super(...) is in the struct literal above
         this.init();
-        let mut size: i32 = (this.IMAGE.len() as i32).clone();
-        for index in (0..size) {
-            this.IMAGE[(index) as usize] = crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone).clone();
-        }
         this
     }
 
     pub fn new(mut title: String, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(title, backgroundBasicColor, foregroundBasicColor))));
-            jcall!(DisplayChangeEventHandler::getInstance()).addListenerInterface((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(title.clone(), backgroundBasicColor.clone(), foregroundBasicColor.clone()))));
+            jcall!(DisplayChangeEventHandler::getInstance()).addListenerInterface(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+            let mut size: i32 = (jcall!(this).IMAGE.len() as i32).clone();
+            for index in (0..size) {
+            { let java_index = (index) as usize; jcall!(this).IMAGE[java_index] = crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone).clone(); };
+        }
         this
     }
     
@@ -128,14 +134,14 @@ impl AndroidBasicTitleProgressBar {
             if unsafe { AndroidBasicTitleProgressBar_background.clone() } != 0 {
                 jcall!(ResourceUtil::getInstance()).addResource(AndroidBasicTitleProgressBar_RESOURCE.with(Clone::clone).clone(), Some((unsafe { AndroidBasicTitleProgressBar_background.clone() }.clone()) as i32));
                 GameFeatureImageCacheFactory::init();
-                self.image = jcall!(ImageCacheFactory::getInstance()).getWithKey(AndroidBasicTitleProgressBar_RESOURCE.with(Clone::clone).clone());
+                self.image = { let java_value = (jcall!(ImageCacheFactory::getInstance()).getWithKey(crate::java_into_object(AndroidBasicTitleProgressBar_RESOURCE.with(Clone::clone).clone()))).clone(); java_value };
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -155,9 +161,9 @@ impl AndroidBasicTitleProgressBar {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -166,34 +172,34 @@ impl AndroidBasicTitleProgressBar {
     pub fn updateCurrent(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if !self.isBackground() {
-                self.animation = jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0);
+                self.animation = { let java_value = (jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0)).clone(); java_value };
             } else if unsafe { AndroidBasicTitleProgressBar_background.clone() } != 0 {
                 let mut displayInfo: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
-                let mut currentImage: Option<Rc<RefCell<Image>>> = None;
+                let mut currentImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = None;
                 if jcall!(displayInfo).isPortrait() {
                     currentImage = self.getImage(0);
                 } else {
                     currentImage = self.getImage(2);
                 }
                 if currentImage.is_none() {
-                    self.animation = jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0);
+                    self.animation = { let java_value = (jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0)).clone(); java_value };
                 } else {
-                    self.animation = ImageAnimation::new(currentImage.clone(), AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+                    self.animation = { let java_value = (ImageAnimation::new(currentImage.clone(), AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>)).clone(); java_value };
                 }
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).UPDATE.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
@@ -204,10 +210,10 @@ impl AndroidBasicTitleProgressBar {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", jcall!(self.commonStrings).EXCEPTION_LABEL, jcall!(ExceptionUtil::getInstance()).getStackTrace(e.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.canvasStrings).ON_DISPLAY_CHANGE_EVENT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            self.animation = jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0);
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", { let java_field = jcall!(self.commonStrings).EXCEPTION_LABEL.clone(); java_field }, jcall!(ExceptionUtil::getInstance()).getStackTrace(e.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.canvasStrings).ON_DISPLAY_CHANGE_EVENT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            self.animation = { let java_value = (jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0)).clone(); java_value };
             }
         }
     }
@@ -226,10 +232,10 @@ impl AndroidBasicTitleProgressBar {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("IllegalArgumentException "), jcall!(ExceptionUtil::getInstance()).getStackTrace(e.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("loadProgressImages"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            self.animation = jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0);
+            self.animation = { let java_value = (jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0)).clone(); java_value };
             }
         }
     }
@@ -246,15 +252,15 @@ impl AndroidBasicTitleProgressBar {
 
     pub fn start(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).START_METHOD_NAME.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).START_METHOD_NAME.clone(); java_field }.clone());
             self.base.start();
             jcall!(self.midletActivity).runOnUiThread(self.showTitleProgressBarRunnable.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).START_METHOD_NAME.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).START_METHOD_NAME.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -262,15 +268,15 @@ impl AndroidBasicTitleProgressBar {
 
     pub fn end(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).END_METHOD_NAME.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).END_METHOD_NAME.clone(); java_field }.clone());
             jcall!(self.midletActivity).runOnUiThread(self.dismissTitleProgressBarRunnable.clone());
             self.base.end();
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).END_METHOD_NAME.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).END_METHOD_NAME.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -279,16 +285,16 @@ impl AndroidBasicTitleProgressBar {
     pub fn addEarlyPortion(&mut self, mut value: i32, mut text: String, mut index: i32) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             self.portion = value.clone();
-            self.base.addEarlyPortion(value.clone(), text.clone(), index.clone());
+            { let java_arguments = (value.clone(), text.clone(), index.clone(),); self.base.addEarlyPortion(java_arguments.0, java_arguments.1, java_arguments.2) };
             if !match (&self.midletActivity, &crate::org::allbinary::AndroidUtil::AndroidUtil_NULL_ACTIVITY.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 jcall!(self.midletActivity).runOnUiThread(self.titleProgressDialogPortionSetProgressRunnable.clone());
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ADD_PORTION.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ADD_PORTION.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -297,14 +303,14 @@ impl AndroidBasicTitleProgressBar {
     pub fn addPortion(&mut self, mut value: i32, mut text: String, mut index: i32) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             self.portion = value.clone();
-            self.base.addPortion(value.clone(), text.clone(), index.clone());
+            { let java_arguments = (value.clone(), text.clone(), index.clone(),); self.base.addPortion(java_arguments.0, java_arguments.1, java_arguments.2) };
             jcall!(self.midletActivity).runOnUiThread(self.titleProgressDialogPortionSetProgressRunnable.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ADD_PORTION.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ADD_PORTION.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -313,14 +319,14 @@ impl AndroidBasicTitleProgressBar {
     pub fn addNormalPortion(&mut self, mut value: i32, mut text: String) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             self.portion = value.clone();
-            self.base.addNormalPortion(value.clone(), text.clone());
+            { let java_arguments = (value.clone(), text.clone(),); self.base.addNormalPortion(java_arguments.0, java_arguments.1) };
             jcall!(self.midletActivity).runOnUiThread(self.titleProgressDialogPortionSetProgressRunnable.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ADD_PORTION.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ADD_PORTION.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -328,14 +334,14 @@ impl AndroidBasicTitleProgressBar {
 
     pub fn setValue(&mut self, mut value: i32) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            self.base.setValue(value.clone());
+            { let java_arguments = (value.clone(),); self.base.setValue(java_arguments.0) };
             jcall!(self.midletActivity).runOnUiThread(self.titleProgressDialogSetProgressRunnable.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setValue"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setValue"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -347,16 +353,16 @@ impl AndroidBasicTitleProgressBar {
 
     // throws Exception
     pub fn setImages(&mut self, mut index: i32, mut lastWidth: i32, mut lastHeight: i32) {
-        let mut image: Option<Rc<RefCell<Image>>> = self.image.clone();
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = self.image.clone();
         if !match (&image, &crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            if jcall!(Features::getInstance()).isFeature(jcall!(MainFeatureFactory::getInstance()).FULL_SCREEN.clone()) {
+            if jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(MainFeatureFactory::getInstance()).FULL_SCREEN.clone(); java_field }.clone()) {
                 if match (&self.IMAGE[(index) as usize], &crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                    self.IMAGE[(index) as usize] = jcall!(ImageScaleUtil::getInstance()).createImage2(ImageCacheFactory::getInstance(), image.clone(), ((lastWidth) as f32), ((jcall!(image).getWidth()) as f32), ((lastHeight) as f32) - 20.0_f32, ((jcall!(image).getHeight()) as f32), false);
+                    { let java_index = (index) as usize; self.IMAGE[java_index] = jcall!(ImageScaleUtil::getInstance()).createImage2(ImageCacheFactory::getInstance(), image.clone(), ((lastWidth) as f32), ((jcall!(image).getWidth()) as f32), ((lastHeight) as f32) - 20.0_f32, ((jcall!(image).getHeight()) as f32), false); };
                 }
             } else {
                 let mut nextIndex: i32 = index + 1;
                 if match (&self.IMAGE[(nextIndex) as usize], &crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                    self.IMAGE[(nextIndex) as usize] = jcall!(ImageScaleUtil::getInstance()).createImage2(ImageCacheFactory::getInstance(), image.clone(), ((lastWidth) as f32), ((jcall!(image).getWidth()) as f32), ((lastHeight) as f32) - 28.0_f32, ((jcall!(image).getHeight()) as f32), false);
+                    { let java_index = (nextIndex) as usize; self.IMAGE[java_index] = jcall!(ImageScaleUtil::getInstance()).createImage2(ImageCacheFactory::getInstance(), image.clone(), ((lastWidth) as f32), ((jcall!(image).getWidth()) as f32), ((lastHeight) as f32) - 28.0_f32, ((jcall!(image).getHeight()) as f32), false); };
                 }
             }
         }
@@ -364,14 +370,14 @@ impl AndroidBasicTitleProgressBar {
     
 
     // throws Exception
-    pub fn initOpenGL(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone());
-        self.image = jcall!(GameFeatureImageCacheFactory::getInstance()).getWithKey(AndroidBasicTitleProgressBar_RESOURCE.with(Clone::clone).clone());
+    pub fn initOpenGL(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
+        self.image = { let java_value = (jcall!(GameFeatureImageCacheFactory::getInstance()).getWithKey(crate::java_into_object(AndroidBasicTitleProgressBar_RESOURCE.with(Clone::clone).clone()))).clone(); java_value };
         let mut preResourceImageUtil: Option<Rc<RefCell<PreResourceImageUtil>>> = PreResourceImageUtil::getInstance();
         let mut size: i32 = (self.IMAGE.len() as i32).clone();
         for index in (0..size) {
             if !match (&self.IMAGE[(index) as usize], &crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                self.IMAGE[(index) as usize] = jcall!(preResourceImageUtil).encapsulate(self.IMAGE[(index) as usize].clone());
+                { let java_index = (index) as usize; self.IMAGE[java_index] = jcall!(preResourceImageUtil).encapsulate(self.IMAGE[(index) as usize].clone()); };
             }
         }
         self.updateCurrent();
@@ -379,10 +385,10 @@ impl AndroidBasicTitleProgressBar {
     
 
     // throws Exception
-    pub fn update(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).UPDATE.clone());
+    pub fn update(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone());
         self.initOpenGL(graphics.clone());
-        self.image = jcall!(GameFeatureImageCacheFactory::getInstance()).getWithKey(AndroidBasicTitleProgressBar_RESOURCE.with(Clone::clone).clone());
+        self.image = { let java_value = (jcall!(GameFeatureImageCacheFactory::getInstance()).getWithKey(crate::java_into_object(AndroidBasicTitleProgressBar_RESOURCE.with(Clone::clone).clone()))).clone(); java_value };
         let mut preResourceImageUtil: Option<Rc<RefCell<PreResourceImageUtil>>> = PreResourceImageUtil::getInstance();
         let mut size: i32 = (self.IMAGE.len() as i32).clone();
         for index in (0..size) {
@@ -394,27 +400,27 @@ impl AndroidBasicTitleProgressBar {
     
 
     // throws Exception
-    pub fn getImage(&mut self, mut index: i32) -> Option<Rc<RefCell<Image>>> {
-        let mut image: Option<Rc<RefCell<Image>>> = crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone).clone();
-        if jcall!(Features::getInstance()).isFeature(jcall!(MainFeatureFactory::getInstance()).FULL_SCREEN.clone()) {
-            image = self.IMAGE[(index) as usize].clone();
+    pub fn getImage(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone).clone();
+        if jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(MainFeatureFactory::getInstance()).FULL_SCREEN.clone(); java_field }.clone()) {
+            image = { let java_value = (self.IMAGE[(index) as usize]).clone(); java_value }.clone();
         } else {
-            image = self.IMAGE[(index + 1) as usize].clone();
+            image = { let java_value = (self.IMAGE[(index + 1) as usize]).clone(); java_value }.clone();
         }
         return image.clone();
     }
     
 
-    pub fn paint2(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint2(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(self.animation).paintXY(graphics.clone(), 0, 20);
-            self.base.paint2(graphics.clone());
+            { let java_arguments = (graphics.clone(),); self.base.paint2(java_arguments.0) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.canvasStrings).PAINT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.canvasStrings).PAINT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -426,7 +432,7 @@ impl AndroidBasicTitleProgressBar {
     
 
     pub fn setBackground(&mut self, mut background: bool) {
-        self.base.setBackground(background.clone());
+        { let java_arguments = (background.clone(),); self.base.setBackground(java_arguments.0) };
         self.updateCurrent();
     }
     
@@ -451,15 +457,45 @@ impl std::ops::DerefMut for AndroidBasicTitleProgressBar {
 impl crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn for AndroidBasicTitleProgressBar {
     fn as_ProgressCanvas(&self) -> &crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvas { &self.base }
     fn as_ProgressCanvas_mut(&mut self) -> &mut crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvas { &mut self.base }
-    fn update(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::update(self, graphics) }
+    fn update(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::update(self, graphics) }
     fn start(&mut self) { Self::start(self) }
     fn end(&mut self) { Self::end(self) }
     fn addEarlyPortion(&mut self, mut value: i32, mut text: String, mut index: i32) { Self::addEarlyPortion(self, value, text, index) }
     fn addPortion(&mut self, mut value: i32, mut text: String, mut index: i32) { Self::addPortion(self, value, text, index) }
     fn addNormalPortion(&mut self, mut value: i32, mut text: String) { Self::addNormalPortion(self, value, text) }
     fn setValue(&mut self, mut value: i32) { Self::setValue(self, value) }
-    fn paint2(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint2(self, graphics) }
+    fn paint2(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint2(self, graphics) }
     fn setBackground(&mut self, mut background: bool) { Self::setBackground(self, background) }
+}
+impl crate::javax::microedition::lcdui::Canvas::CanvasDyn for AndroidBasicTitleProgressBar {
+    fn as_Canvas(&self) -> &crate::javax::microedition::lcdui::Canvas::Canvas { &self.base.base.base.base }
+    fn as_Canvas_mut(&mut self) -> &mut crate::javax::microedition::lcdui::Canvas::Canvas { &mut self.base.base.base.base }
+}
+impl crate::javax::microedition::lcdui::Displayable::DisplayableDyn for AndroidBasicTitleProgressBar {
+    fn as_Displayable(&self) -> &crate::javax::microedition::lcdui::Displayable::Displayable { &self.base.base.base.base.base }
+    fn as_Displayable_mut(&mut self) -> &mut crate::javax::microedition::lcdui::Displayable::Displayable { &mut self.base.base.base.base.base }
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn removeCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getWidth(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getHeight(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn setCommandListener(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::CommandListener::CommandListener>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setCommandListener(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn hideNotify(&mut self) { crate::javax::microedition::lcdui::Canvas::Canvas::hideNotify(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+    fn keyPressed(&mut self, p1: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::keyPressed(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1) }
+    fn keyRepeated(&mut self, p1: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::keyRepeated(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1) }
+    fn keyReleased(&mut self, p1: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::keyReleased(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1) }
+    fn pointerPressed(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerPressed(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn pointerReleased(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerReleased(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn pointerDragged(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerDragged(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvas::paintThreed(crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn::as_ProgressCanvas_mut(self), p1) }
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvas::paint(crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn::as_ProgressCanvas_mut(self), p1) }
+    fn repaint(&mut self) { crate::javax::microedition::lcdui::Canvas::Canvas::repaint(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+    fn repaint4(&mut self, p1: i32, p2: i32, p3: i32, p4: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::repaint4(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1, p2, p3, p4) }
+    fn sizeChanged2(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::sizeChanged2(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn showNotify(&mut self) { crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas::showNotify(crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn::as_RunnableCanvas_mut(self)) }
+    fn setFullScreenMode(&mut self, p1: bool) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setFullScreenMode(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn getTypeAsInt(&mut self) -> i32 { crate::javax::microedition::lcdui::Canvas::Canvas::getTypeAsInt(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+    fn repaintXYWH(&mut self, p1: i32, p2: i32, p3: i32, p4: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::repaintXYWH(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1, p2, p3, p4) }
+    fn getDisplayableType(&mut self) -> i32 { crate::javax::microedition::lcdui::Canvas::Canvas::getDisplayableType(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
 }
 impl crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn for AndroidBasicTitleProgressBar {
     fn as_MyCanvas(&self) -> &crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas { &self.base.base.base }
@@ -468,6 +504,25 @@ impl crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn for And
 impl crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn for AndroidBasicTitleProgressBar {
     fn as_RunnableCanvas(&self) -> &crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas { &self.base.base }
     fn as_RunnableCanvas_mut(&mut self) -> &mut crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas { &mut self.base.base }
+    fn initCommands(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::CommandListener::CommandListener>>>) { crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvas::initCommands(crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn::as_ProgressCanvas_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::displayable::DisplayableInterface::DisplayableInterface for AndroidBasicTitleProgressBar {
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getHeight(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getWidth(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn removeCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn setCommandListener(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::CommandListener::CommandListener>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setCommandListener(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for AndroidBasicTitleProgressBar {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvas::paint(crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn::as_ProgressCanvas_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvas::paintThreed(crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn::as_ProgressCanvas_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for AndroidBasicTitleProgressBar {
+    fn updateMeasurement(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvas::updateMeasurement(crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn::as_ProgressCanvas_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::displayable::command::MyCommandInterface::MyCommandInterface for AndroidBasicTitleProgressBar {
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn removeAllCommands(&mut self) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeAllCommands(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
 }
 
 

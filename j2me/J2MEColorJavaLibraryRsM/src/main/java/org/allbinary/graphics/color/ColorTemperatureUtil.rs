@@ -35,6 +35,10 @@ thread_local! { pub static ColorTemperatureUtil_instance: Option<Rc<RefCell<Colo
 
 impl ColorTemperatureUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             basicColorFactory: None,
@@ -54,21 +58,21 @@ impl ColorTemperatureUtil {
     
 
     pub fn getBasicColor(&mut self, mut thirdTemp: i32) -> Option<Rc<RefCell<BasicColor>>> {
-        let mut basicColor: Option<Rc<RefCell<BasicColor>>> = jcall!(self.basicColorFactory).RED.clone();
+        let mut basicColor: Option<Rc<RefCell<BasicColor>>> = { let java_field = jcall!(self.basicColorFactory).RED.clone(); java_field }.clone();
         if thirdTemp > 3700 {
-            basicColor = jcall!(self.basicColorFactory).PURPLE.clone();
+            basicColor = { let java_value = ({ let java_field = jcall!(self.basicColorFactory).PURPLE.clone(); java_field }).clone(); java_value }.clone();
         } else if thirdTemp > 3200 {
-            basicColor = jcall!(self.basicColorFactory).BLUE.clone();
+            basicColor = { let java_value = ({ let java_field = jcall!(self.basicColorFactory).BLUE.clone(); java_field }).clone(); java_value }.clone();
         } else if thirdTemp > 2700 {
-            basicColor = jcall!(self.basicColorFactory).PUCE.clone();
+            basicColor = { let java_value = ({ let java_field = jcall!(self.basicColorFactory).PUCE.clone(); java_field }).clone(); java_value }.clone();
         } else if thirdTemp > 2200 {
-            basicColor = jcall!(self.basicColorFactory).WHITE.clone();
+            basicColor = { let java_value = ({ let java_field = jcall!(self.basicColorFactory).WHITE.clone(); java_field }).clone(); java_value }.clone();
         } else if thirdTemp > 1700 {
-            basicColor = jcall!(self.basicColorFactory).GREEN.clone();
+            basicColor = { let java_value = ({ let java_field = jcall!(self.basicColorFactory).GREEN.clone(); java_field }).clone(); java_value }.clone();
         } else if thirdTemp > 1200 {
-            basicColor = jcall!(self.basicColorFactory).YELLOW.clone();
+            basicColor = { let java_value = ({ let java_field = jcall!(self.basicColorFactory).YELLOW.clone(); java_field }).clone(); java_value }.clone();
         } else if thirdTemp > 700 {
-            basicColor = jcall!(self.basicColorFactory).ORANGE.clone();
+            basicColor = { let java_value = ({ let java_field = jcall!(self.basicColorFactory).ORANGE.clone(); java_field }).clone(); java_value }.clone();
         }
         return basicColor.clone();
     }

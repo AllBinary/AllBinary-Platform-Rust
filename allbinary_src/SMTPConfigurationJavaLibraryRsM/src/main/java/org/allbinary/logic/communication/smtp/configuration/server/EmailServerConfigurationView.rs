@@ -16,15 +16,15 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::data::tree::dom::DomNodeHelper::DomNodeHelper;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::EmailServerConfigurationInterface::EmailServerConfigurationInterface;
 use super::EmailServerConfiguration::EmailServerConfiguration;
 use super::EmailServerConfigurationMapping::EmailServerConfigurationMapping;
@@ -45,6 +45,10 @@ impl DomNodeInterface for EmailServerConfigurationView {
 }
 
 impl EmailServerConfigurationView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut node: Option<Rc<RefCell<Node>>>) -> Self {
@@ -64,7 +68,7 @@ impl EmailServerConfigurationView {
     }
     
 
-    pub fn new_struct1(mut emailServerConfigurationInterface: Option<Rc<RefCell<dyn EmailServerConfigurationInterface>>>) -> Self {
+    pub fn new_struct1_EmailServerConfigurationInterface(mut emailServerConfigurationInterface: Option<Rc<RefCell<dyn EmailServerConfigurationInterface>>>) -> Self {
         let mut this = Self {
             emailServerConfigurationInterface: None,
         };
@@ -72,8 +76,8 @@ impl EmailServerConfigurationView {
         this
     }
 
-    pub fn new1(mut emailServerConfigurationInterface: Option<Rc<RefCell<dyn EmailServerConfigurationInterface>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(emailServerConfigurationInterface))))
+    pub fn new1_EmailServerConfigurationInterface(mut emailServerConfigurationInterface: Option<Rc<RefCell<dyn EmailServerConfigurationInterface>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_EmailServerConfigurationInterface(emailServerConfigurationInterface))))
     }
     
 
@@ -85,8 +89,8 @@ impl EmailServerConfigurationView {
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
         let mut emailConfigurationMapping: Option<Rc<RefCell<EmailServerConfigurationMapping>>> = EmailServerConfigurationMapping::new(self.emailServerConfigurationInterface.clone());
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(emailConfigurationMapping).toHashMap();
-        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNodeWithValueNodes(document.clone(), EmailServerConfigurationData_NAME.with(Clone::clone).clone(), hashMap.clone());
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(emailConfigurationMapping).toHashMap();
+        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNodeWithValueNodes_Document_Node_HashMap(document.clone(), EmailServerConfigurationData_NAME.with(Clone::clone).clone(), hashMap.clone());
         return node.clone();
     }
 }

@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::PoolInterface::PoolInterface;
 use super::CacheableInterfaceFactoryInterface::CacheableInterfaceFactoryInterface;
 use super::CacheableInterface::CacheableInterface;
@@ -47,6 +48,10 @@ impl crate::org::allbinary::logic::util::cache::CacheInterface::CacheInterface f
 }
 
 impl AbstractArrayListPool {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut cacheableInterfaceFactoryInterface: Option<Rc<RefCell<dyn CacheableInterfaceFactoryInterface>>>) -> Self {
@@ -56,7 +61,7 @@ impl AbstractArrayListPool {
             cacheableInterfaceFactoryInterface: None,
         };
         this.commonStrings = CommonStrings::getInstance();
-        this.buffers = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.buffers = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.cacheableInterfaceFactoryInterface = cacheableInterfaceFactoryInterface.clone();
         this
     }
@@ -68,13 +73,13 @@ impl AbstractArrayListPool {
 
     // throws Exception
     pub fn clear(&mut self) {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
     // throws Exception
     pub fn remove(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn CacheableInterface>>> {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
@@ -91,7 +96,7 @@ impl AbstractArrayListPool {
         }
     }
 }
-pub trait AbstractArrayListPoolDyn {
+pub trait AbstractArrayListPoolDyn: std::any::Any {
     fn as_AbstractArrayListPool(&self) -> &AbstractArrayListPool;
     fn as_AbstractArrayListPool_mut(&mut self) -> &mut AbstractArrayListPool;
     fn clear(&mut self) { AbstractArrayListPool::clear(self.as_AbstractArrayListPool_mut()) }

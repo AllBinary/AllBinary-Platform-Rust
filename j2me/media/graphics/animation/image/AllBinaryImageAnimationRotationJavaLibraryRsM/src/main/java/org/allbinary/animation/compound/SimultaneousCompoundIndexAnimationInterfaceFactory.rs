@@ -23,6 +23,7 @@ use crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::Animat
 use crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation;
 use crate::org::allbinary::logic::communication::log::ForcedLogUtil::ForcedLogUtil;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::SimultaneousCompoundIndexAnimation::SimultaneousCompoundIndexAnimation;
 
 // Borrows the object of a Java reference
@@ -45,6 +46,10 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 }
 
 impl SimultaneousCompoundIndexAnimationInterfaceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut basicAnimationInterfaceFactoryInterfaceArray: Vec<Option<Rc<RefCell<dyn AnimationInterfaceFactoryInterface>>>>, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
@@ -67,14 +72,14 @@ impl SimultaneousCompoundIndexAnimationInterfaceFactory {
         let mut size: i32 = (self.basicAnimationInterfaceFactoryInterfaceArray.len() as i32).clone();
         let mut animationInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>>> = vec![None; (size) as usize];
         for index in (0..size) {
-            animationInterfaceArray[(index) as usize] = (jcall!(self.basicAnimationInterfaceFactoryInterfaceArray[(index) as usize]).getInstance(instanceId.clone())).clone() /* as IndexedAnimation */;
+            animationInterfaceArray[(index) as usize] = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> { panic!("ClassCastException: a Rust dyn Animation cannot be cast to IndexedAnimation") })();
         }
         return self.getOrCreate(animationInterfaceArray.clone());
     }
     
 
     pub fn getOrCreate(&mut self, mut animationInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
-        return SimultaneousCompoundIndexAnimation::new(animationInterfaceArray.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+        return SimultaneousCompoundIndexAnimation::new(animationInterfaceArray.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
     }
     
 

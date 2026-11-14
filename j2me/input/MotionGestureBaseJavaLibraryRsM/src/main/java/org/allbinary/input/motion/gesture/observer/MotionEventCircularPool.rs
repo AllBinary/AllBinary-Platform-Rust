@@ -21,6 +21,7 @@ use crate::org::allbinary::game::input::InputFactory::InputFactory;
 use crate::org::allbinary::input::motion::gesture::MotionGestureInput::MotionGestureInput;
 use crate::org::allbinary::input::motion::gesture::TouchMotionGestureFactory::TouchMotionGestureFactory;
 use crate::org::allbinary::logic::util::event::AllBinaryEventCircularPool::AllBinaryEventCircularPool;
+use crate::java::lang::Exception::*;
 use super::MotionEventFactory::MotionEventFactory;
 use super::MotionGestureEvent::MotionGestureEvent;
 
@@ -38,6 +39,10 @@ pub struct MotionEventCircularPool {
 
 
 impl MotionEventCircularPool {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn createPool(mut id: i32) -> Option<Rc<RefCell<MotionEventCircularPool>>> {
@@ -50,9 +55,9 @@ impl MotionEventCircularPool {
             MIN: 0,
             eventPool: None,
         };
-        this.MIN = jcall!(jcall!(TouchMotionGestureFactory::getInstance()).LAST_MOTION).getId();
-        this.eventPool = AllBinaryEventCircularPool::new((jcall!(InputFactory::getInstance()).MAX - 1) - this.MIN);
-        jcall!(this.eventPool).initAllBinaryEventCircularPool(MotionEventFactory::new(this.eventPool.clone(), id.clone()));
+        this.MIN = jcall!({ let java_field = jcall!(TouchMotionGestureFactory::getInstance()).LAST_MOTION.clone(); java_field }).getId();
+        this.eventPool = AllBinaryEventCircularPool::new(({ let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field } - 1) - this.MIN);
+        jcall!(this.eventPool).initAllBinaryEventCircularPool(MotionEventFactory::new(crate::java_into_object(this.eventPool.clone()), id.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObjectFactoryInterface::AllBinaryEventObjectFactoryInterface>>));
         this
     }
 

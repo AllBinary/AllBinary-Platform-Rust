@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait AllBinarySensorListener {
+pub trait AllBinarySensorListener: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn onSensorChange(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::RuntimeException::*;
 use super::Log::Log;
 
 // Borrows the object of a Java reference
@@ -32,6 +33,10 @@ pub struct LogUtil {
 thread_local! { pub static LogUtil_instance: Option<Rc<RefCell<LogUtil>>> = LogUtil::new(); }
 
 impl LogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogUtil>>> {
@@ -65,7 +70,7 @@ impl LogUtil {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn putF(&mut self, mut specialMessage: String, mut className: String, mut functionName: String) {
+    pub fn putF_String_String_String(&mut self, mut specialMessage: String, mut className: String, mut functionName: String) {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     

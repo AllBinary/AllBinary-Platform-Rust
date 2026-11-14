@@ -51,8 +51,8 @@ impl KeyFactoryInitializer {
     
 
     pub fn init(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone());
-        jcall!(SmallIntegerSingletonFactory::getInstance()).initWithRange(0x2D0_u32 as i32, 6);
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
+        jcall!(SmallIntegerSingletonFactory::getInstance()).initWithRange(0x2D0, 6);
     }
 }
 impl std::ops::Deref for KeyFactoryInitializer {
@@ -63,5 +63,12 @@ impl std::ops::DerefMut for KeyFactoryInitializer {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::org::allbinary::init::Init::InitDyn for KeyFactoryInitializer {
+    fn as_Init(&self) -> &crate::org::allbinary::init::Init::Init { &self.base }
+    fn as_Init_mut(&mut self) -> &mut crate::org::allbinary::init::Init::Init { &mut self.base }
+}
+impl crate::org::allbinary::init::InitInterface::InitInterface for KeyFactoryInitializer {
+    fn init(&mut self) { Self::init(self) }
+}
 
 

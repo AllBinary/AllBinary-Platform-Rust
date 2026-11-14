@@ -22,6 +22,7 @@ use crate::org::allbinary::game::ag::life::LifeInterfaceCompositeInterface::Life
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerCircularPool::AllBinaryLayerCircularPool;
 use crate::org::allbinary::layer::AllBinaryLayerFactoryInterface::AllBinaryLayerFactoryInterface;
+use crate::java::lang::Exception::*;
 use super::LifeLayer::LifeLayer;
 
 // Borrows the object of a Java reference
@@ -43,7 +44,7 @@ impl LifeLayerCircularStaticPool {
         let mut this = Self {
             base: AllBinaryLayerCircularPool::new_struct(),
         };
-        this.base.initAllBinaryLayerCircularPool(allbinaryLayerFactoryInterface.clone(), total.clone());
+        { let java_arguments = (allbinaryLayerFactoryInterface.clone(), total.clone(),); this.base.initAllBinaryLayerCircularPool(java_arguments.0, java_arguments.1) };
         this
     }
 
@@ -55,7 +56,7 @@ impl LifeLayerCircularStaticPool {
     // throws Exception
     pub fn visit(&mut self, mut sourceLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) {
         let mut lifeLayer: Option<Rc<RefCell<LifeLayer>>> = { let java_object = (self.getNextInstance()).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LifeLayer>>>>().expect("ClassCastException").clone()) };
-        let mut lifeInterfaceCompositeInterface: Option<Rc<RefCell<dyn LifeInterfaceCompositeInterface>>> = (sourceLayerInterface).clone() /* as LifeInterfaceCompositeInterface */;
+        let mut lifeInterfaceCompositeInterface: Option<Rc<RefCell<dyn LifeInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn LifeInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to LifeInterfaceCompositeInterface") })();
         let mut lifeInterface: Option<Rc<RefCell<Life>>> = jcall!(lifeInterfaceCompositeInterface).getLifeInterface();
         jcall!(lifeLayer).visit(lifeInterface.clone());
     }

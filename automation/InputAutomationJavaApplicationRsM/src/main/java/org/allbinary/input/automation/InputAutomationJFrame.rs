@@ -18,9 +18,9 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::thread::ARunnable::ARunnable;
-// use crate::java::net::URI::URI;
-// use crate::java::net::URL::URL;
-// use crate::java::awt::Desktop::Desktop;
+use crate::java::net::URI::URI;
+use crate::java::net::URL::URL;
+use crate::java::awt::Desktop::Desktop;
 // use crate::java::util::List::List;
 // use crate::javax::swing::ImageIcon::ImageIcon;
 // use crate::javax::swing::JDialog::JDialog;
@@ -52,9 +52,8 @@ use crate::org::allbinary::logic::system::security::licensing::InputAutomationCl
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::thread::RunnableInterface::RunnableInterface;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::JFrame::JFrame;
-use super::swing::swing;
-use super::javax::javax;
 use super::JLabel::JLabel;
 use super::JTabbedPane::JTabbedPane;
 use super::JPanel::JPanel;
@@ -65,11 +64,8 @@ use super::JMenu::JMenu;
 use super::JMenuItem::JMenuItem;
 use super::JCheckBoxMenuItem::JCheckBoxMenuItem;
 use super::Dimension::Dimension;
-use super::awt::awt;
-use super::java::java;
 use super::GroupLayout::GroupLayout;
 use super::WindowFocusListener::WindowFocusListener;
-use super::event::event;
 use super::WindowEvent::WindowEvent;
 use super::FocusAdapter::FocusAdapter;
 use super::FocusEvent::FocusEvent;
@@ -77,7 +73,6 @@ use super::ListSelectionListener::ListSelectionListener;
 use super::ListSelectionEvent::ListSelectionEvent;
 use super::ActionListener::ActionListener;
 use super::ActionEvent::ActionEvent;
-use super::util::util;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -92,7 +87,7 @@ pub struct InputAutomationJFrame {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
     pub inputAutomationModuleConfigurations: Option<Rc<RefCell<InputAutomationModuleConfigurations>>>,
     pub inputAutomationModuleFactory: Option<Rc<RefCell<InputAutomationModuleFactoryFactory>>>,
-    pub inputAutomationModuleInterface: Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>,
+    pub inputAutomationModuleInterface: Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>,
     pub runnableInterface: Option<Rc<RefCell<dyn RunnableInterface>>>,
     pub thread: Option<Rc<RefCell<Thread>>>,
     pub helpSet: Option<Rc<RefCell<HelpSet>>>,
@@ -164,9 +159,9 @@ impl InputAutomationJFrame {
         this.uri = URI::new(String::from("http://geocities.com/allbinary/"));
         this.initComponents();
         let mut url: Option<Rc<RefCell<URL>>> = jcall!(std::any::type_name_of_val(&this)).getResource(String::from("/help/Help.hs"));
-        jcall!(this.logUtil).putF(format!("{}{}", String::from("URL: "), url), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
-        this.helpSet = jcall!(JavaHelpUtil::getInstance()).getHelpSet(url.clone());
-        url = jcall!(std::any::type_name_of_val(&this)).getResource(String::from("/resources/allbinaryicon8bit.jpg"));
+        jcall!(this.logUtil).putF(format!("{}{}", String::from("URL: "), url), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
+        this.helpSet = { let java_value = (jcall!(JavaHelpUtil::getInstance()).getHelpSet_URL(url.clone())).clone(); java_value };
+        url = { let java_value = (jcall!(std::any::type_name_of_val(&this)).getResource(String::from("/resources/allbinaryicon8bit.jpg"))).clone(); java_value };
         let mut imageIcon: Option<Rc<RefCell<ImageIcon>>> = ImageIcon::new(url.clone());
         { let java_arguments = (jcall!(imageIcon).getImage(),); this.setIconImage(java_arguments.0) };
         this.init();
@@ -192,7 +187,7 @@ impl InputAutomationJFrame {
     pub fn init(&mut self) {
         let mut inputAutomationConfigurationFactory: Option<Rc<RefCell<InputAutomationConfigurationFactory>>> = InputAutomationConfigurationFactory::getInstance();
         jcall!(inputAutomationConfigurationFactory).init(InputAutomationClientInformationFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface>>));
-        let mut inputAutomationModuleConfigurationList: Option<Rc<RefCell<dyn List<Option<Rc<RefCell<InputAutomationModuleConfiguration>>>>>>> = jcall!(jcall!(inputAutomationConfigurationFactory).inputAutomationConfiguration).getInputAutomationModuleConfigurationList();
+        let mut inputAutomationModuleConfigurationList: Option<Rc<RefCell<dyn List<Option<Rc<RefCell<InputAutomationModuleConfiguration>>>>>>> = jcall!({ let java_field = jcall!(inputAutomationConfigurationFactory).inputAutomationConfiguration.clone(); java_field }).getInputAutomationModuleConfigurationList();
         if inputAutomationModuleConfigurationList.is_none() {
         } else {
             self.inputAutomationModuleConfigurations = InputAutomationModuleConfigurations::new1(inputAutomationModuleConfigurationList.clone());
@@ -228,9 +223,9 @@ impl InputAutomationJFrame {
         jcall!(self.noModuleSelectedJLabel).setText(String::from("Please Select A Module"));
         let mut noModuleSelectedJDialogLayout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(jcall!(self.noModuleSelectedJDialog).getContentPane());
         jcall!(jcall!(self.noModuleSelectedJDialog).getContentPane()).setLayout(noModuleSelectedJDialogLayout.clone());
-        jcall!(noModuleSelectedJDialogLayout).setHorizontalGroup(jcall!(jcall!(noModuleSelectedJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(noModuleSelectedJDialogLayout).createSequentialGroup()).addContainerGap()).addComponent(self.noModuleSelectedJLabel.clone())).addContainerGap(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), i16::MAX.clone())));
-        jcall!(noModuleSelectedJDialogLayout).setVerticalGroup(jcall!(jcall!(noModuleSelectedJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addComponent(self.noModuleSelectedJLabel.clone(), jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).TRAILING.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), 48, i16::MAX.clone()));
-        self.setDefaultCloseOperation(jcall!(jcall!(unsafe { javax_swing.clone() }).WindowConstants).EXIT_ON_CLOSE.clone());
+        jcall!(noModuleSelectedJDialogLayout).setHorizontalGroup(jcall!(jcall!(noModuleSelectedJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(noModuleSelectedJDialogLayout).createSequentialGroup()).addContainerGap()).addComponent(self.noModuleSelectedJLabel.clone())).addContainerGap({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), i16::MAX.clone())));
+        jcall!(noModuleSelectedJDialogLayout).setVerticalGroup(jcall!(jcall!(noModuleSelectedJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addComponent(self.noModuleSelectedJLabel.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).TRAILING.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), 48, i16::MAX.clone()));
+        { let java_arguments = ({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).WindowConstants.clone(); java_field }).EXIT_ON_CLOSE.clone(); java_field }.clone(),); self.setDefaultCloseOperation(java_arguments.0) };
         self.setMinimumSize(Dimension::new(325, 215));
         self.setResizable(false);
         { let java_arguments = (WindowFocusListener::new() /* Java anonymous class body: implement it as a named type
@@ -269,17 +264,17 @@ impl InputAutomationJFrame {
         jcall!(self.jScrollPane1).setViewportView(self.inputAutomationModuleJList.clone());
         let mut inputAutomationModuleJPanelLayout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(self.inputAutomationModuleJPanel.clone());
         jcall!(self.inputAutomationModuleJPanel).setLayout(inputAutomationModuleJPanelLayout.clone());
-        jcall!(inputAutomationModuleJPanelLayout).setHorizontalGroup(jcall!(jcall!(inputAutomationModuleJPanelLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(inputAutomationModuleJPanelLayout).createSequentialGroup()).addComponent(self.jScrollPane1.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), 199, jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone())).addContainerGap(367, i16::MAX.clone())));
-        jcall!(inputAutomationModuleJPanelLayout).setVerticalGroup(jcall!(jcall!(inputAutomationModuleJPanelLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(inputAutomationModuleJPanelLayout).createSequentialGroup()).addComponent(self.jScrollPane1.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), 330, jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone())).addContainerGap(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), i16::MAX.clone())));
+        jcall!(inputAutomationModuleJPanelLayout).setHorizontalGroup(jcall!(jcall!(inputAutomationModuleJPanelLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(inputAutomationModuleJPanelLayout).createSequentialGroup()).addComponent(self.jScrollPane1.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), 199, { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).addContainerGap(367, i16::MAX.clone())));
+        jcall!(inputAutomationModuleJPanelLayout).setVerticalGroup(jcall!(jcall!(inputAutomationModuleJPanelLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(inputAutomationModuleJPanelLayout).createSequentialGroup()).addComponent(self.jScrollPane1.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), 330, { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).addContainerGap({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), i16::MAX.clone())));
         jcall!(self.gameRobotJTabbedPane).addTab(String::from("Modules"), self.inputAutomationModuleJPanel.clone());
         let mut automationModuleConfigurationJPanelLayout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(self.automationModuleConfigurationJPanel.clone());
         jcall!(self.automationModuleConfigurationJPanel).setLayout(automationModuleConfigurationJPanelLayout.clone());
-        jcall!(automationModuleConfigurationJPanelLayout).setHorizontalGroup(jcall!(jcall!(automationModuleConfigurationJPanelLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGap(0, 566, i16::MAX.clone()));
-        jcall!(automationModuleConfigurationJPanelLayout).setVerticalGroup(jcall!(jcall!(automationModuleConfigurationJPanelLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGap(0, 334, i16::MAX.clone()));
+        jcall!(automationModuleConfigurationJPanelLayout).setHorizontalGroup(jcall!(jcall!(automationModuleConfigurationJPanelLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGap(0, 566, i16::MAX.clone()));
+        jcall!(automationModuleConfigurationJPanelLayout).setVerticalGroup(jcall!(jcall!(automationModuleConfigurationJPanelLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGap(0, 334, i16::MAX.clone()));
         jcall!(self.gameRobotJTabbedPane).addTab(String::from("Configuration"), self.automationModuleConfigurationJPanel.clone());
         jcall!(self.processingJMenu).setText(String::from("Processing"));
         jcall!(self.processingJMenu).setToolTipText(String::from("Set module processing state"));
-        jcall!(self.startJMenuItem).setText(jcall!(self.commonStrings).START.clone());
+        jcall!(self.startJMenuItem).setText({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone());
         { let java_receiver = self.startJMenuItem.clone(); let java_arguments = (ActionListener::new() /* Java anonymous class body: implement it as a named type
             
 
@@ -365,11 +360,11 @@ impl InputAutomationJFrame {
 */,); jcall!(java_receiver).addActionListener(java_arguments.0); };
         jcall!(self.toolsJMenu).add(self.aboutJMenuItem.clone());
         jcall!(self.mainJMenuBar).add(self.toolsJMenu.clone());
-        self.setJMenuBar(self.mainJMenuBar.clone());
+        { let java_arguments = (self.mainJMenuBar.clone(),); self.setJMenuBar(java_arguments.0) };
         let mut layout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(self.getContentPane());
         jcall!(self.getContentPane()).setLayout(layout.clone());
-        jcall!(layout).setHorizontalGroup(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addComponent(self.gameRobotJTabbedPane.clone(), jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).TRAILING.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), 571, i16::MAX.clone()));
-        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addComponent(self.gameRobotJTabbedPane.clone(), jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).TRAILING.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), 359, i16::MAX.clone()));
+        jcall!(layout).setHorizontalGroup(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addComponent(self.gameRobotJTabbedPane.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).TRAILING.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), 571, i16::MAX.clone()));
+        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addComponent(self.gameRobotJTabbedPane.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).TRAILING.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), 359, i16::MAX.clone()));
         self.pack();
     }
     
@@ -380,9 +375,9 @@ impl InputAutomationJFrame {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("subscriptionJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("subscriptionJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -394,9 +389,9 @@ impl InputAutomationJFrame {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updatesJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updatesJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -415,9 +410,9 @@ impl InputAutomationJFrame {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("modulesJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("modulesJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -463,11 +458,11 @@ impl InputAutomationJFrame {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut gameAutomationRobotModuleNameString: String = (jcall!(self.inputAutomationModuleJList).getSelectedValue()).clone() /* as String */;
             if true {
-                self.inputAutomationModuleInterface = jcall!(self.inputAutomationModuleFactory).getInstance(gameAutomationRobotModuleNameString.clone());
+                self.inputAutomationModuleInterface = { let java_value = (jcall!(self.inputAutomationModuleFactory).getInstance(gameAutomationRobotModuleNameString.clone())).clone(); java_value };
                 jcall!(self.getAutomationModuleConfigurationJPanel()).removeAll();
                 let mut layout: Option<Rc<RefCell<GroupLayout>>> = (jcall!(self.getAutomationModuleConfigurationJPanel()).getLayout()).clone() /* as GroupLayout */;
-                jcall!(layout).setHorizontalGroup(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGap(0, 395, i16::MAX.clone())).addComponent(jcall!(self.inputAutomationModuleInterface).getConfigurationJPanel(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone()));
-                jcall!(layout).setVerticalGroup(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGap(0, 256, i16::MAX.clone())).addComponent(jcall!(self.inputAutomationModuleInterface).getConfigurationJPanel(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone()));
+                jcall!(layout).setHorizontalGroup(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGap(0, 395, i16::MAX.clone())).addComponent(jcall!(self.inputAutomationModuleInterface).getConfigurationJPanel(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone()));
+                jcall!(layout).setVerticalGroup(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGap(0, 256, i16::MAX.clone())).addComponent(jcall!(self.inputAutomationModuleInterface).getConfigurationJPanel(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone()));
                 jcall!(self.gameRobotJTabbedPane).setEnabledAt(1, true);
                 jcall!(self.logUtil).putF(format!("{}{}", format!("{}{}", String::from("Setting Module: "), gameAutomationRobotModuleNameString), String::from(" and Configuration JPanel")), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("gameAutomationRobotModuleJListValueChanged"));
             } else {
@@ -477,9 +472,9 @@ impl InputAutomationJFrame {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("gameAutomationRobotModuleJListValueChanged"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("gameAutomationRobotModuleJListValueChanged"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -499,7 +494,7 @@ impl InputAutomationJFrame {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(self.logUtil).putF(String::from("Starting"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("startJMenuItemActionPerformed"));
             if self.inputAutomationModuleInterface.is_some() {
-                self.runnableInterface = jcall!(self.inputAutomationModuleInterface).getInstance();
+                self.runnableInterface = { let java_value = (jcall!(self.inputAutomationModuleInterface).getInstance()).clone(); java_value };
                 if self.runnableInterface.is_some() {
                     self.thread = Thread::new1(self.runnableInterface.clone());
                     jcall!(self.thread).setPriority(unsafe { Thread_MIN_PRIORITY.clone() } + 1);
@@ -517,9 +512,9 @@ impl InputAutomationJFrame {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("startJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("startJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -539,16 +534,16 @@ impl InputAutomationJFrame {
         LogConfigTypeFactory::getInstance();
         let mut appUrlGlobals: Option<Rc<RefCell<AppUrlGlobals>>> = AppUrlGlobals::new();
         jcall!(appUrlGlobals).setWebappPath(String::from("G:/mnt/bc/mydev/work_automation/automation/run/"));
-        URLGLOBALS::init(appUrlGlobals.clone());
+        URLGLOBALS::init(appUrlGlobals.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::globals::UrlGlobalsInterface::UrlGlobalsInterfaceDyn>>));
         WebappClassLoaderInfo::setLoader(jcall!(std::any::type_name_of_val(&appUrlGlobals)).getClassLoader());
-        jcall!(jcall!(unsafe { java_awt.clone() }).EventQueue).invokeLater(ARunnable::new() /* Java anonymous class body: implement it as a named type
+        jcall!({ let java_field = jcall!(unsafe { java_awt.clone() }).EventQueue.clone(); java_field }).invokeLater(ARunnable::new() /* Java anonymous class body: implement it as a named type
             
 
             pub fn run(&mut self) {
                 let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
                 match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                    jcall!(logUtil).putF(String::from("Running"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone());
+                    jcall!(logUtil).putF(String::from("Running"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone());
                     unsafe { *InputAutomationJFrame_INPUTAUTOMATION_JFRAME = InputAutomationJFrame::new() };
                     jcall!(InputRobotFactory::getInstance()).addListener(InputAutomationJFrame::getInstance());
                     if inputAutomationBundleActivatorListenerInterface.is_some() {
@@ -559,9 +554,9 @@ impl InputAutomationJFrame {
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                    jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+                    jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }
@@ -587,14 +582,14 @@ impl InputAutomationJFrame {
 
     pub fn onAdd(&mut self, mut inputAutomationRobotChangeEvent: Option<Rc<RefCell<InputAutomationRobotChangeEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onAdd"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onAdd"));
             jcall!(InputRobotFactory::getInstance()).add(jcall!(jcall!(inputAutomationRobotChangeEvent).getInputAutomationRobotInterfaceWrapper()).getInputRobotInterface());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onAdd"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onAdd"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -602,46 +597,46 @@ impl InputAutomationJFrame {
 
     pub fn onRemove(&mut self, mut inputAutomationRobotChangeEvent: Option<Rc<RefCell<InputAutomationRobotChangeEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onRemove"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onRemove"));
             jcall!(InputRobotFactory::getInstance()).add(jcall!(jcall!(inputAutomationRobotChangeEvent).getInputAutomationRobotInterfaceWrapper()).getInputRobotInterface());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onRemove"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onRemove"), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn onAdd(&mut self, mut inputAutomationConfigurationChangeEvent: Option<Rc<RefCell<InputAutomationConfigurationModuleChangeEvent>>>) {
+    pub fn onAdd_InputAutomationConfigurationModuleChangeEvent(&mut self, mut inputAutomationConfigurationChangeEvent: Option<Rc<RefCell<InputAutomationConfigurationModuleChangeEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onAdd"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onAdd"));
             { let java_receiver = self.inputAutomationModuleConfigurations.clone(); let java_arguments = (jcall!(inputAutomationConfigurationChangeEvent).getInputAutomationModuleConfiguration(),); jcall!(java_receiver).add(java_arguments.0); };
             self.init();
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onAdd"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onAdd"), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn onRemove(&mut self, mut inputAutomationConfigurationChangeEvent: Option<Rc<RefCell<InputAutomationConfigurationModuleChangeEvent>>>) {
+    pub fn onRemove_InputAutomationConfigurationModuleChangeEvent(&mut self, mut inputAutomationConfigurationChangeEvent: Option<Rc<RefCell<InputAutomationConfigurationModuleChangeEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onRemove"));
-            let mut inputAutomationConfiguration: Option<Rc<RefCell<InputAutomationConfiguration>>> = jcall!(InputAutomationConfigurationFactory::getInstance()).inputAutomationConfiguration.clone();
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onRemove"));
+            let mut inputAutomationConfiguration: Option<Rc<RefCell<InputAutomationConfiguration>>> = { let java_field = jcall!(InputAutomationConfigurationFactory::getInstance()).inputAutomationConfiguration.clone(); java_field }.clone();
             let mut inputAutomationModuleConfigurationList: Option<Rc<RefCell<dyn List<Option<Rc<RefCell<InputAutomationModuleConfiguration>>>>>>> = jcall!(inputAutomationConfiguration).getInputAutomationModuleConfigurationList();
             if inputAutomationModuleConfigurationList.is_none() {
                 let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(logUtil).putF(format!("{}{}", String::from("inputAutomationModuleConfigurationList: "), inputAutomationModuleConfigurationList), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone());
+                jcall!(logUtil).putF(format!("{}{}", String::from("inputAutomationModuleConfigurationList: "), inputAutomationModuleConfigurationList), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone());
                 panic!("{:?}", format!("{}: {:?}", "Exception", ()));
             }
             let mut inputAutomationModuleConfigurations: Option<Rc<RefCell<InputAutomationModuleConfigurations>>> = InputAutomationModuleConfigurations::new1(jcall!(inputAutomationConfiguration).getInputAutomationModuleConfigurationList());
@@ -650,9 +645,9 @@ impl InputAutomationJFrame {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onRemove"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onRemove"), crate::java_into_object(e.clone()));
             }
         }
     }

@@ -25,6 +25,7 @@ use crate::org::allbinary::game::input::GameInput::GameInput;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::logic::util::visitor::Visitor::Visitor;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::BasicRandomAI::BasicRandomAI;
 
 // Borrows the object of a Java reference
@@ -38,10 +39,14 @@ pub struct BasicRandomAIFactory {
 }
 
 impl ArtificialIntelligenceInterfaceFactoryInterface for BasicRandomAIFactory {
-    fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> { Self::getInstance(self, hashtable, ownerLayerInterface, gameInput) }
+    fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> { Self::getInstance(self, hashtable, ownerLayerInterface, gameInput) }
 }
 
 impl BasicRandomAIFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -55,13 +60,13 @@ impl BasicRandomAIFactory {
     
 
     // throws Exception
-    pub fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> {
-        let mut visitor: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>> = { let java_object = (jcall!(hashtable).get(crate::java_into_object((crate::org::allbinary::game::ai::BasicAI::BasicAI_AI_VISITOR.with(Clone::clone)).clone() /* as Any */))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>>>().expect("ClassCastException").clone()) };
+    pub fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> {
+        let mut visitor: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>> = { let java_object = (jcall!(hashtable).get(crate::java_into_object(crate::java_into_object((crate::org::allbinary::game::ai::BasicAI::BasicAI_AI_VISITOR.with(Clone::clone)).clone())))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>>>().expect("ClassCastException").clone()) };
         if visitor.is_none() {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("No Visitor Provided"))));
         }
-        let mut inputProbability: Option<Rc<RefCell<InputProbability>>> = { let java_object = (jcall!(hashtable).get(crate::java_into_object((unsafe { crate::org::allbinary::game::ag::ai::InputProbability::InputProbability_INPUT_PROBABILITY.clone() }).clone() /* as Any */))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<InputProbability>>>>().expect("ClassCastException").clone()) };
-        return BasicRandomAI::new(ownerLayerInterface.clone(), gameInput.clone(), inputProbability.clone(), visitor.clone()).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>);
+        let mut inputProbability: Option<Rc<RefCell<InputProbability>>> = { let java_object = (jcall!(hashtable).get(crate::java_into_object(crate::java_into_object((unsafe { crate::org::allbinary::game::ag::ai::InputProbability::InputProbability_INPUT_PROBABILITY.clone() }).clone())))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<InputProbability>>>>().expect("ClassCastException").clone()) };
+        return BasicRandomAI::new(ownerLayerInterface.clone(), gameInput.clone(), inputProbability.clone(), visitor.clone()).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>);
     }
 }
 

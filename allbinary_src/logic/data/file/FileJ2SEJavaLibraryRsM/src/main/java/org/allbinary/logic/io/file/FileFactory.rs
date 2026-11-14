@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::AbFile::AbFile;
 
 // Borrows the object of a Java reference
@@ -32,6 +33,10 @@ pub struct FileFactory {
 thread_local! { pub static FileFactory_instance: Option<Rc<RefCell<FileFactory>>> = FileFactory::new(); }
 
 impl FileFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

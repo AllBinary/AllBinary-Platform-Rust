@@ -27,6 +27,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -47,7 +48,7 @@ impl ImageTypes {
         let mut this = Self {
             vector: None,
         };
-        this.vector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.vector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -60,13 +61,13 @@ impl ImageTypes {
         let mut this = Self {
             vector: None,
         };
-        this.vector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.vector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(node).getChildNodes();
-        for index in (0..jcall!(nodeList).getLength()) {
+        for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
             let mut childNode: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
             if jcall!(jcall!(childNode).getNodeName()).compareTo(unsafe { ImageActionScriptOutputData_TYPE.clone() }.clone()) == 0 {
                 let mut nextImageTypeString: String = DomNodeHelper::getTextNodeValue(childNode.clone());
-                jcall!(this.getVector()).add(InputImageType::getInstance(nextImageTypeString.clone()));
+                jcall!(this.getVector()).add(crate::java_into_object(InputImageType::getInstance(nextImageTypeString.clone())));
             } else {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("ImageTypes Unknown Node"))));
             }
@@ -82,8 +83,8 @@ impl ImageTypes {
     pub fn valueOf(mut anyType: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>>) -> Option<Rc<RefCell<ImageTypes>>> {
         let mut imageTypes: Option<Rc<RefCell<ImageTypes>>> = ImageTypes::new();
         for index in (0..(anyType.len() as i32)) {
-            let mut imageType: Option<Rc<RefCell<InputImageType>>> = InputImageType::getInstance((anyType[(index) as usize]).clone() /* as String */);
-            jcall!(jcall!(imageTypes).getVector()).add(imageType.clone());
+            let mut imageType: Option<Rc<RefCell<InputImageType>>> = InputImageType::getInstance({ let java_object = (anyType[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() });
+            jcall!(jcall!(imageTypes).getVector()).add(crate::java_into_object(imageType.clone()));
         }
         return imageTypes.clone();
     }

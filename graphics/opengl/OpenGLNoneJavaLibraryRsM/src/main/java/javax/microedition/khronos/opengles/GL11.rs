@@ -5,9 +5,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::nio::Buffer::Buffer;
-// use crate::java::nio::FloatBuffer::FloatBuffer;
-// use crate::java::nio::IntBuffer::IntBuffer;
+use crate::java::nio::Buffer::Buffer;
+use crate::java::nio::FloatBuffer::FloatBuffer;
+use crate::java::nio::IntBuffer::IntBuffer;
 use super::GL10::GL10;
 
 // Borrows the object of a Java reference

@@ -21,6 +21,7 @@ use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::LineAnimation::LineAnimation;
 
 // Borrows the object of a Java reference
@@ -42,6 +43,10 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 }
 
 impl LineAnimationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Self {
@@ -59,7 +64,7 @@ impl LineAnimationFactory {
 
     // throws Exception
     pub fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
-        return LineAnimation::new(self.basicColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+        return LineAnimation::new(self.basicColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
     }
     
 

@@ -23,6 +23,7 @@ use crate::org::allbinary::math::Angle::Angle;
 use crate::org::allbinary::math::NoDecimalTrigTable::NoDecimalTrigTable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,6 +39,10 @@ pub struct BasicGraphicsPipeline {
 
 
 impl BasicGraphicsPipeline {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut points: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Self {
@@ -66,12 +71,12 @@ impl BasicGraphicsPipeline {
 
     // throws Exception
     pub fn translate(&mut self, mut x: i32, mut y: i32) {
-        let mut newBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut newBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut size: i32 = jcall!(self.pointBasicArrayList).size();
         let mut pointFactory: Option<Rc<RefCell<PointFactory>>> = PointFactory::getInstance();
         let mut secondPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = None;
         for index in (0..size) {
-            secondPoint = { let java_object = (jcall!(self.pointBasicArrayList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) };
+            secondPoint = { let java_value = ({ let java_object = (jcall!(self.pointBasicArrayList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             if jcall!(secondPoint).getX() != 1000 {
                 jcall!(newBasicArrayList).add(crate::java_into_object(jcall!(pointFactory).createXY(jcall!(secondPoint).getX() + x, jcall!(secondPoint).getY() + y)));
             } else {
@@ -90,7 +95,7 @@ impl BasicGraphicsPipeline {
 
     // throws Exception
     pub fn rotate(&mut self, mut angle: i32) {
-        let mut newBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut newBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut secondPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = None;
         let mut y: i64 = 0_i64;
         let mut secondX: i64 = 0_i64;
@@ -101,14 +106,14 @@ impl BasicGraphicsPipeline {
         let mut sin: i64 = 0_i64;
         let mut cos: i64 = 0_i64;
         for index in (0..size) {
-            secondPoint = { let java_object = (jcall!(self.pointBasicArrayList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) };
+            secondPoint = { let java_value = ({ let java_object = (jcall!(self.pointBasicArrayList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             if jcall!(secondPoint).getX() != 1000 {
-                sin = jcall!(self.noDecimalTrigTable).sin(angle.clone());
-                cos = jcall!(self.noDecimalTrigTable).cos(angle.clone());
-                y = ((jcall!(secondPoint).getY()) as i64) * sin;
-                secondX = (((jcall!(secondPoint).getX()) as i64) * cos) - y;
-                secondY = (((jcall!(secondPoint).getX()) as i64) * sin) + (((jcall!(secondPoint).getY()) as i64) * cos);
-                point = jcall!(pointFactory).createXY(((secondX) as i32) / 10000, ((secondY) as i32) / 10000);
+                sin = { let java_value = (jcall!(self.noDecimalTrigTable).sin(angle.clone())).clone(); java_value };
+                cos = { let java_value = (jcall!(self.noDecimalTrigTable).cos(angle.clone())).clone(); java_value };
+                y = { let java_value = (((jcall!(secondPoint).getY()) as i64) * sin).clone(); java_value };
+                secondX = { let java_value = ((((jcall!(secondPoint).getX()) as i64) * cos) - y).clone(); java_value };
+                secondY = { let java_value = ((((jcall!(secondPoint).getX()) as i64) * sin) + (((jcall!(secondPoint).getY()) as i64) * cos)).clone(); java_value };
+                point = { let java_value = (jcall!(pointFactory).createXY(((secondX) as i32) / 10000, ((secondY) as i32) / 10000)).clone(); java_value };
                 jcall!(newBasicArrayList).add(crate::java_into_object(point.clone()));
             } else {
                 jcall!(newBasicArrayList).add(crate::java_into_object(secondPoint.clone()));
@@ -122,21 +127,21 @@ impl BasicGraphicsPipeline {
     pub fn mirror(&mut self, mut width: i32) {
         let mut pointFactory: Option<Rc<RefCell<PointFactory>>> = PointFactory::getInstance();
         let mut halfWidth: i32 = (width >> 1);
-        let mut newBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut newBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut secondPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = None;
         let mut newX: i32 = 0;
         let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = None;
         let mut size: i32 = jcall!(self.pointBasicArrayList).size();
         for index in (0..size) {
-            secondPoint = { let java_object = (jcall!(self.pointBasicArrayList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) };
+            secondPoint = { let java_value = ({ let java_object = (jcall!(self.pointBasicArrayList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             if jcall!(secondPoint).getX() != 1000 {
                 newX = 0;
                 if jcall!(secondPoint).getX() > halfWidth {
-                    newX = halfWidth - (jcall!(secondPoint).getX() - halfWidth);
+                    newX = { let java_value = (halfWidth - (jcall!(secondPoint).getX() - halfWidth)).clone(); java_value };
                 } else {
-                    newX = halfWidth + (halfWidth - jcall!(secondPoint).getX());
+                    newX = { let java_value = (halfWidth + (halfWidth - jcall!(secondPoint).getX())).clone(); java_value };
                 }
-                point = jcall!(pointFactory).createXY(newX.clone(), jcall!(secondPoint).getY());
+                point = { let java_value = (jcall!(pointFactory).createXY(newX.clone(), jcall!(secondPoint).getY())).clone(); java_value };
                 jcall!(newBasicArrayList).add(crate::java_into_object(point.clone()));
             } else {
                 jcall!(newBasicArrayList).add(crate::java_into_object(secondPoint.clone()));
@@ -150,7 +155,7 @@ impl BasicGraphicsPipeline {
         return self.pointBasicArrayList.clone();
     }
 }
-pub trait BasicGraphicsPipelineDyn {
+pub trait BasicGraphicsPipelineDyn: std::any::Any {
     fn as_BasicGraphicsPipeline(&self) -> &BasicGraphicsPipeline;
     fn as_BasicGraphicsPipeline_mut(&mut self) -> &mut BasicGraphicsPipeline;
     fn setInitMatrix(&mut self, mut points: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) { BasicGraphicsPipeline::setInitMatrix(self.as_BasicGraphicsPipeline_mut(), points) }

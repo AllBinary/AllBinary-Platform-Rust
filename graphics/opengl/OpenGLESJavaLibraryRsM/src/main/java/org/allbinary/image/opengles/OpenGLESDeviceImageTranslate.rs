@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use super::OpenGLESImageTranslate::OpenGLESImageTranslate;
 use super::OpenGLESImage::OpenGLESImage;
 
@@ -60,12 +60,12 @@ impl OpenGLESDeviceImageTranslate {
     
 
     pub fn translate(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>>, mut x: f32, mut y: f32) {
-        jcall!(jcall!(openGLESImage).as_OpenGLESImage_mut().imageProcessor).translate(gl.clone(), self.translateX + (jcall!(jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageProperties).scaleX * x), self.translateY + (jcall!(jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageProperties).scaleY * y));
+        jcall!({ let java_field = jcall!(openGLESImage).as_OpenGLESImage_mut().imageProcessor.clone(); java_field }).translate(gl.clone(), self.translateX + ({ let java_field = jcall!({ let java_field = jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageProperties.clone(); java_field }).scaleX.clone(); java_field } * x), self.translateY + ({ let java_field = jcall!({ let java_field = jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageProperties.clone(); java_field }).scaleY.clone(); java_field } * y));
     }
     
 
     pub fn translate2(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>>) {
-        jcall!(jcall!(openGLESImage).as_OpenGLESImage_mut().imageProcessor).translate(gl.clone(), self.translateX2.clone(), self.translateY2.clone());
+        jcall!({ let java_field = jcall!(openGLESImage).as_OpenGLESImage_mut().imageProcessor.clone(); java_field }).translate(gl.clone(), self.translateX2.clone(), self.translateY2.clone());
     }
 }
 impl std::ops::Deref for OpenGLESDeviceImageTranslate {

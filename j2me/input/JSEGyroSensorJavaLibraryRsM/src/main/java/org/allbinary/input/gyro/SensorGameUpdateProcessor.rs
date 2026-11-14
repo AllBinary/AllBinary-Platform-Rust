@@ -21,6 +21,7 @@ use crate::org::allbinary::game::input::motion::action::NoCompleteMotionGestureI
 use crate::org::allbinary::input::AllBinarySensor::AllBinarySensor;
 use crate::org::allbinary::input::NoAllBinarySensor::NoAllBinarySensor;
 use crate::org::allbinary::input::accelerometer::AccelerometerSensorFactory::AccelerometerSensorFactory;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -35,6 +36,10 @@ pub struct SensorGameUpdateProcessor {
 
 
 impl SensorGameUpdateProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -78,20 +83,14 @@ impl SensorGameUpdateProcessor {
     
 
     pub fn setNoSensors(&mut self) {
-        jcall!(GyroSensorFactory::GyroSensorFactory::getInstance()).setCompleteMotionGestureInputEventListener(NoCompleteMotionGestureInputEventListener::getInstance());
-        jcall!(AccelerometerSensorFactory::getInstance()).setCompleteMotionGestureInputEventListener(NoCompleteMotionGestureInputEventListener::getInstance());
+        jcall!(GyroSensorFactory::GyroSensorFactory::getInstance()).setCompleteMotionGestureInputEventListener(NoCompleteMotionGestureInputEventListener::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEventListenerInterface::CompleteMotionGestureInputEventListenerInterface>>));
+        jcall!(AccelerometerSensorFactory::getInstance()).setCompleteMotionGestureInputEventListener(NoCompleteMotionGestureInputEventListener::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEventListenerInterface::CompleteMotionGestureInputEventListenerInterface>>));
         { let java_arguments = (NoAllBinarySensor::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::AllBinarySensor::AllBinarySensorDyn>>),); self.setInputSensor(java_arguments.0) };
     }
 }
-pub trait SensorGameUpdateProcessorDyn {
+pub trait SensorGameUpdateProcessorDyn: std::any::Any {
     fn as_SensorGameUpdateProcessor(&self) -> &SensorGameUpdateProcessor;
     fn as_SensorGameUpdateProcessor_mut(&mut self) -> &mut SensorGameUpdateProcessor;
-    fn setInputSensor(&mut self, mut inputSensor: Option<Rc<RefCell<dyn crate::org::allbinary::input::AllBinarySensor::AllBinarySensorDyn>>>) { SensorGameUpdateProcessor::setInputSensor(self.as_SensorGameUpdateProcessor_mut(), inputSensor) }
-    fn getInputSensor(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::input::AllBinarySensor::AllBinarySensorDyn>>> { SensorGameUpdateProcessor::getInputSensor(self.as_SensorGameUpdateProcessor_mut()) }
-    fn process(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { SensorGameUpdateProcessor::process(self.as_SensorGameUpdateProcessor_mut(), anyType) }
-    fn sendNotifications(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { SensorGameUpdateProcessor::sendNotifications(self.as_SensorGameUpdateProcessor_mut(), anyType) }
-    fn isAnySensor(&mut self) -> bool { SensorGameUpdateProcessor::isAnySensor(self.as_SensorGameUpdateProcessor_mut()) }
-    fn setNoSensors(&mut self) { SensorGameUpdateProcessor::setNoSensors(self.as_SensorGameUpdateProcessor_mut()) }
     fn setInputSensor(&mut self, mut inputSensor: Option<Rc<RefCell<dyn crate::org::allbinary::input::AllBinarySensor::AllBinarySensorDyn>>>) { SensorGameUpdateProcessor::setInputSensor(self.as_SensorGameUpdateProcessor_mut(), inputSensor) }
     fn getInputSensor(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::input::AllBinarySensor::AllBinarySensorDyn>>> { SensorGameUpdateProcessor::getInputSensor(self.as_SensorGameUpdateProcessor_mut()) }
     fn process(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { SensorGameUpdateProcessor::process(self.as_SensorGameUpdateProcessor_mut(), anyType) }

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::FileFilter::FileFilter;
+use crate::java::io::FileFilter::FileFilter;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
@@ -58,32 +58,32 @@ impl SubDirectory {
     }
     
 
-    pub fn search2(&mut self, mut fileFilter: Option<Rc<RefCell<FileFilter>>>, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+    pub fn search2(&mut self, mut fileFilter: Option<Rc<RefCell<dyn FileFilter>>>, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
         return jcall!(self.directory).search3(fileFilter.clone(), file.clone(), true);
     }
     
 
     // Java overloaded method: Rust needs a different name
     pub fn search(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        return jcall!(self.directory).search2(file.clone(), true);
+        return jcall!(self.directory).search2_AbFile_boolean(file.clone(), true);
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn search2(&mut self, mut searchValue: String, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        return jcall!(self.directory).search3(searchValue.clone(), file.clone(), true);
+    pub fn search2_String_AbFile(&mut self, mut searchValue: String, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+        return jcall!(self.directory).search3_String_AbFile_boolean(searchValue.clone(), file.clone(), true);
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn search2(&mut self, mut level: i32, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        return jcall!(self.directory).search3(level.clone(), file.clone(), true);
+    pub fn search2_int_AbFile(&mut self, mut level: i32, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+        return jcall!(self.directory).search3_int_AbFile_boolean(level.clone(), file.clone(), true);
     }
     
 
     pub fn toString(mut files: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        let mut NEW_LINE: String = jcall!(CommonSeps::getInstance()).NEW_LINE.clone();
+        let mut NEW_LINE: String = { let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone();
         let mut size: i32 = jcall!(files).size();
         for index in (0..size) {
             let mut file: Option<Rc<RefCell<AbFile>>> = { let java_object = (jcall!(files).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AbFile>>>>().expect("ClassCastException").clone()) };

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use super::LocationPaintable::LocationPaintable;
 
 // Borrows the object of a Java reference
@@ -32,9 +32,6 @@ pub struct StringLocationPaintable {
     pub value: String,
 }
 
-impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for StringLocationPaintable {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
-}
 
 impl StringLocationPaintable {
     
@@ -53,7 +50,7 @@ impl StringLocationPaintable {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         jcall!(graphics).drawString(self.value.clone(), x.clone(), y.clone(), 0);
     }
 }
@@ -68,7 +65,9 @@ impl std::ops::DerefMut for StringLocationPaintable {
 impl crate::org::allbinary::graphics::paint::LocationPaintable::LocationPaintableDyn for StringLocationPaintable {
     fn as_LocationPaintable(&self) -> &crate::org::allbinary::graphics::paint::LocationPaintable::LocationPaintable { &self.base }
     fn as_LocationPaintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::LocationPaintable::LocationPaintable { &mut self.base }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+}
+impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for StringLocationPaintable {
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 

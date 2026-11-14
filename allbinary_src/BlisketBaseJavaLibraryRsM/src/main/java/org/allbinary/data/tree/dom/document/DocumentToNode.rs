@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::string::regex::replace::Replace::Replace;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,6 +39,10 @@ thread_local! { pub static DocumentToNode_XMLEND: String = String::from(">"); }
 thread_local! { pub static DocumentToNode_XMLJSPROOTENDSTART: String = String::from("</jsp:root"); }
 
 impl DocumentToNode {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -53,9 +58,9 @@ impl DocumentToNode {
 
     // throws Exception
     pub fn convertDocumentToNodeString(mut documentString: String) -> String {
-        documentString = DocumentToNode::remove(documentString.clone(), DocumentToNode_XMLJSPROOTSTART.with(Clone::clone).clone(), DocumentToNode_XMLEND.with(Clone::clone).clone());
-        documentString = DocumentToNode::remove(documentString.clone(), DocumentToNode_XMLJSPROOTENDSTART.with(Clone::clone).clone(), DocumentToNode_XMLEND.with(Clone::clone).clone());
-        let mut replaceXmlRoot: Option<Rc<RefCell<Replace>>> = Replace::new2(DocumentToNode_XMLROOT.with(Clone::clone).clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone());
+        documentString = { let java_value = (DocumentToNode::remove(documentString.clone(), DocumentToNode_XMLJSPROOTSTART.with(Clone::clone).clone(), DocumentToNode_XMLEND.with(Clone::clone).clone())).clone(); java_value };
+        documentString = { let java_value = (DocumentToNode::remove(documentString.clone(), DocumentToNode_XMLJSPROOTENDSTART.with(Clone::clone).clone(), DocumentToNode_XMLEND.with(Clone::clone).clone())).clone(); java_value };
+        let mut replaceXmlRoot: Option<Rc<RefCell<Replace>>> = Replace::new2(DocumentToNode_XMLROOT.with(Clone::clone).clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
         return jcall!(replaceXmlRoot).all(documentString.clone());
     }
     
@@ -67,9 +72,9 @@ impl DocumentToNode {
 
     pub fn remove(mut documentString: String, mut start: String, mut end: String) -> String {
         let mut startIndex: i32 = 0;
-        while ({ startIndex = documentString.find(&start.clone()).map(|index| index as i32).unwrap_or(-1); startIndex.clone() }) != -1 {
+        while ({ startIndex = { let java_value = (documentString.find(&start.clone()).map(|index| index as i32).unwrap_or(-1)).clone(); java_value }; startIndex.clone() }) != -1 {
             if startIndex >= 0 {
-                let mut endIndex: i32 = jcall!(documentString).indexOf(end.clone(), startIndex.clone());
+                let mut endIndex: i32 = { let java_from = (startIndex).max(0) as usize; documentString.get(java_from..).and_then(|java_rest| java_rest.find(&end)).map(|index| (index + java_from) as i32).unwrap_or(-1) };
                 if endIndex >= 0 {
                     let mut startString: String = documentString[(0) as usize..(startIndex) as usize].to_string();
                     let mut resultString: String = documentString[(endIndex + 1) as usize..].to_string();

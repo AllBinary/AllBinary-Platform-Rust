@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::ArtificialIntelligence::ArtificialIntelligence;
 
 // Borrows the object of a Java reference
@@ -26,13 +27,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait ArtificialIntelligenceFactoryInterface {
+pub trait ArtificialIntelligenceFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn getInstance(&mut self, anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

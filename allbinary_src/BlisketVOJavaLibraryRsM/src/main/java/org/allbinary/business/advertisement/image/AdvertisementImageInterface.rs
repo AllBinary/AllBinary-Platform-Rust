@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AdvertisementImageInterface {
+pub trait AdvertisementImageInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getFileName(&mut self) -> String;
@@ -36,8 +36,6 @@ pub trait AdvertisementImageInterface {
     
 
     fn getTwoDimensionalConstraint(&mut self) -> Option<Rc<RefCell<dyn TwoDimensionalConstraintInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

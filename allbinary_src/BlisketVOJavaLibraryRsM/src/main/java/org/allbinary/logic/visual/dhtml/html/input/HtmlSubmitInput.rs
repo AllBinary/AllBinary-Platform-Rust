@@ -36,7 +36,7 @@ impl HtmlSubmitInput {
 
     pub fn new_struct(mut before: String, mut name: String, mut value: String, mut after: String) -> Self {
         let mut this = Self {
-            base: HtmlValueInput::new_struct(before.clone(), jcall!(HtmlInputData::HtmlInputData::getInstance()).SUBMIT.clone(), name.clone(), value.clone(), after.clone()),
+            base: HtmlValueInput::new_struct(before.clone(), { let java_field = jcall!(HtmlInputData::HtmlInputData::getInstance()).SUBMIT.clone(); java_field }.clone(), name.clone(), value.clone(), after.clone()),
         };
         // super(...) is in the struct literal above
         this

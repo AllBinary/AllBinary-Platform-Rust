@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::ItemPaintableFactory::ItemPaintableFactory;
 use super::LockablePaintable::LockablePaintable;
 use super::ItemPaintable::ItemPaintable;
@@ -54,7 +55,7 @@ impl LockableFormPaintableFactory {
 
     // throws Exception
     pub fn getInstanceItemPaintable(&mut self, mut paintableForm: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::PaintableForm::PaintableFormDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemPaintable::ItemPaintableDyn>>> {
-        return LockablePaintable::new(self.lockedIndex.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemPaintable::ItemPaintableDyn>>);
+        return LockablePaintable::new(self.lockedIndex.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemPaintable::ItemPaintableDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemPaintable::ItemPaintableDyn>>);
     }
 }
 impl std::ops::Deref for LockableFormPaintableFactory {

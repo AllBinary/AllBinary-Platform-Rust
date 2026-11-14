@@ -38,6 +38,10 @@ impl crate::org::allbinary::osgi::OSGIServiceInterface::OSGIServiceInterface for
 }
 
 impl InputAutomationRobotService {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut inputRobotInterfaceArray: Vec<Option<Rc<RefCell<dyn InputRobotInterface>>>>) -> Self {

@@ -34,6 +34,10 @@ pub struct VehicleProperties {
 
 
 impl VehicleProperties {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut vehicleFrictionProperties: Option<Rc<RefCell<VehicleFrictionProperties>>>) -> Self {

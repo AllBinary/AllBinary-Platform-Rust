@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::system::os::OperatingSystemInterface::OperatingSystemInterface;
+use crate::java::lang::Exception::*;
 use super::HardwareInterface::HardwareInterface;
 
 // Borrows the object of a Java reference
@@ -34,6 +35,10 @@ pub struct HardwareFactory {
 thread_local! { pub static HardwareFactory_instance: Option<Rc<RefCell<HardwareFactory>>> = HardwareFactory::new(); }
 
 impl HardwareFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<HardwareFactory>>> {
@@ -57,16 +62,17 @@ impl HardwareFactory {
     // throws Exception
     // Java overloaded method: Rust needs a different name
     pub fn getInstance1(&mut self, mut os: Option<Rc<RefCell<dyn OperatingSystemInterface>>>) -> Option<Rc<RefCell<dyn HardwareInterface>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            return self.SINGLETON.clone();
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            return Some(self.SINGLETON.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

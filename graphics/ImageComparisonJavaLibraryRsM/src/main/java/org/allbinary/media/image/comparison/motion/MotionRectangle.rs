@@ -22,7 +22,7 @@ use super::*;
 // use crate::java::util::Vector::Vector;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
-use super::Cloneable::Cloneable;
+use crate::java::lang::Cloneable::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,9 +36,14 @@ pub struct MotionRectangle {
     pub pixelDeltaVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-// impl Cloneable for MotionRectangle with the methods of the trait
+impl Cloneable for MotionRectangle {
+}
 
 impl MotionRectangle {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut rectangle: Option<Rc<RefCell<Rectangle>>>) -> Self {
@@ -77,8 +82,8 @@ impl MotionRectangle {
     
 
     pub fn clone(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        let mut motionRectangle: Option<Rc<RefCell<MotionRectangle>>> = MotionRectangle::new((jcall!(self.getRectangle()).clone()).clone() /* as Rectangle */);
-        jcall!(motionRectangle).setPixelDeltaVector((jcall!(self.getPixelDeltaVector()).clone()).clone() /* as BasicArrayList */);
+        let mut motionRectangle: Option<Rc<RefCell<MotionRectangle>>> = MotionRectangle::new((jcall!(self.getRectangle()).clone()).clone());
+        jcall!(motionRectangle).setPixelDeltaVector({ let java_object = (jcall!(self.getPixelDeltaVector()).clone()).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) });
         return (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(motionRectangle.clone());
     }
 }

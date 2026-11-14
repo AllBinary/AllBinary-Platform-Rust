@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvasInterface::AllBinaryGameCanvasInterface;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
+use crate::java::lang::Exception::*;
 use super::GeographicMapCellPosition::GeographicMapCellPosition;
 use super::GeographicMapCellType::GeographicMapCellType;
 use super::BasicGeographicMap::BasicGeographicMap;
@@ -40,6 +41,10 @@ pub struct GeographicMapCellPositionTracking {
 
 
 impl GeographicMapCellPositionTracking {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -65,7 +70,7 @@ impl GeographicMapCellPositionTracking {
     pub fn getCurrentOverCellType(&mut self, mut geographicMap: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>> {
         let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = self.currentGeographicMapCellPosition.clone();
         if !match (&geographicMapCellPosition, &self.previousGeographicMapCellPosition) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            self.currentCellType = jcall!(geographicMap).getCellTypeAt(geographicMapCellPosition.clone());
+            self.currentCellType = { let java_value = (jcall!(geographicMap).getCellTypeAt(geographicMapCellPosition.clone())).clone(); java_value };
         }
         return self.currentCellType.clone();
     }
@@ -74,9 +79,9 @@ impl GeographicMapCellPositionTracking {
     // throws Exception
     pub fn updateStart(&mut self, mut gameCanvasInterface: Option<Rc<RefCell<dyn AllBinaryGameCanvasInterface>>>, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> bool {
         if !match (&gameCanvasInterface, &SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (jcall!(gameCanvasInterface).getLayerManager()).clone() /* as GeographicMapCompositeInterface */;
+            let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryGameLayerManager cannot be cast to GeographicMapCompositeInterface") })();
             let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
-            self.newGeographicMapCellPosition = jcall!(geographicMapInterface).getCellPositionAtXY(jcall!(layer).getXP() + jcall!(layer).getHalfWidth(), jcall!(layer).getYP() + jcall!(layer).getHalfHeight());
+            self.newGeographicMapCellPosition = { let java_value = (jcall!(geographicMapInterface).getCellPositionAtXY(jcall!(layer).getXP() + jcall!(layer).getHalfWidth(), jcall!(layer).getYP() + jcall!(layer).getHalfHeight())).clone(); java_value };
             if !match (&self.newGeographicMapCellPosition, &self.currentGeographicMapCellPosition) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 self.currentGeographicMapCellPosition = self.newGeographicMapCellPosition.clone();
                 return true;

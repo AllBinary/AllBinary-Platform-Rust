@@ -16,11 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::io::ByteArrayOutputStream::ByteArrayOutputStream;
 // use crate::java::io::PrintStream::PrintStream;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::java::util::Properties::Properties;
 // use crate::javax::mail::Address::Address;
 // use crate::javax::mail::Authenticator::Authenticator;
@@ -40,6 +39,7 @@ use crate::org::allbinary::logic::string::StringValidationUtil::StringValidation
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::EmailInterface::EmailInterface;
 
 // Borrows the object of a Java reference
@@ -54,7 +54,7 @@ pub struct Email {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
     pub msg: Option<Rc<RefCell<MimeMessage>>>,
     pub properties: Option<Rc<RefCell<Properties>>>,
-    pub bs: Vec<u8>,
+    pub bs: Option<Rc<RefCell<crate::java::io::OutputStream::OutputStream>>>,
     pub isDebug: bool,
 }
 
@@ -77,6 +77,10 @@ impl crate::org::allbinary::data::tree::dom::document::mapping::DomDocumentMappi
 }
 
 impl Email {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct7(mut from: String, mut to: String, mut subject: String, mut server: String, mut textBody: String, mut htmlAttachment: String, mut contentBase: String) -> Self {
@@ -136,15 +140,15 @@ impl Email {
                 }
                 mimeBodyParts[(1) as usize] = MimeBodyPart::new(internetHeaders.clone(), htmlAttachment.bytes().map(|value| value as i8).collect::<Vec<i8>>());
             }
-            self.init8(server.clone(), (None).clone() /* as Authenticator */, vec![InternetAddress::new(from.clone())], vec![InternetAddress::new(to.clone())], (None).clone() /* as  */, (None).clone() /* as  */, subject.clone(), mimeBodyParts.clone());
+            self.init8(server.clone(), (None).clone() /* as Authenticator */, vec![InternetAddress::new(from.clone())], vec![InternetAddress::new(to.clone())], None, None, subject.clone(), mimeBodyParts.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).EMAILLOGGINGERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).EMAILLOGGINGERROR.clone(); java_field }.clone()) {
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("emailConstructor"), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("emailConstructor"), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", e);
             }
@@ -158,9 +162,9 @@ impl Email {
         self.properties = Properties::new();
         jcall!(self.properties).put(Email_SMTP_HOST.with(Clone::clone).clone(), server.clone());
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut hostName: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            let mut hostName: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
             if jcall!(StringValidationUtil::getInstance()).isEmpty(hostName.clone()) {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).EMAILLOGGINGERROR.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).EMAILLOGGINGERROR.clone(); java_field }.clone()) {
                     jcall!(self.logUtil).putF(String::from("Unable to get HostName so using fake"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("init()"));
                 }
                 jcall!(self.properties).put(Email_SMTP_LOCAL_HOST.with(Clone::clone).clone(), String::from("FakeHostName"));
@@ -168,9 +172,9 @@ impl Email {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).EMAILLOGGINGERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).EMAILLOGGINGERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).put(String::from("Continuing on Exception: Unable to get HostName"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("init()"), crate::java_into_object(e.clone()));
             }
             jcall!(self.properties).put(Email_SMTP_LOCAL_HOST.with(Clone::clone).clone(), String::from("FakeHostName"));
@@ -182,15 +186,15 @@ impl Email {
         let mut session: Option<Rc<RefCell<Session>>> = Session::getInstance(self.properties.clone(), authenticator.clone());
         if self.isDebug {
             jcall!(session).setDebug(true);
-            self.bs = Vec::new();
+            self.bs = crate::java::io::OutputStream::OutputStream::new();
             let mut printStream: () = ();
             jcall!(session).setDebugOut(printStream.clone());
         }
         self.msg = MimeMessage::new(session.clone());
         jcall!(self.msg).addFrom(addresses_from.clone());
-        jcall!(self.msg).setRecipients(jcall!(unsafe { crate::javax::mail::Message::Message_RecipientType.clone() }).TO.clone(), addresses_to.clone());
-        jcall!(self.msg).setRecipients(jcall!(unsafe { crate::javax::mail::Message::Message_RecipientType.clone() }).CC.clone(), addresses_cc.clone());
-        jcall!(self.msg).setRecipients(jcall!(unsafe { crate::javax::mail::Message::Message_RecipientType.clone() }).BCC.clone(), addresses_bcc.clone());
+        jcall!(self.msg).setRecipients({ let java_field = jcall!(unsafe { crate::javax::mail::Message::Message_RecipientType.clone() }).TO.clone(); java_field }.clone(), addresses_to.clone());
+        jcall!(self.msg).setRecipients({ let java_field = jcall!(unsafe { crate::javax::mail::Message::Message_RecipientType.clone() }).CC.clone(); java_field }.clone(), addresses_cc.clone());
+        jcall!(self.msg).setRecipients({ let java_field = jcall!(unsafe { crate::javax::mail::Message::Message_RecipientType.clone() }).BCC.clone(); java_field }.clone(), addresses_bcc.clone());
         jcall!(self.msg).setSubject(subject.clone());
         let mut mimeMultipart: Option<Rc<RefCell<MimeMultipart>>> = MimeMultipart::new();
         for i in (0..(mimeBodyParts.len() as i32)) {
@@ -207,7 +211,7 @@ impl Email {
 
     pub fn getDebugInfo(&mut self) -> String {
         if self.isDebug {
-            return format!("{}{}", String::from("More Logging Before This To Standard Out: "), String::from_utf8_lossy(&self.bs).into_owned().clone());
+            return format!("{}{}", String::from("More Logging Before This To Standard Out: "), jcall!(self.bs).toString().clone());
         } else {
             return String::from("Debugging Is Off");
         }
@@ -216,72 +220,73 @@ impl Email {
 
     // throws Exception
     pub fn log(&mut self) -> String {
-        return format!("{}{}", String::from("\nHashMap: "), jcall!(self.toHashMap()).toString());
+        return format!("{}{}", String::from("\nHashMap: "), { let java_value = jcall!(self.toHashMap()).toString(); java_value });
     }
     
 
     // throws Exception
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-            jcall!(hashMap).put(EmailData_SERVER.with(Clone::clone).clone(), (jcall!(self.properties).get(Email_SMTP_HOST.with(Clone::clone).clone())).clone() /* as String */);
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+            jcall!(hashMap).put(crate::java_into_object(EmailData_SERVER.with(Clone::clone).clone()), crate::java_into_object((jcall!(self.properties).get(Email_SMTP_HOST.with(Clone::clone).clone())).clone() /* as String */));
             let mut addresses: Vec<Option<Rc<RefCell<Address>>>> = jcall!(self.msg).getFrom();
-            if addresses.is_some() {
+            if !addresses.is_empty() {
                 for index in (0..(addresses.len() as i32)) {
-                    jcall!(hashMap).put(EmailData_FROM.with(Clone::clone).clone(), jcall!(addresses[(index) as usize]).toString());
+                    jcall!(hashMap).put(crate::java_into_object(EmailData_FROM.with(Clone::clone).clone()), crate::java_into_object(jcall!(addresses[(index) as usize]).toString()));
                 }
             }
-            addresses = jcall!(self.msg).getRecipients(jcall!(unsafe { crate::javax::mail::Message::Message_RecipientType.clone() }).TO.clone());
-            if addresses.is_some() {
+            addresses = { let java_value = (jcall!(self.msg).getRecipients({ let java_field = jcall!(unsafe { crate::javax::mail::Message::Message_RecipientType.clone() }).TO.clone(); java_field }.clone())).clone(); java_value };
+            if !addresses.is_empty() {
                 for index in (0..(addresses.len() as i32)) {
-                    jcall!(hashMap).put(EmailData_TO.with(Clone::clone).clone(), jcall!(addresses[(index) as usize]).toString());
+                    jcall!(hashMap).put(crate::java_into_object(EmailData_TO.with(Clone::clone).clone()), crate::java_into_object(jcall!(addresses[(index) as usize]).toString()));
                 }
             }
-            addresses = jcall!(self.msg).getRecipients(jcall!(unsafe { crate::javax::mail::Message::Message_RecipientType.clone() }).CC.clone());
-            if addresses.is_some() {
+            addresses = { let java_value = (jcall!(self.msg).getRecipients({ let java_field = jcall!(unsafe { crate::javax::mail::Message::Message_RecipientType.clone() }).CC.clone(); java_field }.clone())).clone(); java_value };
+            if !addresses.is_empty() {
                 for index in (0..(addresses.len() as i32)) {
-                    jcall!(hashMap).put(EmailData_CC.with(Clone::clone).clone(), jcall!(addresses[(index) as usize]).toString());
+                    jcall!(hashMap).put(crate::java_into_object(EmailData_CC.with(Clone::clone).clone()), crate::java_into_object(jcall!(addresses[(index) as usize]).toString()));
                 }
             }
-            addresses = jcall!(self.msg).getRecipients(jcall!(unsafe { crate::javax::mail::Message::Message_RecipientType.clone() }).BCC.clone());
-            if addresses.is_some() {
+            addresses = { let java_value = (jcall!(self.msg).getRecipients({ let java_field = jcall!(unsafe { crate::javax::mail::Message::Message_RecipientType.clone() }).BCC.clone(); java_field }.clone())).clone(); java_value };
+            if !addresses.is_empty() {
                 for index in (0..(addresses.len() as i32)) {
-                    jcall!(hashMap).put(EmailData_BCC.with(Clone::clone).clone(), jcall!(addresses[(index) as usize]).toString());
+                    jcall!(hashMap).put(crate::java_into_object(EmailData_BCC.with(Clone::clone).clone()), crate::java_into_object(jcall!(addresses[(index) as usize]).toString()));
                 }
             }
-            jcall!(hashMap).put(EmailData_SUBJECT.with(Clone::clone).clone(), jcall!(self.msg).getSubject());
+            jcall!(hashMap).put(crate::java_into_object(EmailData_SUBJECT.with(Clone::clone).clone()), crate::java_into_object(jcall!(self.msg).getSubject()));
             let mut mimeMultipart: Option<Rc<RefCell<MimeMultipart>>> = (jcall!(self.msg).getContent()).clone() /* as MimeMultipart */;
             if mimeMultipart.is_some() {
-                for index in (0..jcall!(mimeMultipart).getCount()) {
+                for index in (0..{ let java_bound = jcall!(mimeMultipart).getCount(); java_bound }) {
                     let mut content: String = (jcall!(jcall!(mimeMultipart).getBodyPart(index.clone())).getContent()).clone() /* as String */;
-                    jcall!(hashMap).put(EmailData_CONTENT.with(Clone::clone).clone(), content.clone());
+                    jcall!(hashMap).put(crate::java_into_object(EmailData_CONTENT.with(Clone::clone).clone()), crate::java_into_object(content.clone()));
                 }
             }
-            return hashMap.clone();
+            return Some(hashMap.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).EMAILLOGGINGERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toHashMap()"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).EMAILLOGGINGERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toHashMap()"), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes(document.clone(), EmailData_NAME.with(Clone::clone).clone(), self.toHashMap());
+        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), EmailData_NAME.with(Clone::clone).clone(), self.toHashMap());
         return node.clone();
     }
     
 
     // throws Exception
     pub fn toXmlDoc(&mut self) -> Option<Rc<RefCell<Document>>> {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
 }
 

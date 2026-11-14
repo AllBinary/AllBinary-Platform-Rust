@@ -23,6 +23,7 @@ use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::graphics::opengles::CurrentDisplayableFactory::CurrentDisplayableFactory;
 use crate::org::allbinary::graphics::opengles::OpenGLFeatureFactory::OpenGLFeatureFactory;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
+use crate::java::lang::Exception::*;
 use super::DemoGameBehavior::DemoGameBehavior;
 use super::AllBinaryGameCanvas::AllBinaryGameCanvas;
 
@@ -54,7 +55,7 @@ impl BaseGameBehavior {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::DemoGameBehavior::DemoGameBehaviorDyn>>> {
-        return BaseGameBehavior_instanceC.with(Clone::clone).clone();
+        return BaseGameBehavior_instanceC.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::DemoGameBehavior::DemoGameBehaviorDyn>>);
     }
     
 
@@ -67,18 +68,18 @@ impl BaseGameBehavior {
 
     pub fn pause(&mut self, mut allBinaryGameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>) {
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
-        if jcall!(features).isDefault(jcall!(OpenGLFeatureFactory::getInstance()).OPENGL_AS_GAME_THREAD.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        if jcall!(features).isDefault({ let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL_AS_GAME_THREAD.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             let mut currentDisplayableFactory: Option<Rc<RefCell<CurrentDisplayableFactory>>> = CurrentDisplayableFactory::getInstance();
-            jcall!(currentDisplayableFactory).setRunnable(jcall!(allBinaryGameCanvas).as_AllBinaryGameCanvas_mut().gamePauseRunnable.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>));
+            jcall!(currentDisplayableFactory).setRunnable({ let java_field = jcall!(allBinaryGameCanvas).as_AllBinaryGameCanvas_mut().gamePauseRunnable.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>));
         }
     }
     
 
     pub fn unPause(&mut self, mut allBinaryGameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>) {
-        if jcall!(Features::getInstance()).isDefault(jcall!(OpenGLFeatureFactory::getInstance()).OPENGL_AS_GAME_THREAD.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        if jcall!(Features::getInstance()).isDefault({ let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL_AS_GAME_THREAD.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             let mut currentDisplayableFactory: Option<Rc<RefCell<CurrentDisplayableFactory>>> = CurrentDisplayableFactory::getInstance();
-            jcall!(currentDisplayableFactory).setRunnable(jcall!(allBinaryGameCanvas).as_AllBinaryGameCanvas_mut().gameRunnable.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>));
-            jcall!(currentDisplayableFactory).setDisplayable(allBinaryGameCanvas.clone());
+            jcall!(currentDisplayableFactory).setRunnable({ let java_field = jcall!(allBinaryGameCanvas).as_AllBinaryGameCanvas_mut().gameRunnable.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>));
+            jcall!(currentDisplayableFactory).setDisplayable(allBinaryGameCanvas.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>));
         }
     }
     

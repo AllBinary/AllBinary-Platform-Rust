@@ -16,11 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
-// use crate::java::util::Map::Map;
-// use crate::java::util::Set::Set;
+use crate::java::util::HashMap::HashMap;
+use crate::java::util::Map::Map;
+use crate::java::util::Set::Set;
 use crate::org::allbinary::business::init::db::DatabaseConnectionInfoInterface::DatabaseConnectionInfoInterface;
 use crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfo;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
@@ -30,6 +29,7 @@ use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::DynamicInitDb::DynamicInitDb;
 use super::InitializerData::InitializerData;
 
@@ -57,9 +57,13 @@ thread_local! { pub static InitializerDatabase_MIN: i32 = 4; }
 thread_local! { pub static InitializerDatabase_MINPASSWORD: i32 = 0; }
 
 impl InitializerDatabase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct2(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut map: Option<Rc<RefCell<dyn Map>>>) -> Self {
+    pub fn new_struct2(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut map: Option<Rc<RefCell<dyn Map<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             adminDbUserName: String::new(),
@@ -72,14 +76,14 @@ impl InitializerDatabase {
         };
         this.logUtil = LogUtil::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
         let mut keys: Option<Rc<RefCell<dyn Set>>> = jcall!(map).keySet();
         let mut keyArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(keys).toArray();
         let mut size: i32 = (keyArray.len() as i32).clone();
         for index in (0..size) {
-            let mut key: String = (keyArray[(index) as usize]).clone() /* as String */;
-            let mut values: Vec<String> = (jcall!(map).get(key.clone())).clone() /* as  */;
-            jcall!(hashMap).put(key.clone().clone(), values[(0) as usize].clone().clone());
+            let mut key: String = { let java_object = (keyArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut values: Vec<String> = { let java_object = (jcall!(map).get(crate::java_into_object(key.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<Vec<String>>().cloned().expect("ClassCastException")).unwrap_or_default() };
+            jcall!(hashMap).put(crate::java_into_object(key.clone().clone()), crate::java_into_object(values[(0) as usize].clone().clone()));
             jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
             jcall!(stringBuffer).append(String::from("key: "));
             jcall!(stringBuffer).append(key.clone());
@@ -91,12 +95,12 @@ impl InitializerDatabase {
         this
     }
 
-    pub fn new2(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut map: Option<Rc<RefCell<dyn Map>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new2(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut map: Option<Rc<RefCell<dyn Map<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct2(abeClientInformation, map))))
     }
     
 
-    pub fn new_struct2(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut initHashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct2_AbeClientInformationInterface_HashMap(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut initHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             adminDbUserName: String::new(),
@@ -112,34 +116,34 @@ impl InitializerDatabase {
         this
     }
 
-    pub fn new2(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut initHashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct2(abeClientInformation, initHashMap))))
+    pub fn new2_AbeClientInformationInterface_HashMap(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut initHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct2_AbeClientInformationInterface_HashMap(abeClientInformation, initHashMap))))
     }
     
 
-    pub fn getFormData(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut hashMap: Option<Rc<RefCell<HashMap>>>) {
+    pub fn getFormData(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut initializerData: Option<Rc<RefCell<InitializerData>>> = InitializerData::getInstance();
-            { let java_arguments = ((jcall!(hashMap).get(jcall!(initializerData).DBUSER.clone())).clone() /* as String */,); self.setAdminDbUserName(java_arguments.0) };
-            { let java_arguments = ((jcall!(hashMap).get(jcall!(initializerData).DBPASSWORD.clone())).clone() /* as String */,); self.setAdminDbPassword(java_arguments.0) };
-            { let java_arguments = ((jcall!(hashMap).get(jcall!(initializerData).ADMINJDBCDRIVER.clone())).clone() /* as String */,); self.setAdminJdbcDriver(java_arguments.0) };
-            { let java_arguments = ((jcall!(hashMap).get(jcall!(initializerData).ADMINSCHEMA.clone())).clone() /* as String */,); self.setAdminSchema(java_arguments.0) };
-            { let java_arguments = ((jcall!(hashMap).get(jcall!(initializerData).ADMINSERVER.clone())).clone() /* as String */,); self.setAdminServer(java_arguments.0) };
-            { let java_arguments = ((jcall!(hashMap).get(jcall!(initializerData).ADMINPORT.clone())).clone() /* as String */,); self.setAdminPort(java_arguments.0) };
+            { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).DBUSER.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setAdminDbUserName(java_arguments.0) };
+            { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).DBPASSWORD.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setAdminDbPassword(java_arguments.0) };
+            { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).ADMINJDBCDRIVER.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setAdminJdbcDriver(java_arguments.0) };
+            { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).ADMINSCHEMA.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setAdminSchema(java_arguments.0) };
+            { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).ADMINSERVER.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setAdminServer(java_arguments.0) };
+            { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).ADMINPORT.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setAdminPort(java_arguments.0) };
             let mut dbConnectionInfo: Option<Rc<RefCell<dyn crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfoDyn>>> = DbConnectionInfo::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfoDyn>>);
-            let mut adminDbName: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-            jcall!(dbConnectionInfo).setJdbcDriver(self.getAdminJdbcDriver());
-            jcall!(dbConnectionInfo).setName(adminDbName.clone());
-            jcall!(dbConnectionInfo).setUserName(self.getAdminDbUserName());
-            jcall!(dbConnectionInfo).setPassword(self.getAdminDbPassword());
-            jcall!(dbConnectionInfo).setSchema(self.getAdminSchema());
-            jcall!(dbConnectionInfo).setServer(self.getAdminServer());
-            jcall!(dbConnectionInfo).setPort(self.getAdminPort());
-            self.initDb = DynamicInitDb::new2(abeClientInformation.clone(), (dbConnectionInfo).clone() /* as DatabaseConnectionInfoInterface */);
+            let mut adminDbName: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+            jcall!(dbConnectionInfo).as_DbConnectionInfo_mut().setJdbcDriver(self.getAdminJdbcDriver());
+            jcall!(dbConnectionInfo).as_DbConnectionInfo_mut().setName(adminDbName.clone());
+            jcall!(dbConnectionInfo).as_DbConnectionInfo_mut().setUserName(self.getAdminDbUserName());
+            jcall!(dbConnectionInfo).as_DbConnectionInfo_mut().setPassword(self.getAdminDbPassword());
+            jcall!(dbConnectionInfo).as_DbConnectionInfo_mut().setSchema(self.getAdminSchema());
+            jcall!(dbConnectionInfo).as_DbConnectionInfo_mut().setServer(self.getAdminServer());
+            jcall!(dbConnectionInfo).as_DbConnectionInfo_mut().setPort(self.getAdminPort());
+            self.initDb = DynamicInitDb::new2(abeClientInformation.clone(), (|| -> Option<Rc<RefCell<dyn DatabaseConnectionInfoInterface>>> { panic!("ClassCastException: a Rust dyn DbConnectionInfo cannot be cast to DatabaseConnectionInfoInterface") })());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             jcall!(self.logUtil).put(String::from("Unable to get form data"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getFormData()"), crate::java_into_object(e.clone()));
             }
@@ -148,27 +152,28 @@ impl InitializerDatabase {
     
 
     pub fn isJdbcDriverValid(&mut self, mut jdbcDriverClassPathString: String) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(Class::Class::forName(jdbcDriverClassPathString.clone())).newInstance();
-            return true;
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PRELOADERERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PRELOADERERROR.clone(); java_field }.clone()) {
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).IS_VALID.clone(), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).IS_VALID.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn isValid(&mut self) -> bool {
         let mut isValid: bool = true;
-        if !self.isJdbcDriverValid(self.adminJdbcDriver.clone()) {
+        if !{ let java_arguments = (self.adminJdbcDriver.clone(),); self.isJdbcDriverValid(java_arguments.0) } {
             isValid = false;
         }
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
@@ -195,7 +200,7 @@ impl InitializerDatabase {
         let mut isValid: bool = true;
         let mut isJdbcDriversValid: bool = true;
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        if !self.isJdbcDriverValid(self.adminJdbcDriver.clone()) {
+        if !{ let java_arguments = (self.adminJdbcDriver.clone(),); self.isJdbcDriverValid(java_arguments.0) } {
             isJdbcDriversValid = false;
             jcall!(stringBuffer).append({ let java_arguments = (self.getAdminJdbcDriver(),); self.getJdbcDriverValidationInfo(java_arguments.0) });
         }
@@ -214,50 +219,53 @@ impl InitializerDatabase {
     
 
     pub fn createUsers(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(self.initDb).addUsers();
-            return true;
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             jcall!(self.logUtil).put(String::from("Unable to Create Users"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("createUsers()"), crate::java_into_object(e.clone()));
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn createDatabases(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(self.initDb).addDatabases();
-            return true;
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             jcall!(self.logUtil).put(String::from("Unable to Create Databases"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("createDatabases()"), crate::java_into_object(e.clone()));
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn createTables(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(self.initDb).addTables();
-            return true;
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             jcall!(self.logUtil).put(String::from("Unable to Create Tables"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("createTables()"), crate::java_into_object(e.clone()));
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 

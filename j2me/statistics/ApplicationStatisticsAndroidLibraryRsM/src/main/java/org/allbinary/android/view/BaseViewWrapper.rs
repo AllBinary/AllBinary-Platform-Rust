@@ -32,6 +32,10 @@ thread_local! { pub static BaseViewWrapper_NULL_VIEW_WRAPPER: Option<Rc<RefCell<
 
 impl BaseViewWrapper {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -50,7 +54,7 @@ impl BaseViewWrapper {
     pub fn postInvalidate(&mut self) {
     }
 }
-pub trait BaseViewWrapperDyn {
+pub trait BaseViewWrapperDyn: std::any::Any {
     fn as_BaseViewWrapper(&self) -> &BaseViewWrapper;
     fn as_BaseViewWrapper_mut(&mut self) -> &mut BaseViewWrapper;
     fn invalidate(&mut self) { BaseViewWrapper::invalidate(self.as_BaseViewWrapper_mut()) }

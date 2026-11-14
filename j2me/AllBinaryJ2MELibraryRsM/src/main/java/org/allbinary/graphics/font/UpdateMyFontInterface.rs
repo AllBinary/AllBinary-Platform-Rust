@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait UpdateMyFontInterface {
+pub trait UpdateMyFontInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
-    fn updateMeasurement(&mut self, graphics: Option<Rc<RefCell<Graphics>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn updateMeasurement(&mut self, graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>);
 }
 
 

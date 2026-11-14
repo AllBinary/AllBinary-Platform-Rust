@@ -48,7 +48,7 @@ impl AllCommandsVisitor {
     
 
     pub fn visit(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return jcall!(BooleanFactory::getInstance()).TRUE.clone();
+        return crate::java_into_object({ let java_field = jcall!(BooleanFactory::getInstance()).TRUE.clone(); java_field }.clone());
     }
 }
 impl std::ops::Deref for AllCommandsVisitor {

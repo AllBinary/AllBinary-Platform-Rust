@@ -31,6 +31,10 @@ pub struct UserEmailEventsConfigurationData {
 thread_local! { pub static UserEmailEventsConfigurationData_NAME: String = String::from("EMAIL_EVENTS_CONFIGURATION_NAME"); }
 
 impl UserEmailEventsConfigurationData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

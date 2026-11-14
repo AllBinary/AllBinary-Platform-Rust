@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,6 +31,10 @@ pub struct OpenGLVUtilBase {
 
 
 impl OpenGLVUtilBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -54,7 +58,7 @@ impl OpenGLVUtilBase {
     pub fn glGenerateMipmap(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut textureId: i32, mut target: i32, mut generateMipMap: bool) {
     }
 }
-pub trait OpenGLVUtilBaseDyn {
+pub trait OpenGLVUtilBaseDyn: std::any::Any {
     fn as_OpenGLVUtilBase(&self) -> &OpenGLVUtilBase;
     fn as_OpenGLVUtilBase_mut(&mut self) -> &mut OpenGLVUtilBase;
     fn glTexEnvix(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut target: i32, mut pname: i32, mut param: i32) { OpenGLVUtilBase::glTexEnvix(self.as_OpenGLVUtilBase_mut(), gl, target, pname, param) }

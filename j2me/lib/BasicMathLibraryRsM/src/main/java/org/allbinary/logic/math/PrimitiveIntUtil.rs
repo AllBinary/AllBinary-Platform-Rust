@@ -31,6 +31,10 @@ pub struct PrimitiveIntUtil {
 
 
 impl PrimitiveIntUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -45,12 +49,12 @@ impl PrimitiveIntUtil {
     
 
     pub fn getArrayInstance() -> Vec<i32> {
-        return jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone();
+        return { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone(); java_field }.clone();
     }
     
 
     pub fn getTwoDimensionalArrayInstance() -> Vec<Vec<i32>> {
-        return jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY.clone();
+        return { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY.clone(); java_field }.clone();
     }
 }
 

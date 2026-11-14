@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::util::HashSet::HashSet;
-// use crate::java::util::Set::Set;
+use crate::java::util::HashSet::HashSet;
+use crate::java::util::Set::Set;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::user::commerce::inventory::item::Item::Item;
@@ -26,6 +26,7 @@ use crate::org::allbinary::business::user::commerce::inventory::item::ItemView::
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,13 +41,17 @@ pub struct BasketReview {
 
 
 impl BasketReview {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
         let mut this = Self {
             items: None,
         };
-        this.items = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.items = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -74,8 +79,8 @@ impl BasketReview {
         let mut itemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(self.items).toArray();
         let mut size: i32 = (itemArray.len() as i32).clone();
         for index in (0..size) {
-            let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>> = (itemArray[(index) as usize]).clone() /* as Item */;
-            if jcall!(jcall!(item).as_Item_mut().getId()).compareTo(id.clone()) == 0 {
+            let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>> = { let java_object = (itemArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>>>().expect("ClassCastException").clone()) };
+            if (jcall!(item).getId().cmp(&id.clone()) as i32) == 0 {
                 jcall!(self.items).remove(crate::java_into_object(item.clone()));
             }
         }
@@ -86,9 +91,9 @@ impl BasketReview {
         let mut itemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(self.items).toArray();
         let mut size: i32 = (itemArray.len() as i32).clone();
         for index in (0..size) {
-            let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>> = (itemArray[(index) as usize]).clone() /* as Item */;
-            if jcall!(jcall!(item).as_Item_mut().getId()).compareTo(id.clone()) == 0 {
-                jcall!(item).as_Item_mut().setNumber(num.clone());
+            let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>> = { let java_object = (itemArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>>>().expect("ClassCastException").clone()) };
+            if (jcall!(item).getId().cmp(&id.clone()) as i32) == 0 {
+                jcall!(item).setNumber(num.clone());
             }
         }
     }
@@ -99,10 +104,10 @@ impl BasketReview {
         let mut itemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(self.items).toArray();
         let mut size: i32 = (itemArray.len() as i32).clone();
         for index in (0..size) {
-            let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>> = (itemArray[(index) as usize]).clone() /* as Item */;
-            weightFloat += ((Some((jcall!(item).as_Item_mut().getWeight()) as f32)).unwrap() as f32);
+            let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>> = { let java_object = (itemArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>>>().expect("ClassCastException").clone()) };
+            weightFloat += ((Some((jcall!(item).getWeight()).trim().parse::<f32>().expect("NumberFormatException"))).unwrap() as f32);
         }
-        return jcall!(Some((weightFloat.clone()) as f32)).toString();
+        return (Some((weightFloat.clone()) as f32)).expect("NullPointerException").to_string();
     }
     
 
@@ -116,10 +121,10 @@ impl BasketReview {
         let mut itemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(self.items).toArray();
         let mut size: i32 = (itemArray.len() as i32).clone();
         for index in (0..size) {
-            let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>> = (itemArray[(index) as usize]).clone() /* as Item */;
-            jcall!(idSet).add(jcall!(item).as_Item_mut().getId());
+            let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>> = { let java_object = (itemArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>>>().expect("ClassCastException").clone()) };
+            jcall!(idSet).add(jcall!(item).getId());
         }
-        return (idSet).clone() /* as Set */;
+        return (idSet).clone().map(|reference| reference as Rc<RefCell<dyn Set>>);
     }
     
 
@@ -127,9 +132,9 @@ impl BasketReview {
         let mut itemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(self.items).toArray();
         let mut size: i32 = (itemArray.len() as i32).clone();
         for index in (0..size) {
-            let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>> = (itemArray[(index) as usize]).clone() /* as Item */;
-            if jcall!(jcall!(item).as_Item_mut().getId()).compareTo(id.clone()) == 0 {
-                return Some((jcall!(item).as_Item_mut().getNumber()) as i32);
+            let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>> = { let java_object = (itemArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>>>().expect("ClassCastException").clone()) };
+            if (jcall!(item).getId().cmp(&id.clone()) as i32) == 0 {
+                return Some((jcall!(item).getNumber()).trim().parse::<i32>().expect("NumberFormatException"));
             }
         }
         return Some((0) as i32);
@@ -142,8 +147,8 @@ impl BasketReview {
         let mut itemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(self.items).toArray();
         let mut size: i32 = (itemArray.len() as i32).clone();
         for index in (0..size) {
-            let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>> = (itemArray[(index) as usize]).clone() /* as Item */;
-            jcall!(node).appendChild(jcall!(ItemView::new(item.clone(), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>))).toXmlNode(document.clone()));
+            let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>> = { let java_object = (itemArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::Item::ItemDyn>>>>().expect("ClassCastException").clone()) };
+            jcall!(node).appendChild(jcall!(ItemView::new(item.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::OrderItemInterface::OrderItemInterface>> { panic!("ClassCastException: the Rust trait of Item does not have OrderItemInterface as a base trait") }), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>))).toXmlNode(document.clone()));
         }
         return node.clone();
     }

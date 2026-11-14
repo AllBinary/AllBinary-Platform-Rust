@@ -36,10 +36,14 @@ pub struct NullAIFactory {
 
 pub static mut NullAIFactory_NULL_AI: std::cell::LazyCell<Option<Rc<RefCell<NullAI>>>> = std::cell::LazyCell::new(|| NullAI::new());
 impl ArtificialIntelligenceInterfaceFactoryInterface for NullAIFactory {
-    fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> { Self::getInstance3(self, hashtable, ownerLayerInterface, gameInput) }
+    fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> { Self::getInstance3(self, hashtable, ownerLayerInterface, gameInput) }
 }
 
 impl NullAIFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -52,14 +56,14 @@ impl NullAIFactory {
     }
     
 
-    pub fn getInstance3(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> {
-        return unsafe { NullAIFactory_NULL_AI.clone() }.clone();
+    pub fn getInstance3(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> {
+        return unsafe { NullAIFactory_NULL_AI.clone() }.clone().map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>);
     }
     
 
     // Java overloaded method: Rust needs a different name
     pub fn getInstance() -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> {
-        return unsafe { NullAIFactory_NULL_AI.clone() }.clone();
+        return unsafe { NullAIFactory_NULL_AI.clone() }.clone().map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>);
     }
 }
 

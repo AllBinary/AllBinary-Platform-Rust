@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::BasicWeaponPart::BasicWeaponPart;
 
 // Borrows the object of a Java reference
@@ -26,13 +27,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait BasicWeaponPartFactoryInterface {
+pub trait BasicWeaponPartFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn getInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -50,8 +50,8 @@ impl ObjectPermutationVisitor {
 
     pub fn visit(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
         { let java_receiver = self.stringBuilder.clone(); let java_arguments = (0, jcall!(self.stringBuilder).length(),); jcall!(java_receiver).delete(java_arguments.0, java_arguments.1); };
-        self.print2(self.data.clone(), self.stringBuilder.clone());
-        return jcall!(NullUtil::getInstance()).NULL_OBJECT.clone();
+        { let java_arguments = (self.data.clone(), self.stringBuilder.clone(),); self.print2(java_arguments.0, java_arguments.1) };
+        return { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone();
     }
     
 
@@ -67,7 +67,7 @@ impl ObjectPermutationVisitor {
         let mut size: i32 = (data.len() as i32).clone();
         for i in (0..size) {
             jcall!(stringBuilder).appendint(jcall!(tsUtil).hashCode(crate::java_into_object(data[(i) as usize].clone())));
-            jcall!(stringBuilder).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
+            jcall!(stringBuilder).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
         }
         println!("{}", jcall!(stringBuilder).toString());
     }

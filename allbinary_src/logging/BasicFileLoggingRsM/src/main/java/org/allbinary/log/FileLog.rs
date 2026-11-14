@@ -17,16 +17,17 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::BufferedReader::BufferedReader;
-// use crate::java::io::BufferedWriter::BufferedWriter;
-// use crate::java::io::File::File;
-// use crate::java::io::FileReader::FileReader;
-// use crate::java::io::FileWriter::FileWriter;
+use crate::java::io::BufferedReader::BufferedReader;
+use crate::java::io::BufferedWriter::BufferedWriter;
+use crate::java::io::File::File;
+use crate::java::io::FileReader::FileReader;
+use crate::java::io::FileWriter::FileWriter;
 // use crate::java::io::RandomAccessFile::RandomAccessFile;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::communication::log::LogFormatUtil::LogFormatUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -46,12 +47,16 @@ thread_local! { pub static FileLog_fileName: String = format!("{}{}", String::fr
 thread_local! { pub static FileLog_backupFileName: String = jcall!(FileLog_fileName.with(Clone::clone)).concat(String::from(".bak")); }
 thread_local! { pub static FileLog_ORG_ALLBINARY: String = String::from("org.allbinary: "); }
 pub static mut FileLog_firstTime: std::cell::LazyCell<bool> = std::cell::LazyCell::new(|| true);
-pub static mut FileLog_logFile: std::cell::LazyCell<Option<Rc<RefCell<File>>>> = std::cell::LazyCell::new(|| File::new(FileLog_logPath.with(Clone::clone).clone(), FileLog_fileName.with(Clone::clone).clone()));
+pub static mut FileLog_logFile: std::cell::LazyCell<Option<Rc<RefCell<File>>>> = std::cell::LazyCell::new(|| File::new2(FileLog_logPath.with(Clone::clone).clone(), FileLog_fileName.with(Clone::clone).clone()));
 pub static mut FileLog_logFileBak: std::cell::LazyCell<Option<Rc<RefCell<File>>>> = std::cell::LazyCell::new(|| None);
 pub static mut FileLog_fileOut: std::cell::LazyCell<Option<Rc<RefCell<BufferedWriter>>>> = std::cell::LazyCell::new(|| None);
 pub static mut FileLog_backupIndex: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 0);
 
 impl FileLog {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -67,61 +72,63 @@ impl FileLog {
 
     // synchronized
     pub fn createLogFile() -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            unsafe { *FileLog_logFile = File::new(FileLog_logPath.with(Clone::clone).clone(), FileLog_fileName.with(Clone::clone).clone()) };
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            unsafe { *FileLog_logFile = File::new2(FileLog_logPath.with(Clone::clone).clone(), FileLog_fileName.with(Clone::clone).clone()) };
             if !unsafe { FileLog_firstTime.clone() } {
-                unsafe { *FileLog_fileOut = BufferedWriter::new(FileWriter::new(unsafe { FileLog_logFile.clone() }.clone())) };
+                unsafe { *FileLog_fileOut = BufferedWriter::new(FileWriter::new1(unsafe { FileLog_logFile.clone() }.clone())) };
             } else {
                 unsafe { *FileLog_firstTime = false };
                 let mut raFile: Option<Rc<RefCell<RandomAccessFile>>> = RandomAccessFile::new(unsafe { FileLog_logFile.clone() }.clone(), String::from("rw"));
                 jcall!(raFile).seek(jcall!(raFile).length());
-                unsafe { *FileLog_fileOut = BufferedWriter::new(FileWriter::new(jcall!(raFile).getFD())) };
+                unsafe { *FileLog_fileOut = BufferedWriter::new(FileWriter::new1(jcall!(raFile).getFD())) };
             }
             let mut canWrite: bool = jcall!(unsafe { FileLog_logFile.clone() }).canWrite();
-            return canWrite.clone();
+            return Some(canWrite.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             println!("{}", format!("{}{}", String::from("Error Creating Log: "), e));
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // synchronized
     pub fn createLogFileBackup() -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut stringMaker: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-            unsafe { *FileLog_logFileBak = File::new(FileLog_logPath.with(Clone::clone).clone(), jcall!(stringMaker).append(FileLog_backupFileName.with(Clone::clone).clone()).append(jcall!(CommonSeps::getInstance()).PERIOD.clone()).appendint(unsafe { FileLog_backupIndex.clone() }.clone()).toString()) };
+            unsafe { *FileLog_logFileBak = File::new2(FileLog_logPath.with(Clone::clone).clone(), jcall!(stringMaker).append(FileLog_backupFileName.with(Clone::clone).clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).PERIOD.clone(); java_field }.clone()).appendint(unsafe { FileLog_backupIndex.clone() }.clone()).toString()) };
             while jcall!(unsafe { FileLog_logFileBak.clone() }).isFile() {
                 unsafe { *FileLog_backupIndex += 1 };
                 jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                unsafe { *FileLog_logFileBak = File::new(FileLog_logPath.with(Clone::clone).clone(), jcall!(stringMaker).append(FileLog_backupFileName.with(Clone::clone).clone()).append(jcall!(CommonSeps::getInstance()).PERIOD.clone()).appendint(unsafe { FileLog_backupIndex.clone() }.clone()).toString()) };
+                unsafe { *FileLog_logFileBak = File::new2(FileLog_logPath.with(Clone::clone).clone(), jcall!(stringMaker).append(FileLog_backupFileName.with(Clone::clone).clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).PERIOD.clone(); java_field }.clone()).appendint(unsafe { FileLog_backupIndex.clone() }.clone()).toString()) };
             }
             let mut line: String = String::new();
-            let mut tmpOut: Option<Rc<RefCell<BufferedWriter>>> = BufferedWriter::new(FileWriter::new(unsafe { FileLog_logFileBak.clone() }.clone()));
+            let mut tmpOut: Option<Rc<RefCell<BufferedWriter>>> = BufferedWriter::new(FileWriter::new1(unsafe { FileLog_logFileBak.clone() }.clone()));
             let mut tmpIn: Option<Rc<RefCell<BufferedReader>>> = BufferedReader::new(FileReader::new(unsafe { FileLog_logFile.clone() }.clone()));
-            while ({ line = jcall!(tmpIn).readLine(); line.clone() }).is_some() {
-                jcall!(tmpOut).write(line.clone(), 0, (line.chars().count() as i32));
+            while ({ line = { let java_value = (jcall!(tmpIn).readLine()).clone(); java_value }; line.clone() }).is_some() {
+                jcall!(tmpOut).write3(line.clone(), 0, (line.chars().count() as i32));
                 jcall!(tmpOut).newLine();
             }
             jcall!(tmpOut).flush();
             jcall!(tmpOut).close();
             jcall!(tmpIn).close();
             jcall!(unsafe { FileLog_logFile.clone() }).delete();
-            return true;
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             println!("{}", format!("{}{}", String::from("Error Creating Backup: "), e));
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -134,87 +141,89 @@ impl FileLog {
     // Java overloaded method: Rust needs a different name
     // synchronized
     pub fn put4(mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String, mut exception: String) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if unsafe { FileLog_firstTime.clone() } == true {
                 FileLog::createLogFileBackup();
                 if Self::createLogFile() == false {
-                    return String::from("Log File Creation Error").clone();
+                    return Some(String::from("Log File Creation Error").clone());
                 }
             }
             let mut length: i64 = ((jcall!(unsafe { FileLog_logFile.clone() }).length()) as i64);
             if length > FileLog_logLength.with(Clone::clone) {
                 if !(Self::createLogFileBackup()) || Self::createLogFile() == false {
-                    return String::from("Couldn't Create a Backup file").clone();
+                    return Some(String::from("Couldn't Create a Backup file").clone());
                 }
             }
-            let mut className: String = jcall!(FileLog_stringUtil.with(Clone::clone)).NULL_STRING.clone().clone();
+            let mut className: String = { let java_field = jcall!(FileLog_stringUtil.with(Clone::clone)).NULL_STRING.clone(); java_field }.clone().clone();
             if false {
-                functionName = jcall!(FileLog_stringUtil.with(Clone::clone)).NULL_STRING.clone().clone();
+                functionName = { let java_value = ({ let java_field = jcall!(FileLog_stringUtil.with(Clone::clone)).NULL_STRING.clone(); java_field }.clone().clone()).clone(); java_value };
             }
             if false {
-                specialMessage = jcall!(FileLog_stringUtil.with(Clone::clone)).NULL_STRING.clone().clone();
+                specialMessage = { let java_value = ({ let java_field = jcall!(FileLog_stringUtil.with(Clone::clone)).NULL_STRING.clone(); java_field }.clone().clone()).clone(); java_value };
             }
             if true {
-                className = std::any::type_name_of_val(&anyType).to_string().clone();
+                className = { let java_value = (std::any::type_name_of_val(&anyType).to_string().clone()).clone(); java_value };
             }
             let mut message: String = jcall!(LogFormatUtil::getInstance()).get(className.clone(), functionName.clone(), specialMessage.clone(), crate::java_into_object(exception.clone()));
-            jcall!(unsafe { FileLog_fileOut.clone() }).write(message.clone(), 0, (message.chars().count() as i32));
+            jcall!(unsafe { FileLog_fileOut.clone() }).write3(message.clone(), 0, (message.chars().count() as i32));
             jcall!(unsafe { FileLog_fileOut.clone() }).newLine();
             jcall!(unsafe { FileLog_fileOut.clone() }).flush();
-            return format!("{}{}", FileLog_ORG_ALLBINARY.with(Clone::clone), message).clone();
+            return Some(format!("{}{}", FileLog_ORG_ALLBINARY.with(Clone::clone), message).clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return format!("{}{}", String::from("Error: "), e).clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // Java overloaded method: Rust needs a different name
     // synchronized
-    pub fn put(mut specialMessage: String, mut className: String, mut functionName: String) -> String {
-        return FileLog::put4(specialMessage.clone(), className.clone(), functionName.clone(), None);
+    pub fn put_String_String_String(mut specialMessage: String, mut className: String, mut functionName: String) -> String {
+        return FileLog::put4_String_String_String_Exception(specialMessage.clone(), className.clone(), functionName.clone(), None);
     }
     
 
     // Java overloaded method: Rust needs a different name
     // synchronized
-    pub fn put4(mut specialMessage: String, mut className: String, mut functionName: String, mut exception: String) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+    pub fn put4_String_String_String_Exception(mut specialMessage: String, mut className: String, mut functionName: String, mut exception: String) -> String {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if unsafe { FileLog_firstTime.clone() } == true {
                 FileLog::createLogFileBackup();
                 if Self::createLogFile() == false {
-                    return String::from("Log File Creation Error").clone();
+                    return Some(String::from("Log File Creation Error").clone());
                 }
             }
             let mut length: i64 = ((jcall!(unsafe { FileLog_logFile.clone() }).length()) as i64);
             if length > FileLog_logLength.with(Clone::clone) {
                 if !(Self::createLogFileBackup()) || Self::createLogFile() == false {
-                    return String::from("Couldn't Create a Backup file").clone();
+                    return Some(String::from("Couldn't Create a Backup file").clone());
                 }
             }
             if false {
-                functionName = jcall!(FileLog_stringUtil.with(Clone::clone)).NULL_STRING.clone().clone();
+                functionName = { let java_value = ({ let java_field = jcall!(FileLog_stringUtil.with(Clone::clone)).NULL_STRING.clone(); java_field }.clone().clone()).clone(); java_value };
             }
             if false {
-                specialMessage = jcall!(FileLog_stringUtil.with(Clone::clone)).NULL_STRING.clone().clone();
+                specialMessage = { let java_value = ({ let java_field = jcall!(FileLog_stringUtil.with(Clone::clone)).NULL_STRING.clone(); java_field }.clone().clone()).clone(); java_value };
             }
             let mut message: String = jcall!(LogFormatUtil::getInstance()).get(className.clone(), functionName.clone(), specialMessage.clone(), crate::java_into_object(exception.clone()));
-            jcall!(unsafe { FileLog_fileOut.clone() }).write(message.clone(), 0, (message.chars().count() as i32));
+            jcall!(unsafe { FileLog_fileOut.clone() }).write3(message.clone(), 0, (message.chars().count() as i32));
             jcall!(unsafe { FileLog_fileOut.clone() }).newLine();
             jcall!(unsafe { FileLog_fileOut.clone() }).flush();
-            return format!("{}{}", FileLog_ORG_ALLBINARY.with(Clone::clone), message).clone();
+            return Some(format!("{}{}", FileLog_ORG_ALLBINARY.with(Clone::clone), message).clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return format!("{}{}", String::from("Error: "), e).clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 

@@ -16,10 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
-// use crate::java::util::Set::Set;
+use crate::java::util::HashMap::HashMap;
+use crate::java::util::Set::Set;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
@@ -29,6 +28,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::UserEmailEventsConfigurationInterface::UserEmailEventsConfigurationInterface;
 use super::UserEmailEventsConfiguration::UserEmailEventsConfiguration;
 use super::UserEmailEventConfigurationView::UserEmailEventConfigurationView;
@@ -53,6 +53,10 @@ impl DomNodeInterface for UserEmailEventsConfigurationView {
 }
 
 impl UserEmailEventsConfigurationView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut node: Option<Rc<RefCell<Node>>>) -> Self {
@@ -80,7 +84,7 @@ impl UserEmailEventsConfigurationView {
     }
     
 
-    pub fn new_struct1(mut userEmailEventsConfigurationInterface: Option<Rc<RefCell<dyn UserEmailEventsConfigurationInterface>>>) -> Self {
+    pub fn new_struct1_UserEmailEventsConfigurationInterface(mut userEmailEventsConfigurationInterface: Option<Rc<RefCell<dyn UserEmailEventsConfigurationInterface>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -92,8 +96,8 @@ impl UserEmailEventsConfigurationView {
         this
     }
 
-    pub fn new1(mut userEmailEventsConfigurationInterface: Option<Rc<RefCell<dyn UserEmailEventsConfigurationInterface>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(userEmailEventsConfigurationInterface))))
+    pub fn new1_UserEmailEventsConfigurationInterface(mut userEmailEventsConfigurationInterface: Option<Rc<RefCell<dyn UserEmailEventsConfigurationInterface>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_UserEmailEventsConfigurationInterface(userEmailEventsConfigurationInterface))))
     }
     
 
@@ -106,16 +110,16 @@ impl UserEmailEventsConfigurationView {
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
         let mut userEmailConfigurationMapping: Option<Rc<RefCell<UserEmailEventsConfigurationMapping>>> = UserEmailEventsConfigurationMapping::new(self.userEmailEventsConfigurationInterface.clone());
         let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(UserEmailEventsConfigurationData_NAME.with(Clone::clone).clone());
-        let mut emailEventHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(self.getUserEmailEventsConfigurationInterface()).getEventConfigurationHashMap();
+        let mut emailEventHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(self.getUserEmailEventsConfigurationInterface()).getEventConfigurationHashMap();
         let mut set: Option<Rc<RefCell<dyn Set>>> = jcall!(emailEventHashMap).keySet();
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).EMAILLOGGING.clone()) {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Number Of Email Events Specified in file: "), jcall!(set).size()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).EMAILLOGGING.clone(); java_field }.clone()) {
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Number Of Email Events Specified in file: "), jcall!(set).size()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         let mut eventNameArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(set).toArray();
         let mut size: i32 = (eventNameArray.len() as i32).clone();
         for index in (0..size) {
-            let mut eventName: String = (eventNameArray[(index) as usize]).clone() /* as String */;
-            let mut userEmailEventsConfigurationInterface: Option<Rc<RefCell<dyn UserEmailEventConfigurationInterface>>> = (jcall!(emailEventHashMap).get(eventName.clone())).clone() /* as UserEmailEventConfigurationInterface */;
+            let mut eventName: String = { let java_object = (eventNameArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut userEmailEventsConfigurationInterface: Option<Rc<RefCell<dyn UserEmailEventConfigurationInterface>>> = { let java_object = (jcall!(emailEventHashMap).get(crate::java_into_object(eventName.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn UserEmailEventConfigurationInterface>>>>().expect("ClassCastException").clone()) };
             let mut userEmailEventConfigurationView: Option<Rc<RefCell<UserEmailEventConfigurationView>>> = UserEmailEventConfigurationView::new1(userEmailEventsConfigurationInterface.clone());
             jcall!(node).appendChild(jcall!(userEmailEventConfigurationView).toXmlNode(document.clone()));
         }

@@ -21,6 +21,7 @@ use crate::org::allbinary::logic::util::cache::BasicArrayListResetablePool::Basi
 use crate::org::allbinary::logic::util::cache::CacheableInterface::CacheableInterface;
 use crate::org::allbinary::logic::util::cache::CacheableInterfaceFactoryInterface::CacheableInterfaceFactoryInterface;
 use crate::org::allbinary::logic::util::cache::PoolInterface::PoolInterface;
+use crate::java::lang::Exception::*;
 use super::ImageArrayRotationAnimationCacheableInterfaceFactory::ImageArrayRotationAnimationCacheableInterfaceFactory;
 use super::ImageArrayRotationAnimationInfo::ImageArrayRotationAnimationInfo;
 use super::ImageArrayRotationAnimationCacheable::ImageArrayRotationAnimationCacheable;
@@ -36,7 +37,12 @@ pub struct ImageArrayRotationAnimationPool {
     pub base: BasicArrayListResetablePool,
 }
 
-pub static mut ImageArrayRotationAnimationPool_IMAGE_ROTATION_ANIMATION_POOL: std::cell::LazyCell<Option<Rc<RefCell<dyn PoolInterface>>>> = std::cell::LazyCell::new(|| ImageArrayRotationAnimationPool::new(ImageArrayRotationAnimationCacheableInterfaceFactory::new()).map(|reference| reference as Rc<RefCell<dyn PoolInterface>>));
+pub static mut ImageArrayRotationAnimationPool_IMAGE_ROTATION_ANIMATION_POOL: std::cell::LazyCell<Option<Rc<RefCell<dyn PoolInterface>>>> = std::cell::LazyCell::new(|| ImageArrayRotationAnimationPool::new(ImageArrayRotationAnimationCacheableInterfaceFactory::new().map(|reference| reference as Rc<RefCell<dyn CacheableInterfaceFactoryInterface>>)).map(|reference| reference as Rc<RefCell<dyn PoolInterface>>).map(|reference| reference as Rc<RefCell<dyn PoolInterface>>));
+impl crate::org::allbinary::logic::util::cache::CacheInterface::CacheInterface for ImageArrayRotationAnimationPool {
+    fn add(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::cache::CacheableInterface::CacheableInterface>>>) { crate::org::allbinary::logic::util::cache::AbstractArrayListPool::AbstractArrayListPool::add(crate::org::allbinary::logic::util::cache::AbstractArrayListPool::AbstractArrayListPoolDyn::as_AbstractArrayListPool_mut(self), p1) }
+    fn addArray(&mut self, p1: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::cache::CacheableInterface::CacheableInterface>>>>) { crate::org::allbinary::logic::util::cache::AbstractArrayListPool::AbstractArrayListPool::addArray(crate::org::allbinary::logic::util::cache::AbstractArrayListPool::AbstractArrayListPoolDyn::as_AbstractArrayListPool_mut(self), p1) }
+    fn clear(&mut self) { crate::org::allbinary::logic::util::cache::BasicArrayListResetablePool::BasicArrayListResetablePool::clear(crate::org::allbinary::logic::util::cache::BasicArrayListResetablePool::BasicArrayListResetablePoolDyn::as_BasicArrayListResetablePool_mut(self)) }
+}
 impl PoolInterface for ImageArrayRotationAnimationPool {
     fn remove(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn CacheableInterface>>> { Self::remove(self, key) }
 }
@@ -64,9 +70,9 @@ impl ImageArrayRotationAnimationPool {
 
     // throws Exception
     pub fn remove(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn CacheableInterface>>> {
-        let mut cacheableInterface: Option<Rc<RefCell<dyn CacheableInterface>>> = self.base.remove(key.clone());
-        let mut allBinaryImageRotationAnimationInfo: Option<Rc<RefCell<ImageArrayRotationAnimationInfo>>> = (key).clone() /* as ImageArrayRotationAnimationInfo */;
-        let mut imageArrayRotationAnimationCacheable: Option<Rc<RefCell<ImageArrayRotationAnimationCacheable>>> = ((cacheableInterface).clone() /* as ImageArrayRotationAnimationCacheable */);
+        let mut cacheableInterface: Option<Rc<RefCell<dyn CacheableInterface>>> = { let java_arguments = (crate::java_into_object(key.clone()),); self.base.remove(java_arguments.0) };
+        let mut allBinaryImageRotationAnimationInfo: Option<Rc<RefCell<ImageArrayRotationAnimationInfo>>> = { let java_object = (key).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ImageArrayRotationAnimationInfo>>>>().expect("ClassCastException").clone()) };
+        let mut imageArrayRotationAnimationCacheable: Option<Rc<RefCell<ImageArrayRotationAnimationCacheable>>> = ((cacheableInterface).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<ImageArrayRotationAnimationCacheable>() }, "ClassCastException: not a ImageArrayRotationAnimationCacheable"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<ImageArrayRotationAnimationCacheable>) } }));
         jcall!(imageArrayRotationAnimationCacheable).setImageArray(jcall!(allBinaryImageRotationAnimationInfo).getImageArray());
         return cacheableInterface.clone();
     }

@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,6 +32,10 @@ pub struct TestRemoteHighScoresNotFinished {
 thread_local! { pub static TestRemoteHighScoresNotFinished_PATH: String = String::from("G:\\mnt\\bc\\mydev\\work\\allbinary_src\\licensing\\data\\"); }
 
 impl TestRemoteHighScoresNotFinished {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

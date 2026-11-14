@@ -25,6 +25,7 @@ use crate::org::allbinary::input::motion::trackball::action::RightTrackballInput
 use crate::org::allbinary::input::motion::trackball::action::UpTrackballInputToGameKeyEventAction::UpTrackballInputToGameKeyEventAction;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::MotionEventProcessor::MotionEventProcessor;
 
 // Borrows the object of a Java reference
@@ -86,9 +87,9 @@ impl TrackballGameInputMotionEventProcessor {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

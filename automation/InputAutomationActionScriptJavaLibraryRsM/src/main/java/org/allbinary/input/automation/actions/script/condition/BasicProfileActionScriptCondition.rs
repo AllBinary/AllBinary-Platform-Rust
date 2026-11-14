@@ -38,6 +38,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -54,6 +55,9 @@ pub struct BasicProfileActionScriptCondition {
 }
 
 // impl ProfileActionScriptConditionInterface for BasicProfileActionScriptCondition with the methods of the trait
+impl crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItemInterface::ProfileActionScriptItemInterface for BasicProfileActionScriptCondition {
+    fn process(&mut self, mut frame: Option<i64>) { Self::process(self, frame) }
+}
 
 impl BasicProfileActionScriptCondition {
     
@@ -69,15 +73,15 @@ impl BasicProfileActionScriptCondition {
         // super(...) is in the struct literal above
         this.init();
         let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(node).getChildNodes();
-        for index in (0..jcall!(nodeList).getLength()) {
+        for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
             let mut actionItemNode: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
             if match (&jcall!(actionItemNode).getNodeType(), &unsafe { crate::org::w3c::dom::Node::Node_ELEMENT_NODE.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 if jcall!(jcall!(actionItemNode).getNodeName()).compareTo(unsafe { GenericProfileActionScriptConditionData_NAME.clone() }.clone()) == 0 {
-                    { let java_arguments = (ProfileActionScriptConditionFactory::ProfileActionScriptConditionFactory::getInstance(actionItemNode.clone()),); this.addCondition(java_arguments.0) };
+                    { let java_arguments = (ProfileActionScriptConditionFactory::ProfileActionScriptConditionFactory::getInstance(actionItemNode.clone()).map(|reference| reference as Rc<RefCell<dyn ProfileActionScriptNodeInterface>>),); this.addCondition(java_arguments.0) };
                 } else if jcall!(jcall!(actionItemNode).getNodeName()).compareTo(unsafe { crate::org::allbinary::input::automation::actions::script::condition::processors::input::GenericProfileActionScriptInputData::GenericProfileActionScriptInputData_NAME.clone() }.clone()) == 0 {
-                    { let java_arguments = (ProfileActionScriptInputFactory::getInstance(actionItemNode.clone()),); this.addProcessor(java_arguments.0) };
+                    { let java_arguments = (ProfileActionScriptInputFactory::getInstance(actionItemNode.clone()).map(|reference| reference as Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>),); this.addProcessor(java_arguments.0) };
                 } else if jcall!(jcall!(actionItemNode).getNodeName()).compareTo(unsafe { crate::org::allbinary::input::automation::module::actions::script::condition::processors::output::GenericProfileActionScriptOutputData::GenericProfileActionScriptOutputData_NAME.clone() }.clone()) == 0 {
-                    { let java_arguments = (ProfileActionScriptOutputFactory::getInstance(actionItemNode.clone()),); this.addProcessor(java_arguments.0) };
+                    { let java_arguments = (ProfileActionScriptOutputFactory::getInstance(actionItemNode.clone()).map(|reference| reference as Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>),); this.addProcessor(java_arguments.0) };
                 }
             }
         }
@@ -92,12 +96,12 @@ impl BasicProfileActionScriptCondition {
     // throws Exception
     pub fn addProcessorNodes(&mut self, mut node: Option<Rc<RefCell<Node>>>) {
         let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(node).getChildNodes();
-        for index in (0..jcall!(nodeList).getLength()) {
+        for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
             let mut processorActionItemNode: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
             if jcall!(jcall!(processorActionItemNode).getNodeName()).compareTo(unsafe { crate::org::allbinary::input::automation::actions::script::condition::processors::input::GenericProfileActionScriptInputData::GenericProfileActionScriptInputData_NAME.clone() }.clone()) == 0 {
-                { let java_arguments = (ProfileActionScriptInputFactory::getInstance(processorActionItemNode.clone()),); self.addProcessor(java_arguments.0) };
+                { let java_arguments = (ProfileActionScriptInputFactory::getInstance(processorActionItemNode.clone()).map(|reference| reference as Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>),); self.addProcessor(java_arguments.0) };
             } else if jcall!(jcall!(processorActionItemNode).getNodeName()).compareTo(unsafe { crate::org::allbinary::input::automation::module::actions::script::condition::processors::output::GenericProfileActionScriptOutputData::GenericProfileActionScriptOutputData_NAME.clone() }.clone()) == 0 {
-                { let java_arguments = (ProfileActionScriptOutputFactory::getInstance(processorActionItemNode.clone()),); self.addProcessor(java_arguments.0) };
+                { let java_arguments = (ProfileActionScriptOutputFactory::getInstance(processorActionItemNode.clone()).map(|reference| reference as Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>),); self.addProcessor(java_arguments.0) };
             }
         }
     }
@@ -131,10 +135,10 @@ impl BasicProfileActionScriptCondition {
     
 
     pub fn getConditionJPopupMenu(&mut self) -> Option<Rc<RefCell<JMenu>>> {
-        let mut jMenu: Option<Rc<RefCell<JMenu>>> = JMenu::new(NEW_CONDITION.clone());
-        let mut jMenuItemColorAt: Option<Rc<RefCell<JMenuItem>>> = JMenuItem::new(NEW_COLOR_AT.clone());
-        let mut jMenuItemAlways: Option<Rc<RefCell<JMenuItem>>> = JMenuItem::new(NEW_ALWAYS.clone());
-        let mut jMenuItemTimeInterval: Option<Rc<RefCell<JMenuItem>>> = JMenuItem::new(NEW_TIME_INTERVAL.clone());
+        let mut jMenu: Option<Rc<RefCell<JMenu>>> = JMenu::new(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_CONDITION.with(Clone::clone).clone());
+        let mut jMenuItemColorAt: Option<Rc<RefCell<JMenuItem>>> = JMenuItem::new(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_COLOR_AT.with(Clone::clone).clone());
+        let mut jMenuItemAlways: Option<Rc<RefCell<JMenuItem>>> = JMenuItem::new(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_ALWAYS.with(Clone::clone).clone());
+        let mut jMenuItemTimeInterval: Option<Rc<RefCell<JMenuItem>>> = JMenuItem::new(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_TIME_INTERVAL.with(Clone::clone).clone());
         jcall!(jMenuItemColorAt).addActionListener(None /* Java this: a &mut self method has no Rc of itself */);
         jcall!(jMenuItemAlways).addActionListener(None /* Java this: a &mut self method has no Rc of itself */);
         jcall!(jMenuItemTimeInterval).addActionListener(None /* Java this: a &mut self method has no Rc of itself */);
@@ -146,10 +150,10 @@ impl BasicProfileActionScriptCondition {
     
 
     pub fn getInputJPopupMenu(&mut self) -> Option<Rc<RefCell<JMenu>>> {
-        let mut jMenu: Option<Rc<RefCell<JMenu>>> = JMenu::new(NEW_INPUT.clone());
-        let mut jMenuItemKey: Option<Rc<RefCell<JMenuItem>>> = JMenuItem::new(NEW_KEY_INPUT.clone());
-        let mut jMenuItemMouse: Option<Rc<RefCell<JMenuItem>>> = JMenuItem::new(NEW_MOUSE_INPUT.clone());
-        let mut jMenuItemJoystick: Option<Rc<RefCell<JMenuItem>>> = JMenuItem::new(NEW_JOYSTICK_INPUT.clone());
+        let mut jMenu: Option<Rc<RefCell<JMenu>>> = JMenu::new(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_INPUT.with(Clone::clone).clone());
+        let mut jMenuItemKey: Option<Rc<RefCell<JMenuItem>>> = JMenuItem::new(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_KEY_INPUT.with(Clone::clone).clone());
+        let mut jMenuItemMouse: Option<Rc<RefCell<JMenuItem>>> = JMenuItem::new(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_MOUSE_INPUT.with(Clone::clone).clone());
+        let mut jMenuItemJoystick: Option<Rc<RefCell<JMenuItem>>> = JMenuItem::new(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_JOYSTICK_INPUT.with(Clone::clone).clone());
         jcall!(jMenuItemKey).addActionListener(None /* Java this: a &mut self method has no Rc of itself */);
         jcall!(jMenuItemMouse).addActionListener(None /* Java this: a &mut self method has no Rc of itself */);
         jcall!(jMenuItemJoystick).addActionListener(None /* Java this: a &mut self method has no Rc of itself */);
@@ -161,8 +165,8 @@ impl BasicProfileActionScriptCondition {
     
 
     pub fn getOutputJPopupMenu(&mut self) -> Option<Rc<RefCell<JMenu>>> {
-        let mut jMenu: Option<Rc<RefCell<JMenu>>> = JMenu::new(NEW_OUTPUT.clone());
-        let mut jMenuItemImage: Option<Rc<RefCell<JMenuItem>>> = JMenuItem::new(NEW_IMAGE_OUTPUT.clone());
+        let mut jMenu: Option<Rc<RefCell<JMenu>>> = JMenu::new(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_OUTPUT.with(Clone::clone).clone());
+        let mut jMenuItemImage: Option<Rc<RefCell<JMenuItem>>> = JMenuItem::new(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_IMAGE_OUTPUT.with(Clone::clone).clone());
         jcall!(jMenuItemImage).addActionListener(None /* Java this: a &mut self method has no Rc of itself */);
         jcall!(jMenu).add(jMenuItemImage.clone());
         return jMenu.clone();
@@ -170,29 +174,29 @@ impl BasicProfileActionScriptCondition {
     
 
     pub fn addProcessor(&mut self, mut profileActionProcessorInterface: Option<Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addInput"));
-        jcall!(self.getProfileActionProcessorInterfaceVector()).add(profileActionProcessorInterface.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addInput"));
+        jcall!(self.getProfileActionProcessorInterfaceVector()).add(crate::java_into_object(profileActionProcessorInterface.clone()));
         self.add(profileActionProcessorInterface.clone());
     }
     
 
     pub fn removeProcessor(&mut self, mut profileActionProcessorInterface: Option<Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeInput"));
-        jcall!(self.getProfileActionProcessorInterfaceVector()).remove(profileActionProcessorInterface.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeInput"));
+        jcall!(self.getProfileActionProcessorInterfaceVector()).remove(crate::java_into_object(profileActionProcessorInterface.clone()));
         self.remove(profileActionProcessorInterface.clone());
     }
     
 
     pub fn removeCondition(&mut self, mut profileActionScriptNodeInterface: Option<Rc<RefCell<dyn ProfileActionScriptNodeInterface>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeCondition"));
-        jcall!(self.getProfileActionConditionInterfaceVector()).remove(profileActionScriptNodeInterface.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeCondition"));
+        jcall!(self.getProfileActionConditionInterfaceVector()).remove(crate::java_into_object(profileActionScriptNodeInterface.clone()));
         self.remove(profileActionScriptNodeInterface.clone());
     }
     
 
     pub fn addCondition(&mut self, mut profileActionScriptNodeInterface: Option<Rc<RefCell<dyn ProfileActionScriptNodeInterface>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addCondition"));
-        jcall!(self.getProfileActionConditionInterfaceVector()).add(profileActionScriptNodeInterface.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addCondition"));
+        jcall!(self.getProfileActionConditionInterfaceVector()).add(crate::java_into_object(profileActionScriptNodeInterface.clone()));
         self.add(profileActionScriptNodeInterface.clone());
     }
     
@@ -203,13 +207,13 @@ impl BasicProfileActionScriptCondition {
         let mut profileActionConditionInterfaceVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getProfileActionConditionInterfaceVector();
         let mut size: i32 = jcall!(profileActionConditionInterfaceVector).size();
         for index in (0..size) {
-            let mut profileActionConditionInterface: Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>> = { let java_object = jcall!(profileActionConditionInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>>>().expect("ClassCastException").clone()) };
+            let mut profileActionConditionInterface: Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>> = { let java_object = (jcall!(profileActionConditionInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>>>().expect("ClassCastException").clone()) };
             jcall!(node).appendChild(jcall!(profileActionConditionInterface).toXmlNode(document.clone()));
         }
         let mut profileActionProcessorInterfaceVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getProfileActionProcessorInterfaceVector();
         let mut size2: i32 = jcall!(profileActionProcessorInterfaceVector).size();
         for index in (0..size2) {
-            let mut profileActionProcessorInterface: Option<Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>> = { let java_object = jcall!(profileActionProcessorInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>>>().expect("ClassCastException").clone()) };
+            let mut profileActionProcessorInterface: Option<Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>> = { let java_object = (jcall!(profileActionProcessorInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>>>().expect("ClassCastException").clone()) };
             jcall!(node).appendChild(jcall!(profileActionProcessorInterface).toXmlNode(document.clone()));
         }
         return node.clone();
@@ -228,36 +232,36 @@ impl BasicProfileActionScriptCondition {
 
     pub fn actionPerformed(&mut self, mut actionEvent: Option<Rc<RefCell<ActionEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            self.base.actionPerformed(actionEvent.clone());
-            if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(DELETE.clone()) == 0 {
+            { let java_arguments = (actionEvent.clone(),); self.base.actionPerformed(java_arguments.0) };
+            if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_DELETE.with(Clone::clone).clone()) == 0 {
                 if (self.getParent()).is_some() /* instanceof ProfileActionScriptNodeInterface */ {
-                    let mut profileActionScriptNodeInterface: Option<Rc<RefCell<dyn ProfileActionScriptNodeInterface>>> = (self.getParent()).clone() /* as ProfileActionScriptNodeInterface */;
+                    let mut profileActionScriptNodeInterface: Option<Rc<RefCell<dyn ProfileActionScriptNodeInterface>>> = (self.getParent()).clone();
                     jcall!(profileActionScriptNodeInterface).removeCondition(None /* Java this: a &mut self method has no Rc of itself */);
                     jcall!(jcall!(JTreeInterfaceFactory::getInstance()).getJTreeInterface()).updateJTree();
                 }
-            } else if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(NEW_COLOR_AT.clone()) == 0 {
-                self.addCondition(ColorAtActionScriptCondition::new());
+            } else if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_COLOR_AT.with(Clone::clone).clone()) == 0 {
+                self.addCondition(ColorAtActionScriptCondition::new().map(|reference| reference as Rc<RefCell<dyn ProfileActionScriptNodeInterface>>));
                 self.updateTree();
-            } else if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(NEW_ALWAYS.clone()) == 0 {
-                self.addCondition(AlwaysActionScriptCondition::new());
+            } else if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_ALWAYS.with(Clone::clone).clone()) == 0 {
+                self.addCondition(AlwaysActionScriptCondition::new().map(|reference| reference as Rc<RefCell<dyn ProfileActionScriptNodeInterface>>));
                 self.updateTree();
-            } else if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(NEW_TIME_INTERVAL.clone()) == 0 {
-                self.addCondition(TimeIntervalActionScriptCondition::new());
+            } else if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_TIME_INTERVAL.with(Clone::clone).clone()) == 0 {
+                self.addCondition(TimeIntervalActionScriptCondition::new().map(|reference| reference as Rc<RefCell<dyn ProfileActionScriptNodeInterface>>));
                 self.updateTree();
-            } else if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(NEW_KEY_INPUT.clone()) == 0 {
-                self.addProcessor(KeyboardActionScriptInput::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::automation::actions::script::condition::processors::input::KeyboardActionScriptInput::KeyboardActionScriptInputDyn>>));
+            } else if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_KEY_INPUT.with(Clone::clone).clone()) == 0 {
+                self.addProcessor(KeyboardActionScriptInput::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::automation::actions::script::condition::processors::input::KeyboardActionScriptInput::KeyboardActionScriptInputDyn>>).map(|_java_reference| -> Rc<RefCell<dyn ProfileActionScriptProcessorInterface>> { panic!("ClassCastException: the Rust trait of KeyboardActionScriptInput does not have ProfileActionScriptProcessorInterface as a base trait") }));
                 self.updateTree();
-            } else if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(NEW_MOUSE_INPUT.clone()) == 0 {
-                self.addProcessor(MouseActionScriptInput::new());
+            } else if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_MOUSE_INPUT.with(Clone::clone).clone()) == 0 {
+                self.addProcessor(MouseActionScriptInput::new().map(|reference| reference as Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>));
                 self.updateTree();
-            } else if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(NEW_IMAGE_OUTPUT.clone()) == 0 {
-                self.addProcessor(ImageActionScriptOutput::new());
+            } else if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_NEW_IMAGE_OUTPUT.with(Clone::clone).clone()) == 0 {
+                self.addProcessor(ImageActionScriptOutput::new().map(|reference| reference as Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>));
                 self.updateTree();
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             jcall!(self.logUtil).put(String::from("Error"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("actionPerformed"), crate::java_into_object(e.clone()));
             }
@@ -287,7 +291,7 @@ impl BasicProfileActionScriptCondition {
         let mut profileActionConditionInterfaceVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getProfileActionConditionInterfaceVector();
         let mut size: i32 = jcall!(profileActionConditionInterfaceVector).size();
         for index in (0..size) {
-            let mut profileActionScriptConditionInterface: Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>> = { let java_object = jcall!(profileActionConditionInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>>>().expect("ClassCastException").clone()) };
+            let mut profileActionScriptConditionInterface: Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>> = { let java_object = (jcall!(profileActionConditionInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>>>().expect("ClassCastException").clone()) };
             if !jcall!(profileActionScriptConditionInterface).shouldProcess(frame.clone()) {
                 return false;
             }
@@ -298,11 +302,11 @@ impl BasicProfileActionScriptCondition {
 
     // throws Exception
     pub fn process(&mut self, mut frame: Option<i64>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Start - Processing ")).appendint(jcall!(self.getProfileActionProcessorInterfaceVector()).size()).append(String::from(" inputs")).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_argument = jcall!(StringMaker::new()).append(String::from("Start - Processing ")).appendint({ let java_argument = jcall!(self.getProfileActionProcessorInterfaceVector()).size(); java_argument }).append(String::from(" inputs")).toString(); java_argument }, crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut profileActionProcessorInterfaceVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getProfileActionProcessorInterfaceVector();
         let mut size: i32 = jcall!(profileActionProcessorInterfaceVector).size();
         for index in (0..size) {
-            let mut profileActionScriptProcessorInterface: Option<Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>> = { let java_object = jcall!(profileActionProcessorInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>>>().expect("ClassCastException").clone()) };
+            let mut profileActionScriptProcessorInterface: Option<Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>> = { let java_object = (jcall!(profileActionProcessorInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ProfileActionScriptProcessorInterface>>>>().expect("ClassCastException").clone()) };
             jcall!(profileActionScriptProcessorInterface).process(frame.clone());
         }
     }

@@ -56,7 +56,7 @@ impl IIOImageCacheable {
     
 
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return self.key.clone();
+        return crate::java_into_object(self.key.clone());
     }
     
 
@@ -77,7 +77,7 @@ impl IIOImageCacheable {
 
     pub fn toString(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(std::any::type_name_of_val(&self).to_string());
+        jcall!(stringBuffer).append({ let java_argument = std::any::type_name_of_val(&self).to_string(); java_argument });
         jcall!(stringBuffer).append(String::from(" Reusable IIOImage"));
         return jcall!(stringBuffer).toString();
     }

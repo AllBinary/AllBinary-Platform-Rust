@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvas;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::logic::util::event::AllBinaryEventCircularPool::AllBinaryEventCircularPool;
+use crate::java::lang::Exception::*;
 use super::DestroyEventFactory::DestroyEventFactory;
 use super::DestroyedEvent::DestroyedEvent;
 
@@ -37,6 +38,10 @@ pub struct DestroyEventCircularStaticPool {
 thread_local! { pub static DestroyEventCircularStaticPool_instance: Option<Rc<RefCell<DestroyEventCircularStaticPool>>> = DestroyEventCircularStaticPool::new(); }
 
 impl DestroyEventCircularStaticPool {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<DestroyEventCircularStaticPool>>> {
@@ -58,7 +63,7 @@ impl DestroyEventCircularStaticPool {
     
 
     pub fn init(&mut self, mut combatGameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>) {
-        jcall!(self.EVENT_POOL).initAllBinaryEventCircularPool(DestroyEventFactory::new(combatGameCanvas.clone()));
+        jcall!(self.EVENT_POOL).initAllBinaryEventCircularPool(DestroyEventFactory::new(combatGameCanvas.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObjectFactoryInterface::AllBinaryEventObjectFactoryInterface>>));
     }
     
 

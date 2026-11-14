@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::game::SimpleTiledLayer::SimpleTiledLayer;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::game::SimpleTiledLayer::SimpleTiledLayer;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::layer::RTSLayerEvent::RTSLayerEvent;
 use crate::org::allbinary::game::layer::building::event::BuildingEventListenerInterface::BuildingEventListenerInterface;
 use crate::org::allbinary::game::layer::building::event::LocalPlayerBuildingEventHandler::LocalPlayerBuildingEventHandler;
@@ -31,6 +31,7 @@ use crate::org::allbinary::layer::event::ScrollMapEventListenerInterface::Scroll
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventStrings::EventStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -59,11 +60,12 @@ impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventLis
 impl ScrollMapEventListenerInterface for VisibleCellPositionsSingleton {
     fn onMoveEvent(&mut self, mut scrollMapEvent: Option<Rc<RefCell<ScrollMapEvent>>>) { Self::onMoveEvent(self, scrollMapEvent) }
 }
-impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for VisibleCellPositionsSingleton {
-    fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, eventObject) }
-}
 
 impl VisibleCellPositionsSingleton {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<VisibleCellPositionsSingleton>>> {
@@ -81,9 +83,9 @@ impl VisibleCellPositionsSingleton {
             paintSimpleTiledLayer: None,
             currentIndex: 0,
         };
-        this.stationaryVisibleCellPositions = jcall!(NullUtil::getInstance()).NULL_SHORT_ARRAY_ARRAY.clone();
-        this.visibleCellPositions = jcall!(NullUtil::getInstance()).NULL_SHORT_ARRAY_ARRAY.clone();
-        this.currentlyVisibleCellPositions = jcall!(NullUtil::getInstance()).NULL_SHORT_ARRAY_ARRAY.clone();
+        this.stationaryVisibleCellPositions = { let java_field = jcall!(NullUtil::getInstance()).NULL_SHORT_ARRAY_ARRAY.clone(); java_field }.clone();
+        this.visibleCellPositions = { let java_field = jcall!(NullUtil::getInstance()).NULL_SHORT_ARRAY_ARRAY.clone(); java_field }.clone();
+        this.currentlyVisibleCellPositions = { let java_field = jcall!(NullUtil::getInstance()).NULL_SHORT_ARRAY_ARRAY.clone(); java_field }.clone();
         this.ALL_VISIBLE_TILEDLAYER = SimpleTiledLayer::new(0, 0, 0, 0);
         this.simpleTiledLayer = this.ALL_VISIBLE_TILEDLAYER.clone();
         this.paintSimpleTiledLayer = this.ALL_VISIBLE_TILEDLAYER.clone();
@@ -92,8 +94,8 @@ impl VisibleCellPositionsSingleton {
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
         let this = Some(Rc::new(RefCell::new(Self::new_struct())));
-            jcall!(LocalPlayerBuildingEventHandler::getInstance()).addListenerInterface((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
-            jcall!(ScrollMapEventHandler::getInstance()).addListenerInterface((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+            jcall!(LocalPlayerBuildingEventHandler::getInstance()).addListenerInterface(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+            jcall!(ScrollMapEventHandler::getInstance()).addListenerInterface(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
         this
     }
     
@@ -111,7 +113,7 @@ impl VisibleCellPositionsSingleton {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
@@ -128,7 +130,7 @@ impl VisibleCellPositionsSingleton {
     
 
     pub fn addStationaryCellPositions(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
-        for index in (0..=jcall!(list).size() - 1).rev() {
+        for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
             let mut cellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>> = { let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>>().expect("ClassCastException").clone()) };
             self.stationaryVisibleCellPositions[(jcall!(cellPosition).getRow()) as usize][(jcall!(cellPosition).getColumn()) as usize] += 1;
         }
@@ -136,7 +138,7 @@ impl VisibleCellPositionsSingleton {
     
 
     pub fn removeStationaryCellPositions(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
-        for index in (0..=jcall!(list).size() - 1).rev() {
+        for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
             let mut cellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>> = { let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>>().expect("ClassCastException").clone()) };
             self.stationaryVisibleCellPositions[(jcall!(cellPosition).getRow()) as usize][(jcall!(cellPosition).getColumn()) as usize] -= 1;
         }
@@ -150,7 +152,7 @@ impl VisibleCellPositionsSingleton {
             self.visibleCellPositions = temp.clone();
             for index in (0..=(self.visibleCellPositions.len() as i32) - 1).rev() {
                 for index2 in (0..=(self.visibleCellPositions[(0) as usize].len() as i32) - 1).rev() {
-                    self.visibleCellPositions[(index) as usize][(index2) as usize] = self.stationaryVisibleCellPositions[(index) as usize][(index2) as usize].clone();
+                    { let java_index = (index2) as usize; self.visibleCellPositions[(index) as usize][java_index] = { let java_value = (self.stationaryVisibleCellPositions[(index) as usize][(index2) as usize]).clone(); java_value }.clone(); };
                 }
             }
         }
@@ -171,7 +173,7 @@ impl VisibleCellPositionsSingleton {
     
 
     pub fn addCellPositions(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
-        for index in (0..=jcall!(list).size() - 1).rev() {
+        for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
             let mut cellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>> = { let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>>().expect("ClassCastException").clone()) };
             self.visibleCellPositions[(jcall!(cellPosition).getRow()) as usize][(jcall!(cellPosition).getColumn()) as usize] += 1;
         }
@@ -192,7 +194,7 @@ impl VisibleCellPositionsSingleton {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.paintSimpleTiledLayer).paint(graphics.clone(), self.currentlyVisibleCellPositions.clone());
     }
     

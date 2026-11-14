@@ -41,6 +41,10 @@ thread_local! { pub static BasketData_DELETE: String = String::from("BASKET_DELE
 thread_local! { pub static BasketData_ADJUST: String = String::from("BASKET_ADJUST"); }
 
 impl BasketData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

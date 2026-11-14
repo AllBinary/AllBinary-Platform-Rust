@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Command::Command;
 use crate::android::app::Notification::Notification;
 use crate::android::app::NotificationManager::NotificationManager;
 use crate::android::app::PendingIntent::PendingIntent;
@@ -46,6 +46,10 @@ pub struct NotificationUtil {
 thread_local! { pub static NotificationUtil_SINGLETON: Option<Rc<RefCell<NotificationUtil>>> = NotificationUtil::new(); }
 
 impl NotificationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<NotificationUtil>>> {
@@ -65,7 +69,7 @@ impl NotificationUtil {
         if SDK_VERSION > 22 {
             this.notificationBuilder = NotificationBuilderAPI23::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::content::NotificationBuilder::NotificationBuilderDyn>>);
         } else {
-            this.notificationBuilder = NotificationBuilder_NULL_NOTIFICATION_BUILDER.with(Clone::clone).clone();
+            this.notificationBuilder = { let java_value = (NotificationBuilder_NULL_NOTIFICATION_BUILDER.with(Clone::clone)).clone(); java_value }.clone();
         }
         this
     }
@@ -75,16 +79,16 @@ impl NotificationUtil {
     }
     
 
-    pub fn notify(&mut self, mut command: Option<Rc<RefCell<Command>>>, mut resource: String, mut message: String) {
+    pub fn notify(&mut self, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut resource: String, mut message: String) {
         let mut context: Option<Rc<RefCell<Context>>> = jcall!(ResourceUtil::getInstance()).getContext();
         let mut intent: Option<Rc<RefCell<Intent>>> = jcall!(CommandUriAction::CommandUriAction::getInstance()).getIntent(command.clone());
         let mut integer: Option<i32> = jcall!(ResourceUtil::getInstance()).getResourceId(resource.clone());
         let mut FLAG_IMMUTABLE: i32 = 1 << 26;
         let mut SDK_VERSION: i32 = jcall!(AndroidInfoFactory::getInstance()).getVersion();
-        let mut pendingIntent: Option<Rc<RefCell<PendingIntent>>> = PendingIntent::getActivity(context.clone(), 0, intent.clone(), (if SDK_VERSION > 22 { FLAG_IMMUTABLE } else { 0 }));
+        let mut pendingIntent: Option<Rc<RefCell<PendingIntent>>> = PendingIntent::getActivity(context.clone(), 0, intent.clone(), (if SDK_VERSION > 22 { FLAG_IMMUTABLE.clone() } else { 0 }));
         if self.notificationBuilder.is_none() {
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).putF(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).NOT_IMPLEMENTED.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone());
             return;
         }
         jcall!(self.notificationBuilder).build(context.clone(), command.clone(), message.clone(), integer.clone(), pendingIntent.clone());

@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::input::motion::button::TouchButtonRecognizer::TouchButtonRecognizer;
+use crate::java::lang::Exception::*;
 use super::MotionRecognizer::MotionRecognizer;
 
 // Borrows the object of a Java reference

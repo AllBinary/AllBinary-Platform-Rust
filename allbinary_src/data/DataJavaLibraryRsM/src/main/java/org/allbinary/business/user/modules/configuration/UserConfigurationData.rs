@@ -30,10 +30,14 @@ pub struct UserConfigurationData {
 }
 
 thread_local! { pub static UserConfigurationData_NAME: String = String::from("USER_CONFIGURATION_NAME"); }
-thread_local! { pub static UserConfigurationData_UNCRYPTED_EXTENSION: String = jcall!(CommonDataFileStrings::getInstance()).UNCRYPTED_EXTENSION.clone(); }
-thread_local! { pub static UserConfigurationData_ENCRYPTED_EXTENSION: String = jcall!(CommonDataFileStrings::getInstance()).ENCRYPTED_EXTENSION.clone(); }
+thread_local! { pub static UserConfigurationData_UNCRYPTED_EXTENSION: String = { let java_field = jcall!(CommonDataFileStrings::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field }.clone(); }
+thread_local! { pub static UserConfigurationData_ENCRYPTED_EXTENSION: String = { let java_field = jcall!(CommonDataFileStrings::getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone(); }
 
 impl UserConfigurationData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

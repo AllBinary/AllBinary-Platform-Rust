@@ -51,6 +51,8 @@ use crate::org::allbinary::media::graphics::geography::map::GeographicMapComposi
 use crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory;
 use crate::org::allbinary::media::graphics::geography::map::drop::DropCellPositionHistory::DropCellPositionHistory;
 use crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactory;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::RTSFormInput::RTSFormInput;
 
 // Borrows the object of a Java reference
@@ -103,24 +105,26 @@ impl BuildingRTSFormInput {
     }
 
     pub fn new(mut groupInterface: Vec<Option<Rc<RefCell<Group>>>>, mut isUnitProducer: bool) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(groupInterface, isUnitProducer))));
-            this.buildOnPathGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).BUILD_ON_PATH.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).PINK.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
-            this.spotTakenGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).SPOT_TAKEN.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).PINK.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
-            this.selectBuildSpotGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).SELECT_BUILD_SPOT.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).PINK.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
-            this.roadCollisionGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).ROAD_COLLISION.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).PINK.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
-            this.noMoneyGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).NO_MONEY.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).PINK.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
-            this.buildingCollisionGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).BUILDING_COLLISION.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).PINK.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
-            this.structureToCloseCollisionGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).STRUCTURE_TO_CLOSE.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).PINK.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
-            this.buildingGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).BUILDING.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).PINK.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
-            this.mapEdgeGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).MAP_EDGE.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).PINK.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(groupInterface.clone(), isUnitProducer.clone()))));
+            let mut smallIntegerSingletonFactory: Option<Rc<RefCell<SmallIntegerSingletonFactory>>> = SmallIntegerSingletonFactory::getInstance();
+            let mut basicColorFactory: Option<Rc<RefCell<BasicColorFactory>>> = BasicColorFactory::getInstance();
+            jcall!(this).buildOnPathGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).BUILD_ON_PATH.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).PINK.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
+            jcall!(this).spotTakenGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).SPOT_TAKEN.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).PINK.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
+            jcall!(this).selectBuildSpotGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).SELECT_BUILD_SPOT.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).PINK.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
+            jcall!(this).roadCollisionGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).ROAD_COLLISION.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).PINK.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
+            jcall!(this).noMoneyGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).NO_MONEY.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).PINK.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
+            jcall!(this).buildingCollisionGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).BUILDING_COLLISION.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).PINK.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
+            jcall!(this).structureToCloseCollisionGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).STRUCTURE_TO_CLOSE.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).PINK.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
+            jcall!(this).buildingGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).BUILDING.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).PINK.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
+            jcall!(this).mapEdgeGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).MAP_EDGE.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).PINK.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
         this
     }
     
 
     // throws Exception
     pub fn setAllBinaryGameLayerManager(&mut self, mut allBinaryGameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>) {
-        self.base.setAllBinaryGameLayerManager(allBinaryGameLayerManager.clone());
-        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (allBinaryGameLayerManager).clone() /* as GeographicMapCompositeInterface */;
+        { let java_arguments = (allBinaryGameLayerManager.clone(),); self.base.setAllBinaryGameLayerManager(java_arguments.0) };
+        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryGameLayerManager cannot be cast to GeographicMapCompositeInterface") })();
         let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
         { let java_receiver = self.buildOnPathGameNotificationEvent.clone(); let java_arguments = (jcall!(geographicMapInterface).getForegroundBasicColor(),); jcall!(java_receiver).setBasicColorP(java_arguments.0); };
         { let java_receiver = self.spotTakenGameNotificationEvent.clone(); let java_arguments = (jcall!(geographicMapInterface).getForegroundBasicColor(),); jcall!(java_receiver).setBasicColorP(java_arguments.0); };
@@ -136,19 +140,19 @@ impl BuildingRTSFormInput {
 
     // throws Exception
     pub fn processGameSpecific(&mut self, mut associatedRtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>>, mut rtsPlayerLayerInterface: Option<Rc<RefCell<dyn RTSPlayerLayerInterface>>>, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut itemIndex: i32) {
-        self.base.process(layerManager.clone());
+        { let java_arguments = (layerManager.clone(),); self.base.process(java_arguments.0) };
         self.buildFromMotionInput(rtsPlayerLayerInterface.clone(), layerManager.clone(), item.clone(), itemIndex.clone());
     }
     
 
     pub fn isPositionBlocked(&mut self) -> bool {
-        return { let java_receiver = self.dropCellPositionHistory.clone(); let java_arguments = (self.getSelectedGeographicCellPosition(),); let java_result = jcall!(java_receiver).isCellPositionWithDrop(java_arguments.0); java_result };
+        return { let java_receiver = self.dropCellPositionHistory.clone(); let java_arguments = (self.getSelectedGeographicCellPosition().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>),); let java_result = jcall!(java_receiver).isCellPositionWithDrop(java_arguments.0); java_result };
     }
     
 
     pub fn isDemoLocked(&mut self, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) -> bool {
-        let mut factoryItem: Option<Rc<RefCell<LayerInterfaceFactoryImageItem>>> = (item).clone() /* as LayerInterfaceFactoryImageItem */;
-        let mut layerInterfaceFactoryInterface: Option<Rc<RefCell<dyn DemoLockedWithCostLayerInterfaceFactoryInterface>>> = (jcall!(factoryItem).getLayerInterfaceFactoryInterface()).clone() /* as DemoLockedWithCostLayerInterfaceFactoryInterface */;
+        let mut factoryItem: Option<Rc<RefCell<LayerInterfaceFactoryImageItem>>> = (item).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<LayerInterfaceFactoryImageItem>() }, "ClassCastException: not a LayerInterfaceFactoryImageItem"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<LayerInterfaceFactoryImageItem>) } });
+        let mut layerInterfaceFactoryInterface: Option<Rc<RefCell<dyn DemoLockedWithCostLayerInterfaceFactoryInterface>>> = (|| -> Option<Rc<RefCell<dyn DemoLockedWithCostLayerInterfaceFactoryInterface>>> { panic!("ClassCastException: a Rust dyn LayerInterfaceFactoryInterface cannot be cast to dyn DemoLockedWithCostLayerInterfaceFactoryInterface") })();
         if jcall!(LockedUtil::getInstance()).isLocked() && jcall!(layerInterfaceFactoryInterface).isDemoLocked() {
             return true;
         } else {
@@ -160,14 +164,14 @@ impl BuildingRTSFormInput {
     // throws Exception
     pub fn buildFromMotionInput(&mut self, mut rtsPlayerLayerInterface: Option<Rc<RefCell<dyn RTSPlayerLayerInterface>>>, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut itemIndex: i32) {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(self.logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("buildFromMotionInput"));
+        jcall!(self.logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("buildFromMotionInput"));
         if layerManager.is_none() {
             panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
         }
-        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (layerManager).clone() /* as GeographicMapCompositeInterface */;
+        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayerManager cannot be cast to GeographicMapCompositeInterface") })();
         let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
         if self.isDemoLocked(item.clone()) {
-            jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
+            jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance());
             jcall!(LockedFeatureNotificationUtil::getInstance()).fireWithColor(jcall!(geographicMapInterface).getForegroundBasicColor());
             return;
         }
@@ -175,34 +179,34 @@ impl BuildingRTSFormInput {
         if !match (&geographicMapCellPosition, &crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             if !self.isPositionBlocked() {
                 let mut geographicMapCellType: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>> = jcall!(geographicMapInterface).getCellTypeAt(geographicMapCellPosition.clone());
-                let mut raceTrackGeographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactoryDyn>>> = (jcall!(geographicMapInterface).getGeographicMapCellTypeFactory()).clone() /* as RaceTrackGeographicMapCellTypeFactory */;
+                let mut raceTrackGeographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactoryDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactoryDyn>>> { panic!("ClassCastException: a Rust dyn GeographicMapCellTypeFactory cannot be cast to RaceTrackGeographicMapCellTypeFactory") })();
                 if !jcall!(raceTrackGeographicMapCellTypeFactory).isPath(geographicMapCellType.clone()) {
                     if match (&self.newUnconstructedRTSLayerInterfaceArray[(itemIndex) as usize], &CollidableDestroyableDamageableLayer::getNullInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                        self.newUnconstructedRTSLayerInterfaceArray[(itemIndex) as usize] = self.getInstance(layerManager.clone(), item.clone(), geographicMapCellPosition.clone());
+                        { let java_index = (itemIndex) as usize; self.newUnconstructedRTSLayerInterfaceArray[java_index] = self.getInstance(layerManager.clone(), item.clone(), geographicMapCellPosition.clone()); };
                     } else {
-                        let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = (self.newUnconstructedRTSLayerInterfaceArray[(itemIndex) as usize]).clone() /* as RTSLayer */;
+                        let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableDestroyableDamageableLayer cannot be cast to RTSLayer") })();
                         let mut cellPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(geographicMapCellPosition).getPoint();
                         jcall!(rtsLayer).setPosition(jcall!(cellPoint).getX(), jcall!(cellPoint).getY(), jcall!(cellPoint).getZ());
-                        jcall!(jcall!(rtsLayer).as_RTSLayer_mut().geographicMapCellPositionAreaBase).update(geographicMapInterface.clone());
+                        jcall!({ let java_field = jcall!(rtsLayer).as_RTSLayer_mut().geographicMapCellPositionAreaBase.clone(); java_field }).as_GeographicMapCellPositionAreaBase_mut().update(geographicMapInterface.clone());
                     }
-                    let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = (self.newUnconstructedRTSLayerInterfaceArray[(itemIndex) as usize]).clone() /* as RTSLayer */;
+                    let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableDestroyableDamageableLayer cannot be cast to RTSLayer") })();
                     self.attemptBuild(rtsPlayerLayerInterface.clone(), layerManager.clone(), rtsLayer.clone(), itemIndex.clone());
                 } else {
-                    jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
+                    jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance());
                     if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-                        jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.buildOnPathGameNotificationEvent.clone());
+                        jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.buildOnPathGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
                     }
                 }
             } else {
-                jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
+                jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance());
                 if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-                    jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.spotTakenGameNotificationEvent.clone());
+                    jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.spotTakenGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
                 }
             }
         } else {
-            jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
+            jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance());
             if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.selectBuildSpotGameNotificationEvent.clone());
+                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.selectBuildSpotGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
             }
         }
     }
@@ -211,26 +215,26 @@ impl BuildingRTSFormInput {
     // throws Exception
     pub fn attemptBuild(&mut self, mut rtsPlayerLayerInterface: Option<Rc<RefCell<dyn RTSPlayerLayerInterface>>>, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>, mut itemIndex: i32) -> bool {
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Layer: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(layerInterface.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("attemptBuild"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        let mut geographicMapCellPositionArea: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::GeographicMapCellPositionAreaBase::GeographicMapCellPositionAreaBaseDyn>>> = jcall!(layerInterface).as_RTSLayer_mut().geographicMapCellPositionAreaBase.clone();
-        let mut occupyList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(geographicMapCellPositionArea).getOccupyingGeographicMapCellPositionList();
+        let mut geographicMapCellPositionArea: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::GeographicMapCellPositionAreaBase::GeographicMapCellPositionAreaBaseDyn>>> = { let java_field = jcall!(layerInterface).as_RTSLayer_mut().geographicMapCellPositionAreaBase.clone(); java_field }.clone();
+        let mut occupyList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(geographicMapCellPositionArea).as_GeographicMapCellPositionAreaBase_mut().getOccupyingGeographicMapCellPositionList();
         if !self.isBuildAttemptValid(rtsPlayerLayerInterface.clone(), layerInterface.clone()) {
             return false;
         }
         let mut geographicMapCellType: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>> = None;
-        for index in (0..=jcall!(occupyList).size() - 1).rev() {
-            let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (layerManager).clone() /* as GeographicMapCompositeInterface */;
+        for index in (0..={ let java_bound = jcall!(occupyList).size() - 1; java_bound }).rev() {
+            let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayerManager cannot be cast to GeographicMapCompositeInterface") })();
             let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
-            geographicMapCellType = jcall!(geographicMapInterface).getCellTypeAt({ let java_object = (jcall!(occupyList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) });
-            let mut raceTrackGeographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactoryDyn>>> = (jcall!(geographicMapInterface).getGeographicMapCellTypeFactory()).clone() /* as RaceTrackGeographicMapCellTypeFactory */;
+            geographicMapCellType = { let java_value = (jcall!(geographicMapInterface).getCellTypeAt({ let java_object = (jcall!(occupyList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) })).clone(); java_value };
+            let mut raceTrackGeographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactoryDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactoryDyn>>> { panic!("ClassCastException: a Rust dyn GeographicMapCellTypeFactory cannot be cast to RaceTrackGeographicMapCellTypeFactory") })();
             if jcall!(raceTrackGeographicMapCellTypeFactory).isPath(geographicMapCellType.clone()) {
-                jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
+                jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance());
                 if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-                    jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.roadCollisionGameNotificationEvent.clone());
+                    jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.roadCollisionGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
                 }
                 return false;
             }
         }
-        let mut cost: i32 = jcall!(layerInterface).getCost();
+        let mut cost: i32 = jcall!(layerInterface).as_RTSLayer_mut().getCost();
         let mut capital: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::capital::Capital::CapitalDyn>>> = jcall!(rtsPlayerLayerInterface).getCapital();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(String::from("Trying to Build: "));
@@ -242,14 +246,14 @@ impl BuildingRTSFormInput {
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("attemptBuild"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         if cost <= jcall!(capital).getTotalMoney() {
             jcall!(layerInterface).construct(rtsPlayerLayerInterface.clone());
-            self.newUnconstructedRTSLayerInterfaceArray[(itemIndex) as usize] = CollidableDestroyableDamageableLayer::getNullInstance();
+            { let java_index = (itemIndex) as usize; self.newUnconstructedRTSLayerInterfaceArray[java_index] = CollidableDestroyableDamageableLayer::getNullInstance(); };
             jcall!(capital).removeMoney(cost.clone());
             self.add(rtsPlayerLayerInterface.clone(), layerManager.clone(), layerInterface.clone());
             return true;
         } else {
-            jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
+            jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance());
             if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.noMoneyGameNotificationEvent.clone());
+                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.noMoneyGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
             }
             return false;
         }
@@ -258,26 +262,26 @@ impl BuildingRTSFormInput {
 
     // throws Exception
     pub fn isBuildAttemptValid(&mut self, mut rtsPlayerLayerInterface: Option<Rc<RefCell<dyn RTSPlayerLayerInterface>>>, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>) -> bool {
-        let mut geographicMapCellPositionArea: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::GeographicMapCellPositionAreaBase::GeographicMapCellPositionAreaBaseDyn>>> = jcall!(layerInterface).as_RTSLayer_mut().geographicMapCellPositionAreaBase.clone();
-        let mut occupyList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(geographicMapCellPositionArea).getOccupyingGeographicMapCellPositionList();
+        let mut geographicMapCellPositionArea: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::GeographicMapCellPositionAreaBase::GeographicMapCellPositionAreaBaseDyn>>> = { let java_field = jcall!(layerInterface).as_RTSLayer_mut().geographicMapCellPositionAreaBase.clone(); java_field }.clone();
+        let mut occupyList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(geographicMapCellPositionArea).as_GeographicMapCellPositionAreaBase_mut().getOccupyingGeographicMapCellPositionList();
         if jcall!(self.dropCellPositionHistory).anyCellPositionWithDrop(occupyList.clone()) {
-            jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
+            jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance());
             if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.buildingCollisionGameNotificationEvent.clone());
+                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.buildingCollisionGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
             }
             return false;
         }
-        if self.isUnitProducer && { let java_receiver = self.dropCellPositionHistory.clone(); let java_arguments = (jcall!(geographicMapCellPositionArea).getSurroundingGeographicMapCellPositionList(),); let java_result = jcall!(java_receiver).anyCellPositionWithDrop(java_arguments.0); java_result } {
-            jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
+        if self.isUnitProducer && { let java_receiver = self.dropCellPositionHistory.clone(); let java_arguments = (jcall!(geographicMapCellPositionArea).as_GeographicMapCellPositionAreaBase_mut().getSurroundingGeographicMapCellPositionList(),); let java_result = jcall!(java_receiver).anyCellPositionWithDrop(java_arguments.0); java_result } {
+            jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance());
             if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.structureToCloseCollisionGameNotificationEvent.clone());
+                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.structureToCloseCollisionGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
             }
             return false;
         } else {
             if self.isSurroundingCellsOffMap(layerInterface.clone()) {
-                jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
+                jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance());
                 if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-                    jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.mapEdgeGameNotificationEvent.clone());
+                    jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.mapEdgeGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
                 }
                 return false;
             }
@@ -288,23 +292,23 @@ impl BuildingRTSFormInput {
 
     // throws Exception
     pub fn add(&mut self, mut rtsPlayerLayerInterface: Option<Rc<RefCell<dyn RTSPlayerLayerInterface>>>, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>) {
-        let mut geographicMapCellPositionArea: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::GeographicMapCellPositionAreaBase::GeographicMapCellPositionAreaBaseDyn>>> = jcall!(layerInterface).as_RTSLayer_mut().geographicMapCellPositionAreaBase.clone();
-        let mut occupyList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(geographicMapCellPositionArea).getOccupyingGeographicMapCellPositionList();
+        let mut geographicMapCellPositionArea: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::GeographicMapCellPositionAreaBase::GeographicMapCellPositionAreaBaseDyn>>> = { let java_field = jcall!(layerInterface).as_RTSLayer_mut().geographicMapCellPositionAreaBase.clone(); java_field }.clone();
+        let mut occupyList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(geographicMapCellPositionArea).as_GeographicMapCellPositionAreaBase_mut().getOccupyingGeographicMapCellPositionList();
         jcall!(self.dropCellPositionHistory).addAll(occupyList.clone(), layerInterface.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>));
-        let mut rtsPlayerGameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::RTSPlayerGameInput::RTSPlayerGameInputDyn>>> = (jcall!(rtsPlayerLayerInterface).getPlayerGameInput()).clone() /* as RTSPlayerGameInput */;
+        let mut rtsPlayerGameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::RTSPlayerGameInput::RTSPlayerGameInputDyn>>> = (jcall!(rtsPlayerLayerInterface).getPlayerGameInput()).clone();
         jcall!(rtsPlayerGameInput).setSelectedRTSLayer(layerInterface.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>), self.getSelectedGeographicCellPosition());
         jcall!(layerManager).append(layerInterface.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>));
-        jcall!(rtsPlayerLayerInterface).add(BuildingSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
+        jcall!(rtsPlayerLayerInterface).add(BuildingSound::getInstance());
         if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-            jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.buildingGameNotificationEvent.clone());
+            jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.buildingGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
         }
     }
     
 
     pub fn isSurroundingCellsOffMap(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>) -> bool {
-        let mut geographicMapCellPositionArea: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::GeographicMapCellPositionAreaBase::GeographicMapCellPositionAreaBaseDyn>>> = jcall!(layerInterface).as_RTSLayer_mut().geographicMapCellPositionAreaBase.clone();
-        let mut occupyList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(geographicMapCellPositionArea).getOccupyingGeographicMapCellPositionList();
-        let mut surroundList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(geographicMapCellPositionArea).getSurroundingGeographicMapCellPositionList();
+        let mut geographicMapCellPositionArea: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::GeographicMapCellPositionAreaBase::GeographicMapCellPositionAreaBaseDyn>>> = { let java_field = jcall!(layerInterface).as_RTSLayer_mut().geographicMapCellPositionAreaBase.clone(); java_field }.clone();
+        let mut occupyList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(geographicMapCellPositionArea).as_GeographicMapCellPositionAreaBase_mut().getOccupyingGeographicMapCellPositionList();
+        let mut surroundList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(geographicMapCellPositionArea).as_GeographicMapCellPositionAreaBase_mut().getSurroundingGeographicMapCellPositionList();
         let mut occupySize: i32 = jcall!(occupyList).size();
         let mut surroundSize: i32 = jcall!(surroundList).size();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();

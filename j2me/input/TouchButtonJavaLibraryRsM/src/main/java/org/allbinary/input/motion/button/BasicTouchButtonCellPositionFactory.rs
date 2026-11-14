@@ -58,6 +58,10 @@ pub struct BasicTouchButtonCellPositionFactory {
 
 
 impl BasicTouchButtonCellPositionFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -88,50 +92,50 @@ impl BasicTouchButtonCellPositionFactory {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         let mut touchButtonLocationHelper: Option<Rc<RefCell<TouchButtonLocationHelper>>> = TouchButtonLocationHelper::new();
         let mut cellPositionFactory: Option<Rc<RefCell<CellPositionFactory>>> = CellPositionFactory::getInstance();
         jcall!(cellPositionFactory).init(jcall!(touchButtonLocationHelper).getTotalColumns(), jcall!(touchButtonLocationHelper).getTotalRows());
-        this.TOP_LEFT = jcall!(cellPositionFactory).getInstanceColRow(0, 0);
-        this.TOP_RIGHT = jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 1, 0);
-        this.BOTTOM_LEFT = jcall!(cellPositionFactory).getInstanceColRow(0, jcall!(touchButtonLocationHelper).getTotalRows() - 1);
-        this.BOTTOM_RIGHT = jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 1, jcall!(touchButtonLocationHelper).getTotalRows() - 1);
-        this.BOTTOM_SECOND_FROM_RIGHT = jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 2, jcall!(touchButtonLocationHelper).getTotalRows() - 1);
-        this.SECOND_FROM_BOTTOM_RIGHT = jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 1, jcall!(touchButtonLocationHelper).getTotalRows() - 2);
-        this.SECOND_FROM_BOTTOM_SECOND_FROM_RIGHT = jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 2, jcall!(touchButtonLocationHelper).getTotalRows() - 2);
-        this.BOTTOM_SECOND_FROM_LEFT = jcall!(cellPositionFactory).getInstanceColRow(1, jcall!(touchButtonLocationHelper).getTotalRows() - 1);
-        this.SECOND_FROM_BOTTOM_LEFT = jcall!(cellPositionFactory).getInstanceColRow(0, jcall!(touchButtonLocationHelper).getTotalRows() - 2);
-        this.SECOND_FROM_BOTTOM_SECOND_FROM_LEFT = jcall!(cellPositionFactory).getInstanceColRow(1, jcall!(touchButtonLocationHelper).getTotalRows() - 2);
+        this.TOP_LEFT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(0, 0)).clone(); java_value };
+        this.TOP_RIGHT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 1, 0)).clone(); java_value };
+        this.BOTTOM_LEFT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(0, jcall!(touchButtonLocationHelper).getTotalRows() - 1)).clone(); java_value };
+        this.BOTTOM_RIGHT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 1, jcall!(touchButtonLocationHelper).getTotalRows() - 1)).clone(); java_value };
+        this.BOTTOM_SECOND_FROM_RIGHT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 2, jcall!(touchButtonLocationHelper).getTotalRows() - 1)).clone(); java_value };
+        this.SECOND_FROM_BOTTOM_RIGHT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 1, jcall!(touchButtonLocationHelper).getTotalRows() - 2)).clone(); java_value };
+        this.SECOND_FROM_BOTTOM_SECOND_FROM_RIGHT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 2, jcall!(touchButtonLocationHelper).getTotalRows() - 2)).clone(); java_value };
+        this.BOTTOM_SECOND_FROM_LEFT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(1, jcall!(touchButtonLocationHelper).getTotalRows() - 1)).clone(); java_value };
+        this.SECOND_FROM_BOTTOM_LEFT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(0, jcall!(touchButtonLocationHelper).getTotalRows() - 2)).clone(); java_value };
+        this.SECOND_FROM_BOTTOM_SECOND_FROM_LEFT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(1, jcall!(touchButtonLocationHelper).getTotalRows() - 2)).clone(); java_value };
         if jcall!(touchButtonLocationHelper).getTotalRows() > 2 {
-            this.SECOND_FROM_TOP_LEFT = jcall!(cellPositionFactory).getInstanceColRow(0, 1);
-            this.SECOND_FROM_TOP_RIGHT = jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 1, 1);
+            this.SECOND_FROM_TOP_LEFT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(0, 1)).clone(); java_value };
+            this.SECOND_FROM_TOP_RIGHT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 1, 1)).clone(); java_value };
         } else {
-            this.SECOND_FROM_TOP_LEFT = jcall!(cellPositionFactory).NONE.clone();
-            this.SECOND_FROM_TOP_RIGHT = jcall!(cellPositionFactory).NONE.clone();
+            this.SECOND_FROM_TOP_LEFT = { let java_value = ({ let java_field = jcall!(cellPositionFactory).NONE.clone(); java_field }).clone(); java_value }.clone();
+            this.SECOND_FROM_TOP_RIGHT = { let java_value = ({ let java_field = jcall!(cellPositionFactory).NONE.clone(); java_field }).clone(); java_value }.clone();
         }
         if jcall!(touchButtonLocationHelper).getTotalRows() >= 4 {
-            this.THIRD_FROM_BOTTOM_RIGHT = jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 1, jcall!(touchButtonLocationHelper).getTotalRows() - 3);
-            this.FOURTH_FROM_BOTTOM_RIGHT = jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 1, jcall!(touchButtonLocationHelper).getTotalRows() - 4);
-            this.THIRD_FROM_BOTTOM_LEFT = jcall!(cellPositionFactory).getInstanceColRow(0, jcall!(touchButtonLocationHelper).getTotalRows() - 3);
+            this.THIRD_FROM_BOTTOM_RIGHT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 1, jcall!(touchButtonLocationHelper).getTotalRows() - 3)).clone(); java_value };
+            this.FOURTH_FROM_BOTTOM_RIGHT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 1, jcall!(touchButtonLocationHelper).getTotalRows() - 4)).clone(); java_value };
+            this.THIRD_FROM_BOTTOM_LEFT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(0, jcall!(touchButtonLocationHelper).getTotalRows() - 3)).clone(); java_value };
         } else {
-            this.THIRD_FROM_BOTTOM_RIGHT = jcall!(cellPositionFactory).NONE.clone();
-            this.FOURTH_FROM_BOTTOM_RIGHT = jcall!(cellPositionFactory).NONE.clone();
-            this.THIRD_FROM_BOTTOM_LEFT = jcall!(cellPositionFactory).NONE.clone();
+            this.THIRD_FROM_BOTTOM_RIGHT = { let java_value = ({ let java_field = jcall!(cellPositionFactory).NONE.clone(); java_field }).clone(); java_value }.clone();
+            this.FOURTH_FROM_BOTTOM_RIGHT = { let java_value = ({ let java_field = jcall!(cellPositionFactory).NONE.clone(); java_field }).clone(); java_value }.clone();
+            this.THIRD_FROM_BOTTOM_LEFT = { let java_value = ({ let java_field = jcall!(cellPositionFactory).NONE.clone(); java_field }).clone(); java_value }.clone();
         }
         if jcall!(touchButtonLocationHelper).getTotalColumns() >= 4 {
-            this.SECOND_FROM_BOTTOM_THIRD_FROM_RIGHT = jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 3, jcall!(touchButtonLocationHelper).getTotalRows() - 2);
-            this.SECOND_FROM_BOTTOM_FOURTH_FROM_RIGHT = jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 4, jcall!(touchButtonLocationHelper).getTotalRows() - 2);
-            this.BOTTOM_THIRD_FROM_RIGHT = jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 3, jcall!(touchButtonLocationHelper).getTotalRows() - 1);
-            this.BOTTOM_FOURTH_FROM_RIGHT = jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 4, jcall!(touchButtonLocationHelper).getTotalRows() - 1);
-            this.TOP_SECOND_FROM_LEFT = jcall!(cellPositionFactory).getInstanceColRow(1, 0);
-            this.TOP_SECOND_FROM_RIGHT = jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 2, 0);
+            this.SECOND_FROM_BOTTOM_THIRD_FROM_RIGHT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 3, jcall!(touchButtonLocationHelper).getTotalRows() - 2)).clone(); java_value };
+            this.SECOND_FROM_BOTTOM_FOURTH_FROM_RIGHT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 4, jcall!(touchButtonLocationHelper).getTotalRows() - 2)).clone(); java_value };
+            this.BOTTOM_THIRD_FROM_RIGHT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 3, jcall!(touchButtonLocationHelper).getTotalRows() - 1)).clone(); java_value };
+            this.BOTTOM_FOURTH_FROM_RIGHT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 4, jcall!(touchButtonLocationHelper).getTotalRows() - 1)).clone(); java_value };
+            this.TOP_SECOND_FROM_LEFT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(1, 0)).clone(); java_value };
+            this.TOP_SECOND_FROM_RIGHT = { let java_value = (jcall!(cellPositionFactory).getInstanceColRow(jcall!(touchButtonLocationHelper).getTotalColumns() - 2, 0)).clone(); java_value };
         } else {
-            this.SECOND_FROM_BOTTOM_THIRD_FROM_RIGHT = jcall!(cellPositionFactory).NONE.clone();
-            this.SECOND_FROM_BOTTOM_FOURTH_FROM_RIGHT = jcall!(cellPositionFactory).NONE.clone();
-            this.BOTTOM_THIRD_FROM_RIGHT = jcall!(cellPositionFactory).NONE.clone();
-            this.BOTTOM_FOURTH_FROM_RIGHT = jcall!(cellPositionFactory).NONE.clone();
-            this.TOP_SECOND_FROM_LEFT = jcall!(cellPositionFactory).NONE.clone();
-            this.TOP_SECOND_FROM_RIGHT = jcall!(cellPositionFactory).NONE.clone();
+            this.SECOND_FROM_BOTTOM_THIRD_FROM_RIGHT = { let java_value = ({ let java_field = jcall!(cellPositionFactory).NONE.clone(); java_field }).clone(); java_value }.clone();
+            this.SECOND_FROM_BOTTOM_FOURTH_FROM_RIGHT = { let java_value = ({ let java_field = jcall!(cellPositionFactory).NONE.clone(); java_field }).clone(); java_value }.clone();
+            this.BOTTOM_THIRD_FROM_RIGHT = { let java_value = ({ let java_field = jcall!(cellPositionFactory).NONE.clone(); java_field }).clone(); java_value }.clone();
+            this.BOTTOM_FOURTH_FROM_RIGHT = { let java_value = ({ let java_field = jcall!(cellPositionFactory).NONE.clone(); java_field }).clone(); java_value }.clone();
+            this.TOP_SECOND_FROM_LEFT = { let java_value = ({ let java_field = jcall!(cellPositionFactory).NONE.clone(); java_field }).clone(); java_value }.clone();
+            this.TOP_SECOND_FROM_RIGHT = { let java_value = ({ let java_field = jcall!(cellPositionFactory).NONE.clone(); java_field }).clone(); java_value }.clone();
         }
         this
     }

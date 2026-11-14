@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::GeographicMapCellPositionBaseFactory::GeographicMapCellPositionBaseFactory;
 use super::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactory;
 use super::BasicGeographicMap::BasicGeographicMap;
@@ -39,7 +40,7 @@ pub struct GeographicMapCellPositionFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static GeographicMapCellPositionFactory_hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(StdUtil::getInstance()).createHashtable(); }
+thread_local! { pub static GeographicMapCellPositionFactory_hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashtable(); }
 
 impl GeographicMapCellPositionFactory {
 
@@ -63,18 +64,18 @@ impl GeographicMapCellPositionFactory {
         let mut allBinaryTiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(geographicMapInterface).getAllBinaryTiledLayer();
         let mut geographicMapCellPositionFactoryCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(GeographicMapCellPositionFactory_hashtable.with(Clone::clone)).get(crate::java_into_object(jcall!(allBinaryTiledLayer).getDataId()));
         if geographicMapCellPositionFactoryCanBeNull.is_none() {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Creating GeographicMapCellPositionFactory for TileLayer: ")).appendint(((jcall!(allBinaryTiledLayer).getDataId()).unwrap() as i32)).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            geographicMapCellPositionFactoryCanBeNull = BasicGeographicMapCellPositionFactory::new(geographicMapInterface.clone());
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Creating GeographicMapCellPositionFactory for TileLayer: ")).appendint(((jcall!(allBinaryTiledLayer).getDataId()).unwrap() as i32)).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            geographicMapCellPositionFactoryCanBeNull = crate::java_into_object(BasicGeographicMapCellPositionFactory::new(geographicMapInterface.clone()));
             jcall!(GeographicMapCellPositionFactory_hashtable.with(Clone::clone)).put(crate::java_into_object(jcall!(allBinaryTiledLayer).getDataId()), geographicMapCellPositionFactoryCanBeNull.clone());
-            return (geographicMapCellPositionFactoryCanBeNull).clone() /* as BasicGeographicMapCellPositionFactory */;
+            return { let java_object = (geographicMapCellPositionFactoryCanBeNull).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactoryDyn>>>>().expect("ClassCastException").clone()) };
         } else {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Reusing GeographicMapCellPositionFactory for TileLayer: ")).appendint(((jcall!(allBinaryTiledLayer).getDataId()).unwrap() as i32)).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            return (geographicMapCellPositionFactoryCanBeNull).clone() /* as BasicGeographicMapCellPositionFactory */;
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Reusing GeographicMapCellPositionFactory for TileLayer: ")).appendint(((jcall!(allBinaryTiledLayer).getDataId()).unwrap() as i32)).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            return { let java_object = (geographicMapCellPositionFactoryCanBeNull).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactoryDyn>>>>().expect("ClassCastException").clone()) };
         }
     }
     
 
-    pub fn getHashtable() -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn getHashtable() -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
         return GeographicMapCellPositionFactory_hashtable.with(Clone::clone).clone();
     }
 }

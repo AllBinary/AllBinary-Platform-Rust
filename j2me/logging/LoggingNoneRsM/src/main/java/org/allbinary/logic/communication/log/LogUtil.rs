@@ -33,6 +33,10 @@ pub struct LogUtil {
 thread_local! { pub static LogUtil_instance: Option<Rc<RefCell<LogUtil>>> = LogUtil::new(); }
 
 impl LogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogUtil>>> {
@@ -55,9 +59,12 @@ impl LogUtil {
     }
     
 
-    pub fn putF<T1, T2, T3>(&mut self, specialMessage: T1, anyType: T2, functionName: T3) {
+    pub fn putF(&mut self, mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String) {
     }
     
+
+    pub fn putFS(&mut self, mut specialMessage: String, mut className: String, mut functionName: String) {
+    }
     
 
     pub fn put(&mut self, mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {

@@ -41,7 +41,7 @@ impl TouchButtonsListBuilder {
             base: BaseTouchInput::new_struct(),
             baseTouchInputList: None,
         };
-        this.baseTouchInputList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.baseTouchInputList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -54,7 +54,7 @@ impl TouchButtonsListBuilder {
         let mut size: i32 = jcall!(self.baseTouchInputList).size();
         let mut baseTouchInput: Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::BaseTouchInput::BaseTouchInputDyn>>> = None;
         for index in (0..size) {
-            baseTouchInput = { let java_object = (jcall!(self.baseTouchInputList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::BaseTouchInput::BaseTouchInputDyn>>>>().expect("ClassCastException").clone()) };
+            baseTouchInput = { let java_value = ({ let java_object = (jcall!(self.baseTouchInputList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::BaseTouchInput::BaseTouchInputDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             jcall!(list).addAllList(jcall!(baseTouchInput).getList());
         }
     }

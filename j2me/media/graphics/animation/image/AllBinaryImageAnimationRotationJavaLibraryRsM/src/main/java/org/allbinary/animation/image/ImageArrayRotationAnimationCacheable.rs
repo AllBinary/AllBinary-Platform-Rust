@@ -21,6 +21,7 @@ use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::util::cache::CacheableInterface::CacheableInterface;
+use crate::java::lang::Exception::*;
 use super::AdjustedImageArrayRotationAnimation::AdjustedImageArrayRotationAnimation;
 use super::ImageArrayRotationAnimationInfo::ImageArrayRotationAnimationInfo;
 
@@ -38,9 +39,18 @@ pub struct ImageArrayRotationAnimationCacheable {
 impl CacheableInterface for ImageArrayRotationAnimationCacheable {
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getKey(self) }
 }
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for ImageArrayRotationAnimationCacheable {
-    fn getSize(&mut self) -> i32 { self.base.getSize() }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for ImageArrayRotationAnimationCacheable {
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::Animation::Animation::nextFrame(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self)) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
+}
+impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for ImageArrayRotationAnimationCacheable {
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::animation::image::AdjustedImageArrayRotationAnimation::AdjustedImageArrayRotationAnimation::paintXY(crate::org::allbinary::animation::image::AdjustedImageArrayRotationAnimation::AdjustedImageArrayRotationAnimationDyn::as_AdjustedImageArrayRotationAnimation_mut(self), p1, p2, p3) }
+}
+impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterface for ImageArrayRotationAnimationCacheable {
+    fn setFrameByDirection(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameByDirection(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn setFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrame(&mut self, p1: i16) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrame(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
 }
 
 impl ImageArrayRotationAnimationCacheable {
@@ -48,7 +58,7 @@ impl ImageArrayRotationAnimationCacheable {
 
     pub fn new_struct(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
         let mut this = Self {
-            base: AdjustedImageArrayRotationAnimation::new_struct(jcall!(((anyType).clone() /* as ImageArrayRotationAnimationInfo */)).getImageArray(), jcall!(((anyType).clone() /* as ImageArrayRotationAnimationInfo */)).getAngleInfoP(), jcall!(((anyType).clone() /* as ImageArrayRotationAnimationInfo */)).getTotalAngle(), jcall!(((anyType).clone() /* as ImageArrayRotationAnimationInfo */)).getDx(), jcall!(((anyType).clone() /* as ImageArrayRotationAnimationInfo */)).getDy(), animationBehavior.clone()),
+            base: AdjustedImageArrayRotationAnimation::new_struct(jcall!(({ let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ImageArrayRotationAnimationInfo>>>>().expect("ClassCastException").clone()) })).getImageArray(), jcall!(({ let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ImageArrayRotationAnimationInfo>>>>().expect("ClassCastException").clone()) })).getAngleInfoP(), jcall!(({ let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ImageArrayRotationAnimationInfo>>>>().expect("ClassCastException").clone()) })).getTotalAngle(), jcall!(({ let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ImageArrayRotationAnimationInfo>>>>().expect("ClassCastException").clone()) })).getDx(), jcall!(({ let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ImageArrayRotationAnimationInfo>>>>().expect("ClassCastException").clone()) })).getDy(), animationBehavior.clone()),
         };
         // super(...) is in the struct literal above
         this
@@ -60,12 +70,12 @@ impl ImageArrayRotationAnimationCacheable {
     
 
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return jcall!(NullUtil::getInstance()).NULL_OBJECT.clone();
+        return { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone();
     }
     
 
     pub fn toString(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
 }
 impl std::ops::Deref for ImageArrayRotationAnimationCacheable {
@@ -87,11 +97,13 @@ impl crate::org::allbinary::animation::image::ImageArrayRotationAnimation::Image
 impl crate::org::allbinary::animation::image::ImageArrayBaseRotationAnimation::ImageArrayBaseRotationAnimationDyn for ImageArrayRotationAnimationCacheable {
     fn as_ImageArrayBaseRotationAnimation(&self) -> &crate::org::allbinary::animation::image::ImageArrayBaseRotationAnimation::ImageArrayBaseRotationAnimation { &self.base.base.base }
     fn as_ImageArrayBaseRotationAnimation_mut(&mut self) -> &mut crate::org::allbinary::animation::image::ImageArrayBaseRotationAnimation::ImageArrayBaseRotationAnimation { &mut self.base.base.base }
+    fn setImageArray(&mut self, p1: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>) { crate::org::allbinary::animation::image::ImageArrayRotationAnimation::ImageArrayRotationAnimation::setImageArray(crate::org::allbinary::animation::image::ImageArrayRotationAnimation::ImageArrayRotationAnimationDyn::as_ImageArrayRotationAnimation_mut(self), p1) }
 }
 impl crate::org::allbinary::animation::Animation::AnimationDyn for ImageArrayRotationAnimationCacheable {
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base.base.base.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base.base.base.base.base }
     fn setAlpha(&mut self, p1: i32) { crate::org::allbinary::animation::image::ImageArrayBaseRotationAnimation::ImageArrayBaseRotationAnimation::setAlpha(crate::org::allbinary::animation::image::ImageArrayBaseRotationAnimation::ImageArrayBaseRotationAnimationDyn::as_ImageArrayBaseRotationAnimation_mut(self), p1) }
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::animation::image::AdjustedImageArrayRotationAnimation::AdjustedImageArrayRotationAnimation::paintXY(crate::org::allbinary::animation::image::AdjustedImageArrayRotationAnimation::AdjustedImageArrayRotationAnimationDyn::as_AdjustedImageArrayRotationAnimation_mut(self), p1, p2, p3) }
     fn setDx(&mut self, p1: i32) { crate::org::allbinary::animation::image::AdjustedImageArrayRotationAnimation::AdjustedImageArrayRotationAnimation::setDx(crate::org::allbinary::animation::image::AdjustedImageArrayRotationAnimation::AdjustedImageArrayRotationAnimationDyn::as_AdjustedImageArrayRotationAnimation_mut(self), p1) }
     fn getDx(&mut self) -> i32 { crate::org::allbinary::animation::image::AdjustedImageArrayRotationAnimation::AdjustedImageArrayRotationAnimation::getDx(crate::org::allbinary::animation::image::AdjustedImageArrayRotationAnimation::AdjustedImageArrayRotationAnimationDyn::as_AdjustedImageArrayRotationAnimation_mut(self)) }
     fn setDy(&mut self, p1: i32) { crate::org::allbinary::animation::image::AdjustedImageArrayRotationAnimation::AdjustedImageArrayRotationAnimation::setDy(crate::org::allbinary::animation::image::AdjustedImageArrayRotationAnimation::AdjustedImageArrayRotationAnimationDyn::as_AdjustedImageArrayRotationAnimation_mut(self), p1) }

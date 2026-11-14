@@ -12,6 +12,7 @@ use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,16 +28,16 @@ pub struct ApplicationConfiguration {
     pub progressBarView: bool,
 }
 
-pub static mut ApplicationConfiguration_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut ApplicationConfiguration_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl ApplicationConfiguration {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ApplicationConfiguration>>> {
-        if match (&unsafe { ApplicationConfiguration_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *ApplicationConfiguration_instance = ApplicationConfiguration::new() };
+        if match (&unsafe { ApplicationConfiguration_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *ApplicationConfiguration_instance = crate::java_into_object(ApplicationConfiguration::new()) };
         }
-        return (unsafe { ApplicationConfiguration_instance.clone() }).clone() /* as ApplicationConfiguration */;
+        return { let java_object = (unsafe { ApplicationConfiguration_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ApplicationConfiguration>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -56,10 +57,10 @@ impl ApplicationConfiguration {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(this.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone(), e.clone());
+            jcall!(this.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         this
@@ -85,8 +86,8 @@ impl ApplicationConfiguration {
     
 
     // throws Exception
-    pub fn update(&mut self, mut gameFeature: Option<Rc<RefCell<Feature>>>) {
-        if match (&gameFeature, &jcall!(MainFeatureFactory::getInstance()).FULL_SCREEN) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+    pub fn update(&mut self, mut gameFeature: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>>) {
+        if match (&gameFeature, &{ let java_field = jcall!(MainFeatureFactory::getInstance()).FULL_SCREEN.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
             if jcall!(features).isFeature(gameFeature.clone()) {
                 if !self.isFullscreen() {

@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationship;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
+use crate::java::lang::Exception::*;
 use super::PartInterface::PartInterface;
 
 // Borrows the object of a Java reference
@@ -28,13 +29,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait PartFactoryInterface {
+pub trait PartFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn getInstance(&mut self, sourceLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, relativeRelationship: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationshipDyn>>>) -> Option<Rc<RefCell<dyn PartInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

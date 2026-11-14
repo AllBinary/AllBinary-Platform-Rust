@@ -49,8 +49,8 @@ impl BasicDecimal {
             factor: 0,
             factorValue: 0,
         };
-        this.factor = jcall!(ScaleFactorFactory::ScaleFactorFactory::getInstance()).DEFAULT_SCALE_FACTOR.clone();
-        this.factorValue = jcall!(ScaleFactorFactory::ScaleFactorFactory::getInstance()).DEFAULT_SCALE_VALUE.clone();
+        this.factor = { let java_field = jcall!(ScaleFactorFactory::ScaleFactorFactory::getInstance()).DEFAULT_SCALE_FACTOR.clone(); java_field }.clone();
+        this.factorValue = { let java_field = jcall!(ScaleFactorFactory::ScaleFactorFactory::getInstance()).DEFAULT_SCALE_VALUE.clone(); java_field }.clone();
         this.units = units.clone();
         this.updateScaled();
         this
@@ -74,7 +74,7 @@ impl BasicDecimal {
     
 
     pub fn set(&mut self, mut bigDecimal: Option<Rc<RefCell<BasicDecimal>>>) {
-        self.units = jcall!(bigDecimal).getUnscaled();
+        self.units = { let java_value = (jcall!(bigDecimal).getUnscaled()).clone(); java_value };
         self.updateScaled();
     }
     
@@ -92,7 +92,7 @@ impl BasicDecimal {
     
 
     pub fn add(&mut self, mut bigDecimal: Option<Rc<RefCell<BasicDecimal>>>) {
-        self.units = self.units + jcall!(bigDecimal).getUnscaled();
+        self.units = { let java_value = (self.units + jcall!(bigDecimal).getUnscaled()).clone(); java_value };
         self.updateScaled();
     }
     
@@ -110,7 +110,7 @@ impl BasicDecimal {
     
 
     pub fn subtract(&mut self, mut bigDecimal: Option<Rc<RefCell<BasicDecimal>>>) {
-        self.units = self.units - jcall!(bigDecimal).getUnscaled();
+        self.units = { let java_value = (self.units - jcall!(bigDecimal).getUnscaled()).clone(); java_value };
         self.updateScaled();
     }
     
@@ -128,7 +128,7 @@ impl BasicDecimal {
     
 
     pub fn multiply(&mut self, mut bigDecimal: Option<Rc<RefCell<BasicDecimal>>>) {
-        self.units = self.units * jcall!(bigDecimal).getUnscaled();
+        self.units = { let java_value = (self.units * jcall!(bigDecimal).getUnscaled()).clone(); java_value };
         self.updateScaled();
     }
     
@@ -146,7 +146,7 @@ impl BasicDecimal {
     
 
     pub fn divide(&mut self, mut bigDecimal: Option<Rc<RefCell<BasicDecimal>>>) {
-        self.units = self.units / jcall!(bigDecimal).getUnscaled();
+        self.units = { let java_value = (self.units / jcall!(bigDecimal).getUnscaled()).clone(); java_value };
         self.updateScaled();
     }
     

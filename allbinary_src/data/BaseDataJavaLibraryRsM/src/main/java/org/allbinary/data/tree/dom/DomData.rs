@@ -35,6 +35,10 @@ thread_local! { pub static DomData_VALUE: String = String::from("value"); }
 thread_local! { pub static DomData_INDEX: String = String::from("index"); }
 
 impl DomData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

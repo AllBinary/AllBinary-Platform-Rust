@@ -20,6 +20,8 @@ use super::*;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::ValidationInterface::ValidationInterface;
 
 // Borrows the object of a Java reference
@@ -41,6 +43,10 @@ impl ValidationInterface for Validation {
 }
 
 impl Validation {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -78,7 +84,7 @@ impl Validation {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait ValidationDyn {
+pub trait ValidationDyn: std::any::Any {
     fn as_Validation(&self) -> &Validation;
     fn as_Validation_mut(&mut self) -> &mut Validation;
     fn isValid(&mut self) -> Option<bool> { Validation::isValid(self.as_Validation_mut()) }

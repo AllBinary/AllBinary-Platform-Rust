@@ -35,6 +35,10 @@ thread_local! { pub static AdvancedRTSLayerUtil_instance: Option<Rc<RefCell<Adva
 
 impl AdvancedRTSLayerUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -51,8 +55,8 @@ impl AdvancedRTSLayerUtil {
     }
     
 
-    pub fn createFakeRTSLayerHashtable(&mut self, mut baseRaceTrackGeographicMap: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::BaseRaceTrackGeographicMap::BaseRaceTrackGeographicMapDyn>>>) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(RTSLayerUtil::RTSLayerUtil::getInstance()).createFakeRTSLayerHashtable(baseRaceTrackGeographicMap.clone());
+    pub fn createFakeRTSLayerHashtable(&mut self, mut baseRaceTrackGeographicMap: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::BaseRaceTrackGeographicMap::BaseRaceTrackGeographicMapDyn>>>) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(RTSLayerUtil::RTSLayerUtil::getInstance()).createFakeRTSLayerHashtable(baseRaceTrackGeographicMap.clone());
         jcall!(hashtable).put(crate::java_into_object(crate::org::allbinary::game::layer::waypoint::WorkWaypoint::WorkWaypoint_ID.with(Clone::clone).clone()), crate::java_into_object(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(50)));
         return hashtable.clone();
     }

@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::RaceTrackGeographicMapInterfaceFactoryInterface::RaceTrackGeographicMapInterfaceFactoryInterface;
 
 // Borrows the object of a Java reference

@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::business::user::commerce::inventory::order::OrderInterface::OrderInterface;
 use crate::org::allbinary::business::user::role::UserRole::UserRole;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait WeblisketSessionInterface {
+pub trait WeblisketSessionInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn clear(&mut self);
@@ -103,8 +104,6 @@ pub trait WeblisketSessionInterface {
     
 
     fn setUserName(&mut self, userName: String);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

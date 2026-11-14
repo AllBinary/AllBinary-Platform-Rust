@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::media::Player::Player;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::media::Player::Player;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::animation::AnimationEventHandler::AnimationEventHandler;
@@ -27,6 +27,7 @@ use crate::org::allbinary::logic::math::PrimitiveIntUtil::PrimitiveIntUtil;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::time::GameTickTimeDelayHelperFactory::GameTickTimeDelayHelperFactory;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -46,30 +47,21 @@ pub struct CaptionIndexedAnimation {
     pub time: i32,
     pub END_EVENT: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>,
     pub timeDelayHelper: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>>,
-    pub player: Option<Rc<RefCell<Player>>>,
+    pub player: Option<Rc<RefCell<dyn Player>>>,
 }
 
 impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for CaptionIndexedAnimation {
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
-}
-impl crate::org::allbinary::animation::IndexedAnimationInterface::IndexedAnimationInterface for CaptionIndexedAnimation {
-    fn reset(&mut self) { self.base.reset() }
-    fn setFrame(&mut self, mut index: i32) { Self::setFrame(self, index) }
-    fn getFrame(&mut self) -> i32 { Self::getFrame(self) }
-}
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for CaptionIndexedAnimation {
-    fn getSize(&mut self) -> i32 { Self::getSize(self) }
-    fn previousFrame(&mut self) { Self::previousFrame(self) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for CaptionIndexedAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 impl CaptionIndexedAnimation {
     
 
-    pub fn new_struct(mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>, mut movieIndexedAnimationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>>, mut player: Option<Rc<RefCell<Player>>>, mut captionDx: i32, mut captionDy: i32, mut dx: i32, mut dy: i32, mut time: i32, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
+    pub fn new_struct(mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>, mut movieIndexedAnimationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>>, mut player: Option<Rc<RefCell<dyn Player>>>, mut captionDx: i32, mut captionDy: i32, mut dx: i32, mut dy: i32, mut time: i32, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
         let mut this = Self {
             base: IndexedAnimation::new_struct(animationBehavior.clone()),
             animationInterface: None,
@@ -91,23 +83,23 @@ impl CaptionIndexedAnimation {
         this.dx = dx.clone();
         this.dy = dy.clone();
         this.time = time.clone();
-        let mut timePerFrame: i32 = this.time / this.getSize();
-        this.timeDelayHelper = TimeDelayHelper::new(timePerFrame.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
-        this.player = player.clone();
-        jcall!(this.player).start();
         this
     }
 
-    pub fn new(mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>, mut movieIndexedAnimationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>>, mut player: Option<Rc<RefCell<Player>>>, mut captionDx: i32, mut captionDy: i32, mut dx: i32, mut dy: i32, mut time: i32, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(animationInterface, movieIndexedAnimationInterface, player, captionDx, captionDy, dx, dy, time, animationBehavior))));
-            this.END_EVENT = AllBinaryEventObject::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone())).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>);
+    pub fn new(mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>, mut movieIndexedAnimationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>>, mut player: Option<Rc<RefCell<dyn Player>>>, mut captionDx: i32, mut captionDy: i32, mut dx: i32, mut dy: i32, mut time: i32, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<Self>>> {
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(animationInterface.clone(), movieIndexedAnimationInterface.clone(), player.clone(), captionDx.clone(), captionDy.clone(), dx.clone(), dy.clone(), time.clone(), animationBehavior.clone()))));
+            jcall!(this).END_EVENT = AllBinaryEventObject::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone())).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>);
+            let mut timePerFrame: i32 = jcall!(this).time / jcall!(this).getSize();
+            jcall!(this).timeDelayHelper = TimeDelayHelper::new(timePerFrame.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
+            jcall!(this).player = player.clone();
+            jcall!(jcall!(this).player).start();
         this
     }
     
 
     // throws Exception
     pub fn nextFrame(&mut self) {
-        if { let java_receiver = self.timeDelayHelper.clone(); let java_arguments = (jcall!(GameTickTimeDelayHelperFactory::getInstance()).startTime.clone(),); let java_result = jcall!(java_receiver).isTime(java_arguments.0); java_result } {
+        if { let java_receiver = self.timeDelayHelper.clone(); let java_arguments = ({ let java_field = jcall!(GameTickTimeDelayHelperFactory::getInstance()).startTime.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).isTime(java_arguments.0); java_result } {
             jcall!(self.movieIndexedAnimationInterface).nextFrame();
         }
         if self.isLastFrame() {
@@ -117,7 +109,7 @@ impl CaptionIndexedAnimation {
     
 
     pub fn isLastFrame(&mut self) -> bool {
-        if jcall!(self.movieIndexedAnimationInterface).getFrame() == self.getSize() - 1 {
+        if { let java_value = jcall!(self.movieIndexedAnimationInterface).getFrame(); java_value } == self.getSize() - 1 {
             return true;
         } else {
             return false;
@@ -154,13 +146,13 @@ impl CaptionIndexedAnimation {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         jcall!(self.animationInterface).paintXY(graphics.clone(), x + self.captionDx, y + self.captionDy);
         jcall!(self.movieIndexedAnimationInterface).paintXY(graphics.clone(), x + self.captionDx + self.dx, y + self.captionDy + self.dy);
     }
     
 
-    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) {
+    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) {
         jcall!(self.animationInterface).paintThreedXYZ(graphics.clone(), x + self.captionDx, y + self.captionDy, z.clone());
         jcall!(self.movieIndexedAnimationInterface).paintThreedXYZ(graphics.clone(), x + self.captionDx + self.dx, y + self.captionDy + self.dy, z.clone());
     }
@@ -177,8 +169,8 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for CaptionIndexe
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base }
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
 }
 impl crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn for CaptionIndexedAnimation {
     fn as_IndexedAnimation(&self) -> &crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &self.base }

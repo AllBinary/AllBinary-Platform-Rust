@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait OperatingSystemInterface {
+pub trait OperatingSystemInterface: std::any::Any {
     
 
     fn getName(&mut self) -> String;

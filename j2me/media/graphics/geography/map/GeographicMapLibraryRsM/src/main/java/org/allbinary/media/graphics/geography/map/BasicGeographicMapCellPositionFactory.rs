@@ -21,6 +21,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayer;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
+use crate::java::lang::Exception::*;
 use super::GeographicMapCellPosition::GeographicMapCellPosition;
 use super::BasicGeographicMap::BasicGeographicMap;
 use super::GeographicMapCellPositionFactoryInterface::GeographicMapCellPositionFactoryInterface;
@@ -45,6 +46,10 @@ pub struct BasicGeographicMapCellPositionFactory {
 
 
 impl BasicGeographicMapCellPositionFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>) -> Self {
@@ -59,10 +64,10 @@ impl BasicGeographicMapCellPositionFactory {
         };
         this.logUtil = LogUtil::getInstance();
         this.geographicMapInterface = geographicMapInterface.clone();
-        this.geographicMapCellPositionFactoryInterface = jcall!(this.geographicMapInterface).getGeographicMapCellPositionFactoryInterface();
-        this.tiledLayer = jcall!(this.geographicMapInterface).getAllBinaryTiledLayer();
-        this.columns = jcall!(this.tiledLayer).getColumns();
-        this.rows = jcall!(this.tiledLayer).getRows();
+        this.geographicMapCellPositionFactoryInterface = { let java_value = (jcall!(this.geographicMapInterface).getGeographicMapCellPositionFactoryInterface()).clone(); java_value };
+        this.tiledLayer = { let java_value = (jcall!(this.geographicMapInterface).getAllBinaryTiledLayer()).clone(); java_value };
+        this.columns = { let java_value = (jcall!(this.tiledLayer).getColumns()).clone(); java_value };
+        this.rows = { let java_value = (jcall!(this.tiledLayer).getRows()).clone(); java_value };
         this.geographicMapCellPositionArray = vec![vec![None; (this.columns) as usize]; (this.rows) as usize];
         this.init();
         this
@@ -104,10 +109,10 @@ impl BasicGeographicMapCellPositionFactory {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(commonSeps).BRACKET_OPEN.clone()).appendint(rows.clone()).append(jcall!(commonSeps).BRACKET_CLOSE.clone()).append(jcall!(commonSeps).BRACKET_OPEN.clone()).appendint(columns.clone()).append(jcall!(commonSeps).BRACKET_CLOSE.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("visit"), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(commonSeps).BRACKET_OPEN.clone(); java_field }.clone()).appendint(rows.clone()).append({ let java_field = jcall!(commonSeps).BRACKET_CLOSE.clone(); java_field }.clone()).append({ let java_field = jcall!(commonSeps).BRACKET_OPEN.clone(); java_field }.clone()).appendint(columns.clone()).append({ let java_field = jcall!(commonSeps).BRACKET_CLOSE.clone(); java_field }.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("visit"), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
             panic!("{:?}", e);
             }
         }
@@ -128,12 +133,12 @@ impl BasicGeographicMapCellPositionFactory {
 
     // throws Exception
     pub fn createInstance(&mut self, mut i_column: i32, mut i_row: i32, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> {
-        let mut cellPositionCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = self.geographicMapCellPositionArray[(i_row) as usize][(i_column) as usize].clone();
+        let mut cellPositionCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = crate::java_into_object(self.geographicMapCellPositionArray[(i_row) as usize][(i_column) as usize].clone());
         if cellPositionCanBeNull.is_none() {
-            cellPositionCanBeNull = jcall!(self.geographicMapCellPositionFactoryInterface).getInstance(self.geographicMapInterface.clone(), i_column.clone(), i_row.clone(), self.columns.clone(), self.rows.clone(), width.clone(), height.clone());
-            self.geographicMapCellPositionArray[(i_row) as usize][(i_column) as usize] = (cellPositionCanBeNull).clone() /* as GeographicMapCellPosition */;
+            cellPositionCanBeNull = crate::java_into_object({ let java_value = (jcall!(self.geographicMapCellPositionFactoryInterface).getInstance(self.geographicMapInterface.clone(), i_column.clone(), i_row.clone(), self.columns.clone(), self.rows.clone(), width.clone(), height.clone())).clone(); java_value });
+            { let java_index = (i_column) as usize; self.geographicMapCellPositionArray[(i_row) as usize][java_index] = { let java_object = (cellPositionCanBeNull).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) }; };
         }
-        return (cellPositionCanBeNull).clone() /* as GeographicMapCellPosition */;
+        return { let java_object = (cellPositionCanBeNull).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -146,7 +151,7 @@ impl BasicGeographicMapCellPositionFactory {
         return self.rows.clone();
     }
 }
-pub trait BasicGeographicMapCellPositionFactoryDyn {
+pub trait BasicGeographicMapCellPositionFactoryDyn: std::any::Any {
     fn as_BasicGeographicMapCellPositionFactory(&self) -> &BasicGeographicMapCellPositionFactory;
     fn as_BasicGeographicMapCellPositionFactory_mut(&mut self) -> &mut BasicGeographicMapCellPositionFactory;
     fn init(&mut self) { BasicGeographicMapCellPositionFactory::init(self.as_BasicGeographicMapCellPositionFactory_mut()) }

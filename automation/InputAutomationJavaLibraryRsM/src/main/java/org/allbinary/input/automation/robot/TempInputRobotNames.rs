@@ -33,6 +33,10 @@ thread_local! { pub static TempInputRobotNames_SYS_NAME: String = String::from("
 thread_local! { pub static TempInputRobotNames_DX_NAME: String = String::from("DirectX"); }
 
 impl TempInputRobotNames {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

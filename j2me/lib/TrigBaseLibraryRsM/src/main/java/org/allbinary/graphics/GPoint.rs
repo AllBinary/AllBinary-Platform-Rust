@@ -103,18 +103,18 @@ impl GPoint {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut positionStrings: Option<Rc<RefCell<PositionStrings>>> = PositionStrings::getInstance();
         jcall!(stringBuffer).append(GPoint_POINT_LABEL.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).X_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).X_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(x.clone());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).Y_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).Y_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(y.clone());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).Z_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).Z_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(z.clone());
         return jcall!(stringBuffer).toString();
     }
 }
-pub trait GPointDyn {
+pub trait GPointDyn: std::any::Any {
     fn as_GPoint(&self) -> &GPoint;
     fn as_GPoint_mut(&mut self) -> &mut GPoint;
     fn getX(&mut self) -> i32 { GPoint::getX(self.as_GPoint_mut()) }

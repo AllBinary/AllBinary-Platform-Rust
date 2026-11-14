@@ -27,6 +27,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListS::BasicArrayListS;
 use crate::org::allbinary::vector::VectorInfo::VectorInfo;
+use crate::java::lang::Exception::*;
 use super::VectorAnimationUtil::VectorAnimationUtil;
 
 // Borrows the object of a Java reference
@@ -45,6 +46,10 @@ pub struct VectorRotationGenerator {
 thread_local! { pub static VectorRotationGenerator_instance: Option<Rc<RefCell<VectorRotationGenerator>>> = VectorRotationGenerator::new(); }
 
 impl VectorRotationGenerator {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<VectorRotationGenerator>>> {
@@ -76,11 +81,11 @@ impl VectorRotationGenerator {
     
 
     pub fn getInstanceFrames(&mut self, mut width: i32, mut height: i32, mut points: Vec<Vec<i32>>, mut frames: i32) -> Vec<Vec<Vec<i32>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut totalAngle: i16 = jcall!(self.angleFactory).TOTAL_ANGLE.clone();
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut totalAngle: i16 = { let java_field = jcall!(self.angleFactory).TOTAL_ANGLE.clone(); java_field }.clone();
             let mut angleIncrement: i32 = ((totalAngle) as i32) / frames;
-            let mut pointsBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListS::new(((totalAngle) as i32) / angleIncrement).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-            let mut pointBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListS::new((points.len() as i32).clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            let mut pointsBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListS::new(((totalAngle) as i32) / angleIncrement).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            let mut pointBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListS::new((points.len() as i32).clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
             let mut pointFactory: Option<Rc<RefCell<PointFactory>>> = PointFactory::getInstance();
             let mut size: i32 = (points.len() as i32).clone();
             for index in (0..size) {
@@ -92,17 +97,18 @@ impl VectorRotationGenerator {
                 index += angleIncrement.clone();
             }
             let mut newPoints: Vec<Vec<Vec<i32>>> = { let java_receiver = self.vectorAnimationUtil.clone(); let java_arguments = (pointsBasicArrayList.clone(), jcall!(pointBasicArrayList).size(),); let java_result = jcall!(java_receiver).toAnimationArrayFromListOfPointListWithPointsPerFrame(java_arguments.0, java_arguments.1); java_result };
-            return newPoints.clone();
+            return Some(newPoints.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
-            return jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY_ARRAY.clone();
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
+            return { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY_ARRAY.clone(); java_field }.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 

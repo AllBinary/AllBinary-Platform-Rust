@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::apache::commons::fileupload::FileItem::FileItem;
 use crate::org::apache::commons::fileupload::FileItemStream::FileItemStream;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,6 +39,10 @@ pub struct HttpFileUploadUtil {
 thread_local! { pub static HttpFileUploadUtil_instance: Option<Rc<RefCell<HttpFileUploadUtil>>> = HttpFileUploadUtil::new(); }
 
 impl HttpFileUploadUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<HttpFileUploadUtil>>> {
@@ -64,7 +69,7 @@ impl HttpFileUploadUtil {
             if (anyType).is_some() /* instanceof FileItem */ {
                 return true;
             } else {
-                panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Object Not Instance Of FileItem but is: "), ClassUtil::viewAll(anyType.clone(), jcall!(CommonSeps::getInstance()).NEW_LINE.clone())))));
+                panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Object Not Instance Of FileItem but is: "), ClassUtil::viewAll(anyType.clone(), { let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone())))));
             }
         }
         return false;
@@ -77,44 +82,44 @@ impl HttpFileUploadUtil {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
         jcall!(stringBuffer).append(String::from("FileItem Log:"));
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("Content Type:"));
         jcall!(stringBuffer).append(jcall!(fileItem).getContentType());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("Field Name:"));
         jcall!(stringBuffer).append(jcall!(fileItem).getFieldName());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("Name:"));
         jcall!(stringBuffer).append(jcall!(fileItem).getName());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("Size:"));
         jcall!(stringBuffer).append(String::from(" Not Calculated Yet"));
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).HTTP.clone()) {
-            jcall!(logUtil).putF(jcall!(stringBuffer).toString(), crate::java_into_object(Self::getInstance()), String::from("log()"));
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).HTTP.clone(); java_field }.clone()) {
+            jcall!(logUtil).putF({ let java_argument = jcall!(stringBuffer).toString(); java_argument }, crate::java_into_object(Self::getInstance()), String::from("log()"));
         }
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn log(mut fileItem: Option<Rc<RefCell<FileItem>>>) {
+    pub fn log_FileItem(mut fileItem: Option<Rc<RefCell<FileItem>>>) {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
         jcall!(stringBuffer).append(String::from("FileItem Log:"));
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("Content Type:"));
         jcall!(stringBuffer).append(jcall!(fileItem).getContentType());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("Field Name:"));
         jcall!(stringBuffer).append(jcall!(fileItem).getFieldName());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("Name:"));
         jcall!(stringBuffer).append(jcall!(fileItem).getName());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("Size:"));
         jcall!(stringBuffer).appendlong(((jcall!(fileItem).getSize()) as i64));
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).HTTPREQUEST.clone()) {
-            jcall!(logUtil).putF(jcall!(stringBuffer).toString(), crate::java_into_object(Self::getInstance()), String::from("log()"));
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).HTTPREQUEST.clone(); java_field }.clone()) {
+            jcall!(logUtil).putF({ let java_argument = jcall!(stringBuffer).toString(); java_argument }, crate::java_into_object(Self::getInstance()), String::from("log()"));
         }
     }
 }

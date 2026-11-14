@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::net::URL::URL;
+use crate::java::net::URL::URL;
 // use crate::javax::help::HelpSet::HelpSet;
 // use crate::javax::swing::*;
 use crate::org::allbinary::logic::java::help::JavaHelpUtil::JavaHelpUtil;
@@ -68,7 +68,7 @@ impl AbstractInputAutomationFactory {
         this.name = name.clone();
         this.jPanel = jPanel.clone();
         let mut url: Option<Rc<RefCell<URL>>> = jcall!(std::any::type_name_of_val(&this)).getResource(String::from("/help/Help.hs"));
-        this.helpSet = jcall!(JavaHelpUtil::getInstance()).getHelpSet(url.clone());
+        this.helpSet = { let java_value = (jcall!(JavaHelpUtil::getInstance()).getHelpSet_URL(url.clone())).clone(); java_value };
         this
     }
 

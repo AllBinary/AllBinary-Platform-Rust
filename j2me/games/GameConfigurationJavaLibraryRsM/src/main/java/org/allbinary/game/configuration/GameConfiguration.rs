@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::java::bool::BooleanFactory::BooleanFactory;
 use crate::org::allbinary::logic::math::SmallIntegerSingletonFactory::SmallIntegerSingletonFactory;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -54,12 +55,12 @@ impl GameConfiguration {
             maxValue: None,
             modifiable: None,
         };
-        this.name = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.name = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.defaultValue = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0);
         this.value = GameConfiguration_MIN_VALUE.with(Clone::clone).clone();
         this.minValue = this.defaultValue.clone();
         this.maxValue = this.defaultValue.clone();
-        this.modifiable = jcall!(BooleanFactory::getInstance()).TRUE.clone();
+        this.modifiable = { let java_field = jcall!(BooleanFactory::getInstance()).TRUE.clone(); java_field }.clone();
         this.setName(name.clone());
         this.setDefaultValue(defaultValue.clone());
         this.value = this.getDefaultValue();
@@ -69,18 +70,18 @@ impl GameConfiguration {
     }
 
     pub fn new(mut name: String, mut defaultValue: Option<i32>, mut minValue: Option<i32>, mut maxValue: Option<i32>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(name, defaultValue, minValue, maxValue))));
-            jcall!(jcall!(GameConfigurationSingleton::GameConfigurationSingleton::getInstance()).getHashtable()).put(this.getName(), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(name.clone(), defaultValue.clone(), minValue.clone(), maxValue.clone()))));
+            jcall!(jcall!(GameConfigurationSingleton::GameConfigurationSingleton::getInstance()).getHashtable()).put(crate::java_into_object(jcall!(this).getName()), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
         this
     }
     
 
     // throws Exception
     pub fn setValue(&mut self, mut value: Option<i32>) {
-        if !match (&self.value, &value) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if self.value != value {
             let mut oldValue: Option<i32> = self.value.clone();
             self.value = value.clone();
-            jcall!(GameFeatureEventHandler::getInstance()).fireEvent(GameFeatureEvent::new(None /* Java this: a &mut self method has no Rc of itself */, jcall!(StringMaker::new()).append(self.name.clone()).append(String::from(" value: from: ")).appendint(((oldValue).unwrap() as i32)).append(String::from(" to ")).appendint(((self.value).unwrap() as i32)).toString()));
+            jcall!(GameFeatureEventHandler::getInstance()).fireEvent(GameFeatureEvent::new(None /* Java this: a &mut self method has no Rc of itself */, jcall!(StringMaker::new()).append(self.name.clone()).append(String::from(" value: from: ")).appendint(((oldValue).unwrap() as i32)).append(String::from(" to ")).appendint(((self.value).unwrap() as i32)).toString()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
         }
     }
     
@@ -141,15 +142,15 @@ impl GameConfiguration {
         jcall!(stringBuffer).append(String::from("Name: "));
         jcall!(stringBuffer).append(self.name.clone());
         jcall!(stringBuffer).append(String::from(" Min: "));
-        jcall!(stringBuffer).appendint(((self.getMinValue()).unwrap() as i32));
+        jcall!(stringBuffer).appendint({ let java_argument = ((self.getMinValue()).unwrap() as i32); java_argument });
         jcall!(stringBuffer).append(String::from(" Max: "));
-        jcall!(stringBuffer).appendint(((self.getMaxValue()).unwrap() as i32));
+        jcall!(stringBuffer).appendint({ let java_argument = ((self.getMaxValue()).unwrap() as i32); java_argument });
         jcall!(stringBuffer).append(String::from(" Value: "));
-        jcall!(stringBuffer).appendint(((self.getValue()).unwrap() as i32));
+        jcall!(stringBuffer).appendint({ let java_argument = ((self.getValue()).unwrap() as i32); java_argument });
         jcall!(stringBuffer).append(String::from(" Default: "));
-        jcall!(stringBuffer).appendint(((self.getDefaultValue()).unwrap() as i32));
+        jcall!(stringBuffer).appendint({ let java_argument = ((self.getDefaultValue()).unwrap() as i32); java_argument });
         jcall!(stringBuffer).append(String::from(" Modifiable: "));
-        jcall!(stringBuffer).appendboolean(self.isModifiable().unwrap());
+        jcall!(stringBuffer).appendboolean({ let java_argument = self.isModifiable().unwrap(); java_argument });
         return jcall!(stringBuffer).toString();
     }
     
@@ -163,7 +164,7 @@ impl GameConfiguration {
         return self.modifiable.clone();
     }
 }
-pub trait GameConfigurationDyn {
+pub trait GameConfigurationDyn: std::any::Any {
     fn as_GameConfiguration(&self) -> &GameConfiguration;
     fn as_GameConfiguration_mut(&mut self) -> &mut GameConfiguration;
     fn setValue(&mut self, mut value: Option<i32>) { GameConfiguration::setValue(self.as_GameConfiguration_mut(), value) }

@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::data::tables::transform::info::TransformInfoEntity::TransformInfoEntity;
 use crate::org::allbinary::data::tables::transform::info::TransformInfoEntityBuilder::TransformInfoEntityBuilder;
@@ -37,6 +36,7 @@ use crate::org::allbinary::logic::visual::transform::template::customizer::widge
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::views::business::context::modules::storefront::customizer::CustomizerUtil::CustomizerUtil;
+use crate::java::lang::Exception::*;
 use super::PageView::PageView;
 
 // Borrows the object of a Java reference
@@ -52,6 +52,9 @@ pub struct PageValidationView {
 }
 
 // impl ValidationComponentInterface for PageValidationView with the methods of the trait
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for PageValidationView {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }
+}
 
 impl PageValidationView {
     
@@ -63,7 +66,7 @@ impl PageValidationView {
         };
         this.logUtil = LogUtil::getInstance();
         // super(...) is in the struct literal above
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("View Name: "), jcall!(transformInfoInterface).getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("PageViewValidation()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         this
@@ -75,117 +78,119 @@ impl PageValidationView {
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut isValid: Option<bool> = true;
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
-                jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone());
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone());
             }
             let mut transformInfoEntityInterface: Option<Rc<RefCell<TransformInfoEntity>>> = TransformInfoEntityBuilder::getInstance();
             let mut pageObjectConfigInterface: Option<Rc<RefCell<dyn TransformInfoObjectConfigInterface>>> = jcall!(self.getTransformInfoInterface()).getObjectConfigInterface();
             let mut allViewsToBeModifiedVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(pageObjectConfigInterface).getGroupTransforms();
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Views To Be Modified: "), jcall!(allViewsToBeModifiedVector).size()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("get(transformInfoInterface)"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
             let mut size: i32 = jcall!(allViewsToBeModifiedVector).size();
             for index in (0..size) {
                 let mut transformInfoInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfo::TransformInfoDyn>>> = { let java_object = (jcall!(allViewsToBeModifiedVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfo::TransformInfoDyn>>>>().expect("ClassCastException").clone()) };
                 let mut viewNameOfViewToBeModified: String = jcall!(transformInfoInterface).getName();
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                     let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-                    jcall!(stringBuffer).append(jcall!(self.getTransformInfoInterface()).getName());
+                    jcall!(stringBuffer).append({ let java_argument = jcall!(self.getTransformInfoInterface()).getName(); java_argument });
                     jcall!(stringBuffer).append(String::from(" is modifying view: "));
                     jcall!(stringBuffer).append(viewNameOfViewToBeModified.clone());
                     { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("insert()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
-                let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (self.getTransformInfoInterface()).clone() /* as TransformInfoHttpInterface */;
+                let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (|| -> Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> { panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpInterface") })();
                 let mut specifiedTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>> = jcall!(transformInfoEntityInterface).get(viewNameOfViewToBeModified.clone(), jcall!(httpTransformInfoInterface).getPropertiesHashMap(), jcall!(httpTransformInfoInterface).getPageContext());
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                     let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-                    jcall!(stringBuffer).append(jcall!(self.getTransformInfoInterface()).getName());
+                    jcall!(stringBuffer).append({ let java_argument = jcall!(self.getTransformInfoInterface()).getName(); java_argument });
                     jcall!(stringBuffer).append(String::from(" is adding data to view: "));
                     jcall!(stringBuffer).append(viewNameOfViewToBeModified.clone());
                     { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("insert()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
-                let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-                let mut title: String = jcall!(jcall!(specifiedTransformInfoInterface).getName()).substring(jcall!(jcall!(self.getTransformInfoInterface()).getStoreName()).length());
+                let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+                let mut title: String = jcall!(specifiedTransformInfoInterface).getName()[({ let java_argument = (jcall!(self.getTransformInfoInterface()).getStoreName().chars().count() as i32); java_argument }) as usize..].to_string();
                 if (title.cmp(&String::from("index")) as i32) == 0 {
-                    jcall!(hashMap).put(jcall!(TitleData::getInstance()).TEXT.clone(), format!("{}{}", jcall!(self.getTransformInfoInterface()).getStoreName(), String::from(" - Home Page")));
+                    jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(TitleData::getInstance()).TEXT.clone(); java_field }.clone()), crate::java_into_object(format!("{}{}", { let java_value = jcall!(self.getTransformInfoInterface()).getStoreName(); java_value }, String::from(" - Home Page"))));
                 } else {
-                    jcall!(hashMap).put(jcall!(TitleData::getInstance()).TEXT.clone(), format!("{}{}", format!("{}{}", jcall!(self.getTransformInfoInterface()).getStoreName(), String::from(" -")), title));
+                    jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(TitleData::getInstance()).TEXT.clone(); java_field }.clone()), crate::java_into_object(format!("{}{}", format!("{}{}", { let java_value = jcall!(self.getTransformInfoInterface()).getStoreName(); java_value }, String::from(" -")), title)));
                 }
-                let mut pageValidation: Option<Rc<RefCell<PageValidation>>> = PageValidation::new1(hashMap.clone());
-                if match (&jcall!(pageValidation).isValid(), &false) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                    isValid = false;
+                let mut pageValidation: Option<Rc<RefCell<PageValidation>>> = PageValidation::new1_HashMap(hashMap.clone());
+                if jcall!(pageValidation).isValid() == false {
+                    isValid = { let java_value = (false).clone(); java_value }.clone();
                 }
-                if match (&isValid, &true) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                if isValid == true {
                     let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create();
                     jcall!(document).appendChild(jcall!(pageValidation).toXmlNode(document.clone()));
                     let mut documentString: String = XmlDocumentHelper::toString(document.clone());
-                    if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+                    if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                         jcall!(stringBuffer).append(viewNameOfViewToBeModified.clone());
                         jcall!(stringBuffer).append(String::from(" is changing data in "));
                         jcall!(stringBuffer).append(jcall!(jcall!(specifiedTransformInfoInterface).getDataFilePath()).toString());
                         jcall!(stringBuffer).append(String::from(" to the following data:\n"));
                         jcall!(stringBuffer).append(documentString.clone());
-                        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                     }
                     jcall!(CustomizerUtil::getInstance()).write(specifiedTransformInfoInterface.clone(), documentString.clone());
                 }
             }
-            return isValid.clone();
+            return Some(isValid.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
-                jcall!(self.logUtil).put(String::from("Failed to validate"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put(String::from("Failed to validate"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn validationInfo(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             let mut transformInfoEntityInterface: Option<Rc<RefCell<TransformInfoEntity>>> = TransformInfoEntityBuilder::getInstance();
             let mut objectConfig: Option<Rc<RefCell<dyn TransformInfoObjectConfigInterface>>> = jcall!(self.getTransformInfoInterface()).getObjectConfigInterface();
-            let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (self.getTransformInfoInterface()).clone() /* as TransformInfoHttpInterface */;
+            let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (|| -> Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> { panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpInterface") })();
             let mut allViewsToBeModifiedVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(objectConfig).getGroupTransforms();
             let mut size: i32 = jcall!(allViewsToBeModifiedVector).size();
             for index in (0..size) {
                 let mut transformInfoInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfo::TransformInfoDyn>>> = { let java_object = (jcall!(allViewsToBeModifiedVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfo::TransformInfoDyn>>>>().expect("ClassCastException").clone()) };
                 let mut viewNameOfViewToBeModified: String = jcall!(transformInfoInterface).getName();
                 let mut specifiedTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>> = jcall!(transformInfoEntityInterface).get(viewNameOfViewToBeModified.clone(), jcall!(httpTransformInfoInterface).getPropertiesHashMap(), jcall!(httpTransformInfoInterface).getPageContext());
-                let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-                let mut title: String = jcall!(jcall!(specifiedTransformInfoInterface).getName()).substring(jcall!(jcall!(self.getTransformInfoInterface()).getStoreName()).length());
+                let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+                let mut title: String = jcall!(specifiedTransformInfoInterface).getName()[({ let java_argument = (jcall!(self.getTransformInfoInterface()).getStoreName().chars().count() as i32); java_argument }) as usize..].to_string();
                 if (title.cmp(&String::from("index")) as i32) == 0 {
-                    jcall!(hashMap).put(jcall!(TitleData::getInstance()).TEXT.clone(), format!("{}{}", jcall!(self.getTransformInfoInterface()).getStoreName(), String::from(" - Home Page")));
+                    jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(TitleData::getInstance()).TEXT.clone(); java_field }.clone()), crate::java_into_object(format!("{}{}", { let java_value = jcall!(self.getTransformInfoInterface()).getStoreName(); java_value }, String::from(" - Home Page"))));
                 } else {
-                    jcall!(hashMap).put(jcall!(TitleData::getInstance()).TEXT.clone(), format!("{}{}", format!("{}{}", jcall!(self.getTransformInfoInterface()).getStoreName(), String::from(" -")), title));
+                    jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(TitleData::getInstance()).TEXT.clone(); java_field }.clone()), crate::java_into_object(format!("{}{}", format!("{}{}", { let java_value = jcall!(self.getTransformInfoInterface()).getStoreName(); java_value }, String::from(" -")), title)));
                 }
-                let mut pageValidation: Option<Rc<RefCell<PageValidation>>> = PageValidation::new1(hashMap.clone());
-                if match (&jcall!(pageValidation).isValid(), &false) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                let mut pageValidation: Option<Rc<RefCell<PageValidation>>> = PageValidation::new1_HashMap(hashMap.clone());
+                if jcall!(pageValidation).isValid() == false {
                     jcall!(stringBuffer).append(format!("{}{}", String::from("TransformInfo Name for PageValidation:"), jcall!(specifiedTransformInfoInterface).getName()));
                     jcall!(stringBuffer).append(format!("{}{}", String::from("PageValidation:"), hashMap));
                     jcall!(stringBuffer).append(format!("{}{}", String::from("PageValidation Info:"), jcall!(pageValidation).validationInfo()));
                 }
             }
-            return jcall!(stringBuffer).toString();
+            return Some(jcall!(stringBuffer).toString());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).put(String::from("Failed to generate validation error info"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("validationInfo()"), crate::java_into_object(e.clone()));
             }
             return String::from("An auto generated page name was invalid.");
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 

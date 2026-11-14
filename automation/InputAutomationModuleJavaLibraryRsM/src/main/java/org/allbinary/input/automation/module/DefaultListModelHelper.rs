@@ -21,6 +21,7 @@ use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 // use crate::javax::swing::*;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,6 +37,10 @@ pub struct DefaultListModelHelper {
 
 
 impl DefaultListModelHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -57,7 +62,7 @@ impl DefaultListModelHelper {
         self.defaultListModel = DefaultListModel::new();
         let mut size: i32 = jcall!(self.vector).size();
         for index in (0..size) {
-            let mut moduleName: String = (jcall!(self.vector).get(index.clone())).clone() /* as String */;
+            let mut moduleName: String = { let java_object = (jcall!(self.vector).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             jcall!(self.defaultListModel).addElement(moduleName.clone());
         }
     }

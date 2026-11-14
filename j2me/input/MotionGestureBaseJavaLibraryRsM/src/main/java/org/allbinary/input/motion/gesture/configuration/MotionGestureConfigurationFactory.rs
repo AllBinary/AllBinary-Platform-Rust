@@ -32,6 +32,10 @@ pub struct MotionGestureConfigurationFactory {
 pub static mut MotionGestureConfigurationFactory_config: std::cell::LazyCell<Option<Rc<RefCell<MotionGestureConfiguration>>>> = std::cell::LazyCell::new(|| MotionGestureConfiguration::new());
 
 impl MotionGestureConfigurationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

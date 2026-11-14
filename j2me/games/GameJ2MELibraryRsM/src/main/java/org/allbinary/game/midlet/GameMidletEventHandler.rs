@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
+use crate::java::lang::Exception::*;
 use super::GameMidletEventListener::GameMidletEventListener;
 
 // Borrows the object of a Java reference
@@ -57,7 +58,7 @@ impl GameMidletEventHandler {
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut gameMidletEventListener: Option<Rc<RefCell<dyn GameMidletEventListener>>> = panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn GameMidletEventListener");
+        let mut gameMidletEventListener: Option<Rc<RefCell<dyn GameMidletEventListener>>> = (|| -> Option<Rc<RefCell<dyn GameMidletEventListener>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn GameMidletEventListener") })();
         jcall!(gameMidletEventListener).onGameEnd(eventObject.clone());
     }
 }

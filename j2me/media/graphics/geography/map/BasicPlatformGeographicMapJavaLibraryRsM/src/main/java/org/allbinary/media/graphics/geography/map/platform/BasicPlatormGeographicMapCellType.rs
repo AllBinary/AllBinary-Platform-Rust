@@ -35,11 +35,15 @@ pub struct BasicPlatormGeographicMapCellType {
 
 
 impl BasicPlatormGeographicMapCellType {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn createType(mut r#type: i32) -> Option<Rc<RefCell<BasicPlatormGeographicMapCellType>>> {
-        let mut types: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        jcall!(types).add(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(r#type.clone()));
+        let mut types: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        jcall!(types).add(crate::java_into_object(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(r#type.clone())));
         let mut basicPlatormGeographicMapCellType: Option<Rc<RefCell<BasicPlatormGeographicMapCellType>>> = BasicPlatormGeographicMapCellType::new(types.clone());
         return basicPlatormGeographicMapCellType.clone();
     }
@@ -54,8 +58,8 @@ impl BasicPlatormGeographicMapCellType {
         let mut typeAsInteger: Option<i32> = None;
         let mut r#type: i32 = 0;
         for index in (0..size) {
-            typeAsInteger = ((jcall!(types).get(index.clone())).clone() /* as Integer */);
-            r#type = ((typeAsInteger).unwrap() as i32);
+            typeAsInteger = { let java_value = (({ let java_object = (jcall!(types).get(index.clone())).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) })).clone(); java_value };
+            r#type = { let java_value = (((typeAsInteger).unwrap() as i32)).clone(); java_value };
             GeographicMapCellType::new(r#type.clone(), 0).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>);
             typeArray[(index) as usize] = r#type.clone();
         }

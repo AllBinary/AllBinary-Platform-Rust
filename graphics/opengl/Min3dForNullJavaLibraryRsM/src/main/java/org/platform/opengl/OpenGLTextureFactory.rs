@@ -5,9 +5,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactory;
+use crate::java::lang::RuntimeException::*;
 use super::OpenGLGLUUtils::OpenGLGLUUtils;
 
 // Borrows the object of a Java reference
@@ -46,7 +47,7 @@ impl OpenGLTextureFactory {
     }
     
 
-    pub fn load(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut target: i32, mut level: i32, mut image: Option<Rc<RefCell<Image>>>, mut border: i32, mut flip: bool) {
+    pub fn load(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut target: i32, mut level: i32, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut border: i32, mut flip: bool) {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
@@ -61,7 +62,7 @@ impl std::ops::DerefMut for OpenGLTextureFactory {
 impl crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactoryDyn for OpenGLTextureFactory {
     fn as_PlatformTextureBaseFactory(&self) -> &crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactory { &self.base }
     fn as_PlatformTextureBaseFactory_mut(&mut self) -> &mut crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactory { &mut self.base }
-    fn load(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut target: i32, mut level: i32, mut image: Option<Rc<RefCell<Image>>>, mut border: i32, mut flip: bool) { Self::load(self, gl, target, level, image, border, flip) }
+    fn load(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut target: i32, mut level: i32, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut border: i32, mut flip: bool) { Self::load(self, gl, target, level, image, border, flip) }
 }
 
 

@@ -18,6 +18,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::layer::RTSLayerEvent::RTSLayerEvent;
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

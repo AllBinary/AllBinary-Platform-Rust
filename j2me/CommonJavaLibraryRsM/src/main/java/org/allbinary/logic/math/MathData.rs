@@ -39,6 +39,10 @@ pub struct MathData {
 thread_local! { pub static MathData_instance: Option<Rc<RefCell<MathData>>> = MathData::new(); }
 
 impl MathData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<MathData>>> {
@@ -58,10 +62,10 @@ impl MathData {
         this.PLUS = String::from("+");
         this.GREATER_THAN = String::from(">");
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
-        this.EQUALS = jcall!(commonSeps).EQUALS.clone();
-        this.MINUS = jcall!(commonSeps).DASH.clone();
-        this.DIVIDE = jcall!(commonSeps).FORWARD_SLASH.clone();
-        this.MULTIPLY = jcall!(CommonPhoneStrings::getInstance()).STAR.clone();
+        this.EQUALS = { let java_value = ({ let java_field = jcall!(commonSeps).EQUALS.clone(); java_field }).clone(); java_value }.clone();
+        this.MINUS = { let java_value = ({ let java_field = jcall!(commonSeps).DASH.clone(); java_field }).clone(); java_value }.clone();
+        this.DIVIDE = { let java_value = ({ let java_field = jcall!(commonSeps).FORWARD_SLASH.clone(); java_field }).clone(); java_value }.clone();
+        this.MULTIPLY = { let java_value = ({ let java_field = jcall!(CommonPhoneStrings::getInstance()).STAR.clone(); java_field }).clone(); java_value }.clone();
         this
     }
 

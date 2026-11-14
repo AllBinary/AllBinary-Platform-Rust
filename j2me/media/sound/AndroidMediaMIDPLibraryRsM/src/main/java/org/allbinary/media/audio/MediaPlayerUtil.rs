@@ -20,6 +20,7 @@ use super::*;
 use crate::android::media::MediaPlayer::MediaPlayer;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -35,6 +36,10 @@ pub struct MediaPlayerUtil {
 thread_local! { pub static MediaPlayerUtil_instance: Option<Rc<RefCell<MediaPlayerUtil>>> = MediaPlayerUtil::new(); }
 
 impl MediaPlayerUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

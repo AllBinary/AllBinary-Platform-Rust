@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use super::FtpConfigurationInterface::FtpConfigurationInterface;
 
 // Borrows the object of a Java reference
@@ -47,6 +46,10 @@ impl FtpConfigurationInterface for FtpConfiguration {
 }
 
 impl FtpConfiguration {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -64,21 +67,21 @@ impl FtpConfiguration {
     }
     
 
-    pub fn new_struct1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             ftpServer: String::new(),
             ftpPath: String::new(),
             ftpUserName: String::new(),
             ftpPassword: String::new(),
         };
-        this.ftpServer = (jcall!(hashMap).get(FtpConfigurationData_SERVER.with(Clone::clone).clone())).clone() /* as String */;
-        this.ftpPath = (jcall!(hashMap).get(FtpConfigurationData_PATH.with(Clone::clone).clone())).clone() /* as String */;
-        this.ftpUserName = (jcall!(hashMap).get(FtpConfigurationData_USERNAME.with(Clone::clone).clone())).clone() /* as String */;
-        this.ftpPassword = (jcall!(hashMap).get(FtpConfigurationData_PASSWORD.with(Clone::clone).clone())).clone() /* as String */;
+        this.ftpServer = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(FtpConfigurationData_SERVER.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.ftpPath = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(FtpConfigurationData_PATH.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.ftpUserName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(FtpConfigurationData_USERNAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.ftpPassword = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(FtpConfigurationData_PASSWORD.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         this
     }
 
-    pub fn new1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new1(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct1(hashMap))))
     }
     

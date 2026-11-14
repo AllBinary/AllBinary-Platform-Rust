@@ -23,6 +23,7 @@ use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::form::FormTypeFactory::FormTypeFactory;
 use crate::org::allbinary::graphics::form::ItemPaintableFactory::ItemPaintableFactory;
 use crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionForm;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -54,7 +55,7 @@ impl PreGameScrollSelectionForm {
 
     // throws Exception
     pub fn init(&mut self, mut rectangle: Option<Rc<RefCell<Rectangle>>>) {
-        self.base.init(rectangle.clone(), jcall!(FormTypeFactory::getInstance()).TEMP_HORIZONTAL_FORM.clone());
+        { let java_arguments = (rectangle.clone(), { let java_field = jcall!(FormTypeFactory::getInstance()).TEMP_HORIZONTAL_FORM.clone(); java_field }.clone(),); self.base.init(java_arguments.0, java_arguments.1) };
     }
 }
 impl std::ops::Deref for PreGameScrollSelectionForm {
@@ -80,6 +81,24 @@ impl crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelection
     fn getDiffX(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) -> i32 { crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionForm::getDiffX(crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionFormDyn::as_ScrollCurrentSelectionForm_mut(self), p1) }
     fn getDx(&mut self) -> i32 { crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionForm::getDx(crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionFormDyn::as_ScrollCurrentSelectionForm_mut(self)) }
     fn getDy(&mut self) -> i32 { crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionForm::getDy(crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionFormDyn::as_ScrollCurrentSelectionForm_mut(self)) }
+}
+impl crate::org::allbinary::graphics::form::ABCustomForm::ABCustomFormDyn for PreGameScrollSelectionForm {
+    fn as_ABCustomForm(&self) -> &crate::org::allbinary::graphics::form::ABCustomForm::ABCustomForm { &self.base.base.base.base }
+    fn as_ABCustomForm_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::ABCustomForm::ABCustomForm { &mut self.base.base.base.base }
+    fn append(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) -> i32 { crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionForm::append(crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn::as_ScrollSelectionForm_mut(self), p1) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::graphics::form::PaintableForm::PaintableForm::getWidth(crate::org::allbinary::graphics::form::PaintableForm::PaintableFormDyn::as_PaintableForm_mut(self)) }
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionForm::paint(crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionFormDyn::as_ScrollCurrentSelectionForm_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::form::CustomDisplayable::CustomDisplayableDyn for PreGameScrollSelectionForm {
+    fn as_CustomDisplayable(&self) -> &crate::org::allbinary::graphics::form::CustomDisplayable::CustomDisplayable { &self.base.base.base.base.base.base }
+    fn as_CustomDisplayable_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::CustomDisplayable::CustomDisplayable { &mut self.base.base.base.base.base.base }
+}
+impl crate::org::allbinary::graphics::form::CustomScreen::CustomScreenDyn for PreGameScrollSelectionForm {
+    fn as_CustomScreen(&self) -> &crate::org::allbinary::graphics::form::CustomScreen::CustomScreen { &self.base.base.base.base.base }
+    fn as_CustomScreen_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::CustomScreen::CustomScreen { &mut self.base.base.base.base.base }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for PreGameScrollSelectionForm {
+    fn updateMeasurement(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionForm::updateMeasurement(crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionFormDyn::as_ScrollCurrentSelectionForm_mut(self), p1) }
 }
 
 

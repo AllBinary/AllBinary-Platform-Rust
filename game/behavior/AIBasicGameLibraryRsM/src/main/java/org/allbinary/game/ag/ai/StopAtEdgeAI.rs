@@ -24,6 +24,7 @@ use crate::org::allbinary::game::physics::velocity::VelocityInterfaceCompositeIn
 use crate::org::allbinary::graphics::displayable::DisplayInfoSingleton::DisplayInfoSingleton;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,7 +41,7 @@ impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntel
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for StopAtEdgeAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl StopAtEdgeAI {
@@ -62,7 +63,7 @@ impl StopAtEdgeAI {
     // throws Exception
     pub fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) {
         let mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = self.getOwnerLayerInterface();
-        let mut velocityInterfaceCompositeInterface: Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> = ((ownerLayerInterface).clone() /* as VelocityInterfaceCompositeInterface */);
+        let mut velocityInterfaceCompositeInterface: Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> = ((|| -> Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to VelocityInterfaceCompositeInterface") })());
         let mut velocityProperties: Option<Rc<RefCell<dyn crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn>>> = jcall!(velocityInterfaceCompositeInterface).getVelocityProperties();
         let mut x: i32 = jcall!(ownerLayerInterface).getXP();
         let mut y: i32 = jcall!(ownerLayerInterface).getYP();
@@ -71,21 +72,21 @@ impl StopAtEdgeAI {
         let mut width: i32 = jcall!(ownerLayerInterface).getWidth();
         let mut height: i32 = jcall!(ownerLayerInterface).getHeight();
         let mut displayInfo: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
-        if x2 + jcall!(jcall!(velocityProperties).getVelocityXBasicDecimalP()).getScaled() > jcall!(displayInfo).getLastWidth() {
+        if x2 + jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityXBasicDecimalP()).getScaled() > jcall!(displayInfo).getLastWidth() {
             jcall!(ownerLayerInterface).setPosition(jcall!(displayInfo).getLastWidth() - width, y.clone(), jcall!(ownerLayerInterface).getZP());
-            jcall!(jcall!(velocityProperties).getVelocityYBasicDecimalP()).setint(0);
+            jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP()).setint(0);
         }
-        if y2 + jcall!(jcall!(velocityProperties).getVelocityYBasicDecimalP()).getScaled() > jcall!(displayInfo).getLastHeight() {
+        if y2 + jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP()).getScaled() > jcall!(displayInfo).getLastHeight() {
             jcall!(ownerLayerInterface).setPosition(x.clone(), jcall!(displayInfo).getLastHeight() - height, jcall!(ownerLayerInterface).getZP());
-            jcall!(jcall!(velocityProperties).getVelocityXBasicDecimalP()).setint(0);
+            jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityXBasicDecimalP()).setint(0);
         }
-        if x + jcall!(jcall!(velocityProperties).getVelocityXBasicDecimalP()).getScaled() < 0 {
+        if x + jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityXBasicDecimalP()).getScaled() < 0 {
             jcall!(ownerLayerInterface).setPosition(0, y.clone(), jcall!(ownerLayerInterface).getZP());
-            jcall!(jcall!(velocityProperties).getVelocityYBasicDecimalP()).setint(0);
+            jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP()).setint(0);
         }
-        if y + jcall!(jcall!(velocityProperties).getVelocityYBasicDecimalP()).getScaled() < 0 {
+        if y + jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP()).getScaled() < 0 {
             jcall!(ownerLayerInterface).setPosition(x.clone(), 0, jcall!(ownerLayerInterface).getZP());
-            jcall!(jcall!(velocityProperties).getVelocityXBasicDecimalP()).setint(0);
+            jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityXBasicDecimalP()).setint(0);
         }
     }
 }

@@ -16,15 +16,15 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::data::tree::dom::DomNodeHelper::DomNodeHelper;
 use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
 use crate::org::allbinary::input::media::image::InputImageType::InputImageType;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::GenericProfileDataWorkerTypeInterface::GenericProfileDataWorkerTypeInterface;
 
 // Borrows the object of a Java reference
@@ -38,8 +38,8 @@ pub struct GenericProfileDataWorkerType {
     pub name: String,
 }
 
-pub static mut GenericProfileDataWorkerType_hashMap: std::cell::LazyCell<Option<Rc<RefCell<HashMap>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashMap());
-pub static mut GenericProfileDataWorkerType_SAVED_CAPTURE: std::cell::LazyCell<Option<Rc<RefCell<dyn GenericProfileDataWorkerTypeDyn>>>> = std::cell::LazyCell::new(|| unsafe { SavedCaptureGenericProfileDataWorkerType_SAVED_CAPTURE.clone() }.clone());
+pub static mut GenericProfileDataWorkerType_hashMap: std::cell::LazyCell<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashMap());
+pub static mut GenericProfileDataWorkerType_SAVED_CAPTURE: std::cell::LazyCell<Option<Rc<RefCell<dyn GenericProfileDataWorkerTypeDyn>>>> = std::cell::LazyCell::new(|| unsafe { SavedCaptureGenericProfileDataWorkerType_SAVED_CAPTURE.clone() }.clone().map(|reference| reference as Rc<RefCell<dyn GenericProfileDataWorkerTypeDyn>>));
 pub static mut GenericProfileDataWorkerType_SCREEN_CAPTURE: std::cell::LazyCell<Option<Rc<RefCell<dyn GenericProfileDataWorkerTypeDyn>>>> = std::cell::LazyCell::new(|| GenericProfileDataWorkerType::new(format!("{}{}", String::from("Screen "), jcall!(unsafe { crate::org::allbinary::input::media::image::InputImageType::InputImageType_CAPTURE.clone() }).getName())).map(|reference| reference as Rc<RefCell<dyn GenericProfileDataWorkerTypeDyn>>));
 pub static mut GenericProfileDataWorkerType_COMPARISON: std::cell::LazyCell<Option<Rc<RefCell<dyn GenericProfileDataWorkerTypeDyn>>>> = std::cell::LazyCell::new(|| GenericProfileDataWorkerType::new(jcall!(unsafe { crate::org::allbinary::input::media::image::InputImageType::InputImageType_COMPARISON.clone() }).getName()).map(|reference| reference as Rc<RefCell<dyn GenericProfileDataWorkerTypeDyn>>));
 pub static mut GenericProfileDataWorkerType_MOTION: std::cell::LazyCell<Option<Rc<RefCell<dyn GenericProfileDataWorkerTypeDyn>>>> = std::cell::LazyCell::new(|| GenericProfileDataWorkerType::new(jcall!(unsafe { crate::org::allbinary::input::media::image::InputImageType::InputImageType_MOTION.clone() }).getName()).map(|reference| reference as Rc<RefCell<dyn GenericProfileDataWorkerTypeDyn>>));
@@ -62,8 +62,8 @@ impl GenericProfileDataWorkerType {
     }
 
     pub fn new(mut name: String) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(name))));
-            jcall!(unsafe { GenericProfileDataWorkerType_hashMap.clone() }).put(this.getName(), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(name.clone()))));
+            jcall!(unsafe { GenericProfileDataWorkerType_hashMap.clone() }).put(crate::java_into_object(jcall!(this).getName()), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
         this
     }
     
@@ -92,10 +92,10 @@ impl GenericProfileDataWorkerType {
 
     pub fn getInstance(mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<dyn GenericProfileDataWorkerTypeDyn>>> {
         let mut name: String = DomNodeHelper::getTextNodeValue(node.clone());
-        return (jcall!(unsafe { GenericProfileDataWorkerType_hashMap.clone() }).get(name.clone())).clone() /* as GenericProfileDataWorkerType */;
+        return { let java_object = (jcall!(unsafe { GenericProfileDataWorkerType_hashMap.clone() }).get(crate::java_into_object(name.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GenericProfileDataWorkerTypeDyn>>>>().expect("ClassCastException").clone()) };
     }
 }
-pub trait GenericProfileDataWorkerTypeDyn {
+pub trait GenericProfileDataWorkerTypeDyn: std::any::Any {
     fn as_GenericProfileDataWorkerType(&self) -> &GenericProfileDataWorkerType;
     fn as_GenericProfileDataWorkerType_mut(&mut self) -> &mut GenericProfileDataWorkerType;
     fn getName(&mut self) -> String { GenericProfileDataWorkerType::getName(self.as_GenericProfileDataWorkerType_mut()) }

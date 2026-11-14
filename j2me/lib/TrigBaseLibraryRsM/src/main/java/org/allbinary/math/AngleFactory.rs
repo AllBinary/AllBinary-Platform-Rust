@@ -26,6 +26,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::jsinterop::annotations::JsMethod;
 use crate::jsinterop::annotations::JsConstructor;
 use crate::jsinterop::annotations::JsProperty;
+use crate::java::lang::RuntimeException::*;
 use super::Angle::Angle;
 use super::NamedAngle::NamedAngle;
 use super::FrameUtil::FrameUtil;
@@ -54,6 +55,10 @@ pub struct AngleFactory {
 thread_local! { pub static AngleFactory_instance: Option<Rc<RefCell<AngleFactory>>> = AngleFactory::new(); }
 
 impl AngleFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AngleFactory>>> {
@@ -80,29 +85,29 @@ impl AngleFactory {
         this.QUARTER_TOTAL_ANGLE = 90;
         this.angleArray = vec![None; (((this.TOTAL_ANGLE) as i32)) as usize];
         this.NEGATIVE_ONE = ((-1) as i16);
-        this.NOT_ANGLE = NamedAngle::new(this.NEGATIVE_ONE.clone(), jcall!(CommonStrings::getInstance()).EMPTY.clone());
+        this.NOT_ANGLE = NamedAngle::new(this.NEGATIVE_ONE.clone(), { let java_field = jcall!(CommonStrings::getInstance()).EMPTY.clone(); java_field }.clone());
         this.frameUtil = FrameUtil::getInstance();
         let mut commonPhoneStrings: Option<Rc<RefCell<CommonPhoneStrings>>> = CommonPhoneStrings::getInstance();
         let mut total: i16 = (((this.angleArray.len() as i32)) as i16);
-        this.UP = NamedAngle::new(((0) as i16), jcall!(commonPhoneStrings).UP.clone());
+        this.UP = { let java_value = (NamedAngle::new(((0) as i16), { let java_field = jcall!(commonPhoneStrings).UP.clone(); java_field }.clone())).clone(); java_value };
         this.angleArray[(0) as usize] = this.UP.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
         for index in (1..90) {
-            this.angleArray[(index) as usize] = Angle::new(((index) as i16)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
+            { let java_index = (index) as usize; this.angleArray[java_index] = Angle::new(((index) as i16)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>); };
         }
-        this.RIGHT = NamedAngle::new(((90) as i16), jcall!(commonPhoneStrings).RIGHT.clone());
+        this.RIGHT = { let java_value = (NamedAngle::new(((90) as i16), { let java_field = jcall!(commonPhoneStrings).RIGHT.clone(); java_field }.clone())).clone(); java_value };
         this.angleArray[(90) as usize] = this.RIGHT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
         for index in (91..180) {
-            this.angleArray[(index) as usize] = Angle::new(((index) as i16)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
+            { let java_index = (index) as usize; this.angleArray[java_index] = Angle::new(((index) as i16)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>); };
         }
-        this.DOWN = NamedAngle::new(((180) as i16), jcall!(commonPhoneStrings).DOWN.clone());
+        this.DOWN = { let java_value = (NamedAngle::new(((180) as i16), { let java_field = jcall!(commonPhoneStrings).DOWN.clone(); java_field }.clone())).clone(); java_value };
         this.angleArray[(180) as usize] = this.DOWN.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
         for index in (181..270) {
-            this.angleArray[(index) as usize] = Angle::new(((index) as i16)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
+            { let java_index = (index) as usize; this.angleArray[java_index] = Angle::new(((index) as i16)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>); };
         }
-        this.LEFT = NamedAngle::new(((270) as i16), jcall!(commonPhoneStrings).LEFT.clone());
+        this.LEFT = { let java_value = (NamedAngle::new(((270) as i16), { let java_field = jcall!(commonPhoneStrings).LEFT.clone(); java_field }.clone())).clone(); java_value };
         this.angleArray[(270) as usize] = this.LEFT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
         for index in (271..total) {
-            this.angleArray[(index) as usize] = Angle::new(((index) as i16)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
+            { let java_index = (index) as usize; this.angleArray[java_index] = Angle::new(((index) as i16)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>); };
         }
         this
     }
@@ -141,7 +146,7 @@ impl AngleFactory {
         let mut stringMaker: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut angleFactory: Option<Rc<RefCell<AngleFactory>>> = AngleFactory::getInstance();
         for index in (0..360) {
-            jcall!(stringMaker).appendint(index.clone()).append(jcall!(CommonSeps::getInstance()).FORWARD_SLASH.clone()).appendshort(((jcall!(jcall!(angleFactory).getClosestDirection(index.clone())).getValue()) as i16)).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
+            jcall!(stringMaker).appendint(index.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).FORWARD_SLASH.clone(); java_field }.clone()).appendshort(jcall!(jcall!(angleFactory).getClosestDirection(index.clone())).getValue()).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
         }
         jcall!(LogUtil::getInstance()).putF(jcall!(stringMaker).toString(), crate::java_into_object(String::from("main")), String::from("main"));
     }

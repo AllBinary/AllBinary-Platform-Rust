@@ -27,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait ViewCompositeInterface {
+pub trait ViewCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getRootView(&mut self) -> Option<Rc<RefCell<View>>>;
@@ -37,8 +37,6 @@ pub trait ViewCompositeInterface {
     
 
     fn runOnUiThread(&mut self, action: Option<Rc<RefCell<dyn Runnable>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

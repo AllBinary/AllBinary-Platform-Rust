@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait CpuInterface {
+pub trait CpuInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getProcessor(&mut self) -> String;
@@ -53,8 +53,6 @@ pub trait CpuInterface {
     
 
     fn compareTo(&mut self, cpuInterface: Option<Rc<RefCell<dyn CpuInterface>>>) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

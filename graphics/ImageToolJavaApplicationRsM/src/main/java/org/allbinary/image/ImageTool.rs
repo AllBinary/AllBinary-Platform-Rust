@@ -21,6 +21,7 @@ use crate::org::allbinary::thread::ARunnable::ARunnable;
 use crate::org::allbinary::image::gui::ImageToolJFrame::ImageToolJFrame;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -35,6 +36,10 @@ pub struct ImageTool {
 
 
 impl ImageTool {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -51,21 +56,21 @@ impl ImageTool {
     
 
     pub fn main(mut args: Vec<String>) {
-        jcall!(jcall!(unsafe { java_awt.clone() }).EventQueue).invokeLater(ARunnable::new() /* Java anonymous class body: implement it as a named type
+        jcall!({ let java_field = jcall!(unsafe { java_awt.clone() }).EventQueue.clone(); java_field }).invokeLater(ARunnable::new() /* Java anonymous class body: implement it as a named type
             
 
             pub fn run(&mut self) {
                 let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
                 match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                    jcall!(logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone());
+                    jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone());
                     jcall!(ImageToolJFrame::new()).setVisible(true);
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                    jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+                    jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }

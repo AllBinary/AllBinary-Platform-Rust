@@ -40,6 +40,10 @@ pub struct EntryData {
 thread_local! { pub static EntryData_instance: Option<Rc<RefCell<EntryData>>> = EntryData::new(); }
 
 impl EntryData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<EntryData>>> {

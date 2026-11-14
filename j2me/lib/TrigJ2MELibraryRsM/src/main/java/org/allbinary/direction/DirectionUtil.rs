@@ -37,6 +37,10 @@ pub struct DirectionUtil {
 thread_local! { pub static DirectionUtil_instance: Option<Rc<RefCell<DirectionUtil>>> = DirectionUtil::new(); }
 
 impl DirectionUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<DirectionUtil>>> {
@@ -53,14 +57,14 @@ impl DirectionUtil {
         this.directionArray2 = vec![None; (10) as usize];
         let mut angleFactory: Option<Rc<RefCell<AngleFactory>>> = AngleFactory::getInstance();
         let mut directionFactory: Option<Rc<RefCell<DirectionFactory>>> = DirectionFactory::getInstance();
-        this.directionArray[(jcall!(jcall!(directionFactory).LEFT).getValue()) as usize] = jcall!(angleFactory).LEFT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
-        this.directionArray[(jcall!(jcall!(directionFactory).RIGHT).getValue()) as usize] = jcall!(angleFactory).RIGHT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
-        this.directionArray[(jcall!(jcall!(directionFactory).UP).getValue()) as usize] = jcall!(angleFactory).UP.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
-        this.directionArray[(jcall!(jcall!(directionFactory).DOWN).getValue()) as usize] = jcall!(angleFactory).DOWN.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
-        this.directionArray2[(jcall!(jcall!(directionFactory).LEFT).getValue()) as usize] = jcall!(angleFactory).LEFT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
-        this.directionArray2[(jcall!(jcall!(directionFactory).RIGHT).getValue()) as usize] = jcall!(angleFactory).RIGHT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
-        this.directionArray2[(jcall!(jcall!(directionFactory).UP).getValue()) as usize] = jcall!(angleFactory).UP.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
-        this.directionArray2[(jcall!(jcall!(directionFactory).DOWN).getValue()) as usize] = jcall!(angleFactory).DOWN.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
+        { let java_index = (jcall!({ let java_field = jcall!(directionFactory).LEFT.clone(); java_field }).getValue()) as usize; this.directionArray[java_index] = { let java_field = jcall!(angleFactory).LEFT.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>); };
+        { let java_index = (jcall!({ let java_field = jcall!(directionFactory).RIGHT.clone(); java_field }).getValue()) as usize; this.directionArray[java_index] = { let java_field = jcall!(angleFactory).RIGHT.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>); };
+        { let java_index = (jcall!({ let java_field = jcall!(directionFactory).UP.clone(); java_field }).getValue()) as usize; this.directionArray[java_index] = { let java_field = jcall!(angleFactory).UP.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>); };
+        { let java_index = (jcall!({ let java_field = jcall!(directionFactory).DOWN.clone(); java_field }).getValue()) as usize; this.directionArray[java_index] = { let java_field = jcall!(angleFactory).DOWN.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>); };
+        { let java_index = (jcall!({ let java_field = jcall!(directionFactory).LEFT.clone(); java_field }).getValue()) as usize; this.directionArray2[java_index] = { let java_field = jcall!(angleFactory).LEFT.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>); };
+        { let java_index = (jcall!({ let java_field = jcall!(directionFactory).RIGHT.clone(); java_field }).getValue()) as usize; this.directionArray2[java_index] = { let java_field = jcall!(angleFactory).RIGHT.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>); };
+        { let java_index = (jcall!({ let java_field = jcall!(directionFactory).UP.clone(); java_field }).getValue()) as usize; this.directionArray2[java_index] = { let java_field = jcall!(angleFactory).UP.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>); };
+        { let java_index = (jcall!({ let java_field = jcall!(directionFactory).DOWN.clone(); java_field }).getValue()) as usize; this.directionArray2[java_index] = { let java_field = jcall!(angleFactory).DOWN.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>); };
         this
     }
 

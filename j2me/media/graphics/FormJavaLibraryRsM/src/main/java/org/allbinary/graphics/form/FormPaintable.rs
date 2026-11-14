@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::paint::Paintable::Paintable;
 use super::PaintableForm::PaintableForm;
 
@@ -51,7 +51,7 @@ impl FormPaintable {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.form).paint(graphics.clone());
     }
     
@@ -71,7 +71,10 @@ impl std::ops::DerefMut for FormPaintable {
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for FormPaintable {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for FormPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

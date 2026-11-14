@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::direction::Direction::Direction;
 use crate::org::allbinary::direction::DirectionFactory::DirectionFactory;
 use crate::org::allbinary::math::AngleIncrementInfo::AngleIncrementInfo;
@@ -37,6 +37,10 @@ pub struct BasicDirectionAIHelper {
 
 
 impl BasicDirectionAIHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut name: String, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>) -> Self {
@@ -61,15 +65,15 @@ impl BasicDirectionAIHelper {
         let mut degrees: i32 = (directionAngle - ((angle) as i32)).abs();
         if degrees < 180 {
             if ((angle) as i32) > directionAngle {
-                keyDirection = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone();
+                keyDirection = { let java_value = (crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone)).clone(); java_value }.clone();
             } else if ((angle) as i32) < directionAngle {
-                keyDirection = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone();
+                keyDirection = { let java_value = (crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone)).clone(); java_value }.clone();
             }
         } else {
             if ((angle) as i32) > directionAngle {
-                keyDirection = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone();
+                keyDirection = { let java_value = (crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone)).clone(); java_value }.clone();
             } else if ((angle) as i32) < directionAngle {
-                keyDirection = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone();
+                keyDirection = { let java_value = (crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone)).clone(); java_value }.clone();
             }
         }
         return keyDirection.clone();
@@ -81,7 +85,7 @@ impl BasicDirectionAIHelper {
         if ((jcall!(self.angleInfo).getAngle()) as i32) != ((angle) as i32) {
             return { let java_arguments = (((frame).unwrap() as i32),); self.turnAI(java_arguments.0) };
         } else {
-            return unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() }.clone();
+            return crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone).clone();
         }
     }
     
@@ -90,14 +94,14 @@ impl BasicDirectionAIHelper {
         let mut keyDirection: i32 = -1;
         let mut angleIncrementInfo: Option<Rc<RefCell<AngleIncrementInfo>>> = jcall!(self.angleInfo).getAngleIncrementInfo();
         let mut directionFactory: Option<Rc<RefCell<DirectionFactory>>> = DirectionFactory::getInstance();
-        if match (&geographicMapDirectionData, &jcall!(directionFactory).DOWN) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            keyDirection = self.getAIKeyPressed(jcall!(angleIncrementInfo).DOWN_FRAME.clone());
-        } else if match (&geographicMapDirectionData, &jcall!(directionFactory).UP) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            keyDirection = self.getAIKeyPressed(jcall!(angleIncrementInfo).UP_FRAME.clone());
-        } else if match (&geographicMapDirectionData, &jcall!(directionFactory).LEFT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            keyDirection = self.getAIKeyPressed(jcall!(angleIncrementInfo).LEFT_FRAME.clone());
-        } else if match (&geographicMapDirectionData, &jcall!(directionFactory).RIGHT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            keyDirection = self.getAIKeyPressed(jcall!(angleIncrementInfo).RIGHT_FRAME.clone());
+        if match (&geographicMapDirectionData, &{ let java_field = jcall!(directionFactory).DOWN.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            keyDirection = { let java_value = ({ let java_arguments = ({ let java_field = jcall!(angleIncrementInfo).DOWN_FRAME.clone(); java_field }.clone(),); self.getAIKeyPressed(java_arguments.0) }).clone(); java_value };
+        } else if match (&geographicMapDirectionData, &{ let java_field = jcall!(directionFactory).UP.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            keyDirection = { let java_value = ({ let java_arguments = ({ let java_field = jcall!(angleIncrementInfo).UP_FRAME.clone(); java_field }.clone(),); self.getAIKeyPressed(java_arguments.0) }).clone(); java_value };
+        } else if match (&geographicMapDirectionData, &{ let java_field = jcall!(directionFactory).LEFT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            keyDirection = { let java_value = ({ let java_arguments = ({ let java_field = jcall!(angleIncrementInfo).LEFT_FRAME.clone(); java_field }.clone(),); self.getAIKeyPressed(java_arguments.0) }).clone(); java_value };
+        } else if match (&geographicMapDirectionData, &{ let java_field = jcall!(directionFactory).RIGHT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            keyDirection = { let java_value = ({ let java_arguments = ({ let java_field = jcall!(angleIncrementInfo).RIGHT_FRAME.clone(); java_field }.clone(),); self.getAIKeyPressed(java_arguments.0) }).clone(); java_value };
         }
         return keyDirection.clone();
     }

@@ -19,6 +19,8 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::MultipassState::MultipassState;
 
 // Borrows the object of a Java reference
@@ -35,6 +37,10 @@ pub struct GeographicPathFinderBase {
 thread_local! { pub static GeographicPathFinderBase_NULL_GEOGRAPHIC_PATH_FINDER_BASE: Option<Rc<RefCell<dyn GeographicPathFinderBaseDyn>>> = GeographicPathFinderBase::new().map(|reference| reference as Rc<RefCell<dyn GeographicPathFinderBaseDyn>>); }
 
 impl GeographicPathFinderBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -60,7 +66,7 @@ impl GeographicPathFinderBase {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait GeographicPathFinderBaseDyn {
+pub trait GeographicPathFinderBaseDyn: std::any::Any {
     fn as_GeographicPathFinderBase(&self) -> &GeographicPathFinderBase;
     fn as_GeographicPathFinderBase_mut(&mut self) -> &mut GeographicPathFinderBase;
     fn searchTotalPath(&mut self, mut startPathFindingNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut endPathFindingNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut totalPaths: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { GeographicPathFinderBase::searchTotalPath(self.as_GeographicPathFinderBase_mut(), startPathFindingNodeList, endPathFindingNodeList, totalPaths) }

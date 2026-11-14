@@ -17,13 +17,14 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::game::ag::life::Life::Life;
 use crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
 use crate::org::allbinary::graphics::displayable::event::DisplayChangeEvent::DisplayChangeEvent;
 use crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,11 +41,8 @@ pub struct LivesHudWidget {
 }
 
 impl PaintableInterface for LivesHudWidget {
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
-}
-impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for LivesHudWidget {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paintThreed(self, graphics) }
 }
 
 impl LivesHudWidget {
@@ -52,7 +50,7 @@ impl LivesHudWidget {
 
     pub fn new_struct(mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>, mut lifeInterface: Option<Rc<RefCell<Life>>>, mut location: i32, mut direction: i32) -> Self {
         let mut this = Self {
-            base: BasicHud::new_struct(location.clone(), direction.clone(), 2, jcall!(BasicColorFactory::getInstance()).WHITE.clone()),
+            base: BasicHud::new_struct(location.clone(), direction.clone(), 2, { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone()),
             lifeInterface: None,
             xArray: Vec::new(),
             animationInterface: None,
@@ -62,7 +60,7 @@ impl LivesHudWidget {
         let mut size: i32 = ((jcall!(this.getLifeInterface()).getMaxlives()) as i32);
         this.xArray = vec![0; (size) as usize];
         this.animationInterface = animationInterface.clone();
-        this.updateMaxWidth = ((jcall!(this.lifeInterface).getMaxlives()) as i32) * 16;
+        this.updateMaxWidth = { let java_value = (((jcall!(this.lifeInterface).getMaxlives()) as i32) * 16).clone(); java_value };
         this.updateMaxHeight = 16;
         this
     }
@@ -72,28 +70,28 @@ impl LivesHudWidget {
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.updateMeasurement(graphics.clone());
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(),); self.base.updateMeasurement(java_arguments.0) };
         let mut maxLives: i32 = ((jcall!(self.getLifeInterface()).getMaxlives()) as i32);
         for index in (0..maxLives) {
-            self.xArray[(index) as usize] = self.getX() + (index * 16);
+            { let java_index = (index) as usize; self.xArray[java_index] = self.getX() + (index * 16); };
         }
     }
     
 
     pub fn onDisplayChangeEvent(&mut self, mut displayChangeEvent: Option<Rc<RefCell<DisplayChangeEvent>>>) {
-        self.base.onDisplayChangeEvent(displayChangeEvent.clone());
+        { let java_arguments = (displayChangeEvent.clone(),); self.base.onDisplayChangeEvent(java_arguments.0) };
         self.myFontProcessor = self.updateMyFontProcessor.clone();
     }
     
 
     pub fn setX(&mut self, mut x: i32) {
-        self.base.setX(x.clone());
+        { let java_arguments = (x.clone(),); self.base.setX(java_arguments.0) };
         self.myFontProcessor = self.updateMyFontProcessor.clone();
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         {
             let mut index: i32 = ((jcall!(self.getLifeInterface()).get()) as i32);
@@ -104,7 +102,7 @@ impl LivesHudWidget {
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 
@@ -123,9 +121,11 @@ impl std::ops::DerefMut for LivesHudWidget {
 impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for LivesHudWidget {
     fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self.base }
     fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self.base }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
     fn onDisplayChangeEvent(&mut self, mut displayChangeEvent: Option<Rc<RefCell<DisplayChangeEvent>>>) { Self::onDisplayChangeEvent(self, displayChangeEvent) }
     fn setX(&mut self, mut x: i32) { Self::setX(self, x) }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for LivesHudWidget {
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 

@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::Anchor::Anchor;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
@@ -48,7 +48,7 @@ pub struct StartIntermissionPaintable {
     pub gameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>,
     pub stringArray: Vec<String>,
     pub fontSize: i32,
-    pub font: Option<Rc<RefCell<Font>>>,
+    pub font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>,
     pub lastWidth: Vec<i32>,
     pub updateMyFontProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>>,
     pub myFontProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>>,
@@ -63,12 +63,12 @@ pub struct StartIntermissionPaintable {
 }
 
 impl UpdateMyFontInterface for StartIntermissionPaintable {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintableInterface::InitUpdatePaintableInterface for StartIntermissionPaintable {
 }
 impl crate::org::allbinary::init::InitInterface::InitInterface for StartIntermissionPaintable {
-    fn init(&mut self) { self.base.init() }
+    fn init(&mut self) { crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintable::init(crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn::as_InitUpdatePaintable_mut(self)) }
 }
 impl crate::org::allbinary::init::UpdateInterface::UpdateInterface for StartIntermissionPaintable {
     fn update(&mut self) { Self::update(self) }
@@ -77,7 +77,7 @@ impl crate::org::allbinary::init::UpdateInterface::UpdateInterface for StartInte
 impl StartIntermissionPaintable {
     
 
-    pub fn new_struct(mut gameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>, mut stringArray: Vec<String>, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut font: Option<Rc<RefCell<Font>>>) -> Self {
+    pub fn new_struct(mut gameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>, mut stringArray: Vec<String>, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>) -> Self {
         let mut this = Self {
             base: InitUpdatePaintable::new_struct(),
             fontDebugFactory: None,
@@ -100,48 +100,49 @@ impl StartIntermissionPaintable {
         };
         this.fontDebugFactory = FontDebugFactory::getInstance();
         this.basicSetColorUtil = BasicColorSetUtil::getInstance();
-        this.updateMyFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
         this.myFontProcessor = this.updateMyFontProcessor.clone();
-        this.basicColor = jcall!(BasicColorFactory::getInstance()).BLACK.clone();
-        this.lineYOffsetArray = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone();
+        this.basicColor = { let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone();
+        this.lineYOffsetArray = { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone(); java_field }.clone();
         this.hasChanged = true;
         this.anchor = unsafe { crate::org::allbinary::graphics::Anchor::Anchor_TOP_LEFT.clone() }.clone();
         this.BEGIN_LEVEL = String::from("Begin Level ");
-        this.EMPTY_STRING = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.EMPTY_STRING = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.gameCanvas = gameCanvas.clone();
         this.stringArray = stringArray.clone();
-        this.lastWidth = vec![0; ((this.stringArray.len() as i32)) as usize];
+        this.lastWidth = { let java_value = (vec![0; ((this.stringArray.len() as i32)) as usize]).clone(); java_value };
         this.setBasicColorP(basicColor.clone());
-        this.color = jcall!(basicColor).intValue();
-        this.fontSize = jcall!(font).getSize();
+        this.color = { let java_value = (jcall!(basicColor).intValue()).clone(); java_value };
+        this.fontSize = { let java_value = (jcall!(font).getSize()).clone(); java_value };
         this.font = font.clone();
         this
     }
 
-    pub fn new(mut gameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>, mut stringArray: Vec<String>, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut font: Option<Rc<RefCell<Font>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(gameCanvas, stringArray, basicColor, font))))
+    pub fn new(mut gameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>, mut stringArray: Vec<String>, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>) -> Option<Rc<RefCell<Self>>> {
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(gameCanvas.clone(), stringArray.clone(), basicColor.clone(), font.clone()))));
+        jcall!(this).updateMyFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.fontHeightP = jcall!(font).getHeight();
-        self.myFontProcessor = MyFontProcessor::getInstance();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.fontHeightP = { let java_value = (jcall!(font).getHeight()).clone(); java_value };
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.myFontProcessor).process(graphics.clone());
-        let mut existingFont: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
+        let mut existingFont: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
         jcall!(self.fontDebugFactory).setFont(self.font.clone(), graphics.clone());
         let mut displayInfo: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
         jcall!(self.basicSetColorUtil).setBasicColorP3(graphics.clone(), self.basicColor.clone(), self.color.clone());
         let mut beginWidth: i32 = 0;
         for index in (0..=(self.lineYOffsetArray.len() as i32) - 1).rev() {
             if self.hasChanged {
-                self.lastWidth[(index) as usize] = (jcall!(jcall!(graphics).getFont()).stringWidth(self.stringArray[(index) as usize].clone()) >> 1);
+                { let java_index = (index) as usize; self.lastWidth[java_index] = (jcall!(jcall!(graphics).getFont()).stringWidth(self.stringArray[(index) as usize].clone()) >> 1); };
             }
-            beginWidth = self.lastWidth[(index) as usize].clone();
+            beginWidth = { let java_value = (self.lastWidth[(index) as usize]).clone(); java_value }.clone();
             jcall!(graphics).drawString(self.stringArray[(index) as usize].clone(), jcall!(displayInfo).getLastHalfWidth() - beginWidth, jcall!(displayInfo).getLastHalfHeight() - self.lineYOffsetArray[(index) as usize], self.anchor.clone());
         }
         self.hasChanged = false;
@@ -153,7 +154,7 @@ impl StartIntermissionPaintable {
         let mut level: i32 = jcall!(jcall!(jcall!(self.gameCanvas).getLayerManager()).getGameInfo()).getCurrentLevel();
         self.stringArray[(0) as usize] = jcall!(StringMaker::new()).append(self.BEGIN_LEVEL.clone()).appendint(level.clone()).toString();
         for index in (1..=(self.stringArray.len() as i32) - 1).rev() {
-            self.stringArray[(index) as usize] = self.EMPTY_STRING.clone();
+            { let java_index = (index) as usize; self.stringArray[java_index] = self.EMPTY_STRING.clone(); };
         }
     }
     
@@ -184,7 +185,10 @@ impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for StartIn
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base }
     fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::setBasicColorP(self, basicColor) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for StartIntermissionPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

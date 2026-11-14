@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::input::GameKey::GameKey;
 use crate::org::allbinary::game::input::Input::Input;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,13 +28,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait InputMappingInterface {
+pub trait InputMappingInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn processInputMapping(&mut self, gameKey: Option<Rc<RefCell<GameKey>>>, input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

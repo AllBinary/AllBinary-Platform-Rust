@@ -34,6 +34,10 @@ pub struct ImageUnifierProperties {
 
 
 impl ImageUnifierProperties {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -51,12 +55,12 @@ impl ImageUnifierProperties {
     
 
     pub fn getWidth(&mut self) -> i32 {
-        return ((self.getColumns()).unwrap() as i32) * ((jcall!(self.getImageUnifierCell()).getWidth()).unwrap() as i32);
+        return { let java_value = ((self.getColumns()).unwrap() as i32); java_value } * { let java_value = ((jcall!(self.getImageUnifierCell()).getWidth()).unwrap() as i32); java_value };
     }
     
 
     pub fn getHeight(&mut self) -> i32 {
-        return ((self.getRows()).unwrap() as i32) * ((jcall!(self.getImageUnifierCell()).getHeight()).unwrap() as i32);
+        return { let java_value = ((self.getRows()).unwrap() as i32); java_value } * { let java_value = ((jcall!(self.getImageUnifierCell()).getHeight()).unwrap() as i32); java_value };
     }
     
 

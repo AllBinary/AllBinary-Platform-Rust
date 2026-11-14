@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::LayerProcessorInterface::LayerProcessorInterface;
 use super::LayerManager::LayerManager;
 use super::AllBinaryLayerManager::AllBinaryLayerManager;
@@ -45,6 +46,10 @@ impl crate::org::allbinary::layer::BasicLayerProcessorInterface::BasicLayerProce
 }
 
 impl LayerProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>>) -> Self {
@@ -64,13 +69,13 @@ impl LayerProcessor {
 
     // throws Exception
     pub fn processAt(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut index: i32) {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
     // throws Exception
     pub fn isProcessorLayer(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> bool {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
@@ -84,11 +89,11 @@ impl LayerProcessor {
         let mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>> = self.getLayerManager();
         let mut size: i32 = jcall!(layerManager).getSize();
         for index in (0..size) {
-            { let java_arguments = (allBinaryLayerManager.clone(), (jcall!(layerManager).getLayerAt(index.clone())).clone() /* as AllBinaryLayer */, index.clone(),); self.processAt(java_arguments.0, java_arguments.1, java_arguments.2) };
+            { let java_arguments = (allBinaryLayerManager.clone(), (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> { panic!("ClassCastException: a Rust dyn Layer cannot be cast to AllBinaryLayer") })(), index.clone(),); self.processAt(java_arguments.0, java_arguments.1, java_arguments.2) };
         }
     }
 }
-pub trait LayerProcessorDyn {
+pub trait LayerProcessorDyn: std::any::Any {
     fn as_LayerProcessor(&self) -> &LayerProcessor;
     fn as_LayerProcessor_mut(&mut self) -> &mut LayerProcessor;
     fn processAt(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut index: i32) { LayerProcessor::processAt(self.as_LayerProcessor_mut(), allBinaryLayerManager, layerInterface, index) }

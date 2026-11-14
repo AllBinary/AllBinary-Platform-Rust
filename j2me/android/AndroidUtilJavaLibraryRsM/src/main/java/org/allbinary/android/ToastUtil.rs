@@ -11,7 +11,7 @@ use crate::android::view::View::View;
 use crate::android::widget::Toast::Toast;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
-use super::MakeToast::MakeToast;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,6 +27,10 @@ pub struct ToastUtil {
 thread_local! { pub static ToastUtil_instance: Option<Rc<RefCell<ToastUtil>>> = ToastUtil::new(); }
 
 impl ToastUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -57,6 +61,10 @@ impl Runnable for MakeToast {
 }
 
 impl MakeToast {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
             
 
             pub fn new_struct(mut string: String) -> Self {
@@ -79,10 +87,10 @@ impl MakeToast {
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                     let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                    jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+                    jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }

@@ -27,12 +27,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait VectorAnimationFactoryInterface {
+pub trait VectorAnimationFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getInstance(&mut self, points: Vec<Vec<Vec<i32>>>, basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

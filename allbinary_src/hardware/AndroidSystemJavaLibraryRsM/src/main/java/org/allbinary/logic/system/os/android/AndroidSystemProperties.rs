@@ -37,6 +37,10 @@ pub struct AndroidSystemProperties {
 thread_local! { pub static AndroidSystemProperties_SINGLETON: Option<Rc<RefCell<AndroidSystemProperties>>> = AndroidSystemProperties::new(jcall!(ResourceUtil::getInstance()).getContext()); }
 
 impl AndroidSystemProperties {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AndroidSystemProperties>>> {
@@ -58,67 +62,67 @@ impl AndroidSystemProperties {
     
 
     pub fn getDeviceId(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 
     pub fn getDeviceSoftwareVersion(&mut self) -> String {
-        return jcall!(self.commonStrings).DISABLE.clone();
+        return { let java_field = jcall!(self.commonStrings).DISABLE.clone(); java_field }.clone();
     }
     
 
     pub fn getLine1Number(&mut self) -> String {
-        return jcall!(self.commonStrings).DISABLE.clone();
+        return { let java_field = jcall!(self.commonStrings).DISABLE.clone(); java_field }.clone();
     }
     
 
     pub fn getNetworkCountryIso(&mut self) -> String {
-        return jcall!(self.commonStrings).DISABLE.clone();
+        return { let java_field = jcall!(self.commonStrings).DISABLE.clone(); java_field }.clone();
     }
     
 
     pub fn getNetworkOperator(&mut self) -> String {
-        return jcall!(self.commonStrings).DISABLE.clone();
+        return { let java_field = jcall!(self.commonStrings).DISABLE.clone(); java_field }.clone();
     }
     
 
     pub fn getNetworkOperatorName(&mut self) -> String {
-        return jcall!(self.commonStrings).DISABLE.clone();
+        return { let java_field = jcall!(self.commonStrings).DISABLE.clone(); java_field }.clone();
     }
     
 
     pub fn getSimCountryIso(&mut self) -> String {
-        return jcall!(self.commonStrings).DISABLE.clone();
+        return { let java_field = jcall!(self.commonStrings).DISABLE.clone(); java_field }.clone();
     }
     
 
     pub fn getSimOperator(&mut self) -> String {
-        return jcall!(self.commonStrings).DISABLE.clone();
+        return { let java_field = jcall!(self.commonStrings).DISABLE.clone(); java_field }.clone();
     }
     
 
     pub fn getSimOperatorName(&mut self) -> String {
-        return jcall!(self.commonStrings).DISABLE.clone();
+        return { let java_field = jcall!(self.commonStrings).DISABLE.clone(); java_field }.clone();
     }
     
 
     pub fn getSimSerialNumber(&mut self) -> String {
-        return jcall!(self.commonStrings).DISABLE.clone();
+        return { let java_field = jcall!(self.commonStrings).DISABLE.clone(); java_field }.clone();
     }
     
 
     pub fn getSubscriberId(&mut self) -> String {
-        return jcall!(self.commonStrings).DISABLE.clone();
+        return { let java_field = jcall!(self.commonStrings).DISABLE.clone(); java_field }.clone();
     }
     
 
     pub fn getVoiceMailAlphaTag(&mut self) -> String {
-        return jcall!(self.commonStrings).DISABLE.clone();
+        return { let java_field = jcall!(self.commonStrings).DISABLE.clone(); java_field }.clone();
     }
     
 
     pub fn getVoiceMailNumber(&mut self) -> String {
-        return jcall!(self.commonStrings).DISABLE.clone();
+        return { let java_field = jcall!(self.commonStrings).DISABLE.clone(); java_field }.clone();
     }
     
 

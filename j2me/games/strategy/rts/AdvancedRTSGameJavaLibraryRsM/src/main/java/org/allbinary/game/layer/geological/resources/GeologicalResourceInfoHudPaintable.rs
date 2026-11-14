@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::layer::RTSLayer::RTSLayer;
 use crate::org::allbinary::game::layer::waypoint::WaypointInfoHudPaintable::WaypointInfoHudPaintable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
@@ -39,10 +39,13 @@ pub struct GeologicalResourceInfoHudPaintable {
 }
 
 thread_local! { pub static GeologicalResourceInfoHudPaintable_RESOURCES: String = String::from("Resources: "); }
-impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for GeologicalResourceInfoHudPaintable {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
-}
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintableInterface::InitUpdatePaintableInterface for GeologicalResourceInfoHudPaintable {
+}
+impl crate::org::allbinary::init::InitInterface::InitInterface for GeologicalResourceInfoHudPaintable {
+    fn init(&mut self) { crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintable::init(crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn::as_InitUpdatePaintable_mut(self)) }
+}
+impl crate::org::allbinary::init::UpdateInterface::UpdateInterface for GeologicalResourceInfoHudPaintable {
+    fn update(&mut self) { crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable::update(crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn::as_SelectionHudPaintable_mut(self)) }
 }
 
 impl GeologicalResourceInfoHudPaintable {
@@ -55,7 +58,7 @@ impl GeologicalResourceInfoHudPaintable {
             fontHeight: 0,
         };
         this.fontHeight = 0;
-        this.keyvalueDrawString = KeyValueDrawCharArray::new(GeologicalResourceInfoHudPaintable_RESOURCES.with(Clone::clone).clone(), this.textX.clone());
+        this.keyvalueDrawString = { let java_value = (KeyValueDrawCharArray::new(GeologicalResourceInfoHudPaintable_RESOURCES.with(Clone::clone).clone(), this.textX.clone())).clone(); java_value };
         this
     }
 
@@ -64,17 +67,17 @@ impl GeologicalResourceInfoHudPaintable {
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.updateMeasurement(graphics.clone());
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.fontHeight = (2 * jcall!(font).getHeight());
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(),); self.base.updateMeasurement(java_arguments.0) };
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.fontHeight = { let java_value = ((2 * jcall!(font).getHeight())).clone(); java_value };
     }
     
 
     pub fn updateSelectionInfo(&mut self) {
         self.base.updateSelectionInfo();
-        let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = (self.rtsLayerP).clone() /* as RTSLayer */;
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(jcall!(rtsLayer).as_RTSLayer_mut().geographicMapCellPositionAreaBase).getOccupyingGeographicMapCellPositionList();
+        let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> { panic!("ClassCastException: a Rust dyn PathFindingLayerInterface cannot be cast to RTSLayer") })();
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!({ let java_field = jcall!(rtsLayer).as_RTSLayer_mut().geographicMapCellPositionAreaBase.clone(); java_field }).as_GeographicMapCellPositionAreaBase_mut().getOccupyingGeographicMapCellPositionList();
         let mut total: i32 = 0;
         {
             let mut index: i32 = jcall!(list).size();
@@ -83,12 +86,12 @@ impl GeologicalResourceInfoHudPaintable {
             total += jcall!(jcall!(geographicMapCellPosition).getGeologicalResource()).getTotal();
             }
         }
-        { let java_receiver = self.keyvalueDrawString.clone(); let java_arguments = (jcall!(self.getPrimitiveLongUtil()).getCharArray(total.clone()), jcall!(self.getPrimitiveLongUtil()).getCurrentTotalDigits(),); jcall!(java_receiver).update(java_arguments.0, java_arguments.1); };
+        { let java_receiver = self.keyvalueDrawString.clone(); let java_arguments = ({ let java_argument = jcall!(self.getPrimitiveLongUtil()).getCharArray(total.clone()); java_argument }, { let java_argument = jcall!(self.getPrimitiveLongUtil()).getCurrentTotalDigits(); java_argument },); jcall!(java_receiver).update(java_arguments.0, java_arguments.1); };
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.paint(graphics.clone());
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(),); self.base.paint(java_arguments.0) };
         jcall!(self.keyvalueDrawString).paint(graphics.clone(), (self.y + self.fontHeight).clone());
     }
 }
@@ -103,7 +106,6 @@ impl std::ops::DerefMut for GeologicalResourceInfoHudPaintable {
 impl crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn for GeologicalResourceInfoHudPaintable {
     fn as_SelectionHudPaintable(&self) -> &crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable { &self.base.base }
     fn as_SelectionHudPaintable_mut(&mut self) -> &mut crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable { &mut self.base.base }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
     fn updateSelectionInfo(&mut self) { Self::updateSelectionInfo(self) }
 }
 impl crate::org::allbinary::game::layer::waypoint::WaypointInfoHudPaintable::WaypointInfoHudPaintableDyn for GeologicalResourceInfoHudPaintable {
@@ -119,7 +121,13 @@ impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for Geologi
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base.base.base }
     fn setBasicColorP(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable::setBasicColorP(crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn::as_SelectionHudPaintable_mut(self), p1) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for GeologicalResourceInfoHudPaintable {
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for GeologicalResourceInfoHudPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

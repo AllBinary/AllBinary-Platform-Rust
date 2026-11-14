@@ -19,6 +19,10 @@ pub struct ABImageStringItem {
 
 impl ABImageStringItem {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -29,7 +33,7 @@ impl ABImageStringItem {
         Some(Rc::new(RefCell::new(Self::new_struct())))
     }
 }
-pub trait ABImageStringItemDyn {
+pub trait ABImageStringItemDyn: std::any::Any {
     fn as_ABImageStringItem(&self) -> &ABImageStringItem;
     fn as_ABImageStringItem_mut(&mut self) -> &mut ABImageStringItem;
 }

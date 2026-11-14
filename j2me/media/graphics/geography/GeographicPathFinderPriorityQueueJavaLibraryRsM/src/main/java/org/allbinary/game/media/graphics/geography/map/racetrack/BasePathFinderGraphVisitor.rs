@@ -22,6 +22,7 @@ use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::
 use crate::org::allbinary::media::graphics::geography::pathfinding::PathFinderGraphVisitorBase::PathFinderGraphVisitorBase;
 use crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNode;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -71,10 +72,10 @@ impl BasePathFinderGraphVisitor {
     // throws Exception
     pub fn fixPath(&mut self, mut startPathFindingNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut endPathFindingNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut pathList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         let mut startPathFindingNode: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>> = None;
-        for index in (0..=jcall!(startPathFindingNodeList).size() - 1).rev() {
-            startPathFindingNode = { let java_object = (jcall!(startPathFindingNodeList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>>>().expect("ClassCastException").clone()) };
-            jcall!(pathList).remove(crate::java_into_object(jcall!(startPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone()));
-            jcall!(pathList).addAt(0, crate::java_into_object(jcall!(startPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone()));
+        for index in (0..={ let java_bound = jcall!(startPathFindingNodeList).size() - 1; java_bound }).rev() {
+            startPathFindingNode = { let java_value = ({ let java_object = (jcall!(startPathFindingNodeList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            jcall!(pathList).remove(crate::java_into_object({ let java_field = jcall!(startPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone(); java_field }.clone()));
+            jcall!(pathList).addAt(0, crate::java_into_object({ let java_field = jcall!(startPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone(); java_field }.clone()));
         }
     }
     
@@ -85,7 +86,7 @@ impl BasePathFinderGraphVisitor {
     
 
     pub fn getInvalidReason(&mut self, mut graphPath: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
 }
 impl std::ops::Deref for BasePathFinderGraphVisitor {

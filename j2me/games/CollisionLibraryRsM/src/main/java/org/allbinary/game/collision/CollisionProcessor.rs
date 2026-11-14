@@ -20,6 +20,10 @@ pub struct CollisionProcessor {
 
 impl CollisionProcessor {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -35,7 +39,7 @@ impl CollisionProcessor {
         return false;
     }
 }
-pub trait CollisionProcessorDyn {
+pub trait CollisionProcessorDyn: std::any::Any {
     fn as_CollisionProcessor(&self) -> &CollisionProcessor;
     fn as_CollisionProcessor_mut(&mut self) -> &mut CollisionProcessor;
     fn isCollision(&mut self, mut myLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut myLayer2: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> bool { CollisionProcessor::isCollision(self.as_CollisionProcessor_mut(), myLayer, myLayer2) }

@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::GeographicMapCellPosition::GeographicMapCellPosition;
 use super::BasicGeographicMap::BasicGeographicMap;
 
@@ -27,13 +28,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait GeographicMapCellPositionFactoryInterface {
+pub trait GeographicMapCellPositionFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn getInstance(&mut self, geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, i_column: i32, i_row: i32, columns: i32, rows: i32, width: i32, height: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

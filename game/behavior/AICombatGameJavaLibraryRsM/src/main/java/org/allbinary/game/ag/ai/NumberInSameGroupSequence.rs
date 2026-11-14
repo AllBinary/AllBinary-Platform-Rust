@@ -42,6 +42,10 @@ pub struct NumberInSameGroupSequence {
 
 
 impl NumberInSameGroupSequence {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<NumberInSameGroupSequence>>> {
@@ -64,16 +68,16 @@ impl NumberInSameGroupSequence {
             NUMBER_ON_SAME_TEAM_SEQUENCE: Vec::new(),
         };
         let mut smallIntegerSingletonFactory: Option<Rc<RefCell<SmallIntegerSingletonFactory>>> = SmallIntegerSingletonFactory::getInstance();
-        this.NUMBER_ON_SAME_TEAM_SEQUENCE_ZERO = jcall!(smallIntegerSingletonFactory).getAt(100);
-        this.NUMBER_ON_SAME_TEAM_SEQUENCE_ONE = jcall!(smallIntegerSingletonFactory).getAt(101);
-        this.NUMBER_ON_SAME_TEAM_SEQUENCE_TWO = jcall!(smallIntegerSingletonFactory).getAt(102);
-        this.NUMBER_ON_SAME_TEAM_SEQUENCE_THREE = jcall!(smallIntegerSingletonFactory).getAt(103);
-        this.NUMBER_ON_SAME_TEAM_SEQUENCE_FOUR = jcall!(smallIntegerSingletonFactory).getAt(104);
-        this.NUMBER_ON_SAME_TEAM_SEQUENCE_FIVE = jcall!(smallIntegerSingletonFactory).getAt(105);
-        this.NUMBER_ON_SAME_TEAM_SEQUENCE_SIX = jcall!(smallIntegerSingletonFactory).getAt(106);
-        this.NUMBER_ON_SAME_TEAM_SEQUENCE_SEVEN = jcall!(smallIntegerSingletonFactory).getAt(107);
-        this.NUMBER_ON_SAME_TEAM_SEQUENCE_EIGHT = jcall!(smallIntegerSingletonFactory).getAt(108);
-        this.NUMBER_ON_SAME_TEAM_SEQUENCE_NINE = jcall!(smallIntegerSingletonFactory).getAt(109);
+        this.NUMBER_ON_SAME_TEAM_SEQUENCE_ZERO = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(100)).clone(); java_value };
+        this.NUMBER_ON_SAME_TEAM_SEQUENCE_ONE = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(101)).clone(); java_value };
+        this.NUMBER_ON_SAME_TEAM_SEQUENCE_TWO = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(102)).clone(); java_value };
+        this.NUMBER_ON_SAME_TEAM_SEQUENCE_THREE = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(103)).clone(); java_value };
+        this.NUMBER_ON_SAME_TEAM_SEQUENCE_FOUR = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(104)).clone(); java_value };
+        this.NUMBER_ON_SAME_TEAM_SEQUENCE_FIVE = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(105)).clone(); java_value };
+        this.NUMBER_ON_SAME_TEAM_SEQUENCE_SIX = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(106)).clone(); java_value };
+        this.NUMBER_ON_SAME_TEAM_SEQUENCE_SEVEN = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(107)).clone(); java_value };
+        this.NUMBER_ON_SAME_TEAM_SEQUENCE_EIGHT = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(108)).clone(); java_value };
+        this.NUMBER_ON_SAME_TEAM_SEQUENCE_NINE = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(109)).clone(); java_value };
         this.NUMBER_ON_SAME_TEAM_SEQUENCE = vec![this.NUMBER_ON_SAME_TEAM_SEQUENCE_ZERO.clone(), this.NUMBER_ON_SAME_TEAM_SEQUENCE_ONE.clone(), this.NUMBER_ON_SAME_TEAM_SEQUENCE_THREE.clone(), this.NUMBER_ON_SAME_TEAM_SEQUENCE_FOUR.clone(), this.NUMBER_ON_SAME_TEAM_SEQUENCE_FIVE.clone(), this.NUMBER_ON_SAME_TEAM_SEQUENCE_SIX.clone(), this.NUMBER_ON_SAME_TEAM_SEQUENCE_SEVEN.clone(), this.NUMBER_ON_SAME_TEAM_SEQUENCE_EIGHT.clone(), this.NUMBER_ON_SAME_TEAM_SEQUENCE_NINE.clone()];
         this
     }

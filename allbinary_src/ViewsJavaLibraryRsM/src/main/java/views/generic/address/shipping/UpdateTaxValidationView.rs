@@ -29,6 +29,7 @@ use crate::org::allbinary::logic::control::validate::ValidationComponentInterfac
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::ShippingAddressView::ShippingAddressView;
 
 // Borrows the object of a Java reference
@@ -43,6 +44,9 @@ pub struct UpdateTaxValidationView {
 }
 
 // impl ValidationComponentInterface for UpdateTaxValidationView with the methods of the trait
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for UpdateTaxValidationView {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }
+}
 
 impl UpdateTaxValidationView {
     
@@ -63,11 +67,11 @@ impl UpdateTaxValidationView {
     // throws Exception
     pub fn isValid(&mut self) -> Option<bool> {
         self.streetAddress = StreetAddress::new1(self.getRequest());
-        let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(self.getTransformInfoInterface()).getStoreName());
-        if match (&jcall!(jcall!(TaxFactory::getInstance()).getInstance2(self.abeClientInformation.clone(), storeFrontInterface.clone())).isValid(self.streetAddress.clone(), storeFrontInterface.clone()), &false) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance({ let java_argument = jcall!(self.getTransformInfoInterface()).getStoreName(); java_argument }).map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
+        if jcall!(jcall!(TaxFactory::getInstance()).getInstance2(self.abeClientInformation.clone(), storeFrontInterface.clone())).isValid(self.streetAddress.clone(), storeFrontInterface.clone()) == false {
             return false;
         }
-        let mut billingAddressesEntity: Option<Rc<RefCell<ShippingAddressesEntity>>> = ShippingAddressesEntity::new(jcall!(self.getWeblisketSession()).getUserName());
+        let mut billingAddressesEntity: Option<Rc<RefCell<ShippingAddressesEntity>>> = ShippingAddressesEntity::new({ let java_argument = jcall!(self.getWeblisketSession()).getUserName(); java_argument });
         let mut streetAddressList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(billingAddressesEntity).get();
         if streetAddressList.is_none() {
             return false;
@@ -76,7 +80,7 @@ impl UpdateTaxValidationView {
         let mut size: i32 = jcall!(streetAddressList).size();
         for index in (0..size) {
             let mut aStreetAddress: Option<Rc<RefCell<StreetAddress>>> = { let java_object = (jcall!(streetAddressList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<StreetAddress>>>>().expect("ClassCastException").clone()) };
-            if jcall!(jcall!(aStreetAddress).getName()).compareTo(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_TAX.with(Clone::clone).clone()) == 0 {
+            if (jcall!(aStreetAddress).getName().cmp(&crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_TAX.with(Clone::clone).clone()) as i32) == 0 {
                 count += 1;
             }
         }
@@ -112,6 +116,10 @@ impl std::ops::DerefMut for UpdateTaxValidationView {
 impl crate::views::generic::address::shipping::ShippingAddressView::ShippingAddressViewDyn for UpdateTaxValidationView {
     fn as_ShippingAddressView(&self) -> &crate::views::generic::address::shipping::ShippingAddressView::ShippingAddressView { &self.base }
     fn as_ShippingAddressView_mut(&mut self) -> &mut crate::views::generic::address::shipping::ShippingAddressView::ShippingAddressView { &mut self.base }
+}
+impl crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn for UpdateTaxValidationView {
+    fn as_TransformInfoHttpComposite(&self) -> &crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &self.base.base.base.base }
+    fn as_TransformInfoHttpComposite_mut(&mut self) -> &mut crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &mut self.base.base.base.base }
 }
 impl crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentViewDyn for UpdateTaxValidationView {
     fn as_HttpStoreComponentView(&self) -> &crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &self.base.base }

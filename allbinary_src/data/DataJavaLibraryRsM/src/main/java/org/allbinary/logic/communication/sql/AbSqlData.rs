@@ -36,6 +36,10 @@ thread_local! { pub static AbSqlData_MAXSTRING: i32 = 255; }
 thread_local! { pub static AbSqlData_MAXBLOB: i32 = 32000; }
 
 impl AbSqlData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

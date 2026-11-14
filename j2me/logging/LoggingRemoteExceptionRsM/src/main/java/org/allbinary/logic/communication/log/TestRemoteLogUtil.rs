@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::globals::Globals::Globals;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::LogUtil::LogUtil;
 
 // Borrows the object of a Java reference
@@ -34,15 +35,19 @@ pub struct TestRemoteLogUtil {
 thread_local! { pub static TestRemoteLogUtil_PATH: String = String::from("G:\\mnt\\bc\\mydev\\work\\allbinary_src\\licensing\\data\\"); }
 
 impl TestRemoteLogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
-        jcall!(Globals::getInstance()).init(jcall!(std::any::type_name_of_val(&this)).getClassLoader(), TestRemoteLogUtil_PATH.with(Clone::clone).clone());
+        jcall!(Globals::getInstance()).init({ let java_argument = jcall!(std::any::type_name_of_val(&this)).getClassLoader(); java_argument }, TestRemoteLogUtil_PATH.with(Clone::clone).clone());
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from("Test")), String::from("TestClass"), crate::java_into_object(format!("{}: {:?}", "Exception", (String::from("Pretend Exception")))));
+        jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from("Test")), String::from("TestClass"), crate::java_into_object(format!("{}: {:?}", "Exception", (String::from("Pretend Exception")))));
         this
     }
 

@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::jsinterop::annotations::JsType;
 use crate::jsinterop::annotations::JsMethod;
+use crate::java::lang::Exception::*;
 use super::CacheableInterface::CacheableInterface;
 
 // Borrows the object of a Java reference
@@ -28,7 +29,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait CacheInterface {
+pub trait CacheInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
@@ -41,8 +42,6 @@ pub trait CacheInterface {
 
     // throws Exception
     fn clear(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

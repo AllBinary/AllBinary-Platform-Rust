@@ -32,8 +32,14 @@ pub struct CollidableAlwaysPickupNeverCollideBehavior {
     pub base: CollidableNeverCollideBehavior,
 }
 
+impl crate::org::allbinary::game::collision::CollidableInterface::CollidableInterface for CollidableAlwaysPickupNeverCollideBehavior {
+    fn isCollidable(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) -> bool { crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehavior::isCollidable(crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn::as_CollidableBaseBehavior_mut(self), p1) }
+    fn isCollision(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, p2: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) -> bool { crate::org::allbinary::game::collision::CollidableNeverCollideBehavior::CollidableNeverCollideBehavior::isCollision(crate::org::allbinary::game::collision::CollidableNeverCollideBehavior::CollidableNeverCollideBehaviorDyn::as_CollidableNeverCollideBehavior_mut(self), p1, p2) }
+    fn collide(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, p2: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) { crate::org::allbinary::game::collision::CollidableNeverCollideBehavior::CollidableNeverCollideBehavior::collide(crate::org::allbinary::game::collision::CollidableNeverCollideBehavior::CollidableNeverCollideBehaviorDyn::as_CollidableNeverCollideBehavior_mut(self), p1, p2) }
+    fn getCollisionTypeWith(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> Option<Rc<RefCell<CollisionType>>> { Self::getCollisionTypeWith(self, layerInterface) }
+}
 impl crate::org::allbinary::layer::NamedInterface::NamedInterface for CollidableAlwaysPickupNeverCollideBehavior {
-    fn getName(&mut self) -> String { self.base.getName() }
+    fn getName(&mut self) -> String { crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehavior::getName(crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn::as_CollidableBaseBehavior_mut(self)) }
 }
 
 impl CollidableAlwaysPickupNeverCollideBehavior {
@@ -53,7 +59,7 @@ impl CollidableAlwaysPickupNeverCollideBehavior {
     
 
     pub fn getCollisionTypeWith(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> Option<Rc<RefCell<CollisionType>>> {
-        return jcall!(CollisionTypeFactory::CollisionTypeFactory::getInstance()).PICKUP.clone();
+        return { let java_field = jcall!(CollisionTypeFactory::CollisionTypeFactory::getInstance()).PICKUP.clone(); java_field }.clone();
     }
 }
 impl std::ops::Deref for CollidableAlwaysPickupNeverCollideBehavior {

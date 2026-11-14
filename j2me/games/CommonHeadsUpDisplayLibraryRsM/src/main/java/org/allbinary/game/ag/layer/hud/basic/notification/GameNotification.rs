@@ -39,9 +39,13 @@ pub struct GameNotification {
     pub colorList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static GameNotification_NULL_GAME_NOTIFICATION_EVENT: Option<Rc<RefCell<GameNotificationEvent>>> = GameNotificationEvent::new(jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), Some((0) as i32), jcall!(BasicColorFactory::getInstance()).RED.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone()); }
+thread_local! { pub static GameNotification_NULL_GAME_NOTIFICATION_EVENT: Option<Rc<RefCell<GameNotificationEvent>>> = GameNotificationEvent::new(crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), Some((0) as i32), { let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone()); }
 
 impl GameNotification {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -49,9 +53,9 @@ impl GameNotification {
             timeList: None,
             colorList: None,
         };
-        this.stringList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.timeList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.colorList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.stringList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.timeList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.colorList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 

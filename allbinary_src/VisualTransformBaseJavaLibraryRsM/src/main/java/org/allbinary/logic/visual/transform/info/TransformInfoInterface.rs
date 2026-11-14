@@ -16,13 +16,13 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::logic::visual::transform::info::objectConfig::TransformInfoObjectConfigInterface::TransformInfoObjectConfigInterface;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,7 +38,7 @@ pub trait TransformInfoInterface: TableMappingInterface {
     
 
     // throws Exception
-    fn r#override(&mut self, hashMap: Option<Rc<RefCell<HashMap>>>);
+    fn r#override(&mut self, hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>);
     
 
     fn getName(&mut self) -> String;

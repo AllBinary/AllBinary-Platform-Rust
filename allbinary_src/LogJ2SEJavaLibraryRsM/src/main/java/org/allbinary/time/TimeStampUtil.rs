@@ -16,11 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::Calendar;
 use crate::Date;
 use super::*;
 // use crate::java::text::SimpleDateFormat::SimpleDateFormat;
-// use crate::java::util::Calendar::Calendar;
+use crate::java::util::Calendar::Calendar;
 // use crate::java::util::Date::Date;
 
 // Borrows the object of a Java reference
@@ -38,6 +37,10 @@ pub struct TimeStampUtil {
 thread_local! { pub static TimeStampUtil_instance: Option<Rc<RefCell<TimeStampUtil>>> = TimeStampUtil::new(); }
 
 impl TimeStampUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<TimeStampUtil>>> {

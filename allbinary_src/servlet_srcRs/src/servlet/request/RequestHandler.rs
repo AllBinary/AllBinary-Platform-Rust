@@ -25,6 +25,7 @@ use crate::org::allbinary::logic::system::security::licensing::LicensingExceptio
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::control::workflow::WorkFlowInterface::WorkFlowInterface;
 use crate::org::allbinary::logic::control::workflow::RequestWorkFlowFactory::RequestWorkFlowFactory;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -57,7 +58,7 @@ impl RequestHandler {
 
     // throws ServletException
     pub fn init(&mut self, mut config: Option<Rc<RefCell<ServletConfig>>>) {
-        self.base.init(config.clone());
+        { let java_arguments = (config.clone(),); self.base.init(java_arguments.0) };
     }
     
 
@@ -79,12 +80,12 @@ impl RequestHandler {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SERVLETERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SERVLETERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).put(String::from("Servlet LicensingException"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("processRequest()"), e.clone());
             }
-            jcall!(response).sendRedirect(jcall!(jcall!(jcall!(self.base.abcs).globals).URLGLOBALS).LICENSEERRORPAGE.clone());
+            jcall!(response).sendRedirect({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(self.base.abcs).globals.clone(); java_field }).URLGLOBALS.clone(); java_field }).LICENSEERRORPAGE.clone(); java_field }.clone());
             }
         }
     }

@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::CompleteMotionGestureInputInterface::CompleteMotionGestureInputInterface;
 
 // Borrows the object of a Java reference
@@ -50,14 +51,14 @@ impl CompleteMotionGestureInputEvent {
 
     pub fn new_struct(mut name: String, mut motionGestureInput: Option<Rc<RefCell<MotionGestureInput>>>) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(motionGestureInput.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(motionGestureInput.clone())),
             logUtil: None,
             name: String::new(),
             motionGestureInput: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.name = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.motionGestureInput = jcall!(TouchMotionGestureFactory::getInstance()).NO_MOTION.clone();
+        this.name = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.motionGestureInput = { let java_field = jcall!(TouchMotionGestureFactory::getInstance()).NO_MOTION.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this.setName(name.clone());
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
@@ -65,10 +66,10 @@ impl CompleteMotionGestureInputEvent {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(this.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("InputToGameKeyEventAction"), crate::java_into_object(e.clone()));
+            jcall!(this.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("InputToGameKeyEventAction"), crate::java_into_object(e.clone()));
             }
         }
         this

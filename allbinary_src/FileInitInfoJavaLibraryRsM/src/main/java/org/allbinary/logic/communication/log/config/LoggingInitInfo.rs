@@ -30,6 +30,7 @@ use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::LogConfig::LogConfig;
 
 // Borrows the object of a Java reference
@@ -43,7 +44,7 @@ pub struct LoggingInitInfo {
 }
 
 thread_local! { pub static LoggingInitInfo_INITFILENAME: String = String::from("logConfig.xml"); }
-thread_local! { pub static LoggingInitInfo_PACKAGE: String = jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone(); }
+thread_local! { pub static LoggingInitInfo_PACKAGE: String = { let java_field = jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field }.clone(); }
 pub static mut LoggingInitInfo_logConfigInfoList: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = std::cell::LazyCell::new(|| None);
 pub static mut LoggingInitInfo_hasRead: std::cell::LazyCell<bool> = std::cell::LazyCell::new(|| false);
 
@@ -80,7 +81,7 @@ impl LoggingInitInfo {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
             }
@@ -93,10 +94,10 @@ impl LoggingInitInfo {
     pub fn read() {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut document: Option<Rc<RefCell<Document>>> = LoggingInitInfo::getDoc();
-            let mut logConfigsNodeList: Option<Rc<RefCell<NodeList>>> = jcall!(document).getElementsByTagName(jcall!(LogConfigsData::LogConfigsData::getInstance()).NAME.clone());
+            let mut logConfigsNodeList: Option<Rc<RefCell<NodeList>>> = jcall!(document).getElementsByTagName({ let java_field = jcall!(LogConfigsData::LogConfigsData::getInstance()).NAME.clone(); java_field }.clone());
             let mut logConfigsNode: Option<Rc<RefCell<Node>>> = jcall!(logConfigsNodeList).item(0);
-            let mut logConfigNodeVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = DomSearchHelper::getAllNodes(jcall!(LogConfigData::LogConfigData::getInstance()).NAME.clone(), jcall!(logConfigsNode).getChildNodes());
-            unsafe { *LoggingInitInfo_logConfigInfoList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>) };
+            let mut logConfigNodeVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = DomSearchHelper::getAllNodes({ let java_field = jcall!(LogConfigData::LogConfigData::getInstance()).NAME.clone(); java_field }.clone(), jcall!(logConfigsNode).getChildNodes());
+            unsafe { *LoggingInitInfo_logConfigInfoList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>) };
             let mut size: i32 = jcall!(logConfigNodeVector).size();
             for i in (0..size) {
                 let mut node: Option<Rc<RefCell<Node>>> = (jcall!(logConfigNodeVector).get(i.clone())).clone() /* as Node */;
@@ -106,7 +107,7 @@ impl LoggingInitInfo {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
             }
@@ -134,16 +135,17 @@ impl LoggingInitInfo {
     
 
     pub fn isValid(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            return true;
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -163,7 +165,7 @@ impl LoggingInitInfo {
     // throws Exception
     pub fn getTypeNameList() -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
         LoggingInitInfo::updateIfNeeded();
-        let mut allLogTypeVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut allLogTypeVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut size: i32 = jcall!(unsafe { LoggingInitInfo_logConfigInfoList.clone() }).size();
         for index in (0..size) {
             let mut logConfigInfo: Option<Rc<RefCell<LogConfig>>> = { let java_object = (jcall!(unsafe { LoggingInitInfo_logConfigInfoList.clone() }).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LogConfig>>>>().expect("ClassCastException").clone()) };
@@ -179,7 +181,7 @@ impl LoggingInitInfo {
     // throws Exception
     pub fn getTypeList() -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
         LoggingInitInfo::updateIfNeeded();
-        let mut allLogTypeVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut allLogTypeVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut size: i32 = jcall!(unsafe { LoggingInitInfo_logConfigInfoList.clone() }).size();
         for index in (0..size) {
             let mut logConfigInfo: Option<Rc<RefCell<LogConfig>>> = { let java_object = (jcall!(unsafe { LoggingInitInfo_logConfigInfoList.clone() }).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LogConfig>>>>().expect("ClassCastException").clone()) };
@@ -199,17 +201,18 @@ impl LoggingInitInfo {
     
 
     pub fn toString(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut document: Option<Rc<RefCell<Document>>> = LoggingInitInfo::getDoc();
-            return XmlDocumentHelper::toString(document.clone());
+            return Some(XmlDocumentHelper::toString(document.clone()));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return String::from("Error");
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

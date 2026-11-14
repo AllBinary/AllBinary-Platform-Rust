@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintable;
 use super::AllBinaryGameCanvas::AllBinaryGameCanvas;
 
@@ -55,7 +55,7 @@ impl GameCanvasPaintHelper {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.gameCanvas).draw(graphics.clone());
     }
 }
@@ -70,12 +70,15 @@ impl std::ops::DerefMut for GameCanvasPaintHelper {
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for GameCanvasPaintHelper {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
 }
 impl crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintableDyn for GameCanvasPaintHelper {
     fn as_ProcessPaintable(&self) -> &crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintable { &self.base }
     fn as_ProcessPaintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintable { &mut self.base }
     fn process(&mut self) { Self::process(self) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for GameCanvasPaintHelper {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

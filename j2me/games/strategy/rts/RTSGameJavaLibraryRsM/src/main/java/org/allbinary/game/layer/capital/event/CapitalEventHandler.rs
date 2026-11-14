@@ -19,6 +19,7 @@ use super::*;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
+use crate::java::lang::Exception::*;
 use super::CapitalEventListenerInterface::CapitalEventListenerInterface;
 use super::CapitalEvent::CapitalEvent;
 
@@ -51,8 +52,8 @@ impl CapitalEventHandler {
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut capitalEventListenerInterface: Option<Rc<RefCell<dyn CapitalEventListenerInterface>>> = (panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn CapitalEventListenerInterface"));
-        jcall!(capitalEventListenerInterface).onCapitalChangeEvent((eventObject).clone() /* as CapitalEvent */);
+        let mut capitalEventListenerInterface: Option<Rc<RefCell<dyn CapitalEventListenerInterface>>> = ((|| -> Option<Rc<RefCell<dyn CapitalEventListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn CapitalEventListenerInterface") })());
+        jcall!(capitalEventListenerInterface).onCapitalChangeEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<CapitalEvent>() }, "ClassCastException: not a CapitalEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<CapitalEvent>) } }));
     }
 }
 impl std::ops::Deref for CapitalEventHandler {

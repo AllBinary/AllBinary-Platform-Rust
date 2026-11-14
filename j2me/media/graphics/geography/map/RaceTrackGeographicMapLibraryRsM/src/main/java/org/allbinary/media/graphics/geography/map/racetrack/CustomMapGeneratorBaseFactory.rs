@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::CustomMapGeneratorBase::CustomMapGeneratorBase;
 use super::RaceTrackGeographicMap::RaceTrackGeographicMap;
 
@@ -33,6 +34,10 @@ pub struct CustomMapGeneratorBaseFactory {
 thread_local! { pub static CustomMapGeneratorBaseFactory_instance: Option<Rc<RefCell<dyn CustomMapGeneratorBaseFactoryDyn>>> = CustomMapGeneratorBaseFactory::new().map(|reference| reference as Rc<RefCell<dyn CustomMapGeneratorBaseFactoryDyn>>); }
 
 impl CustomMapGeneratorBaseFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn CustomMapGeneratorBaseFactoryDyn>>> {
@@ -56,7 +61,7 @@ impl CustomMapGeneratorBaseFactory {
         return CustomMapGeneratorBase::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::CustomMapGeneratorBase::CustomMapGeneratorBaseDyn>>);
     }
 }
-pub trait CustomMapGeneratorBaseFactoryDyn {
+pub trait CustomMapGeneratorBaseFactoryDyn: std::any::Any {
     fn as_CustomMapGeneratorBaseFactory(&self) -> &CustomMapGeneratorBaseFactory;
     fn as_CustomMapGeneratorBaseFactory_mut(&mut self) -> &mut CustomMapGeneratorBaseFactory;
     fn create(&mut self, mut raceTrackGeographicMap: Option<Rc<RefCell<RaceTrackGeographicMap>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::CustomMapGeneratorBase::CustomMapGeneratorBaseDyn>>> { CustomMapGeneratorBaseFactory::create(self.as_CustomMapGeneratorBaseFactory_mut(), raceTrackGeographicMap) }

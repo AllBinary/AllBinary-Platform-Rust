@@ -38,7 +38,7 @@ impl HtmlRadioInput {
 
     pub fn new_struct(mut before: String, mut name: String, mut value: String, mut after: String) -> Self {
         let mut this = Self {
-            base: HtmlValueInput::new_struct(before.clone(), jcall!(HtmlInputData::HtmlInputData::getInstance()).RADIO.clone(), name.clone(), value.clone(), after.clone()),
+            base: HtmlValueInput::new_struct(before.clone(), { let java_field = jcall!(HtmlInputData::HtmlInputData::getInstance()).RADIO.clone(); java_field }.clone(), name.clone(), value.clone(), after.clone()),
             CHECKED: String::new(),
         };
         this.CHECKED = String::from("checked");
@@ -52,7 +52,7 @@ impl HtmlRadioInput {
     
 
     pub fn setSelected(&mut self) {
-        self.base.addAttribute(self.CHECKED.clone(), jcall!(BooleanFactory::getInstance()).TRUE_STRING.clone());
+        { let java_arguments = (self.CHECKED.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).TRUE_STRING.clone(); java_field }.clone(),); self.base.addAttribute(java_arguments.0, java_arguments.1) };
     }
 }
 impl std::ops::Deref for HtmlRadioInput {

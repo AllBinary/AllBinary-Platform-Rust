@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait FtpConfigurationInterface {
+pub trait FtpConfigurationInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getServer(&mut self) -> String;
@@ -50,8 +50,6 @@ pub trait FtpConfigurationInterface {
     
 
     fn setPassword(&mut self, value: String);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

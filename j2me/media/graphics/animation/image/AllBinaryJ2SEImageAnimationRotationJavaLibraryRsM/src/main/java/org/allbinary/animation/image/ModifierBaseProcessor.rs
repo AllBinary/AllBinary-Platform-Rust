@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::media::image::ImageModifierUtil::ImageModifierUtil;
 
@@ -35,6 +35,10 @@ thread_local! { pub static ModifierBaseProcessor_instance: Option<Rc<RefCell<dyn
 
 impl ModifierBaseProcessor {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -51,18 +55,18 @@ impl ModifierBaseProcessor {
     }
     
 
-    pub fn updateColor(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut imageToShow: Option<Rc<RefCell<Image>>>, mut index: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
+    pub fn updateColor(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageToShow: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut index: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
     }
     
 
-    pub fn updateAlpha(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut imageToShow: Option<Rc<RefCell<Image>>>, mut index: i32, mut alpha: i32) {
+    pub fn updateAlpha(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageToShow: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut index: i32, mut alpha: i32) {
     }
 }
-pub trait ModifierBaseProcessorDyn {
+pub trait ModifierBaseProcessorDyn: std::any::Any {
     fn as_ModifierBaseProcessor(&self) -> &ModifierBaseProcessor;
     fn as_ModifierBaseProcessor_mut(&mut self) -> &mut ModifierBaseProcessor;
-    fn updateColor(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut imageToShow: Option<Rc<RefCell<Image>>>, mut index: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { ModifierBaseProcessor::updateColor(self.as_ModifierBaseProcessor_mut(), imageModifierUtil, originalImage, imageToShow, index, basicColor) }
-    fn updateAlpha(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut imageToShow: Option<Rc<RefCell<Image>>>, mut index: i32, mut alpha: i32) { ModifierBaseProcessor::updateAlpha(self.as_ModifierBaseProcessor_mut(), imageModifierUtil, originalImage, imageToShow, index, alpha) }
+    fn updateColor(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageToShow: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut index: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { ModifierBaseProcessor::updateColor(self.as_ModifierBaseProcessor_mut(), imageModifierUtil, originalImage, imageToShow, index, basicColor) }
+    fn updateAlpha(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageToShow: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut index: i32, mut alpha: i32) { ModifierBaseProcessor::updateAlpha(self.as_ModifierBaseProcessor_mut(), imageModifierUtil, originalImage, imageToShow, index, alpha) }
 }
 impl ModifierBaseProcessorDyn for ModifierBaseProcessor {
     fn as_ModifierBaseProcessor(&self) -> &ModifierBaseProcessor { self }

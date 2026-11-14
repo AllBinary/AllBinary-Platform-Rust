@@ -23,6 +23,7 @@ use crate::org::allbinary::input::automation::actions::script::ProfileActionScri
 use crate::org::allbinary::input::automation::actions::script::condition::ProfileActionScriptConditionInterface::ProfileActionScriptConditionInterface;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::ProfileActionScriptProcessorInterface::ProfileActionScriptProcessorInterface;
 
 // Borrows the object of a Java reference
@@ -68,11 +69,11 @@ impl BasicProfileActionScriptProcessor {
     
 
     pub fn actionPerformed(&mut self, mut actionEvent: Option<Rc<RefCell<ActionEvent>>>) {
-        self.base.actionPerformed(actionEvent.clone());
-        if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(DELETE.clone()) == 0 {
+        { let java_arguments = (actionEvent.clone(),); self.base.actionPerformed(java_arguments.0) };
+        if jcall!(jcall!(actionEvent).getActionCommand()).compareTo(crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItem::ProfileActionScriptItem_DELETE.with(Clone::clone).clone()) == 0 {
             if (self.getParent()).is_some() /* instanceof ProfileActionScriptConditionInterface */ {
-                let mut profileActionScriptConditionInterface: Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>> = (self.getParent()).clone() /* as ProfileActionScriptConditionInterface */;
-                jcall!(profileActionScriptConditionInterface).removeProcessor((self).clone() /* as ProfileActionScriptProcessorInterface */);
+                let mut profileActionScriptConditionInterface: Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>> = (self.getParent()).clone();
+                jcall!(profileActionScriptConditionInterface).removeProcessor(None /* Java this: a &mut self method has no Rc of itself */);
                 jcall!(jcall!(JTreeInterfaceFactory::getInstance()).getJTreeInterface()).updateJTree();
             }
         }

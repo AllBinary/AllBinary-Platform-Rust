@@ -17,12 +17,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::nio::ByteBuffer::ByteBuffer;
+use crate::java::nio::ByteBuffer::ByteBuffer;
 // use crate::java::nio::ByteOrder::ByteOrder;
-// use crate::java::nio::FloatBuffer::FloatBuffer;
-// use crate::javax::microedition::khronos::opengles::GL::GL;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::java::nio::FloatBuffer::FloatBuffer;
+use crate::javax::microedition::khronos::opengles::GL::GL;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::graphics::opengles::OpenGLLogUtil::OpenGLLogUtil;
 use crate::org::allbinary::graphics::displayable::DisplayInfoSingleton::DisplayInfoSingleton;
 use crate::org::allbinary::opengles::GLUtil::GLUtil;
@@ -52,7 +52,7 @@ pub struct OpenGLESGL11VBOImage {
 impl OpenGLESGL11VBOImage {
     
 
-    pub fn new_struct(mut image: Option<Rc<RefCell<Image>>>, mut bitmapFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::graphics::PlatformBitmapBaseFactory::PlatformBitmapBaseFactoryDyn>>>, mut textureFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactoryDyn>>>) -> Self {
+    pub fn new_struct(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut bitmapFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::graphics::PlatformBitmapBaseFactory::PlatformBitmapBaseFactoryDyn>>>, mut textureFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactoryDyn>>>) -> Self {
         let mut this = Self {
             base: OpenGLESImage::new_struct(image.clone(), bitmapFactory.clone(), textureFactory.clone()),
             glUtil: None,
@@ -75,29 +75,29 @@ impl OpenGLESGL11VBOImage {
         this
     }
 
-    pub fn new(mut image: Option<Rc<RefCell<Image>>>, mut bitmapFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::graphics::PlatformBitmapBaseFactory::PlatformBitmapBaseFactoryDyn>>>, mut textureFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut bitmapFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::graphics::PlatformBitmapBaseFactory::PlatformBitmapBaseFactoryDyn>>>, mut textureFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(image, bitmapFactory, textureFactory))))
     }
     
 
     pub fn initVertices(&mut self) {
-        jcall!(self.textureVertexFloatBuffer).put(0);
-        jcall!(self.textureVertexFloatBuffer).put(1);
-        jcall!(self.textureVertexFloatBuffer).put(1);
-        jcall!(self.textureVertexFloatBuffer).put(1);
-        jcall!(self.textureVertexFloatBuffer).put(0);
-        jcall!(self.textureVertexFloatBuffer).put(0);
-        jcall!(self.textureVertexFloatBuffer).put(1);
-        jcall!(self.textureVertexFloatBuffer).put(0);
+        jcall!(self.textureVertexFloatBuffer).put(0.0_f32);
+        jcall!(self.textureVertexFloatBuffer).put(1.0_f32);
+        jcall!(self.textureVertexFloatBuffer).put(1.0_f32);
+        jcall!(self.textureVertexFloatBuffer).put(1.0_f32);
+        jcall!(self.textureVertexFloatBuffer).put(0.0_f32);
+        jcall!(self.textureVertexFloatBuffer).put(0.0_f32);
+        jcall!(self.textureVertexFloatBuffer).put(1.0_f32);
+        jcall!(self.textureVertexFloatBuffer).put(0.0_f32);
         jcall!(self.textureVertexFloatBuffer).rewind();
     }
     
 
     pub fn set(&mut self, mut gl: Option<Rc<RefCell<dyn GL>>>) {
-        let mut gl10: Option<Rc<RefCell<dyn GL10>>> = panic!("ClassCastException: a Rust dyn GL cannot be cast to dyn GL10");
-        if self.base.initTexture(gl10.clone()) {
-            jcall!(self.textureFactory).load(gl10.clone(), unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.clone() }.clone(), 0, None /* Java this: a &mut self method has no Rc of itself */, 0, true);
-            jcall!(gl10).glDisable(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.clone() }.clone());
+        let mut gl10: Option<Rc<RefCell<dyn GL10>>> = (|| -> Option<Rc<RefCell<dyn GL10>>> { panic!("ClassCastException: a Rust dyn GL cannot be cast to dyn GL10") })();
+        if { let java_arguments = (gl10.clone(),); self.base.initTexture(java_arguments.0) } {
+            jcall!(self.textureFactory).load(gl10.clone(), crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.with(Clone::clone).clone(), 0, None /* Java this: a &mut self method has no Rc of itself */, 0, true);
+            jcall!(gl10).glDisable(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.with(Clone::clone).clone());
             jcall!(OpenGLLogUtil::getInstance()).logError2(gl10.clone(), None /* Java this: a &mut self method has no Rc of itself */);
         }
     }
@@ -108,54 +108,54 @@ impl OpenGLESGL11VBOImage {
         self.regionRectangleFloatArray[(7) as usize] = ((viewHeight - y) as f32);
         self.regionRectangleFloatArray[(1) as usize] = self.regionRectangleFloatArray[(7) as usize] - height;
         self.regionRectangleFloatArray[(3) as usize] = ((x) as f32) + width;
-        self.regionRectangleFloatArray[(4) as usize] = self.regionRectangleFloatArray[(1) as usize].clone();
+        self.regionRectangleFloatArray[(4) as usize] = { let java_value = (self.regionRectangleFloatArray[(1) as usize]).clone(); java_value }.clone();
         self.regionRectangleFloatArray[(6) as usize] = ((x) as f32).clone();
-        self.regionRectangleFloatArray[(9) as usize] = self.regionRectangleFloatArray[(3) as usize].clone();
-        self.regionRectangleFloatArray[(10) as usize] = self.regionRectangleFloatArray[(7) as usize].clone();
-        self.regionTextureRectangleFloatArray[(0) as usize] = x_src / self.getWidth();
-        self.regionTextureRectangleFloatArray[(1) as usize] = ((y_src + height)) / self.getHeight();
-        self.regionTextureRectangleFloatArray[(2) as usize] = ((x_src + width)) / self.getWidth();
-        self.regionTextureRectangleFloatArray[(3) as usize] = self.regionTextureRectangleFloatArray[(1) as usize].clone();
-        self.regionTextureRectangleFloatArray[(4) as usize] = self.regionTextureRectangleFloatArray[(0) as usize].clone();
-        self.regionTextureRectangleFloatArray[(5) as usize] = y_src / self.getHeight();
-        self.regionTextureRectangleFloatArray[(6) as usize] = self.regionTextureRectangleFloatArray[(2) as usize].clone();
-        self.regionTextureRectangleFloatArray[(7) as usize] = self.regionTextureRectangleFloatArray[(5) as usize].clone();
+        self.regionRectangleFloatArray[(9) as usize] = { let java_value = (self.regionRectangleFloatArray[(3) as usize]).clone(); java_value }.clone();
+        self.regionRectangleFloatArray[(10) as usize] = { let java_value = (self.regionRectangleFloatArray[(7) as usize]).clone(); java_value }.clone();
+        self.regionTextureRectangleFloatArray[(0) as usize] = x_src / ((self.getWidth()) as f32);
+        self.regionTextureRectangleFloatArray[(1) as usize] = (y_src + height) / ((self.getHeight()) as f32);
+        self.regionTextureRectangleFloatArray[(2) as usize] = (x_src + width) / ((self.getWidth()) as f32);
+        self.regionTextureRectangleFloatArray[(3) as usize] = { let java_value = (self.regionTextureRectangleFloatArray[(1) as usize]).clone(); java_value }.clone();
+        self.regionTextureRectangleFloatArray[(4) as usize] = { let java_value = (self.regionTextureRectangleFloatArray[(0) as usize]).clone(); java_value }.clone();
+        self.regionTextureRectangleFloatArray[(5) as usize] = y_src / ((self.getHeight()) as f32);
+        self.regionTextureRectangleFloatArray[(6) as usize] = { let java_value = (self.regionTextureRectangleFloatArray[(2) as usize]).clone(); java_value }.clone();
+        self.regionTextureRectangleFloatArray[(7) as usize] = { let java_value = (self.regionTextureRectangleFloatArray[(5) as usize]).clone(); java_value }.clone();
         jcall!(self.glUtil).position(self.regionRectangleVertexFloatBuffer.clone(), 0);
-        jcall!(gl).glVertexPointer(3, unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_FLOAT.clone() }.clone(), 0, self.regionRectangleVertexFloatBuffer.clone());
-        jcall!(gl).glEnableClientState(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_VERTEX_ARRAY.clone() }.clone());
-        jcall!(gl).glEnable(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.clone() }.clone());
-        jcall!(gl).glBindTexture(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.clone() }.clone(), jcall!(self.openGLESImageProperties).textureID.clone());
-        jcall!(gl).glEnableClientState(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_COORD_ARRAY.clone() }.clone());
+        jcall!(gl).glVertexPointer(3, crate::javax::microedition::khronos::opengles::GL10::GL10_GL_FLOAT.with(Clone::clone).clone(), 0, self.regionRectangleVertexFloatBuffer.clone());
+        jcall!(gl).glEnableClientState(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_VERTEX_ARRAY.with(Clone::clone).clone());
+        jcall!(gl).glEnable(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.with(Clone::clone).clone());
+        jcall!(gl).glBindTexture(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.with(Clone::clone).clone(), { let java_field = jcall!(self.openGLESImageProperties).textureID.clone(); java_field }.clone());
+        jcall!(gl).glEnableClientState(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_COORD_ARRAY.with(Clone::clone).clone());
         jcall!(self.glUtil).position(self.regionTextureVertexFloatBuffer.clone(), 0);
-        jcall!(gl).glTexCoordPointer(2, unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_FLOAT.clone() }.clone(), 0, self.regionTextureVertexFloatBuffer.clone());
-        jcall!(gl).glDrawArrays(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TRIANGLE_STRIP.clone() }.clone(), 0, 4);
-        jcall!(gl).glDisableClientState(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_VERTEX_ARRAY.clone() }.clone());
-        jcall!(gl).glDisableClientState(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_COORD_ARRAY.clone() }.clone());
-        jcall!(gl).glDisable(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.clone() }.clone());
+        jcall!(gl).glTexCoordPointer(2, crate::javax::microedition::khronos::opengles::GL10::GL10_GL_FLOAT.with(Clone::clone).clone(), 0, self.regionTextureVertexFloatBuffer.clone());
+        jcall!(gl).glDrawArrays(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TRIANGLE_STRIP.with(Clone::clone).clone(), 0, 4);
+        jcall!(gl).glDisableClientState(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_VERTEX_ARRAY.with(Clone::clone).clone());
+        jcall!(gl).glDisableClientState(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_COORD_ARRAY.with(Clone::clone).clone());
+        jcall!(gl).glDisable(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.with(Clone::clone).clone());
     }
     
 
     pub fn draw(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut x: i32, mut y: i32, mut z: i32) {
         self.regionRectangleFloatArray[(0) as usize] = ((x) as f32).clone();
-        self.regionRectangleFloatArray[(7) as usize] = ((jcall!(DisplayInfoSingleton::getInstance()).getLastHeight() - y) as f32);
-        self.regionRectangleFloatArray[(1) as usize] = self.regionRectangleFloatArray[(7) as usize] - self.getHeight();
-        self.regionRectangleFloatArray[(3) as usize] = x + self.getWidth();
-        self.regionRectangleFloatArray[(4) as usize] = self.regionRectangleFloatArray[(1) as usize].clone();
+        self.regionRectangleFloatArray[(7) as usize] = (((jcall!(DisplayInfoSingleton::getInstance()).getLastHeight() - y)) as f32);
+        self.regionRectangleFloatArray[(1) as usize] = self.regionRectangleFloatArray[(7) as usize] - ((self.getHeight()) as f32);
+        self.regionRectangleFloatArray[(3) as usize] = (((x + self.getWidth())) as f32);
+        self.regionRectangleFloatArray[(4) as usize] = { let java_value = (self.regionRectangleFloatArray[(1) as usize]).clone(); java_value }.clone();
         self.regionRectangleFloatArray[(6) as usize] = ((x) as f32).clone();
-        self.regionRectangleFloatArray[(9) as usize] = self.regionRectangleFloatArray[(3) as usize].clone();
-        self.regionRectangleFloatArray[(10) as usize] = self.regionRectangleFloatArray[(7) as usize].clone();
+        self.regionRectangleFloatArray[(9) as usize] = { let java_value = (self.regionRectangleFloatArray[(3) as usize]).clone(); java_value }.clone();
+        self.regionRectangleFloatArray[(10) as usize] = { let java_value = (self.regionRectangleFloatArray[(7) as usize]).clone(); java_value }.clone();
         jcall!(self.glUtil).position(self.regionRectangleVertexFloatBuffer.clone(), 0);
-        jcall!(gl).glVertexPointer(3, unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_FLOAT.clone() }.clone(), 0, self.regionRectangleVertexFloatBuffer.clone());
-        jcall!(gl).glEnableClientState(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_VERTEX_ARRAY.clone() }.clone());
-        jcall!(gl).glEnable(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.clone() }.clone());
-        jcall!(gl).glBindTexture(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.clone() }.clone(), jcall!(self.openGLESImageProperties).textureID.clone());
-        jcall!(gl).glEnableClientState(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_COORD_ARRAY.clone() }.clone());
+        jcall!(gl).glVertexPointer(3, crate::javax::microedition::khronos::opengles::GL10::GL10_GL_FLOAT.with(Clone::clone).clone(), 0, self.regionRectangleVertexFloatBuffer.clone());
+        jcall!(gl).glEnableClientState(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_VERTEX_ARRAY.with(Clone::clone).clone());
+        jcall!(gl).glEnable(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.with(Clone::clone).clone());
+        jcall!(gl).glBindTexture(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.with(Clone::clone).clone(), { let java_field = jcall!(self.openGLESImageProperties).textureID.clone(); java_field }.clone());
+        jcall!(gl).glEnableClientState(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_COORD_ARRAY.with(Clone::clone).clone());
         jcall!(self.glUtil).position(self.textureVertexFloatBuffer.clone(), 0);
-        jcall!(gl).glTexCoordPointer(2, unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_FLOAT.clone() }.clone(), 0, self.textureVertexFloatBuffer.clone());
-        jcall!(gl).glDrawArrays(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TRIANGLE_STRIP.clone() }.clone(), 0, 4);
-        jcall!(gl).glDisableClientState(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_VERTEX_ARRAY.clone() }.clone());
-        jcall!(gl).glDisableClientState(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_COORD_ARRAY.clone() }.clone());
-        jcall!(gl).glDisable(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.clone() }.clone());
+        jcall!(gl).glTexCoordPointer(2, crate::javax::microedition::khronos::opengles::GL10::GL10_GL_FLOAT.with(Clone::clone).clone(), 0, self.textureVertexFloatBuffer.clone());
+        jcall!(gl).glDrawArrays(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TRIANGLE_STRIP.with(Clone::clone).clone(), 0, 4);
+        jcall!(gl).glDisableClientState(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_VERTEX_ARRAY.with(Clone::clone).clone());
+        jcall!(gl).glDisableClientState(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_COORD_ARRAY.with(Clone::clone).clone());
+        jcall!(gl).glDisable(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_TEXTURE_2D.with(Clone::clone).clone());
     }
 }
 impl std::ops::Deref for OpenGLESGL11VBOImage {
@@ -172,8 +172,12 @@ impl crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn for
     fn drawRegion(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut viewHeight: i32, mut x_src: f32, mut y_src: f32, mut width: f32, mut height: f32, mut x: i32, mut y: i32, mut z: i32) { Self::drawRegion(self, gl, viewHeight, x_src, y_src, width, height, x, y, z) }
     fn draw(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut x: i32, mut y: i32, mut z: i32) { Self::draw(self, gl, x, y, z) }
 }
+impl crate::javax::microedition::lcdui::Image::ImageDyn for OpenGLESGL11VBOImage {
+    fn as_Image(&self) -> &crate::javax::microedition::lcdui::Image::Image { &self.base.base }
+    fn as_Image_mut(&mut self) -> &mut crate::javax::microedition::lcdui::Image::Image { &mut self.base.base }
+    fn getType(&mut self) -> i32 { crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImage::getType(crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn::as_OpenGLESImage_mut(self)) }
+}
 impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface for OpenGLESGL11VBOImage {
-    fn set(&mut self, mut gl: Option<Rc<RefCell<dyn GL>>>) { Self::set(self, gl) }
     fn set(&mut self, mut gl: Option<Rc<RefCell<dyn GL>>>) { Self::set(self, gl) }
 }
 

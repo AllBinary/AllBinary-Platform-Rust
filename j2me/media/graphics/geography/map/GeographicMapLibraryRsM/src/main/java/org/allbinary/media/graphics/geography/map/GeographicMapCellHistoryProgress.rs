@@ -44,7 +44,7 @@ impl GeographicMapCellHistoryProgress {
             totalVisitedArray: Vec::new(),
             geographicMapCellHistoryArray: Vec::new(),
         };
-        this.totalVisitedArray = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone();
+        this.totalVisitedArray = { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone(); java_field }.clone();
         this.geographicMapCellHistoryArray = GeographicMapCellHistory_NULL_GEOGRPAHIC_MAP_HISTORY_ARRAY.with(Clone::clone).clone();
         this.geographicMapCellHistoryArray = geographicMapCellHistoryArray.clone();
         this.init();
@@ -57,7 +57,7 @@ impl GeographicMapCellHistoryProgress {
     
 
     pub fn init(&mut self) {
-        self.totalVisitedArray = vec![0; ((self.geographicMapCellHistoryArray.len() as i32)) as usize];
+        self.totalVisitedArray = { let java_value = (vec![0; ((self.geographicMapCellHistoryArray.len() as i32)) as usize]).clone(); java_value };
     }
     
 
@@ -67,11 +67,11 @@ impl GeographicMapCellHistoryProgress {
         let mut currentTotalVisited: i32 = 0;
         let mut totalVisited: i32 = 0;
         for index in (0..size) {
-            totalVisited = jcall!(self.geographicMapCellHistoryArray[(index) as usize]).getTotalVisited();
-            currentTotalVisited = self.totalVisitedArray[(index) as usize].clone();
+            totalVisited = { let java_value = (jcall!(self.geographicMapCellHistoryArray[(index) as usize]).getTotalVisited()).clone(); java_value };
+            currentTotalVisited = { let java_value = (self.totalVisitedArray[(index) as usize]).clone(); java_value }.clone();
             if currentTotalVisited < totalVisited {
                 isProgressing = true;
-                self.totalVisitedArray[(index) as usize] = totalVisited.clone();
+                { let java_index = (index) as usize; self.totalVisitedArray[java_index] = totalVisited.clone(); };
             }
         }
         return isProgressing.clone();

@@ -39,7 +39,7 @@ impl TransformInfoTableTag {
         let mut this = Self {
             base: TableTag::new_struct(),
         };
-        this.setTagHelperFactory(TransformInfoHelperFactory::new());
+        this.setTagHelperFactory(TransformInfoHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 

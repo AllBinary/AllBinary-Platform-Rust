@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation;
 use crate::org::allbinary::game::input::event::RawKeyEventListener::RawKeyEventListener;
@@ -48,19 +48,21 @@ impl RawKeyEventListener for CustomTextBoxIndexedAnimation {
     fn onEventRaw(&mut self, mut keyCode: i32, mut deviceId: i32, mut repeated: bool) { Self::onEventRaw(self, keyCode, deviceId, repeated) }
 }
 impl UpdateMyFontInterface for CustomTextBoxIndexedAnimation {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
-// impl TextInterface for CustomTextBoxIndexedAnimation with the methods of the trait
+impl TextInterface for CustomTextBoxIndexedAnimation {
+    fn setTextWithOnMeasure(&mut self, mut text: String, mut textChangeListener: Option<Rc<RefCell<TextChangeListener>>>) { Self::setTextWithOnMeasure(self, text, textChangeListener) }
+    fn getText(&mut self) -> String { Self::getText(self) }
+    fn setText(&mut self, mut text: String) { Self::setText(self, text) }
+    fn getFontHeight(&mut self) -> i32 { Self::getFontHeight(self) }
+    fn getWidth(&mut self) -> i32 { Self::getWidth(self) }
+}
 impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for CustomTextBoxIndexedAnimation {
-    fn nextFrame(&mut self) { self.base.nextFrame() }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
-}
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for CustomTextBoxIndexedAnimation {
-    fn getSize(&mut self) -> i32 { self.base.getSize() }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::Animation::Animation::nextFrame(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self)) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for CustomTextBoxIndexedAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 impl CustomTextBoxIndexedAnimation {
@@ -74,7 +76,7 @@ impl CustomTextBoxIndexedAnimation {
             hasChanged: false,
             textChangeListener: None,
         };
-        this.lastText = jcall!(StringUtil::getInstance()).INIT_STRING.clone();
+        this.lastText = { let java_field = jcall!(StringUtil::getInstance()).INIT_STRING.clone(); java_field }.clone();
         this.hasChanged = true;
         this.textChangeListener = TextChangeListener::getInstance();
         // super(...) is in the struct literal above
@@ -103,10 +105,10 @@ impl CustomTextBoxIndexedAnimation {
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
         jcall!(self.textChangeListener).onMeasure();
-        self.textChangeListener = TextChangeListener::getInstance();
+        self.textChangeListener = { let java_value = (TextChangeListener::getInstance()).clone(); java_value };
     }
     
 
@@ -125,7 +127,7 @@ impl CustomTextBoxIndexedAnimation {
     
 
     pub fn onEventRaw(&mut self, mut keyCode: i32, mut deviceId: i32, mut repeated: bool) {
-        jcall!(self.customTextBox).onEventRaw(keyCode.clone(), deviceId.clone(), repeated.clone());
+        jcall!(self.customTextBox).as_CustomTextBox_mut().onEventRaw(keyCode.clone(), deviceId.clone(), repeated.clone());
     }
     
 
@@ -134,12 +136,17 @@ impl CustomTextBoxIndexedAnimation {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         jcall!(self.customTextBox).paintXY(graphics.clone(), x.clone(), y.clone());
     }
     
 
-    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) {
+    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) {
+    }
+    
+
+    pub fn getWidth(&mut self) -> i32 {
+        return self.base.getWidth();
     }
 }
 impl std::ops::Deref for CustomTextBoxIndexedAnimation {
@@ -153,14 +160,15 @@ impl std::ops::DerefMut for CustomTextBoxIndexedAnimation {
 impl crate::org::allbinary::animation::Animation::AnimationDyn for CustomTextBoxIndexedAnimation {
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
     fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::setBasicColorP(self, basicColor) }
     fn setBackgroundBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::setBackgroundBasicColorP(self, basicColor) }
 }
 impl crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn for CustomTextBoxIndexedAnimation {
     fn as_IndexedAnimation(&self) -> &crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &self.base }
     fn as_IndexedAnimation_mut(&mut self) -> &mut crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &mut self.base }
+    fn getWidth(&mut self) -> i32 { Self::getWidth(self) }
 }
 impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface for CustomTextBoxIndexedAnimation {
     fn set(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::khronos::opengles::GL::GL>>>) { crate::org::allbinary::animation::Animation::Animation::set(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1) }

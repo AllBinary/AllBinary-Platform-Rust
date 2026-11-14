@@ -17,14 +17,15 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::File::File;
-// use crate::java::io::FileFilter::FileFilter;
-// use crate::java::io::FilenameFilter::FilenameFilter;
-// use crate::java::io::IOException::IOException;
-// use crate::java::net::URI::URI;
+use crate::java::io::File::File;
+use crate::java::io::FileFilter::FileFilter;
+use crate::java::io::FilenameFilter::FilenameFilter;
+use crate::java::io::IOException::IOException;
+use crate::java::net::URI::URI;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 use super::AbFileInterface::AbFileInterface;
 
 // Borrows the object of a Java reference
@@ -42,7 +43,7 @@ pub struct AbFile {
     pub file: Option<Rc<RefCell<File>>>,
 }
 
-thread_local! { pub static AbFile_NULL_FILE: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFileFromRawPath(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()); }
+thread_local! { pub static AbFile_NULL_FILE: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFileFromRawPath({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()); }
 impl AbFileInterface for AbFile {
     fn canRead(&mut self) -> bool { Self::canRead(self) }
     fn canWrite(&mut self) -> bool { Self::canWrite(self) }
@@ -61,7 +62,7 @@ impl AbFileInterface for AbFile {
     fn lastModified(&mut self) -> i64 { Self::lastModified(self) }
     fn length(&mut self) -> i64 { Self::length(self) }
     fn list(&mut self) -> Vec<String> { Self::list(self) }
-    fn listWithFilter(&mut self, mut filter: Option<Rc<RefCell<FilenameFilter>>>) -> Vec<String> { Self::listWithFilter(self, filter) }
+    fn listWithFilter(&mut self, mut filter: Option<Rc<RefCell<dyn FilenameFilter>>>) -> Vec<String> { Self::listWithFilter(self, filter) }
     fn mkdir(&mut self) -> bool { Self::mkdir(self) }
     fn mkdirs(&mut self) -> bool { Self::mkdirs(self) }
     fn setLastModified(&mut self, mut time: i64) -> bool { Self::setLastModified(self, time) }
@@ -75,29 +76,29 @@ impl AbFile {
 
     // throws Exception
     pub fn createAbFileWithChild(mut file: Option<Rc<RefCell<AbFile>>>, mut childPathName: String) -> Option<Rc<RefCell<AbFile>>> {
-        return AbFile::new(File::new(jcall!(file).getFile(), childPathName.clone()));
+        return AbFile::new(File::new2(jcall!(file).getFile(), childPathName.clone()));
     }
     
 
     // throws Exception
     pub fn createAbFile(mut filePath: String) -> Option<Rc<RefCell<AbFile>>> {
-        return AbFile::new(File::new(jcall!(AbPath::new(filePath.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).toFileSystemString()));
+        return AbFile::new(File::new1(jcall!(AbPath::new(filePath.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).toFileSystemString()));
     }
     
 
     // throws Exception
     pub fn createAbFilePathAndName(mut filePath: String, mut fileName: String) -> Option<Rc<RefCell<AbFile>>> {
-        return AbFile::new(File::new(jcall!(AbPath::new(filePath.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).toFileSystemString(), fileName.clone()));
+        return AbFile::new(File::new2(jcall!(AbPath::new(filePath.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).toFileSystemString(), fileName.clone()));
     }
     
 
     pub fn createAbFileFromAbPath(mut abPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>) -> Option<Rc<RefCell<AbFile>>> {
-        return AbFile::new(File::new(jcall!(abPath).toFileSystemString()));
+        return AbFile::new(File::new1(jcall!(abPath).toFileSystemString()));
     }
     
 
     pub fn createAbFileFromRawPath(mut filePath: String) -> Option<Rc<RefCell<AbFile>>> {
-        return AbFile::new(File::new(filePath.clone()));
+        return AbFile::new(File::new1(filePath.clone()));
     }
     
 
@@ -130,7 +131,7 @@ impl AbFile {
     
 
     pub fn getParentFile(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return jcall!(self.file).getParentFile();
+        return crate::java_into_object(jcall!(self.file).getParentFile());
     }
     
 
@@ -150,7 +151,7 @@ impl AbFile {
     
 
     pub fn getAbsoluteFile(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return jcall!(self.file).getAbsoluteFile();
+        return crate::java_into_object(jcall!(self.file).getAbsoluteFile());
     }
     
 
@@ -162,7 +163,7 @@ impl AbFile {
 
     // throws IOException
     pub fn getCanonicalFile(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return jcall!(self.file).getCanonicalFile();
+        return crate::java_into_object(jcall!(self.file).getCanonicalFile());
     }
     
 
@@ -233,23 +234,23 @@ impl AbFile {
     }
     
 
-    pub fn listWithFilter(&mut self, mut filter: Option<Rc<RefCell<FilenameFilter>>>) -> Vec<String> {
-        return jcall!(self.file).list(filter.clone());
+    pub fn listWithFilter(&mut self, mut filter: Option<Rc<RefCell<dyn FilenameFilter>>>) -> Vec<String> {
+        return jcall!(self.file).list1(filter.clone());
     }
     
 
     pub fn listFiles(&mut self) -> Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> {
-        return (jcall!(self.file).listFiles()).clone() /* as  */;
+        return (jcall!(self.file).listFiles()).into_iter().map(|java_element| crate::java_into_object(java_element)).collect::<Vec<crate::JavaObject>>();
     }
     
 
-    pub fn listFilesFileNameFilter(&mut self, mut filter: Option<Rc<RefCell<FilenameFilter>>>) -> Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> {
-        return (jcall!(self.file).listFiles(filter.clone())).clone() /* as  */;
+    pub fn listFilesFileNameFilter(&mut self, mut filter: Option<Rc<RefCell<dyn FilenameFilter>>>) -> Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> {
+        return (jcall!(self.file).listFiles1(filter.clone())).into_iter().map(|java_element| crate::java_into_object(java_element)).collect::<Vec<crate::JavaObject>>();
     }
     
 
-    pub fn listFilesFileFilter(&mut self, mut filter: Option<Rc<RefCell<FileFilter>>>) -> Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> {
-        return (jcall!(self.file).listFiles(filter.clone())).clone() /* as  */;
+    pub fn listFilesFileFilter(&mut self, mut filter: Option<Rc<RefCell<dyn FileFilter>>>) -> Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> {
+        return (jcall!(self.file).listFiles1_FileFilter(filter.clone())).into_iter().map(|java_element| crate::java_into_object(java_element)).collect::<Vec<crate::JavaObject>>();
     }
     
 

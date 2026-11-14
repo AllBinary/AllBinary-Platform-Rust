@@ -38,6 +38,10 @@ pub struct LogData {
 
 impl LogData {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             MAX: 0_i64,
@@ -49,7 +53,7 @@ impl LogData {
         };
         this.MAX = 5000000_i64;
         this.extension = String::from("log");
-        this.backupFileExt = format!("{}{}", format!("{}{}", format!("{}{}", jcall!(AbPathData::getInstance()).EXTENSION_SEP, String::from("bak")), jcall!(AbPathData::getInstance()).EXTENSION_SEP), String::from("txt"));
+        this.backupFileExt = format!("{}{}", format!("{}{}", format!("{}{}", { let java_field = jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(); java_field }, String::from("bak")), { let java_field = jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(); java_field }), String::from("txt"));
         this.ALLBINARY = String::from("allbinary");
         this.NAME = String::from("LOG_NAME");
         this.DESCRIPTION = String::from("LOG_DESCRIPTION");

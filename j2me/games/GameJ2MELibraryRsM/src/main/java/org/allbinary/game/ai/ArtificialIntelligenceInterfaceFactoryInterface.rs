@@ -21,6 +21,7 @@ use crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntell
 use crate::org::allbinary::game::input::GameInput::GameInput;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -29,13 +30,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait ArtificialIntelligenceInterfaceFactoryInterface {
+pub trait ArtificialIntelligenceInterfaceFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
-    fn getInstance(&mut self, hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn getInstance(&mut self, hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>>;
 }
 
 

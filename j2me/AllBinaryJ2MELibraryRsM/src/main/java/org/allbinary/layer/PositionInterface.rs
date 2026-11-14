@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait PositionInterface {
+pub trait PositionInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn setPosition(&mut self, x: i32, y: i32, z: i32);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

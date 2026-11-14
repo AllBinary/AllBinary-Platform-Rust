@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait MinMaxIntConstraintInterface {
+pub trait MinMaxIntConstraintInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getMax(&mut self) -> i32;
@@ -38,8 +38,6 @@ pub trait MinMaxIntConstraintInterface {
     
 
     fn setMin(&mut self, min: i32);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

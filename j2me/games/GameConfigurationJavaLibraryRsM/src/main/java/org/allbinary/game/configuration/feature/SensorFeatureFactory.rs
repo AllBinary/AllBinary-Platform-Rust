@@ -40,6 +40,10 @@ pub struct SensorFeatureFactory {
 thread_local! { pub static SensorFeatureFactory_instance: Option<Rc<RefCell<SensorFeatureFactory>>> = SensorFeatureFactory::new(); }
 
 impl SensorFeatureFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<SensorFeatureFactory>>> {

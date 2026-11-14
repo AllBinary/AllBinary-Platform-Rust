@@ -37,6 +37,10 @@ impl CacheableInterface for ColorCacheable {
 }
 
 impl ColorCacheable {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Self {
@@ -45,7 +49,7 @@ impl ColorCacheable {
             color: None,
         };
         this.key = key.clone();
-        this.color = Color::new(((({ let java_object = key; java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) })).unwrap() as i32));
+        this.color = { let java_value = (Color::new(((({ let java_object = (key).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) })).unwrap() as i32))).clone(); java_value };
         this
     }
 

@@ -13,9 +13,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait ABChoiceItemInterface {
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+pub trait ABChoiceItemInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
 }
 
 

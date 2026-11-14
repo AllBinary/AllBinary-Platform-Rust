@@ -33,6 +33,10 @@ pub struct TransformInfoObjectData {
 thread_local! { pub static TransformInfoObjectData_instance: Option<Rc<RefCell<TransformInfoObjectData>>> = TransformInfoObjectData::new(); }
 
 impl TransformInfoObjectData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<TransformInfoObjectData>>> {

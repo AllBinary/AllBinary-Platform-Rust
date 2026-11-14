@@ -17,13 +17,14 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
 use crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::math::PrimitiveLongUtil::PrimitiveLongUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -44,11 +45,8 @@ pub struct LevelHudWidget {
 }
 
 impl PaintableInterface for LevelHudWidget {
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
-}
-impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for LevelHudWidget {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paintThreed(self, graphics) }
 }
 
 impl LevelHudWidget {
@@ -62,7 +60,7 @@ impl LevelHudWidget {
 
     pub fn new_struct(mut maxlevel: i32, mut location: i32, mut direction: i32) -> Self {
         let mut this = Self {
-            base: BasicHud::new_struct(location.clone(), direction.clone(), 2, jcall!(BasicColorFactory::getInstance()).GREY.clone()),
+            base: BasicHud::new_struct(location.clone(), direction.clone(), 2, { let java_field = jcall!(BasicColorFactory::getInstance()).GREY.clone(); java_field }.clone()),
             level: 0,
             maxlevel: 0,
             levelString: Vec::new(),
@@ -71,11 +69,11 @@ impl LevelHudWidget {
             offset: 0,
             primitiveLongUtil: None,
         };
-        this.levelNumberCharArray = jcall!(NullUtil::getInstance()).NULL_CHAR_ARRAY.clone();
+        this.levelNumberCharArray = { let java_field = jcall!(NullUtil::getInstance()).NULL_CHAR_ARRAY.clone(); java_field }.clone();
         // super(...) is in the struct literal above
-        this.primitiveLongUtil = PrimitiveLongUtil::createPowerOfTen(1000);
+        this.primitiveLongUtil = { let java_value = (PrimitiveLongUtil::createPowerOfTen(1000)).clone(); java_value };
         let mut LEVEL: String = String::from("Lv ");
-        this.levelString = LEVEL.chars().collect::<Vec<char>>();
+        this.levelString = { let java_value = (LEVEL.chars().collect::<Vec<char>>()).clone(); java_value };
         this.maxlevel = maxlevel.clone();
         this.level = maxlevel.clone();
         this.update();
@@ -88,17 +86,17 @@ impl LevelHudWidget {
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.updateMaxWidth = jcall!(font).getSize() * 4;
-        self.offset = jcall!(font).charsWidth(self.levelString.clone(), 0, (self.levelString.len() as i32).clone()) + jcall!(font).getSize();
-        self.base.updateMeasurement(graphics.clone());
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.updateMaxWidth = { let java_value = (jcall!(font).getSize() * 4).clone(); java_value };
+        self.offset = { let java_value = (jcall!(font).charsWidth(self.levelString.clone(), 0, (self.levelString.len() as i32).clone()) + jcall!(font).getSize()).clone(); java_value };
+        { let java_arguments = (graphics.clone(),); self.base.updateMeasurement(java_arguments.0) };
     }
     
 
     pub fn update(&mut self) {
-        self.levelNumberCharArray = jcall!(self.primitiveLongUtil).getCharArray(self.level.clone());
-        self.levelNumberTotalDigits = jcall!(self.primitiveLongUtil).getCurrentTotalDigits();
+        self.levelNumberCharArray = { let java_value = (jcall!(self.primitiveLongUtil).getCharArray(self.level.clone())).clone(); java_value };
+        self.levelNumberTotalDigits = { let java_value = (jcall!(self.primitiveLongUtil).getCurrentTotalDigits()).clone(); java_value };
     }
     
 
@@ -132,12 +130,12 @@ impl LevelHudWidget {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.paintDX(graphics.clone(), self.levelString.clone(), 0, (self.levelString.len() as i32).clone(), self.levelNumberCharArray.clone(), 0, self.levelNumberTotalDigits.clone(), self.offset.clone());
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(), self.levelString.clone(), 0, (self.levelString.len() as i32).clone(), self.levelNumberCharArray.clone(), 0, self.levelNumberTotalDigits.clone(), self.offset.clone(),); self.base.paintDX(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5, java_arguments.6, java_arguments.7) };
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
 }
 impl std::ops::Deref for LevelHudWidget {
@@ -151,7 +149,9 @@ impl std::ops::DerefMut for LevelHudWidget {
 impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for LevelHudWidget {
     fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self.base }
     fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self.base }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for LevelHudWidget {
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 

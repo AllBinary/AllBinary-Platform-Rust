@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait CategoryPropertiesFactoryInterface {
+pub trait CategoryPropertiesFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getInstance(&mut self) -> Option<Rc<RefCell<dyn CategoryPropertiesInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

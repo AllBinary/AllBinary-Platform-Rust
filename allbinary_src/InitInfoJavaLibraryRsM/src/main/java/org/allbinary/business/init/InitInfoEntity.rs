@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::init::db::UserDbInitInfo::UserDbInitInfo;
@@ -28,6 +27,7 @@ use crate::org::allbinary::logic::communication::log::config::r#type::LogConfigT
 use crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes;
 use crate::org::allbinary::logic::io::path::AbPathData::AbPathData;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
+use crate::java::lang::Exception::*;
 use super::InitSql::InitSql;
 
 // Borrows the object of a Java reference
@@ -57,7 +57,7 @@ impl InitInfoEntity {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: InitSql::new_struct(UserDbInitInfo::new()),
+            base: InitSql::new_struct(UserDbInitInfo::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfoDyn>>)),
             NAME: String::new(),
             NOTHING: String::new(),
             tableName: String::new(),
@@ -80,22 +80,22 @@ impl InitInfoEntity {
         this.FAILED_TO_CREATE = String::from("Failed to create ");
         // super(...) is in the struct literal above
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(jcall!(this.sqlStrings).CREATE_TABLE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(this.sqlStrings).CREATE_TABLE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(this.tableName.clone());
-        jcall!(stringBuffer).append(jcall!(this.sqlStrings).START.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(this.sqlStrings).START.clone(); java_field }.clone());
         jcall!(stringBuffer).append(this.NOTHING.clone());
-        jcall!(stringBuffer).append(jcall!(this.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(InitInfo::InitInfo::getInstance()).TESTING.clone());
-        jcall!(stringBuffer).append(jcall!(this.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(InitInfo::InitInfo::getInstance()).TESTHTMLPATH.clone());
-        jcall!(stringBuffer).append(jcall!(this.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(InitInfo::InitInfo::getInstance()).MAINPATH.clone());
-        jcall!(stringBuffer).append(jcall!(this.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(this.sqlStrings).PRIMARY_KEY.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(this.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(InitInfo::InitInfo::getInstance()).TESTING.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(this.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(InitInfo::InitInfo::getInstance()).TESTHTMLPATH.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(this.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(InitInfo::InitInfo::getInstance()).MAINPATH.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(this.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(this.sqlStrings).PRIMARY_KEY.clone(); java_field }.clone());
         jcall!(stringBuffer).append(this.NOTHING.clone());
-        jcall!(stringBuffer).append(jcall!(this.sqlStrings).END.clone());
-        this.tableData = jcall!(stringBuffer).toString();
-        this.setTable(this.tableName.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(this.sqlStrings).END.clone(); java_field }.clone());
+        this.tableData = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
+        { let java_arguments = (this.tableName.clone(),); this.setTable(java_arguments.0) };
         this
     }
 
@@ -105,57 +105,59 @@ impl InitInfoEntity {
     
 
     pub fn get(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut keyAndValue: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-            jcall!(keyAndValue).put(self.NOTHING.clone(), self.NOTHING.clone());
-            let mut hashMap: Option<Rc<RefCell<HashMap>>> = self.getRow(keyAndValue.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut keyAndValue: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+            jcall!(keyAndValue).put(crate::java_into_object(self.NOTHING.clone()), crate::java_into_object(self.NOTHING.clone()));
+            let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.getRow(keyAndValue.clone());
             if hashMap.is_some() {
                 jcall!(InitInfo::InitInfo::getInstance()).set1(hashMap.clone());
-                return true;
+                return Some(true);
             } else {
-                if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone())) {
-                    PreLogUtil::put(self.NOT_IN_DB.clone(), self.NAME.clone(), self.METHOD_GET.clone());
+                if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone(); java_field }.clone())) {
+                    PreLogUtil::put(self.NOT_IN_DB.clone(), crate::java_into_object(self.NAME.clone()), self.METHOD_GET.clone());
                 }
-                return false;
-            }
+                return Some(false);
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone())) {
-                PreLogUtil::putOE(jcall!(self.commonStrings).EXCEPTION.clone(), self.NAME.clone(), self.METHOD_GET.clone(), e.clone());
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone(); java_field }.clone())) {
+                PreLogUtil::putOE({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(self.NAME.clone()), self.METHOD_GET.clone(), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn is(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut keyAndValue: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-            jcall!(keyAndValue).put(self.NOTHING.clone(), self.NOTHING.clone());
-            let mut hashMap: Option<Rc<RefCell<HashMap>>> = self.getRow(keyAndValue.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut keyAndValue: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+            jcall!(keyAndValue).put(crate::java_into_object(self.NOTHING.clone()), crate::java_into_object(self.NOTHING.clone()));
+            let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.getRow(keyAndValue.clone());
             if hashMap.is_some() {
-                return true;
+                return Some(true);
             } else {
-                if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone())) {
-                    PreLogUtil::put(self.NOT_IN_DB.clone(), self.NAME.clone(), self.METHOD_IS.clone());
+                if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone(); java_field }.clone())) {
+                    PreLogUtil::put(self.NOT_IN_DB.clone(), crate::java_into_object(self.NAME.clone()), self.METHOD_IS.clone());
                 }
-                return false;
-            }
+                return Some(false);
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone())) {
-                PreLogUtil::putOE(jcall!(self.commonStrings).EXCEPTION.clone(), self.NAME.clone(), self.METHOD_IS.clone(), e.clone());
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone(); java_field }.clone())) {
+                PreLogUtil::putOE({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(self.NAME.clone()), self.METHOD_IS.clone(), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -166,7 +168,7 @@ impl InitInfoEntity {
 
     pub fn add(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            let mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
             jcall!(values).add(crate::java_into_object(self.NOTHING.clone()));
             jcall!(values).add(crate::java_into_object(jcall!(InitInfo::InitInfo::getInstance()).getTesting()));
             jcall!(values).add(crate::java_into_object(jcall!(InitInfo::InitInfo::getInstance()).getTestHtmlPath()));
@@ -175,10 +177,10 @@ impl InitInfoEntity {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone())) {
-                PreLogUtil::putOE(jcall!(self.commonStrings).EXCEPTION.clone(), self.NAME.clone(), self.METHOD_ADD.clone(), e.clone());
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone(); java_field }.clone())) {
+                PreLogUtil::putOE({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(self.NAME.clone()), self.METHOD_ADD.clone(), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -186,13 +188,13 @@ impl InitInfoEntity {
     
 
     pub fn createTable(&mut self) -> String {
-        if self.base.createTable(self.tableData.clone()) {
+        if { let java_arguments = (self.tableData.clone(),); self.base.createTable(java_arguments.0) } {
             return format!("{}{}", self.tableName, self.CREATED_SUCCESS);
         } else {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(self.FAILED_TO_CREATE.clone());
             jcall!(stringBuffer).append(self.tableData.clone());
-            jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(); java_field }.clone());
             return jcall!(stringBuffer).toString();
         }
     }

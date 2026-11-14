@@ -32,6 +32,10 @@ thread_local! { pub static J2SEMath_instance: Option<Rc<RefCell<J2SEMath>>> = J2
 
 impl J2SEMath {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -54,12 +58,12 @@ impl J2SEMath {
     
 
     pub fn abs(&mut self, mut value: f32) -> f32 {
-        return (if (value < 0.0_f32) { -value } else { value });
+        return (if (value < 0.0_f32) { -value } else { value.clone() });
     }
     
 
     pub fn absdouble(&mut self, mut value: f64) -> f64 {
-        return (if (value < 0.0) { -value } else { value });
+        return (if (value < 0.0) { -value } else { value.clone() });
     }
 }
 

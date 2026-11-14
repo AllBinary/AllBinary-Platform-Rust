@@ -16,11 +16,11 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::logic::visual::transform::info::objectConfig::TransformInfoObjectConfigNoManipulationFactory::TransformInfoObjectConfigNoManipulationFactory;
+use crate::java::lang::Exception::*;
 use super::TransformInfoHttpStore::TransformInfoHttpStore;
 
 // Borrows the object of a Java reference
@@ -38,7 +38,7 @@ pub struct TransformInfoHttpStoreNoManipulation {
 impl TransformInfoHttpStoreNoManipulation {
     
 
-    pub fn new_struct(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
+    pub fn new_struct(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
         let mut this = Self {
             base: TransformInfoHttpStore::new_struct2(propertiesHashMap.clone(), pageContext.clone()),
         };
@@ -46,7 +46,7 @@ impl TransformInfoHttpStoreNoManipulation {
         this
     }
 
-    pub fn new(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(propertiesHashMap, pageContext))))
     }
     
@@ -54,7 +54,7 @@ impl TransformInfoHttpStoreNoManipulation {
     // throws Exception
     pub fn setObjectConfigFile(&mut self, mut value: String) {
         self.setObjectConfigFileName(value.clone());
-        { let java_arguments = (jcall!(TransformInfoObjectConfigNoManipulationFactory::getInstance()).getInstance2(None /* Java this: a &mut self method has no Rc of itself */, self.getObjectConfigFilePath()),); self.setObjectConfigInterface(java_arguments.0) };
+        { let java_arguments = ({ let java_argument = jcall!(TransformInfoObjectConfigNoManipulationFactory::getInstance()).getInstance2(None /* Java this: a &mut self method has no Rc of itself */, self.getObjectConfigFilePath()); java_argument },); self.setObjectConfigInterface(java_arguments.0) };
     }
     
 

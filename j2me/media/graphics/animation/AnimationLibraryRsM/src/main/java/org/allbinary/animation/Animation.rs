@@ -17,12 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL::GL;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::khronos::opengles::GL::GL;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
 use crate::org::allbinary::graphics::color::BasicColorSetUtil::BasicColorSetUtil;
 use crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface;
+use crate::java::lang::Exception::*;
 use super::AnimationInterface::AnimationInterface;
 
 // Borrows the object of a Java reference
@@ -43,16 +44,20 @@ pub struct Animation {
 
 impl AnimationInterface for Animation {
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for Animation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 impl OpenGLSurfaceChangedInterface for Animation {
     fn set(&mut self, mut gl: Option<Rc<RefCell<dyn GL>>>) { Self::set(self, gl) }
 }
 
 impl Animation {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -65,8 +70,8 @@ impl Animation {
             alphaP: 0,
         };
         this.basicSetColorUtil = BasicColorSetUtil::getInstance();
-        this.basicColor = jcall!(BasicColorFactory::getInstance()).WHITE.clone();
-        this.changeBasicColorP = jcall!(BasicColorFactory::getInstance()).NULL_COLOR.clone();
+        this.basicColor = { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone();
+        this.changeBasicColorP = { let java_field = jcall!(BasicColorFactory::getInstance()).NULL_COLOR.clone(); java_field }.clone();
         this
     }
 
@@ -85,12 +90,12 @@ impl Animation {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         { let java_receiver = self.basicSetColorUtil.clone(); let java_arguments = (graphics.clone(), self.getBasicColorP(), self.getColor(),); jcall!(java_receiver).setBasicColorP3(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
-    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) {
+    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) {
     }
     
 
@@ -106,7 +111,7 @@ impl Animation {
 
     pub fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
         self.basicColor = basicColor.clone();
-        self.colorP = jcall!(self.basicColor).intValue();
+        self.colorP = { let java_value = (jcall!(self.basicColor).intValue()).clone(); java_value };
     }
     
 
@@ -121,7 +126,7 @@ impl Animation {
 
     pub fn changeBasicColor(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
         self.changeBasicColorP = basicColor.clone();
-        self.changeColorP = jcall!(self.changeBasicColorP).intValue();
+        self.changeColorP = { let java_value = (jcall!(self.changeBasicColorP).intValue()).clone(); java_value };
     }
     
 
@@ -165,13 +170,13 @@ impl Animation {
         return 0;
     }
 }
-pub trait AnimationDyn: crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface {
+pub trait AnimationDyn: std::any::Any + crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface {
     fn as_Animation(&self) -> &Animation;
     fn as_Animation_mut(&mut self) -> &mut Animation;
     fn setAlpha(&mut self, mut alpha: i32) { Animation::setAlpha(self.as_Animation_mut(), alpha) }
     fn nextFrame(&mut self) { Animation::nextFrame(self.as_Animation_mut()) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Animation::paintXY(self.as_Animation_mut(), graphics, x, y) }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Animation::paintThreedXYZ(self.as_Animation_mut(), graphics, x, y, z) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Animation::paintXY(self.as_Animation_mut(), graphics, x, y) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Animation::paintThreedXYZ(self.as_Animation_mut(), graphics, x, y, z) }
     fn isThreed(&mut self) -> bool { Animation::isThreed(self.as_Animation_mut()) }
     fn getBasicColorP(&mut self) -> Option<Rc<RefCell<BasicColor>>> { Animation::getBasicColorP(self.as_Animation_mut()) }
     fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Animation::setBasicColorP(self.as_Animation_mut(), basicColor) }

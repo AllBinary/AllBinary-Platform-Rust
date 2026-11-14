@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::admin::taghelpers::TagHelper::TagHelper;
@@ -35,6 +34,7 @@ use crate::org::allbinary::data::tables::user::commerce::inventory::order::Order
 use crate::org::allbinary::data::tables::user::commerce::inventory::order::OrderHistoryEntityInterface::OrderHistoryEntityInterface;
 use crate::org::allbinary::logic::communication::http::request::session::WeblisketSession::WeblisketSession;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -48,7 +48,7 @@ pub struct OrderHistoryHelper {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub weblisketSession: Option<Rc<RefCell<WeblisketSession>>>,
     pub storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>,
-    pub propertiesHashMap: Option<Rc<RefCell<HashMap>>>,
+    pub propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
     pub pageContext: Option<Rc<RefCell<PageContext>>>,
     pub request: Option<Rc<RefCell<HttpServletRequest>>>,
     pub streetAddress: Option<Rc<RefCell<StreetAddress>>>,
@@ -62,7 +62,7 @@ pub struct OrderHistoryHelper {
 impl OrderHistoryHelper {
     
 
-    pub fn new_struct(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
+    pub fn new_struct(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
         let mut this = Self {
             base: TagHelper::new_struct(),
             logUtil: None,
@@ -80,64 +80,65 @@ impl OrderHistoryHelper {
         this.logUtil = LogUtil::getInstance();
         this.propertiesHashMap = propertiesHashMap.clone();
         this.pageContext = pageContext.clone();
-        this.request = (jcall!(pageContext).getRequest()).clone() /* as HttpServletRequest */;
-        let mut storeName: String = (jcall!(propertiesHashMap).get(jcall!(StoreFrontData::getInstance()).NAME.clone())).clone() /* as String */;
-        this.newStatus = (jcall!(propertiesHashMap).get(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_STATUS.with(Clone::clone).clone())).clone() /* as String */;
+        this.request = { let java_value = ((jcall!(pageContext).getRequest()).clone() /* as HttpServletRequest */).clone(); java_value };
+        let mut storeName: String = { let java_object = (jcall!(propertiesHashMap).get(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+        this.newStatus = { let java_value = ({ let java_object = (jcall!(propertiesHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_STATUS.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if true {
-            this.storeFrontInterface = StoreFrontFactory::getInstance(storeName.clone());
+            this.storeFrontInterface = { let java_value = (StoreFrontFactory::getInstance(storeName.clone())).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
         }
         this.getFormData();
         this
     }
 
-    pub fn new(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(propertiesHashMap, pageContext))))
     }
     
 
     pub fn getFormData(&mut self) {
-        self.id = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderData::OrderData_ID.with(Clone::clone).clone());
-        self.groupId = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::shipping::ShippingMethodData::ShippingMethodData_GROUP.with(Clone::clone).clone());
+        self.id = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderData::OrderData_ID.with(Clone::clone).clone())).clone(); java_value };
+        self.groupId = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::shipping::ShippingMethodData::ShippingMethodData_GROUP.with(Clone::clone).clone())).clone(); java_value };
         if false {
-            self.newStatus = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_STATUS.with(Clone::clone).clone());
+            self.newStatus = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_STATUS.with(Clone::clone).clone())).clone(); java_value };
         }
     }
     
 
     pub fn setOrderStatus(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut success: String = format!("{}{}", String::from("Status successfully set to: "), self.status);
-            let mut orderReviewInterface: Option<Rc<RefCell<dyn OrderHistoryInterface>>> = OrderHistoryFactory::getInstance(self.id.clone());
+            let mut orderReviewInterface: Option<Rc<RefCell<dyn OrderHistoryInterface>>> = OrderHistoryFactory::getInstance(self.id.clone()).map(|reference| reference as Rc<RefCell<dyn OrderHistoryInterface>>);
             let mut status: String = jcall!(orderReviewInterface).getStatus();
             if (status.cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELLED.with(Clone::clone).clone()) as i32) == 0 {
-                return format!("{}{}", format!("{}{}", String::from("Order "), self.id), String::from(" Already Cancelled<br/>"));
+                return Some(format!("{}{}", format!("{}{}", String::from("Order "), self.id), String::from(" Already Cancelled<br/>")));
             } else if (status.cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPED.with(Clone::clone).clone()) as i32) == 0 {
-                return format!("{}{}", format!("{}{}", String::from("Order "), self.id), String::from(" Already Shipped. You can't cancel a shipped order.<br/>"));
+                return Some(format!("{}{}", format!("{}{}", String::from("Order "), self.id), String::from(" Already Shipped. You can't cancel a shipped order.<br/>")));
             } else if (status.cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PREPROCESSING.with(Clone::clone).clone()) as i32) == 0 {
-                return format!("{}{}", format!("{}{}", String::from("Order "), self.id), String::from(" has been cancelled.<br/>"));
+                return Some(format!("{}{}", format!("{}{}", String::from("Order "), self.id), String::from(" has been cancelled.<br/>")));
             } else if (status.cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PARTIALLYSHIPPED.with(Clone::clone).clone()) as i32) == 0 {
-                return format!("{}{}", format!("{}{}", String::from("Order "), self.id), String::from(" Partially Shipped. You can cancel unshipped items, but not the whole order.<br/>"));
+                return Some(format!("{}{}", format!("{}{}", String::from("Order "), self.id), String::from(" Partially Shipped. You can cancel unshipped items, but not the whole order.<br/>")));
             } else if (status.cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PROCESSING.with(Clone::clone).clone()) as i32) == 0 {
                 let mut orderHistoryEntityInterface: Option<Rc<RefCell<dyn OrderHistoryEntityInterface>>> = OrderHistoryEntityFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn OrderHistoryEntityInterface>>);
                 jcall!(orderHistoryEntityInterface).setStatus(self.id.clone(), self.newStatus.clone());
-                return format!("{}{}", format!("{}{}", String::from("Order "), self.id), String::from(" has been cancelled.<br/>"));
+                return Some(format!("{}{}", format!("{}{}", String::from("Order "), self.id), String::from(" has been cancelled.<br/>")));
             }
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGS.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGS.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).putF(success.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setOrderStatus()"));
             }
-            return String::from("Error Setting Order Status");
+            return Some(String::from("Error Setting Order Status"));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut error: String = String::from("Failed to set order status");
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setOrderStatus()"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setOrderStatus()"), crate::java_into_object(e.clone()));
             }
             return format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", error, String::from("<br/>")), String::from("Exception: ")), e), String::from("<br/>"));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for OrderHistoryHelper {

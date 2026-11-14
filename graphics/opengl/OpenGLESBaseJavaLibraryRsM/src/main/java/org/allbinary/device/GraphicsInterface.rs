@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Font::Font;
 use crate::org::allbinary::graphics::font::FontDebugBase::FontDebugBase;
 
 // Borrows the object of a Java reference
@@ -27,12 +27,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait GraphicsInterface {
+pub trait GraphicsInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
-    fn setFontDebug(&mut self, font: Option<Rc<RefCell<Font>>>, fontDebug: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::font::FontDebugBase::FontDebugBaseDyn>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn setFontDebug(&mut self, font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, fontDebug: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::font::FontDebugBase::FontDebugBaseDyn>>>);
 }
 
 

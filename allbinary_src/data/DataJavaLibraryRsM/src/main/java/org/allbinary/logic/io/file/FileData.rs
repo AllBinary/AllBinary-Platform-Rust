@@ -47,6 +47,10 @@ pub struct FileData {
 thread_local! { pub static FileData_instance: Option<Rc<RefCell<FileData>>> = FileData::new(); }
 
 impl FileData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<FileData>>> {

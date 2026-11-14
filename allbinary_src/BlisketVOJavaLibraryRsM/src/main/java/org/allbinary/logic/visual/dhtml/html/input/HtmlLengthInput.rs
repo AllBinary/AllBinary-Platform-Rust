@@ -58,14 +58,14 @@ impl HtmlLengthInput {
     
 
     pub fn setMaxLength(&mut self, mut length: Option<i32>) {
-        (self.len() as i32) = length.clone().clone();
-        self.addAttribute(self.MAXLENGTH.clone(), (self.len() as i32).clone());
+        (self.len() as i32) = { let java_value = ((length).expect("NullPointerException").to_string().clone()).clone(); java_value };
+        { let java_arguments = (self.MAXLENGTH.clone(), (self.len() as i32).clone(),); self.addAttribute(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn setSize(&mut self, mut size: Option<i32>) {
-        self.size = size.clone().clone();
-        self.addAttribute(self.MAXLENGTH.clone(), self.size.clone());
+        self.size = { let java_value = ((size).expect("NullPointerException").to_string().clone()).clone(); java_value };
+        { let java_arguments = (self.MAXLENGTH.clone(), self.size.clone(),); self.addAttribute(java_arguments.0, java_arguments.1) };
     }
 }
 impl std::ops::Deref for HtmlLengthInput {

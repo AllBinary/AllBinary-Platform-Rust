@@ -17,12 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::math::PrimitiveIntUtil::PrimitiveIntUtil;
 use crate::org::allbinary::math::AngleInfo::AngleInfo;
 use crate::org::allbinary::util::CircularIndexUtil::CircularIndexUtil;
+use crate::java::lang::Exception::*;
 use super::RotationAnimation::RotationAnimation;
 use super::VectorAnimationInterface::VectorAnimationInterface;
 use super::AnimationBehavior::AnimationBehavior;
@@ -40,12 +41,18 @@ pub struct VectorBaseRotationAnimation {
 }
 
 // impl VectorAnimationInterface for VectorBaseRotationAnimation with the methods of the trait
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for VectorBaseRotationAnimation {
-    fn getSize(&mut self) -> i32 { Self::getSize(self) }
-    fn previousFrame(&mut self) { Self::previousFrame(self) }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for VectorBaseRotationAnimation {
+    fn nextFrame(&mut self) { Self::nextFrame(self) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for VectorBaseRotationAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+}
+impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterface for VectorBaseRotationAnimation {
+    fn setFrameByDirection(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameByDirection(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn setFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrame(&mut self, p1: i16) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrame(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
 }
 
 impl VectorBaseRotationAnimation {
@@ -53,10 +60,10 @@ impl VectorBaseRotationAnimation {
 
     pub fn new_struct(mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut currentPoints: Vec<Vec<Vec<i32>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
         let mut this = Self {
-            base: RotationAnimation::new_struct(angleInfo.clone(), CircularIndexUtil::createInstance(360 / jcall!(jcall!(angleInfo).getAngleIncrementInfo()).getAngleIncrement()), animationBehavior.clone()),
+            base: RotationAnimation::new_struct(angleInfo.clone(), CircularIndexUtil::createInstance(360 / ((jcall!(jcall!(angleInfo).getAngleIncrementInfo()).getAngleIncrement()) as i32)), animationBehavior.clone()),
             currentPoints: Vec::new(),
         };
-        this.currentPoints = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY_ARRAY.clone();
+        this.currentPoints = { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY_ARRAY.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this.setPoints(currentPoints.clone());
         this.setBasicColorP(basicColor.clone());
@@ -108,7 +115,7 @@ impl VectorBaseRotationAnimation {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         jcall!(self.basicSetColorUtil).setBasicColorP(graphics.clone(), self.basicColor.clone());
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut nextPointX: i32 = 0;
@@ -119,10 +126,10 @@ impl VectorBaseRotationAnimation {
             let mut size: i32 = (currentPointsFrame.len() as i32).clone();
             let mut index: i32 = size - 2;
             while { index -= 1; index } >= 0 {
-                nextPoint = currentPointsFrame[(index) as usize].clone();
-                point = currentPointsFrame[(index + 1) as usize].clone();
-                nextPointX = nextPoint[(0) as usize].clone();
-                nextPointY = nextPoint[(1) as usize].clone();
+                nextPoint = { let java_value = (currentPointsFrame[(index) as usize]).clone(); java_value }.clone();
+                point = { let java_value = (currentPointsFrame[(index + 1) as usize]).clone(); java_value }.clone();
+                nextPointX = { let java_value = (nextPoint[(0) as usize]).clone(); java_value }.clone();
+                nextPointY = { let java_value = (nextPoint[(1) as usize]).clone(); java_value }.clone();
                 if nextPointX != 1000 {
                     jcall!(graphics).drawLine(point[(0) as usize] + x, point[(1) as usize] + y, nextPointX + x, nextPointY + y);
                 } else {
@@ -132,9 +139,9 @@ impl VectorBaseRotationAnimation {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("paintVectors"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("paintVectors"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -147,7 +154,17 @@ impl VectorBaseRotationAnimation {
 
     pub fn setPoints(&mut self, mut currentPoints: Vec<Vec<Vec<i32>>>) {
         self.currentPoints = currentPoints.clone();
-        self.circularIndexUtil = CircularIndexUtil::createInstance((self.currentPoints.len() as i32).clone());
+        self.circularIndexUtil = { let java_value = (CircularIndexUtil::createInstance((self.currentPoints.len() as i32).clone())).clone(); java_value };
+    }
+    
+
+    pub fn getBasicColorP(&mut self) -> Option<Rc<RefCell<BasicColor>>> {
+        return self.base.getBasicColorP();
+    }
+    
+
+    pub fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
+        { let java_arguments = (basicColor.clone(),); self.base.setBasicColorP(java_arguments.0) };
     }
 }
 impl std::ops::Deref for VectorBaseRotationAnimation {
@@ -173,7 +190,9 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for VectorBaseRot
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base.base }
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn getBasicColorP(&mut self) -> Option<Rc<RefCell<BasicColor>>> { Self::getBasicColorP(self) }
+    fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::setBasicColorP(self, basicColor) }
 }
 impl crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn for VectorBaseRotationAnimation {
     fn as_IndexedAnimation(&self) -> &crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &self.base.base }

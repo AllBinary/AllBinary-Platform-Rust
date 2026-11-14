@@ -16,10 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::awt::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::swing::tree::MutableTreeNode::MutableTreeNode;
 use crate::org::allbinary::graphics::GPoint::GPoint;
 use crate::org::allbinary::graphics::PointFactory::PointFactory;
@@ -31,6 +30,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::math::RectangleCollisionPointUtil::RectangleCollisionPointUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -68,7 +68,7 @@ impl GraphicItemInterface for SelectionTool {
     fn setAngle(&mut self, mut angle: f64) { Self::setAngle(self, angle) }
     fn addAngle(&mut self, mut angle: f64) { Self::addAngle(self, angle) }
     fn getAngle(&mut self) -> f64 { Self::getAngle(self) }
-    fn paint(&mut self, mut g: Option<Rc<RefCell<Graphics>>>, mut canvasAngle: Option<f64>, mut dimension: Option<Rc<RefCell<IntegerDimension>>>, mut x: i32, mut y: i32) { Self::paint(self, g, canvasAngle, dimension, x, y) }
+    fn paint(&mut self, mut g: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut canvasAngle: Option<f64>, mut dimension: Option<Rc<RefCell<IntegerDimension>>>, mut x: i32, mut y: i32) { Self::paint(self, g, canvasAngle, dimension, x, y) }
     fn toDom(&mut self, mut canvasDom: Option<Rc<RefCell<CanvasDom>>>) -> Option<Rc<RefCell<Node>>> { Self::toDom(self, canvasDom) }
     fn removePoint(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> { Self::removePoint(self) }
     fn addPoint(&mut self, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) { Self::addPoint(self, point) }
@@ -86,6 +86,10 @@ impl GraphicItemInterface for SelectionTool {
 }
 
 impl SelectionTool {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>>) -> Self {
@@ -102,8 +106,8 @@ impl SelectionTool {
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
         this.active = true;
-        this.rectColor = Color::new(jcall!(jcall!(BasicColorFactory::getInstance()).RED).intValue());
-        this.startPoint = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone();
+        this.rectColor = Color::new(jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }).intValue());
+        this.startPoint = { let java_field = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone();
         this.endPoint = this.startPoint.clone();
         this.canvasJPanel = canvasJPanel.clone();
         this
@@ -185,11 +189,11 @@ impl SelectionTool {
         let mut xRect2: i32 = (jcall!(self.endPoint).getX() - jcall!(self.startPoint).getX()).abs() + xRect;
         let mut yRect: i32 = self.getYRect();
         let mut yRect2: i32 = (jcall!(self.endPoint).getY() - jcall!(self.startPoint).getY()).abs() + yRect;
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(self.canvasJPanel).getGraphicItemHashMap();
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(self.canvasJPanel).getGraphicItemHashMap();
         let mut graphicItemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(hashMap).keySet()).toArray();
         let mut size: i32 = (graphicItemArray.len() as i32).clone();
         for index in (0..size) {
-            let mut item: Option<Rc<RefCell<dyn GraphicItemInterface>>> = (jcall!(hashMap).get(graphicItemArray[(index) as usize].clone())).clone() /* as GraphicItemInterface */;
+            let mut item: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(hashMap).get(graphicItemArray[(index) as usize].clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
             if jcall!(item).getName() == LinesGraphicItem::LinesGraphicItem::getStaticName() {
                 if RectangleCollisionPointUtil::allPointsInsideCell(xRect.clone(), yRect.clone(), xRect2.clone(), yRect2.clone(), jcall!(jcall!(item).getPointsInterface()).getPoints(), jcall!(self.canvasJPanel).getXPixelsPerWorkAreaPixel(), jcall!(self.canvasJPanel).getYPixelsPerWorkAreaPixel()) {
                     jcall!(item).setColor(unsafe { Color_YELLOW.clone() }.clone());
@@ -207,7 +211,7 @@ impl SelectionTool {
         let mut xDiff: i32 = jcall!(self.endPoint).getX() - jcall!(self.startPoint).getX();
         let mut xRect: i32 = jcall!(self.startPoint).getX();
         if xDiff < 0 {
-            xRect = jcall!(self.endPoint).getX();
+            xRect = { let java_value = (jcall!(self.endPoint).getX()).clone(); java_value };
         }
         return xRect.clone();
     }
@@ -217,13 +221,13 @@ impl SelectionTool {
         let mut yDiff: i32 = jcall!(self.endPoint).getY() - jcall!(self.startPoint).getY();
         let mut yRect: i32 = jcall!(self.startPoint).getY();
         if yDiff < 0 {
-            yRect = jcall!(self.endPoint).getY();
+            yRect = { let java_value = (jcall!(self.endPoint).getY()).clone(); java_value };
         }
         return yRect.clone();
     }
     
 
-    pub fn paint(&mut self, mut g: Option<Rc<RefCell<Graphics>>>, mut canvasAngle: Option<f64>, mut dimension: Option<Rc<RefCell<IntegerDimension>>>, mut x: i32, mut y: i32) {
+    pub fn paint(&mut self, mut g: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut canvasAngle: Option<f64>, mut dimension: Option<Rc<RefCell<IntegerDimension>>>, mut x: i32, mut y: i32) {
         jcall!(g).setColor(self.rectColor.clone());
         let mut xRect: i32 = self.getXRect();
         let mut width: i32 = (jcall!(self.endPoint).getX() - jcall!(self.startPoint).getX()).abs();
@@ -275,34 +279,34 @@ impl SelectionTool {
     
 
     pub fn mousePressed(&mut self, mut mouseEvent: Option<Rc<RefCell<MouseEvent>>>, mut xPixelsPerCell: i32, mut yPixelsPerCell: i32) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(MouseStrings::MouseStrings::getInstance()).MOUSE_PRESSED.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        self.startPoint = jcall!(PointFactory::getInstance()).createXY(jcall!(mouseEvent).getX(), jcall!(mouseEvent).getY());
+        { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(MouseStrings::MouseStrings::getInstance()).MOUSE_PRESSED.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        self.startPoint = { let java_value = (jcall!(PointFactory::getInstance()).createXY(jcall!(mouseEvent).getX(), jcall!(mouseEvent).getY())).clone(); java_value };
         self.endPoint = self.startPoint.clone();
     }
     
 
     pub fn mouseReleased(&mut self, mut mouseEvent: Option<Rc<RefCell<MouseEvent>>>, mut xPixelsPerCell: i32, mut yPixelsPerCell: i32) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(MouseStrings::MouseStrings::getInstance()).MOUSE_RELEASED.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        self.endPoint = jcall!(PointFactory::getInstance()).createXY(jcall!(mouseEvent).getX(), jcall!(mouseEvent).getY());
+        { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(MouseStrings::MouseStrings::getInstance()).MOUSE_RELEASED.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        self.endPoint = { let java_value = (jcall!(PointFactory::getInstance()).createXY(jcall!(mouseEvent).getX(), jcall!(mouseEvent).getY())).clone(); java_value };
         self.active = false;
         self.makeSelection();
     }
     
 
     pub fn mouseDragged(&mut self, mut mouseEvent: Option<Rc<RefCell<MouseEvent>>>, mut xPixelsPerCell: i32, mut yPixelsPerCell: i32) {
-        self.endPoint = jcall!(PointFactory::getInstance()).createXY(jcall!(mouseEvent).getX(), jcall!(mouseEvent).getY());
+        self.endPoint = { let java_value = (jcall!(PointFactory::getInstance()).createXY(jcall!(mouseEvent).getX(), jcall!(mouseEvent).getY())).clone(); java_value };
     }
     
 
     pub fn keyPressed(&mut self, mut keyEvent: Option<Rc<RefCell<KeyEvent>>>) {
-        if match (&jcall!(keyEvent).getKeyCode(), &jcall!(keyEvent).VK_CONTROL) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&jcall!(keyEvent).getKeyCode(), &{ let java_field = jcall!(keyEvent).VK_CONTROL.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             self.controlIdDown = true;
         }
     }
     
 
     pub fn keyReleased(&mut self, mut keyEvent: Option<Rc<RefCell<KeyEvent>>>) {
-        if match (&jcall!(keyEvent).getKeyCode(), &jcall!(keyEvent).VK_CONTROL) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&jcall!(keyEvent).getKeyCode(), &{ let java_field = jcall!(keyEvent).VK_CONTROL.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             self.controlIdDown = false;
         }
     }

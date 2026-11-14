@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::input::automation::actions::script::condition::processors::BasicProfileActionScriptProcessor::BasicProfileActionScriptProcessor;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::ProfileActionScriptOutputInterface::ProfileActionScriptOutputInterface;
 
 // Borrows the object of a Java reference

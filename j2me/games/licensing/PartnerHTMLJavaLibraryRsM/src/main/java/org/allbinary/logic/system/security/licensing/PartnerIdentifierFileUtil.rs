@@ -21,6 +21,7 @@ use crate::org::allbinary::data::resource::ResourceUtil::ResourceUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,6 +38,10 @@ pub struct PartnerIdentifierFileUtil {
 thread_local! { pub static PartnerIdentifierFileUtil_instance: Option<Rc<RefCell<PartnerIdentifierFileUtil>>> = PartnerIdentifierFileUtil::new(); }
 
 impl PartnerIdentifierFileUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -59,20 +64,21 @@ impl PartnerIdentifierFileUtil {
     
 
     pub fn get(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut resourceUtil: Option<Rc<RefCell<ResourceUtil>>> = ResourceUtil::getInstance();
-            let mut partnerString: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-            return partnerString.clone();
+            let mut partnerString: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+            return Some(partnerString.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET.clone(), crate::java_into_object(e.clone()));
-            return jcall!(StringUtil::getInstance()).NULL_STRING.clone();
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
+            return { let java_field = jcall!(StringUtil::getInstance()).NULL_STRING.clone(); java_field }.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

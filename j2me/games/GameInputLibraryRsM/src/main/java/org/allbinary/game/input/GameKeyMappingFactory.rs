@@ -32,16 +32,20 @@ pub struct GameKeyMappingFactory {
     pub intKeyToGameKey: Vec<Option<Rc<RefCell<GameKey>>>>,
 }
 
-pub static mut GameKeyMappingFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut GameKeyMappingFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl GameKeyMappingFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GameKeyMappingFactory>>> {
-        if match (&unsafe { GameKeyMappingFactory_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *GameKeyMappingFactory_instance = GameKeyMappingFactory::new() };
+        if match (&unsafe { GameKeyMappingFactory_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *GameKeyMappingFactory_instance = crate::java_into_object(GameKeyMappingFactory::new()) };
         }
-        return (unsafe { GameKeyMappingFactory_instance.clone() }).clone() /* as GameKeyMappingFactory */;
+        return { let java_object = (unsafe { GameKeyMappingFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameKeyMappingFactory>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -49,32 +53,32 @@ impl GameKeyMappingFactory {
         let mut this = Self {
             intKeyToGameKey: Vec::new(),
         };
-        this.intKeyToGameKey = vec![None; (jcall!(InputFactory::InputFactory::getInstance()).MAX) as usize];
+        this.intKeyToGameKey = vec![None; ({ let java_field = jcall!(InputFactory::InputFactory::getInstance()).MAX.clone(); java_field }) as usize];
         let mut gameKeyFactory: Option<Rc<RefCell<GameKeyFactory>>> = GameKeyFactory::getInstance();
-        this.setGameKey(jcall!(gameKeyFactory).NONE.clone());
-        this.setGameKey(jcall!(gameKeyFactory).UP.clone());
-        this.setGameKey(jcall!(gameKeyFactory).DOWN.clone());
-        this.setGameKey(jcall!(gameKeyFactory).LEFT.clone());
-        this.setGameKey(jcall!(gameKeyFactory).RIGHT.clone());
-        this.setGameKey(jcall!(gameKeyFactory).KEY_POUND.clone());
-        this.setGameKey(jcall!(gameKeyFactory).KEY_STAR.clone());
-        this.setGameKey(jcall!(gameKeyFactory).KEY_NUM0.clone());
-        this.setGameKey(jcall!(gameKeyFactory).KEY_NUM1.clone());
-        this.setGameKey(jcall!(gameKeyFactory).KEY_NUM2.clone());
-        this.setGameKey(jcall!(gameKeyFactory).KEY_NUM3.clone());
-        this.setGameKey(jcall!(gameKeyFactory).KEY_NUM4.clone());
-        this.setGameKey(jcall!(gameKeyFactory).KEY_NUM5.clone());
-        this.setGameKey(jcall!(gameKeyFactory).KEY_NUM6.clone());
-        this.setGameKey(jcall!(gameKeyFactory).KEY_NUM7.clone());
-        this.setGameKey(jcall!(gameKeyFactory).KEY_NUM8.clone());
-        this.setGameKey(jcall!(gameKeyFactory).KEY_NUM9.clone());
-        this.setGameKey(jcall!(gameKeyFactory).GAME_A.clone());
-        this.setGameKey(jcall!(gameKeyFactory).GAME_B.clone());
-        this.setGameKey(jcall!(gameKeyFactory).GAME_C.clone());
-        this.setGameKey(jcall!(gameKeyFactory).GAME_D.clone());
-        this.setGameKey(jcall!(gameKeyFactory).FIRE.clone());
-        this.setGameKey(jcall!(gameKeyFactory).LEVEL_DOWN.clone());
-        this.setGameKey(jcall!(gameKeyFactory).LEVEL_UP.clone());
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).NONE.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).UP.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).DOWN.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).LEFT.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).RIGHT.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).KEY_POUND.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).KEY_STAR.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).KEY_NUM0.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).KEY_NUM1.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).KEY_NUM2.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).KEY_NUM3.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).KEY_NUM4.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).KEY_NUM5.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).KEY_NUM6.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).KEY_NUM7.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).KEY_NUM8.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).KEY_NUM9.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).GAME_A.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).GAME_B.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).GAME_C.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).GAME_D.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).FIRE.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).LEVEL_DOWN.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameKeyFactory).LEVEL_UP.clone(); java_field }.clone(),); this.setGameKey(java_arguments.0) };
         this
     }
 
@@ -89,7 +93,7 @@ impl GameKeyMappingFactory {
     
 
     pub fn setGameKey(&mut self, mut gameKey: Option<Rc<RefCell<GameKey>>>) {
-        self.intKeyToGameKey[(jcall!(gameKey).getId()) as usize] = gameKey.clone();
+        { let java_index = (jcall!(gameKey).getId()) as usize; self.intKeyToGameKey[java_index] = gameKey.clone(); };
     }
 }
 

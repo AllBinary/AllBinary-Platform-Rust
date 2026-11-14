@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,6 +33,10 @@ pub struct UrlGlobalsInterface {
 
 impl UrlGlobalsInterface {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -45,17 +50,17 @@ impl UrlGlobalsInterface {
 
     // throws Exception
     pub fn getMainPath(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 
     pub fn getTestHtmlPath(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 
     pub fn getWebappPath(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 
@@ -63,7 +68,7 @@ impl UrlGlobalsInterface {
         return false;
     }
 }
-pub trait UrlGlobalsInterfaceDyn {
+pub trait UrlGlobalsInterfaceDyn: std::any::Any {
     fn as_UrlGlobalsInterface(&self) -> &UrlGlobalsInterface;
     fn as_UrlGlobalsInterface_mut(&mut self) -> &mut UrlGlobalsInterface;
     fn getMainPath(&mut self) -> String { UrlGlobalsInterface::getMainPath(self.as_UrlGlobalsInterface_mut()) }

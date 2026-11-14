@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL::GL;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::khronos::opengles::GL::GL;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::animation::RotationAnimation::RotationAnimation;
 use crate::org::allbinary::direction::Direction::Direction;
@@ -27,6 +27,7 @@ use crate::org::allbinary::math::Angle::Angle;
 use crate::org::allbinary::math::AngleFactory::AngleFactory;
 use crate::org::allbinary::math::AngleInfo::AngleInfo;
 use crate::org::allbinary::util::CircularIndexUtil::CircularIndexUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -42,21 +43,7 @@ pub struct SimultaneousCompoundRotationAnimation {
 
 impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for SimultaneousCompoundRotationAnimation {
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
-}
-impl crate::org::allbinary::animation::IndexedAnimationInterface::IndexedAnimationInterface for SimultaneousCompoundRotationAnimation {
-    fn reset(&mut self) { self.base.reset() }
-    fn setFrame(&mut self, mut frameIndex: i32) { Self::setFrame(self, frameIndex) }
-    fn getFrame(&mut self) -> i32 { Self::getFrame(self) }
-}
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for SimultaneousCompoundRotationAnimation {
-    fn getSize(&mut self) -> i32 { Self::getSize(self) }
-    fn previousFrame(&mut self) { Self::previousFrame(self) }
-}
-impl crate::org::allbinary::animation::RotationAnimationInterface::RotationAnimationInterface for SimultaneousCompoundRotationAnimation {
-    fn getAngleInfoP(&mut self) -> Option<Rc<RefCell<AngleInfo>>> { Self::getAngleInfoP(self) }
-    fn nextRotation(&mut self) { Self::nextRotation(self) }
-    fn previousRotation(&mut self) { Self::previousRotation(self) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
 }
 impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterface for SimultaneousCompoundRotationAnimation {
     fn setFrameByDirection(&mut self, mut direction: Option<Rc<RefCell<Direction>>>) { Self::setFrameByDirection(self, direction) }
@@ -65,7 +52,7 @@ impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterfac
     fn adjustFrame(&mut self, mut angle: i16) { Self::adjustFrame(self, angle) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for SimultaneousCompoundRotationAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 impl SimultaneousCompoundRotationAnimation {
@@ -73,7 +60,7 @@ impl SimultaneousCompoundRotationAnimation {
 
     pub fn new_struct(mut animationInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
         let mut this = Self {
-            base: RotationAnimation::new_struct(AngleInfo::getInstance(jcall!(AngleFactory::getInstance()).QUARTER_TOTAL_ANGLE.clone()), CircularIndexUtil::createInstance(4), animationBehavior.clone()),
+            base: RotationAnimation::new_struct(AngleInfo::getInstance({ let java_field = jcall!(AngleFactory::getInstance()).QUARTER_TOTAL_ANGLE.clone(); java_field }.clone()), CircularIndexUtil::createInstance(4), animationBehavior.clone()),
             animationInterfaceArray: Vec::new(),
         };
         // super(...) is in the struct literal above
@@ -162,7 +149,7 @@ impl SimultaneousCompoundRotationAnimation {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         {
             let mut index: i32 = (self.animationInterfaceArray.len() as i32).clone();
             while { index -= 1; index } >= 0 {
@@ -172,7 +159,7 @@ impl SimultaneousCompoundRotationAnimation {
     }
     
 
-    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) {
+    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) {
         {
             let mut index: i32 = (self.animationInterfaceArray.len() as i32).clone();
             while { index -= 1; index } >= 0 {
@@ -237,7 +224,7 @@ impl SimultaneousCompoundRotationAnimation {
         {
             let mut index: i32 = (self.animationInterfaceArray.len() as i32).clone();
             while { index -= 1; index } >= 0 {
-            jcall!(self.animationInterfaceArray[(index) as usize]).set(gl.clone());
+            jcall!(self.animationInterfaceArray[(index) as usize]).as_RotationAnimation_mut().set(gl.clone());
             }
         }
     }
@@ -254,8 +241,8 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for SimultaneousC
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base.base }
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
 }
 impl crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn for SimultaneousCompoundRotationAnimation {
     fn as_IndexedAnimation(&self) -> &crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &self.base.base }

@@ -59,23 +59,23 @@ impl SelectAdvancedRTSLayerVisitor {
     
 
     pub fn visit(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        let mut selectedLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (anyType).clone() /* as CollidableDestroyableDamageableLayer */;
+        let mut selectedLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = { let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>>>().expect("ClassCastException").clone()) };
         if !match (&selectedLayer, &CollidableDestroyableDamageableLayer::getNullInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } && jcall!(selectedLayer).getType() == BuildingLayer::getStaticType() {
-            let mut rtsGameLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>> = (selectedLayer).clone() /* as AdvancedRTSGameLayer */;
+            let mut rtsGameLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableDestroyableDamageableLayer cannot be cast to AdvancedRTSGameLayer") })();
             let mut assignWaypointsUtil: Option<Rc<RefCell<AssignWaypointsUtil>>> = AssignWaypointsUtil::getInstance();
             let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(self.selectedRTSLayersPlayerGameInput).getSelectedBasicArrayList();
             let mut currentRTSLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = None;
             let mut unitLayer: Option<Rc<RefCell<UnitLayer>>> = None;
-            for index in (0..=jcall!(list).size() - 1).rev() {
-                currentRTSLayer = { let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>>().expect("ClassCastException").clone()) };
+            for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
+                currentRTSLayer = { let java_value = ({ let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 if jcall!(currentRTSLayer).getType() == UnitLayer::getStaticType() {
-                    unitLayer = (currentRTSLayer).clone() /* as UnitLayer */;
-                    jcall!(unitLayer).setParentLayer(rtsGameLayer.clone());
+                    unitLayer = (currentRTSLayer).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<UnitLayer>() }, "ClassCastException: not a UnitLayer"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<UnitLayer>) } });
+                    jcall!(unitLayer).setParentLayer(rtsGameLayer.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of AdvancedRTSGameLayer does not have PathFindingLayerInterface as a base trait") }));
                     jcall!(assignWaypointsUtil).set(unitLayer.clone(), rtsGameLayer.clone());
                 }
             }
         }
-        return jcall!(NullUtil::getInstance()).NULL_OBJECT.clone();
+        return { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone();
     }
 }
 impl std::ops::Deref for SelectAdvancedRTSLayerVisitor {

@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Screen::Screen;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Screen::Screen;
 use crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItem;
 use crate::org::allbinary::graphics::form::item::ABCustomItemInterface::ABCustomItemInterface;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
@@ -56,7 +56,7 @@ impl TileLayerItem {
     }
     
 
-    pub fn setOwner(&mut self, mut owner: Option<Rc<RefCell<Screen>>>) {
+    pub fn setOwner(&mut self, mut owner: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Screen::ScreenDyn>>>) {
     }
     
 
@@ -90,13 +90,13 @@ impl TileLayerItem {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         { let java_receiver = self.tiledLayer.clone(); let java_arguments = (x.clone(), y.clone(), jcall!(self.tiledLayer).getZP(),); jcall!(java_receiver).setPosition(java_arguments.0, java_arguments.1, java_arguments.2); };
-        jcall!(self.tiledLayer).paint(graphics.clone());
+        jcall!(self.tiledLayer).as_AllBinaryTiledLayer_mut().paint(graphics.clone());
     }
     
 
-    pub fn paintUnselected(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintUnselected(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
     }
 }
 impl std::ops::Deref for TileLayerItem {
@@ -110,9 +110,9 @@ impl std::ops::DerefMut for TileLayerItem {
 impl crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn for TileLayerItem {
     fn as_ABCustomItem(&self) -> &crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItem { &self.base }
     fn as_ABCustomItem_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItem { &mut self.base }
-    fn setOwner(&mut self, mut owner: Option<Rc<RefCell<Screen>>>) { Self::setOwner(self, owner) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
-    fn paintUnselected(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintUnselected(self, graphics, x, y) }
+    fn setOwner(&mut self, mut owner: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Screen::ScreenDyn>>>) { Self::setOwner(self, owner) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintUnselected(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintUnselected(self, graphics, x, y) }
     fn getMinimumWidth(&mut self) -> i32 { Self::getMinimumWidth(self) }
     fn getMinimumHeight(&mut self) -> i32 { Self::getMinimumHeight(self) }
 }

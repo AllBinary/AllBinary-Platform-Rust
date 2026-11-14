@@ -17,17 +17,18 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::security::Security::Security;
-// use crate::java::security::spec::KeySpec::KeySpec;
-// use crate::javax::crypto::Cipher::Cipher;
-// use crate::javax::crypto::SecretKey::SecretKey;
-// use crate::javax::crypto::SecretKeyFactory::SecretKeyFactory;
+use crate::java::security::Security::Security;
+use crate::java::security::spec::KeySpec::KeySpec;
+use crate::javax::crypto::Cipher::Cipher;
+use crate::javax::crypto::SecretKey::SecretKey;
+use crate::javax::crypto::SecretKeyFactory::SecretKeyFactory;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::org::allbinary::init::crypt::jcehelper::CryptInterface::CryptInterface;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::bouncycastle::jce::provider::BouncyCastleProvider::BouncyCastleProvider;
+use crate::java::lang::Exception::*;
 use super::BaseSecretComposite::BaseSecretComposite;
 use super::SecretComposite::SecretComposite;
 
@@ -50,6 +51,10 @@ impl CryptInterface for AbCrypt {
 }
 
 impl AbCrypt {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut algorithm: String) -> Self {
@@ -77,55 +82,57 @@ impl AbCrypt {
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                PreLogUtil::putOE(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone(), e.clone());
+                PreLogUtil::putOE({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                 }
             }
             let mut key: Vec<i8> = jcall!(self.tsUtil).getByteArray(keyAsString.clone());
-            let mut keySpec: Option<Rc<RefCell<KeySpec>>> = jcall!(KeySpecFactory::KeySpecFactory::getInstance()).getInstance2(self.algorithm.clone(), key.clone());
+            let mut keySpec: Option<Rc<RefCell<dyn KeySpec>>> = jcall!(KeySpecFactory::KeySpecFactory::getInstance()).getInstance2(self.algorithm.clone(), key.clone());
             let mut keyFactory: Option<Rc<RefCell<SecretKeyFactory>>> = SecretKeyFactory::getInstance(self.algorithm.clone());
-            let mut secretKey: Option<Rc<RefCell<SecretKey>>> = jcall!(keyFactory).generateSecret(keySpec.clone());
+            let mut secretKey: Option<Rc<RefCell<dyn SecretKey>>> = jcall!(keyFactory).generateSecret(keySpec.clone());
             let mut cipher: Option<Rc<RefCell<Cipher>>> = Cipher::getInstance(self.algorithm.clone());
             self.secretComposite = SecretComposite::new(secretKey.clone(), cipher.clone(), key.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::security::crypt::jcehelper::BaseSecretComposite::BaseSecretCompositeDyn>>);
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putOE(String::from("init Failed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone(), e.clone());
+            PreLogUtil::putOE(String::from("init Failed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
     pub fn encrypt(&mut self, mut array: Vec<i8>) -> Vec<i8> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            return jcall!(self.secretComposite).encrypt(array.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            return Some(jcall!(self.secretComposite).encrypt(array.clone()));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putOE(String::from("Encrypt Failed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("encrypt"), e.clone());
-            return jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone();
+            PreLogUtil::putOE(String::from("Encrypt Failed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("encrypt"), crate::java_into_object(e.clone()));
+            return { let java_field = jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone(); java_field }.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn decrypt(&mut self, mut array: Vec<i8>) -> Vec<i8> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            return jcall!(self.secretComposite).decrypt(array.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            return Some(jcall!(self.secretComposite).decrypt(array.clone()));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putOE(String::from("decrypt Failed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("decrypt"), e.clone());
-            return jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone();
+            PreLogUtil::putOE(String::from("decrypt Failed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("decrypt"), crate::java_into_object(e.clone()));
+            return { let java_field = jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone(); java_field }.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

@@ -100,6 +100,10 @@ pub static mut EchoPaymentGatewayData_PURCHASE_ORDER_NUMBER: std::cell::LazyCell
 pub static mut EchoPaymentGatewayData_SALES_TAX: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("sales_tax"));
 
 impl EchoPaymentGatewayData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

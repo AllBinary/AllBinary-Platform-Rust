@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::InputStream::InputStream;
 // use crate::javax::xml::transform::URIResolver::URIResolver;
 use crate::org::allbinary::data::tree::dom::BasicUriResolver::BasicUriResolver;
 use crate::org::allbinary::data::tree::dom::StoreUriResolver::StoreUriResolver;
@@ -27,6 +27,7 @@ use crate::org::allbinary::logic::system::security::licensing::ServiceClientInfo
 use crate::org::allbinary::logic::visual::transform::AbTransformer::AbTransformer;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::views::compound::objectConfig::CompoundContextTransformInfoObjectConfig::CompoundContextTransformInfoObjectConfig;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -41,6 +42,9 @@ pub struct CompoundTransform {
     pub abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>,
 }
 
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for CompoundTransform {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::AbTransformer::AbTransformer::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::AbTransformer::AbTransformerDyn::as_AbTransformer_mut(self)) }
+}
 
 impl CompoundTransform {
     
@@ -54,12 +58,12 @@ impl CompoundTransform {
         this.logUtil = LogUtil::getInstance();
         this.abeClientInformation = ServiceClientInformationInterfaceFactory::getInstance();
         // super(...) is in the struct literal above
-        { let java_arguments = ((StoreUriResolver::new(this.getTransformInfoInterface(), (this.getURIResolver()).clone() /* as BasicUriResolver */)).clone() /* as URIResolver */,); this.setURIResolver(java_arguments.0) };
-        let mut objectConfig: Option<Rc<RefCell<CompoundContextTransformInfoObjectConfig>>> = CompoundContextTransformInfoObjectConfig::new3(this.abeClientInformation.clone(), this.getTransformInfoInterface(), jcall!(jcall!(this.getTransformInfoInterface()).getObjectConfigInterface()).toXmlDoc());
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
-            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("\nObjectConfig: \n"), jcall!(objectConfig).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_arguments = ((StoreUriResolver::new(this.getTransformInfoInterface(), (this.getURIResolver()).clone())).clone() /* as URIResolver */,); this.setURIResolver(java_arguments.0) };
+        let mut objectConfig: Option<Rc<RefCell<CompoundContextTransformInfoObjectConfig>>> = CompoundContextTransformInfoObjectConfig::new3(this.abeClientInformation.clone(), this.getTransformInfoInterface(), { let java_argument = jcall!(jcall!(this.getTransformInfoInterface()).getObjectConfigInterface()).toXmlDoc(); java_argument });
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
+            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("\nObjectConfig: \n"), jcall!(objectConfig).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
-        let mut templateInputStream: Option<Rc<RefCell<InputStream>>> = jcall!(objectConfig).createInputStream();
+        let mut templateInputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = jcall!(objectConfig).createInputStream();
         this.setInputStream(templateInputStream.clone());
         this
     }

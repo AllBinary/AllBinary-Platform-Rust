@@ -5,7 +5,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use crate::org::allbinary::graphics::opengles::OpenGLProcessor::OpenGLProcessor;
 
 // Borrows the object of a Java reference
@@ -65,10 +65,6 @@ impl std::ops::DerefMut for ShaderOpenGLProcessor {
 pub trait ShaderOpenGLProcessorDyn: crate::org::allbinary::graphics::opengles::OpenGLProcessor::OpenGLProcessorDyn {
     fn as_ShaderOpenGLProcessor(&self) -> &ShaderOpenGLProcessor;
     fn as_ShaderOpenGLProcessor_mut(&mut self) -> &mut ShaderOpenGLProcessor;
-    fn process0(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) { ShaderOpenGLProcessor::process0(self.as_ShaderOpenGLProcessor_mut(), gl) }
-    fn process1(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) { ShaderOpenGLProcessor::process1(self.as_ShaderOpenGLProcessor_mut(), gl) }
-    fn process2(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) { ShaderOpenGLProcessor::process2(self.as_ShaderOpenGLProcessor_mut(), gl) }
-    fn process3(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) { ShaderOpenGLProcessor::process3(self.as_ShaderOpenGLProcessor_mut(), gl) }
     fn process0(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) { ShaderOpenGLProcessor::process0(self.as_ShaderOpenGLProcessor_mut(), gl) }
     fn process1(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) { ShaderOpenGLProcessor::process1(self.as_ShaderOpenGLProcessor_mut(), gl) }
     fn process2(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) { ShaderOpenGLProcessor::process2(self.as_ShaderOpenGLProcessor_mut(), gl) }

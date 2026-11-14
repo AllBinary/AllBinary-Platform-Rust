@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::GeographicMapCellType::GeographicMapCellType;
 use super::BasicGeographicMap::BasicGeographicMap;
 use super::GeographicMapCellPosition::GeographicMapCellPosition;
@@ -33,6 +34,10 @@ pub struct MultiGeographicMapBehavior {
 
 
 impl MultiGeographicMapBehavior {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -52,7 +57,7 @@ impl MultiGeographicMapBehavior {
         {
             let mut index: i32 = size.clone();
             while { index -= 1; index } >= 0 {
-            cellType = jcall!(geographicMapInterfaceArray[(index) as usize]).getCellTypeAt(geographicMapCellPosition.clone());
+            cellType = { let java_value = (jcall!(geographicMapInterfaceArray[(index) as usize]).getCellTypeAt(geographicMapCellPosition.clone())).clone(); java_value };
             geographicMapCellTypeArray[(index) as usize] = cellType.clone();
             }
         }

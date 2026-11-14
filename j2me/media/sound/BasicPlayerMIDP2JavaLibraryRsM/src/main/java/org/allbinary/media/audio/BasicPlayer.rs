@@ -17,11 +17,11 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::media::Control::Control;
-// use crate::javax::microedition::media::MediaException::MediaException;
-// use crate::javax::microedition::media::Player::Player;
-// use crate::javax::microedition::media::PlayerListener::PlayerListener;
-// use crate::javax::microedition::media::TimeBase::TimeBase;
+use crate::javax::microedition::media::Control::Control;
+use crate::javax::microedition::media::MediaException::MediaException;
+use crate::javax::microedition::media::Player::Player;
+use crate::javax::microedition::media::PlayerListener::PlayerListener;
+use crate::javax::microedition::media::TimeBase::TimeBase;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
@@ -39,22 +39,45 @@ macro_rules! jcall {
 //BasicPlayerMIDP2JavaLibrary
 pub struct BasicPlayer {
     pub listenersList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
-    pub timeBase: Option<Rc<RefCell<TimeBase>>>,
+    pub timeBase: Option<Rc<RefCell<dyn TimeBase>>>,
     pub stateP: i32,
     pub loopCountP: i32,
 }
 
 pub static mut BasicPlayer_CONTROL_TYPE: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("ToneControl"));
-// impl Player for BasicPlayer with the methods of the trait
+impl Player for BasicPlayer {
+    fn realize(&mut self) { Self::realize(self) }
+    fn prefetch(&mut self) { Self::prefetch(self) }
+    fn start(&mut self) { Self::start(self) }
+    fn stop(&mut self) { Self::stop(self) }
+    fn deallocate(&mut self) { Self::deallocate(self) }
+    fn close(&mut self) { Self::close(self) }
+    fn setMediaTime(&mut self, mut now: i64) -> i64 { Self::setMediaTime(self, now) }
+    fn getMediaTime(&mut self) -> i64 { Self::getMediaTime(self) }
+    fn getState(&mut self) -> i32 { Self::getState(self) }
+    fn getDuration(&mut self) -> i64 { Self::getDuration(self) }
+    fn getContentType(&mut self) -> String { Self::getContentType(self) }
+    fn setLoopCount(&mut self, mut count: i32) { Self::setLoopCount(self, count) }
+    fn addPlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<dyn PlayerListener>>>) { Self::addPlayerListener(self, playerListener) }
+    fn removePlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<dyn PlayerListener>>>) { Self::removePlayerListener(self, playerListener) }
+}
+impl crate::javax::microedition::media::Controllable::Controllable for BasicPlayer {
+    fn getControls(&mut self) -> Vec<Option<Rc<RefCell<dyn Control>>>> { Self::getControls(self) }
+    fn getControl(&mut self, mut controlType: String) -> Option<Rc<RefCell<dyn Control>>> { Self::getControl(self, controlType) }
+}
 impl TimeBaseInterface for BasicPlayer {
-    fn getTimeBase(&mut self) -> Option<Rc<RefCell<TimeBase>>> { Self::getTimeBase(self) }
-    fn setTimeBase(&mut self, mut timeBase: Option<Rc<RefCell<TimeBase>>>) { Self::setTimeBase(self, timeBase) }
+    fn getTimeBase(&mut self) -> Option<Rc<RefCell<dyn TimeBase>>> { Self::getTimeBase(self) }
+    fn setTimeBase(&mut self, mut timeBase: Option<Rc<RefCell<dyn TimeBase>>>) { Self::setTimeBase(self, timeBase) }
 }
 impl Controllable2 for BasicPlayer {
     fn setVolume(&mut self, mut leftVolume: i32, mut rightVolume: i32) { Self::setVolume(self, leftVolume, rightVolume) }
 }
 
 impl BasicPlayer {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -64,9 +87,9 @@ impl BasicPlayer {
             stateP: 0,
             loopCountP: 0,
         };
-        this.listenersList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.listenersList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.setLoopCount(0);
-        this.setState(unsafe { crate::javax::microedition::media::Player::Player_UNREALIZED.clone() }.clone());
+        { let java_arguments = (crate::javax::microedition::media::Player::Player_UNREALIZED.with(Clone::clone).clone(),); this.setState(java_arguments.0) };
         this
     }
 
@@ -76,16 +99,16 @@ impl BasicPlayer {
     
 
     pub fn getContentType(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 
-    pub fn getControl(&mut self, mut controlType: String) -> Option<Rc<RefCell<Control>>> {
-        return NullControl::new();
+    pub fn getControl(&mut self, mut controlType: String) -> Option<Rc<RefCell<dyn Control>>> {
+        return NullControl::new().map(|reference| reference as Rc<RefCell<dyn Control>>).map(|reference| reference as Rc<RefCell<dyn Control>>);
     }
     
 
-    pub fn getControls(&mut self) -> Vec<Option<Rc<RefCell<Control>>>> {
+    pub fn getControls(&mut self) -> Vec<Option<Rc<RefCell<dyn Control>>>> {
         return vec![None; (0) as usize];
     }
     
@@ -95,14 +118,14 @@ impl BasicPlayer {
     
 
     // synchronized
-    pub fn addPlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<PlayerListener>>>) {
+    pub fn addPlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<dyn PlayerListener>>>) {
         if !jcall!(self.listenersList).contains(crate::java_into_object(playerListener.clone())) {
             jcall!(self.listenersList).add(crate::java_into_object(playerListener.clone()));
         }
     }
     
 
-    pub fn removePlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<PlayerListener>>>) {
+    pub fn removePlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<dyn PlayerListener>>>) {
         jcall!(self.listenersList).remove(crate::java_into_object(playerListener.clone()));
     }
     
@@ -128,13 +151,13 @@ impl BasicPlayer {
     }
     
 
-    pub fn getTimeBase(&mut self) -> Option<Rc<RefCell<TimeBase>>> {
+    pub fn getTimeBase(&mut self) -> Option<Rc<RefCell<dyn TimeBase>>> {
         return self.timeBase.clone();
     }
     
 
     // synchronized
-    pub fn setTimeBase(&mut self, mut timeBase: Option<Rc<RefCell<TimeBase>>>) {
+    pub fn setTimeBase(&mut self, mut timeBase: Option<Rc<RefCell<dyn TimeBase>>>) {
         self.timeBase = timeBase.clone();
     }
     
@@ -174,35 +197,33 @@ impl BasicPlayer {
     // throws MediaException
     // synchronized
     pub fn start(&mut self) {
-        self.setState(unsafe { crate::javax::microedition::media::Player::Player_STARTED.clone() }.clone());
+        { let java_arguments = (crate::javax::microedition::media::Player::Player_STARTED.with(Clone::clone).clone(),); self.setState(java_arguments.0) };
     }
     
 
     // throws MediaException
     // synchronized
     pub fn stop(&mut self) {
-        self.setState(unsafe { crate::javax::microedition::media::Player::Player_PREFETCHED.clone() }.clone());
+        { let java_arguments = (crate::javax::microedition::media::Player::Player_PREFETCHED.with(Clone::clone).clone(),); self.setState(java_arguments.0) };
     }
     
 
     pub fn setVolume(&mut self, mut leftVolume: i32, mut rightVolume: i32) {
     }
 }
-pub trait BasicPlayerDyn: crate::org::allbinary::media::audio::Controllable2::Controllable2 {
+pub trait BasicPlayerDyn: std::any::Any + crate::org::allbinary::media::audio::Controllable2::Controllable2 + crate::org::allbinary::media::audio::TimeBaseInterface::TimeBaseInterface {
     fn as_BasicPlayer(&self) -> &BasicPlayer;
     fn as_BasicPlayer_mut(&mut self) -> &mut BasicPlayer;
     fn getContentType(&mut self) -> String { BasicPlayer::getContentType(self.as_BasicPlayer_mut()) }
-    fn getControl(&mut self, mut controlType: String) -> Option<Rc<RefCell<Control>>> { BasicPlayer::getControl(self.as_BasicPlayer_mut(), controlType) }
-    fn getControls(&mut self) -> Vec<Option<Rc<RefCell<Control>>>> { BasicPlayer::getControls(self.as_BasicPlayer_mut()) }
+    fn getControl(&mut self, mut controlType: String) -> Option<Rc<RefCell<dyn Control>>> { BasicPlayer::getControl(self.as_BasicPlayer_mut(), controlType) }
+    fn getControls(&mut self) -> Vec<Option<Rc<RefCell<dyn Control>>>> { BasicPlayer::getControls(self.as_BasicPlayer_mut()) }
     fn close(&mut self) { BasicPlayer::close(self.as_BasicPlayer_mut()) }
-    fn addPlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<PlayerListener>>>) { BasicPlayer::addPlayerListener(self.as_BasicPlayer_mut(), playerListener) }
-    fn removePlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<PlayerListener>>>) { BasicPlayer::removePlayerListener(self.as_BasicPlayer_mut(), playerListener) }
+    fn addPlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<dyn PlayerListener>>>) { BasicPlayer::addPlayerListener(self.as_BasicPlayer_mut(), playerListener) }
+    fn removePlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<dyn PlayerListener>>>) { BasicPlayer::removePlayerListener(self.as_BasicPlayer_mut(), playerListener) }
     fn getState(&mut self) -> i32 { BasicPlayer::getState(self.as_BasicPlayer_mut()) }
     fn setState(&mut self, mut state: i32) { BasicPlayer::setState(self.as_BasicPlayer_mut(), state) }
     fn getDuration(&mut self) -> i64 { BasicPlayer::getDuration(self.as_BasicPlayer_mut()) }
     fn getMediaTime(&mut self) -> i64 { BasicPlayer::getMediaTime(self.as_BasicPlayer_mut()) }
-    fn getTimeBase(&mut self) -> Option<Rc<RefCell<TimeBase>>> { BasicPlayer::getTimeBase(self.as_BasicPlayer_mut()) }
-    fn setTimeBase(&mut self, mut timeBase: Option<Rc<RefCell<TimeBase>>>) { BasicPlayer::setTimeBase(self.as_BasicPlayer_mut(), timeBase) }
     fn deallocate(&mut self) { BasicPlayer::deallocate(self.as_BasicPlayer_mut()) }
     fn prefetch(&mut self) { BasicPlayer::prefetch(self.as_BasicPlayer_mut()) }
     fn realize(&mut self) { BasicPlayer::realize(self.as_BasicPlayer_mut()) }

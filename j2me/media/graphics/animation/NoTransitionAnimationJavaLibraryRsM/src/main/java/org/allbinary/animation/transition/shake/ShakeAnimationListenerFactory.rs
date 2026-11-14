@@ -33,6 +33,10 @@ pub struct ShakeAnimationListenerFactory {
 
 impl ShakeAnimationListenerFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -45,7 +49,7 @@ impl ShakeAnimationListenerFactory {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::transition::shake::ShakeAnimationListener::ShakeAnimationListenerDyn>>> {
-        return NoShakeAnimationListener::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::transition::shake::ShakeAnimationListener::ShakeAnimationListenerDyn>>);
+        return NoShakeAnimationListener::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::transition::shake::ShakeAnimationListener::ShakeAnimationListenerDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::transition::shake::ShakeAnimationListener::ShakeAnimationListenerDyn>>);
     }
 }
 

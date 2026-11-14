@@ -21,6 +21,7 @@ use crate::org::allbinary::business::user::UserInterface::UserInterface;
 use crate::org::allbinary::logic::communication::smtp::event::UserEmailEventListenerInterface::UserEmailEventListenerInterface;
 use crate::org::allbinary::logic::system::loader::AbeFactory::AbeFactory;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
+use crate::java::lang::Exception::*;
 use super::UserEmailEventConfigurationInterface::UserEmailEventConfigurationInterface;
 
 // Borrows the object of a Java reference
@@ -35,6 +36,10 @@ pub struct UserEmailEventListenerFactory {
 
 
 impl UserEmailEventListenerFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -53,8 +58,8 @@ impl UserEmailEventListenerFactory {
         let mut params: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = vec![None; (1) as usize];
         let mut classes: Vec<&'static str> = vec![""; (1) as usize];
         classes[(0) as usize] = std::any::type_name::<UserInterface>();
-        params[(0) as usize] = crate::java_into_object((userInterface).clone() /* as Any */);
-        return (jcall!(AbeFactory::getInstance()).getInstance4(abeClientInformation.clone(), jcall!(userEmailEventConfigurationInterface).getEventListenerClassPath(), classes.clone(), params.clone())).clone() /* as UserEmailEventListenerInterface */;
+        params[(0) as usize] = crate::java_into_object(crate::java_into_object((userInterface).clone()));
+        return (jcall!(AbeFactory::getInstance()).getInstance4(abeClientInformation.clone(), jcall!(userEmailEventConfigurationInterface).getEventListenerClassPath(), classes.clone(), params.clone())).clone();
     }
 }
 

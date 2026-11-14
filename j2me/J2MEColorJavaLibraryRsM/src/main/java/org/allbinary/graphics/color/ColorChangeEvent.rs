@@ -38,10 +38,10 @@ impl ColorChangeEvent {
 
     pub fn new_struct(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(anyType.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(anyType.clone())),
             basicColor: None,
         };
-        this.basicColor = jcall!(BasicColorFactory::BasicColorFactory::getInstance()).WHITE.clone();
+        this.basicColor = { let java_field = jcall!(BasicColorFactory::BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this
     }

@@ -16,15 +16,15 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::DynamicObjectData::DynamicObjectData;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::system::loader::AbeFactory::AbeFactory;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::WorkFlowWrapper::WorkFlowWrapper;
 use super::WorkFlowInterface::WorkFlowInterface;
 
@@ -42,6 +42,10 @@ pub struct DbWorkFlowFactory {
 thread_local! { pub static DbWorkFlowFactory_instance: Option<Rc<RefCell<DbWorkFlowFactory>>> = DbWorkFlowFactory::new(); }
 
 impl DbWorkFlowFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<DbWorkFlowFactory>>> {
@@ -64,27 +68,28 @@ impl DbWorkFlowFactory {
 
     // throws Exception, LicensingException
     // Java overloaded method: Rust needs a different name
-    pub fn getInstance2(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<dyn WorkFlowInterface>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut className: String = (jcall!(hashMap).get(crate::org::allbinary::business::DynamicObjectData::DynamicObjectData_NAME.with(Clone::clone).clone())).clone() /* as String */;
+    pub fn getInstance2(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn WorkFlowInterface>>> {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut className: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(crate::org::allbinary::business::DynamicObjectData::DynamicObjectData_NAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             let mut params: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = vec![None; (1) as usize];
             let mut classes: Vec<&'static str> = vec![""; (1) as usize];
             classes[(0) as usize] = std::any::type_name_of_val(&hashMap);
-            params[(0) as usize] = crate::java_into_object((hashMap).clone() /* as Any */);
-            let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(AbeFactory::getInstance()).getInstance4(abeClientInformation.clone(), className.clone(), classes.clone(), params.clone());
-            return (WorkFlowWrapper::new(anyType.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::control::workflow::WorkFlowWrapper::WorkFlowWrapperDyn>>)).clone() /* as WorkFlowInterface */;
+            params[(0) as usize] = crate::java_into_object(crate::java_into_object((hashMap).clone()));
+            let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = crate::java_into_object(jcall!(AbeFactory::getInstance()).getInstance4(abeClientInformation.clone(), className.clone(), classes.clone(), params.clone()));
+            return Some((WorkFlowWrapper::new(crate::java_into_object(anyType.clone())).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::control::workflow::WorkFlowWrapper::WorkFlowWrapperDyn>>)).clone() /* as WorkFlowInterface */);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).TAGHELPERFACTORYERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).TAGHELPERFACTORYERROR.clone(); java_field }.clone()) {
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getInstance(HashMap)"), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getInstance(HashMap)"), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

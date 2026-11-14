@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use crate::org::allbinary::graphics::opengles::NullOpenGLProcessorFactory::NullOpenGLProcessorFactory;
 use crate::org::allbinary::graphics::opengles::OpenGLProcessor::OpenGLProcessor;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
@@ -62,6 +62,10 @@ pub struct ShaderComposite {
 
 
 impl ShaderComposite {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut requiresOpenGLVersion: String, mut shaderArray: Vec<Option<Rc<RefCell<Shader>>>>, mut compositeShaderUpdater: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::shader::CompositeShaderUpdater::CompositeShaderUpdaterDyn>>>, mut shaderInitializer: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::shader::ShaderInitializer::ShaderInitializerDyn>>>, mut modelViewProjection: Option<Rc<RefCell<ModelViewProjection>>>, mut colorOpenGLProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::OpenGLProcessor::OpenGLProcessorDyn>>>, mut vertexOpenGLProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::OpenGLProcessor::OpenGLProcessorDyn>>>, mut disableProgramShaderOpenGLProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::OpenGLProcessor::OpenGLProcessorDyn>>>) -> Self {
@@ -121,10 +125,10 @@ impl ShaderComposite {
     
 
     pub fn init(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) {
-        self.programHandle = { let java_receiver = self.shaderInitializer.clone(); let java_arguments = (gl.clone(), self.shaderArray.clone(), jcall!(StringUtil::getInstance()).getArrayInstance(),); let java_result = jcall!(java_receiver).init(java_arguments.0, java_arguments.1, java_arguments.2); java_result };
+        self.programHandle = { let java_value = ({ let java_receiver = self.shaderInitializer.clone(); let java_arguments = (gl.clone(), self.shaderArray.clone(), jcall!(StringUtil::getInstance()).getArrayInstance(),); let java_result = jcall!(java_receiver).init(java_arguments.0, java_arguments.1, java_arguments.2); java_result }).clone(); java_value };
     }
 }
-pub trait ShaderCompositeDyn {
+pub trait ShaderCompositeDyn: std::any::Any {
     fn as_ShaderComposite(&self) -> &ShaderComposite;
     fn as_ShaderComposite_mut(&mut self) -> &mut ShaderComposite;
     fn init(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) { ShaderComposite::init(self.as_ShaderComposite_mut(), gl) }

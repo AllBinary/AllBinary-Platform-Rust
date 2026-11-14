@@ -39,6 +39,10 @@ impl ScoreableInterface for Scoreable {
 }
 
 impl Scoreable {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut points: i32) -> Self {
@@ -73,7 +77,7 @@ impl Scoreable {
         return self.points.clone();
     }
 }
-pub trait ScoreableDyn: crate::org::allbinary::game::score::ScoreableInterface::ScoreableInterface {
+pub trait ScoreableDyn: std::any::Any + crate::org::allbinary::game::score::ScoreableInterface::ScoreableInterface {
     fn as_Scoreable(&self) -> &Scoreable;
     fn as_Scoreable_mut(&mut self) -> &mut Scoreable;
     fn setPoints(&mut self, mut points: i32) { Scoreable::setPoints(self.as_Scoreable_mut(), points) }

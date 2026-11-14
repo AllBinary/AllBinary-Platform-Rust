@@ -16,11 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::io::File::File;
-// use crate::java::io::FileInputStream::FileInputStream;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::io::File::File;
+use crate::java::io::FileInputStream::FileInputStream;
+use crate::java::util::HashMap::HashMap;
 // use crate::java::util::List::List;
 use crate::org::allbinary::data::tree::dom::document::DomDocumentHelper::DomDocumentHelper;
 use crate::org::allbinary::input::automation::module::InputAutomationModuleData::InputAutomationModuleData;
@@ -30,6 +29,7 @@ use crate::org::allbinary::logic::system::security::licensing::AbeClientInformat
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::InputAutomationModuleConfiguration::InputAutomationModuleConfiguration;
 
 // Borrows the object of a Java reference
@@ -41,11 +41,15 @@ macro_rules! jcall {
 
 pub struct InputAutomationModuleConfigurations {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
-    pub hashMap: Option<Rc<RefCell<HashMap>>>,
+    pub hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 
 impl InputAutomationModuleConfigurations {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct2(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut file: Option<Rc<RefCell<File>>>) -> Self {
@@ -56,8 +60,8 @@ impl InputAutomationModuleConfigurations {
         this.logUtil = LogUtil::getInstance();
         this.setHashMap(HashMap::new());
         let mut bytes: Vec<i8> = vec![0; (100000) as usize];
-        let mut idFile: Option<Rc<RefCell<FileInputStream>>> = FileInputStream::new(file.clone());
-        let mut length: i32 = jcall!(idFile).read(bytes.clone());
+        let mut idFile: Option<Rc<RefCell<dyn crate::java::io::FileInputStream::FileInputStreamDyn>>> = FileInputStream::new(file.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::FileInputStream::FileInputStreamDyn>>);
+        let mut length: i32 = jcall!(idFile).as_FileInputStream_mut().read1(bytes.clone());
         let mut data: String = String::from_utf8(bytes.clone().iter().map(|value| *value as u8).collect()).unwrap();
         let mut endIndex: i32 = data.rfind('>').map(|index| index as i32).unwrap_or(-1);
         let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1(data[(0) as usize..(endIndex + 1) as usize].to_string());
@@ -65,7 +69,7 @@ impl InputAutomationModuleConfigurations {
         if jcall!(nodeList).getLength() > 0 {
             let mut nameNodeList: Option<Rc<RefCell<NodeList>>> = jcall!(document).getElementsByTagName(unsafe { crate::org::allbinary::input::automation::module::InputAutomationModuleData::InputAutomationModuleData_NAME.clone() }.clone());
             { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Number Of Module(s) Specified: "), jcall!(nameNodeList).getLength()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Contructor"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            for index in (0..jcall!(nameNodeList).getLength()) {
+            for index in (0..{ let java_bound = jcall!(nameNodeList).getLength(); java_bound }) {
                 let mut node: Option<Rc<RefCell<Node>>> = jcall!(nameNodeList).item(index.clone());
                 this.add(InputAutomationModuleConfiguration::new2(abeClientInformation.clone(), node.clone()));
             }
@@ -78,7 +82,7 @@ impl InputAutomationModuleConfigurations {
     }
     
 
-    pub fn new_struct2(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut document: Option<Rc<RefCell<Document>>>) -> Self {
+    pub fn new_struct2_AbeClientInformationInterface_Document(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut document: Option<Rc<RefCell<Document>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             hashMap: None,
@@ -87,15 +91,15 @@ impl InputAutomationModuleConfigurations {
         this.setHashMap(HashMap::new());
         let mut nameNodeList: Option<Rc<RefCell<NodeList>>> = jcall!(document).getElementsByTagName(unsafe { crate::org::allbinary::input::automation::module::InputAutomationModuleData::InputAutomationModuleData_NAME.clone() }.clone());
         { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Number Of Module(s) Specified: "), jcall!(nameNodeList).getLength()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Contructor"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        for index in (0..jcall!(nameNodeList).getLength()) {
+        for index in (0..{ let java_bound = jcall!(nameNodeList).getLength(); java_bound }) {
             let mut node: Option<Rc<RefCell<Node>>> = jcall!(nameNodeList).item(index.clone());
             this.add(InputAutomationModuleConfiguration::new2(abeClientInformation.clone(), node.clone()));
         }
         this
     }
 
-    pub fn new2(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct2(abeClientInformation, document))))
+    pub fn new2_AbeClientInformationInterface_Document(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct2_AbeClientInformationInterface_Document(abeClientInformation, document))))
     }
     
 
@@ -109,7 +113,7 @@ impl InputAutomationModuleConfigurations {
         let mut size: i32 = jcall!(inputAutomationModuleConfigurationList).size();
         let mut inputAutomationModuleConfiguration: Option<Rc<RefCell<InputAutomationModuleConfiguration>>> = None;
         for index in (0..size) {
-            inputAutomationModuleConfiguration = jcall!(inputAutomationModuleConfigurationList).get(index.clone());
+            inputAutomationModuleConfiguration = { let java_value = (jcall!(inputAutomationModuleConfigurationList).get(index.clone())).clone(); java_value };
             this.add(inputAutomationModuleConfiguration.clone());
         }
         this
@@ -136,21 +140,21 @@ impl InputAutomationModuleConfigurations {
     
 
     pub fn add(&mut self, mut inputAutomationModuleConfiguration: Option<Rc<RefCell<InputAutomationModuleConfiguration>>>) {
-        jcall!(self.getHashMap()).put(jcall!(inputAutomationModuleConfiguration).getClassName(), inputAutomationModuleConfiguration.clone());
+        jcall!(self.getHashMap()).put(crate::java_into_object(jcall!(inputAutomationModuleConfiguration).getClassName()), crate::java_into_object(inputAutomationModuleConfiguration.clone()));
     }
     
 
     pub fn remove(&mut self, mut inputAutomationModuleConfiguration: Option<Rc<RefCell<InputAutomationModuleConfiguration>>>) {
-        jcall!(self.getHashMap()).remove(jcall!(inputAutomationModuleConfiguration).getClassName());
+        jcall!(self.getHashMap()).remove(crate::java_into_object(jcall!(inputAutomationModuleConfiguration).getClassName()));
     }
     
 
-    pub fn getHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn getHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return self.hashMap.clone();
     }
     
 
-    pub fn setHashMap(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) {
+    pub fn setHashMap(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
         self.hashMap = hashMap.clone();
     }
 }

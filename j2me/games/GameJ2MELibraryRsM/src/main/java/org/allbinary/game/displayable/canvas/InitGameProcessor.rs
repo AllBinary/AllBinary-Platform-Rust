@@ -21,6 +21,7 @@ use crate::org::allbinary::canvas::Processor::Processor;
 use crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvasFactory::ProgressCanvasFactory;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::AllBinaryGameCanvas::AllBinaryGameCanvas;
 
 // Borrows the object of a Java reference

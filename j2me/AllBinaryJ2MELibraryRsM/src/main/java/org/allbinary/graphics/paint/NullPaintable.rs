@@ -48,7 +48,7 @@ impl NullPaintable {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>> {
-        return NullPaintable_SINGLETON.with(Clone::clone).clone();
+        return NullPaintable_SINGLETON.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>);
     }
 }
 impl std::ops::Deref for NullPaintable {
@@ -62,6 +62,10 @@ impl std::ops::DerefMut for NullPaintable {
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for NullPaintable {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for NullPaintable {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paint(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

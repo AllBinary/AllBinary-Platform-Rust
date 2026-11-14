@@ -26,10 +26,6 @@ use crate::org::eclipse::swt::graphics::GC::GC;
 use crate::org::eclipse::swt::graphics::ImageData::ImageData;
 use super::ImageUtil::ImageUtil;
 use super::Image::Image;
-use super::graphics::graphics;
-use super::swt::swt;
-use super::eclipse::eclipse;
-use super::org::org;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -50,6 +46,10 @@ pub struct ImageSwtRotationUtil {
 thread_local! { pub static ImageSwtRotationUtil_instance: Option<Rc<RefCell<ImageSwtRotationUtil>>> = ImageSwtRotationUtil::new(); }
 
 impl ImageSwtRotationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ImageSwtRotationUtil>>> {
@@ -80,36 +80,36 @@ impl ImageSwtRotationUtil {
     }
     
 
-    pub fn getRotatedImage(&mut self, mut bufferedImage: Option<Rc<RefCell<Image>>>, mut totalAngle: i32) -> Option<Rc<RefCell<Image>>> {
-        if !jcall!(self.features).isFeature(jcall!(self.gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone()) {
-            jcall!(self.logUtil).putF(self.NO_COPY.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone());
+    pub fn getRotatedImage(&mut self, mut bufferedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut totalAngle: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        if !jcall!(self.features).isFeature({ let java_field = jcall!(self.gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone(); java_field }.clone()) {
+            jcall!(self.logUtil).putF(self.NO_COPY.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
             return bufferedImage.clone();
         }
         return bufferedImage.clone();
     }
     
 
-    pub fn getRotatedImage2(&mut self, mut bufferedImage: Option<Rc<RefCell<Image>>>, mut newBufferedImage: Option<Rc<RefCell<Image>>>, mut gc: Option<Rc<RefCell<GC>>>, mut angle: f32) -> Option<Rc<RefCell<Image>>> {
-        if !jcall!(self.features).isFeature(jcall!(self.gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone()) {
-            jcall!(self.logUtil).putF(self.NO_COPY.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone());
+    pub fn getRotatedImage2(&mut self, mut bufferedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut newBufferedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut gc: Option<Rc<RefCell<GC>>>, mut angle: f32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        if !jcall!(self.features).isFeature({ let java_field = jcall!(self.gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone(); java_field }.clone()) {
+            jcall!(self.logUtil).putF(self.NO_COPY.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
             return bufferedImage.clone();
         }
         return bufferedImage.clone();
     }
     
 
-    pub fn rotateImage(&mut self, mut originalSwtImage: Option<Rc<RefCell<Image>>>, mut newSwtImage: Option<Rc<RefCell<Image>>>, mut gc: Option<Rc<RefCell<GC>>>, mut totalAngle: i32) -> Option<Rc<RefCell<Image>>> {
+    pub fn rotateImage(&mut self, mut originalSwtImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut newSwtImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut gc: Option<Rc<RefCell<GC>>>, mut totalAngle: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return self.getRotatedImage2(originalSwtImage.clone(), newSwtImage.clone(), gc.clone(), totalAngle.clone());
     }
     
 
-    pub fn getRotatedImageSWT(&mut self, mut bufferedImage: Option<Rc<RefCell<Image>>>, mut newSwtImage: Option<Rc<RefCell<Image>>>, mut gc: Option<Rc<RefCell<GC>>>, mut totalAngle: i32) -> Option<Rc<RefCell<Image>>> {
+    pub fn getRotatedImageSWT(&mut self, mut bufferedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut newSwtImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut gc: Option<Rc<RefCell<GC>>>, mut totalAngle: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return self.getRotatedImage2(bufferedImage.clone(), newSwtImage.clone(), gc.clone(), totalAngle.clone());
     }
     
 
-    pub fn getRotatedImages(&mut self, mut bufferedImage: Option<Rc<RefCell<Image>>>, mut numberOfFrames: i32, mut totalAngle: i32) -> Vec<Option<Rc<RefCell<Image>>>> {
-        let mut bufferedImageArray: Vec<Option<Rc<RefCell<Image>>>> = vec![None; (numberOfFrames) as usize];
+    pub fn getRotatedImages(&mut self, mut bufferedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut numberOfFrames: i32, mut totalAngle: i32) -> Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> {
+        let mut bufferedImageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> = vec![None; (numberOfFrames) as usize];
         let mut angle: i32 = 0;
         let mut size: i32 = (bufferedImageArray.len() as i32).clone();
         for index in (0..size) {
@@ -120,7 +120,7 @@ impl ImageSwtRotationUtil {
     }
     
 
-    pub fn createSpriteImage(&mut self, mut bufferedImageArray: Vec<Option<Rc<RefCell<Image>>>>) -> Option<Rc<RefCell<Image>>> {
+    pub fn createSpriteImage(&mut self, mut bufferedImageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         let mut columns: i32 = 9;
         let mut rows: i32 = 0;
         let mut size: i32 = (bufferedImageArray.len() as i32).clone();
@@ -131,23 +131,23 @@ impl ImageSwtRotationUtil {
         if size % columns != 0 {
             rows += 1;
         }
-        let mut firstBufferedImage: Option<Rc<RefCell<Image>>> = bufferedImageArray[(0) as usize].clone();
-        let mut imageData: Option<Rc<RefCell<ImageData>>> = jcall!(firstBufferedImage).getImageData();
-        let mut bufferedImage: Option<Rc<RefCell<Image>>> = jcall!(self.imageUtil).create(jcall!(imageData).width * columns, jcall!(imageData).height * rows);
+        let mut firstBufferedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = bufferedImageArray[(0) as usize].clone();
+        let mut imageData: Option<Rc<RefCell<ImageData>>> = jcall!(firstBufferedImage).as_Image_mut().getImageData();
+        let mut bufferedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(self.imageUtil).create({ let java_field = jcall!(imageData).width.clone(); java_field } * columns, { let java_field = jcall!(imageData).height.clone(); java_field } * rows);
         let mut gc: Option<Rc<RefCell<GC>>> = GC::new(bufferedImage.clone());
         jcall!(gc).setAntialias(unsafe { crate::org::eclipse::swt::SWT::SWT_ON.clone() }.clone());
         jcall!(gc).setInterpolation(unsafe { crate::org::eclipse::swt::SWT::SWT_HIGH.clone() }.clone());
         let mut columnIndex: i32 = 0;
         let mut rowIndex: i32 = 0;
-        let mut nextBufferedImage: Option<Rc<RefCell<Image>>> = None;
+        let mut nextBufferedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = None;
         for index in (0..size) {
             if index / 9 != 0 && index % 9 == 0 {
                 rowIndex += 1;
                 columnIndex = 0;
             }
-            nextBufferedImage = bufferedImageArray[(index) as usize].clone();
-            imageData = jcall!(nextBufferedImage).getImageData();
-            jcall!(gc).drawImage(bufferedImage.clone(), 0, 0, jcall!(jcall!(bufferedImage).getBounds()).width.clone(), jcall!(jcall!(bufferedImage).getBounds()).height.clone(), jcall!(imageData).width * columnIndex, jcall!(imageData).height * rowIndex, jcall!(imageData).width.clone(), jcall!(imageData).height.clone());
+            nextBufferedImage = { let java_value = (bufferedImageArray[(index) as usize]).clone(); java_value }.clone();
+            imageData = { let java_value = (jcall!(nextBufferedImage).as_Image_mut().getImageData()).clone(); java_value };
+            jcall!(gc).drawImage(bufferedImage.clone(), 0, 0, { let java_field = jcall!(jcall!(bufferedImage).as_Image_mut().getBounds()).width.clone(); java_field }.clone(), { let java_field = jcall!(jcall!(bufferedImage).as_Image_mut().getBounds()).height.clone(); java_field }.clone(), { let java_field = jcall!(imageData).width.clone(); java_field } * columnIndex, { let java_field = jcall!(imageData).height.clone(); java_field } * rowIndex, { let java_field = jcall!(imageData).width.clone(); java_field }.clone(), { let java_field = jcall!(imageData).height.clone(); java_field }.clone());
             columnIndex += 1;
         }
         jcall!(gc).dispose();

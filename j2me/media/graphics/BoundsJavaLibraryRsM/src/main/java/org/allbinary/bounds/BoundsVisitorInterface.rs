@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait BoundsVisitorInterface {
+pub trait BoundsVisitorInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getX(&mut self) -> i32;
@@ -44,8 +44,6 @@ pub trait BoundsVisitorInterface {
     
 
     fn minY(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

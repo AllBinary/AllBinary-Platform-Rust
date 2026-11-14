@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL::GL;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::khronos::opengles::GL::GL;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation;
 use crate::org::allbinary::animation::RotationAnimation::RotationAnimation;
@@ -28,6 +28,7 @@ use crate::org::allbinary::math::Angle::Angle;
 use crate::org::allbinary::math::AngleFactory::AngleFactory;
 use crate::org::allbinary::math::AngleInfo::AngleInfo;
 use crate::org::allbinary::util::CircularIndexUtil::CircularIndexUtil;
+use crate::java::lang::Exception::*;
 use super::CompoundAnimationInterface::CompoundAnimationInterface;
 
 // Borrows the object of a Java reference
@@ -42,20 +43,18 @@ pub struct AutoCompoundRotationAnimation {
     pub animationInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>>>,
 }
 
-// impl CompoundAnimationInterface for AutoCompoundRotationAnimation with the methods of the trait
-impl crate::org::allbinary::animation::IndexedAnimationInterface::IndexedAnimationInterface for AutoCompoundRotationAnimation {
-    fn reset(&mut self) { self.base.reset() }
-    fn setFrame(&mut self, mut index: i32) { Self::setFrame(self, index) }
-    fn getFrame(&mut self) -> i32 { Self::getFrame(self) }
+impl CompoundAnimationInterface for AutoCompoundRotationAnimation {
+    fn nextAnimation(&mut self) { Self::nextAnimation(self) }
+    fn previousAnimation(&mut self) { Self::previousAnimation(self) }
+    fn setAnimation(&mut self, mut index: i32) { Self::setAnimation(self, index) }
+    fn getCurrentAnimation(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> { Self::getCurrentAnimation(self) }
 }
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for AutoCompoundRotationAnimation {
-    fn getSize(&mut self) -> i32 { Self::getSize(self) }
-    fn previousFrame(&mut self) { Self::previousFrame(self) }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for AutoCompoundRotationAnimation {
+    fn nextFrame(&mut self) { Self::nextFrame(self) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
 }
-impl crate::org::allbinary::animation::RotationAnimationInterface::RotationAnimationInterface for AutoCompoundRotationAnimation {
-    fn getAngleInfoP(&mut self) -> Option<Rc<RefCell<AngleInfo>>> { Self::getAngleInfoP(self) }
-    fn nextRotation(&mut self) { Self::nextRotation(self) }
-    fn previousRotation(&mut self) { Self::previousRotation(self) }
+impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for AutoCompoundRotationAnimation {
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterface for AutoCompoundRotationAnimation {
     fn setFrameByDirection(&mut self, mut direction: Option<Rc<RefCell<Direction>>>) { Self::setFrameByDirection(self, direction) }
@@ -63,21 +62,18 @@ impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterfac
     fn adjustFrameToAngle(&mut self, mut newAngle: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { Self::adjustFrameToAngle(self, newAngle) }
     fn adjustFrame(&mut self, mut angle: i16) { Self::adjustFrame(self, angle) }
 }
-impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for AutoCompoundRotationAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
-}
 
 impl AutoCompoundRotationAnimation {
     
 
     pub fn new_struct(mut animationInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
         let mut this = Self {
-            base: RotationAnimation::new_struct(AngleInfo::getInstance(jcall!(AngleFactory::getInstance()).QUARTER_TOTAL_ANGLE.clone()), CircularIndexUtil::createInstance(4), animationBehavior.clone()),
+            base: RotationAnimation::new_struct(AngleInfo::getInstance({ let java_field = jcall!(AngleFactory::getInstance()).QUARTER_TOTAL_ANGLE.clone(); java_field }.clone()), CircularIndexUtil::createInstance(4), animationBehavior.clone()),
             animationInterfaceArray: Vec::new(),
         };
         // super(...) is in the struct literal above
         this.animationInterfaceArray = animationInterfaceArray.clone();
-        this.circularIndexUtil = CircularIndexUtil::createInstance((this.animationInterfaceArray.len() as i32).clone());
+        this.circularIndexUtil = { let java_value = (CircularIndexUtil::createInstance((this.animationInterfaceArray.len() as i32).clone())).clone(); java_value };
         this
     }
 
@@ -139,18 +135,18 @@ impl AutoCompoundRotationAnimation {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         jcall!(self.animationInterfaceArray[(jcall!(self.circularIndexUtil).getIndex()) as usize]).paintXY(graphics.clone(), x.clone(), y.clone());
     }
     
 
-    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) {
+    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) {
         jcall!(self.animationInterfaceArray[(jcall!(self.circularIndexUtil).getIndex()) as usize]).paintThreedXYZ(graphics.clone(), x.clone(), y.clone(), z.clone());
     }
     
 
     pub fn getCurrentAnimation(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> {
-        return self.animationInterfaceArray[(jcall!(self.circularIndexUtil).getIndex()) as usize].clone();
+        return self.animationInterfaceArray[(jcall!(self.circularIndexUtil).getIndex()) as usize].clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>);
     }
     
 
@@ -215,7 +211,7 @@ impl AutoCompoundRotationAnimation {
         {
             let mut index: i32 = (self.animationInterfaceArray.len() as i32).clone();
             while { index -= 1; index } >= 0 {
-            jcall!(self.animationInterfaceArray[(index) as usize]).set(gl.clone());
+            jcall!(self.animationInterfaceArray[(index) as usize]).as_RotationAnimation_mut().set(gl.clone());
             }
         }
     }
@@ -232,8 +228,8 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for AutoCompoundR
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base.base }
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
 }
 impl crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn for AutoCompoundRotationAnimation {
     fn as_IndexedAnimation(&self) -> &crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &self.base.base }

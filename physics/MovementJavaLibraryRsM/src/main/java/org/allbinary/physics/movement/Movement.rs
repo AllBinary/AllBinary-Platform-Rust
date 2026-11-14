@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayer;
 use crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal;
+use crate::java::lang::Exception::*;
 use super::MovementInterface::MovementInterface;
 
 // Borrows the object of a Java reference
@@ -38,6 +39,10 @@ impl MovementInterface for Movement {
 }
 
 impl Movement {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -63,7 +68,7 @@ impl Movement {
     pub fn stop(&mut self) {
     }
 }
-pub trait MovementDyn: crate::org::allbinary::physics::movement::MovementInterface::MovementInterface {
+pub trait MovementDyn: std::any::Any + crate::org::allbinary::physics::movement::MovementInterface::MovementInterface {
     fn as_Movement(&self) -> &Movement;
     fn as_Movement_mut(&mut self) -> &mut Movement;
 }

@@ -32,6 +32,10 @@ pub struct MethodUtil {
 
 
 impl MethodUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

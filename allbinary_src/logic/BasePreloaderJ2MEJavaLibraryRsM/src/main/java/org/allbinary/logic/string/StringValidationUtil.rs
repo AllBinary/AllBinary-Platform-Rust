@@ -35,6 +35,10 @@ pub struct StringValidationUtil {
 thread_local! { pub static StringValidationUtil_instance: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::new(); }
 
 impl StringValidationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<StringValidationUtil>>> {
@@ -92,7 +96,7 @@ impl StringValidationUtil {
     
 
     pub fn isValidRequired(&mut self, mut value: String, mut min: i32, mut max: i32) -> bool {
-        if false || (value.chars().count() as i32) < min || (value.chars().count() as i32) > max {
+        if (value.chars().count() as i32) < min || (value.chars().count() as i32) > max {
             return false;
         }
         return true;
@@ -111,7 +115,7 @@ impl StringValidationUtil {
     
 
     pub fn isValidNotRequired(&mut self, mut value: String, mut min: i32, mut max: i32) -> bool {
-        if true {
+        if (value.chars().count() as i32) > 0 {
             if (value.chars().count() as i32) < min || (value.chars().count() as i32) > max {
                 return false;
             }
@@ -121,8 +125,8 @@ impl StringValidationUtil {
     
 
     pub fn isValidNotRequiredNumber(&mut self, mut value: String, mut min: i32, mut max: i32) -> bool {
-        if true {
-            if { let left = &(value); let right = &(jcall!(self.stringUtil).NULL_STRING); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 || (value.chars().count() as i32) < min || (value.chars().count() as i32) > max {
+        if (value.chars().count() as i32) > 0 {
+            if { let left = (value).clone(); let right = ({ let java_field = jcall!(self.stringUtil).NULL_STRING.clone(); java_field }).clone(); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 || (value.chars().count() as i32) < min || (value.chars().count() as i32) > max {
                 return false;
             }
             if !self.isNumber(value.clone()) {
@@ -134,7 +138,7 @@ impl StringValidationUtil {
     
 
     pub fn isEmpty(&mut self, mut string: String) -> bool {
-        if true && { let left = &(string); let right = &(jcall!(self.stringUtil).NULL_STRING); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } != 0 && { let left = &(string); let right = &(jcall!(self.stringUtil).EMPTY_STRING); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } != 0 {
+        if { let left = (string).clone(); let right = ({ let java_field = jcall!(self.stringUtil).NULL_STRING.clone(); java_field }).clone(); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } != 0 && { let left = (string).clone(); let right = ({ let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }).clone(); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } != 0 {
             return false;
         } else {
             return true;

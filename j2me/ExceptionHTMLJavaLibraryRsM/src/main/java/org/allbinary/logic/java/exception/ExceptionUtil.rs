@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::jsinterop::annotations::JsType;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -35,6 +36,10 @@ thread_local! { pub static ExceptionUtil_instance: Option<Rc<RefCell<ExceptionUt
 thread_local! { pub static ExceptionUtil_PRETEND_EXCEPTION: String = format!("{}: {:?}", "Exception", (String::from("Not Really An Exception"))); }
 
 impl ExceptionUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ExceptionUtil>>> {

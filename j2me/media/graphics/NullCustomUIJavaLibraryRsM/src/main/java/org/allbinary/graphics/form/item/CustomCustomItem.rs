@@ -5,7 +5,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessor;
 use crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface;
@@ -26,7 +26,7 @@ pub struct CustomCustomItem {
 }
 
 impl UpdateMyFontInterface for CustomCustomItem {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 impl CustomCustomItem {
@@ -38,18 +38,19 @@ impl CustomCustomItem {
             updateMyFontProcessor: None,
             myFontProcessor: None,
         };
-        this.updateMyFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
         this.myFontProcessor = this.updateMyFontProcessor.clone();
         // super(...) is in the struct literal above
         this
     }
 
     pub fn new(mut label: String, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(label, backgroundBasicColor, foregroundBasicColor))))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(label.clone(), backgroundBasicColor.clone(), foregroundBasicColor.clone()))));
+        jcall!(this).updateMyFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
 }
 impl std::ops::Deref for CustomCustomItem {
@@ -60,10 +61,9 @@ impl std::ops::DerefMut for CustomCustomItem {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait CustomCustomItemDyn: crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn {
+pub trait CustomCustomItemDyn: crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn + crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface {
     fn as_CustomCustomItem(&self) -> &CustomCustomItem;
     fn as_CustomCustomItem_mut(&mut self) -> &mut CustomCustomItem;
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { CustomCustomItem::updateMeasurement(self.as_CustomCustomItem_mut(), graphics) }
 }
 impl CustomCustomItemDyn for CustomCustomItem {
     fn as_CustomCustomItem(&self) -> &CustomCustomItem { self }

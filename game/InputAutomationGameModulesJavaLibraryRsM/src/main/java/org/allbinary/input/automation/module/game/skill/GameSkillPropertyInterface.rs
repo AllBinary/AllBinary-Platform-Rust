@@ -25,15 +25,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait GameSkillPropertyInterface {
+pub trait GameSkillPropertyInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getName(&mut self) -> String;
     
 
     fn getValue(&mut self) -> String;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -27,6 +27,7 @@ use crate::org::allbinary::media::graphics::geography::pathfinding::PathFinder::
 use crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingInfo::PathFindingInfo;
 use crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNodeCostInfoFactory::PathFindingNodeCostInfoFactory;
 use crate::org::allbinary::util::BasicArrayListS::BasicArrayListS;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -64,7 +65,7 @@ impl PathFindingInfoFactory {
             pathFindingInfo: None,
             pathFinder: None,
         };
-        this.pathFindingInfo = PathFindingInfo::new(PathFindingNodeCostInfoFactory::new(unsafe { PathFindingInfoFactory_MAX.clone() }.clone()), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>));
+        this.pathFindingInfo = { let java_value = (PathFindingInfo::new(PathFindingNodeCostInfoFactory::new(unsafe { PathFindingInfoFactory_MAX.clone() }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNodeCostInfoFactoryBase::PathFindingNodeCostInfoFactoryBaseDyn>>), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>))).clone(); java_value };
         this.pathFinder = PathFinder::new();
         this
     }
@@ -76,7 +77,7 @@ impl PathFindingInfoFactory {
 
     // throws Exception
     pub fn getInstancePathFindingInfo(&mut self, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, mut mapArray: Vec<Vec<i32>>) -> Option<Rc<RefCell<PathFindingInfo>>> {
-        let mut pathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>> = PathFindingInfo::new(jcall!(self.pathFindingInfo).getPathFindingNodeCostInfoFactoryInterface(), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>));
+        let mut pathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>> = PathFindingInfo::new(jcall!(self.pathFindingInfo).getPathFindingNodeCostInfoFactoryInterface(), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
         jcall!(RaceTrackRoadsGeographicMapCellHistoryFactory::getInstance()).init();
         self.init(geographicMapInterface.clone(), pathFindingInfo.clone(), mapArray.clone());
         jcall!(self.pathFinder).init(geographicMapInterface.clone());
@@ -87,7 +88,7 @@ impl PathFindingInfoFactory {
 
     // throws Exception
     pub fn init(&mut self, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, mut pathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>>, mut mapArray: Vec<Vec<i32>>) {
-        self.base.init(geographicMapInterface.clone(), pathFindingInfo.clone(), mapArray.clone());
+        { let java_arguments = (geographicMapInterface.clone(), pathFindingInfo.clone(), mapArray.clone(),); self.base.init(java_arguments.0, java_arguments.1, java_arguments.2) };
         self.buildPathFindingNodes(geographicMapInterface.clone(), pathFindingInfo.clone(), mapArray.clone());
     }
     

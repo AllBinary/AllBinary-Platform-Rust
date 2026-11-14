@@ -42,7 +42,20 @@ pub struct PlayerGameInput {
     pub playerInputId: i32,
 }
 
-// impl GameKeyEventListenerInterface for PlayerGameInput with the methods of the trait
+impl GameKeyEventListenerInterface for PlayerGameInput {
+}
+impl crate::org::allbinary::game::input::event::DownGameKeyEventListenerInterface::DownGameKeyEventListenerInterface for PlayerGameInput {
+    fn onDownGameKeyEvent(&mut self, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) { Self::onDownGameKeyEvent(self, gameKeyEvent) }
+}
+impl crate::org::allbinary::game::input::event::PressGameKeyEventListenerInterface::PressGameKeyEventListenerInterface for PlayerGameInput {
+    fn onPressGameKeyEvent(&mut self, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) { Self::onPressGameKeyEvent(self, gameKeyEvent) }
+}
+impl crate::org::allbinary::game::input::event::UpGameKeyEventListenerInterface::UpGameKeyEventListenerInterface for PlayerGameInput {
+    fn onUpGameKeyEvent(&mut self, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) { Self::onUpGameKeyEvent(self, gameKeyEvent) }
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for PlayerGameInput {
+    fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, eventObject) }
+}
 
 impl PlayerGameInput {
     
@@ -86,7 +99,7 @@ impl PlayerGameInput {
 
     // synchronized
     pub fn onDownKey(&mut self, mut gameKeyEvent: Option<i32>) {
-        PreLogUtil::put(jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).START_LABEL.clone()).append(jcall!(gameKeyEvent).toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).ON_DOWN_GAME_KEY.clone());
+        PreLogUtil::put(jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).START_LABEL.clone(); java_field }.clone()).append((gameKeyEvent).expect("NullPointerException").to_string()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).ON_DOWN_GAME_KEY.clone(); java_field }.clone());
     }
     
 
@@ -102,7 +115,7 @@ impl PlayerGameInput {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 

@@ -81,5 +81,11 @@ impl crate::views::generic::inventory::InventorySearch::InventorySearchDyn for A
     fn as_InventorySearch(&self) -> &crate::views::generic::inventory::InventorySearch::InventorySearch { &self.base }
     fn as_InventorySearch_mut(&mut self) -> &mut crate::views::generic::inventory::InventorySearch::InventorySearch { &mut self.base }
 }
+impl crate::views::admin::inventory::listings::InventoryViewSearchInterface::InventoryViewSearchInterface for AutoSearchValidationInventoryView {
+    fn searchSingleStaticPage(&mut self) -> String { crate::views::generic::inventory::InventorySearch::InventorySearch::searchSingleStaticPage(crate::views::generic::inventory::InventorySearch::InventorySearchDyn::as_InventorySearch_mut(self)) }
+    fn searchSingleDynamicPage(&mut self) -> String { crate::views::generic::inventory::InventorySearch::InventorySearch::searchSingleDynamicPage(crate::views::generic::inventory::InventorySearch::InventorySearchDyn::as_InventorySearch_mut(self)) }
+    fn search(&mut self) -> Vec<String> { crate::views::generic::inventory::InventorySearch::InventorySearch::search(crate::views::generic::inventory::InventorySearch::InventorySearchDyn::as_InventorySearch_mut(self)) }
+    fn getProduct(&mut self, p1: String) -> String { crate::views::generic::inventory::InventorySearch::InventorySearch::getProduct(crate::views::generic::inventory::InventorySearch::InventorySearchDyn::as_InventorySearch_mut(self), p1) }
+}
 
 

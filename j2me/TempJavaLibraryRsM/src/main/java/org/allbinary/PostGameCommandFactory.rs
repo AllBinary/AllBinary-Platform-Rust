@@ -17,7 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,6 +33,10 @@ pub struct PostGameCommandFactory {
 thread_local! { pub static PostGameCommandFactory_instance: Option<Rc<RefCell<PostGameCommandFactory>>> = PostGameCommandFactory::new(); }
 
 impl PostGameCommandFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -49,7 +54,7 @@ impl PostGameCommandFactory {
     }
     
 
-    pub fn addCommands(&mut self, mut canvas: Option<Rc<RefCell<Canvas>>>) {
+    pub fn addCommands(&mut self, mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>) {
     }
 }
 

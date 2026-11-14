@@ -23,6 +23,7 @@ use crate::org::allbinary::game::score::HighScoresHelperBase::HighScoresHelperBa
 use crate::org::allbinary::game::score::NullHighScoresSingletonFactory::NullHighScoresSingletonFactory;
 use crate::org::allbinary::game::state::GameStateFactory::GameStateFactory;
 use crate::org::allbinary::graphics::paint::NullPaintable::NullPaintable;
+use crate::java::lang::Exception::*;
 use super::AllBinaryGameCanvas::AllBinaryGameCanvas;
 
 // Borrows the object of a Java reference
@@ -65,18 +66,18 @@ impl EndGameProcessor {
     pub fn process(&mut self) {
         if jcall!(self.gameCanvas).isHighScoreSubmitted() {
             if jcall!(jcall!(self.gameCanvas).getGameStateTimeHelper()).isElapsedTNT(self.WAIT.clone()) {
-                if match (&jcall!(self.gameCanvas).getGameState(), &jcall!(self.gameStateFactory).SHOW_END_RESULT_GAME_STATE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                    let mut highScoresBase: Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScoresHelperBase::HighScoresHelperBaseDyn>>> = (jcall!(self.gameCanvas).as_AllBinaryGameCanvas_mut().highScoresHelper).clone() /* as HighScoresHelperBase */;
+                if match (&jcall!(self.gameCanvas).getGameState(), &{ let java_field = jcall!(self.gameStateFactory).SHOW_END_RESULT_GAME_STATE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                    let mut highScoresBase: Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScoresHelperBase::HighScoresHelperBaseDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScoresHelperBase::HighScoresHelperBaseDyn>>> { panic!("ClassCastException: a Rust dyn HighScoresHelperBaseInterface cannot be cast to HighScoresHelperBase") })();
                     let mut highScores: Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>> = jcall!(highScoresBase).getSelectedHighScores();
                     if !match (&highScores, &NullHighScoresSingletonFactory::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                         jcall!(highScoresBase).selectHighScores();
                         jcall!(jcall!(self.gameCanvas).getRealHighScoresPaintable()).setHighScores(highScores.clone());
-                        jcall!(self.gameCanvas).setGameState(jcall!(self.gameStateFactory).SHOW_HIGH_SCORE_GAME_STATE.clone());
-                        { let java_receiver = self.gameCanvas.clone(); let java_arguments = (jcall!(self.gameCanvas).getRealHighScoresPaintable(),); jcall!(java_receiver).setHighScoresPaintable(java_arguments.0); };
+                        jcall!(self.gameCanvas).setGameState({ let java_field = jcall!(self.gameStateFactory).SHOW_HIGH_SCORE_GAME_STATE.clone(); java_field }.clone());
+                        { let java_receiver = self.gameCanvas.clone(); let java_arguments = (jcall!(self.gameCanvas).getRealHighScoresPaintable().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>),); jcall!(java_receiver).setHighScoresPaintable(java_arguments.0); };
                     }
-                } else if match (&jcall!(self.gameCanvas).getGameState(), &jcall!(self.gameStateFactory).SHOW_HIGH_SCORE_GAME_STATE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                    jcall!(self.gameCanvas).setGameState(jcall!(self.gameStateFactory).SHOW_END_RESULT_GAME_STATE.clone());
-                    { let java_receiver = self.gameCanvas.clone(); let java_arguments = (NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>),); jcall!(java_receiver).setHighScoresPaintable(java_arguments.0); };
+                } else if match (&jcall!(self.gameCanvas).getGameState(), &{ let java_field = jcall!(self.gameStateFactory).SHOW_HIGH_SCORE_GAME_STATE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                    jcall!(self.gameCanvas).setGameState({ let java_field = jcall!(self.gameStateFactory).SHOW_END_RESULT_GAME_STATE.clone(); java_field }.clone());
+                    { let java_receiver = self.gameCanvas.clone(); let java_arguments = (NullPaintable::getInstance(),); jcall!(java_receiver).setHighScoresPaintable(java_arguments.0); };
                 }
             }
         }

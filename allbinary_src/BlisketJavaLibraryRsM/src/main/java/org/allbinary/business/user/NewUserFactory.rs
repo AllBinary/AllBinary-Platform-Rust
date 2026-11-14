@@ -16,15 +16,15 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
 use crate::org::allbinary::business::user::modules::User::User;
 use crate::org::allbinary::business::user::role::UserRoleData::UserRoleData;
 use crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParams;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpInterface::TransformInfoHttpInterface;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
+use crate::java::lang::Exception::*;
 use super::UserInterface::UserInterface;
 
 // Borrows the object of a Java reference
@@ -39,6 +39,10 @@ pub struct NewUserFactory {
 
 
 impl NewUserFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -54,29 +58,29 @@ impl NewUserFactory {
 
     // throws Exception
     pub fn getInstance() -> Option<Rc<RefCell<dyn UserInterface>>> {
-        return User::new().map(|reference| reference as Rc<RefCell<dyn UserInterface>>);
+        return User::new().map(|reference| reference as Rc<RefCell<dyn UserInterface>>).map(|_java_reference| -> Rc<RefCell<dyn UserInterface>> { panic!("ClassCastException: the Rust trait of User does not have UserInterface as a base trait") });
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
     pub fn getInstance1(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Option<Rc<RefCell<dyn UserInterface>>> {
-        let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpInterface");
+        let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (|| -> Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> { panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpInterface") })();
         let mut httpServletRequest: Option<Rc<RefCell<HttpServletRequest>>> = (jcall!(jcall!(httpTransformInfoInterface).getPageContext()).getRequest()).clone() /* as HttpServletRequest */;
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(RequestParams::new1(httpServletRequest.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParamsDyn>>)).toHashMap();
-        let mut role: String = (jcall!(jcall!(httpTransformInfoInterface).getPropertiesHashMap()).get(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone())).clone() /* as String */;
-        jcall!(hashMap).put(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone(), role.clone());
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(RequestParams::new1(httpServletRequest.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParamsDyn>>)).toHashMap();
+        let mut role: String = { let java_object = (jcall!(jcall!(httpTransformInfoInterface).getPropertiesHashMap()).get(crate::java_into_object(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+        jcall!(hashMap).put(crate::java_into_object(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone()), crate::java_into_object(role.clone()));
         return CreateUserFactory::CreateUserFactory::getInstance(hashMap.clone());
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn getInstance2(mut httpServletRequest: Option<Rc<RefCell<HttpServletRequest>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<dyn UserInterface>>> {
+    pub fn getInstance2(mut httpServletRequest: Option<Rc<RefCell<HttpServletRequest>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn UserInterface>>> {
         if propertiesHashMap.is_some() {
-            let mut requestHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(RequestParams::new1(httpServletRequest.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParamsDyn>>)).toHashMap();
-            let mut roleString: String = (jcall!(propertiesHashMap).get(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone())).clone() /* as String */;
-            jcall!(requestHashMap).put(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone(), roleString.clone());
+            let mut requestHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(RequestParams::new1(httpServletRequest.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParamsDyn>>)).toHashMap();
+            let mut roleString: String = { let java_object = (jcall!(propertiesHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            jcall!(requestHashMap).put(crate::java_into_object(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone()), crate::java_into_object(roleString.clone()));
             return CreateUserFactory::CreateUserFactory::getInstance(requestHashMap.clone());
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Null HashMap"))));

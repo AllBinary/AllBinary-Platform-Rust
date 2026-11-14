@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::osgi::OSGIServiceInterface::OSGIServiceInterface;
 use crate::org::allbinary::osgi::OSGIServiceVisitorInterface::OSGIServiceVisitorInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,6 +41,10 @@ pub struct InputAutomationRobotOSGIServiceVisitor {
 // impl OSGIServiceVisitorInterface for InputAutomationRobotOSGIServiceVisitor with the methods of the trait
 
 impl InputAutomationRobotOSGIServiceVisitor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -58,30 +63,31 @@ impl InputAutomationRobotOSGIServiceVisitor {
     
 
     pub fn visit(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return self.visit((anyType).clone() /* as OSGIServiceInterface */);
+        return crate::java_into_object(self.visit_OSGIServiceInterface({ let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn OSGIServiceInterface>>>>().expect("ClassCastException").clone()) }));
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn visit(&mut self, mut osgiServiceInterface: Option<Rc<RefCell<dyn OSGIServiceInterface>>>) -> Option<bool> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("visit"));
-            let mut inputAutomationRobotServiceInterface: Option<Rc<RefCell<dyn InputAutomationRobotServiceInterface>>> = panic!("ClassCastException: a Rust dyn OSGIServiceInterface cannot be cast to dyn InputAutomationRobotServiceInterface");
+    pub fn visit_OSGIServiceInterface(&mut self, mut osgiServiceInterface: Option<Rc<RefCell<dyn OSGIServiceInterface>>>) -> Option<bool> {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("visit"));
+            let mut inputAutomationRobotServiceInterface: Option<Rc<RefCell<dyn InputAutomationRobotServiceInterface>>> = (|| -> Option<Rc<RefCell<dyn InputAutomationRobotServiceInterface>>> { panic!("ClassCastException: a Rust dyn OSGIServiceInterface cannot be cast to dyn InputAutomationRobotServiceInterface") })();
             let mut inputRobotInterfaceArray: Vec<Option<Rc<RefCell<dyn InputRobotInterface>>>> = jcall!(inputAutomationRobotServiceInterface).getInputRobotInterfaceArray();
             for index in (0..(inputRobotInterfaceArray.len() as i32)) {
                 { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Adding: "), jcall!(inputRobotInterfaceArray[(index) as usize]).getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("visit"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 jcall!(InputRobotFactory::getInstance()).add(inputRobotInterfaceArray[(index) as usize].clone());
             }
-            return true;
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("visit"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("visit"), crate::java_into_object(e.clone()));
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

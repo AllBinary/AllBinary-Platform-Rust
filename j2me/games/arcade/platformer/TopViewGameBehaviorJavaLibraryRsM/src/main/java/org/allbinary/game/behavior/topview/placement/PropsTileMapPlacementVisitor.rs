@@ -58,7 +58,7 @@ impl PropsTileMapPlacementVisitor {
 
     pub fn visit(&mut self, mut lastMap: Option<Rc<RefCell<TiledMap>>>, mut mapData: Vec<Vec<i32>>) {
         let mut layerIndex: i32 = 0;
-        let mut tileLayer: Option<Rc<RefCell<TileLayer>>> = ((jcall!(lastMap).getLayer(layerIndex.clone())).clone() /* as TileLayer */);
+        let mut tileLayer: Option<Rc<RefCell<TileLayer>>> = ((jcall!(lastMap).getLayer(layerIndex.clone())).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<TileLayer>() }, "ClassCastException: not a TileLayer"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<TileLayer>) } }));
         let mut mapArray: Vec<Vec<i32>> = jcall!(tileLayer).getMapArray();
         let mut size: i32 = (mapData.len() as i32).clone();
         let mut size2: i32 = (mapData[(0) as usize].len() as i32).clone();

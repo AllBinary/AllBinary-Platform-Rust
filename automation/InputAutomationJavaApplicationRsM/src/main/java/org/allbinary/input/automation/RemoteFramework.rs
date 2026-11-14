@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::util::Map::Map;
+use crate::java::util::Map::Map;
 use crate::org::osgi::framework::BundleContext::BundleContext;
 
 // Borrows the object of a Java reference
@@ -27,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait RemoteFramework {
+pub trait RemoteFramework: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn connect(&mut self, host: String) -> Option<Rc<RefCell<dyn BundleContext>>>;
@@ -36,9 +36,7 @@ pub trait RemoteFramework {
     fn disconnect(&mut self, bc: Option<Rc<RefCell<dyn BundleContext>>>);
     
 
-    fn getSystemProperties(&mut self, bc: Option<Rc<RefCell<dyn BundleContext>>>) -> Option<Rc<RefCell<dyn Map>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn getSystemProperties(&mut self, bc: Option<Rc<RefCell<dyn BundleContext>>>) -> Option<Rc<RefCell<dyn Map<crate::JavaObject, crate::JavaObject>>>>;
 }
 
 

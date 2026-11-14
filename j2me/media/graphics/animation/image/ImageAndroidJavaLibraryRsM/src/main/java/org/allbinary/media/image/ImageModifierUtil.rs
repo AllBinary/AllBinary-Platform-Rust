@@ -20,7 +20,7 @@ use super::*;
 use crate::android::graphics::Paint::Paint;
 use crate::android::graphics::PorterDuff::PorterDuff;
 use crate::android::graphics::PorterDuffColorFilter::PorterDuffColorFilter;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 
 // Borrows the object of a Java reference
@@ -36,6 +36,10 @@ pub struct ImageModifierUtil {
 
 
 impl ImageModifierUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -55,29 +59,29 @@ impl ImageModifierUtil {
     }
     
 
-    pub fn setColor(&mut self, mut unusedOriginalImage: Option<Rc<RefCell<Image>>>, mut image: Option<Rc<RefCell<Image>>>, mut imageIndex: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
-        { let java_receiver = self.paint.clone(); let java_arguments = (PorterDuffColorFilter::new(jcall!(basicColor).intValue(), jcall!(unsafe { crate::android::graphics::PorterDuff::PorterDuff_Mode.clone() }).SRC_IN.clone()),); jcall!(java_receiver).setColorFilter(java_arguments.0); };
+    pub fn setColor(&mut self, mut unusedOriginalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageIndex: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
+        { let java_receiver = self.paint.clone(); let java_arguments = (PorterDuffColorFilter::new(jcall!(basicColor).intValue(), { let java_field = jcall!(unsafe { crate::android::graphics::PorterDuff::PorterDuff_Mode.clone() }).SRC_IN.clone(); java_field }.clone()),); jcall!(java_receiver).setColorFilter(java_arguments.0); };
     }
     
 
-    pub fn changeColor(&mut self, mut unusedOriginalImage: Option<Rc<RefCell<Image>>>, mut image: Option<Rc<RefCell<Image>>>, mut imageIndex: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
-        { let java_receiver = self.paint.clone(); let java_arguments = (PorterDuffColorFilter::new(jcall!(basicColor).intValue(), jcall!(unsafe { crate::android::graphics::PorterDuff::PorterDuff_Mode.clone() }).SRC_IN.clone()),); jcall!(java_receiver).setColorFilter(java_arguments.0); };
+    pub fn changeColor(&mut self, mut unusedOriginalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageIndex: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
+        { let java_receiver = self.paint.clone(); let java_arguments = (PorterDuffColorFilter::new(jcall!(basicColor).intValue(), { let java_field = jcall!(unsafe { crate::android::graphics::PorterDuff::PorterDuff_Mode.clone() }).SRC_IN.clone(); java_field }.clone()),); jcall!(java_receiver).setColorFilter(java_arguments.0); };
     }
     
 
-    pub fn setAlpha(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut image: Option<Rc<RefCell<Image>>>, mut imageIndex: i32, mut alphaInt: i32) {
+    pub fn setAlpha(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageIndex: i32, mut alphaInt: i32) {
         if alphaInt != jcall!(self.paint).getAlpha() {
             jcall!(self.paint).setAlpha(alphaInt.clone());
         }
     }
     
 
-    pub fn getImageArray(&mut self, mut originalImageArray: Vec<Option<Rc<RefCell<Image>>>>) -> Vec<Option<Rc<RefCell<Image>>>> {
+    pub fn getImageArray(&mut self, mut originalImageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>) -> Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> {
         return originalImageArray.clone();
     }
     
 
-    pub fn handleImage(&mut self, mut imageArray: Vec<Option<Rc<RefCell<Image>>>>, mut index: i32, mut image: Option<Rc<RefCell<Image>>>) {
+    pub fn handleImage(&mut self, mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut index: i32, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) {
     }
     
 

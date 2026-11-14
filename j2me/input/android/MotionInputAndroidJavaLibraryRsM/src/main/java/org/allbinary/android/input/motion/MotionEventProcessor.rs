@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::android::view::MotionEvent::MotionEvent;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,6 +32,10 @@ pub struct MotionEventProcessor {
 
 
 impl MotionEventProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -48,7 +53,7 @@ impl MotionEventProcessor {
     pub fn process(&mut self, mut motionEvent: Option<Rc<RefCell<MotionEvent>>>) {
     }
 }
-pub trait MotionEventProcessorDyn {
+pub trait MotionEventProcessorDyn: std::any::Any {
     fn as_MotionEventProcessor(&self) -> &MotionEventProcessor;
     fn as_MotionEventProcessor_mut(&mut self) -> &mut MotionEventProcessor;
     fn process(&mut self, mut motionEvent: Option<Rc<RefCell<MotionEvent>>>) { MotionEventProcessor::process(self.as_MotionEventProcessor_mut(), motionEvent) }

@@ -73,6 +73,10 @@ pub struct BasicViewData {
 thread_local! { pub static BasicViewData_instance: Option<Rc<RefCell<BasicViewData>>> = BasicViewData::new(); }
 
 impl BasicViewData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<BasicViewData>>> {

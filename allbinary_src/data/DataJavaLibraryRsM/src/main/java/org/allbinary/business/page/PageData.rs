@@ -32,6 +32,10 @@ pub struct PageData {
 thread_local! { pub static PageData_instance: Option<Rc<RefCell<PageData>>> = PageData::new(); }
 
 impl PageData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<PageData>>> {

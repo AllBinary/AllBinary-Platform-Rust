@@ -38,6 +38,10 @@ pub struct BooleanFileVisitor {
 // impl VisitorInterface for BooleanFileVisitor with the methods of the trait
 
 impl BooleanFileVisitor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut filterStringBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Self {
@@ -47,7 +51,7 @@ impl BooleanFileVisitor {
         };
         this.commonStrings = CommonStrings::getInstance();
         this.setFilterStringBasicArrayList(filterStringBasicArrayList.clone());
-        PreLogUtil::put(format!("{}{}", String::from("Filter BasicArrayList: "), jcall!(this.getFilterStringBasicArrayList()).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        PreLogUtil::put(format!("{}{}", String::from("Filter BasicArrayList: "), { let java_value = jcall!(this.getFilterStringBasicArrayList()).toString(); java_value }), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this
     }
 
@@ -57,17 +61,17 @@ impl BooleanFileVisitor {
     
 
     pub fn visit(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return (self.visit((anyType).clone() /* as AbFile */)).clone() /* as Any */;
+        return crate::java_into_object(crate::java_into_object((self.visit_AbFile({ let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AbFile>>>>().expect("ClassCastException").clone()) })).clone()));
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn visit(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<bool> {
+    pub fn visit_AbFile(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<bool> {
         let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getFilterStringBasicArrayList();
         let mut size: i32 = jcall!(list).size();
         let mut nextFileFilterString: String = String::new();
         for index in (0..size) {
-            nextFileFilterString = (jcall!(list).get(index.clone())).clone() /* as String */;
+            nextFileFilterString = { let java_value = ({ let java_object = (jcall!(list).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
             if self.visit2(file.clone(), nextFileFilterString.clone()).unwrap() {
                 return true;
             }
@@ -91,7 +95,7 @@ impl BooleanFileVisitor {
         return false;
     }
 }
-pub trait BooleanFileVisitorDyn {
+pub trait BooleanFileVisitorDyn: std::any::Any {
     fn as_BooleanFileVisitor(&self) -> &BooleanFileVisitor;
     fn as_BooleanFileVisitor_mut(&mut self) -> &mut BooleanFileVisitor;
     fn getFilterStringBasicArrayList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { BooleanFileVisitor::getFilterStringBasicArrayList(self.as_BooleanFileVisitor_mut()) }

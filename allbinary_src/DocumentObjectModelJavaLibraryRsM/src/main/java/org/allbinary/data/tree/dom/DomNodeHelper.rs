@@ -21,6 +21,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,6 +35,10 @@ pub struct DomNodeHelper {
 
 
 impl DomNodeHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -51,8 +56,8 @@ impl DomNodeHelper {
         let mut node: Option<Rc<RefCell<Node>>> = jcall!(parentNode).getFirstChild();
         if node.is_some() && !match (&jcall!(node).getNodeType(), &unsafe { crate::org::w3c::dom::Node::Node_ELEMENT_NODE.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(parentNode).getChildNodes();
-            for index in (0..jcall!(nodeList).getLength()) {
-                node = jcall!(nodeList).item(index.clone());
+            for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
+                node = { let java_value = (jcall!(nodeList).item(index.clone())).clone(); java_value };
                 if jcall!(node).getNodeType() == 1 {
                     break;
                 }
@@ -67,7 +72,7 @@ impl DomNodeHelper {
         if nodeTextNode.is_some() {
             return jcall!(nodeTextNode).getNodeValue();
         } else {
-            return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         }
     }
     
@@ -83,7 +88,7 @@ impl DomNodeHelper {
     pub fn getTextNodesValue(mut node: Option<Rc<RefCell<Node>>>) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(node).getChildNodes();
-        for index in (0..jcall!(nodeList).getLength()) {
+        for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
             let mut nodeTextNode: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
             if match (&jcall!(nodeTextNode).getNodeType(), &unsafe { crate::org::w3c::dom::Node::Node_TEXT_NODE.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 if nodeTextNode.is_some() {

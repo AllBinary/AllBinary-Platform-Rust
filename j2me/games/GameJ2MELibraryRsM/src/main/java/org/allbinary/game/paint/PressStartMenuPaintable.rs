@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::AppletUtil::AppletUtil;
 use crate::org::allbinary::graphics::Anchor::Anchor;
 use crate::org::allbinary::graphics::displayable::DisplayInfoSingleton::DisplayInfoSingleton;
@@ -53,7 +53,7 @@ pub struct PressStartMenuPaintable {
 }
 
 impl UpdateMyFontInterface for PressStartMenuPaintable {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 impl PressStartMenuPaintable {
@@ -78,8 +78,7 @@ impl PressStartMenuPaintable {
         this.PRESS_START = String::from("Press Screen To Start");
         this.KEY_START = String::from("Press or Click F2 To Begin");
         this.MENU_START = String::from("Press Start From The Menu To Begin");
-        this.myFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
-        this.startString = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.startString = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.timeDelayHelper = TimeDelayHelper::new(1100).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
         this.anchor = unsafe { crate::org::allbinary::graphics::Anchor::Anchor_TOP_LEFT.clone() }.clone();
         this
@@ -87,26 +86,27 @@ impl PressStartMenuPaintable {
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
         let this = Some(Rc::new(RefCell::new(Self::new_struct())));
+        jcall!(this).myFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
             if jcall!(TouchScreenFactory::getInstance()).isTouch() {
-            this.startString = this.PRESS_START.clone();
+            jcall!(this).startString = jcall!(this).PRESS_START.clone();
         } else if AppletUtil::isAppletLoader((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone())) {
-            this.startString = this.KEY_START.clone();
+            jcall!(this).startString = jcall!(this).KEY_START.clone();
         } else {
-            this.startString = this.MENU_START.clone();
+            jcall!(this).startString = jcall!(this).MENU_START.clone();
         }
         this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.beginWidth = (jcall!(jcall!(graphics).getFont()).stringWidth(self.startString.clone()) >> 1);
-        self.line = (4 * MyFontProcessor::defaultCharWidth(font.clone())) + (jcall!(font).getHeight() >> 1);
-        self.myFontProcessor = MyFontProcessor::getInstance();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.beginWidth = { let java_value = ((jcall!(jcall!(graphics).getFont()).stringWidth(self.startString.clone()) >> 1)).clone(); java_value };
+        self.line = { let java_value = ((4 * MyFontProcessor::defaultCharWidth(font.clone())) + (jcall!(font).getHeight() >> 1)).clone(); java_value };
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         if jcall!(self.timeDelayHelper).isTimeTNT() {
             if self.isFlash() {
                 self.setFlash(false);
@@ -141,7 +141,10 @@ impl std::ops::DerefMut for PressStartMenuPaintable {
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for PressStartMenuPaintable {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for PressStartMenuPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

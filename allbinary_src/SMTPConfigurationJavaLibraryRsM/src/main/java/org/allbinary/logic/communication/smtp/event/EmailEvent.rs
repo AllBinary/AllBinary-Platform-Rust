@@ -78,7 +78,7 @@ impl EmailEvent {
         jcall!(stringBuffer).append(String::from("EmailEvent Log: \n"));
         jcall!(stringBuffer).append(String::from("Event Name: "));
         jcall!(stringBuffer).append(jcall!(self.userEmailEventNameData).toString());
-        jcall!(stringBuffer).append(jcall!(self.getEmailInfo()).toString());
+        jcall!(stringBuffer).append({ let java_argument = jcall!(self.getEmailInfo()).toString(); java_argument });
         jcall!(stringBuffer).append(String::from("\nNumber of Attempts: "));
         jcall!(stringBuffer).appendint(self.getAttempts());
         return jcall!(stringBuffer).toString();

@@ -32,6 +32,10 @@ pub struct RectangleCollisionUtil {
 
 
 impl RectangleCollisionUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -46,7 +50,7 @@ impl RectangleCollisionUtil {
     
 
     pub fn isCollision(mut rectangle: Option<Rc<RefCell<Rectangle>>>, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) -> bool {
-        if jcall!(point).getX() > (((jcall!(rectangle).x) as i32) + jcall!(rectangle).getWidth()) || jcall!(point).getY() > (((jcall!(rectangle).y) as i32) + jcall!(rectangle).getHeight()) || jcall!(point).getX() < jcall!(rectangle).x || jcall!(point).getY() < jcall!(rectangle).y {
+        if jcall!(point).getX() > ((({ let java_field = jcall!(rectangle).x.clone(); java_field }) as i32) + jcall!(rectangle).getWidth()) || jcall!(point).getY() > ((({ let java_field = jcall!(rectangle).y.clone(); java_field }) as i32) + jcall!(rectangle).getHeight()) || jcall!(point).getX() < { let java_field = jcall!(rectangle).x.clone(); java_field } || jcall!(point).getY() < { let java_field = jcall!(rectangle).y.clone(); java_field } {
             return false;
         } else {
             return true;
@@ -55,8 +59,8 @@ impl RectangleCollisionUtil {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn isCollision(mut rectangle1: Option<Rc<RefCell<Rectangle>>>, mut rectangle2: Option<Rc<RefCell<Rectangle>>>) -> bool {
-        return RectangleCollisionUtil::isCollision8(jcall!(rectangle1).x.clone(), jcall!(rectangle1).y.clone(), jcall!(rectangle1).x + jcall!(rectangle1).width, jcall!(rectangle1).y + jcall!(rectangle1).height, jcall!(rectangle2).x.clone(), jcall!(rectangle2).y.clone(), jcall!(rectangle2).x + jcall!(rectangle2).width, jcall!(rectangle2).y + jcall!(rectangle2).height);
+    pub fn isCollision_Rectangle_Rectangle(mut rectangle1: Option<Rc<RefCell<Rectangle>>>, mut rectangle2: Option<Rc<RefCell<Rectangle>>>) -> bool {
+        return RectangleCollisionUtil::isCollision8({ let java_field = jcall!(rectangle1).x.clone(); java_field }.clone(), { let java_field = jcall!(rectangle1).y.clone(); java_field }.clone(), { let java_field = jcall!(rectangle1).x.clone(); java_field } + { let java_field = jcall!(rectangle1).width.clone(); java_field }, { let java_field = jcall!(rectangle1).y.clone(); java_field } + { let java_field = jcall!(rectangle1).height.clone(); java_field }, { let java_field = jcall!(rectangle2).x.clone(); java_field }.clone(), { let java_field = jcall!(rectangle2).y.clone(); java_field }.clone(), { let java_field = jcall!(rectangle2).x.clone(); java_field } + { let java_field = jcall!(rectangle2).width.clone(); java_field }, { let java_field = jcall!(rectangle2).y.clone(); java_field } + { let java_field = jcall!(rectangle2).height.clone(); java_field });
     }
     
 

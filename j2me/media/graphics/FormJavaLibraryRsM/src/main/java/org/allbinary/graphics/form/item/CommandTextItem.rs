@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Command::Command;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use super::ABTextItem::ABTextItem;
 
@@ -30,14 +30,14 @@ macro_rules! jcall {
 
 pub struct CommandTextItem {
     pub base: ABTextItem,
-    pub command: Option<Rc<RefCell<Command>>>,
+    pub command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
 }
 
 
 impl CommandTextItem {
     
 
-    pub fn new_struct(mut command: Option<Rc<RefCell<Command>>>, mut layout: i32, mut altText: String, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Self {
+    pub fn new_struct(mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut layout: i32, mut altText: String, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Self {
         let mut this = Self {
             base: ABTextItem::new_struct(jcall!(command).getLabel(), layout.clone(), altText.clone(), backgroundBasicColor.clone(), foregroundBasicColor.clone()),
             command: None,
@@ -47,7 +47,7 @@ impl CommandTextItem {
         this
     }
 
-    pub fn new(mut command: Option<Rc<RefCell<Command>>>, mut layout: i32, mut altText: String, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut layout: i32, mut altText: String, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(command, layout, altText, backgroundBasicColor, foregroundBasicColor))))
     }
     
@@ -57,7 +57,7 @@ impl CommandTextItem {
     }
     
 
-    pub fn getCommand(&mut self) -> Option<Rc<RefCell<Command>>> {
+    pub fn getCommand(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>> {
         return self.command.clone();
     }
 }
@@ -80,7 +80,22 @@ impl crate::org::allbinary::graphics::form::item::CustomCustomItem::CustomCustom
 impl crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn for CommandTextItem {
     fn as_ABCustomItem(&self) -> &crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItem { &self.base.base.base }
     fn as_ABCustomItem_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItem { &mut self.base.base.base }
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::paintXY(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self), p1, p2, p3) }
+    fn paintUnselected(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::paintUnselected(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self), p1, p2, p3) }
     fn isFocusable(&mut self) -> bool { Self::isFocusable(self) }
+    fn getLabel(&mut self) -> String { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::getLabel(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self)) }
+    fn getMinimumWidth(&mut self) -> i32 { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::getMinimumWidth(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self)) }
+    fn getMinimumHeight(&mut self) -> i32 { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::getMinimumHeight(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self)) }
+}
+impl crate::org::allbinary::graphics::form::item::ABCustomItemInterface::ABCustomItemInterface for CommandTextItem {
+    fn getMinimumWidth(&mut self) -> i32 { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::getMinimumWidth(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self)) }
+    fn getMinimumHeight(&mut self) -> i32 { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::getMinimumHeight(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self)) }
+    fn getLabel(&mut self) -> String { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::getLabel(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self)) }
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::paintXY(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self), p1, p2, p3) }
+    fn paintUnselected(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::paintUnselected(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self), p1, p2, p3) }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for CommandTextItem {
+    fn updateMeasurement(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::form::item::CustomCustomItem::CustomCustomItem::updateMeasurement(crate::org::allbinary::graphics::form::item::CustomCustomItem::CustomCustomItemDyn::as_CustomCustomItem_mut(self), p1) }
 }
 
 

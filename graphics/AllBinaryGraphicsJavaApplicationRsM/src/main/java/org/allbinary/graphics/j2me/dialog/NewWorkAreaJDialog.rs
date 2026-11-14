@@ -25,6 +25,7 @@ use crate::org::allbinary::graphics::j2me::GraphicsException::GraphicsException;
 use crate::org::allbinary::graphics::j2me::MyFrame::MyFrame;
 use crate::org::allbinary::graphics::j2me::workarea::WorkAreaJPanel::WorkAreaJPanel;
 use crate::org::allbinary::graphics::j2me::workarea::WorkAreaJPanelInterface::WorkAreaJPanelInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -73,7 +74,7 @@ impl NewWorkAreaJDialog {
                     })) {
                         Ok(_) => {}
                         Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                         }
                     }
@@ -94,7 +95,7 @@ impl NewWorkAreaJDialog {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
             }
@@ -118,12 +119,12 @@ impl NewWorkAreaJDialog {
             }
             let mut workAreaJPanel: Option<Rc<RefCell<WorkAreaJPanel>>> = WorkAreaJPanel::new4(newName.clone(), self.dimension.clone(), ((canvasWidth).unwrap() as i32), ((canvasHeight).unwrap() as i32));
             jcall!(workAreaJPanel).setLayout(GridLayout::new(1, 1));
-            jcall!(self.parent).add((workAreaJPanel).clone() /* as WorkAreaJPanelInterface */);
+            jcall!(self.parent).add((workAreaJPanel).clone().map(|reference| reference as Rc<RefCell<dyn WorkAreaJPanelInterface>>));
             self.dispose();
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
             }
@@ -155,7 +156,7 @@ impl NewWorkAreaJDialog {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             }
         }

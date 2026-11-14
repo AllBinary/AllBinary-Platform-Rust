@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
@@ -46,7 +46,7 @@ impl UpgradableWideRTSLayerPaintable {
             base: RTSLayerCompositePaintable::new_struct(upgradableRTSLayerHudPaintable.clone()),
             cost: String::new(),
         };
-        this.cost = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.cost = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this
     }
@@ -57,13 +57,13 @@ impl UpgradableWideRTSLayerPaintable {
     
 
     pub fn update(&mut self, mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>) {
-        self.base.update(rtsLayer.clone());
-        { let java_arguments = (jcall!(StringMaker::new()).append(self.getUpgradeCost()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(self.getDownGradeCost()).toString(),); self.setCost(java_arguments.0) };
+        { let java_arguments = (rtsLayer.clone(),); self.base.update(java_arguments.0) };
+        { let java_arguments = ({ let java_argument = jcall!(StringMaker::new()).append(self.getUpgradeCost()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(self.getDownGradeCost()).toString(); java_argument },); self.setCost(java_arguments.0) };
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        jcall!(graphics).drawString(self.getCost(), jcall!(self.upgradableRTSLayerHudPaintable).textX.clone(), jcall!(self.upgradableRTSLayerHudPaintable).costY.clone(), 0);
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        jcall!(graphics).drawString(self.getCost(), { let java_field = jcall!(self.upgradableRTSLayerHudPaintable).textX.clone(); java_field }.clone(), { let java_field = jcall!(self.upgradableRTSLayerHudPaintable).costY.clone(); java_field }.clone(), 0);
     }
     
 
@@ -92,7 +92,10 @@ impl crate::org::allbinary::game::layer::RTSLayerCompositePaintable::RTSLayerCom
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for UpgradableWideRTSLayerPaintable {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for UpgradableWideRTSLayerPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

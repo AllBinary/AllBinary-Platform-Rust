@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::multiplayer::layer::RemoteInfo::RemoteInfo;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerFactoryInterface::AllBinaryLayerFactoryInterface;
+use crate::java::lang::Exception::*;
 use super::FallingPickupLayer::FallingPickupLayer;
 
 // Borrows the object of a Java reference
@@ -38,6 +39,10 @@ impl AllBinaryLayerFactoryInterface for FallingPickupLayerFactory {
 
 impl FallingPickupLayerFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -51,7 +56,7 @@ impl FallingPickupLayerFactory {
 
     // throws Exception
     pub fn getInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> {
-        return FallingPickupLayer::new(crate::org::allbinary::game::multiplayer::layer::RemoteInfo::RemoteInfo_REMOTE_INFO.with(Clone::clone).clone());
+        return FallingPickupLayer::new(crate::org::allbinary::game::multiplayer::layer::RemoteInfo::RemoteInfo_REMOTE_INFO.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>);
     }
 }
 

@@ -29,12 +29,16 @@ macro_rules! jcall {
 pub struct NullIntermissionEnableListener {
 }
 
-thread_local! { pub static NullIntermissionEnableListener_SINGLETON: Option<Rc<RefCell<dyn IntermissionEnableListenerInterface>>> = NullIntermissionEnableListener::new().map(|reference| reference as Rc<RefCell<dyn IntermissionEnableListenerInterface>>); }
+thread_local! { pub static NullIntermissionEnableListener_SINGLETON: Option<Rc<RefCell<dyn IntermissionEnableListenerInterface>>> = NullIntermissionEnableListener::new().map(|reference| reference as Rc<RefCell<dyn IntermissionEnableListenerInterface>>).map(|reference| reference as Rc<RefCell<dyn IntermissionEnableListenerInterface>>); }
 impl IntermissionEnableListenerInterface for NullIntermissionEnableListener {
     fn notifyIntermission(&mut self, mut enable: bool) { Self::notifyIntermission(self, enable) }
 }
 
 impl NullIntermissionEnableListener {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn IntermissionEnableListenerInterface>>> {

@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::system::security::crypt::jcehelper::AbCrypt::AbCrypt;
 use crate::org::allbinary::logic::system::security::crypt::jcehelper::KeySpecFactory::KeySpecFactory;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,6 +41,10 @@ pub static mut WeakCrypt_keys: std::cell::LazyCell<Vec<String>> = std::cell::Laz
 pub static mut WeakCrypt_KEYMAX: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| (unsafe { WeakCrypt_keys.clone() }.len() as i32).clone());
 
 impl WeakCrypt {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut key: i32) -> Self {
@@ -48,16 +53,16 @@ impl WeakCrypt {
             abCrypt: None,
         };
         this.tsUtil = TsUtil::getInstance();
-        this.abCrypt = AbCrypt::new(jcall!(KeySpecFactory::getInstance()).DES.clone());
+        this.abCrypt = AbCrypt::new({ let java_field = jcall!(KeySpecFactory::getInstance()).DES.clone(); java_field }.clone());
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(this.abCrypt).init(unsafe { WeakCrypt_keys.clone() }[(key) as usize].clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            PreLogUtil::putOE(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("SuperCrypt(key)"), e.clone());
+            PreLogUtil::putOE({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("SuperCrypt(key)"), crate::java_into_object(e.clone()));
             }
         }
         this
@@ -69,34 +74,36 @@ impl WeakCrypt {
     
 
     pub fn encrypt(&mut self, mut value: String) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut crypted: Vec<i8> = { let java_receiver = self.abCrypt.clone(); let java_arguments = (jcall!(self.tsUtil).getByteArray(value.clone()),); let java_result = jcall!(java_receiver).encrypt(java_arguments.0); java_result };
-            return DatabaseEncoder::DatabaseEncoder::encode(crypted.clone());
+            return Some(DatabaseEncoder::DatabaseEncoder::encode(crypted.clone()));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putOE(String::from("Encrypt Failed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("encrypt"), e.clone());
-            return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            PreLogUtil::putOE(String::from("Encrypt Failed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("encrypt"), crate::java_into_object(e.clone()));
+            return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn decrypt(&mut self, mut value: String) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut decrypted: Vec<i8> = { let java_receiver = self.abCrypt.clone(); let java_arguments = (DatabaseEncoder::DatabaseEncoder::decode(value.clone()),); let java_result = jcall!(java_receiver).decrypt(java_arguments.0); java_result };
-            return String::from_utf8(decrypted.clone().iter().map(|value| *value as u8).collect()).unwrap();
+            return Some(String::from_utf8(decrypted.clone().iter().map(|value| *value as u8).collect()).unwrap());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putOE(String::from("decrypt Failed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("decrypt"), e.clone());
-            return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            PreLogUtil::putOE(String::from("decrypt Failed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("decrypt"), crate::java_into_object(e.clone()));
+            return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

@@ -63,5 +63,13 @@ impl crate::org::allbinary::game::input::J2MEGameInputMapping::J2MEGameInputMapp
     fn as_J2MEGameInputMapping(&self) -> &crate::org::allbinary::game::input::J2MEGameInputMapping::J2MEGameInputMapping { &self.base }
     fn as_J2MEGameInputMapping_mut(&mut self) -> &mut crate::org::allbinary::game::input::J2MEGameInputMapping::J2MEGameInputMapping { &mut self.base }
 }
+impl crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMappingDyn for MotionJ2MEGameInputMapping {
+    fn as_PersistentInputMapping(&self) -> &crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMapping { &self.base.base }
+    fn as_PersistentInputMapping_mut(&mut self) -> &mut crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMapping { &mut self.base.base }
+    fn getDefault(&mut self) -> Option<Rc<RefCell<InputToGameKeyMapping>>> { Self::getDefault(self) }
+    fn init(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface>>>) { crate::org::allbinary::game::input::J2MEGameInputMapping::J2MEGameInputMapping::init(crate::org::allbinary::game::input::J2MEGameInputMapping::J2MEGameInputMappingDyn::as_J2MEGameInputMapping_mut(self), p1) }
+    fn isDelete(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool { crate::org::allbinary::game::input::J2MEGameInputMapping::J2MEGameInputMapping::isDelete(crate::org::allbinary::game::input::J2MEGameInputMapping::J2MEGameInputMappingDyn::as_J2MEGameInputMapping_mut(self), p1) }
+    fn isSystemInput(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool { crate::org::allbinary::game::input::J2MEGameInputMapping::J2MEGameInputMapping::isSystemInput(crate::org::allbinary::game::input::J2MEGameInputMapping::J2MEGameInputMappingDyn::as_J2MEGameInputMapping_mut(self), p1) }
+}
 
 

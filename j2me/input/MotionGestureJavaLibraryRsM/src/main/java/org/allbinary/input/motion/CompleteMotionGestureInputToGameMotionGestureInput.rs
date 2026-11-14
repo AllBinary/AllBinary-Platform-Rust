@@ -34,6 +34,7 @@ use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -49,6 +50,10 @@ pub struct CompleteMotionGestureInputToGameMotionGestureInput {
 thread_local! { pub static CompleteMotionGestureInputToGameMotionGestureInput_instance: Option<Rc<RefCell<CompleteMotionGestureInputToGameMotionGestureInput>>> = CompleteMotionGestureInputToGameMotionGestureInput::new(); }
 
 impl CompleteMotionGestureInputToGameMotionGestureInput {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -71,42 +76,42 @@ impl CompleteMotionGestureInputToGameMotionGestureInput {
     pub fn init(&mut self) {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            PreLogUtil::put(String::from("Compound Motion Gestures"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone());
+            PreLogUtil::put(String::from("Compound Motion Gestures"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone());
             let mut motionGestureConfiguration: Option<Rc<RefCell<MotionGestureConfiguration>>> = MotionGestureConfigurationFactory::getInstance();
             let mut touchMotionGestureFactory: Option<Rc<RefCell<TouchMotionGestureFactory>>> = TouchMotionGestureFactory::getInstance();
-            let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-            jcall!(list).add(crate::java_into_object(jcall!(touchMotionGestureFactory).DIAGONAL_DOWN_LEFT.clone()));
+            let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            jcall!(list).add(crate::java_into_object({ let java_field = jcall!(touchMotionGestureFactory).DIAGONAL_DOWN_LEFT.clone(); java_field }.clone()));
             jcall!(motionGestureConfiguration).addMotionGestureAction(list.clone(), DiagonalDownLeftTouchInputToGameKeyEventAction::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn>>));
             list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-            jcall!(list).add(crate::java_into_object(jcall!(touchMotionGestureFactory).DIAGONAL_DOWN_RIGHT.clone()));
+            jcall!(list).add(crate::java_into_object({ let java_field = jcall!(touchMotionGestureFactory).DIAGONAL_DOWN_RIGHT.clone(); java_field }.clone()));
             jcall!(motionGestureConfiguration).addMotionGestureAction(list.clone(), DiagonalDownRightTouchInputToGameKeyEventAction::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn>>));
             list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-            jcall!(list).add(crate::java_into_object(jcall!(touchMotionGestureFactory).DIAGONAL_UP_LEFT.clone()));
+            jcall!(list).add(crate::java_into_object({ let java_field = jcall!(touchMotionGestureFactory).DIAGONAL_UP_LEFT.clone(); java_field }.clone()));
             jcall!(motionGestureConfiguration).addMotionGestureAction(list.clone(), DiagonalUpLeftTouchInputToGameKeyEventAction::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn>>));
             list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-            jcall!(list).add(crate::java_into_object(jcall!(touchMotionGestureFactory).DIAGONAL_UP_RIGHT.clone()));
+            jcall!(list).add(crate::java_into_object({ let java_field = jcall!(touchMotionGestureFactory).DIAGONAL_UP_RIGHT.clone(); java_field }.clone()));
             jcall!(motionGestureConfiguration).addMotionGestureAction(list.clone(), DiagonalUpRightTouchInputToGameKeyEventAction::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn>>));
             list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-            jcall!(list).add(crate::java_into_object(jcall!(touchMotionGestureFactory).LEFT.clone()));
+            jcall!(list).add(crate::java_into_object({ let java_field = jcall!(touchMotionGestureFactory).LEFT.clone(); java_field }.clone()));
             jcall!(motionGestureConfiguration).addMotionGestureAction(list.clone(), LeftTouchInputToGameKeyEventAction::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn>>));
             list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-            jcall!(list).add(crate::java_into_object(jcall!(touchMotionGestureFactory).RIGHT.clone()));
+            jcall!(list).add(crate::java_into_object({ let java_field = jcall!(touchMotionGestureFactory).RIGHT.clone(); java_field }.clone()));
             jcall!(motionGestureConfiguration).addMotionGestureAction(list.clone(), RightTouchInputToGameKeyEventAction::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn>>));
             list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-            jcall!(list).add(crate::java_into_object(jcall!(touchMotionGestureFactory).DOWN.clone()));
+            jcall!(list).add(crate::java_into_object({ let java_field = jcall!(touchMotionGestureFactory).DOWN.clone(); java_field }.clone()));
             jcall!(motionGestureConfiguration).addMotionGestureAction(list.clone(), DownTouchInputToGameKeyEventAction::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn>>));
             list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-            jcall!(list).add(crate::java_into_object(jcall!(touchMotionGestureFactory).UP.clone()));
+            jcall!(list).add(crate::java_into_object({ let java_field = jcall!(touchMotionGestureFactory).UP.clone(); java_field }.clone()));
             jcall!(motionGestureConfiguration).addMotionGestureAction(list.clone(), UpTouchInputToGameKeyEventAction::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn>>));
             list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-            jcall!(list).add(crate::java_into_object(jcall!(touchMotionGestureFactory).RELEASED.clone()));
+            jcall!(list).add(crate::java_into_object({ let java_field = jcall!(touchMotionGestureFactory).RELEASED.clone(); java_field }.clone()));
             jcall!(motionGestureConfiguration).addMotionGestureAction(list.clone(), ReleaseTouchInputToGameKeyEventAction::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn>>));
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

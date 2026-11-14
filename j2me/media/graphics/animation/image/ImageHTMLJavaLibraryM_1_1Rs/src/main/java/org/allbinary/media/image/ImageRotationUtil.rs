@@ -17,13 +17,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::microemu::device::playn::PlaynImmutableImage::PlaynImmutableImage;
 use crate::org::microemu::device::playn::PlaynMutableImage::PlaynMutableImage;
 use crate::playn::core::CanvasImage::CanvasImage;
 use crate::playn::core::CanvasSurface::CanvasSurface;
-use super::core::core;
-use super::playn::playn;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,6 +37,10 @@ pub struct ImageRotationUtil {
 thread_local! { pub static ImageRotationUtil_instance: Option<Rc<RefCell<ImageRotationUtil>>> = ImageRotationUtil::new(); }
 
 impl ImageRotationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ImageRotationUtil>>> {
@@ -56,13 +59,13 @@ impl ImageRotationUtil {
     }
     
 
-    pub fn rotateImage(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut image: Option<Rc<RefCell<Image>>>, mut totalAngle: i32) -> Option<Rc<RefCell<Image>>> {
+    pub fn rotateImage(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut totalAngle: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         if jcall!(image).isMutable() {
             let mut htmlImage: Option<Rc<RefCell<PlaynMutableImage>>> = (image).clone() /* as PlaynMutableImage */;
             let mut canvasImage: Option<Rc<RefCell<CanvasImage>>> = (jcall!(htmlImage).getImage()).clone() /* as CanvasImage */;
             let mut canvasSurface: Option<Rc<RefCell<CanvasSurface>>> = jcall!(htmlImage).getCanvasSurface(canvasImage.clone());
             jcall!(canvasSurface).translate(jcall!(originalImage).getWidth() / 2, jcall!(originalImage).getHeight() / 2);
-            let mut image2: Option<Rc<RefCell<Image>>> = self.rotateImageCanvasSurface(originalImage.clone(), image.clone(), canvasSurface.clone(), totalAngle.clone());
+            let mut image2: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = self.rotateImageCanvasSurface(originalImage.clone(), image.clone(), canvasSurface.clone(), totalAngle.clone());
             self.drawImage(originalImage.clone(), image.clone(), canvasSurface.clone());
             return image2.clone();
         } else {
@@ -71,7 +74,7 @@ impl ImageRotationUtil {
     }
     
 
-    pub fn rotateImageCanvasSurfaceClear(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut image: Option<Rc<RefCell<Image>>>, mut canvasSurface: Option<Rc<RefCell<CanvasSurface>>>, mut totalAngle: i32) -> Option<Rc<RefCell<Image>>> {
+    pub fn rotateImageCanvasSurfaceClear(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut canvasSurface: Option<Rc<RefCell<CanvasSurface>>>, mut totalAngle: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         if jcall!(image).isMutable() {
             jcall!(canvasSurface).translate(-jcall!(originalImage).getWidth() / 2, -jcall!(originalImage).getHeight() / 2);
             jcall!(canvasSurface).clear();
@@ -83,7 +86,7 @@ impl ImageRotationUtil {
     }
     
 
-    pub fn rotateImageCanvasSurface(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut image: Option<Rc<RefCell<Image>>>, mut canvasSurface: Option<Rc<RefCell<CanvasSurface>>>, mut totalAngle: i32) -> Option<Rc<RefCell<Image>>> {
+    pub fn rotateImageCanvasSurface(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut canvasSurface: Option<Rc<RefCell<CanvasSurface>>>, mut totalAngle: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         if jcall!(image).isMutable() {
             jcall!(canvasSurface).rotate(((((totalAngle.clone()) as f64).to_radians()) as f32));
             return image.clone();
@@ -93,23 +96,23 @@ impl ImageRotationUtil {
     }
     
 
-    pub fn drawImage(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut image: Option<Rc<RefCell<Image>>>, mut canvasSurface: Option<Rc<RefCell<CanvasSurface>>>) {
-        let mut originalPlayNImage: Option<Rc<RefCell<Image>>> = None;
+    pub fn drawImage(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut canvasSurface: Option<Rc<RefCell<CanvasSurface>>>) {
+        let mut originalPlayNImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = None;
         if jcall!(originalImage).isMutable() {
             let mut originalHTMLImage: Option<Rc<RefCell<PlaynMutableImage>>> = (originalImage).clone() /* as PlaynMutableImage */;
-            originalPlayNImage = (jcall!(originalHTMLImage).getImage()).clone() /* as Image */;
+            originalPlayNImage = { let java_value = ((jcall!(originalHTMLImage).getImage()).clone()).clone(); java_value };
         } else {
             let mut originalHTMLImage: Option<Rc<RefCell<PlaynImmutableImage>>> = (originalImage).clone() /* as PlaynImmutableImage */;
-            originalPlayNImage = (jcall!(originalHTMLImage).getImage()).clone() /* as Image */;
+            originalPlayNImage = { let java_value = ((jcall!(originalHTMLImage).getImage()).clone()).clone(); java_value };
         }
         jcall!(canvasSurface).drawImage(originalPlayNImage.clone(), -jcall!(originalImage).getWidth() / 2, -jcall!(originalImage).getHeight() / 2);
     }
     
 
     // throws Exception
-    pub fn createRotatedImage(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut rotationInDegrees: i32) -> Option<Rc<RefCell<Image>>> {
-        let mut image: Option<Rc<RefCell<Image>>> = jcall!(ImageCreationUtil::ImageCreationUtil::getInstance()).createImageWH(jcall!(originalImage).getWidth(), jcall!(originalImage).getHeight());
-        let mut rotatedImage: Option<Rc<RefCell<Image>>> = self.rotateImage(originalImage.clone(), image.clone(), rotationInDegrees.clone());
+    pub fn createRotatedImage(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut rotationInDegrees: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(ImageCreationUtil::ImageCreationUtil::getInstance()).createImageWH(jcall!(originalImage).getWidth(), jcall!(originalImage).getHeight());
+        let mut rotatedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = self.rotateImage(originalImage.clone(), image.clone(), rotationInDegrees.clone());
         if rotatedImage.is_none() {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Not Mutable"))));
         }

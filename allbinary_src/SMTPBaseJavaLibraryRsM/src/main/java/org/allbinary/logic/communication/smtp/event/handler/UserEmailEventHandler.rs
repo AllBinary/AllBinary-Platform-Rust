@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::communication::smtp::event::EmailEvent::EmailE
 use crate::org::allbinary::logic::communication::smtp::event::UserEmailEventListenerInterface::UserEmailEventListenerInterface;
 use crate::org::allbinary::logic::communication::smtp::event::UserEmailEventNameData::UserEmailEventNameData;
 use crate::org::allbinary::logic::communication::smtp::info::EmailInfo::EmailInfo;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,6 +41,10 @@ pub struct UserEmailEventHandler {
 
 
 impl UserEmailEventHandler {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -70,15 +75,15 @@ impl UserEmailEventHandler {
     pub fn addListener(&mut self, mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         let mut size: i32 = jcall!(vector).size();
         for index in (0..size) {
-            let mut userEmailEventListenerInterface: Option<Rc<RefCell<dyn UserEmailEventListenerInterface>>> = { let java_object = jcall!(vector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn UserEmailEventListenerInterface>>>>().expect("ClassCastException").clone()) };
-            self.addListener(userEmailEventListenerInterface.clone());
+            let mut userEmailEventListenerInterface: Option<Rc<RefCell<dyn UserEmailEventListenerInterface>>> = { let java_object = (jcall!(vector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn UserEmailEventListenerInterface>>>>().expect("ClassCastException").clone()) };
+            self.addListener_UserEmailEventListenerInterface(userEmailEventListenerInterface.clone());
         }
     }
     
 
     // Java overloaded method: Rust needs a different name
     // synchronized
-    pub fn addListener(&mut self, mut emailEventListenerInterface: Option<Rc<RefCell<dyn UserEmailEventListenerInterface>>>) {
+    pub fn addListener_UserEmailEventListenerInterface(&mut self, mut emailEventListenerInterface: Option<Rc<RefCell<dyn UserEmailEventListenerInterface>>>) {
         jcall!(self.emailVector).add(crate::java_into_object(emailEventListenerInterface.clone()));
     }
     
@@ -95,7 +100,7 @@ impl UserEmailEventHandler {
         let mut emailEvent: Option<Rc<RefCell<EmailEvent>>> = EmailEvent::new(None /* Java this: a &mut self method has no Rc of itself */, self.userEmailEventNameData.clone(), self.emailInfo.clone(), 0);
         let mut size: i32 = jcall!(self.emailVector).size();
         for index in (0..size) {
-            let mut emailEventListenerInterface: Option<Rc<RefCell<dyn UserEmailEventListenerInterface>>> = { let java_object = jcall!(self.emailVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn UserEmailEventListenerInterface>>>>().expect("ClassCastException").clone()) };
+            let mut emailEventListenerInterface: Option<Rc<RefCell<dyn UserEmailEventListenerInterface>>> = { let java_object = (jcall!(self.emailVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn UserEmailEventListenerInterface>>>>().expect("ClassCastException").clone()) };
             jcall!(emailEventListenerInterface).onEmailSendRequest(emailEvent.clone());
         }
     }

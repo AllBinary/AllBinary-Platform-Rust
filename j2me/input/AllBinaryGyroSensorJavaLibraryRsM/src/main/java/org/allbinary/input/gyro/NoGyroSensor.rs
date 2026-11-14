@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::input::AllBinarySensorListener::AllBinarySensorListener;
 use crate::org::allbinary::logic::math::Orientation::Orientation;
+use crate::java::lang::Exception::*;
 use super::AllBinaryOrientationSensor::AllBinaryOrientationSensor;
 
 // Borrows the object of a Java reference
@@ -43,7 +44,7 @@ impl NoGyroSensor {
         let mut this = Self {
             base: AllBinaryOrientationSensor::new_struct(),
         };
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this
     }
 

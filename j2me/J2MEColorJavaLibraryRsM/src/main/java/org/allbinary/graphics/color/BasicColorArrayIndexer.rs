@@ -37,6 +37,10 @@ pub struct BasicColorArrayIndexer {
 
 
 impl BasicColorArrayIndexer {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut basicColorArray: Vec<Option<Rc<RefCell<BasicColor>>>>) -> Self {
@@ -45,7 +49,7 @@ impl BasicColorArrayIndexer {
             circularIndexUtil: None,
         };
         this.basicColorArray = basicColorArray.clone();
-        this.circularIndexUtil = CircularIndexUtil::createInstance((this.basicColorArray.len() as i32).clone());
+        this.circularIndexUtil = { let java_value = (CircularIndexUtil::createInstance((this.basicColorArray.len() as i32).clone())).clone(); java_value };
         this
     }
 

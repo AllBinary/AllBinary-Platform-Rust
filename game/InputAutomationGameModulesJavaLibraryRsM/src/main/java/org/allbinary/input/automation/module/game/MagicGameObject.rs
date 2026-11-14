@@ -20,6 +20,7 @@ use super::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
+use crate::java::lang::Exception::*;
 use super::MeteredGameObject::MeteredGameObject;
 use super::MagicGameObjectInterface::MagicGameObjectInterface;
 
@@ -57,7 +58,7 @@ impl MagicGameObject {
 
     pub fn toString(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.MP_LABEL.clone());
         jcall!(stringBuffer).append(self.base.toString());
         return jcall!(stringBuffer).toString();

@@ -16,13 +16,13 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::logic::communication::http::request::session::WeblisketSession::WeblisketSession;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::TransformInfoHttpInterface::TransformInfoHttpInterface;
 use super::TransformInfoInterface::TransformInfoInterface;
 
@@ -41,6 +41,10 @@ pub struct TransformInfoHttpComposite {
 
 
 impl TransformInfoHttpComposite {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Self {
@@ -51,10 +55,10 @@ impl TransformInfoHttpComposite {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
-            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("View Name: "), jcall!(transformInfoInterface).getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
+            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("View Name: "), jcall!(transformInfoInterface).getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
-        this.transformInfoInterface = (transformInfoInterface).clone() /* as TransformInfoHttpInterface */;
+        this.transformInfoInterface = (|| -> Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> { panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpInterface") })();
         this
     }
 
@@ -79,17 +83,17 @@ impl TransformInfoHttpComposite {
     }
     
 
-    pub fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return jcall!(self.transformInfoInterface).getPropertiesHashMap();
     }
 }
-pub trait TransformInfoHttpCompositeDyn {
+pub trait TransformInfoHttpCompositeDyn: std::any::Any {
     fn as_TransformInfoHttpComposite(&self) -> &TransformInfoHttpComposite;
     fn as_TransformInfoHttpComposite_mut(&mut self) -> &mut TransformInfoHttpComposite;
     fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn TransformInfoInterface>>> { TransformInfoHttpComposite::getTransformInfoInterface(self.as_TransformInfoHttpComposite_mut()) }
     fn getWeblisketSession(&mut self) -> Option<Rc<RefCell<WeblisketSession>>> { TransformInfoHttpComposite::getWeblisketSession(self.as_TransformInfoHttpComposite_mut()) }
     fn getPageContext(&mut self) -> Option<Rc<RefCell<PageContext>>> { TransformInfoHttpComposite::getPageContext(self.as_TransformInfoHttpComposite_mut()) }
-    fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { TransformInfoHttpComposite::getPropertiesHashMap(self.as_TransformInfoHttpComposite_mut()) }
+    fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { TransformInfoHttpComposite::getPropertiesHashMap(self.as_TransformInfoHttpComposite_mut()) }
 }
 impl TransformInfoHttpCompositeDyn for TransformInfoHttpComposite {
     fn as_TransformInfoHttpComposite(&self) -> &TransformInfoHttpComposite { self }

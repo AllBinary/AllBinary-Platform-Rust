@@ -8,6 +8,7 @@ use crate::Runnable;
 use super::*;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::NullPriorityRunnable::NullPriorityRunnable;
 use super::PriorityRunnable::PriorityRunnable;
 
@@ -26,11 +27,15 @@ thread_local! { pub static ThreadObjectUtil_instance: Option<Rc<RefCell<ThreadOb
 
 impl ThreadObjectUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             NULL_PRIORITY_RUNNABLE: None,
         };
-        this.NULL_PRIORITY_RUNNABLE = NullPriorityRunnable::new().map(|reference| reference as Rc<RefCell<dyn PriorityRunnable>>);
+        this.NULL_PRIORITY_RUNNABLE = NullPriorityRunnable::new().map(|reference| reference as Rc<RefCell<dyn PriorityRunnable>>).map(|reference| reference as Rc<RefCell<dyn PriorityRunnable>>);
         this
     }
 

@@ -23,8 +23,8 @@ use crate::org::allbinary::logic::string::StringValidationUtil::StringValidation
 use crate::org::allbinary::logic::system::loader::WebappClassLoaderInfo::WebappClassLoaderInfo;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::ClassLoader::*;
 use super::AppUrlGlobals::AppUrlGlobals;
-use super::ClassLoader::ClassLoader;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,6 +40,10 @@ pub struct Globals {
 thread_local! { pub static Globals_instance: Option<Rc<RefCell<Globals>>> = Globals::new(); }
 
 impl Globals {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<Globals>>> {
@@ -64,29 +68,29 @@ impl Globals {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
         let mut appUrlGlobals: Option<Rc<RefCell<AppUrlGlobals>>> = AppUrlGlobals::new();
         jcall!(appUrlGlobals).setWebappPath(pathString.clone());
-        jcall!(URLGLOBALS).init(appUrlGlobals.clone());
+        URLGLOBALS::URLGLOBALS::init(appUrlGlobals.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::globals::UrlGlobalsInterface::UrlGlobalsInterfaceDyn>>));
         WebappClassLoaderInfo::setLoader(classLoader.clone());
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(String::from("Setting Up AllBinary System Configuration Args: "));
         jcall!(stringBuffer).append(pathString.clone());
         jcall!(stringBuffer).append(String::from(" ClassLoader: "));
         jcall!(stringBuffer).append(std::any::type_name_of_val(&classLoader).to_string());
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
         if jcall!(stringValidationUtil).isEmpty(pathString.clone()) {
             jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
             jcall!(stringBuffer).append(String::from("No Path Provided. Using Process Path: "));
             jcall!(stringBuffer).append(pathString.clone());
-            jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-            jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).EQUALS.clone());
-            jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-            jcall!(stringBuffer).append(jcall!(URLGLOBALS).getWebappPath());
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).EQUALS.clone(); java_field }.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+            jcall!(stringBuffer).append(URLGLOBALS::URLGLOBALS::getWebappPath());
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(String::from("Webapp Path Set To: "));
-        jcall!(stringBuffer).append(jcall!(URLGLOBALS).getWebappPath());
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        jcall!(stringBuffer).append(URLGLOBALS::URLGLOBALS::getWebappPath());
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
 }
 

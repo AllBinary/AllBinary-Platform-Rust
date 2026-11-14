@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::android::input::motion::event::AnalogControllerConfigurationEvent::AnalogControllerConfigurationEvent;
 use crate::org::allbinary::android::input::motion::event::AnalogControllerConfigurationEventHandler::AnalogControllerConfigurationEventHandler;
 use crate::org::allbinary::logic::math::ScaleFactorFactory::ScaleFactorFactory;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,6 +39,10 @@ pub struct AnalogControllerConfigurationFactory {
 thread_local! { pub static AnalogControllerConfigurationFactory_instance: Option<Rc<RefCell<AnalogControllerConfigurationFactory>>> = AnalogControllerConfigurationFactory::new(); }
 
 impl AnalogControllerConfigurationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AnalogControllerConfigurationFactory>>> {
@@ -52,14 +57,15 @@ impl AnalogControllerConfigurationFactory {
             available: false,
             analogControllerConfigurationEvent: None,
         };
-        this.SCALE_FACTOR = jcall!(ScaleFactorFactory::getInstance()).DEFAULT_SCALE_FACTOR.clone();
-        this.SCALE_VALUE = jcall!(ScaleFactorFactory::getInstance()).DEFAULT_SCALE_VALUE.clone();
-        this.analogControllerConfigurationEvent = AnalogControllerConfigurationEvent::new(this);
+        this.SCALE_FACTOR = { let java_field = jcall!(ScaleFactorFactory::getInstance()).DEFAULT_SCALE_FACTOR.clone(); java_field }.clone();
+        this.SCALE_VALUE = { let java_field = jcall!(ScaleFactorFactory::getInstance()).DEFAULT_SCALE_VALUE.clone(); java_field }.clone();
         this
     }
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct())))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct())));
+        jcall!(this).analogControllerConfigurationEvent = AnalogControllerConfigurationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        this
     }
     
 

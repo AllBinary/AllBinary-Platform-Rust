@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::string::tokens::Tokenizer::Tokenizer;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,6 +40,10 @@ pub struct CamelCaseUtil {
 thread_local! { pub static CamelCaseUtil_instance: Option<Rc<RefCell<CamelCaseUtil>>> = CamelCaseUtil::new(); }
 
 impl CamelCaseUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -60,19 +65,16 @@ impl CamelCaseUtil {
 
     // throws Exception
     pub fn getAsCamelCase(&mut self, mut string: String, mut stringBuilder: Option<Rc<RefCell<StringMaker>>>) -> String {
-        if false {
-            return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        }
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
         jcall!(stringBuilder).delete(0, jcall!(stringBuilder).length());
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        let mut tokenizer: Option<Rc<RefCell<Tokenizer>>> = Tokenizer::new(jcall!(self.commonSeps).UNDERSCORE.clone());
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut tokenizer: Option<Rc<RefCell<Tokenizer>>> = Tokenizer::new({ let java_field = jcall!(self.commonSeps).UNDERSCORE.clone(); java_field }.clone());
         jcall!(tokenizer).getTokensFromString(string.clone(), list.clone());
         let mut size: i32 = jcall!(list).size();
         let mut word: String = String::new();
         for i in (0..size) {
-            word = (jcall!(list).get(i.clone())).clone() /* as String */;
-            word = (if jcall!(stringValidationUtil).isEmpty(word.clone()) { word } else { jcall!(StringMaker::new()).appendchar((word.chars().nth((0) as usize).unwrap()).to_ascii_uppercase()).append(word[(1) as usize..].to_string().to_lowercase()).toString() });
+            word = { let java_value = ({ let java_object = (jcall!(list).get(i.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            word = { let java_value = ((if jcall!(stringValidationUtil).isEmpty(word.clone()) { word.clone() } else { jcall!(StringMaker::new()).appendchar((word.chars().nth((0) as usize).unwrap()).to_ascii_uppercase()).append(word[(1) as usize..].to_string().to_lowercase()).toString() })).clone(); java_value };
             jcall!(stringBuilder).append(word.clone());
         }
         return jcall!(stringBuilder).toString();

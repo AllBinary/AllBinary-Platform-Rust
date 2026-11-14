@@ -28,13 +28,17 @@ macro_rules! jcall {
 pub struct ColorLevel {
 }
 
-thread_local! { pub static ColorLevel_COLOR_MASK: i32 = 0x00FFFFFF_u32 as i32; }
-thread_local! { pub static ColorLevel_MIN: i32 = 0x44_u32 as i32; }
-thread_local! { pub static ColorLevel_AVG: i32 = 0x77_u32 as i32; }
-thread_local! { pub static ColorLevel_LIGHT: i32 = 0xAA_u32 as i32; }
-thread_local! { pub static ColorLevel_HIGH: i32 = 0xEE_u32 as i32; }
+thread_local! { pub static ColorLevel_COLOR_MASK: i32 = 0x00FFFFFF; }
+thread_local! { pub static ColorLevel_MIN: i32 = 0x44; }
+thread_local! { pub static ColorLevel_AVG: i32 = 0x77; }
+thread_local! { pub static ColorLevel_LIGHT: i32 = 0xAA; }
+thread_local! { pub static ColorLevel_HIGH: i32 = 0xEE; }
 
 impl ColorLevel {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

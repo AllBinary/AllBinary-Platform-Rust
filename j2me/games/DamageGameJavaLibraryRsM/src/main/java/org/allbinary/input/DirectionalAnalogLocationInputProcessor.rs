@@ -28,6 +28,7 @@ use crate::org::allbinary::graphics::CustomGPoint::CustomGPoint;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -82,21 +83,21 @@ impl DirectionalAnalogLocationInputProcessor {
     }
 
     pub fn new(mut inputProcessorArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(inputProcessorArray))));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(inputProcessorArray.clone()))));
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            this.leftGameKeyEvent = jcall!(GameKeyEventFactory::getInstance()).getInstanceForInput((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(this.gameKeyFactory).LEFT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
-            this.rightGameKeyEvent = jcall!(GameKeyEventFactory::getInstance()).getInstanceForInput((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(this.gameKeyFactory).RIGHT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
-            this.upGameKeyEvent = jcall!(GameKeyEventFactory::getInstance()).getInstanceForInput((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(this.gameKeyFactory).UP.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
-            this.downGameKeyEvent = jcall!(GameKeyEventFactory::getInstance()).getInstanceForInput((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(this.gameKeyFactory).DOWN.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
-            this.leftTriggerGameKeyEvent = jcall!(GameKeyEventFactory::getInstance()).getInstanceForInput((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(this.gameKeyFactory).KEY_NUM0.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
-            this.rightTriggerGameKeyEvent = jcall!(GameKeyEventFactory::getInstance()).getInstanceForInput((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(this.gameKeyFactory).KEY_NUM5.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
+            jcall!(this).leftGameKeyEvent = { let java_value = (jcall!(GameKeyEventFactory::getInstance()).getInstanceForInput(this.clone().map(|reference| reference as Rc<RefCell<dyn GameKeyEventSourceInterface>>), { let java_field = jcall!(jcall!(this).gameKeyFactory).LEFT.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>))).clone(); java_value };
+            jcall!(this).rightGameKeyEvent = { let java_value = (jcall!(GameKeyEventFactory::getInstance()).getInstanceForInput(this.clone().map(|reference| reference as Rc<RefCell<dyn GameKeyEventSourceInterface>>), { let java_field = jcall!(jcall!(this).gameKeyFactory).RIGHT.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>))).clone(); java_value };
+            jcall!(this).upGameKeyEvent = { let java_value = (jcall!(GameKeyEventFactory::getInstance()).getInstanceForInput(this.clone().map(|reference| reference as Rc<RefCell<dyn GameKeyEventSourceInterface>>), { let java_field = jcall!(jcall!(this).gameKeyFactory).UP.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>))).clone(); java_value };
+            jcall!(this).downGameKeyEvent = { let java_value = (jcall!(GameKeyEventFactory::getInstance()).getInstanceForInput(this.clone().map(|reference| reference as Rc<RefCell<dyn GameKeyEventSourceInterface>>), { let java_field = jcall!(jcall!(this).gameKeyFactory).DOWN.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>))).clone(); java_value };
+            jcall!(this).leftTriggerGameKeyEvent = { let java_value = (jcall!(GameKeyEventFactory::getInstance()).getInstanceForInput(this.clone().map(|reference| reference as Rc<RefCell<dyn GameKeyEventSourceInterface>>), { let java_field = jcall!(jcall!(this).gameKeyFactory).KEY_NUM0.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>))).clone(); java_value };
+            jcall!(this).rightTriggerGameKeyEvent = { let java_value = (jcall!(GameKeyEventFactory::getInstance()).getInstanceForInput(this.clone().map(|reference| reference as Rc<RefCell<dyn GameKeyEventSourceInterface>>), { let java_field = jcall!(jcall!(this).gameKeyFactory).KEY_NUM5.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>))).clone(); java_value };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(this.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(e.clone()));
+            jcall!(jcall!(this).logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         this
@@ -106,7 +107,7 @@ impl DirectionalAnalogLocationInputProcessor {
     pub fn process(&mut self, mut allbinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut analogLocationInput: Option<Rc<RefCell<AnalogLocationInput>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut customGPoint: Option<Rc<RefCell<CustomGPoint>>> = None;
-            customGPoint = jcall!(analogLocationInput).getCustomGPoint();
+            customGPoint = { let java_value = (jcall!(analogLocationInput).getCustomGPoint()).clone(); java_value };
             let mut x: i32 = jcall!(customGPoint).getX();
             let mut y: i32 = jcall!(customGPoint).getY();
             let mut leftTrigger: i32 = jcall!(analogLocationInput).getLeftTrigger();
@@ -130,10 +131,10 @@ impl DirectionalAnalogLocationInputProcessor {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(String::from("Unable to process analog input"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).PROCESS.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put(String::from("Unable to process analog input"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

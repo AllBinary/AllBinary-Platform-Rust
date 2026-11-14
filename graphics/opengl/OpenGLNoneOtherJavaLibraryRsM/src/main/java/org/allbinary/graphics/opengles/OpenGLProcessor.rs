@@ -5,7 +5,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 
 // Borrows the object of a Java reference
@@ -16,16 +17,23 @@ macro_rules! jcall {
 }
 
 pub struct OpenGLProcessor {
+    pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
 
 impl OpenGLProcessor {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
+            logUtil: None,
             commonStrings: None,
         };
+        this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
         this
     }
@@ -38,7 +46,7 @@ impl OpenGLProcessor {
     pub fn process(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) {
     }
 }
-pub trait OpenGLProcessorDyn {
+pub trait OpenGLProcessorDyn: std::any::Any {
     fn as_OpenGLProcessor(&self) -> &OpenGLProcessor;
     fn as_OpenGLProcessor_mut(&mut self) -> &mut OpenGLProcessor;
     fn process(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) { OpenGLProcessor::process(self.as_OpenGLProcessor_mut(), gl) }

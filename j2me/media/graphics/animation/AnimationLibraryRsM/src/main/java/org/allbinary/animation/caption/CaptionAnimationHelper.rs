@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::animation::NullAnimationFactory::NullAnimationFactory;
@@ -44,8 +44,12 @@ pub struct CaptionAnimationHelper {
     pub animation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>,
 }
 
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for CaptionAnimationHelper {
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::Animation::Animation::nextFrame(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self)) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
+}
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for CaptionAnimationHelper {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 impl CaptionAnimationHelper {
@@ -60,9 +64,9 @@ impl CaptionAnimationHelper {
             animation: None,
         };
         this.timeHelper = TimeDelayHelper::new(620).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
-        this.textAnimation = TextAnimation::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::text::TextAnimation::TextAnimationDyn>>);
+        this.textAnimation = TextAnimation::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::text::TextAnimation::TextAnimationDyn>>);
         this.animation = jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0);
-        this.captionAnimation = CaptionAnimation::new(captionAnimation.clone(), this.textAnimation.clone(), captionDx.clone(), captionDy.clone(), dx.clone(), dy.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+        this.captionAnimation = CaptionAnimation::new(captionAnimation.clone(), this.textAnimation.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>), captionDx.clone(), captionDy.clone(), dx.clone(), dy.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
         this
     }
 
@@ -81,8 +85,8 @@ impl CaptionAnimationHelper {
     
 
     pub fn tick(&mut self) {
-        if { let java_receiver = self.timeHelper.clone(); let java_arguments = (jcall!(GameTickTimeDelayHelperFactory::getInstance()).startTime.clone(),); let java_result = jcall!(java_receiver).isTime(java_arguments.0); java_result } {
-            self.animation = jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0);
+        if { let java_receiver = self.timeHelper.clone(); let java_arguments = ({ let java_field = jcall!(GameTickTimeDelayHelperFactory::getInstance()).startTime.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).isTime(java_arguments.0); java_result } {
+            self.animation = { let java_value = (jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0)).clone(); java_value };
         }
     }
     
@@ -95,7 +99,7 @@ impl CaptionAnimationHelper {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         jcall!(self.animation).paintXY(graphics.clone(), x.clone(), y.clone());
     }
 }
@@ -117,7 +121,7 @@ impl crate::org::allbinary::animation::caption::CaptionAnimationHelperBase::Capt
 impl crate::org::allbinary::animation::Animation::AnimationDyn for CaptionAnimationHelper {
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface for CaptionAnimationHelper {
     fn set(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::khronos::opengles::GL::GL>>>) { crate::org::allbinary::animation::Animation::Animation::set(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1) }

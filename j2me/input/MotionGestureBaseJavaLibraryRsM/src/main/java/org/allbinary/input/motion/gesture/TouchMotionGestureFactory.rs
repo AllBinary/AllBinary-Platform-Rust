@@ -45,16 +45,20 @@ pub struct TouchMotionGestureFactory {
     pub LAST_MOTION: Option<Rc<RefCell<MotionGestureInput>>>,
 }
 
-pub static mut TouchMotionGestureFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut TouchMotionGestureFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl TouchMotionGestureFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<TouchMotionGestureFactory>>> {
-        if match (&unsafe { TouchMotionGestureFactory_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *TouchMotionGestureFactory_instance = TouchMotionGestureFactory::new() };
+        if match (&unsafe { TouchMotionGestureFactory_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *TouchMotionGestureFactory_instance = crate::java_into_object(TouchMotionGestureFactory::new()) };
         }
-        return (unsafe { TouchMotionGestureFactory_instance.clone() }).clone() /* as TouchMotionGestureFactory */;
+        return { let java_object = (unsafe { TouchMotionGestureFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<TouchMotionGestureFactory>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -75,7 +79,7 @@ impl TouchMotionGestureFactory {
             NO_MOTION: None,
             LAST_MOTION: None,
         };
-        let mut MAX: i32 = jcall!(InputFactory::getInstance()).MAX.clone();
+        let mut MAX: i32 = { let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field }.clone();
         this.LEFT = MotionGestureInput::new(MAX - 3, String::from("Left Touch"));
         this.RIGHT = MotionGestureInput::new(MAX - 4, String::from("Right Touch"));
         this.UP = MotionGestureInput::new(MAX - 5, String::from("Up Touch"));

@@ -23,6 +23,7 @@ use crate::org::allbinary::graphics::CellPosition::CellPosition;
 use crate::org::allbinary::graphics::GPoint::GPoint;
 use crate::org::allbinary::graphics::PointFactory::PointFactory;
 use crate::org::allbinary::graphics::Rectangle::Rectangle;
+use crate::java::lang::Exception::*;
 use super::TouchButton::TouchButton;
 use super::TouchButtonInput::TouchButtonInput;
 use super::TouchButtonResource::TouchButtonResource;
@@ -44,7 +45,7 @@ impl FullTouchButton {
 
     // throws Exception
     pub fn createButton(mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>>, mut touchButtonResource: Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButtonResource::TouchButtonResourceDyn>>>, mut rawRectangle: Option<Rc<RefCell<Rectangle>>>, mut cellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>, mut xBorder: i32, mut yBorder: i32) -> Option<Rc<RefCell<FullTouchButton>>> {
-        return FullTouchButton::new(touchButtonInput.clone(), jcall!(jcall!(FeaturedAnimationInterfaceFactoryInterfaceFactory::getInstance()).get(jcall!(touchButtonResource).as_TouchButtonResource_mut().RESOURCE.clone())).getInstance(0), jcall!(jcall!(FeaturedAnimationInterfaceFactoryInterfaceFactory::getInstance()).get(jcall!(touchButtonResource).as_TouchButtonResource_mut().HINT.clone())).getInstance(0), rawRectangle.clone(), cellPosition.clone(), xBorder.clone(), yBorder.clone());
+        return FullTouchButton::new(touchButtonInput.clone(), jcall!(jcall!(FeaturedAnimationInterfaceFactoryInterfaceFactory::getInstance()).get({ let java_field = jcall!(touchButtonResource).as_TouchButtonResource_mut().RESOURCE.clone(); java_field }.clone())).getInstance(0), jcall!(jcall!(FeaturedAnimationInterfaceFactoryInterfaceFactory::getInstance()).get({ let java_field = jcall!(touchButtonResource).as_TouchButtonResource_mut().HINT.clone(); java_field }.clone())).getInstance(0), rawRectangle.clone(), cellPosition.clone(), xBorder.clone(), yBorder.clone());
     }
     
 
@@ -66,17 +67,17 @@ impl FullTouchButton {
             let mut pointFactory: Option<Rc<RefCell<PointFactory>>> = PointFactory::getInstance();
             let mut x: i32 = jcall!(self.rawRectangle).getWidth() * jcall!(self.cellPositionP).getColumn();
             let mut y: i32 = jcall!(self.rawRectangle).getHeight() * jcall!(self.cellPositionP).getRow();
-            self.rectangleP = Rectangle::new(jcall!(pointFactory).createXY(x.clone(), y.clone()), jcall!(self.rawRectangle).getWidth() + (2 * self.xBorder), jcall!(self.rawRectangle).getHeight() + (2 * self.yBorder));
+            self.rectangleP = { let java_value = (Rectangle::new(jcall!(pointFactory).createXY(x.clone(), y.clone()), jcall!(self.rawRectangle).getWidth() + (2 * self.xBorder), jcall!(self.rawRectangle).getHeight() + (2 * self.yBorder))).clone(); java_value };
             let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(self.rectangleP).getPoint();
-            self.animationX = jcall!(point).getX() + self.xBorder;
-            self.animationY = jcall!(point).getY() + self.yBorder;
-            self.hintAnimationY = self.animationY - jcall!(self.rectangleP).getHeight() >> 1;
+            self.animationX = { let java_value = (jcall!(point).getX() + self.xBorder).clone(); java_value };
+            self.animationY = { let java_value = (jcall!(point).getY() + self.yBorder).clone(); java_value };
+            self.hintAnimationY = { let java_value = (self.animationY - jcall!(self.rectangleP).getHeight() >> 1).clone(); java_value };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateRectangle"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateRectangle"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -97,6 +98,10 @@ impl crate::org::allbinary::input::motion::button::TouchButton::TouchButtonDyn f
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for FullTouchButton {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for FullTouchButton {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::input::motion::button::TouchButton::TouchButton::paint(crate::org::allbinary::input::motion::button::TouchButton::TouchButtonDyn::as_TouchButton_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

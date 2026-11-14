@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -45,7 +46,7 @@ impl PathFindingNode {
             parent: None,
             geographicMapCellPosition: None,
         };
-        this.parent = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone();
+        this.parent = { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone();
         this.geographicMapCellPosition = crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone).clone();
         this.parent = parent.clone();
         this.setGeographicMapCellPositionP(geographicMapCellPosition.clone());
@@ -61,7 +62,7 @@ impl PathFindingNode {
     
 
     pub fn getParentP(&mut self) -> Option<Rc<RefCell<dyn PathFindingNodeDyn>>> {
-        return (self.parent).clone() /* as PathFindingNode */;
+        return { let java_object = (self.parent).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn PathFindingNodeDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -72,20 +73,20 @@ impl PathFindingNode {
 
     pub fn toString(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(std::any::type_name_of_val(&self).to_string());
-        jcall!(stringBuffer).append(jcall!(CommonLabels::getInstance()).COLON_SEP.clone());
+        jcall!(stringBuffer).append({ let java_argument = std::any::type_name_of_val(&self).to_string(); java_argument });
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonLabels::getInstance()).COLON_SEP.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from(" Path: "));
         jcall!(stringBuffer).append(jcall!(self.geographicMapCellPosition).toString());
         let mut pathFindingNode: Option<Rc<RefCell<dyn PathFindingNodeDyn>>> = self.getParentP();
         while pathFindingNode.is_some() {
-            jcall!(stringBuffer).append(jcall!(jcall!(pathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition).toString());
-            jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-            pathFindingNode = jcall!(pathFindingNode).getParentP();
+            jcall!(stringBuffer).append(jcall!({ let java_field = jcall!(pathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone(); java_field }).toString());
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+            pathFindingNode = { let java_value = (jcall!(pathFindingNode).getParentP()).clone(); java_value };
         }
         return jcall!(stringBuffer).toString();
     }
 }
-pub trait PathFindingNodeDyn {
+pub trait PathFindingNodeDyn: std::any::Any {
     fn as_PathFindingNode(&self) -> &PathFindingNode;
     fn as_PathFindingNode_mut(&mut self) -> &mut PathFindingNode;
     fn getParentP(&mut self) -> Option<Rc<RefCell<dyn PathFindingNodeDyn>>> { PathFindingNode::getParentP(self.as_PathFindingNode_mut()) }

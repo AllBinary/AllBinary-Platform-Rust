@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::RuntimeException::*;
 use super::BaseGameStatistics::BaseGameStatistics;
 
 // Borrows the object of a Java reference

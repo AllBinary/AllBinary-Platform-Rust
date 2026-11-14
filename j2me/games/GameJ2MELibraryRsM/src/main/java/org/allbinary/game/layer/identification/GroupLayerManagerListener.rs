@@ -32,6 +32,7 @@ use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -70,13 +71,13 @@ impl GroupLayerManagerListener {
             list: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
         let this = Some(Rc::new(RefCell::new(Self::new_struct())));
-            jcall!(LayerManagerEventHandler::getInstance()).addListener((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+            jcall!(LayerManagerEventHandler::getInstance()).addListener(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::event::LayerManagerEventListener::LayerManagerEventListenerDyn>>));
         this
     }
     
@@ -85,7 +86,7 @@ impl GroupLayerManagerListener {
         let mut groupList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
         let mut size: i32 = jcall!(self.list).size();
         for index in (0..=size - 1).rev() {
-            groupList = { let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
+            groupList = { let java_value = ({ let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             jcall!(groupList).clear();
         }
     }
@@ -144,11 +145,11 @@ impl GroupLayerManagerListener {
         let mut groupInterface: Option<Rc<RefCell<Group>>> = None;
         let mut groupId: i32 = 0;
         for index in (0..=size - 1).rev() {
-            groupInterfaceArray = (jcall!(excludeGroupList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone() /* as  */;
+            groupInterfaceArray = { let java_value = ({ let java_object = (jcall!(excludeGroupList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<Vec<Option<Rc<RefCell<Group>>>>>().cloned().expect("ClassCastException")).unwrap_or_default() }).clone(); java_value };
             let mut size2: i32 = (groupInterfaceArray.len() as i32).clone();
             for index2 in (0..size2) {
-                groupInterface = groupInterfaceArray[(index2) as usize].clone();
-                groupId = ((jcall!(groupInterface).getGroupId()) as i32);
+                groupInterface = { let java_value = (groupInterfaceArray[(index2) as usize]).clone(); java_value }.clone();
+                groupId = { let java_value = (((jcall!(groupInterface).getGroupId()) as i32)).clone(); java_value };
                 if groupId == id {
                     return true;
                 }
@@ -180,7 +181,7 @@ impl GroupLayerManagerListener {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
@@ -192,8 +193,8 @@ impl GroupLayerManagerListener {
         let mut id: i32 = 0;
         let mut groupList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
         for index in (0..size) {
-            id = ((jcall!(groupInterfaceArray[(index) as usize]).getGroupId()) as i32);
-            groupList = { let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(id) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
+            id = { let java_value = (((jcall!(groupInterfaceArray[(index) as usize]).getGroupId()) as i32)).clone(); java_value };
+            groupList = { let java_value = ({ let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(id) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             if groupList.is_none() {
                 { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("id: ")).appendint(id.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onCreateLayerManagerEvent"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
@@ -213,8 +214,8 @@ impl GroupLayerManagerListener {
         let mut id: i32 = 0;
         let mut groupList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
         for index in (0..size) {
-            id = ((jcall!(groupInterfaceArray[(index) as usize]).getGroupId()) as i32);
-            groupList = { let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(id) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
+            id = { let java_value = (((jcall!(groupInterfaceArray[(index) as usize]).getGroupId()) as i32)).clone(); java_value };
+            groupList = { let java_value = ({ let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(id) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             jcall!(groupList).remove(crate::java_into_object(layerInterface.clone()));
         }
     }
@@ -223,8 +224,8 @@ impl GroupLayerManagerListener {
     pub fn log(&mut self) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut GROUP: String = String::from("Group: ");
-        let mut SPACE: String = jcall!(CommonSeps::getInstance()).SPACE.clone();
-        let mut TOTAL_LABEL: String = jcall!(CommonLabels::getInstance()).TOTAL_LABEL.clone();
+        let mut SPACE: String = { let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone();
+        let mut TOTAL_LABEL: String = { let java_field = jcall!(CommonLabels::getInstance()).TOTAL_LABEL.clone(); java_field }.clone();
         let mut size: i32 = jcall!(self.list).size();
         for index in (0..=size - 1).rev() {
             let mut groupList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };

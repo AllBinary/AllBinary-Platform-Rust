@@ -21,6 +21,7 @@ use crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntell
 use crate::org::allbinary::game::input::GameInput::GameInput;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
+use crate::java::lang::Exception::*;
 use super::SequenceAI::SequenceAI;
 
 // Borrows the object of a Java reference
@@ -38,7 +39,7 @@ impl ArtificialIntelligenceInterface for ComboSequenceAI {
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for ComboSequenceAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl ComboSequenceAI {
@@ -63,7 +64,7 @@ impl ComboSequenceAI {
         let mut size: i32 = (artificialIntelligenceInterfaceArray.len() as i32).clone();
         for index in (0..size) {
             self.setIndex(index.clone());
-            self.base.processAI(allBinaryLayerManager.clone());
+            { let java_arguments = (allBinaryLayerManager.clone(),); self.base.processAI(java_arguments.0) };
         }
     }
 }

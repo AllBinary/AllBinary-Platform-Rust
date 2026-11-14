@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait StateControlledInterface {
+pub trait StateControlledInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn setState(&mut self, state: i32);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

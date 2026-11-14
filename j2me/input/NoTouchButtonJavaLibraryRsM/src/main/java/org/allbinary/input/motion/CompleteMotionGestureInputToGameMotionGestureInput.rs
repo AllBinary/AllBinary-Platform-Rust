@@ -35,6 +35,10 @@ thread_local! { pub static CompleteMotionGestureInputToGameMotionGestureInput_in
 
 impl CompleteMotionGestureInputToGameMotionGestureInput {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             commonStrings: None,
@@ -54,7 +58,7 @@ impl CompleteMotionGestureInputToGameMotionGestureInput {
     
 
     pub fn init(&mut self) {
-        PreLogUtil::put(String::from("No Touch Button = No Compound Motion Gestures"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone());
+        PreLogUtil::put(String::from("No Touch Button = No Compound Motion Gestures"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
     }
 }
 

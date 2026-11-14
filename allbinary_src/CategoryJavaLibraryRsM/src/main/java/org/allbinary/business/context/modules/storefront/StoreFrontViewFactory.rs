@@ -22,6 +22,7 @@ use crate::org::allbinary::data::tables::context::module::storefronts::StoreFron
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::StoreFrontView::StoreFrontView;
 
 // Borrows the object of a Java reference
@@ -37,6 +38,10 @@ pub struct StoreFrontViewFactory {
 
 
 impl StoreFrontViewFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -54,21 +59,22 @@ impl StoreFrontViewFactory {
 
     pub fn getInstance(mut storeName: String) -> Option<Rc<RefCell<dyn DomNodeInterface>>> {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut storeFronts: Option<Rc<RefCell<StoreFrontsEntity>>> = jcall!(StoreFrontsEntityFactory::getInstance()).getStoreFrontsEntityInstance();
-            return (StoreFrontView::new(jcall!(storeFronts).getStoreFrontInterface(storeName.clone()))).clone() /* as DomNodeInterface */;
+            return Some((StoreFrontView::new(jcall!(storeFronts).getStoreFrontInterface(storeName.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::context::modules::storefront::StoreFrontInterface::StoreFrontInterface>>))).clone() /* as DomNodeInterface */);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).FACTORYERROR.clone()) {
-                jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from("StoreFrontFactory")), jcall!(commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).FACTORYERROR.clone(); java_field }.clone()) {
+                jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from("StoreFrontFactory")), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return None;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

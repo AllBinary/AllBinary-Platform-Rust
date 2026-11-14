@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::NullCanvas::NullCanvas;
+use crate::javax::microedition::lcdui::NullCanvas::NullCanvas;
 use crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas;
 use crate::org::allbinary::game::commands::GameCommandsFactory::GameCommandsFactory;
 use crate::org::allbinary::game::input::GameInputStrings::GameInputStrings;
@@ -25,6 +25,7 @@ use crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::BasicMenuInputProcessor::BasicMenuInputProcessor;
 
 // Borrows the object of a Java reference
@@ -38,7 +39,23 @@ pub struct DemoCanvasBasicStartInputProcessor {
     pub base: BasicMenuInputProcessor,
 }
 
+impl crate::org::allbinary::game::input::event::DownGameKeyEventListenerInterface::DownGameKeyEventListenerInterface for DemoCanvasBasicStartInputProcessor {
+    fn onDownGameKeyEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onDownGameKeyEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
+}
 impl crate::org::allbinary::game::input::event::GameKeyEventListenerInterface::GameKeyEventListenerInterface for DemoCanvasBasicStartInputProcessor {
+}
+impl crate::org::allbinary::game::input::event::PressGameKeyEventListenerInterface::PressGameKeyEventListenerInterface for DemoCanvasBasicStartInputProcessor {
+    fn onPressGameKeyEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onPressGameKeyEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
+}
+impl crate::org::allbinary::game::input::event::UpGameKeyEventListenerInterface::UpGameKeyEventListenerInterface for DemoCanvasBasicStartInputProcessor {
+    fn onUpGameKeyEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onUpGameKeyEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
+}
+impl crate::org::allbinary::input::motion::gesture::observer::BaseMotionGestureEventListener::BaseMotionGestureEventListener for DemoCanvasBasicStartInputProcessor {
+    fn onMotionGestureEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::input::motion::gesture::observer::MotionGestureEvent::MotionGestureEvent>>>) { crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessor::onMotionGestureEvent(crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn::as_BasicMenuInputProcessor_mut(self), p1) }
+    fn onScrolledMotionGestureEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::input::motion::gesture::observer::MotionGestureEvent::MotionGestureEvent>>>) { crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessor::onScrolledMotionGestureEvent(crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn::as_BasicMenuInputProcessor_mut(self), p1) }
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for DemoCanvasBasicStartInputProcessor {
+    fn onEvent(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
 }
 
 impl DemoCanvasBasicStartInputProcessor {
@@ -46,7 +63,7 @@ impl DemoCanvasBasicStartInputProcessor {
 
     pub fn new_struct(mut gameKeyEventList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut gameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn>>>) -> Self {
         let mut this = Self {
-            base: BasicMenuInputProcessor::new_struct(gameKeyEventList.clone(), -1, gameCanvas.clone()),
+            base: BasicMenuInputProcessor::new_struct(gameKeyEventList.clone(), -1, gameCanvas.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>)),
         };
         // super(...) is in the struct literal above
         this
@@ -63,10 +80,10 @@ impl DemoCanvasBasicStartInputProcessor {
         let mut size: i32 = jcall!(list).size();
         let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = None;
         for index in (0..size) {
-            gameKeyEvent = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameKeyEvent>>>>().expect("ClassCastException").clone()) };
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Start GameKey: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(gameKeyEvent.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(GameInputStrings::getInstance()).PROCESS_INPUT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            gameKeyEvent = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameKeyEvent>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Start GameKey: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(gameKeyEvent.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(GameInputStrings::getInstance()).PROCESS_INPUT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
-        jcall!(jcall!(self.getCanvas()).getCustomCommandListener()).commandAction(jcall!(GameCommandsFactory::getInstance()).START_COMMAND.clone(), crate::javax::microedition::lcdui::NullCanvas::NullCanvas_NULL_CANVAS.with(Clone::clone).clone());
+        jcall!(jcall!(self.getCanvas()).getCustomCommandListener()).commandAction({ let java_field = jcall!(GameCommandsFactory::getInstance()).START_COMMAND.clone(); java_field }.clone(), crate::javax::microedition::lcdui::NullCanvas::NullCanvas_NULL_CANVAS.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>));
         return size.clone();
     }
 }

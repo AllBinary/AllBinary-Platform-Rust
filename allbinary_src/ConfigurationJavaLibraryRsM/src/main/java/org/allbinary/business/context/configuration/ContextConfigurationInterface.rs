@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait ContextConfigurationInterface {
+pub trait ContextConfigurationInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getEmailServerConfigurationInterface(&mut self) -> Option<Rc<RefCell<dyn EmailServerConfigurationInterface>>>;
     
 
     fn setEmailServerConfigurationInterface(&mut self, emailServerConfigurationInterface: Option<Rc<RefCell<dyn EmailServerConfigurationInterface>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -16,10 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::lang::reflect::Method::Method;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::JspTagException::JspTagException;
 use crate::admin::taghelpers::CustomLoaderHelperFactory::CustomLoaderHelperFactory;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
@@ -27,6 +26,7 @@ use crate::org::allbinary::logic::communication::http::request::AbResponseHandle
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
 use crate::tags::CustomTagSupport::CustomTagSupport;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,7 +40,7 @@ pub struct CustomLoaderTag {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub command: String,
     pub webappPath: String,
-    pub propertiesHashMap: Option<Rc<RefCell<HashMap>>>,
+    pub propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 
@@ -77,16 +77,16 @@ impl CustomLoaderTag {
     // throws LicensingException
     pub fn setCustomLoaderWebappPath(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(CustomLoaderHelperFactory::new()).getInstance(self.propertiesHashMap.clone(), self.base.pageContext.clone());
+            let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(CustomLoaderHelperFactory::new()).getInstance2(self.propertiesHashMap.clone(), self.base.pageContext.clone());
             let mut helperClass: &'static str = std::any::type_name_of_val(&anyType);
             let mut methodParams: Vec<&'static str> = vec![std::any::type_name_of_val(&self.webappPath)];
-            let mut methodArgs: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = vec![self.webappPath.clone()];
+            let mut methodArgs: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = vec![crate::java_into_object(self.webappPath.clone())];
             let mut setMethod: Option<Rc<RefCell<Method>>> = jcall!(helperClass).getMethod(String::from("setWebappPath"), methodParams.clone());
             jcall!(setMethod).invoke(anyType.clone(), methodArgs.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
             }
@@ -96,26 +96,27 @@ impl CustomLoaderTag {
 
     // throws JspTagException
     pub fn doStartTag(&mut self) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).JSPTAG.clone()) {
-                jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.base.tagStrings).DO_START_TAG.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).JSPTAG.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.base.tagStrings).DO_START_TAG.clone(); java_field }.clone());
             }
             if true {
-                self.propertiesHashMap = jcall!(StdUtil::getInstance()).createHashMap();
-                if (self.command.cmp(&jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).GLOBALS2).SET.clone()) as i32) == 0 {
+                self.propertiesHashMap = { let java_value = (jcall!(StdUtil::getInstance()).createHashMap()).clone(); java_value };
+                if (self.command.cmp(&{ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).GLOBALS2.clone(); java_field }).SET.clone(); java_field }.clone()) as i32) == 0 {
                     self.setCustomLoaderWebappPath();
                 }
             }
-            return SKIP_BODY.clone();
+            return Some(SKIP_BODY.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             AbResponseHandler::sendJspTagLicensingRedirect(self.pageContext.clone(), e.clone());
             return SKIP_BODY.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for CustomLoaderTag {

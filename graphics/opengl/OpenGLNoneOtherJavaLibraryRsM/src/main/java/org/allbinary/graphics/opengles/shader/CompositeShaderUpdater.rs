@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::egl::EGLConfig::EGLConfig;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::egl::EGLConfig::EGLConfig;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
@@ -36,7 +36,7 @@ pub struct CompositeShaderUpdater {
     pub commonSeps: Option<Rc<RefCell<CommonSeps>>>,
 }
 
-thread_local! { pub static CompositeShaderUpdater_instanceC: Option<Rc<RefCell<dyn CompositeShaderUpdaterDyn>>> = CompositeShaderUpdater::new(jcall!(StringUtil::getInstance()).getArrayInstance(), jcall!(StringUtil::getInstance()).getArrayInstance(), jcall!(StringUtil::getInstance()).getArrayInstance(), jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone()).map(|reference| reference as Rc<RefCell<dyn CompositeShaderUpdaterDyn>>); }
+thread_local! { pub static CompositeShaderUpdater_instanceC: Option<Rc<RefCell<dyn CompositeShaderUpdaterDyn>>> = CompositeShaderUpdater::new(jcall!(StringUtil::getInstance()).getArrayInstance(), jcall!(StringUtil::getInstance()).getArrayInstance(), jcall!(StringUtil::getInstance()).getArrayInstance(), { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn CompositeShaderUpdaterDyn>>); }
 
 impl CompositeShaderUpdater {
     

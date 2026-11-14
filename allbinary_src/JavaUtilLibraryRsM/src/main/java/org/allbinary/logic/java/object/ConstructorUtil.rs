@@ -33,6 +33,10 @@ pub struct ConstructorUtil {
 
 
 impl ConstructorUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -65,9 +69,9 @@ impl ConstructorUtil {
             jcall!(stringBuffer).append(jcall!(constructor).getName());
             let mut classes: Vec<&'static str> = jcall!(constructor).getParameterTypes();
             for index in (0..(classes.len() as i32)) {
-                jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
                 jcall!(stringBuffer).append(classes[(index) as usize].to_string());
-                jcall!(stringBuffer).append(jcall!(commonSeps).COLON.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).COLON.clone(); java_field }.clone());
                 jcall!(stringBuffer).appendint(index.clone());
             }
             jcall!(stringBuffer).append(lineBreak.clone());

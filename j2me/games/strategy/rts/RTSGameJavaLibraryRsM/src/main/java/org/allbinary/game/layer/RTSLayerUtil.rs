@@ -31,6 +31,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
 use crate::org::allbinary::media::graphics::geography::map::racetrack::BaseRaceTrackGeographicMap::BaseRaceTrackGeographicMap;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::RTSLayer::RTSLayer;
 use super::FakeLayerManager::FakeLayerManager;
 
@@ -50,6 +51,10 @@ pub struct RTSLayerUtil {
 thread_local! { pub static RTSLayerUtil_instance: Option<Rc<RefCell<RTSLayerUtil>>> = RTSLayerUtil::new(); }
 
 impl RTSLayerUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -86,15 +91,15 @@ impl RTSLayerUtil {
     
 
     pub fn downgrade(&mut self, mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>) {
-        jcall!(rtsLayer).setLevel(jcall!(rtsLayer).getLevel() - 1);
+        jcall!(rtsLayer).setLevel(jcall!(rtsLayer).as_RTSLayer_mut().getLevel() - 1);
         let mut partInterfaceArray: Vec<Option<Rc<RefCell<dyn PartInterface>>>> = jcall!(rtsLayer).getPartInterfaceArray();
         let mut size: i32 = (partInterfaceArray.len() as i32).clone();
         let mut partInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn>>> = None;
         {
             let mut index: i32 = size.clone();
             while { index -= 1; index } >= 0 {
-            partInterface = (partInterfaceArray[(index) as usize]).clone() /* as BasicWeaponPart */;
-            jcall!(partInterface).setWeaponProperties({ let java_arguments = (jcall!(partInterface).getWeaponProperties(), jcall!(rtsLayer).getLevel(), jcall!(rtsLayer).getLevel() + 1,); self.createWeaponProperties(java_arguments.0, java_arguments.1, java_arguments.2) });
+            partInterface = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn>>> { panic!("ClassCastException: a Rust dyn PartInterface cannot be cast to BasicWeaponPart") })();
+            jcall!(partInterface).setWeaponProperties({ let java_arguments = (jcall!(partInterface).getWeaponProperties(), jcall!(rtsLayer).as_RTSLayer_mut().getLevel(), jcall!(rtsLayer).as_RTSLayer_mut().getLevel() + 1,); self.createWeaponProperties(java_arguments.0, java_arguments.1, java_arguments.2) });
             }
         }
         jcall!(rtsLayer).select();
@@ -102,15 +107,15 @@ impl RTSLayerUtil {
     
 
     pub fn upgrade(&mut self, mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>) {
-        jcall!(rtsLayer).setLevel(jcall!(rtsLayer).getLevel() + 1);
+        jcall!(rtsLayer).setLevel(jcall!(rtsLayer).as_RTSLayer_mut().getLevel() + 1);
         let mut partInterfaceArray: Vec<Option<Rc<RefCell<dyn PartInterface>>>> = jcall!(rtsLayer).getPartInterfaceArray();
         let mut size: i32 = (partInterfaceArray.len() as i32).clone();
         let mut partInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn>>> = None;
         {
             let mut index: i32 = size.clone();
             while { index -= 1; index } >= 0 {
-            partInterface = (partInterfaceArray[(index) as usize]).clone() /* as BasicWeaponPart */;
-            jcall!(partInterface).setWeaponProperties({ let java_arguments = (jcall!(partInterface).getWeaponProperties(), jcall!(rtsLayer).getLevel(), jcall!(rtsLayer).getLevel() - 1,); self.createWeaponProperties(java_arguments.0, java_arguments.1, java_arguments.2) });
+            partInterface = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn>>> { panic!("ClassCastException: a Rust dyn PartInterface cannot be cast to BasicWeaponPart") })();
+            jcall!(partInterface).setWeaponProperties({ let java_arguments = (jcall!(partInterface).getWeaponProperties(), jcall!(rtsLayer).as_RTSLayer_mut().getLevel(), jcall!(rtsLayer).as_RTSLayer_mut().getLevel() - 1,); self.createWeaponProperties(java_arguments.0, java_arguments.1, java_arguments.2) });
             }
         }
         jcall!(rtsLayer).select();
@@ -136,8 +141,8 @@ impl RTSLayerUtil {
         let mut partInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn>>> = None;
         let mut weaponProperties: Option<Rc<RefCell<WeaponProperties>>> = None;
         for index in (0..=size - 1).rev() {
-            partInterface = (partInterfaceArray[(index) as usize]).clone() /* as BasicWeaponPart */;
-            weaponProperties = jcall!(partInterface).getWeaponProperties();
+            partInterface = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn>>> { panic!("ClassCastException: a Rust dyn PartInterface cannot be cast to BasicWeaponPart") })();
+            weaponProperties = { let java_value = (jcall!(partInterface).getWeaponProperties()).clone(); java_value };
             total += self.getWeaponPropertiesCost(weaponProperties.clone());
         }
         return total.clone();
@@ -153,9 +158,9 @@ impl RTSLayerUtil {
         let mut downgradeWeaponCost: i32 = 0;
         let mut currentWeaponCost: i32 = 0;
         for index in (0..=size - 1).rev() {
-            partInterface = (partInterfaceArray[(index) as usize]).clone() /* as BasicWeaponPart */;
-            weaponProperties = jcall!(partInterface).getWeaponProperties();
-            downgradeWeaponCost = { let java_arguments = ({ let java_arguments = (weaponProperties.clone(), jcall!(rtsLayer).getLevel() - 1, jcall!(rtsLayer).getLevel(),); self.createWeaponProperties(java_arguments.0, java_arguments.1, java_arguments.2) },); self.getWeaponPropertiesCost(java_arguments.0) };
+            partInterface = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn>>> { panic!("ClassCastException: a Rust dyn PartInterface cannot be cast to BasicWeaponPart") })();
+            weaponProperties = { let java_value = (jcall!(partInterface).getWeaponProperties()).clone(); java_value };
+            downgradeWeaponCost = { let java_value = ({ let java_arguments = ({ let java_arguments = (weaponProperties.clone(), jcall!(rtsLayer).as_RTSLayer_mut().getLevel() - 1, jcall!(rtsLayer).as_RTSLayer_mut().getLevel(),); self.createWeaponProperties(java_arguments.0, java_arguments.1, java_arguments.2) },); self.getWeaponPropertiesCost(java_arguments.0) }).clone(); java_value };
             currentWeaponCost = self.getWeaponPropertiesCost(weaponProperties.clone());
             downgradeCost += (currentWeaponCost - downgradeWeaponCost);
         }
@@ -174,9 +179,9 @@ impl RTSLayerUtil {
         let mut upgradedWeaponCost: i32 = 0;
         let mut currentWeaponCost: i32 = 0;
         for index in (0..=size - 1).rev() {
-            partInterface = (partInterfaceArray[(index) as usize]).clone() /* as BasicWeaponPart */;
-            weaponProperties = jcall!(partInterface).getWeaponProperties();
-            upgradedWeaponCost = { let java_arguments = ({ let java_arguments = (weaponProperties.clone(), jcall!(rtsLayer).getLevel() + 1, jcall!(rtsLayer).getLevel(),); self.createWeaponProperties(java_arguments.0, java_arguments.1, java_arguments.2) },); self.getWeaponPropertiesCost(java_arguments.0) };
+            partInterface = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn>>> { panic!("ClassCastException: a Rust dyn PartInterface cannot be cast to BasicWeaponPart") })();
+            weaponProperties = { let java_value = (jcall!(partInterface).getWeaponProperties()).clone(); java_value };
+            upgradedWeaponCost = { let java_value = ({ let java_arguments = ({ let java_arguments = (weaponProperties.clone(), jcall!(rtsLayer).as_RTSLayer_mut().getLevel() + 1, jcall!(rtsLayer).as_RTSLayer_mut().getLevel(),); self.createWeaponProperties(java_arguments.0, java_arguments.1, java_arguments.2) },); self.getWeaponPropertiesCost(java_arguments.0) }).clone(); java_value };
             currentWeaponCost = self.getWeaponPropertiesCost(weaponProperties.clone());
             upgradeCost += (upgradedWeaponCost - currentWeaponCost);
         }
@@ -188,21 +193,21 @@ impl RTSLayerUtil {
     // throws Exception
     pub fn destroyAndClear(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = None;
-        for index in (0..=jcall!(list).size() - 1).rev() {
-            rtsLayer = { let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>>().expect("ClassCastException").clone()) };
+        for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
+            rtsLayer = { let java_value = ({ let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             jcall!(rtsLayer).setDestroyed(true);
         }
         jcall!(list).clear();
     }
     
 
-    pub fn createFakeRTSLayerHashtable(&mut self, mut baseRaceTrackGeographicMap: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::BaseRaceTrackGeographicMap::BaseRaceTrackGeographicMapDyn>>>) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(StdUtil::getInstance()).createHashtable();
+    pub fn createFakeRTSLayerHashtable(&mut self, mut baseRaceTrackGeographicMap: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::BaseRaceTrackGeographicMap::BaseRaceTrackGeographicMapDyn>>>) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashtable();
         let mut layerManager: Option<Rc<RefCell<FakeLayerManager>>> = FakeLayerManager::new(crate::org::allbinary::game::GameInfo::GameInfo_NONE.with(Clone::clone).clone());
         jcall!(layerManager).setGeographicMapInterface(vec![baseRaceTrackGeographicMap.clone()]);
         jcall!(hashtable).put(crate::java_into_object(AllBinaryGameLayerManager_ID.with(Clone::clone).clone()), crate::java_into_object(layerManager.clone()));
-        jcall!(hashtable).put(crate::java_into_object(jcall!(DirectionFactory::getInstance()).NAME.clone()), crate::java_into_object(jcall!(DirectionFactory::getInstance()).LEFT.clone()));
-        jcall!(hashtable).put(crate::java_into_object(jcall!(self.groupCommonFactory).ID.clone()), crate::java_into_object(jcall!(BasicGroupFactory::getInstance()).NONE_ARRAY.clone()));
+        jcall!(hashtable).put(crate::java_into_object({ let java_field = jcall!(DirectionFactory::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(DirectionFactory::getInstance()).LEFT.clone(); java_field }.clone()));
+        jcall!(hashtable).put(crate::java_into_object({ let java_field = jcall!(self.groupCommonFactory).ID.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(BasicGroupFactory::getInstance()).NONE_ARRAY.clone(); java_field }.clone()));
         return hashtable.clone();
     }
 }

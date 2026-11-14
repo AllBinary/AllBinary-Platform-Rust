@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait ResizableListenerInterface {
+pub trait ResizableListenerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn onResizable(&mut self, isResizable: bool);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

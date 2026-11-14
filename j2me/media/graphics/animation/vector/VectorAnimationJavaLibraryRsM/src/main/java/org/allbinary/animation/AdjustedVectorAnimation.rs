@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use super::VectorAnimation::VectorAnimation;
 use super::AnimationBehavior::AnimationBehavior;
@@ -35,12 +35,12 @@ pub struct AdjustedVectorAnimation {
     pub dy: i32,
 }
 
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for AdjustedVectorAnimation {
-    fn getSize(&mut self) -> i32 { self.base.getSize() }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for AdjustedVectorAnimation {
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::VectorAnimation::VectorAnimation::nextFrame(crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn::as_VectorAnimation_mut(self)) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for AdjustedVectorAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 impl AdjustedVectorAnimation {
@@ -63,8 +63,8 @@ impl AdjustedVectorAnimation {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
-        self.base.paintXY(graphics.clone(), x + self.dx, y + self.dy);
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
+        { let java_arguments = (graphics.clone(), x + self.dx, y + self.dy,); self.base.paintXY(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
 }
 impl std::ops::Deref for AdjustedVectorAnimation {
@@ -80,7 +80,8 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for AdjustedVecto
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base.base }
     fn setAlpha(&mut self, p1: i32) { crate::org::allbinary::animation::VectorAnimation::VectorAnimation::setAlpha(crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn::as_VectorAnimation_mut(self), p1) }
     fn nextFrame(&mut self) { crate::org::allbinary::animation::VectorAnimation::VectorAnimation::nextFrame(crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn::as_VectorAnimation_mut(self)) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn getBasicColorP(&mut self) -> Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>> { crate::org::allbinary::animation::VectorAnimation::VectorAnimation::getBasicColorP(crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn::as_VectorAnimation_mut(self)) }
     fn setBasicColorP(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::animation::VectorAnimation::VectorAnimation::setBasicColorP(crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn::as_VectorAnimation_mut(self), p1) }
     fn changeBasicColor(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::animation::VectorAnimation::VectorAnimation::changeBasicColor(crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn::as_VectorAnimation_mut(self), p1) }
     fn setScale(&mut self, p1: f32, p2: f32) { crate::org::allbinary::animation::VectorAnimation::VectorAnimation::setScale(crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn::as_VectorAnimation_mut(self), p1, p2) }

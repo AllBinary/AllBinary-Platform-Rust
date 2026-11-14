@@ -22,6 +22,7 @@ use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::math::Angle::Angle;
 use crate::org::allbinary::math::AngleFactory::AngleFactory;
 use crate::org::allbinary::math::AngleInfo::AngleInfo;
+use crate::java::lang::Exception::*;
 use super::VectorBaseRotationAnimation::VectorBaseRotationAnimation;
 use super::AnimationBehavior::AnimationBehavior;
 
@@ -36,14 +37,9 @@ pub struct VectorRotationAnimation {
     pub base: VectorBaseRotationAnimation,
 }
 
-impl crate::org::allbinary::animation::IndexedAnimationInterface::IndexedAnimationInterface for VectorRotationAnimation {
-    fn reset(&mut self) { self.base.reset() }
-    fn setFrame(&mut self, mut index: i32) { Self::setFrame(self, index) }
-    fn getFrame(&mut self) -> i32 { self.base.getFrame() }
-}
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for VectorRotationAnimation {
-    fn getSize(&mut self) -> i32 { self.base.getSize() }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for VectorRotationAnimation {
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::VectorBaseRotationAnimation::VectorBaseRotationAnimation::nextFrame(crate::org::allbinary::animation::VectorBaseRotationAnimation::VectorBaseRotationAnimationDyn::as_VectorBaseRotationAnimation_mut(self)) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
 }
 impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterface for VectorRotationAnimation {
     fn setFrameByDirection(&mut self, mut direction: Option<Rc<RefCell<Direction>>>) { Self::setFrameByDirection(self, direction) }
@@ -51,13 +47,16 @@ impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterfac
     fn adjustFrameToAngle(&mut self, mut newAngle: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { Self::adjustFrameToAngle(self, newAngle) }
     fn adjustFrame(&mut self, mut newAngle: i16) { Self::adjustFrame(self, newAngle) }
 }
+impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for VectorRotationAnimation {
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::animation::VectorBaseRotationAnimation::VectorBaseRotationAnimation::paintXY(crate::org::allbinary::animation::VectorBaseRotationAnimation::VectorBaseRotationAnimationDyn::as_VectorBaseRotationAnimation_mut(self), p1, p2, p3) }
+}
 
 impl VectorRotationAnimation {
     
 
     pub fn new_struct(mut currentPoints: Vec<Vec<Vec<i32>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
         let mut this = Self {
-            base: VectorBaseRotationAnimation::new_struct(AngleInfo::getInstance((((((jcall!(AngleFactory::getInstance()).TOTAL_ANGLE) as i32) / (currentPoints.len() as i32))) as i16)), currentPoints.clone(), basicColor.clone(), animationBehavior.clone()),
+            base: VectorBaseRotationAnimation::new_struct(AngleInfo::getInstance(((((({ let java_field = jcall!(AngleFactory::getInstance()).TOTAL_ANGLE.clone(); java_field }) as i32) / (currentPoints.len() as i32))) as i16)), currentPoints.clone(), basicColor.clone(), animationBehavior.clone()),
         };
         // super(...) is in the struct literal above
         { let java_receiver = this.angleInfo.clone(); let java_arguments = (this.getFrame(),); jcall!(java_receiver).adjustAngle(java_arguments.0); };
@@ -81,7 +80,7 @@ impl VectorRotationAnimation {
     
 
     pub fn setFrame(&mut self, mut index: i32) {
-        self.base.setFrame(index.clone());
+        { let java_arguments = (index.clone(),); self.base.setFrame(java_arguments.0) };
         { let java_receiver = self.angleInfo.clone(); let java_arguments = (self.getFrame(),); jcall!(java_receiver).adjustAngle(java_arguments.0); };
     }
     
@@ -107,6 +106,9 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for VectorRotatio
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base.base.base }
     fn nextFrame(&mut self) { crate::org::allbinary::animation::VectorBaseRotationAnimation::VectorBaseRotationAnimation::nextFrame(crate::org::allbinary::animation::VectorBaseRotationAnimation::VectorBaseRotationAnimationDyn::as_VectorBaseRotationAnimation_mut(self)) }
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::animation::VectorBaseRotationAnimation::VectorBaseRotationAnimation::paintXY(crate::org::allbinary::animation::VectorBaseRotationAnimation::VectorBaseRotationAnimationDyn::as_VectorBaseRotationAnimation_mut(self), p1, p2, p3) }
+    fn getBasicColorP(&mut self) -> Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>> { crate::org::allbinary::animation::VectorBaseRotationAnimation::VectorBaseRotationAnimation::getBasicColorP(crate::org::allbinary::animation::VectorBaseRotationAnimation::VectorBaseRotationAnimationDyn::as_VectorBaseRotationAnimation_mut(self)) }
+    fn setBasicColorP(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::animation::VectorBaseRotationAnimation::VectorBaseRotationAnimation::setBasicColorP(crate::org::allbinary::animation::VectorBaseRotationAnimation::VectorBaseRotationAnimationDyn::as_VectorBaseRotationAnimation_mut(self), p1) }
 }
 impl crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn for VectorRotationAnimation {
     fn as_IndexedAnimation(&self) -> &crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &self.base.base.base }

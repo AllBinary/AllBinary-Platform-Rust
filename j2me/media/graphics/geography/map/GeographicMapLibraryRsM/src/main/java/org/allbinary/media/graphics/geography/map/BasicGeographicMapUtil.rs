@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::layer::Layer::Layer;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 use super::GeographicMapCellPosition::GeographicMapCellPosition;
 use super::BasicGeographicMap::BasicGeographicMap;
 
@@ -36,6 +37,10 @@ pub struct BasicGeographicMapUtil {
 thread_local! { pub static BasicGeographicMapUtil_instance: Option<Rc<RefCell<BasicGeographicMapUtil>>> = BasicGeographicMapUtil::new(); }
 
 impl BasicGeographicMapUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -128,8 +133,8 @@ impl BasicGeographicMapUtil {
         {
             let mut index: i32 = size + startIndex;
             while { index -= 1; index } >= startIndex {
-            geographicMapInterface = geographicMapInterfaceArray[(index) as usize].clone();
-            tiledLayerArray[({ let value = count; count += 1; value }) as usize] = jcall!(geographicMapInterface).getAllBinaryTiledLayer();
+            geographicMapInterface = { let java_value = (geographicMapInterfaceArray[(index) as usize]).clone(); java_value }.clone();
+            tiledLayerArray[({ let value = count; count += 1; value }) as usize] = jcall!(geographicMapInterface).getAllBinaryTiledLayer().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::Layer::LayerDyn>>);
             }
         }
         return tiledLayerArray.clone();
@@ -142,7 +147,7 @@ impl BasicGeographicMapUtil {
         {
             let mut index: i32 = size.clone();
             while { index -= 1; index } >= 0 {
-            geographicMapInterface = geographicMapInterfaceArray[(index) as usize].clone();
+            geographicMapInterface = { let java_value = (geographicMapInterfaceArray[(index) as usize]).clone(); java_value }.clone();
             jcall!(jcall!(geographicMapInterface).getAllBinaryTiledLayer()).moveDXY(dx.clone(), dy.clone());
             }
         }
@@ -155,7 +160,7 @@ impl BasicGeographicMapUtil {
         {
             let mut index: i32 = size.clone();
             while { index -= 1; index } >= 0 {
-            geographicMapInterface = geographicMapInterfaceArray[(index) as usize].clone();
+            geographicMapInterface = { let java_value = (geographicMapInterfaceArray[(index) as usize]).clone(); java_value }.clone();
             jcall!(jcall!(geographicMapInterface).getAllBinaryTiledLayer()).setPosition(x.clone(), y.clone(), jcall!(jcall!(geographicMapInterface).getAllBinaryTiledLayer()).getZP());
             }
         }

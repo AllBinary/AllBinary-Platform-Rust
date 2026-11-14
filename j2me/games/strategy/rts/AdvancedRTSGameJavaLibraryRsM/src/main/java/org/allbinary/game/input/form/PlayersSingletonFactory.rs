@@ -32,6 +32,10 @@ pub static mut PlayersSingletonFactory_total: std::cell::LazyCell<i32> = std::ce
 
 impl PlayersSingletonFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };

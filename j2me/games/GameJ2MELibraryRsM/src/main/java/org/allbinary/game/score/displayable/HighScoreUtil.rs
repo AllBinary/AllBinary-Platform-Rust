@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
 use crate::org::allbinary::game::GameInfo::GameInfo;
 use crate::org::allbinary::game::score::HighScore::HighScore;
 use crate::org::allbinary::game::score::HighScoreNamePersistanceSingleton::HighScoreNamePersistanceSingleton;
@@ -32,6 +32,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -52,15 +53,19 @@ pub struct HighScoreUtil {
     pub firstTime: bool,
 }
 
-thread_local! { pub static HighScoreUtil_SUBMIT_TEXTBOX_COMMAND: Option<Rc<RefCell<Command>>> = Command::new(String::from("Submit"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1); }
+thread_local! { pub static HighScoreUtil_SUBMIT_TEXTBOX_COMMAND: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>> = Command::new4(String::from("Submit"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>); }
 impl HighScoresResultsListener for HighScoreUtil {
     fn setHighScoresArray(&mut self, mut highScoresArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>>>) { Self::setHighScoresArray(self, highScoresArray) }
 }
 
 impl HighScoreUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct(mut highScoresFactoryInterface: Option<Rc<RefCell<dyn HighScoresFactoryInterface>>>, mut highScoresHelper: Option<Rc<RefCell<dyn HighScoresHelperBaseInterface>>>, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut gameInfo: Option<Rc<RefCell<GameInfo>>>, mut cmdListener: Option<Rc<RefCell<CommandListener>>>, mut name: String, mut highScore: Option<Rc<RefCell<HighScore>>>) -> Self {
+    pub fn new_struct(mut highScoresFactoryInterface: Option<Rc<RefCell<dyn HighScoresFactoryInterface>>>, mut highScoresHelper: Option<Rc<RefCell<dyn HighScoresHelperBaseInterface>>>, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut gameInfo: Option<Rc<RefCell<GameInfo>>>, mut cmdListener: Option<Rc<RefCell<dyn CommandListener>>>, mut name: String, mut highScore: Option<Rc<RefCell<HighScore>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -77,14 +82,14 @@ impl HighScoreUtil {
         this.firstTime = true;
         this.highScoresFactoryInterface = highScoresFactoryInterface.clone();
         this.highScoresHelper = highScoresHelper.clone();
-        this.highScoresArray = jcall!(this.highScoresHelper).getHighScoresArray();
+        this.highScoresArray = { let java_value = (jcall!(this.highScoresHelper).getHighScoresArray()).clone(); java_value };
         this.highScore = highScore.clone();
         this.abeClientInformation = abeClientInformation.clone();
         this.gameInfo = gameInfo.clone();
         this
     }
 
-    pub fn new(mut highScoresFactoryInterface: Option<Rc<RefCell<dyn HighScoresFactoryInterface>>>, mut highScoresHelper: Option<Rc<RefCell<dyn HighScoresHelperBaseInterface>>>, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut gameInfo: Option<Rc<RefCell<GameInfo>>>, mut cmdListener: Option<Rc<RefCell<CommandListener>>>, mut name: String, mut highScore: Option<Rc<RefCell<HighScore>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut highScoresFactoryInterface: Option<Rc<RefCell<dyn HighScoresFactoryInterface>>>, mut highScoresHelper: Option<Rc<RefCell<dyn HighScoresHelperBaseInterface>>>, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut gameInfo: Option<Rc<RefCell<GameInfo>>>, mut cmdListener: Option<Rc<RefCell<dyn CommandListener>>>, mut name: String, mut highScore: Option<Rc<RefCell<HighScore>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(highScoresFactoryInterface, highScoresHelper, abeClientInformation, gameInfo, cmdListener, name, highScore))))
     }
     
@@ -103,7 +108,7 @@ impl HighScoreUtil {
     
 
     pub fn saveHighScore(&mut self) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.commonStrings).START.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.highScore.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("saveHighScore"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.highScore.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("saveHighScore"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut size: i32 = (self.highScoresArray.len() as i32).clone();
         if self.firstTime && size == 0 {
             jcall!(self.logUtil).putF(String::from("Games canvas did not give us any HighScores"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("saveHighScore"));
@@ -113,9 +118,9 @@ impl HighScoreUtil {
         let mut highScores: Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>> = None;
         let mut highScoresAsString: String = String::new();
         for index in (0..size) {
-            highScores = self.highScoresArray[(index) as usize].clone();
-            jcall!(highScores).addHighScore(self.highScore.clone());
-            highScoresAsString = jcall!(highScores).toString();
+            highScores = { let java_value = (self.highScoresArray[(index) as usize]).clone(); java_value }.clone();
+            jcall!(highScores).as_HighScores_mut().addHighScore(self.highScore.clone());
+            highScoresAsString = { let java_value = (jcall!(highScores).as_HighScores_mut().toString()).clone(); java_value };
             { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Added/Adding Score: ")).append(highScoresAsString.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("saveHighScore"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         jcall!(self.highScoresHelper).setHighScoresArray(self.highScoresArray.clone());
@@ -123,8 +128,8 @@ impl HighScoreUtil {
     
 
     pub fn submit(&mut self, mut myCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn>>>) {
-        let mut commandListener: Option<Rc<RefCell<CommandListener>>> = jcall!(myCanvas).getCustomCommandListener();
-        jcall!(commandListener).commandAction(HighScoreUtil_SUBMIT_TEXTBOX_COMMAND.with(Clone::clone).clone(), myCanvas.clone());
+        let mut commandListener: Option<Rc<RefCell<dyn CommandListener>>> = jcall!(myCanvas).getCustomCommandListener();
+        jcall!(commandListener).commandAction(HighScoreUtil_SUBMIT_TEXTBOX_COMMAND.with(Clone::clone).clone(), myCanvas.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>));
     }
 }
 

@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::logic::communication::smtp::event::UserEmailEventNameData::UserEmailEventNameData;
 use crate::org::allbinary::logic::communication::smtp::event::handler::UserEmailEventHandler::UserEmailEventHandler;
@@ -28,6 +27,7 @@ use crate::org::allbinary::logic::communication::smtp::info::BasicEmailInfo::Bas
 use crate::org::allbinary::logic::communication::smtp::info::EmailInfo::EmailInfo;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
 use crate::org::allbinary::logic::system::security::licensing::ServiceClientInformationInterfaceFactory::ServiceClientInformationInterfaceFactory;
+use crate::java::lang::Exception::*;
 use super::TagHelper::TagHelper;
 
 // Borrows the object of a Java reference
@@ -40,7 +40,7 @@ macro_rules! jcall {
 pub struct BasicTextEmailHelper {
     pub base: TagHelper,
     pub abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>,
-    pub hashMap: Option<Rc<RefCell<HashMap>>>,
+    pub hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
     pub pageContext: Option<Rc<RefCell<PageContext>>>,
 }
 
@@ -48,7 +48,7 @@ pub struct BasicTextEmailHelper {
 impl BasicTextEmailHelper {
     
 
-    pub fn new_struct(mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
+    pub fn new_struct(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
         let mut this = Self {
             base: TagHelper::new_struct(),
             abeClientInformation: None,
@@ -61,15 +61,15 @@ impl BasicTextEmailHelper {
         this
     }
 
-    pub fn new(mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(hashMap, pageContext))))
     }
     
 
     // throws Exception
     pub fn send(&mut self) {
-        let mut adminEmailSubject: String = (jcall!(self.hashMap).get(String::from("Subject"))).clone() /* as String */;
-        let mut adminEmailTextBody: String = (jcall!(self.hashMap).get(String::from("Body"))).clone() /* as String */;
+        let mut adminEmailSubject: String = { let java_object = (jcall!(self.hashMap).get(crate::java_into_object(String::from("Subject")))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+        let mut adminEmailTextBody: String = { let java_object = (jcall!(self.hashMap).get(crate::java_into_object(String::from("Body")))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         let mut adminBasicEmailInfo: Option<Rc<RefCell<dyn crate::org::allbinary::logic::communication::smtp::info::BasicEmailInfo::BasicEmailInfoDyn>>> = (AdminEmailInfo::new(adminEmailSubject.clone(), adminEmailTextBody.clone())).clone() /* as BasicEmailInfo */;
         let mut adminEmailInfo: Option<Rc<RefCell<EmailInfo>>> = EmailInfo::new1(adminBasicEmailInfo.clone());
         let mut adminUserEmailEventHandler: Option<Rc<RefCell<UserEmailEventHandler>>> = jcall!(AdminUserEmailEventHandlerSingletons::getInstance()).getInstance2(self.abeClientInformation.clone(), crate::org::allbinary::logic::communication::smtp::event::UserEmailEventNameData::UserEmailEventNameData_INSTALLER.with(Clone::clone).clone());

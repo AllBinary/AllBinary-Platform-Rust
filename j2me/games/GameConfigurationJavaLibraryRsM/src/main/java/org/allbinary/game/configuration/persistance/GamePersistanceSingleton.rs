@@ -42,7 +42,7 @@ impl GamePersistanceSingleton {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: KeyValuePersistance::new_struct(jcall!(GamePersistanceStrings::GamePersistanceStrings::getInstance()).SAVED_GAME_RECORD_ID.clone()),
+            base: KeyValuePersistance::new_struct({ let java_field = jcall!(GamePersistanceStrings::GamePersistanceStrings::getInstance()).SAVED_GAME_RECORD_ID.clone(); java_field }.clone()),
         };
         // super(...) is in the struct literal above
         this

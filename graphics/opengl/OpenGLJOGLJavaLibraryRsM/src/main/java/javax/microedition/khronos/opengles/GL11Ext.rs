@@ -6,13 +6,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use super::GL::GL;
-use super::opengles::opengles;
-use super::khronos::khronos;
-use super::microedition::microedition;
-use super::javax::javax;
 use super::FloatBuffer::FloatBuffer;
-use super::nio::nio;
-use super::java::java;
 use super::IntBuffer::IntBuffer;
 use super::ShortBuffer::ShortBuffer;
 use super::Buffer::Buffer;
@@ -86,14 +80,14 @@ pub trait GL11Ext: GL {
     
 
     // Java overloaded method: Rust needs a different name
-    fn glMatrixIndexPointerOES(&mut self, size: i32, r#type: i32, stride: i32, offset: i32);
+    fn glMatrixIndexPointerOES_int_int_int_int(&mut self, size: i32, r#type: i32, stride: i32, offset: i32);
     
 
     fn glWeightPointerOES(&mut self, size: i32, r#type: i32, stride: i32, pointer: Option<Rc<RefCell<Buffer>>>);
     
 
     // Java overloaded method: Rust needs a different name
-    fn glWeightPointerOES(&mut self, size: i32, r#type: i32, stride: i32, offset: i32);
+    fn glWeightPointerOES_int_int_int_int(&mut self, size: i32, r#type: i32, stride: i32, offset: i32);
 }
 
 thread_local! { pub static GL11Ext_GL_MATRIX_INDEX_ARRAY_BUFFER_BINDING_OES: i32 = 35742; }

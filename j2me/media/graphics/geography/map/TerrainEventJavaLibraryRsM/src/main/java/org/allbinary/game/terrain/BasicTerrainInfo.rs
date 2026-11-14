@@ -31,9 +31,13 @@ pub struct BasicTerrainInfo {
     pub angle: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>,
 }
 
-thread_local! { pub static BasicTerrainInfo_NULL_BASIC_TERRAIN_INFO: Option<Rc<RefCell<BasicTerrainInfo>>> = BasicTerrainInfo::new(jcall!(AngleFactory::getInstance()).NOT_ANGLE.clone()); }
+thread_local! { pub static BasicTerrainInfo_NULL_BASIC_TERRAIN_INFO: Option<Rc<RefCell<BasicTerrainInfo>>> = BasicTerrainInfo::new({ let java_field = jcall!(AngleFactory::getInstance()).NOT_ANGLE.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>)); }
 
 impl BasicTerrainInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut angle: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) -> Self {

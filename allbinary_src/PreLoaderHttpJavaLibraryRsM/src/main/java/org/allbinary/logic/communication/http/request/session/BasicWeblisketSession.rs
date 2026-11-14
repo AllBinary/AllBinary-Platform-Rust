@@ -41,6 +41,10 @@ pub struct BasicWeblisketSession {
 
 
 impl BasicWeblisketSession {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
@@ -50,7 +54,7 @@ impl BasicWeblisketSession {
         };
         this.pageContext = pageContext.clone();
         let mut request: Option<Rc<RefCell<HttpServletRequest>>> = (jcall!(pageContext).getRequest()).clone() /* as HttpServletRequest */;
-        this.session = jcall!(request).getSession(true);
+        this.session = { let java_value = (jcall!(request).getSession(true)).clone(); java_value };
         this
     }
 
@@ -65,7 +69,7 @@ impl BasicWeblisketSession {
     
 
     pub fn getRole(&mut self) -> Option<Rc<RefCell<BasicUserRole>>> {
-        return ({ let java_receiver = self.session.clone(); let java_arguments = (crate::org::allbinary::business::user::role::BasicUserRoleData::BasicUserRoleData_NAME.with(Clone::clone).clone(),); let java_result = jcall!(java_receiver).getAttribute(java_arguments.0); java_result }).clone() /* as BasicUserRole */;
+        return ({ let java_receiver = self.session.clone(); let java_arguments = (crate::org::allbinary::business::user::role::BasicUserRoleData::BasicUserRoleData_NAME.with(Clone::clone).clone(),); let java_result = jcall!(java_receiver).getAttribute(java_arguments.0); java_result }).clone();
     }
     
 
@@ -85,7 +89,7 @@ impl BasicWeblisketSession {
     
 
     pub fn setAuthenticated(&mut self) {
-        { let java_receiver = self.session.clone(); let java_arguments = (WeblisketSessionData_AUTHENTICATED.with(Clone::clone).clone(), jcall!(BooleanFactory::getInstance()).TRUE_STRING.clone(),); jcall!(java_receiver).setAttribute(java_arguments.0, java_arguments.1); };
+        { let java_receiver = self.session.clone(); let java_arguments = (WeblisketSessionData_AUTHENTICATED.with(Clone::clone).clone(), { let java_field = jcall!(BooleanFactory::getInstance()).TRUE_STRING.clone(); java_field }.clone(),); jcall!(java_receiver).setAttribute(java_arguments.0, java_arguments.1); };
     }
     
 
@@ -100,12 +104,12 @@ impl BasicWeblisketSession {
     
 
     pub fn setStoreName(&mut self, mut value: String) {
-        { let java_receiver = self.session.clone(); let java_arguments = (jcall!(StoreFrontData::getInstance()).NAME.clone(), value.clone(),); jcall!(java_receiver).setAttribute(java_arguments.0, java_arguments.1); };
+        { let java_receiver = self.session.clone(); let java_arguments = ({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone(), value.clone(),); jcall!(java_receiver).setAttribute(java_arguments.0, java_arguments.1); };
     }
     
 
     pub fn getWebAppPath(&mut self) -> String {
-        return (jcall!(self.session).getAttribute(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).GLOBALS2).WEBAPPPATH.clone())).clone() /* as String */;
+        return (jcall!(self.session).getAttribute({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).GLOBALS2.clone(); java_field }).WEBAPPPATH.clone(); java_field }.clone())).clone() /* as String */;
     }
     
 
@@ -140,13 +144,13 @@ impl BasicWeblisketSession {
     
 
     pub fn getStoreName(&mut self) -> String {
-        return ({ let java_receiver = self.session.clone(); let java_arguments = (jcall!(StoreFrontData::getInstance()).NAME.clone(),); let java_result = jcall!(java_receiver).getAttribute(java_arguments.0); java_result }).clone() /* as String */;
+        return ({ let java_receiver = self.session.clone(); let java_arguments = ({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).getAttribute(java_arguments.0); java_result }).clone() /* as String */;
     }
     
 
     // Java overloaded method: Rust needs a different name
     pub fn setAuthenticated1(&mut self, mut value: bool) {
-        { let java_receiver = self.session.clone(); let java_arguments = (WeblisketSessionData_AUTHENTICATED.with(Clone::clone).clone(), jcall!(BooleanFactory::getInstance()).FALSE_STRING.clone(),); jcall!(java_receiver).setAttribute(java_arguments.0, java_arguments.1); };
+        { let java_receiver = self.session.clone(); let java_arguments = (WeblisketSessionData_AUTHENTICATED.with(Clone::clone).clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE_STRING.clone(); java_field }.clone(),); jcall!(java_receiver).setAttribute(java_arguments.0, java_arguments.1); };
     }
     
 

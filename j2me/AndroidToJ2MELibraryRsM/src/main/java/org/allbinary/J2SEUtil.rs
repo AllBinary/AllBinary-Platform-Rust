@@ -16,11 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
-// use crate::java::util::Map::Map;
-// use crate::java::util::Set::Set;
+use crate::java::util::HashMap::HashMap;
+use crate::java::util::Map::Map;
+use crate::java::util::Set::Set;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,6 +35,10 @@ pub struct J2SEUtil {
 thread_local! { pub static J2SEUtil_instance: Option<Rc<RefCell<J2SEUtil>>> = J2SEUtil::new(); }
 
 impl J2SEUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -53,7 +56,7 @@ impl J2SEUtil {
     }
     
 
-    pub fn getHashMapAsArray(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) -> Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> {
+    pub fn getHashMapAsArray(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> {
         let mut objectArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(hashMap).keySet()).toArray();
         return objectArray.clone();
     }
@@ -65,7 +68,7 @@ impl J2SEUtil {
     }
     
 
-    pub fn getSetAsArray(&mut self, mut set: Option<Rc<RefCell<dyn Set<String>>>>) -> Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> {
+    pub fn getSetAsArray(&mut self, mut set: Option<Rc<RefCell<dyn Set<crate::JavaObject>>>>) -> Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> {
         let mut objectArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(set).toArray();
         return objectArray.clone();
     }

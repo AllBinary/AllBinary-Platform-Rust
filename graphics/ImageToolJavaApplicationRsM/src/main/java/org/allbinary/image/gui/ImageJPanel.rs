@@ -67,10 +67,10 @@ impl ImageJPanel {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         if !self.isDrawn {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.canvasStrings).PAINT.clone());
-            jcall!(graphics).drawImage(self.bufferedImage.clone(), 0, 0, jcall!(self.bufferedImage).getWidth(None), jcall!(self.bufferedImage).getHeight(None), None);
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.canvasStrings).PAINT.clone(); java_field }.clone());
+            jcall!(graphics).as_Graphics_mut().drawImage(self.bufferedImage.clone(), 0, 0, jcall!(self.bufferedImage).getWidth(None), jcall!(self.bufferedImage).getHeight(None), None);
             self.isDrawn = true;
         }
     }
@@ -79,8 +79,8 @@ impl ImageJPanel {
     pub fn initComponents(&mut self) {
         let mut layout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(None /* Java this: a &mut self method has no Rc of itself */);
         self.setLayout(layout.clone());
-        jcall!(layout).setHorizontalGroup(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGap(0, 400, i16::MAX.clone()));
-        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGap(0, 300, i16::MAX.clone()));
+        jcall!(layout).setHorizontalGroup(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGap(0, 400, i16::MAX.clone()));
+        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGap(0, 300, i16::MAX.clone()));
     }
 }
 impl std::ops::Deref for ImageJPanel {

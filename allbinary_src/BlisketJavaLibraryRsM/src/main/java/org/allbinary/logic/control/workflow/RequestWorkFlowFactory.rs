@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::ServletConfig::ServletConfig;
 // use crate::javax::servlet::ServletContext::ServletContext;
 // use crate::javax::servlet::ServletRequest::ServletRequest;
@@ -29,6 +28,7 @@ use crate::org::allbinary::data::tables::workflow::WorkFlowEntityFactory::WorkFl
 use crate::org::allbinary::logic::communication::http::request::session::WeblisketSession::WeblisketSession;
 use crate::org::allbinary::logic::io::path::AbPathData::AbPathData;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
+use crate::java::lang::Exception::*;
 use super::WorkFlowInterface::WorkFlowInterface;
 
 // Borrows the object of a Java reference
@@ -43,6 +43,10 @@ pub struct RequestWorkFlowFactory {
 
 
 impl RequestWorkFlowFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -60,20 +64,20 @@ impl RequestWorkFlowFactory {
     pub fn getInstance4(mut request: Option<Rc<RefCell<ServletRequest>>>, mut response: Option<Rc<RefCell<ServletResponse>>>, mut servletConfig: Option<Rc<RefCell<ServletConfig>>>, mut servletContext: Option<Rc<RefCell<ServletContext>>>) -> Option<Rc<RefCell<dyn WorkFlowInterface>>> {
         let mut httpRequest: Option<Rc<RefCell<HttpServletRequest>>> = (request).clone() /* as HttpServletRequest */;
         let mut requestCommand: String = jcall!(httpRequest).getPathInfo();
-        let mut index: i32 = requestCommand.find(&jcall!(AbPathData::getInstance()).SEPARATOR.clone()).map(|index| index as i32).unwrap_or(-1);
+        let mut index: i32 = requestCommand.find(&{ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1);
         let mut storeName: String = requestCommand[(0) as usize..(index) as usize].to_string();
         let mut requestName: String = requestCommand[(index) as usize..((requestCommand.chars().count() as i32)) as usize].to_string();
-        return jcall!(jcall!(WorkFlowEntityFactory::getInstance()).create2()).get(requestName.clone(), storeName.clone());
+        return jcall!(jcall!(WorkFlowEntityFactory::getInstance()).create2()).get2(requestName.clone(), storeName.clone());
     }
     
 
     // throws Exception, LicensingException
     // Java overloaded method: Rust needs a different name
-    pub fn getInstance(mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<dyn WorkFlowInterface>>> {
-        let mut workFlowName: String = (jcall!(jcall!(pageContext).getRequest()).getParameter(jcall!(WorkFlowData::WorkFlowData::getInstance()).NAME.clone())).clone() /* as String */;
+    pub fn getInstance(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<dyn WorkFlowInterface>>> {
+        let mut workFlowName: String = (jcall!(jcall!(pageContext).getRequest()).getParameter({ let java_field = jcall!(WorkFlowData::WorkFlowData::getInstance()).NAME.clone(); java_field }.clone())).clone() /* as String */;
         let mut weblisketSession: Option<Rc<RefCell<WeblisketSession>>> = WeblisketSession::new2(hashMap.clone(), pageContext.clone());
         let mut storeName: String = jcall!(weblisketSession).getStoreName();
-        return jcall!(jcall!(WorkFlowEntityFactory::getInstance()).create2()).get(workFlowName.clone(), storeName.clone());
+        return jcall!(jcall!(WorkFlowEntityFactory::getInstance()).create2()).get2(workFlowName.clone(), storeName.clone());
     }
 }
 

@@ -34,6 +34,10 @@ thread_local! { pub static NoMovementFactory_instance: Option<Rc<RefCell<NoMovem
 
 impl NoMovementFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             movement: None,

@@ -35,9 +35,13 @@ pub struct RelativeRelationship {
     pub z: i32,
 }
 
-thread_local! { pub static RelativeRelationship_NULL_RELATIVE_RELATIONSHIP: Option<Rc<RefCell<dyn RelativeRelationshipDyn>>> = RelativeRelationship::new(jcall!(PointFactory::PointFactory::getInstance()).ZERO_ZERO.clone(), jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance()).map(|reference| reference as Rc<RefCell<dyn RelativeRelationshipDyn>>); }
+thread_local! { pub static RelativeRelationship_NULL_RELATIVE_RELATIONSHIP: Option<Rc<RefCell<dyn RelativeRelationshipDyn>>> = RelativeRelationship::new({ let java_field = jcall!(PointFactory::PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone(), jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance()).map(|reference| reference as Rc<RefCell<dyn RelativeRelationshipDyn>>); }
 
 impl RelativeRelationship {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut typesAllowedList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Self {
@@ -47,9 +51,9 @@ impl RelativeRelationship {
             y: 0,
             z: 0,
         };
-        this.x = jcall!(point).getX();
-        this.y = jcall!(point).getY();
-        this.z = jcall!(point).getZ();
+        this.x = { let java_value = (jcall!(point).getX()).clone(); java_value };
+        this.y = { let java_value = (jcall!(point).getY()).clone(); java_value };
+        this.z = { let java_value = (jcall!(point).getZ()).clone(); java_value };
         this.typesAllowedList = typesAllowedList.clone();
         this
     }
@@ -83,7 +87,7 @@ impl RelativeRelationship {
         self.typesAllowedList = typesAllowedList.clone();
     }
 }
-pub trait RelativeRelationshipDyn {
+pub trait RelativeRelationshipDyn: std::any::Any {
     fn as_RelativeRelationship(&self) -> &RelativeRelationship;
     fn as_RelativeRelationship_mut(&mut self) -> &mut RelativeRelationship;
     fn getX(&mut self) -> i32 { RelativeRelationship::getX(self.as_RelativeRelationship_mut()) }

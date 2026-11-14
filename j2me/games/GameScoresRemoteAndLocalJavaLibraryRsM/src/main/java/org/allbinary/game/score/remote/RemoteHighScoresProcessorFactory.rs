@@ -30,9 +30,13 @@ macro_rules! jcall {
 pub struct RemoteHighScoresProcessorFactory {
 }
 
-thread_local! { pub static RemoteHighScoresProcessorFactory_SINGLETON: Option<Rc<RefCell<dyn RemoteHighScoresProcessorInterface>>> = RemoteHighScoresProcessor::new().map(|reference| reference as Rc<RefCell<dyn RemoteHighScoresProcessorInterface>>); }
+thread_local! { pub static RemoteHighScoresProcessorFactory_SINGLETON: Option<Rc<RefCell<dyn RemoteHighScoresProcessorInterface>>> = RemoteHighScoresProcessor::new().map(|reference| reference as Rc<RefCell<dyn RemoteHighScoresProcessorInterface>>).map(|reference| reference as Rc<RefCell<dyn RemoteHighScoresProcessorInterface>>); }
 
 impl RemoteHighScoresProcessorFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

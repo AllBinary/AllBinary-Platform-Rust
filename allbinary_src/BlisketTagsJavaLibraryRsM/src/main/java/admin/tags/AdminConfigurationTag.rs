@@ -40,8 +40,8 @@ impl AdminConfigurationTag {
         let mut this = Self {
             base: TableTag::new_struct(),
         };
-        this.setTagHelperFactory(AdminConfigurationHelperFactory::new());
-        this.setTagRequestHelperFactory(AdminConfigurationRequestHelperFactory::new());
+        this.setTagHelperFactory(AdminConfigurationHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(AdminConfigurationRequestHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 

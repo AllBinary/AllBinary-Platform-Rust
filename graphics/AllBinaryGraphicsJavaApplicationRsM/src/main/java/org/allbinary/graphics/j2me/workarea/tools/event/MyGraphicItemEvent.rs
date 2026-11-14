@@ -19,8 +19,6 @@ use std::rc::Rc;
 use super::*;
 // use crate::javax::swing::tree::MutableTreeNode::MutableTreeNode;
 use super::EventObject::EventObject;
-use super::util::util;
-use super::java::java;
 use super::MyGraphicItemEventSource::MyGraphicItemEventSource;
 
 // Borrows the object of a Java reference
@@ -52,7 +50,7 @@ impl MyGraphicItemEvent {
     
 
     pub fn getSource(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return self.base.getSource();
+        return crate::java_into_object(self.base.getSource());
     }
     
 

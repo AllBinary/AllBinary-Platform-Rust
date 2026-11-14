@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactory;
 use crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
@@ -28,6 +28,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
+use crate::java::lang::Exception::*;
 use super::AnimationFactoryInitializationVisitor::AnimationFactoryInitializationVisitor;
 
 // Borrows the object of a Java reference
@@ -39,7 +40,7 @@ macro_rules! jcall {
 
 pub struct BaseImageAnimationFactory {
     pub animationFactoryImageScaleUtil: Option<Rc<RefCell<AnimationFactoryImageScaleUtil>>>,
-    pub image: Option<Rc<RefCell<Image>>>,
+    pub image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
     pub animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>,
     pub sequenceArray: Vec<i32>,
     pub animationFactoryInitializationVisitor: Option<Rc<RefCell<AnimationFactoryInitializationVisitor>>>,
@@ -57,12 +58,12 @@ impl BaseImageAnimationFactory {
     
 
     // throws Exception
-    pub fn createFactoryBase(mut image: Option<Rc<RefCell<Image>>>, mut sequenceArray: Vec<i32>, mut width: i32, mut height: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<dyn BaseImageAnimationFactoryDyn>>> {
+    pub fn createFactoryBase(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut sequenceArray: Vec<i32>, mut width: i32, mut height: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<dyn BaseImageAnimationFactoryDyn>>> {
         return BaseImageAnimationFactory::new(image.clone(), sequenceArray.clone(), width.clone(), height.clone(), 0, 0, animationBehaviorFactory.clone()).map(|reference| reference as Rc<RefCell<dyn BaseImageAnimationFactoryDyn>>);
     }
     
 
-    pub fn new_struct(mut image: Option<Rc<RefCell<Image>>>, mut sequenceArray: Vec<i32>, mut width: i32, mut height: i32, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
+    pub fn new_struct(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut sequenceArray: Vec<i32>, mut width: i32, mut height: i32, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
         let mut this = Self {
             animationFactoryImageScaleUtil: None,
             image: None,
@@ -84,7 +85,7 @@ impl BaseImageAnimationFactory {
         this
     }
 
-    pub fn new(mut image: Option<Rc<RefCell<Image>>>, mut sequenceArray: Vec<i32>, mut width: i32, mut height: i32, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut sequenceArray: Vec<i32>, mut width: i32, mut height: i32, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(image, sequenceArray, width, height, dx, dy, animationBehaviorFactory))))
     }
     
@@ -95,7 +96,7 @@ impl BaseImageAnimationFactory {
     }
     
 
-    pub fn getImage(&mut self) -> Option<Rc<RefCell<Image>>> {
+    pub fn getImage(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return self.image.clone();
     }
     
@@ -107,9 +108,9 @@ impl BaseImageAnimationFactory {
 
     pub fn setInitialScale(&mut self, mut scaleProperties: Option<Rc<RefCell<ScaleProperties>>>) {
         self.scaleProperties = scaleProperties.clone();
-        if jcall!(self.scaleProperties).shouldScale {
-            jcall!(self.scaleProperties).scaleWidth = (((((jcall!(self.animationFactoryInitializationVisitor).width) as f32) * jcall!(self.scaleProperties).scaleX)) as i32);
-            jcall!(self.scaleProperties).scaleHeight = (((((jcall!(self.animationFactoryInitializationVisitor).height) as f32) * jcall!(self.scaleProperties).scaleY)) as i32);
+        if { let java_field = jcall!(self.scaleProperties).shouldScale.clone(); java_field } {
+            jcall!(self.scaleProperties).scaleWidth = ((((({ let java_field = jcall!(self.animationFactoryInitializationVisitor).width.clone(); java_field }) as f32) * { let java_field = jcall!(self.scaleProperties).scaleX.clone(); java_field })) as i32);
+            jcall!(self.scaleProperties).scaleHeight = ((((({ let java_field = jcall!(self.animationFactoryInitializationVisitor).height.clone(); java_field }) as f32) * { let java_field = jcall!(self.scaleProperties).scaleY.clone(); java_field })) as i32);
         } else {
         }
     }
@@ -129,19 +130,19 @@ impl BaseImageAnimationFactory {
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
         let mut commonLabels: Option<Rc<RefCell<CommonLabels>>> = CommonLabels::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(self.base.toString());
-        jcall!(stringBuffer).append(jcall!(commonLabels).HEIGHT_LABEL.clone());
-        jcall!(stringBuffer).appendint(((jcall!(self.image).getHeight()) as i32));
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append(String::from(std::any::type_name::<Self>()));
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonLabels).HEIGHT_LABEL.clone(); java_field }.clone());
+        jcall!(stringBuffer).appendint(jcall!(self.image).getHeight());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(self.animationFactoryInitializationVisitor).toString());
         return jcall!(stringBuffer).toString();
     }
 }
-pub trait BaseImageAnimationFactoryDyn {
+pub trait BaseImageAnimationFactoryDyn: std::any::Any {
     fn as_BaseImageAnimationFactory(&self) -> &BaseImageAnimationFactory;
     fn as_BaseImageAnimationFactory_mut(&mut self) -> &mut BaseImageAnimationFactory;
     fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { BaseImageAnimationFactory::getInstance(self.as_BaseImageAnimationFactory_mut(), instanceId) }
-    fn getImage(&mut self) -> Option<Rc<RefCell<Image>>> { BaseImageAnimationFactory::getImage(self.as_BaseImageAnimationFactory_mut()) }
+    fn getImage(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { BaseImageAnimationFactory::getImage(self.as_BaseImageAnimationFactory_mut()) }
     fn getSequenceArray(&mut self) -> Vec<i32> { BaseImageAnimationFactory::getSequenceArray(self.as_BaseImageAnimationFactory_mut()) }
     fn setInitialScale(&mut self, mut scaleProperties: Option<Rc<RefCell<ScaleProperties>>>) { BaseImageAnimationFactory::setInitialScale(self.as_BaseImageAnimationFactory_mut(), scaleProperties) }
     fn getAnimationFactoryInitializationVisitorP(&mut self) -> Option<Rc<RefCell<AnimationFactoryInitializationVisitor>>> { BaseImageAnimationFactory::getAnimationFactoryInitializationVisitorP(self.as_BaseImageAnimationFactory_mut()) }

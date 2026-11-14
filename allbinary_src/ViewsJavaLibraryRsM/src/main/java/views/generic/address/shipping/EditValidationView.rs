@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpInte
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::ShippingAddressView::ShippingAddressView;
 
 // Borrows the object of a Java reference
@@ -39,6 +40,9 @@ pub struct EditValidationView {
 }
 
 // impl ValidationComponentInterface for EditValidationView with the methods of the trait
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for EditValidationView {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }
+}
 
 impl EditValidationView {
     
@@ -49,8 +53,8 @@ impl EditValidationView {
             value: String::new(),
         };
         // super(...) is in the struct literal above
-        let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (this.getTransformInfoInterface()).clone() /* as TransformInfoHttpInterface */;
-        this.value = jcall!(jcall!(jcall!(httpTransformInfoInterface).getPageContext()).getRequest()).getParameter(crate::org::allbinary::business::user::address::StreetAddressData::StreetAddressData_ID.with(Clone::clone).clone());
+        let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (|| -> Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> { panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpInterface") })();
+        this.value = { let java_value = (jcall!(jcall!(jcall!(httpTransformInfoInterface).getPageContext()).getRequest()).getParameter(crate::org::allbinary::business::user::address::StreetAddressData::StreetAddressData_ID.with(Clone::clone).clone())).clone(); java_value };
         this
     }
 
@@ -60,11 +64,11 @@ impl EditValidationView {
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        if jcall!(self.getWeblisketSession()).getUserName().is_some() {
+        if { let java_value = jcall!(self.getWeblisketSession()).getUserName(); java_value }.is_some() {
             return false;
         }
-        let mut billingAddressesEntity: Option<Rc<RefCell<ShippingAddressesEntity>>> = ShippingAddressesEntity::new(jcall!(self.getWeblisketSession()).getUserName());
-        self.streetAddress = jcall!(billingAddressesEntity).get1(Some((self.value.clone()) as i32));
+        let mut billingAddressesEntity: Option<Rc<RefCell<ShippingAddressesEntity>>> = ShippingAddressesEntity::new({ let java_argument = jcall!(self.getWeblisketSession()).getUserName(); java_argument });
+        self.streetAddress = { let java_value = (jcall!(billingAddressesEntity).get1(Some((self.value.clone()).trim().parse::<i32>().expect("NumberFormatException")))).clone(); java_value };
         if self.streetAddress.is_none() {
             return false;
         }
@@ -97,6 +101,10 @@ impl std::ops::DerefMut for EditValidationView {
 impl crate::views::generic::address::shipping::ShippingAddressView::ShippingAddressViewDyn for EditValidationView {
     fn as_ShippingAddressView(&self) -> &crate::views::generic::address::shipping::ShippingAddressView::ShippingAddressView { &self.base }
     fn as_ShippingAddressView_mut(&mut self) -> &mut crate::views::generic::address::shipping::ShippingAddressView::ShippingAddressView { &mut self.base }
+}
+impl crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn for EditValidationView {
+    fn as_TransformInfoHttpComposite(&self) -> &crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &self.base.base.base.base }
+    fn as_TransformInfoHttpComposite_mut(&mut self) -> &mut crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &mut self.base.base.base.base }
 }
 impl crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentViewDyn for EditValidationView {
     fn as_HttpStoreComponentView(&self) -> &crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &self.base.base }

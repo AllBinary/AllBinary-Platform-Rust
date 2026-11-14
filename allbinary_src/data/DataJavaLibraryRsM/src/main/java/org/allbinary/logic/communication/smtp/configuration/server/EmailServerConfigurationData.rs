@@ -34,6 +34,10 @@ thread_local! { pub static EmailServerConfigurationData_ACCOUNT: String = String
 thread_local! { pub static EmailServerConfigurationData_PASSWORD: String = String::from("EMAIL_SERVER_CONFIGURATION_PASSWORD"); }
 
 impl EmailServerConfigurationData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

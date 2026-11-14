@@ -39,6 +39,10 @@ impl LayerPositionFinderInterface for AdvancedRTSGameLayerPositionFinder {
 }
 
 impl AdvancedRTSGameLayerPositionFinder {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AdvancedRTSGameLayerPositionFinder>>> {
@@ -60,7 +64,7 @@ impl AdvancedRTSGameLayerPositionFinder {
     pub fn getLayerInterface(&mut self, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> {
         let mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = jcall!(DropCellPositionHistory::getInstance()).getLayerInterface(geographicMapCellPosition.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>));
         if match (&layerInterface, &crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            layerInterface = jcall!(WaypointCellPositionHistory::getInstance()).getLayerInterface(geographicMapCellPosition.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>));
+            layerInterface = { let java_value = (jcall!(WaypointCellPositionHistory::getInstance()).getLayerInterface(geographicMapCellPosition.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>))).clone(); java_value };
         }
         return layerInterface.clone();
     }

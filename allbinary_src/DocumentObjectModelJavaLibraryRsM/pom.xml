@@ -78,22 +78,6 @@
 
     <profiles><profile><id>rust-ignore-errors</id><activation><property><name>rust.fail.on.error</name><value>false</value></property></activation><build><plugins><plugin><groupId>org.codehaus.mojo</groupId><artifactId>exec-maven-plugin</artifactId><executions><execution><id>compile-rust-sources</id><configuration><successCodes><successCode>0</successCode><successCode>101</successCode></successCodes></configuration></execution></executions></plugin></plugins></build></profile></profiles><build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-pluginRs</artifactId>
-                <version>3.8.1</version>
-                <!-- 
-                <version>2.5.1</version>
-                <version>2.3.2</version>
-                -->
-                <configuration> 
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <compilerArgument>-Xlint:all</compilerArgument>
-                    <showWarnings>true</showWarnings>
-                    <showDeprecation>true</showDeprecation>
-                </configuration>
-            </plugin>
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

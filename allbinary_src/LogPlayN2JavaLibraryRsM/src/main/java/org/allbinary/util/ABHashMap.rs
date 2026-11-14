@@ -16,11 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
-// use crate::java::util::Map::Map;
-// use crate::java::util::Set::Set;
+use crate::java::util::HashMap::HashMap;
+use crate::java::util::Map::Map;
+use crate::java::util::Set::Set;
 use crate::jsinterop::annotations::JsType;
 use super::Entry::Entry;
 
@@ -40,7 +39,7 @@ impl<K, V> ABHashMap<K, V> {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: HashMap::new(),
+            base: HashMap::new_struct(),
         };
         this
     }
@@ -61,27 +60,27 @@ impl<K, V> ABHashMap<K, V> {
     
 
     pub fn get(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> V {
-        return self.base.get(key.clone());
+        return { let java_arguments = (key.clone(),); self.base.get(java_arguments.0) };
     }
     
 
     pub fn containsKey(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> bool {
-        return self.base.containsKey(key.clone());
+        return { let java_arguments = (key.clone(),); self.base.containsKey(java_arguments.0) };
     }
     
 
     pub fn put(&mut self, mut key: K, mut value: V) -> V {
-        return self.base.put(key.clone(), value.clone());
+        return { let java_arguments = (crate::java_into_object(key.clone()), crate::java_into_object(value.clone()),); self.base.put(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn putAll(&mut self, mut map: Option<Rc<RefCell<dyn Map<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) {
-        self.base.putAll(map.clone());
+        { let java_arguments = (map.clone(),); self.base.putAll(java_arguments.0) };
     }
     
 
     pub fn remove(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> V {
-        return self.base.remove(key.clone());
+        return { let java_arguments = (key.clone(),); self.base.remove(java_arguments.0) };
     }
     
 
@@ -91,32 +90,32 @@ impl<K, V> ABHashMap<K, V> {
     
 
     pub fn containsValue(&mut self, mut value: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> bool {
-        return self.base.containsValue(value.clone());
+        return { let java_arguments = (value.clone(),); self.base.containsValue(java_arguments.0) };
     }
     
 
-    pub fn keySet(&mut self) -> Option<Rc<RefCell<dyn Set<K>>>> {
+    pub fn keySet(&mut self) -> Option<Rc<RefCell<dyn Set<crate::JavaObject>>>> {
         return self.base.keySet();
     }
     
 
-    pub fn entrySet(&mut self) -> Option<Rc<RefCell<dyn Set<Option<Rc<RefCell<Entry<K, V>>>>>>>> {
+    pub fn entrySet(&mut self) -> Option<Rc<RefCell<dyn Set<crate::JavaObject>>>> {
         return self.base.entrySet();
     }
     
 
     pub fn getOrDefault(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut defaultValue: V) -> V {
-        return self.base.getOrDefault(key.clone(), defaultValue.clone());
+        return { let java_arguments = (key.clone(), defaultValue.clone(),); self.base.getOrDefault(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn putIfAbsent(&mut self, mut key: K, mut value: V) -> V {
-        return self.base.putIfAbsent(key.clone(), value.clone());
+        return { let java_arguments = (key.clone(), value.clone(),); self.base.putIfAbsent(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn clone(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return self.base.clone();
+        return crate::java_into_object(self.base.clone());
     }
 }
 impl<K, V> std::ops::Deref for ABHashMap<K, V> {

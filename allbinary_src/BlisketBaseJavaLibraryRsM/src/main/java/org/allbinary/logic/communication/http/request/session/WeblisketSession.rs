@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
 // use crate::javax::servlet::http::HttpSession::HttpSession;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
@@ -35,6 +34,7 @@ use crate::org::allbinary::business::user::role::UserRoleB::UserRoleB;
 use crate::org::allbinary::business::user::role::UserRoleData::UserRoleData;
 use crate::org::allbinary::logic::java::bool::BooleanFactory::BooleanFactory;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
+use crate::java::lang::Exception::*;
 use super::WeblisketSessionInterface::WeblisketSessionInterface;
 
 // Borrows the object of a Java reference
@@ -76,34 +76,38 @@ impl WeblisketSessionInterface for WeblisketSession {
 }
 
 impl WeblisketSession {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct2(mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
-        let mut this = Self::new_struct2(hashMap.clone(), (jcall!(pageContext).getRequest()).clone() /* as HttpServletRequest */);
+    pub fn new_struct2(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
+        let mut this = Self::new_struct2_HashMap_HttpServletRequest(hashMap.clone(), (jcall!(pageContext).getRequest()).clone() /* as HttpServletRequest */);
         // this(...) is in the struct literal above
         this
     }
 
-    pub fn new2(mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new2(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct2(hashMap, pageContext))))
     }
     
 
-    pub fn new_struct2(mut hashMap: Option<Rc<RefCell<HashMap>>>, mut httpServletRequest: Option<Rc<RefCell<HttpServletRequest>>>) -> Self {
+    pub fn new_struct2_HashMap_HttpServletRequest(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut httpServletRequest: Option<Rc<RefCell<HttpServletRequest>>>) -> Self {
         let mut this = Self {
             session: None,
         };
-        let mut propertiesHashMap: Option<Rc<RefCell<HashMap>>> = hashMap.clone();
+        let mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = hashMap.clone();
         let mut request: Option<Rc<RefCell<HttpServletRequest>>> = httpServletRequest.clone();
-        this.session = jcall!(request).getSession(true);
-        if this.getStoreName().is_none() {
-            { let java_arguments = ((jcall!(propertiesHashMap).get(jcall!(StoreFrontData::getInstance()).NAME.clone())).clone() /* as String */,); this.setStoreName(java_arguments.0) };
+        this.session = { let java_value = (jcall!(request).getSession(true)).clone(); java_value };
+        if false {
+            { let java_arguments = ({ let java_object = (jcall!(propertiesHashMap).get(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); this.setStoreName(java_arguments.0) };
         }
         this
     }
 
-    pub fn new2(mut hashMap: Option<Rc<RefCell<HashMap>>>, mut httpServletRequest: Option<Rc<RefCell<HttpServletRequest>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct2(hashMap, httpServletRequest))))
+    pub fn new2_HashMap_HttpServletRequest(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut httpServletRequest: Option<Rc<RefCell<HttpServletRequest>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct2_HashMap_HttpServletRequest(hashMap, httpServletRequest))))
     }
     
 
@@ -128,7 +132,7 @@ impl WeblisketSession {
     
 
     pub fn setAuthenticated(&mut self) {
-        { let java_receiver = self.session.clone(); let java_arguments = (WeblisketSessionData_AUTHENTICATED.with(Clone::clone).clone(), jcall!(BooleanFactory::getInstance()).TRUE_STRING.clone(),); jcall!(java_receiver).setAttribute(java_arguments.0, java_arguments.1); };
+        { let java_receiver = self.session.clone(); let java_arguments = (WeblisketSessionData_AUTHENTICATED.with(Clone::clone).clone(), { let java_field = jcall!(BooleanFactory::getInstance()).TRUE_STRING.clone(); java_field }.clone(),); jcall!(java_receiver).setAttribute(java_arguments.0, java_arguments.1); };
     }
     
 
@@ -148,12 +152,12 @@ impl WeblisketSession {
     
 
     pub fn setStoreName(&mut self, mut value: String) {
-        { let java_receiver = self.session.clone(); let java_arguments = (jcall!(StoreFrontData::getInstance()).NAME.clone(), value.clone(),); jcall!(java_receiver).setAttribute(java_arguments.0, java_arguments.1); };
+        { let java_receiver = self.session.clone(); let java_arguments = ({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone(), value.clone(),); jcall!(java_receiver).setAttribute(java_arguments.0, java_arguments.1); };
     }
     
 
     pub fn getWebAppPath(&mut self) -> String {
-        return (jcall!(self.session).getAttribute(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).GLOBALS2).WEBAPPPATH.clone())).clone() /* as String */;
+        return (jcall!(self.session).getAttribute({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).GLOBALS2.clone(); java_field }).WEBAPPPATH.clone(); java_field }.clone())).clone() /* as String */;
     }
     
 
@@ -188,13 +192,13 @@ impl WeblisketSession {
     
 
     pub fn getStoreName(&mut self) -> String {
-        return ({ let java_receiver = self.session.clone(); let java_arguments = (jcall!(StoreFrontData::getInstance()).NAME.clone(),); let java_result = jcall!(java_receiver).getAttribute(java_arguments.0); java_result }).clone() /* as String */;
+        return ({ let java_receiver = self.session.clone(); let java_arguments = ({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).getAttribute(java_arguments.0); java_result }).clone() /* as String */;
     }
     
 
     // throws Exception
     pub fn getRole(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::business::user::role::UserRole::UserRoleDyn>>> {
-        let mut userRole: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::role::UserRole::UserRoleDyn>>> = ({ let java_receiver = self.session.clone(); let java_arguments = (crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone(),); let java_result = jcall!(java_receiver).getAttribute(java_arguments.0); java_result }).clone() /* as UserRole */;
+        let mut userRole: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::role::UserRole::UserRoleDyn>>> = ({ let java_receiver = self.session.clone(); let java_arguments = (crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone(),); let java_result = jcall!(java_receiver).getAttribute(java_arguments.0); java_result }).clone();
         if userRole.is_some() {
             return UserRoleB::getRole(jcall!(jcall!(userRole).getBasicUserRole()).getRole());
         } else {
@@ -205,12 +209,12 @@ impl WeblisketSession {
 
     // throws Exception
     pub fn getOrder(&mut self) -> Option<Rc<RefCell<dyn OrderInterface>>> {
-        let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(self.getStoreName());
+        let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(self.getStoreName()).map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
         let mut basketName: String = jcall!(storeFrontInterface).getBasketName();
         if !jcall!(StringValidationUtil::getInstance()).isEmpty(basketName.clone()) {
-            let mut orderInterface: Option<Rc<RefCell<dyn OrderInterface>>> = (jcall!(self.session).getAttribute(basketName.clone())).clone() /* as OrderInterface */;
+            let mut orderInterface: Option<Rc<RefCell<dyn OrderInterface>>> = (jcall!(self.session).getAttribute(basketName.clone())).clone();
             if orderInterface.is_none() {
-                orderInterface = (Order::new1(Basket::new()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::order::Order::OrderDyn>>)).clone() /* as OrderInterface */;
+                orderInterface = (Order::new1(Basket::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::basket::BasketInterface::BasketInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::order::Order::OrderDyn>>)).clone() /* as OrderInterface */;
             }
             jcall!(self.session).setAttribute(basketName.clone(), orderInterface.clone());
             return orderInterface.clone();
@@ -222,7 +226,7 @@ impl WeblisketSession {
 
     // Java overloaded method: Rust needs a different name
     pub fn setAuthenticated1(&mut self, mut value: bool) {
-        { let java_receiver = self.session.clone(); let java_arguments = (WeblisketSessionData_AUTHENTICATED.with(Clone::clone).clone(), jcall!(BooleanFactory::getInstance()).FALSE_STRING.clone(),); jcall!(java_receiver).setAttribute(java_arguments.0, java_arguments.1); };
+        { let java_receiver = self.session.clone(); let java_arguments = (WeblisketSessionData_AUTHENTICATED.with(Clone::clone).clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE_STRING.clone(); java_field }.clone(),); jcall!(java_receiver).setAttribute(java_arguments.0, java_arguments.1); };
     }
     
 
@@ -245,7 +249,7 @@ impl WeblisketSession {
     
 
     pub fn removeBasket(&mut self) {
-        let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(self.getStoreName());
+        let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(self.getStoreName()).map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
         let mut basketName: String = jcall!(storeFrontInterface).getBasketName();
         if !jcall!(StringValidationUtil::getInstance()).isEmpty(basketName.clone()) {
             jcall!(self.session).removeAttribute(basketName.clone());

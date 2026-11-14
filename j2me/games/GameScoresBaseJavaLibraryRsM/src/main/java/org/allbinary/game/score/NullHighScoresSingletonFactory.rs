@@ -30,9 +30,13 @@ macro_rules! jcall {
 pub struct NullHighScoresSingletonFactory {
 }
 
-thread_local! { pub static NullHighScoresSingletonFactory_SINGLETON: Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>> = HighScores::new(jcall!(CommonStrings::getInstance()).LOADING.clone(), String::from("High Scores Not Loaded"), jcall!(CommonStrings::getInstance()).PERIODS.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>); }
+thread_local! { pub static NullHighScoresSingletonFactory_SINGLETON: Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>> = HighScores::new({ let java_field = jcall!(CommonStrings::getInstance()).LOADING.clone(); java_field }.clone(), String::from("High Scores Not Loaded"), { let java_field = jcall!(CommonStrings::getInstance()).PERIODS.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>); }
 
 impl NullHighScoresSingletonFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

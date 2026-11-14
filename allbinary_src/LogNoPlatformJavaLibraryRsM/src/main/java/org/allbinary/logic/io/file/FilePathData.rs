@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::File::File;
+use crate::java::io::File::File;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,6 +34,10 @@ pub struct FilePathData {
 thread_local! { pub static FilePathData_instance: Option<Rc<RefCell<FilePathData>>> = FilePathData::new(); }
 
 impl FilePathData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<FilePathData>>> {
@@ -49,7 +53,7 @@ impl FilePathData {
         this.SEPARATORCHAR = std::path::MAIN_SEPARATOR.clone();
         this.PATH_START = std::path::MAIN_SEPARATOR.to_string().clone();
         if std::path::MAIN_SEPARATOR == '\\' {
-            this.PATH_START = format!("{}{}", std::path::MAIN_SEPARATOR.to_string(), std::path::MAIN_SEPARATOR.to_string());
+            this.PATH_START = { let java_value = (format!("{}{}", std::path::MAIN_SEPARATOR.to_string(), std::path::MAIN_SEPARATOR.to_string())).clone(); java_value };
         }
         this
     }

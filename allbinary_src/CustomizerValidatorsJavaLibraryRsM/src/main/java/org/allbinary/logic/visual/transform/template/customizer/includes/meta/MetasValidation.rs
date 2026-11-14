@@ -32,6 +32,7 @@ use crate::org::allbinary::logic::visual::dhtml::html::head::meta::HtmlMetasData
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::MetaValidation::MetaValidation;
 
 // Borrows the object of a Java reference
@@ -69,12 +70,12 @@ impl MetasValidation {
             metaValidationVector: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.storeFrontInterface = StoreFrontFactory::getInstance(storeName.clone());
+        this.storeFrontInterface = { let java_value = (StoreFrontFactory::getInstance(storeName.clone())).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
         this.metaValidationVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut contentValue: String = format!("{}{}", jcall!(this.storeFrontInterface).getName(), String::from(" E-Commerce Site"));
-        let mut keywordsMetaValidation: Option<Rc<RefCell<MetaValidation>>> = MetaValidation::new4(jcall!(HtmlMetaAttributeDataFactory::getInstance()).NAME.clone(), String::from("Keywords"), jcall!(HtmlMetaAttributeValuesData::getInstance()).KEYWORDS.clone(), contentValue.clone());
-        let mut abstractMetaValidation: Option<Rc<RefCell<MetaValidation>>> = MetaValidation::new4(jcall!(HtmlMetaAttributeDataFactory::getInstance()).NAME.clone(), String::from("Abstract"), jcall!(HtmlMetaAttributeValuesData::getInstance()).ABSTRACT.clone(), contentValue.clone());
-        let mut descriptionMetaValidation: Option<Rc<RefCell<MetaValidation>>> = MetaValidation::new4(jcall!(HtmlMetaAttributeDataFactory::getInstance()).NAME.clone(), String::from("Description"), jcall!(HtmlMetaAttributeValuesData::getInstance()).DESCRIPTION.clone(), contentValue.clone());
+        let mut keywordsMetaValidation: Option<Rc<RefCell<MetaValidation>>> = MetaValidation::new4({ let java_field = jcall!(HtmlMetaAttributeDataFactory::getInstance()).NAME.clone(); java_field }.clone(), String::from("Keywords"), { let java_field = jcall!(HtmlMetaAttributeValuesData::getInstance()).KEYWORDS.clone(); java_field }.clone(), contentValue.clone());
+        let mut abstractMetaValidation: Option<Rc<RefCell<MetaValidation>>> = MetaValidation::new4({ let java_field = jcall!(HtmlMetaAttributeDataFactory::getInstance()).NAME.clone(); java_field }.clone(), String::from("Abstract"), { let java_field = jcall!(HtmlMetaAttributeValuesData::getInstance()).ABSTRACT.clone(); java_field }.clone(), contentValue.clone());
+        let mut descriptionMetaValidation: Option<Rc<RefCell<MetaValidation>>> = MetaValidation::new4({ let java_field = jcall!(HtmlMetaAttributeDataFactory::getInstance()).NAME.clone(); java_field }.clone(), String::from("Description"), { let java_field = jcall!(HtmlMetaAttributeValuesData::getInstance()).DESCRIPTION.clone(); java_field }.clone(), contentValue.clone());
         jcall!(this.metaValidationVector).add(crate::java_into_object(keywordsMetaValidation.clone()));
         jcall!(this.metaValidationVector).add(crate::java_into_object(abstractMetaValidation.clone()));
         jcall!(this.metaValidationVector).add(crate::java_into_object(descriptionMetaValidation.clone()));
@@ -86,7 +87,7 @@ impl MetasValidation {
     }
     
 
-    pub fn new_struct1(mut document: Option<Rc<RefCell<Document>>>) -> Self {
+    pub fn new_struct1_Document(mut document: Option<Rc<RefCell<Document>>>) -> Self {
         let mut this = Self {
             base: Validation::new_struct(),
             logUtil: None,
@@ -94,48 +95,50 @@ impl MetasValidation {
             metaValidationVector: None,
         };
         this.logUtil = LogUtil::getInstance();
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone(); java_field }.clone())));
         this
     }
 
-    pub fn new1(mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(document))))
+    pub fn new1_Document(mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_Document(document))))
     }
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut valid: Option<bool> = true;
-            return valid.clone();
+            return Some(valid.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
-                jcall!(self.logUtil).put(String::from("Failed to validate form"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put(String::from("Failed to validate form"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn validationInfo(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-            return jcall!(stringBuffer).toString();
+            return Some(jcall!(stringBuffer).toString());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).put(String::from("Failed to generate validation error info"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("validationInfo()"), crate::java_into_object(e.clone()));
             }
             return String::from("Error Validating Form");
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -151,8 +154,8 @@ impl MetasValidation {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(jcall!(HtmlMetasData::getInstance()).NAME.clone());
-        let mut metaArray: Vec<Option<Rc<RefCell<MetaValidation>>>> = ({ let java_receiver = self.metaValidationVector.clone(); let java_arguments = (vec![None; (jcall!(self.metaValidationVector).size()) as usize],); let java_result = jcall!(java_receiver).toArrayType(java_arguments.0); java_result }).clone() /* as  */;
+        let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement({ let java_field = jcall!(HtmlMetasData::getInstance()).NAME.clone(); java_field }.clone());
+        let mut metaArray: Vec<Option<Rc<RefCell<MetaValidation>>>> = { let java_receiver = self.metaValidationVector.clone(); let java_arguments = (vec![None; (jcall!(self.metaValidationVector).size()) as usize],); let java_result = jcall!(java_receiver).toArrayType(java_arguments.0); java_result };
         let mut size: i32 = (metaArray.len() as i32).clone();
         for i in (0..size) {
             let mut metaValidation: Option<Rc<RefCell<MetaValidation>>> = metaArray[(i) as usize].clone();

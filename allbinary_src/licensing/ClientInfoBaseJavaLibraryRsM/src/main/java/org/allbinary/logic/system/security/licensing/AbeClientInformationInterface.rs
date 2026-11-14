@@ -28,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AbeClientInformationInterface {
+pub trait AbeClientInformationInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn init(&mut self);
@@ -58,7 +58,7 @@ pub trait AbeClientInformationInterface {
     fn getNumberOfLicenseServers(&mut self) -> i32;
     
 
-    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>;
+    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>;
     
 
     fn isSameId(&mut self, alicenseId: String) -> bool;
@@ -71,8 +71,6 @@ pub trait AbeClientInformationInterface {
     
 
     fn toShortString(&mut self) -> String;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

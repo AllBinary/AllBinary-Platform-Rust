@@ -38,6 +38,10 @@ impl LayerPositionFinderInterface for RTSGameLayerPositionFinder {
 }
 
 impl RTSGameLayerPositionFinder {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<RTSGameLayerPositionFinder>>> {

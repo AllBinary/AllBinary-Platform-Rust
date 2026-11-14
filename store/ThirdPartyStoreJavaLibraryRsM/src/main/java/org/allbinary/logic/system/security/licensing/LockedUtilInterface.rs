@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait LockedUtilInterface {
+pub trait LockedUtilInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn isLocked(&mut self) -> bool;
     
 
     fn isLockedFeature(&mut self, lockableFeatrue: Option<Rc<RefCell<LockableFeature>>>) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -23,6 +23,7 @@ use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 use super::MotionRectangles::MotionRectangles;
 use super::MotionRectangleConstraintsInterface::MotionRectangleConstraintsInterface;
 use super::MotionRectangle::MotionRectangle;
@@ -67,7 +68,7 @@ impl ConstrainedMotionRectangles {
         { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Start - Size Before: "), jcall!(jcall!(motionRectangles).getVector()).size()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("applyMotionRectangleConstraints"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut bufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>> = jcall!(jcall!(motionRectangles).getImageComparisonResult()).getBufferedImages();
         let mut bufferedImage: Option<Rc<RefCell<BufferedImage>>> = bufferedImageArray[(1) as usize].clone();
-        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut vector2: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(motionRectangles).getVector();
         let mut size: i32 = jcall!(vector2).size();
         for index in (0..size) {
@@ -85,7 +86,7 @@ impl ConstrainedMotionRectangles {
             if isTooBig {
                 continue;
             }
-            let mut isValid: bool = jcall!(self.getMotionRectangleConstraintsInterface()).isValid(jcall!(self.getImageComparisonResult()).getFrameTwo(), bufferedImage.clone(), jcall!(motionRectangle).getRectangle());
+            let mut isValid: bool = jcall!(self.getMotionRectangleConstraintsInterface()).isValid({ let java_argument = jcall!(self.getImageComparisonResult()).getFrameTwo(); java_argument }, bufferedImage.clone(), { let java_argument = jcall!(motionRectangle).getRectangle(); java_argument });
             if !isValid {
                 continue;
             }

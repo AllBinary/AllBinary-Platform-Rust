@@ -17,8 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use crate::org::allbinary::graphics::threed::min3d::renderer::processor::ObjectThreedOpenGLProcessor::ObjectThreedOpenGLProcessor;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

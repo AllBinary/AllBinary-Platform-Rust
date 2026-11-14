@@ -26,6 +26,10 @@ thread_local! { pub static CacheTypeFactory_instance: Option<Rc<RefCell<CacheTyp
 
 impl CacheTypeFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             NO_CACHE: None,
@@ -33,10 +37,10 @@ impl CacheTypeFactory {
             SET: None,
             CACHE_VECTOR: None,
         };
-        this.NO_CACHE = CacheType::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone());
-        this.CACHE = CacheType::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone());
-        this.SET = CacheType::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), String::from("Set"));
-        this.CACHE_VECTOR = CacheType::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone());
+        this.NO_CACHE = CacheType::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
+        this.CACHE = CacheType::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
+        this.SET = CacheType::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), String::from("Set"));
+        this.CACHE_VECTOR = CacheType::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
         this
     }
 

@@ -25,6 +25,7 @@ use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionBaseFactory::GeographicMapCellPositionBaseFactory;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionFactoryInterface::GeographicMapCellPositionFactoryInterface;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellTypeFactory::GeographicMapCellTypeFactory;
+use crate::java::lang::Exception::*;
 use super::RaceTrackGeographicMapInterface::RaceTrackGeographicMapInterface;
 use super::RaceTrackInfo::RaceTrackInfo;
 use super::RaceTrackData::RaceTrackData;
@@ -63,16 +64,16 @@ impl BaseRaceTrackGeographicMap {
         this.raceTrackData = raceTrackData.clone();
         this.miniGeographicMap = miniGeographicMap.clone();
         let mut miniTiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(this.miniGeographicMap).getAllBinaryTiledLayer();
-        if jcall!(miniTiledLayer).getColumns() != jcall!(this.getGeographicMapCellPositionFactory()).getColumns() {
-            let mut error: String = jcall!(StringMaker::new()).append(String::from("RaceTrackMap has incorrect Mini Map columns: ")).appendint(jcall!(miniTiledLayer).getColumns()).append(String::from(" != ")).appendint(((jcall!(this.getGeographicMapCellPositionFactory()).getColumns()) as i32)).toString();
+        if { let java_value = jcall!(miniTiledLayer).getColumns(); java_value } != { let java_value = jcall!(this.getGeographicMapCellPositionFactory()).getColumns(); java_value } {
+            let mut error: String = jcall!(StringMaker::new()).append(String::from("RaceTrackMap has incorrect Mini Map columns: ")).appendint(jcall!(miniTiledLayer).getColumns()).append(String::from(" != ")).appendint({ let java_argument = jcall!(this.getGeographicMapCellPositionFactory()).getColumns(); java_argument }).toString();
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(this.logUtil).putF(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone());
+            jcall!(this.logUtil).putF({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
             panic!("{:?}", format!("{}: {:?}", "Exception", (error.clone())));
         }
-        if jcall!(miniTiledLayer).getRows() != jcall!(this.getGeographicMapCellPositionFactory()).getRows() {
+        if { let java_value = jcall!(miniTiledLayer).getRows(); java_value } != { let java_value = jcall!(this.getGeographicMapCellPositionFactory()).getRows(); java_value } {
             let mut error: String = String::from("RaceTrackMap has incorrect Mini Map rows");
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(this.logUtil).putF(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone());
+            jcall!(this.logUtil).putF({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
             panic!("{:?}", format!("{}: {:?}", "Exception", (error.clone())));
         }
         this

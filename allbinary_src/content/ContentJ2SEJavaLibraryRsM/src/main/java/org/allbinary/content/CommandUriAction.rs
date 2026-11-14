@@ -17,11 +17,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Command::Command;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::Intent::Intent;
 
 // Borrows the object of a Java reference
@@ -34,12 +35,16 @@ macro_rules! jcall {
 pub struct CommandUriAction {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
-    pub hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 thread_local! { pub static CommandUriAction_instance: Option<Rc<RefCell<CommandUriAction>>> = CommandUriAction::new(); }
 
 impl CommandUriAction {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -63,26 +68,26 @@ impl CommandUriAction {
     }
     
 
-    pub fn add(&mut self, mut command: Option<Rc<RefCell<Command>>>, mut url: String) {
+    pub fn add(&mut self, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut url: String) {
         jcall!(self.hashtable).put(crate::java_into_object(command.clone()), crate::java_into_object(url.clone()));
     }
     
 
-    pub fn process(&mut self, mut command: Option<Rc<RefCell<Command>>>) {
+    pub fn process(&mut self, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
-    pub fn getIntent(&mut self, mut command: Option<Rc<RefCell<Command>>>) -> Option<Rc<RefCell<Intent>>> {
-        let mut url: String = (jcall!(self.hashtable).get(crate::java_into_object(command.clone()))).clone() /* as String */;
+    pub fn getIntent(&mut self, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) -> Option<Rc<RefCell<Intent>>> {
+        let mut url: String = { let java_object = (jcall!(self.hashtable).get(crate::java_into_object(command.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         return self.base.intent.clone();
     }
 }

@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::animation::vector::VectorCenterGenerator::VectorCenterGenerator;
 use crate::org::allbinary::dom::DomHelper::DomHelper;
 use crate::org::allbinary::graphics::GPoint::GPoint;
@@ -31,13 +30,11 @@ use crate::org::allbinary::graphics::j2me::workarea::tools::LinesGraphicItem::Li
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::IntegerDimension::IntegerDimension;
 use super::Grid::Grid;
 use super::CanvasJPanel::CanvasJPanel;
 use super::Document::Document;
-use super::dom::dom;
-use super::w3c::w3c;
-use super::org::org;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -48,7 +45,7 @@ macro_rules! jcall {
 
 pub struct CanvasDom {
     pub graphicsStrings: Option<Rc<RefCell<GraphicsStrings>>>,
-    pub graphicItemHashMap: Option<Rc<RefCell<HashMap>>>,
+    pub graphicItemHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
     pub angle: f64,
     pub dimension: Option<Rc<RefCell<IntegerDimension>>>,
     pub grid: Option<Rc<RefCell<Grid>>>,
@@ -67,6 +64,10 @@ thread_local! { pub static CanvasDom_GRAPHICITEMS: String = String::from("graphi
 thread_local! { pub static CanvasDom_REAL_SIZE: String = String::from("realSize"); }
 
 impl CanvasDom {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut canvasNode: Option<Rc<RefCell<Node>>>) -> Self {
@@ -83,7 +84,7 @@ impl CanvasDom {
         this.dimension = IntegerDimension::new(0, 0);
         let mut name: String = jcall!(canvasNode).getNodeName();
         if (name.cmp(&CanvasDom_FRAME.with(Clone::clone).clone()) as i32) == 0 {
-            this.graphicItemHashMap = jcall!(StdUtil::getInstance()).createHashMap();
+            this.graphicItemHashMap = { let java_value = (jcall!(StdUtil::getInstance()).createHashMap()).clone(); java_value };
             let mut angleNode: Option<Rc<RefCell<Node>>> = jcall!(DomHelper::getInstance()).searchNodeList(CanvasDom_ROTATE.with(Clone::clone).clone(), jcall!(canvasNode).getChildNodes());
             let mut angleTextNode: Option<Rc<RefCell<Node>>> = jcall!(angleNode).getFirstChild();
             let mut angle: f64 = ((Some((jcall!(angleTextNode).getNodeValue()) as f64)).unwrap() as f64);
@@ -116,7 +117,7 @@ impl CanvasDom {
             jcall!(this.grid).isGridPossible = Some(jcall!(possibleTextNode).getNodeValue()).unwrap();
             let mut graphicItemNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(DomHelper::getInstance()).getChildrenWithoutTextNodes(CanvasDom_GRAPHICITEMS.with(Clone::clone).clone(), jcall!(canvasNode).getChildNodes());
             if graphicItemNodeList.is_some() {
-                this.graphicItemHashMap = jcall!(GraphicItemFactory::getInstance()).getInstance1(graphicItemNodeList.clone());
+                this.graphicItemHashMap = { let java_value = (jcall!(GraphicItemFactory::getInstance()).getInstance1_BasicArrayList(graphicItemNodeList.clone())).clone(); java_value };
             }
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Frame Element Not Found but Found: "), name))));
@@ -129,7 +130,7 @@ impl CanvasDom {
     }
     
 
-    pub fn new_struct1(mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>>) -> Self {
+    pub fn new_struct1_CanvasJPanel(mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>>) -> Self {
         let mut this = Self {
             graphicsStrings: None,
             graphicItemHashMap: None,
@@ -138,16 +139,16 @@ impl CanvasDom {
             grid: None,
         };
         this.graphicsStrings = GraphicsStrings::getInstance();
-        this.angle = jcall!(canvasJPanel).getAngle();
-        this.graphicItemHashMap = jcall!(canvasJPanel).getGraphicItemHashMap();
-        this.dimension = jcall!(canvasJPanel).getCanvasDimension();
-        this.grid = Grid::new1(jcall!(canvasJPanel).getGrid());
-        this.angle = jcall!(canvasJPanel).getAngle();
+        this.angle = { let java_value = (jcall!(canvasJPanel).getAngle()).clone(); java_value };
+        this.graphicItemHashMap = { let java_value = (jcall!(canvasJPanel).getGraphicItemHashMap()).clone(); java_value };
+        this.dimension = { let java_value = (jcall!(canvasJPanel).getCanvasDimension()).clone(); java_value };
+        this.grid = { let java_value = (Grid::new1(jcall!(canvasJPanel).getGrid())).clone(); java_value };
+        this.angle = { let java_value = (jcall!(canvasJPanel).getAngle()).clone(); java_value };
         this
     }
 
-    pub fn new1(mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(canvasJPanel))))
+    pub fn new1_CanvasJPanel(mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_CanvasJPanel(canvasJPanel))))
     }
     
 
@@ -156,7 +157,7 @@ impl CanvasDom {
     }
     
 
-    pub fn getGraphicItemHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn getGraphicItemHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return self.graphicItemHashMap.clone();
     }
     
@@ -198,31 +199,31 @@ impl CanvasDom {
         let mut document: Option<Rc<RefCell<Document>>> = WorkAreaJPanel::getDocument();
         let mut frameNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement(CanvasDom_FRAME.with(Clone::clone).clone())).clone() /* as Node */;
         let mut angleNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement(CanvasDom_ROTATE.with(Clone::clone).clone())).clone() /* as Node */;
-        let mut angleTextNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createTextNode(jcall!(Some((self.getAngle()) as f64)).toString())).clone() /* as Node */;
+        let mut angleTextNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createTextNode({ let java_argument = (Some((self.getAngle()) as f64)).expect("NullPointerException").to_string(); java_argument })).clone() /* as Node */;
         jcall!(angleNode).appendChild(angleTextNode.clone());
-        let mut sizeNode: Option<Rc<RefCell<Node>>> = ({ let java_arguments = (jcall!(PointFactory::getInstance()).createXY(jcall!(self.getDimension()).getWidth(), jcall!(self.getDimension()).getHeight()), CanvasDom_SIZE.with(Clone::clone).clone(),); self.getPointNode(java_arguments.0, java_arguments.1) }).clone() /* as Node */;
+        let mut sizeNode: Option<Rc<RefCell<Node>>> = ({ let java_arguments = ({ let java_argument = jcall!(PointFactory::getInstance()).createXY({ let java_argument = jcall!(self.getDimension()).getWidth(); java_argument }, { let java_argument = jcall!(self.getDimension()).getHeight(); java_argument }); java_argument }, CanvasDom_SIZE.with(Clone::clone).clone(),); self.getPointNode(java_arguments.0, java_arguments.1) }).clone() /* as Node */;
         let mut zoomNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement(CanvasDom_ZOOM.with(Clone::clone).clone())).clone() /* as Node */;
-        let mut zoomTextNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createTextNode(jcall!(Some((jcall!(self.getGrid()).getZoom()) as i32)).toString())).clone() /* as Node */;
+        let mut zoomTextNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createTextNode({ let java_argument = (Some(({ let java_argument = jcall!(self.getGrid()).getZoom(); java_argument }) as i32)).expect("NullPointerException").to_string(); java_argument })).clone() /* as Node */;
         jcall!(zoomNode).appendChild(zoomTextNode.clone());
         let mut gridNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement(CanvasDom_GRID.with(Clone::clone).clone())).clone() /* as Node */;
-        let mut gridSizeNode: Option<Rc<RefCell<Node>>> = ({ let java_arguments = (jcall!(self.getGrid()).grid.clone(), CanvasDom_SIZE.with(Clone::clone).clone(),); self.getPointNode(java_arguments.0, java_arguments.1) }).clone() /* as Node */;
+        let mut gridSizeNode: Option<Rc<RefCell<Node>>> = ({ let java_arguments = ({ let java_field = jcall!(self.getGrid()).grid.clone(); java_field }.clone(), CanvasDom_SIZE.with(Clone::clone).clone(),); self.getPointNode(java_arguments.0, java_arguments.1) }).clone() /* as Node */;
         jcall!(gridNode).appendChild(gridSizeNode.clone());
         let mut enableNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement(CanvasDom_ENABLED.with(Clone::clone).clone())).clone() /* as Node */;
-        let mut enableTextNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createTextNode(jcall!(Some(jcall!(self.getGrid()).isGridOn())).toString())).clone() /* as Node */;
+        let mut enableTextNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createTextNode({ let java_argument = (Some({ let java_argument = jcall!(self.getGrid()).isGridOn(); java_argument })).expect("null Boolean").to_string(); java_argument })).clone() /* as Node */;
         jcall!(enableNode).appendChild(enableTextNode.clone());
         jcall!(gridNode).appendChild(enableNode.clone());
         let mut possibleNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement(CanvasDom_POSSIBLE.with(Clone::clone).clone())).clone() /* as Node */;
-        let mut possibleTextNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createTextNode(jcall!(Some(jcall!(self.getGrid()).isGridPossible())).toString())).clone() /* as Node */;
+        let mut possibleTextNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createTextNode({ let java_argument = (Some({ let java_argument = jcall!(self.getGrid()).isGridPossible(); java_argument })).expect("null Boolean").to_string(); java_argument })).clone() /* as Node */;
         jcall!(possibleNode).appendChild(possibleTextNode.clone());
         jcall!(gridNode).appendChild(possibleNode.clone());
         let mut realSizeNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement(CanvasDom_REAL_SIZE.with(Clone::clone).clone())).clone() /* as Node */;
         let mut vectorCenterGenerator: Option<Rc<RefCell<VectorCenterGenerator>>> = VectorCenterGenerator::new();
         jcall!(vectorCenterGenerator).calculate(self.getGraphicItemHashMap());
-        let mut widthNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement(jcall!(self.graphicsStrings).WIDTH.clone())).clone() /* as Node */;
+        let mut widthNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement({ let java_field = jcall!(self.graphicsStrings).WIDTH.clone(); java_field }.clone())).clone() /* as Node */;
         let mut widthTextNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createTextNode((jcall!(vectorCenterGenerator).getWidth()).to_string())).clone() /* as Node */;
         jcall!(widthNode).appendChild(widthTextNode.clone());
         jcall!(realSizeNode).appendChild(widthNode.clone());
-        let mut heightNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement(jcall!(self.graphicsStrings).HEIGHT.clone())).clone() /* as Node */;
+        let mut heightNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement({ let java_field = jcall!(self.graphicsStrings).HEIGHT.clone(); java_field }.clone())).clone() /* as Node */;
         let mut heightTextNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createTextNode((jcall!(vectorCenterGenerator).getHeight()).to_string())).clone() /* as Node */;
         jcall!(heightNode).appendChild(heightTextNode.clone());
         jcall!(realSizeNode).appendChild(heightNode.clone());
@@ -235,7 +236,7 @@ impl CanvasDom {
         let mut graphicItemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(self.getGraphicItemHashMap()).keySet()).toArray();
         let mut size: i32 = (graphicItemArray.len() as i32).clone();
         for index in (0..size) {
-            let mut item: Option<Rc<RefCell<dyn GraphicItemInterface>>> = (jcall!(self.graphicItemHashMap).get(graphicItemArray[(index) as usize].clone())).clone() /* as GraphicItemInterface */;
+            let mut item: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(self.graphicItemHashMap).get(graphicItemArray[(index) as usize].clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
             if jcall!(item).getName() == LinesGraphicItem::getStaticName() {
                 if jcall!(item).isValid() {
                     jcall!(graphicItemNode).appendChild(jcall!(item).toDom(None /* Java this: a &mut self method has no Rc of itself */));

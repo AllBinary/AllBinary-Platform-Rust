@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait MeteredGameObjectInterface {
+pub trait MeteredGameObjectInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getRatios(&mut self) -> Vec<Option<f64>>;
@@ -35,8 +35,6 @@ pub trait MeteredGameObjectInterface {
     
 
     fn isDropping(&mut self) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

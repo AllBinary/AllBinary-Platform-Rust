@@ -38,6 +38,10 @@ pub struct MirrorImageUtil {
 thread_local! { pub static MirrorImageUtil_instance: Option<Rc<RefCell<MirrorImageUtil>>> = MirrorImageUtil::new(); }
 
 impl MirrorImageUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<MirrorImageUtil>>> {
@@ -68,13 +72,13 @@ impl MirrorImageUtil {
             let mut tx: Option<Rc<RefCell<AffineTransform>>> = AffineTransform::getScaleInstance(1, -1);
             jcall!(tx).translate(0, -jcall!(bufferedImage).getHeight(None));
             let mut op: Option<Rc<RefCell<AffineTransformOp>>> = AffineTransformOp::new(tx.clone(), unsafe { crate::java::awt::image::AffineTransformOp::AffineTransformOp_TYPE_NEAREST_NEIGHBOR.clone() }.clone());
-            bufferedImage = jcall!(op).filter(bufferedImage.clone(), None);
+            bufferedImage = { let java_value = (jcall!(op).filter(bufferedImage.clone(), None)).clone(); java_value };
         }
         if horizontal {
             let mut tx: Option<Rc<RefCell<AffineTransform>>> = AffineTransform::getScaleInstance(-1, 1);
             jcall!(tx).translate(-jcall!(bufferedImage).getWidth(None), 0);
             let mut op: Option<Rc<RefCell<AffineTransformOp>>> = AffineTransformOp::new(tx.clone(), unsafe { crate::java::awt::image::AffineTransformOp::AffineTransformOp_TYPE_NEAREST_NEIGHBOR.clone() }.clone());
-            bufferedImage = jcall!(op).filter(bufferedImage.clone(), None);
+            bufferedImage = { let java_value = (jcall!(op).filter(bufferedImage.clone(), None)).clone(); java_value };
         }
         jcall!(g).drawImage(bufferedImage.clone(), 0, 0, jcall!(bufferedImage).getWidth(None), jcall!(bufferedImage).getHeight(None), None);
         jcall!(g).dispose();

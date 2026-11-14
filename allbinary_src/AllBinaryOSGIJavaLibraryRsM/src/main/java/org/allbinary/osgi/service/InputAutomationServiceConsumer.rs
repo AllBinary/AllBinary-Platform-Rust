@@ -25,6 +25,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::osgi::OSGIServiceInterface::OSGIServiceInterface;
 use crate::org::allbinary::osgi::OSGIServiceVisitorInterface::OSGIServiceVisitorInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::OSGIServiceUtil::OSGIServiceUtil;
 
 // Borrows the object of a Java reference
@@ -45,6 +46,10 @@ pub struct InputAutomationServiceConsumer {
 
 
 impl InputAutomationServiceConsumer {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut registryName: String, mut bundleContext: Option<Rc<RefCell<dyn BundleContext>>>, mut osgiServiceVisitorInterface: Option<Rc<RefCell<dyn OSGIServiceVisitorInterface>>>) -> Self {
@@ -72,13 +77,13 @@ impl InputAutomationServiceConsumer {
 
     // throws Exception
     pub fn process(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
         let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_receiver = self.osgiServiceUtil.clone(); let java_arguments = (self.getBundleContext(), self.getServiceReferences(),); let java_result = jcall!(java_receiver).getServicesObjectVector(java_arguments.0, java_arguments.1); java_result };
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", String::from("Processing "), jcall!(vector).size()), String::from(" Services")), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", String::from("Processing "), jcall!(vector).size()), String::from(" Services")), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut size: i32 = jcall!(vector).size();
         let mut osgiServiceInterface: Option<Rc<RefCell<dyn OSGIServiceInterface>>> = None;
         for index in (0..size) {
-            osgiServiceInterface = { let java_object = jcall!(vector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn OSGIServiceInterface>>>>().expect("ClassCastException").clone()) };
+            osgiServiceInterface = { let java_value = ({ let java_object = (jcall!(vector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn OSGIServiceInterface>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             if !jcall!(self.getOsgiServiceVisitorInterface()).visit(osgiServiceInterface.clone()) {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Unable to process service: "), osgiServiceInterface))));
             }
@@ -121,7 +126,7 @@ impl InputAutomationServiceConsumer {
         self.osgiServiceVisitorInterface = osgiServiceVisitorInterface.clone();
     }
 }
-pub trait InputAutomationServiceConsumerDyn {
+pub trait InputAutomationServiceConsumerDyn: std::any::Any {
     fn as_InputAutomationServiceConsumer(&self) -> &InputAutomationServiceConsumer;
     fn as_InputAutomationServiceConsumer_mut(&mut self) -> &mut InputAutomationServiceConsumer;
     fn process(&mut self) { InputAutomationServiceConsumer::process(self.as_InputAutomationServiceConsumer_mut()) }

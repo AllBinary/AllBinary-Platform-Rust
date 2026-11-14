@@ -17,9 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::animation::Animation::Animation;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,6 +35,10 @@ pub struct AnimationFrameToImageUtil {
 thread_local! { pub static AnimationFrameToImageUtil_instance: Option<Rc<RefCell<AnimationFrameToImageUtil>>> = AnimationFrameToImageUtil::new(); }
 
 impl AnimationFrameToImageUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -52,9 +57,9 @@ impl AnimationFrameToImageUtil {
     
 
     // throws Exception
-    pub fn getInstanceTranslate(&mut self, mut width: i32, mut height: i32, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<Image>>> {
-        let mut image: Option<Rc<RefCell<Image>>> = jcall!(GameFeatureImageCacheFactory::GameFeatureImageCacheFactory::getInstance()).get(std::any::type_name_of_val(&AnimationFrameToImageUtil_instance.with(Clone::clone)).to_string(), ((width * 3) >> 1).clone(), ((height * 3) >> 1).clone());
-        let mut graphics: Option<Rc<RefCell<Graphics>>> = jcall!(image).getGraphics();
+    pub fn getInstanceTranslate(&mut self, mut width: i32, mut height: i32, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(GameFeatureImageCacheFactory::GameFeatureImageCacheFactory::getInstance()).get(std::any::type_name_of_val(&AnimationFrameToImageUtil_instance.with(Clone::clone)).to_string(), ((width * 3) >> 1).clone(), ((height * 3) >> 1).clone());
+        let mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>> = jcall!(image).getGraphics();
         let mut tranlateX: i32 = (width >> 2);
         let mut tranlateY: i32 = (height >> 2);
         jcall!(graphics).translate(tranlateX.clone(), tranlateY.clone());
@@ -65,9 +70,9 @@ impl AnimationFrameToImageUtil {
     
 
     // throws Exception
-    pub fn getInstanceWH(&mut self, mut width: i32, mut height: i32, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<Image>>> {
-        let mut image: Option<Rc<RefCell<Image>>> = jcall!(GameFeatureImageCacheFactory::GameFeatureImageCacheFactory::getInstance()).get(std::any::type_name_of_val(&AnimationFrameToImageUtil_instance.with(Clone::clone)).to_string(), width.clone(), height.clone());
-        let mut graphics: Option<Rc<RefCell<Graphics>>> = jcall!(image).getGraphics();
+    pub fn getInstanceWH(&mut self, mut width: i32, mut height: i32, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(GameFeatureImageCacheFactory::GameFeatureImageCacheFactory::getInstance()).get(std::any::type_name_of_val(&AnimationFrameToImageUtil_instance.with(Clone::clone)).to_string(), width.clone(), height.clone());
+        let mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>> = jcall!(image).getGraphics();
         jcall!(animationInterface).paintXY(graphics.clone(), 0, 0);
         return image.clone();
     }

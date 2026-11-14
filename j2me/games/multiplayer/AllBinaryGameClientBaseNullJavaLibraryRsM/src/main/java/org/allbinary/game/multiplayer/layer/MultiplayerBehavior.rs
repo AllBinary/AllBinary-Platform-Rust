@@ -29,9 +29,13 @@ macro_rules! jcall {
 pub struct MultiplayerBehavior {
 }
 
-thread_local! { pub static MultiplayerBehavior_NULL_MULTIPLAYER_BEHAVIOR: Option<Rc<RefCell<dyn MultiplayerBehaviorDyn>>> = MultiplayerBehavior::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn MultiplayerBehaviorDyn>>); }
+thread_local! { pub static MultiplayerBehavior_NULL_MULTIPLAYER_BEHAVIOR: Option<Rc<RefCell<dyn MultiplayerBehaviorDyn>>> = MultiplayerBehavior::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn MultiplayerBehaviorDyn>>); }
 
 impl MultiplayerBehavior {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut username: String) -> Self {
@@ -57,7 +61,7 @@ impl MultiplayerBehavior {
         return 0_i64;
     }
 }
-pub trait MultiplayerBehaviorDyn {
+pub trait MultiplayerBehaviorDyn: std::any::Any {
     fn as_MultiplayerBehavior(&self) -> &MultiplayerBehavior;
     fn as_MultiplayerBehavior_mut(&mut self) -> &mut MultiplayerBehavior;
     fn startTick(&mut self) { MultiplayerBehavior::startTick(self.as_MultiplayerBehavior_mut()) }

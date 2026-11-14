@@ -20,6 +20,10 @@ pub struct OpenGLESGraphicsFactory {
 
 impl OpenGLESGraphicsFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -35,7 +39,7 @@ impl OpenGLESGraphicsFactory {
         return OpenGLESNullGraphicsFactory::OpenGLESNullGraphicsFactory::getInstance();
     }
 }
-pub trait OpenGLESGraphicsFactoryDyn {
+pub trait OpenGLESGraphicsFactoryDyn: std::any::Any {
     fn as_OpenGLESGraphicsFactory(&self) -> &OpenGLESGraphicsFactory;
     fn as_OpenGLESGraphicsFactory_mut(&mut self) -> &mut OpenGLESGraphicsFactory;
     fn getOpenGLESGraphicsInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::device::OpenGLESGraphics::OpenGLESGraphicsDyn>>> { OpenGLESGraphicsFactory::getOpenGLESGraphicsInstance(self.as_OpenGLESGraphicsFactory_mut()) }

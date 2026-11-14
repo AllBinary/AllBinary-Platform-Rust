@@ -40,8 +40,8 @@ impl SpecialItemsTag {
         let mut this = Self {
             base: TableTag::new_struct(),
         };
-        this.setTagHelperFactory(SpecialItemsHelperFactory::new());
-        this.setTagRequestHelperFactory(SpecialItemsRequestHelperFactory::new());
+        this.setTagHelperFactory(SpecialItemsHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(SpecialItemsRequestHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 

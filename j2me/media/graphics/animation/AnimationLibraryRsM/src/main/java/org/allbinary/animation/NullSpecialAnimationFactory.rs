@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::animation::special::SpecialAnimation::SpecialAnimation;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
 use super::ProceduralAnimationInterfaceFactoryInterface::ProceduralAnimationInterfaceFactoryInterface;
 use super::Animation::Animation;
@@ -43,10 +44,12 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 impl ProceduralAnimationInterfaceFactoryInterface for NullSpecialAnimationFactory {
     fn getInstanceAnimation(&mut self, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { Self::getInstanceAnimation(self, animationInterface) }
 }
-impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface for NullSpecialAnimationFactory {
-}
 
 impl NullSpecialAnimationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

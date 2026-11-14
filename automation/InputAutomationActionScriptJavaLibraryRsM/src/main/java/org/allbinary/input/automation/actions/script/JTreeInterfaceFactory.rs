@@ -26,6 +26,10 @@ thread_local! { pub static JTreeInterfaceFactory_instance: Option<Rc<RefCell<JTr
 
 impl JTreeInterfaceFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             jTreeInterface: None,

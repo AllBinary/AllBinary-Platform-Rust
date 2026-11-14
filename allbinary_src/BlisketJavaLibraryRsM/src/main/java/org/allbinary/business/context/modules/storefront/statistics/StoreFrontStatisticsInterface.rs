@@ -29,7 +29,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait StoreFrontStatisticsInterface {
+pub trait StoreFrontStatisticsInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getAdvertisements(&mut self) -> Option<Rc<RefCell<dyn StoreFrontAdvertisementsStatisticsInterface>>>;
@@ -42,8 +42,6 @@ pub trait StoreFrontStatisticsInterface {
     
 
     fn getOrders(&mut self) -> Option<Rc<RefCell<dyn StoreFrontOrdersHistoryStatisticsInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

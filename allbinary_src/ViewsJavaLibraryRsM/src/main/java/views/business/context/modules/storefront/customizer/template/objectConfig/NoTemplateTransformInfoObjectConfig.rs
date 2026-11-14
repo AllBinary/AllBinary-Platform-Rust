@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontData::StoreFrontData;
 use crate::org::allbinary::data::tree::dom::document::DomDocumentHelper::DomDocumentHelper;
 use crate::org::allbinary::data::tree::dom::document::XmlDocumentHelper::XmlDocumentHelper;
@@ -31,6 +30,7 @@ use crate::org::allbinary::logic::visual::transform::info::objectConfig::Transfo
 use crate::org::allbinary::logic::visual::transform::info::objectConfig::TransformInfoObjectConfigData::TransformInfoObjectConfigData;
 use crate::org::allbinary::logic::visual::transform::template::util::TransformTemplateCustomizerUtil::TransformTemplateCustomizerUtil;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -98,20 +98,20 @@ impl NoTemplateTransformInfoObjectConfig {
     // throws Exception
     pub fn generate(&mut self, mut objectConfigDocument: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Document>>> {
         let mut docString: String = XmlDocumentHelper::toString(objectConfigDocument.clone());
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             jcall!(self.logUtil).putF(format!("{}{}", String::from("Initial ObjectConfig: "), docString), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generate()"));
         }
         let mut storeName: String = jcall!(self.getTransformInfoInterface()).getStoreName();
         let mut viewName: String = jcall!(self.getTransformInfoInterface()).getName();
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        let mut VARKEY: String = jcall!(TransformInfoObjectConfigData::getInstance()).VARKEY.clone();
-        jcall!(hashMap).put(format!("{}{}", VARKEY, jcall!(StoreFrontData::getInstance()).NAME), storeName.clone());
-        jcall!(hashMap).put(format!("{}{}", VARKEY, jcall!(TransformInfoData::getInstance()).OWNER), viewName.clone());
-        let mut pageName: String = jcall!(TransformTemplateCustomizerUtil::getInstance()).getPageNameHack(jcall!(self.getTransformInfoInterface()).getName(), jcall!(self.getTransformInfoInterface()).getStoreName());
-        jcall!(hashMap).put(format!("{}{}", VARKEY, jcall!(TransformInfoData::getInstance()).PARTIAL), pageName.clone());
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        let mut VARKEY: String = { let java_field = jcall!(TransformInfoObjectConfigData::getInstance()).VARKEY.clone(); java_field }.clone();
+        jcall!(hashMap).put(crate::java_into_object(format!("{}{}", VARKEY, { let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field })), crate::java_into_object(storeName.clone()));
+        jcall!(hashMap).put(crate::java_into_object(format!("{}{}", VARKEY, { let java_field = jcall!(TransformInfoData::getInstance()).OWNER.clone(); java_field })), crate::java_into_object(viewName.clone()));
+        let mut pageName: String = jcall!(TransformTemplateCustomizerUtil::getInstance()).getPageNameHack({ let java_argument = jcall!(self.getTransformInfoInterface()).getName(); java_argument }, { let java_argument = jcall!(self.getTransformInfoInterface()).getStoreName(); java_argument });
+        jcall!(hashMap).put(crate::java_into_object(format!("{}{}", VARKEY, { let java_field = jcall!(TransformInfoData::getInstance()).PARTIAL.clone(); java_field })), crate::java_into_object(pageName.clone()));
         let mut replace: Option<Rc<RefCell<Replace>>> = Replace::new1(hashMap.clone());
         let mut newObjectConfigDocument: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1(jcall!(replace).all(docString.clone()));
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Final ObjectConfig: "), XmlDocumentHelper::toString(newObjectConfigDocument.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generate()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         return newObjectConfigDocument.clone();

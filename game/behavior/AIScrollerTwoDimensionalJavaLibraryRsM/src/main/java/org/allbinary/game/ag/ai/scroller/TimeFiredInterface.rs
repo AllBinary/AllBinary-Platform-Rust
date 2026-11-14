@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait TimeFiredInterface {
+pub trait TimeFiredInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getLastFireTime(&mut self) -> i64;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

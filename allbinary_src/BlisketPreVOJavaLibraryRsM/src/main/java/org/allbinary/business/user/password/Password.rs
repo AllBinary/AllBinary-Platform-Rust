@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::java::util::Random::Random;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
@@ -42,6 +41,7 @@ impl Random {
         (self.seed >> 16) as u32 as i32
     }
 }
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -57,6 +57,10 @@ pub struct Password {
 
 
 impl Password {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut password: String) -> Self {
@@ -86,29 +90,30 @@ impl Password {
 
     pub fn isValid(&mut self) -> Option<bool> {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut valid: Option<bool> = true;
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VALIDATION.clone()) {
-                jcall!(self.logUtil).putF(format!("{}{}", String::from("Password: "), self.password), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).IS_VALID.clone());
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VALIDATION.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).putF(format!("{}{}", String::from("Password: "), self.password), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).IS_VALID.clone(); java_field }.clone());
             }
             if !jcall!(StringValidationUtil::getInstance()).isValidRequired(self.password.clone(), 6, unsafe { crate::org::allbinary::business::user::UserData::UserData_MAXLEN.clone() }.clone()) {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VALIDATION.clone()) {
-                    jcall!(self.logUtil).putF(String::from("Password is invalid"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).IS_VALID.clone());
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VALIDATION.clone(); java_field }.clone()) {
+                    jcall!(self.logUtil).putF(String::from("Password is invalid"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).IS_VALID.clone(); java_field }.clone());
                 }
-                valid = false;
+                valid = { let java_value = (false).clone(); java_value }.clone();
             }
-            return valid.clone();
+            return Some(valid.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VALIDATIONERROR.clone()) {
-                jcall!(self.logUtil).put(String::from("Failed to validate form"), crate::java_into_object(String::from("Password")), jcall!(commonStrings).IS_VALID.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VALIDATIONERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put(String::from("Failed to validate form"), crate::java_into_object(String::from("Password")), { let java_field = jcall!(commonStrings).IS_VALID.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -117,28 +122,28 @@ impl Password {
             return String::from("Please enter a Password with more than 6 characters.<br />");
         }
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        return jcall!(stringUtil).EMPTY_STRING.clone();
+        return { let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 
     pub fn toVector(&mut self, mut secret: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        self.password = jcall!(StringUtil::getInstance()).getNonNull(self.password.clone());
+        self.password = { let java_value = (jcall!(StringUtil::getInstance()).getNonNull(self.password.clone())).clone(); java_value };
         let mut random: i32 = jcall!(Random::new()).nextInt(unsafe { crate::org::allbinary::logic::control::crypt::SuperCrypt::SuperCrypt_KEYMAX.clone() }.clone());
-        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        jcall!(vector).add(crate::java_into_object(jcall!(Some((random.clone()) as i32)).toString()));
+        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        jcall!(vector).add(crate::java_into_object((Some((random.clone()) as i32)).expect("NullPointerException").to_string()));
         jcall!(vector).add(crate::java_into_object(secret.clone()));
         jcall!(vector).add(crate::java_into_object(jcall!(SuperCrypt::new(random.clone())).encrypt(self.password.clone())));
         return vector.clone();
     }
     
 
-    pub fn toHashMap(&mut self, mut secret: String) -> Option<Rc<RefCell<HashMap>>> {
-        self.password = jcall!(StringUtil::getInstance()).getNonNull(self.password.clone());
-        let mut values: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
+    pub fn toHashMap(&mut self, mut secret: String) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        self.password = { let java_value = (jcall!(StringUtil::getInstance()).getNonNull(self.password.clone())).clone(); java_value };
+        let mut values: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
         let mut random: i32 = jcall!(Random::new()).nextInt(unsafe { crate::org::allbinary::logic::control::crypt::SuperCrypt::SuperCrypt_KEYMAX.clone() }.clone());
-        jcall!(values).put(jcall!(EntryData::getInstance()).ENCRYPTION.clone(), jcall!(Some((random.clone()) as i32)).toString());
-        jcall!(values).put(crate::org::allbinary::business::user::UserData::UserData_SECRET.with(Clone::clone).clone(), secret.clone());
-        jcall!(values).put(crate::org::allbinary::business::user::UserData::UserData_PASSWORD.with(Clone::clone).clone(), jcall!(SuperCrypt::new(random.clone())).encrypt(self.password.clone()));
+        jcall!(values).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).ENCRYPTION.clone(); java_field }.clone()), crate::java_into_object((Some((random.clone()) as i32)).expect("NullPointerException").to_string()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_SECRET.with(Clone::clone).clone()), crate::java_into_object(secret.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_PASSWORD.with(Clone::clone).clone()), crate::java_into_object(jcall!(SuperCrypt::new(random.clone())).encrypt(self.password.clone())));
         return values.clone();
     }
 }

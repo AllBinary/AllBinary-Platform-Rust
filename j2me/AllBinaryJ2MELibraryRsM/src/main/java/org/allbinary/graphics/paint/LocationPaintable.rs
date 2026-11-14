@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use super::LocationPaintableInterface::LocationPaintableInterface;
 
 // Borrows the object of a Java reference
@@ -32,10 +32,14 @@ pub struct LocationPaintable {
 
 thread_local! { pub static LocationPaintable_instance: Option<Rc<RefCell<dyn LocationPaintableDyn>>> = LocationPaintable::new().map(|reference| reference as Rc<RefCell<dyn LocationPaintableDyn>>); }
 impl LocationPaintableInterface for LocationPaintable {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 impl LocationPaintable {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -53,13 +57,12 @@ impl LocationPaintable {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
     }
 }
-pub trait LocationPaintableDyn {
+pub trait LocationPaintableDyn: std::any::Any + crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface {
     fn as_LocationPaintable(&self) -> &LocationPaintable;
     fn as_LocationPaintable_mut(&mut self) -> &mut LocationPaintable;
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { LocationPaintable::paintXY(self.as_LocationPaintable_mut(), graphics, x, y) }
 }
 impl LocationPaintableDyn for LocationPaintable {
     fn as_LocationPaintable(&self) -> &LocationPaintable { self }

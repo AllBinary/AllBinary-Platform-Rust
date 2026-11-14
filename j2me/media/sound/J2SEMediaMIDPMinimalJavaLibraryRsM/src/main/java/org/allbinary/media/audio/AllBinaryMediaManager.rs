@@ -19,11 +19,11 @@ use std::rc::Rc;
 use super::*;
 // use crate::java::io::BufferedInputStream::BufferedInputStream;
 // use crate::java::io::ByteArrayInputStream::ByteArrayInputStream;
-// use crate::java::io::IOException::IOException;
-// use crate::java::io::InputStream::InputStream;
-// use crate::javax::microedition::media::Manager::Manager;
-// use crate::javax::microedition::media::MediaException::MediaException;
-// use crate::javax::microedition::media::Player::Player;
+use crate::java::io::IOException::IOException;
+use crate::java::io::InputStream::InputStream;
+use crate::javax::microedition::media::Manager::Manager;
+use crate::javax::microedition::media::MediaException::MediaException;
+use crate::javax::microedition::media::Player::Player;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::org::allbinary::audio::AudioContentTypeDataFactory::AudioContentTypeDataFactory;
 use crate::org::allbinary::data::resource::ResourceUtil::ResourceUtil;
@@ -33,6 +33,7 @@ use crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanva
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::Sounds::Sounds;
 use super::SoundsFactoryInterface::SoundsFactoryInterface;
 use super::PCClipWavPlayer::PCClipWavPlayer;
@@ -52,6 +53,10 @@ thread_local! { pub static AllBinaryMediaManager_THIS: String = String::from("Al
 thread_local! { pub static AllBinaryMediaManager_CREATE_PLAYER: String = String::from("createPlayer"); }
 
 impl AllBinaryMediaManager {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -83,7 +88,7 @@ impl AllBinaryMediaManager {
     pub fn init(mut soundsFactoryInterface: Option<Rc<RefCell<dyn SoundsFactoryInterface>>>) {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut commonString: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(logUtil).putF(jcall!(commonString).START.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), jcall!(commonString).INIT.clone());
+        jcall!(logUtil).putF({ let java_field = jcall!(commonString).START.clone(); java_field }.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), { let java_field = jcall!(commonString).INIT.clone(); java_field }.clone());
         jcall!(ProgressCanvasFactory::getInstance()).addNormalPortion(50, String::from("Media Manager"));
         jcall!(Sounds::new(soundsFactoryInterface.clone())).init();
     }
@@ -98,33 +103,35 @@ impl AllBinaryMediaManager {
     
 
     // throws Exception
-    pub fn createPlayer(mut resource: String) -> Option<Rc<RefCell<Player>>> {
-        if resource.starts_with(&unsafe { crate::javax::microedition::media::Manager::Manager_TONE_DEVICE_LOCATOR.clone() }.clone()) {
-            return AllBinaryMediaManager::createPlayerFromInputStream(ByteArrayInputStream::new(jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone()), jcall!(jcall!(AudioContentTypeDataFactory::getInstance()).MIME_AUDIO_TONE).getName());
-        } else if jcall!(Features::getInstance()).isFeature(jcall!(GameFeatureFactory::getInstance()).SOUND.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                let mut inputStream: Option<Rc<RefCell<InputStream>>> = jcall!(ResourceUtil::getInstance()).getResourceAsStream(resource.clone());
+    pub fn createPlayer(mut resource: String) -> Option<Rc<RefCell<dyn Player>>> {
+        if resource.starts_with(&crate::javax::microedition::media::Manager::Manager_TONE_DEVICE_LOCATOR.with(Clone::clone).clone()) {
+            return AllBinaryMediaManager::createPlayerFromInputStream(crate::java::io::InputStream::InputStream::new1({ let java_field = jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>), jcall!({ let java_field = jcall!(AudioContentTypeDataFactory::getInstance()).MIME_AUDIO_TONE.clone(); java_field }).getName());
+        } else if jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(GameFeatureFactory::getInstance()).SOUND.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = jcall!(ResourceUtil::getInstance()).getResourceAsStream(resource.clone());
                 let mut bufferedInputStream: Option<Rc<RefCell<BufferedInputStream>>> = BufferedInputStream::new(inputStream.clone());
-                return PCClipWavPlayer::new(bufferedInputStream.clone());
+                return Some(PCClipWavPlayer::new(bufferedInputStream.clone()).map(|reference| reference as Rc<RefCell<dyn Player>>).map(|reference| reference as Rc<RefCell<dyn Player>>));
             })) {
-                Ok(java_return) => return java_return,
+                Ok(java_return) => java_return,
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                 let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
                 let mut commonString: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(logUtil).put(jcall!(commonString).EXCEPTION.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), AllBinaryMediaManager_CREATE_PLAYER.with(Clone::clone).clone(), crate::java_into_object(e.clone()));
-                return NoPlayer_NO_PLAYER.with(Clone::clone).clone();
+                jcall!(logUtil).put({ let java_field = jcall!(commonString).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), AllBinaryMediaManager_CREATE_PLAYER.with(Clone::clone).clone(), crate::java_into_object(e.clone()));
+                return NoPlayer_NO_PLAYER.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn Player>>);
+                None
                 }
-            }
+            };
+        if let Some(java_return) = java_try_result { return java_return; }
         } else {
-            return NoPlayer_NO_PLAYER.with(Clone::clone).clone();
+            return NoPlayer_NO_PLAYER.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn Player>>);
         }
     }
     
 
     // throws IOException, MediaException
-    pub fn createPlayerFromInputStream(mut stream: Option<Rc<RefCell<InputStream>>>, mut r#type: String) -> Option<Rc<RefCell<Player>>> {
+    pub fn createPlayerFromInputStream(mut stream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>, mut r#type: String) -> Option<Rc<RefCell<dyn Player>>> {
         panic!("{:?}", format!("{}: {:?}", "MediaException", (String::from("No Impl"))));
     }
     

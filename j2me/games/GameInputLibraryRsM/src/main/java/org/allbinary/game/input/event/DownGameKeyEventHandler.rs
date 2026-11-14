@@ -72,13 +72,13 @@ impl DownGameKeyEventHandler {
     pub fn removeAllListeners(&mut self) {
         self.base.removeAllListeners();
         for index in (0..=(DownGameKeyEventHandler_instanceArray.with(Clone::clone).len() as i32) - 1).rev() {
-            jcall!(DownGameKeyEventHandler_instanceArray.with(Clone::clone)[(index) as usize]).removeAllListeners();
+            jcall!(DownGameKeyEventHandler_instanceArray.with(Clone::clone)[(index) as usize]).as_DownGameKeyEventHandlerBase_mut().removeAllListeners();
         }
     }
     
 
     pub fn removeListenerSingleThreaded(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        self.base.removeListenerSingleThreaded(eventListenerInterface.clone());
+        { let java_arguments = (eventListenerInterface.clone(),); self.base.removeListenerSingleThreaded(java_arguments.0) };
         for index in (0..=(DownGameKeyEventHandler_instanceArray.with(Clone::clone).len() as i32) - 1).rev() {
             jcall!(DownGameKeyEventHandler_instanceArray.with(Clone::clone)[(index) as usize]).removeListenerSingleThreaded(eventListenerInterface.clone());
         }
@@ -87,9 +87,9 @@ impl DownGameKeyEventHandler {
 
     // synchronized
     pub fn removeListener(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        self.base.removeListener(eventListenerInterface.clone());
+        { let java_arguments = (eventListenerInterface.clone(),); self.base.removeListener(java_arguments.0) };
         for index in (0..=(DownGameKeyEventHandler_instanceArray.with(Clone::clone).len() as i32) - 1).rev() {
-            jcall!(DownGameKeyEventHandler_instanceArray.with(Clone::clone)[(index) as usize]).removeListener(eventListenerInterface.clone());
+            jcall!(DownGameKeyEventHandler_instanceArray.with(Clone::clone)[(index) as usize]).as_DownGameKeyEventHandlerBase_mut().removeListener(eventListenerInterface.clone());
         }
     }
 }

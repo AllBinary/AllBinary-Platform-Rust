@@ -35,13 +35,17 @@ thread_local! { pub static BasicHighScoresGameInfoFactory_SINGLETON: Option<Rc<R
 
 impl BasicHighScoresGameInfoFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             MULTI_PLAYER_SERVER: None,
             SINGLE_PLAYER_SERVER: None,
         };
-        this.MULTI_PLAYER_SERVER = GameInfo::new(jcall!(GameTypeFactory::GameTypeFactory::getInstance()).MULTI_PLAYER.clone(), unsafe { GameMode_SERVER.clone() }.clone(), jcall!(PlayerTypesFactory::PlayerTypesFactory::getInstance()).PLAYER_TYPE_ONE.clone(), 0, 0);
-        this.SINGLE_PLAYER_SERVER = GameInfo::new(jcall!(GameTypeFactory::GameTypeFactory::getInstance()).SINGLE_PLAYER.clone(), unsafe { GameMode_SERVER.clone() }.clone(), jcall!(PlayerTypesFactory::PlayerTypesFactory::getInstance()).PLAYER_TYPE_ONE.clone(), 0, 0);
+        this.MULTI_PLAYER_SERVER = GameInfo::new({ let java_field = jcall!(GameTypeFactory::GameTypeFactory::getInstance()).MULTI_PLAYER.clone(); java_field }.clone(), unsafe { GameMode_SERVER.clone() }.clone(), { let java_field = jcall!(PlayerTypesFactory::PlayerTypesFactory::getInstance()).PLAYER_TYPE_ONE.clone(); java_field }.clone(), 0, 0);
+        this.SINGLE_PLAYER_SERVER = GameInfo::new({ let java_field = jcall!(GameTypeFactory::GameTypeFactory::getInstance()).SINGLE_PLAYER.clone(); java_field }.clone(), unsafe { GameMode_SERVER.clone() }.clone(), { let java_field = jcall!(PlayerTypesFactory::PlayerTypesFactory::getInstance()).PLAYER_TYPE_ONE.clone(); java_field }.clone(), 0, 0);
         this
     }
 

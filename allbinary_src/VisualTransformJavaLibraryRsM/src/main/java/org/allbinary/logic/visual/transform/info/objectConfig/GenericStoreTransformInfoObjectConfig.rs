@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontData::StoreFrontData;
 use crate::org::allbinary::data::tree::dom::document::DomDocumentHelper::DomDocumentHelper;
 use crate::org::allbinary::data::tree::dom::document::XmlDocumentHelper::XmlDocumentHelper;
@@ -37,6 +36,7 @@ use crate::org::allbinary::logic::visual::transform::template::TransformTemplate
 use crate::org::allbinary::logic::visual::transform::template::util::TransformTemplateCustomizerUtil::TransformTemplateCustomizerUtil;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 use super::TransformInfoObjectConfig::TransformInfoObjectConfig;
 use super::TransformInfoObjectConfigData::TransformInfoObjectConfigData;
 
@@ -112,54 +112,54 @@ impl GenericStoreTransformInfoObjectConfig {
 
     // throws Exception
     pub fn generate(&mut self, mut objectConfigDocument: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Document>>> {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(String::from("TransformInfo: "));
             if self.getTransformInfoInterface().is_some() {
-                jcall!(stringBuffer).append(jcall!(self.getTransformInfoInterface()).getName());
+                jcall!(stringBuffer).append({ let java_argument = jcall!(self.getTransformInfoInterface()).getName(); java_argument });
             } else {
                 jcall!(stringBuffer).append(String::from("No Owner!?#@"));
             }
             { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generate()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
-        let mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoHttp::TransformInfoHttpDyn>>> = (self.getTransformInfoInterface()).clone() /* as TransformInfoHttp */;
+        let mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoHttp::TransformInfoHttpDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoHttp::TransformInfoHttpDyn>>> { panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to TransformInfoHttp") })();
         let mut objectConfigDocumentString: String = XmlDocumentHelper::toString(objectConfigDocument.clone());
-        let mut replaceHashMap: Option<Rc<RefCell<HashMap>>> = self.createReplaceHashMap(transformInfoHttpStoreInterface.clone(), objectConfigDocumentString.clone());
+        let mut replaceHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.createReplaceHashMap(transformInfoHttpStoreInterface.clone(), objectConfigDocumentString.clone());
         return self.generate2(objectConfigDocumentString.clone(), replaceHashMap.clone());
     }
     
 
     // throws Exception
-    pub fn createReplaceHashMap(&mut self, mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoHttp::TransformInfoHttpDyn>>>, mut objectConfigDocumentString: String) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn createReplaceHashMap(&mut self, mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoHttp::TransformInfoHttpDyn>>>, mut objectConfigDocumentString: String) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         let mut storeName: String = jcall!(transformInfoHttpStoreInterface).getStoreName();
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = self.createHashMap(transformInfoHttpStoreInterface.clone(), objectConfigDocumentString.clone());
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.createHashMap(transformInfoHttpStoreInterface.clone(), objectConfigDocumentString.clone());
         let mut transformInfoObjectConfigData: Option<Rc<RefCell<TransformInfoObjectConfigData>>> = TransformInfoObjectConfigData::getInstance();
-        jcall!(hashMap).put(format!("{}{}", jcall!(transformInfoObjectConfigData).VARKEY, jcall!(StoreFrontData::getInstance()).NAME), storeName.clone());
-        let mut pageName: String = jcall!(TransformTemplateCustomizerUtil::getInstance()).getPageNameHack(jcall!(self.getTransformInfoInterface()).getName(), storeName.clone());
-        jcall!(hashMap).put(format!("{}{}", jcall!(transformInfoObjectConfigData).VARKEY, jcall!(TransformInfoData::getInstance()).PARTIAL), pageName.clone());
+        jcall!(hashMap).put(crate::java_into_object(format!("{}{}", { let java_field = jcall!(transformInfoObjectConfigData).VARKEY.clone(); java_field }, { let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field })), crate::java_into_object(storeName.clone()));
+        let mut pageName: String = jcall!(TransformTemplateCustomizerUtil::getInstance()).getPageNameHack({ let java_argument = jcall!(self.getTransformInfoInterface()).getName(); java_argument }, storeName.clone());
+        jcall!(hashMap).put(crate::java_into_object(format!("{}{}", { let java_field = jcall!(transformInfoObjectConfigData).VARKEY.clone(); java_field }, { let java_field = jcall!(TransformInfoData::getInstance()).PARTIAL.clone(); java_field })), crate::java_into_object(pageName.clone()));
         return hashMap.clone();
     }
     
 
     // throws Exception
-    pub fn createHashMap(&mut self, mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoHttp::TransformInfoHttpDyn>>>, mut objectConfigDocumentString: String) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
+    pub fn createHashMap(&mut self, mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoHttp::TransformInfoHttpDyn>>>, mut objectConfigDocumentString: String) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
         let mut storeName: String = jcall!(transformInfoHttpStoreInterface).getStoreName();
-        let mut propertiesHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(transformInfoHttpStoreInterface).getPropertiesHashMap();
-        let mut templateNameOverride: String = jcall!(StringUtil::getInstance()).getNonNull((jcall!(propertiesHashMap).get(jcall!(TransformInfoData::getInstance()).PARTIAL.clone())).clone() /* as String */);
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        let mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(transformInfoHttpStoreInterface).getPropertiesHashMap();
+        let mut templateNameOverride: String = jcall!(StringUtil::getInstance()).getNonNull({ let java_object = (jcall!(propertiesHashMap).get(crate::java_into_object({ let java_field = jcall!(TransformInfoData::getInstance()).PARTIAL.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() });
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             jcall!(self.logUtil).putF(format!("{}{}", String::from("TemplateNameOverride: "), templateNameOverride), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generate()"));
         }
         let mut templateNameStringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(templateNameStringBuffer).append(storeName.clone());
         jcall!(templateNameStringBuffer).append(templateNameOverride.clone());
-        jcall!(templateNameStringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
+        jcall!(templateNameStringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
         jcall!(templateNameStringBuffer).append(crate::org::allbinary::logic::visual::transform::info::RootTransformInfoData::RootTransformInfoData_NAME.with(Clone::clone).clone());
-        let mut templateNameKey: String = format!("{}{}", jcall!(TransformInfoObjectConfigData::getInstance()).VARKEY, jcall!(TransformInfoData::getInstance()).OWNER);
+        let mut templateNameKey: String = format!("{}{}", { let java_field = jcall!(TransformInfoObjectConfigData::getInstance()).VARKEY.clone(); java_field }, { let java_field = jcall!(TransformInfoData::getInstance()).OWNER.clone(); java_field });
         if objectConfigDocumentString.find(&templateNameKey.clone()).map(|index| index as i32).unwrap_or(-1) != -1 {
             let mut templateInterface: Option<Rc<RefCell<dyn TransformTemplateInterface>>> = jcall!(TransformTemplateFactory::getInstance()).getInstance4(self.abeClientInformation.clone(), jcall!(templateNameStringBuffer).toString(), jcall!(transformInfoHttpStoreInterface).getPropertiesHashMap(), jcall!(transformInfoHttpStoreInterface).getPageContext());
             let mut selectedTemplate: String = jcall!(templateInterface).getName();
-            jcall!(hashMap).put(templateNameKey.clone(), selectedTemplate.clone());
+            jcall!(hashMap).put(crate::java_into_object(templateNameKey.clone()), crate::java_into_object(selectedTemplate.clone()));
         }
         return hashMap.clone();
     }
@@ -167,10 +167,10 @@ impl GenericStoreTransformInfoObjectConfig {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn generate2(&mut self, mut objectConfigDocumentString: String, mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Document>>> {
+    pub fn generate2(&mut self, mut objectConfigDocumentString: String, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Document>>> {
         let mut replace: Option<Rc<RefCell<Replace>>> = Replace::new1(hashMap.clone());
         let mut newObjectConfigDocument: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1(jcall!(replace).all(objectConfigDocumentString.clone()));
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Final ObjectConfig: "), XmlDocumentHelper::toString(newObjectConfigDocument.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generate()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         return newObjectConfigDocument.clone();
@@ -188,9 +188,9 @@ pub trait GenericStoreTransformInfoObjectConfigDyn: crate::org::allbinary::logic
     fn as_GenericStoreTransformInfoObjectConfig(&self) -> &GenericStoreTransformInfoObjectConfig;
     fn as_GenericStoreTransformInfoObjectConfig_mut(&mut self) -> &mut GenericStoreTransformInfoObjectConfig;
     fn generate(&mut self, mut objectConfigDocument: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Document>>> { GenericStoreTransformInfoObjectConfig::generate(self.as_GenericStoreTransformInfoObjectConfig_mut(), objectConfigDocument) }
-    fn createReplaceHashMap(&mut self, mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoHttp::TransformInfoHttpDyn>>>, mut objectConfigDocumentString: String) -> Option<Rc<RefCell<HashMap>>> { GenericStoreTransformInfoObjectConfig::createReplaceHashMap(self.as_GenericStoreTransformInfoObjectConfig_mut(), transformInfoHttpStoreInterface, objectConfigDocumentString) }
-    fn createHashMap(&mut self, mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoHttp::TransformInfoHttpDyn>>>, mut objectConfigDocumentString: String) -> Option<Rc<RefCell<HashMap>>> { GenericStoreTransformInfoObjectConfig::createHashMap(self.as_GenericStoreTransformInfoObjectConfig_mut(), transformInfoHttpStoreInterface, objectConfigDocumentString) }
-    fn generate2(&mut self, mut objectConfigDocumentString: String, mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Document>>> { GenericStoreTransformInfoObjectConfig::generate2(self.as_GenericStoreTransformInfoObjectConfig_mut(), objectConfigDocumentString, hashMap) }
+    fn createReplaceHashMap(&mut self, mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoHttp::TransformInfoHttpDyn>>>, mut objectConfigDocumentString: String) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { GenericStoreTransformInfoObjectConfig::createReplaceHashMap(self.as_GenericStoreTransformInfoObjectConfig_mut(), transformInfoHttpStoreInterface, objectConfigDocumentString) }
+    fn createHashMap(&mut self, mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoHttp::TransformInfoHttpDyn>>>, mut objectConfigDocumentString: String) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { GenericStoreTransformInfoObjectConfig::createHashMap(self.as_GenericStoreTransformInfoObjectConfig_mut(), transformInfoHttpStoreInterface, objectConfigDocumentString) }
+    fn generate2(&mut self, mut objectConfigDocumentString: String, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Document>>> { GenericStoreTransformInfoObjectConfig::generate2(self.as_GenericStoreTransformInfoObjectConfig_mut(), objectConfigDocumentString, hashMap) }
 }
 impl GenericStoreTransformInfoObjectConfigDyn for GenericStoreTransformInfoObjectConfig {
     fn as_GenericStoreTransformInfoObjectConfig(&self) -> &GenericStoreTransformInfoObjectConfig { self }

@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
+use crate::java::lang::Exception::*;
 use super::InputMappingEventListenerInterface::InputMappingEventListenerInterface;
 use super::InputMappingEvent::InputMappingEvent;
 
@@ -58,8 +59,8 @@ impl InputMappingEventHandler {
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut inputMappingEventListenerInterface: Option<Rc<RefCell<dyn InputMappingEventListenerInterface>>> = panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn InputMappingEventListenerInterface");
-        jcall!(inputMappingEventListenerInterface).onInputMappingEvent((eventObject).clone() /* as InputMappingEvent */);
+        let mut inputMappingEventListenerInterface: Option<Rc<RefCell<dyn InputMappingEventListenerInterface>>> = (|| -> Option<Rc<RefCell<dyn InputMappingEventListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn InputMappingEventListenerInterface") })();
+        jcall!(inputMappingEventListenerInterface).onInputMappingEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<InputMappingEvent>() }, "ClassCastException: not a InputMappingEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<InputMappingEvent>) } }));
     }
 }
 impl std::ops::Deref for InputMappingEventHandler {

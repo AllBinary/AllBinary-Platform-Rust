@@ -31,6 +31,10 @@ pub struct HeadingData {
 thread_local! { pub static HeadingData_NAME: String = String::from("HEADER_NAME"); }
 
 impl HeadingData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

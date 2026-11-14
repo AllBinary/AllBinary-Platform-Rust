@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::user::modules::configuration::UserConfigurationInterface::UserConfigurationInterface;
 use crate::org::allbinary::business::user::role::UserRole::UserRole;
 use crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface;
@@ -173,7 +172,7 @@ pub trait UserInterface: TableMappingInterface + ValidationInterface {
     fn setUserConfigurationInterface(&mut self, userConfigurationInterface: Option<Rc<RefCell<dyn UserConfigurationInterface>>>);
     
 
-    fn toPasswordHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>>;
+    fn toPasswordHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>;
     
 
     fn validateSession(&mut self, weblisketSession: Option<Rc<RefCell<dyn WeblisketSessionInterface>>>);

@@ -38,13 +38,17 @@ thread_local! { pub static WaypointCellPositionHistory_SINGLETON: Option<Rc<RefC
 
 impl WaypointCellPositionHistory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             positionList: None,
             layerList: None,
         };
-        this.positionList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.layerList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.positionList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.layerList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -65,7 +69,7 @@ impl WaypointCellPositionHistory {
     
 
     pub fn addList(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) {
-        for index in (0..=jcall!(list).size() - 1).rev() {
+        for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
             { let java_arguments = ({ let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>>().expect("ClassCastException").clone()) }, layerInterface.clone(),); self.add(java_arguments.0, java_arguments.1) };
         }
     }
@@ -83,7 +87,7 @@ impl WaypointCellPositionHistory {
     pub fn removeLayer(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) {
         let mut index: i32 = 0;
         while index != -1 {
-            index = jcall!(self.layerList).indexOf(crate::java_into_object(layerInterface.clone()));
+            index = { let java_value = (jcall!(self.layerList).indexOf(crate::java_into_object(layerInterface.clone()))).clone(); java_value };
             if index >= 0 {
                 jcall!(self.positionList).removeAt(index.clone());
                 jcall!(self.layerList).removeAt(index.clone());
@@ -104,7 +108,7 @@ impl WaypointCellPositionHistory {
     
 
     pub fn anyCellPositionWithDrop(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> bool {
-        for index in (0..=jcall!(list).size() - 1).rev() {
+        for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
             if { let java_arguments = ({ let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>>().expect("ClassCastException").clone()) },); self.isCellPositionWithDrop(java_arguments.0) } {
                 return true;
             }

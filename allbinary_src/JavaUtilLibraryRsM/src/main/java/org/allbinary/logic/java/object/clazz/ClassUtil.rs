@@ -34,6 +34,10 @@ pub struct ClassUtil {
 
 
 impl ClassUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -49,7 +53,7 @@ impl ClassUtil {
 
     pub fn viewAll(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut lineBreak: String) -> String {
         if anyType.is_some() {
-            return ClassUtil::viewAll(std::any::type_name_of_val(&anyType), lineBreak.clone());
+            return ClassUtil::viewAll_Class_String(std::any::type_name_of_val(&anyType), lineBreak.clone());
         } else {
             return String::from("Object Null");
         }
@@ -57,7 +61,7 @@ impl ClassUtil {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn viewAll(mut myClass: &'static str, mut lineBreak: String) -> String {
+    pub fn viewAll_Class_String(mut myClass: &'static str, mut lineBreak: String) -> String {
         if myClass.is_some() {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             let mut classes: Vec<&'static str> = jcall!(myClass).getClasses();

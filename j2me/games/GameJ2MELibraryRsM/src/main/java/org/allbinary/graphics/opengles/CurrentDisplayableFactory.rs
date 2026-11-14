@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Displayable::Displayable;
+use crate::javax::microedition::lcdui::Displayable::Displayable;
 use crate::org::allbinary::J2MEUtil::J2MEUtil;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvas;
@@ -59,8 +59,8 @@ pub struct CurrentDisplayableFactory {
     pub RUNNABLE: String,
     pub RUNNABLE_WAS_ALREADY_IN_USE: String,
     pub DEFAULT_CHILD_NAME_LIST: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
-    pub displayable: Option<Rc<RefCell<Displayable>>>,
-    pub openGlReadydisplayable: Option<Rc<RefCell<Displayable>>>,
+    pub displayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>,
+    pub openGlReadydisplayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>,
     pub runnable: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>>,
     pub usedRunnable: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>>,
 }
@@ -68,6 +68,10 @@ pub struct CurrentDisplayableFactory {
 thread_local! { pub static CurrentDisplayableFactory_instance: Option<Rc<RefCell<CurrentDisplayableFactory>>> = CurrentDisplayableFactory::new(); }
 
 impl CurrentDisplayableFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<CurrentDisplayableFactory>>> {
@@ -101,13 +105,13 @@ impl CurrentDisplayableFactory {
         this.SET_USED_RUNNABLE = String::from("setUsedRunnable");
         this.RUNNABLE = String::from("Runnable: ");
         this.RUNNABLE_WAS_ALREADY_IN_USE = String::from("Runnable was already in use: ");
-        this.DEFAULT_CHILD_NAME_LIST = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.displayable = NullDisplayable::getInstance();
-        this.openGlReadydisplayable = NullDisplayable::getInstance();
+        this.DEFAULT_CHILD_NAME_LIST = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.displayable = NullDisplayable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>);
+        this.openGlReadydisplayable = NullDisplayable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>);
         this.runnable = NullWaitGameRunnable::getInstance();
         this.usedRunnable = NullWaitGameRunnable::getInstance();
-        jcall!(this.DEFAULT_CHILD_NAME_LIST).add(crate::java_into_object(jcall!(this.canvasStrings).ABOUT.clone()));
-        jcall!(this.DEFAULT_CHILD_NAME_LIST).add(crate::java_into_object(jcall!(this.canvasStrings).OPTIONS.clone()));
+        jcall!(this.DEFAULT_CHILD_NAME_LIST).add(crate::java_into_object({ let java_field = jcall!(this.canvasStrings).ABOUT.clone(); java_field }.clone()));
+        jcall!(this.DEFAULT_CHILD_NAME_LIST).add(crate::java_into_object({ let java_field = jcall!(this.canvasStrings).OPTIONS.clone(); java_field }.clone()));
         jcall!(this.DEFAULT_CHILD_NAME_LIST).add(crate::java_into_object(crate::org::allbinary::game::displayable::canvas::GameInputMappingCanvas::GameInputMappingCanvas_NAME.with(Clone::clone).clone()));
         jcall!(this.DEFAULT_CHILD_NAME_LIST).add(crate::java_into_object(crate::org::allbinary::game::displayable::canvas::GameInputMappingInstructionsCanvas::GameInputMappingInstructionsCanvas_NAME.with(Clone::clone).clone()));
         jcall!(this.DEFAULT_CHILD_NAME_LIST).add(crate::java_into_object(crate::org::allbinary::game::score::displayable::HighScoresCanvas::HighScoresCanvas_NAME.with(Clone::clone).clone()));
@@ -121,28 +125,28 @@ impl CurrentDisplayableFactory {
 
     pub fn setMyCanvas(&mut self, mut displayable: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn>>>) {
         if (self.displayable).is_some() /* instanceof MyCanvas */ {
-            if jcall!(displayable).hasChild((self.displayable).clone() /* as MyCanvas */) {
+            if jcall!(displayable).hasChild((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn>>> { panic!("ClassCastException: a Rust dyn Displayable cannot be cast to MyCanvas") })()) {
                 PreLogUtil::put(jcall!(StringMaker::new()).append(String::from("Child Displayable is already set for: ")).append(jcall!(self.stringUtil).toString(crate::java_into_object(displayable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_DISPLAYABLE.clone());
                 return;
             }
         }
-        self.setDisplayable(displayable.clone());
+        self.setDisplayable(displayable.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>));
     }
     
 
-    pub fn setDisplayable(&mut self, mut displayable: Option<Rc<RefCell<Displayable>>>) {
+    pub fn setDisplayable(&mut self, mut displayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) {
         self.displayable = displayable.clone();
         self.setOpenGlReadydisplayable(displayable.clone());
     }
     
 
-    pub fn setOpenGlReadydisplayable(&mut self, mut openGlReadydisplayable: Option<Rc<RefCell<Displayable>>>) {
+    pub fn setOpenGlReadydisplayable(&mut self, mut openGlReadydisplayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) {
         self.openGlReadydisplayable = openGlReadydisplayable.clone();
         self.update();
     }
     
 
-    pub fn getOpenGlReadydisplayable(&mut self) -> Option<Rc<RefCell<Displayable>>> {
+    pub fn getOpenGlReadydisplayable(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>> {
         return self.openGlReadydisplayable.clone();
     }
     
@@ -160,7 +164,7 @@ impl CurrentDisplayableFactory {
 
     pub fn clearRunnable(&mut self) {
         PreLogUtil::put(jcall!(StringMaker::new()).append(self.RUNNABLE.clone()).append({ let java_receiver = self.stringUtil.clone(); let java_arguments = (crate::java_into_object(NullRunnable::getInstance()),); let java_result = jcall!(java_receiver).toString(java_arguments.0); java_result }).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.CLEAR_RUNNABLE.clone());
-        { let java_arguments = (NullWaitGameRunnable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>),); self.setUsedRunnable(java_arguments.0) };
+        { let java_arguments = (NullWaitGameRunnable::getInstance(),); self.setUsedRunnable(java_arguments.0) };
     }
     
 
@@ -170,24 +174,24 @@ impl CurrentDisplayableFactory {
             let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
             let mut stringMaker: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringMaker).append(jcall!(self.stringUtil).toString(crate::java_into_object(self.openGlReadydisplayable.clone())));
-            if unsafe { crate::org::allbinary::game::layer::SWTUtil::SWTUtil_isSWT.clone() } && !jcall!(features).isDefault(jcall!(OpenGLFeatureFactory::OpenGLFeatureFactory::getInstance()).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-                PreLogUtil::put(jcall!(stringMaker).append(jcall!(commonSeps).SPACE.clone()).append(unsafe { crate::org::allbinary::game::layer::SWTUtil::SWTUtil_SWT.clone() }.clone()).append(jcall!(commonSeps).SPACE.clone()).append(self.RUNNABLE.clone()).append({ let java_receiver = self.stringUtil.clone(); let java_arguments = (crate::java_into_object(NullRunnable::getInstance()),); let java_result = jcall!(java_receiver).toString(java_arguments.0); java_result }).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).UPDATE.clone());
-                { let java_arguments = (NullWaitGameRunnable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>),); self.setUsedRunnable(java_arguments.0) };
+            if unsafe { crate::org::allbinary::game::layer::SWTUtil::SWTUtil_isSWT.clone() } && !jcall!(features).isDefault({ let java_field = jcall!(OpenGLFeatureFactory::OpenGLFeatureFactory::getInstance()).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+                PreLogUtil::put(jcall!(stringMaker).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone()).append(unsafe { crate::org::allbinary::game::layer::SWTUtil::SWTUtil_SWT.clone() }.clone()).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone()).append(self.RUNNABLE.clone()).append({ let java_receiver = self.stringUtil.clone(); let java_arguments = (crate::java_into_object(NullRunnable::getInstance()),); let java_result = jcall!(java_receiver).toString(java_arguments.0); java_result }).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone());
+                { let java_arguments = (NullWaitGameRunnable::getInstance(),); self.setUsedRunnable(java_arguments.0) };
             } else if J2MEUtil::isHTML() {
-                PreLogUtil::put(jcall!(stringMaker).append(jcall!(commonSeps).SPACE.clone()).append(jcall!(GraphicsStrings::getInstance()).HTML.clone()).append(jcall!(commonSeps).SPACE.clone()).append(self.RUNNABLE.clone()).append(jcall!(self.stringUtil).toString(crate::java_into_object(self.runnable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).UPDATE.clone());
-                self.setUsedRunnable(self.runnable.clone());
-            } else if (self.openGlReadydisplayable).is_some() /* instanceof DemoCanvas */ || (self.openGlReadydisplayable).is_some() /* instanceof AllBinaryGameCanvas */ || jcall!(features).isDefault(jcall!(OpenGLFeatureFactory::OpenGLFeatureFactory::getInstance()).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-                PreLogUtil::put(jcall!(stringMaker).append(jcall!(commonSeps).SPACE.clone()).append(jcall!(jcall!(OpenGLFeatureFactory::OpenGLFeatureFactory::getInstance()).OPENGL).toString()).append(jcall!(commonSeps).SPACE.clone()).append(self.RUNNABLE.clone()).append(jcall!(self.stringUtil).toString(crate::java_into_object(self.runnable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).UPDATE.clone());
-                self.setUsedRunnable(self.runnable.clone());
+                PreLogUtil::put(jcall!(stringMaker).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone()).append({ let java_field = jcall!(GraphicsStrings::getInstance()).HTML.clone(); java_field }.clone()).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone()).append(self.RUNNABLE.clone()).append(jcall!(self.stringUtil).toString(crate::java_into_object(self.runnable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone());
+                { let java_arguments = (self.runnable.clone(),); self.setUsedRunnable(java_arguments.0) };
+            } else if (self.openGlReadydisplayable).is_some() /* instanceof DemoCanvas */ || (self.openGlReadydisplayable).is_some() /* instanceof AllBinaryGameCanvas */ || jcall!(features).isDefault({ let java_field = jcall!(OpenGLFeatureFactory::OpenGLFeatureFactory::getInstance()).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+                PreLogUtil::put(jcall!(stringMaker).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone()).append(jcall!({ let java_field = jcall!(OpenGLFeatureFactory::OpenGLFeatureFactory::getInstance()).OPENGL.clone(); java_field }).toString()).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone()).append(self.RUNNABLE.clone()).append(jcall!(self.stringUtil).toString(crate::java_into_object(self.runnable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone());
+                { let java_arguments = (self.runnable.clone(),); self.setUsedRunnable(java_arguments.0) };
             } else {
-                PreLogUtil::put(jcall!(stringMaker).append(self.RUNNABLE.clone()).append({ let java_receiver = self.stringUtil.clone(); let java_arguments = (crate::java_into_object(NullRunnable::getInstance()),); let java_result = jcall!(java_receiver).toString(java_arguments.0); java_result }).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).UPDATE.clone());
-                { let java_arguments = (NullWaitGameRunnable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>),); self.setUsedRunnable(java_arguments.0) };
+                PreLogUtil::put(jcall!(stringMaker).append(self.RUNNABLE.clone()).append({ let java_receiver = self.stringUtil.clone(); let java_arguments = (crate::java_into_object(NullRunnable::getInstance()),); let java_result = jcall!(java_receiver).toString(java_arguments.0); java_result }).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone());
+                { let java_arguments = (NullWaitGameRunnable::getInstance(),); self.setUsedRunnable(java_arguments.0) };
             }
         }
     }
     
 
-    pub fn getDisplayable(&mut self) -> Option<Rc<RefCell<Displayable>>> {
+    pub fn getDisplayable(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>> {
         return self.displayable.clone();
     }
     
@@ -198,7 +202,7 @@ impl CurrentDisplayableFactory {
     
 
     pub fn setUsedRunnable(&mut self, mut usedRunnable: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>>) {
-        PreLogUtil::put(jcall!(StringMaker::new()).append(self.RUNNABLE.clone()).append(jcall!(self.stringUtil).toString(crate::java_into_object(self.runnable.clone()))).append(jcall!(CommonSeps::getInstance()).COLON_SEP.clone()).append(jcall!(self.stringUtil).toString(crate::java_into_object(usedRunnable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_USED_RUNNABLE.clone());
+        PreLogUtil::put(jcall!(StringMaker::new()).append(self.RUNNABLE.clone()).append(jcall!(self.stringUtil).toString(crate::java_into_object(self.runnable.clone()))).append({ let java_field = jcall!(CommonSeps::getInstance()).COLON_SEP.clone(); java_field }.clone()).append(jcall!(self.stringUtil).toString(crate::java_into_object(usedRunnable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_USED_RUNNABLE.clone());
         self.usedRunnable = usedRunnable.clone();
     }
 }

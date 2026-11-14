@@ -18,13 +18,17 @@ macro_rules! jcall {
 pub struct ABStringComponent {
 }
 
-thread_local! { pub static ABStringComponent_NULL_STRING_COMPONENT: Option<Rc<RefCell<ABStringComponent>>> = ABStringComponent::new(jcall!(BasicColorFactory::getInstance()).BLACK.clone(), jcall!(BasicColorFactory::getInstance()).WHITE.clone()); }
+thread_local! { pub static ABStringComponent_NULL_STRING_COMPONENT: Option<Rc<RefCell<ABStringComponent>>> = ABStringComponent::new({ let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone()); }
 
 impl ABStringComponent {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getBackgroundBasicColor(&mut self) -> Option<Rc<RefCell<BasicColor>>> {
-        return jcall!(BasicColorFactory::getInstance()).WHITE.clone();
+        return { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone();
     }
     
 
@@ -40,7 +44,7 @@ impl ABStringComponent {
     
 
     pub fn getForegroundBasicColor(&mut self) -> Option<Rc<RefCell<BasicColor>>> {
-        return jcall!(BasicColorFactory::getInstance()).WHITE.clone();
+        return { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone();
     }
     
 

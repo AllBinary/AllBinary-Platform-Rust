@@ -38,6 +38,10 @@ impl VisitorInterface for Visitor {
 
 impl Visitor {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             nullUtil: None,
@@ -52,7 +56,7 @@ impl Visitor {
     
 
     pub fn visit(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return jcall!(self.nullUtil).NULL_OBJECT.clone();
+        return { let java_field = jcall!(self.nullUtil).NULL_OBJECT.clone(); java_field }.clone();
     }
     
 
@@ -60,7 +64,7 @@ impl Visitor {
         return Visitor_instance.with(Clone::clone).clone();
     }
 }
-pub trait VisitorDyn: crate::org::allbinary::logic::util::visitor::VisitorInterface::VisitorInterface {
+pub trait VisitorDyn: std::any::Any + crate::org::allbinary::logic::util::visitor::VisitorInterface::VisitorInterface {
     fn as_Visitor(&self) -> &Visitor;
     fn as_Visitor_mut(&mut self) -> &mut Visitor;
 }

@@ -18,7 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use crate::Runnable;
 use super::*;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::org::allbinary::game::displayable::canvas::NullWaitGameRunnable::NullWaitGameRunnable;
 use crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas;
@@ -35,6 +35,7 @@ use crate::org::allbinary::thread::ThreadObjectUtil::ThreadObjectUtil;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::Processor::Processor;
 use super::RunnableCanvasRefreshHelper::RunnableCanvasRefreshHelper;
 
@@ -82,9 +83,9 @@ impl crate::Runnable for RunnableCanvas {
 impl RunnableCanvas {
     
 
-    pub fn new_struct(mut commandListener: Option<Rc<RefCell<CommandListener>>>, mut childNameList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut hasParam: bool) -> Self {
+    pub fn new_struct(mut commandListener: Option<Rc<RefCell<dyn CommandListener>>>, mut childNameList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut hasParam: bool) -> Self {
         let mut this = Self {
-            base: MyCanvas::new_struct(jcall!(CommonStrings::getInstance()).UNKNOWN.clone(), childNameList.clone()),
+            base: MyCanvas::new_struct({ let java_field = jcall!(CommonStrings::getInstance()).UNKNOWN.clone(); java_field }.clone(), childNameList.clone()),
             nullUtil: None,
             stdUtil: None,
             systemWrapper: None,
@@ -113,7 +114,7 @@ impl RunnableCanvas {
         this.tsUtil = TsUtil::getInstance();
         this.thread = crate::org::allbinary::thread::NullThread::NullThread_NULL_THREAD.with(Clone::clone).clone();
         this.currentThread = crate::org::allbinary::thread::NullThread::NullThread_NULL_THREAD.with(Clone::clone).clone();
-        this.loopTimeHelper = TimeDelayHelper::new(jcall!(NullWaitGameRunnable::getInstance()).WAIT.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
+        this.loopTimeHelper = TimeDelayHelper::new({ let java_field = jcall!(NullWaitGameRunnable::getInstance()).as_GameRunnable_mut().WAIT.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
         this.runnableCanvasRefreshHelper = Processor::getInstance();
         this.commonLabels = CommonLabels::getInstance();
         this.threadObjectUtil = ThreadObjectUtil::getInstance();
@@ -128,24 +129,24 @@ impl RunnableCanvas {
         this.pauseWait = 0_i64;
         this.notified = false;
         // super(...) is in the struct literal above
-        { let java_receiver = this.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("RunnableCanvas delay: ")).appendint(jcall!(this.loopTimeHelper).as_TimeDelayHelper_mut().delay.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        if commandListener.is_some() {
-            this.initCommands(commandListener.clone());
-        } else if hasParam {
-            jcall!(this.logUtil).putF(String::from("commandListener was null"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initCommands"));
-        }
+        { let java_receiver = this.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("RunnableCanvas delay: ")).appendint({ let java_field = jcall!(this.loopTimeHelper).as_TimeDelayHelper_mut().delay.clone(); java_field }.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         this
     }
 
-    pub fn new(mut commandListener: Option<Rc<RefCell<CommandListener>>>, mut childNameList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut hasParam: bool) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(commandListener, childNameList, hasParam))));
-            this.runnableCanvasRefreshHelper = RunnableCanvasRefreshHelper::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone())).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
+    pub fn new(mut commandListener: Option<Rc<RefCell<dyn CommandListener>>>, mut childNameList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut hasParam: bool) -> Option<Rc<RefCell<Self>>> {
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(commandListener.clone(), childNameList.clone(), hasParam.clone()))));
+            jcall!(this).runnableCanvasRefreshHelper = RunnableCanvasRefreshHelper::new(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
+            if commandListener.is_some() {
+            jcall!(this).initCommands(commandListener.clone());
+        } else if hasParam {
+            jcall!(jcall!(this).logUtil).putF(String::from("commandListener was null"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initCommands"));
+        }
         this
     }
     
 
-    pub fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<CommandListener>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initCommands"));
+    pub fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<dyn CommandListener>>>) {
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initCommands"));
     }
     
 
@@ -166,7 +167,7 @@ impl RunnableCanvas {
     pub fn setRunning(&mut self, mut running: bool) {
         self.running = running.clone();
         if !self.running {
-            self.thread = crate::org::allbinary::thread::NullThread::NullThread_NULL_THREAD.with(Clone::clone).clone();
+            self.thread = { let java_value = (crate::org::allbinary::thread::NullThread::NullThread_NULL_THREAD.with(Clone::clone)).clone(); java_value }.clone();
             { // synchronized (self)
                 jcall!(self.threadObjectUtil).notifyObject(None /* Java this: a &mut self method has no Rc of itself */);
             }
@@ -203,17 +204,17 @@ impl RunnableCanvas {
     pub fn setWait(&mut self, mut wait: i32) {
         jcall!(self.loopTimeHelper).as_TimeDelayHelper_mut().delay = wait.clone();
         self.pauseWait = ((wait) as i64) * 3_i64;
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("setWait - delay: ")).appendint(jcall!(self.loopTimeHelper).as_TimeDelayHelper_mut().delay.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("setWait - delay: ")).appendint({ let java_field = jcall!(self.loopTimeHelper).as_TimeDelayHelper_mut().delay.clone(); java_field }.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
     pub fn getWait(&mut self) -> i32 {
-        return jcall!(self.loopTimeHelper).as_TimeDelayHelper_mut().delay.clone();
+        return { let java_field = jcall!(self.loopTimeHelper).as_TimeDelayHelper_mut().delay.clone(); java_field }.clone();
     }
     
 
     pub fn setCurrentThread(&mut self) {
-        self.currentThread = Thread::currentThread();
+        self.currentThread = { let java_value = (Thread::currentThread()).clone(); java_value };
     }
     
 
@@ -228,9 +229,9 @@ impl RunnableCanvas {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("showNotify"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("showNotify"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -296,7 +297,7 @@ impl RunnableCanvas {
             }
         }
         let mut elapsedTime: i64 = jcall!(self.loopTimeHelper).getElapsedTNT();
-        let mut wait: i64 = ((jcall!(self.loopTimeHelper).as_TimeDelayHelper_mut().delay) as i64);
+        let mut wait: i64 = (({ let java_field = jcall!(self.loopTimeHelper).as_TimeDelayHelper_mut().delay.clone(); java_field }) as i64);
         if elapsedTime > wait {
             elapsedTime = wait.clone();
         } else {
@@ -335,7 +336,7 @@ impl std::ops::DerefMut for RunnableCanvas {
 pub trait RunnableCanvasDyn: crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn {
     fn as_RunnableCanvas(&self) -> &RunnableCanvas;
     fn as_RunnableCanvas_mut(&mut self) -> &mut RunnableCanvas;
-    fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<CommandListener>>>) { RunnableCanvas::initCommands(self.as_RunnableCanvas_mut(), cmdListener) }
+    fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<dyn CommandListener>>>) { RunnableCanvas::initCommands(self.as_RunnableCanvas_mut(), cmdListener) }
     fn isMainCanvas(&mut self) -> bool { RunnableCanvas::isMainCanvas(self.as_RunnableCanvas_mut()) }
     fn setThread(&mut self, mut thread: Option<Rc<RefCell<Thread>>>) { RunnableCanvas::setThread(self.as_RunnableCanvas_mut(), thread) }
     fn setRunning(&mut self, mut running: bool) { RunnableCanvas::setRunning(self.as_RunnableCanvas_mut(), running) }
@@ -345,7 +346,6 @@ pub trait RunnableCanvasDyn: crate::org::allbinary::graphics::displayable::MyCan
     fn getWait(&mut self) -> i32 { RunnableCanvas::getWait(self.as_RunnableCanvas_mut()) }
     fn setCurrentThread(&mut self) { RunnableCanvas::setCurrentThread(self.as_RunnableCanvas_mut()) }
     fn setCurrentThreadFake(&mut self) { RunnableCanvas::setCurrentThreadFake(self.as_RunnableCanvas_mut()) }
-    fn showNotify(&mut self) { RunnableCanvas::showNotify(self.as_RunnableCanvas_mut()) }
     fn stopWaiting(&mut self) { RunnableCanvas::stopWaiting(self.as_RunnableCanvas_mut()) }
     fn waitOnNotify(&mut self, mut wait: i64) { RunnableCanvas::waitOnNotify(self.as_RunnableCanvas_mut(), wait) }
     fn processSleep(&mut self) { RunnableCanvas::processSleep(self.as_RunnableCanvas_mut()) }
@@ -362,9 +362,46 @@ impl RunnableCanvasDyn for RunnableCanvas {
     fn as_RunnableCanvas_mut(&mut self) -> &mut RunnableCanvas { self }
 }
 
+impl crate::javax::microedition::lcdui::Canvas::CanvasDyn for RunnableCanvas {
+    fn as_Canvas(&self) -> &crate::javax::microedition::lcdui::Canvas::Canvas { &self.base.base }
+    fn as_Canvas_mut(&mut self) -> &mut crate::javax::microedition::lcdui::Canvas::Canvas { &mut self.base.base }
+}
+impl crate::javax::microedition::lcdui::Displayable::DisplayableDyn for RunnableCanvas {
+    fn as_Displayable(&self) -> &crate::javax::microedition::lcdui::Displayable::Displayable { &self.base.base.base }
+    fn as_Displayable_mut(&mut self) -> &mut crate::javax::microedition::lcdui::Displayable::Displayable { &mut self.base.base.base }
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn removeCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getWidth(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getHeight(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn setCommandListener(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::CommandListener::CommandListener>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setCommandListener(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn setFullScreenMode(&mut self, p1: bool) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setFullScreenMode(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn hideNotify(&mut self) { crate::javax::microedition::lcdui::Canvas::Canvas::hideNotify(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+    fn keyPressed(&mut self, p1: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::keyPressed(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1) }
+    fn keyRepeated(&mut self, p1: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::keyRepeated(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1) }
+    fn keyReleased(&mut self, p1: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::keyReleased(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1) }
+    fn pointerPressed(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerPressed(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn pointerReleased(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerReleased(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn pointerDragged(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerDragged(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::paint(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn repaint(&mut self) { crate::javax::microedition::lcdui::Canvas::Canvas::repaint(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+    fn repaintXYWH(&mut self, p1: i32, p2: i32, p3: i32, p4: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::repaintXYWH(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1, p2, p3, p4) }
+    fn sizeChanged(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::sizeChanged(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn showNotify(&mut self) { Self::showNotify(self) }
+}
 impl crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn for RunnableCanvas {
     fn as_MyCanvas(&self) -> &crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas { &self.base }
     fn as_MyCanvas_mut(&mut self) -> &mut crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas { &mut self.base }
+}
+impl crate::org::allbinary::graphics::displayable::DisplayableInterface::DisplayableInterface for RunnableCanvas {
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getHeight(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getWidth(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn removeCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn setCommandListener(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::CommandListener::CommandListener>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setCommandListener(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::displayable::command::MyCommandInterface::MyCommandInterface for RunnableCanvas {
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn removeAllCommands(&mut self) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeAllCommands(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
 }
 
 

@@ -28,6 +28,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::FeatureResourceAnimationInterfaceFactoryInterface::FeatureResourceAnimationInterfaceFactoryInterface;
 
 // Borrows the object of a Java reference
@@ -40,33 +41,33 @@ macro_rules! jcall {
 pub struct BaseResourceAnimationInterfaceFactoryInterfaceFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
-    pub hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
-    pub rectangleHashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
-    pub rectangleArrayOfArraysHashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
+    pub rectangleHashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
+    pub rectangleArrayOfArraysHashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
     pub name: String,
     pub initialized: bool,
 }
 
 impl FeatureResourceAnimationInterfaceFactoryInterface for BaseResourceAnimationInterfaceFactoryInterfaceFactory {
-    fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { Self::getHashtable(self) }
+    fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { Self::getHashtable(self) }
 }
 impl crate::org::allbinary::animation::resource::ResourceAnimationInterfaceFactoryInterface::ResourceAnimationInterfaceFactoryInterface for BaseResourceAnimationInterfaceFactoryInterfaceFactory {
     fn getBasicAnimationInterfaceFactoryInstance(&mut self, mut resource: String) -> Option<Rc<RefCell<dyn BasicAnimationInterfaceFactoryInterface>>> { Self::getBasicAnimationInterfaceFactoryInstance(self, resource) }
+}
+impl crate::org::allbinary::game::resource::RectangleResourceFactoryInterface::RectangleResourceFactoryInterface for BaseResourceAnimationInterfaceFactoryInterfaceFactory {
+    fn getRectangle(&mut self, mut resource: String) -> Option<Rc<RefCell<Rectangle>>> { Self::getRectangle(self, resource) }
+    fn getRectangleArrayOfArrays(&mut self, mut resource: String) -> Vec<Vec<Option<Rc<RefCell<Rectangle>>>>> { Self::getRectangleArrayOfArrays(self, resource) }
 }
 impl crate::org::allbinary::game::configuration::feature::GameFeatureControlledInterface::GameFeatureControlledInterface for BaseResourceAnimationInterfaceFactoryInterfaceFactory {
     fn init(&mut self, mut level: i32) { Self::init(self, level) }
     fn isFeature(&mut self) -> bool { Self::isFeature(self) }
     fn isLoadingLevel(&mut self, mut level: i32) -> bool { Self::isLoadingLevel(self, level) }
 }
-impl crate::org::allbinary::game::resource::RectangleResourceFactoryInterface::RectangleResourceFactoryInterface for BaseResourceAnimationInterfaceFactoryInterfaceFactory {
-    fn getRectangle(&mut self, mut resource: String) -> Option<Rc<RefCell<Rectangle>>> { Self::getRectangle(self, resource) }
-    fn getRectangleArrayOfArrays(&mut self, mut resource: String) -> Vec<Vec<Option<Rc<RefCell<Rectangle>>>>> { Self::getRectangleArrayOfArrays(self, resource) }
-}
 
 impl BaseResourceAnimationInterfaceFactoryInterfaceFactory {
     
 
-    pub fn new_struct(mut name: String, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut rectangleHashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut rectangleArrayHashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) -> Self {
+    pub fn new_struct(mut name: String, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut rectangleHashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut rectangleArrayHashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -85,7 +86,7 @@ impl BaseResourceAnimationInterfaceFactoryInterfaceFactory {
         this
     }
 
-    pub fn new(mut name: String, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut rectangleHashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut rectangleArrayHashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut name: String, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut rectangleHashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut rectangleArrayHashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(name, hashtable, rectangleHashtable, rectangleArrayHashtable))))
     }
     
@@ -98,7 +99,7 @@ impl BaseResourceAnimationInterfaceFactoryInterfaceFactory {
     // throws Exception
     pub fn init(&mut self, mut level: i32) {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Available List of Animations: ")).append(jcall!(self.hashtable).toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Available List of Animations: ")).append(jcall!(self.hashtable).toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         self.setInitialized(true);
     }
     
@@ -110,7 +111,7 @@ impl BaseResourceAnimationInterfaceFactoryInterfaceFactory {
 
     // throws Exception
     pub fn add(&mut self, mut resource: String, mut animationInterfaceFactoryInterface: Option<Rc<RefCell<dyn BasicAnimationInterfaceFactoryInterface>>>) {
-        if jcall!(self.hashtable).containsKey(crate::java_into_object((resource).clone() /* as Any */)) {
+        if jcall!(self.hashtable).containsKey(crate::java_into_object(crate::java_into_object((resource).clone()))) {
             panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(StringMaker::new()).append(String::from("Resource Already Created: ")).append(resource.clone()).toString())));
         }
         jcall!(self.hashtable).put(crate::java_into_object(resource.clone()), crate::java_into_object(animationInterfaceFactoryInterface.clone()));
@@ -121,9 +122,9 @@ impl BaseResourceAnimationInterfaceFactoryInterfaceFactory {
     pub fn getBasicAnimationInterfaceFactoryInstance(&mut self, mut resource: String) -> Option<Rc<RefCell<dyn BasicAnimationInterfaceFactoryInterface>>> {
         let mut basicAnimationInterfaceFactoryInterfaceCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(self.hashtable).get(crate::java_into_object(resource.clone()));
         if basicAnimationInterfaceFactoryInterfaceCanBeNull.is_none() {
-            return unsafe { crate::org::allbinary::animation::NullAnimationFactory::NullAnimationFactory_NULL_NOT_FOR_USE_ANIMATION_FACTORY.clone() }.clone();
+            return unsafe { crate::org::allbinary::animation::NullAnimationFactory::NullAnimationFactory_NULL_NOT_FOR_USE_ANIMATION_FACTORY.clone() }.clone().map(|reference| reference as Rc<RefCell<dyn BasicAnimationInterfaceFactoryInterface>>);
         }
-        return (basicAnimationInterfaceFactoryInterfaceCanBeNull).clone() /* as BasicAnimationInterfaceFactoryInterface */;
+        return { let java_object = (basicAnimationInterfaceFactoryInterfaceCanBeNull).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn BasicAnimationInterfaceFactoryInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -133,7 +134,7 @@ impl BaseResourceAnimationInterfaceFactoryInterfaceFactory {
         if rectangleCanBeNull.is_none() {
             return crate::org::allbinary::graphics::RectangleFactory::RectangleFactory_SINGLETON.with(Clone::clone).clone();
         }
-        return (rectangleCanBeNull).clone() /* as Rectangle */;
+        return { let java_object = (rectangleCanBeNull).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<Rectangle>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -145,7 +146,13 @@ impl BaseResourceAnimationInterfaceFactoryInterfaceFactory {
 
     // throws Exception
     pub fn getRectangleArrayOfArrays(&mut self, mut resource: String) -> Vec<Vec<Option<Rc<RefCell<Rectangle>>>>> {
-        return (jcall!(self.rectangleArrayOfArraysHashtable).get(crate::java_into_object(resource.clone()))).clone() /* as  */;
+        let mut valueCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(self.rectangleArrayOfArraysHashtable).get(crate::java_into_object(resource.clone()));
+        if valueCanBeNull.is_some() {
+            let mut rectangleArrayOfArrays: Vec<Vec<Option<Rc<RefCell<Rectangle>>>>> = { let java_object = (valueCanBeNull).clone(); java_object.map(|object| object.borrow().downcast_ref::<Vec<Vec<Option<Rc<RefCell<Rectangle>>>>>>().cloned().expect("ClassCastException")).unwrap_or_default() };
+            return rectangleArrayOfArrays.clone();
+        } else {
+            return crate::org::allbinary::graphics::RectangleFactory::RectangleFactory_ARRAY_OF_ARRAYS.with(Clone::clone).clone();
+        }
     }
     
 
@@ -162,7 +169,7 @@ impl BaseResourceAnimationInterfaceFactoryInterfaceFactory {
 
     pub fn isLoadingLevel(&mut self, mut level: i32) -> bool {
         let mut resourceLoadingLevelFactory: Option<Rc<RefCell<ResourceLoadingLevelFactory>>> = ResourceLoadingLevelFactory::getInstance();
-        if level == jcall!(jcall!(resourceLoadingLevelFactory).LOAD_ALL).getLevel() {
+        if level == jcall!({ let java_field = jcall!(resourceLoadingLevelFactory).LOAD_ALL.clone(); java_field }).getLevel() {
             return true;
         } else {
             return false;
@@ -171,21 +178,21 @@ impl BaseResourceAnimationInterfaceFactoryInterfaceFactory {
     
 
     pub fn toString(&mut self) -> String {
-        return jcall!(StringMaker::new()).append(std::any::type_name_of_val(&self).to_string()).append(jcall!(CommonSeps::getInstance()).SEMICOLON.clone()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(self.name.clone()).toString();
+        return jcall!(StringMaker::new()).append({ let java_argument = std::any::type_name_of_val(&self).to_string(); java_argument }).append({ let java_field = jcall!(CommonSeps::getInstance()).SEMICOLON.clone(); java_field }.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(self.name.clone()).toString();
     }
     
 
-    pub fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
         return self.hashtable.clone();
     }
     
 
-    pub fn getRectangleHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn getRectangleHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
         return self.rectangleHashtable.clone();
     }
     
 
-    pub fn getRectangleArrayOfArraysHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn getRectangleArrayOfArraysHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
         return self.rectangleArrayOfArraysHashtable.clone();
     }
     
@@ -199,7 +206,7 @@ impl BaseResourceAnimationInterfaceFactoryInterfaceFactory {
         return self.initialized.clone();
     }
 }
-pub trait BaseResourceAnimationInterfaceFactoryInterfaceFactoryDyn {
+pub trait BaseResourceAnimationInterfaceFactoryInterfaceFactoryDyn: std::any::Any {
     fn as_BaseResourceAnimationInterfaceFactoryInterfaceFactory(&self) -> &BaseResourceAnimationInterfaceFactoryInterfaceFactory;
     fn as_BaseResourceAnimationInterfaceFactoryInterfaceFactory_mut(&mut self) -> &mut BaseResourceAnimationInterfaceFactoryInterfaceFactory;
     fn getName(&mut self) -> String { BaseResourceAnimationInterfaceFactoryInterfaceFactory::getName(self.as_BaseResourceAnimationInterfaceFactoryInterfaceFactory_mut()) }
@@ -214,9 +221,9 @@ pub trait BaseResourceAnimationInterfaceFactoryInterfaceFactoryDyn {
     fn isFeature(&mut self) -> bool { BaseResourceAnimationInterfaceFactoryInterfaceFactory::isFeature(self.as_BaseResourceAnimationInterfaceFactoryInterfaceFactory_mut()) }
     fn isLoadingLevel(&mut self, mut level: i32) -> bool { BaseResourceAnimationInterfaceFactoryInterfaceFactory::isLoadingLevel(self.as_BaseResourceAnimationInterfaceFactoryInterfaceFactory_mut(), level) }
     fn toString(&mut self) -> String { BaseResourceAnimationInterfaceFactoryInterfaceFactory::toString(self.as_BaseResourceAnimationInterfaceFactoryInterfaceFactory_mut()) }
-    fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { BaseResourceAnimationInterfaceFactoryInterfaceFactory::getHashtable(self.as_BaseResourceAnimationInterfaceFactoryInterfaceFactory_mut()) }
-    fn getRectangleHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { BaseResourceAnimationInterfaceFactoryInterfaceFactory::getRectangleHashtable(self.as_BaseResourceAnimationInterfaceFactoryInterfaceFactory_mut()) }
-    fn getRectangleArrayOfArraysHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { BaseResourceAnimationInterfaceFactoryInterfaceFactory::getRectangleArrayOfArraysHashtable(self.as_BaseResourceAnimationInterfaceFactoryInterfaceFactory_mut()) }
+    fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { BaseResourceAnimationInterfaceFactoryInterfaceFactory::getHashtable(self.as_BaseResourceAnimationInterfaceFactoryInterfaceFactory_mut()) }
+    fn getRectangleHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { BaseResourceAnimationInterfaceFactoryInterfaceFactory::getRectangleHashtable(self.as_BaseResourceAnimationInterfaceFactoryInterfaceFactory_mut()) }
+    fn getRectangleArrayOfArraysHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { BaseResourceAnimationInterfaceFactoryInterfaceFactory::getRectangleArrayOfArraysHashtable(self.as_BaseResourceAnimationInterfaceFactoryInterfaceFactory_mut()) }
     fn setInitialized(&mut self, mut initialized: bool) { BaseResourceAnimationInterfaceFactoryInterfaceFactory::setInitialized(self.as_BaseResourceAnimationInterfaceFactoryInterfaceFactory_mut(), initialized) }
     fn isInitialized(&mut self) -> bool { BaseResourceAnimationInterfaceFactoryInterfaceFactory::isInitialized(self.as_BaseResourceAnimationInterfaceFactoryInterfaceFactory_mut()) }
 }

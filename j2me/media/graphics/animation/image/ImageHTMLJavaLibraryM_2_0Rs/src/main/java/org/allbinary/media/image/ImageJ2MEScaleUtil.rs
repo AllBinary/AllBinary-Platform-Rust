@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::microemu::device::playn::PlaynImmutableImage::PlaynImmutableImage;
 use crate::org::microemu::device::playn::PlaynMutableImage::PlaynMutableImage;
@@ -27,6 +27,7 @@ use crate::playn::core::ImageImpl::ImageImpl;
 use crate::playn::core::PlayN::PlayN;
 use crate::playn::html::HtmlGraphics::HtmlGraphics;
 use crate::playn::html::HtmlImage::HtmlImage;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -42,6 +43,10 @@ pub struct ImageJ2MEScaleUtil {
 thread_local! { pub static ImageJ2MEScaleUtil_instance: Option<Rc<RefCell<ImageJ2MEScaleUtil>>> = ImageJ2MEScaleUtil::new(); }
 
 impl ImageJ2MEScaleUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ImageJ2MEScaleUtil>>> {
@@ -63,8 +68,8 @@ impl ImageJ2MEScaleUtil {
     
 
     // throws Exception
-    pub fn scaleArray(&mut self, mut images: Vec<Option<Rc<RefCell<Image>>>>, mut width: i32, mut height: i32) -> Vec<Option<Rc<RefCell<Image>>>> {
-        let mut scaledImages: Vec<Option<Rc<RefCell<Image>>>> = vec![None; ((images.len() as i32)) as usize];
+    pub fn scaleArray(&mut self, mut images: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut width: i32, mut height: i32) -> Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> {
+        let mut scaledImages: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> = vec![None; ((images.len() as i32)) as usize];
         {
             let mut index: i32 = (images.len() as i32).clone();
             while { index -= 1; index } >= 0 {
@@ -76,20 +81,20 @@ impl ImageJ2MEScaleUtil {
     
 
     // throws Exception
-    pub fn scale(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> {
+    pub fn scale(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         let mut originalPlayNImage: Option<Rc<RefCell<CoreImage>>> = None;
         if jcall!(image).isMutable() {
             let mut originalHTMLImage: Option<Rc<RefCell<PlaynMutableImage>>> = (image).clone() /* as PlaynMutableImage */;
-            originalPlayNImage = (jcall!(originalHTMLImage).getImage()).clone() /* as CoreImage */;
+            originalPlayNImage = { let java_value = ((jcall!(originalHTMLImage).getImage()).clone() /* as CoreImage */).clone(); java_value };
         } else {
             let mut originalHTMLImage: Option<Rc<RefCell<PlaynImmutableImage>>> = (image).clone() /* as PlaynImmutableImage */;
-            originalPlayNImage = (jcall!(originalHTMLImage).getImage()).clone() /* as CoreImage */;
+            originalPlayNImage = { let java_value = ((jcall!(originalHTMLImage).getImage()).clone() /* as CoreImage */).clone(); java_value };
         }
-        let mut scaledImage: Option<Rc<RefCell<Image>>> = Image::createImageWH(width.clone(), height.clone());
+        let mut scaledImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = Image::createImageWH(width.clone(), height.clone());
         let mut htmlImage: Option<Rc<RefCell<PlaynMutableImage>>> = (scaledImage).clone() /* as PlaynMutableImage */;
         let mut scaledPlayNImage: Option<Rc<RefCell<ImageImpl>>> = (jcall!(htmlImage).getImage()).clone() /* as ImageImpl */;
-        let mut canvas: Option<Rc<RefCell<Canvas>>> = jcall!(((jcall!(PlayN::getInstance()).graphics()).clone() /* as HtmlGraphics */)).get((scaledPlayNImage).clone() /* as HtmlImage */);
-        jcall!(((originalPlayNImage).clone() /* as ImageImpl */)).draw(jcall!(canvas).gc(), 0, 0, jcall!(scaledImage).getWidth(), jcall!(scaledImage).getHeight(), 0, 0, jcall!(image).getWidth(), jcall!(image).getHeight());
+        let mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>> = jcall!(((jcall!(PlayN::getInstance()).graphics()).clone() /* as HtmlGraphics */)).get((scaledPlayNImage).clone() /* as HtmlImage */);
+        jcall!(((originalPlayNImage).clone() /* as ImageImpl */)).draw(jcall!(canvas).as_Canvas_mut().gc(), 0, 0, jcall!(scaledImage).getWidth(), jcall!(scaledImage).getHeight(), 0, 0, jcall!(image).getWidth(), jcall!(image).getHeight());
         return scaledImage.clone();
     }
 }

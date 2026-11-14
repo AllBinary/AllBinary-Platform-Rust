@@ -40,6 +40,10 @@ thread_local! { pub static HashtableUtil_instance: Option<Rc<RefCell<HashtableUt
 
 impl HashtableUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             enumerationUtil: None,
@@ -58,13 +62,13 @@ impl HashtableUtil {
     }
     
 
-    pub fn putAll(&mut self, mut fromHashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) {
+    pub fn putAll(&mut self, mut fromHashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) {
         let mut enumeration: Option<Rc<RefCell<dyn Enumeration>>> = jcall!(fromHashtable).keys();
         let mut keyCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = None;
         let mut valueCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = None;
         while jcall!(self.enumerationUtil).hasMoreElements(enumeration.clone()) {
-            keyCanBeNull = jcall!(self.enumerationUtil).nextElement(enumeration.clone());
-            valueCanBeNull = jcall!(hashtable).get(keyCanBeNull.clone());
+            keyCanBeNull = { let java_value = (jcall!(self.enumerationUtil).nextElement(enumeration.clone())).clone(); java_value };
+            valueCanBeNull = { let java_value = (jcall!(hashtable).get(keyCanBeNull.clone())).clone(); java_value };
             if valueCanBeNull.is_none() {
             } else {
                 jcall!(hashtable).put(keyCanBeNull.clone(), valueCanBeNull.clone());
@@ -73,7 +77,7 @@ impl HashtableUtil {
     }
     
 
-    pub fn getKeysAsArray(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) -> Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> {
+    pub fn getKeysAsArray(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) -> Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> {
         let mut objectArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = vec![None; (jcall!(hashtable).size()) as usize];
         let mut index: i32 = 0;
         let mut enumeration: Option<Rc<RefCell<dyn Enumeration>>> = jcall!(hashtable).keys();
@@ -84,8 +88,8 @@ impl HashtableUtil {
     }
     
 
-    pub fn getKeysAsList(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListS::new(jcall!(hashtable).size()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+    pub fn getKeysAsList(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListS::new(jcall!(hashtable).size()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut enumeration: Option<Rc<RefCell<dyn Enumeration>>> = jcall!(hashtable).keys();
         while jcall!(self.enumerationUtil).hasMoreElements(enumeration.clone()) {
             jcall!(list).add(crate::java_into_object(jcall!(self.enumerationUtil).nextElement(enumeration.clone())));

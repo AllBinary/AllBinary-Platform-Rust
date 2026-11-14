@@ -52,6 +52,10 @@ thread_local! { pub static UserData_PERMISSIONS: String = String::from("CUSTOMER
 thread_local! { pub static UserData_CONFIGURATION: String = String::from("CUSTOMER_CONFIGURATION"); }
 
 impl UserData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

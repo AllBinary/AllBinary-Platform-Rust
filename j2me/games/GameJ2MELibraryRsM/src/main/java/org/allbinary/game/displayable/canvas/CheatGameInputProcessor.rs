@@ -27,6 +27,7 @@ use crate::org::allbinary::game::layer::special::SpecialGameInputInterface::Spec
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::AllBinaryGameCanvas::AllBinaryGameCanvas;
 
 // Borrows the object of a Java reference
@@ -43,16 +44,14 @@ pub struct CheatGameInputProcessor {
     pub gameKeyFactory: Option<Rc<RefCell<GameKeyFactory>>>,
 }
 
-pub static mut CheatGameInputProcessor_inputProcessor: std::cell::LazyCell<Option<Rc<RefCell<dyn SpecialGameInputInterface>>>> = std::cell::LazyCell::new(|| crate::org::allbinary::game::layer::special::SpecialGameInputFactory::SpecialGameInputFactory_NO_SPECIAL_GAME_INPUT.with(Clone::clone).clone());
-impl crate::org::allbinary::game::input::event::GameKeyEventListenerInterface::GameKeyEventListenerInterface for CheatGameInputProcessor {
-}
+pub static mut CheatGameInputProcessor_inputProcessor: std::cell::LazyCell<Option<Rc<RefCell<dyn SpecialGameInputInterface>>>> = std::cell::LazyCell::new(|| crate::org::allbinary::game::layer::special::SpecialGameInputFactory::SpecialGameInputFactory_NO_SPECIAL_GAME_INPUT.with(Clone::clone).clone().map(|_java_reference| -> Rc<RefCell<dyn SpecialGameInputInterface>> { panic!("ClassCastException: the Rust trait of SpecialGameInput does not have SpecialGameInputInterface as a base trait") }));
 
 impl CheatGameInputProcessor {
     
 
     pub fn new_struct(mut gameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>) -> Self {
         let mut this = Self {
-            base: PlayerGameInput::new_struct(BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>), -1),
+            base: PlayerGameInput::new_struct(BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>), -1),
             PROCESS_GAME: String::new(),
             gameCanvas: None,
             gameKeyFactory: None,
@@ -77,30 +76,30 @@ impl CheatGameInputProcessor {
             let mut size: i32 = jcall!(list).size();
             for index in (0..size) {
                 let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize].clone();
-                let mut key: i32 = GameKeyEventUtil::getKey(anyType.clone());
-                if key == jcall!(jcall!(self.gameKeyFactory).LEVEL_DOWN).getId() {
+                let mut key: i32 = GameKeyEventUtil::getKey(crate::java_into_object(anyType.clone()));
+                if key == jcall!({ let java_field = jcall!(self.gameKeyFactory).LEVEL_DOWN.clone(); java_field }).getId() {
                     jcall!(unsafe { CheatGameInputProcessor_inputProcessor.clone() }).strafeLeft();
                     break;
-                } else if key == jcall!(jcall!(self.gameKeyFactory).LEVEL_UP).getId() {
+                } else if key == jcall!({ let java_field = jcall!(self.gameKeyFactory).LEVEL_UP.clone(); java_field }).getId() {
                     jcall!(unsafe { CheatGameInputProcessor_inputProcessor.clone() }).strafeRight();
                     break;
                 }
-                if key == jcall!(jcall!(self.gameKeyFactory).LEFT).getId() {
+                if key == jcall!({ let java_field = jcall!(self.gameKeyFactory).LEFT.clone(); java_field }).getId() {
                     jcall!(unsafe { CheatGameInputProcessor_inputProcessor.clone() }).left();
                     break;
-                } else if key == jcall!(jcall!(self.gameKeyFactory).RIGHT).getId() {
+                } else if key == jcall!({ let java_field = jcall!(self.gameKeyFactory).RIGHT.clone(); java_field }).getId() {
                     jcall!(unsafe { CheatGameInputProcessor_inputProcessor.clone() }).right();
                     break;
-                } else if key == jcall!(jcall!(self.gameKeyFactory).UP).getId() {
+                } else if key == jcall!({ let java_field = jcall!(self.gameKeyFactory).UP.clone(); java_field }).getId() {
                     jcall!(unsafe { CheatGameInputProcessor_inputProcessor.clone() }).up();
                     break;
-                } else if key == jcall!(jcall!(self.gameKeyFactory).DOWN).getId() {
+                } else if key == jcall!({ let java_field = jcall!(self.gameKeyFactory).DOWN.clone(); java_field }).getId() {
                     jcall!(unsafe { CheatGameInputProcessor_inputProcessor.clone() }).down();
                     break;
-                } else if key == jcall!(jcall!(self.gameKeyFactory).KEY_NUM1).getId() {
+                } else if key == jcall!({ let java_field = jcall!(self.gameKeyFactory).KEY_NUM1.clone(); java_field }).getId() {
                     jcall!(unsafe { CheatGameInputProcessor_inputProcessor.clone() }).special1(gameLayerManager.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>), crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent_NONE.with(Clone::clone).clone());
                     break;
-                } else if key == jcall!(jcall!(self.gameKeyFactory).KEY_NUM3).getId() {
+                } else if key == jcall!({ let java_field = jcall!(self.gameKeyFactory).KEY_NUM3.clone(); java_field }).getId() {
                     jcall!(unsafe { CheatGameInputProcessor_inputProcessor.clone() }).special2(gameLayerManager.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>), crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent_NONE.with(Clone::clone).clone());
                     break;
                 }
@@ -109,9 +108,9 @@ impl CheatGameInputProcessor {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).UPDATE.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

@@ -19,18 +19,9 @@ use std::rc::Rc;
 use super::*;
 use crate::com::jogamp::opengl::glu::GLU::GLU;
 use super::GL10::GL10;
-use super::opengles::opengles;
-use super::khronos::khronos;
-use super::microedition::microedition;
-use super::javax::javax;
 use super::GL2::GL2;
-use super::opengl::opengl;
-use super::jogamp::jogamp;
-use super::com::com;
 use super::GL::GL;
 use super::Buffer::Buffer;
-use super::nio::nio;
-use super::java::java;
 use super::IntBuffer::IntBuffer;
 use super::FloatBuffer::FloatBuffer;
 
@@ -63,6 +54,10 @@ pub struct JOGL10 {
 // impl GL10 for JOGL10 with the methods of the trait
 
 impl JOGL10 {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut gl: Option<Rc<RefCell<GL>>>, mut gl2: Option<Rc<RefCell<GL2>>>) -> Self {
@@ -95,9 +90,9 @@ impl JOGL10 {
         this.FACE = String::from("face: ");
         this.TARGET = String::from("target: ");
         this.gl10 = gl2.clone();
-        this.glu = GLU::createGLU(this.gl10.clone());
-        this.GL_LINE = jcall!(jcall!(jcall!(unsafe { com_jogamp.clone() }).opengl).GL2).GL_LINE.clone();
-        this.GL_QUAD_STRIP = jcall!(jcall!(jcall!(unsafe { com_jogamp.clone() }).opengl).GL2).GL_QUAD_STRIP.clone();
+        this.glu = { let java_value = (GLU::createGLU(this.gl10.clone())).clone(); java_value };
+        this.GL_LINE = { let java_value = ({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { com_jogamp.clone() }).opengl.clone(); java_field }).GL2.clone(); java_field }).GL_LINE.clone(); java_field }).clone(); java_value }.clone();
+        this.GL_QUAD_STRIP = { let java_value = ({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { com_jogamp.clone() }).opengl.clone(); java_field }).GL2.clone(); java_field }).GL_QUAD_STRIP.clone(); java_field }).clone(); java_value }.clone();
         this
     }
 
@@ -590,7 +585,7 @@ impl JOGL10 {
         jcall!(self.gl10).glPolygonMode(i.clone(), i1.clone());
     }
 }
-pub trait JOGL10Dyn {
+pub trait JOGL10Dyn: std::any::Any {
     fn as_JOGL10(&self) -> &JOGL10;
     fn as_JOGL10_mut(&mut self) -> &mut JOGL10;
     fn getJOGLGL(&mut self) -> Option<Rc<RefCell<GL2>>> { JOGL10::getJOGLGL(self.as_JOGL10_mut()) }

@@ -37,6 +37,10 @@ pub static mut CollisionTypeFactory_SINGLETON: std::cell::LazyCell<Option<Rc<Ref
 
 impl CollisionTypeFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             NONE: None,

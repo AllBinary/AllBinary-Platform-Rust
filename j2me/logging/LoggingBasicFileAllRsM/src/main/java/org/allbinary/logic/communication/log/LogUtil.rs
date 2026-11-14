@@ -37,6 +37,10 @@ pub struct LogUtil {
 thread_local! { pub static LogUtil_instance: Option<Rc<RefCell<LogUtil>>> = LogUtil::new(); }
 
 impl LogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogUtil>>> {
@@ -70,7 +74,7 @@ impl LogUtil {
     
 
     pub fn putFS(&mut self, mut specialMessage: String, mut className: String, mut functionName: String) {
-        FileLog::put(specialMessage.clone(), className.clone(), functionName.clone());
+        FileLog::put_String_String_String(specialMessage.clone(), className.clone(), functionName.clone());
     }
     
 

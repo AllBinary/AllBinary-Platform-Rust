@@ -20,6 +20,8 @@ use super::*;
 // use crate::java::awt::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
 use crate::org::allbinary::media::image::comparison::motion::MotionRectangleConstraintsInterface::MotionRectangleConstraintsInterface;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -47,6 +49,10 @@ impl MotionRectangleConstraintsInterface for MotionRectangleConstraints {
 }
 
 impl MotionRectangleConstraints {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -75,7 +81,7 @@ impl MotionRectangleConstraints {
     
 
     pub fn isTooSmall(&mut self, mut rectangle: Option<Rc<RefCell<Rectangle>>>) -> bool {
-        if jcall!(rectangle).width < jcall!(self.getMinDimension()).width || jcall!(rectangle).height < jcall!(self.getMinDimension()).height {
+        if { let java_field = jcall!(rectangle).width.clone(); java_field } < { let java_field = jcall!(self.getMinDimension()).width.clone(); java_field } || { let java_field = jcall!(rectangle).height.clone(); java_field } < { let java_field = jcall!(self.getMinDimension()).height.clone(); java_field } {
             return true;
         } else {
             return false;
@@ -84,7 +90,7 @@ impl MotionRectangleConstraints {
     
 
     pub fn isAreaTooSmall(&mut self, mut rectangle: Option<Rc<RefCell<Rectangle>>>) -> bool {
-        if jcall!(rectangle).width * jcall!(rectangle).height < self.getMinArea() {
+        if { let java_field = jcall!(rectangle).width.clone(); java_field } * { let java_field = jcall!(rectangle).height.clone(); java_field } < self.getMinArea() {
             return true;
         } else {
             return false;
@@ -93,7 +99,7 @@ impl MotionRectangleConstraints {
     
 
     pub fn isTooBig(&mut self, mut rectangle: Option<Rc<RefCell<Rectangle>>>) -> bool {
-        if jcall!(rectangle).width > jcall!(self.getMaxDimension()).width || jcall!(rectangle).height > jcall!(self.getMaxDimension()).height {
+        if { let java_field = jcall!(rectangle).width.clone(); java_field } > { let java_field = jcall!(self.getMaxDimension()).width.clone(); java_field } || { let java_field = jcall!(rectangle).height.clone(); java_field } > { let java_field = jcall!(self.getMaxDimension()).height.clone(); java_field } {
             return true;
         } else {
             return false;
@@ -136,7 +142,7 @@ impl MotionRectangleConstraints {
         self.minArea = minArea.clone();
     }
 }
-pub trait MotionRectangleConstraintsDyn {
+pub trait MotionRectangleConstraintsDyn: std::any::Any {
     fn as_MotionRectangleConstraints(&self) -> &MotionRectangleConstraints;
     fn as_MotionRectangleConstraints_mut(&mut self) -> &mut MotionRectangleConstraints;
     fn getMinDimension(&mut self) -> Option<Rc<RefCell<Dimension>>> { MotionRectangleConstraints::getMinDimension(self.as_MotionRectangleConstraints_mut()) }

@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::android::app::Activity::Activity;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,6 +32,10 @@ pub struct ActivityFractureUtil {
 
 
 impl ActivityFractureUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -51,7 +56,7 @@ impl ActivityFractureUtil {
     pub fn setFullScreen(&mut self, mut activity: Option<Rc<RefCell<Activity>>>) {
     }
 }
-pub trait ActivityFractureUtilDyn {
+pub trait ActivityFractureUtilDyn: std::any::Any {
     fn as_ActivityFractureUtil(&self) -> &ActivityFractureUtil;
     fn as_ActivityFractureUtil_mut(&mut self) -> &mut ActivityFractureUtil;
     fn process(&mut self, mut activity: Option<Rc<RefCell<Activity>>>) { ActivityFractureUtil::process(self.as_ActivityFractureUtil_mut(), activity) }

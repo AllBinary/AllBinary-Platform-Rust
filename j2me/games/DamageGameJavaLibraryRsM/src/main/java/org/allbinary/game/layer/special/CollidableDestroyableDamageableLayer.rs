@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::collision::CollidableNeverCollideBehaviorFactory::CollidableNeverCollideBehaviorFactory;
 use crate::org::allbinary::game::combat::damage::DamageableInterface::DamageableInterface;
 use crate::org::allbinary::game::combat::destroy::DestroyableInterface::DestroyableInterface;
@@ -41,6 +41,8 @@ use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::math::PositionStrings::PositionStrings;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::view::ViewPositionBase::ViewPositionBase;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::SpecialGameInputInterface::SpecialGameInputInterface;
 
 // Borrows the object of a Java reference
@@ -67,10 +69,13 @@ pub struct CollidableDestroyableDamageableLayer {
     pub isDropped: bool,
 }
 
-pub static mut CollidableDestroyableDamageableLayer_NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut CollidableDestroyableDamageableLayer_NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 thread_local! { pub static CollidableDestroyableDamageableLayer_READYFOREXPLOSION: String = String::from("ReadyForExplosion: "); }
 // impl DestroyableInterface for CollidableDestroyableDamageableLayer with the methods of the trait
-// impl DamageableInterface for CollidableDestroyableDamageableLayer with the methods of the trait
+impl DamageableInterface for CollidableDestroyableDamageableLayer {
+    fn damage(&mut self, mut damage: i32, mut damageType: i32) { Self::damage(self, damage, damageType) }
+    fn getDamage(&mut self, mut damageType: i32) -> i32 { Self::getDamage(self, damageType) }
+}
 impl PickupCompositeInterface for CollidableDestroyableDamageableLayer {
     fn getPickupBehavior(&mut self) -> Option<Rc<RefCell<PickupBehavior>>> { Self::getPickupBehavior(self) }
     fn setPickupBehavior(&mut self, mut pickupBehavior: Option<Rc<RefCell<PickupBehavior>>>) { Self::setPickupBehavior(self, pickupBehavior) }
@@ -79,21 +84,57 @@ impl PickupCompositeInterface for CollidableDestroyableDamageableLayer {
 impl crate::org::allbinary::game::identification::GroupInterfaceCompositeInterface::GroupInterfaceCompositeInterface for CollidableDestroyableDamageableLayer {
     fn getGroupInterface(&mut self) -> Vec<Option<Rc<RefCell<Group>>>> { Self::getGroupInterface(self) }
 }
+impl crate::org::allbinary::layer::LayerInterface::LayerInterface for CollidableDestroyableDamageableLayer {
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getHeight(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getWidth(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getHalfHeight(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getHalfHeight(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getHalfWidth(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getHalfWidth(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getXP(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getXP(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getYP(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getYP(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getZP(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getZP(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getX2(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getX2(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getY2(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getY2(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getZ2(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getZ2(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn isVisible(&mut self) -> bool { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::isVisible(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn moveDXYZ(&mut self, p1: i32, p2: i32, p3: i32) { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::moveDXYZ(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self), p1, p2, p3) }
+    fn setVisible(&mut self, p1: bool) { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::setVisible(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self), p1) }
+    fn implmentsTickableInterface(&mut self) -> bool { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::implmentsTickableInterface(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn implmentsCollidableInterface(&mut self) -> bool { crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayer::implmentsCollidableInterface(crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn::as_CollidableCompositeLayer_mut(self)) }
+    fn implmentsGameInputInterface(&mut self) -> bool { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::implmentsGameInputInterface(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn implmentsArtificialIntelligenceCompositeInterface(&mut self) -> bool { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::implmentsArtificialIntelligenceCompositeInterface(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getType(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getType(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+}
+impl crate::org::allbinary::layer::NamedInterface::NamedInterface for CollidableDestroyableDamageableLayer {
+    fn getName(&mut self) -> String { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getName(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+}
+impl crate::org::allbinary::layer::PositionInterface::PositionInterface for CollidableDestroyableDamageableLayer {
+    fn setPosition(&mut self, p1: i32, p2: i32, p3: i32) { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::setPosition(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self), p1, p2, p3) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for CollidableDestroyableDamageableLayer {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::paintThreed(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self), p1) }
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for CollidableDestroyableDamageableLayer {
+    fn onEvent(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayer::onEvent(crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayerDyn::as_AllBinaryGameLayer_mut(self), p1) }
+}
+impl crate::org::allbinary::view::event::ViewPositionEventListenerInterface::ViewPositionEventListenerInterface for CollidableDestroyableDamageableLayer {
+    fn onChangeEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::view::event::ViewPositionEvent::ViewPositionEvent>>>) { crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayer::onChangeEvent(crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayerDyn::as_AllBinaryGameLayer_mut(self), p1) }
+}
 
 impl CollidableDestroyableDamageableLayer {
     
 
     pub fn getNullInstance() -> Option<Rc<RefCell<dyn CollidableDestroyableDamageableLayerDyn>>> {
-        if match (&unsafe { CollidableDestroyableDamageableLayer_NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *CollidableDestroyableDamageableLayer_NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER = CollidableDestroyableDamageableLayer::new(jcall!(BasicGroupFactory::getInstance()).NONE_ARRAY.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), crate::org::allbinary::graphics::RectangleFactory::RectangleFactory_SINGLETON.with(Clone::clone).clone(), crate::org::allbinary::view::ViewPositionBase::ViewPositionBase_NULL_VIEW_POSITION.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn CollidableDestroyableDamageableLayerDyn>>) };
+        if match (&unsafe { CollidableDestroyableDamageableLayer_NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *CollidableDestroyableDamageableLayer_NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER = crate::java_into_object(CollidableDestroyableDamageableLayer::new({ let java_field = jcall!(BasicGroupFactory::getInstance()).NONE_ARRAY.clone(); java_field }.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::org::allbinary::graphics::RectangleFactory::RectangleFactory_SINGLETON.with(Clone::clone).clone(), crate::org::allbinary::view::ViewPositionBase::ViewPositionBase_NULL_VIEW_POSITION.with(Clone::clone).clone())) };
         }
-        return (unsafe { CollidableDestroyableDamageableLayer_NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER.clone() }).clone() /* as CollidableDestroyableDamageableLayer */;
+        return { let java_object = (unsafe { CollidableDestroyableDamageableLayer_NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn CollidableDestroyableDamageableLayerDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn new_struct(mut groupInterface: Vec<Option<Rc<RefCell<Group>>>>, mut name: String, mut layerInfo: Option<Rc<RefCell<Rectangle>>>, mut viewPosition: Option<Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>>) -> Self {
         let mut this = Self {
-            base: CollidableCompositeLayer::new_struct(name.clone(), layerInfo.clone(), viewPosition.clone(), CollidableNeverCollideBehaviorFactory::getInstance()),
+            base: CollidableCompositeLayer::new_struct(name.clone(), layerInfo.clone(), viewPosition.clone(), CollidableNeverCollideBehaviorFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::collision::CollidableBaseBehaviorFactory::CollidableBaseBehaviorFactoryDyn>>)),
             groupInterface: Vec::new(),
             readyForExplosion: false,
             initWidth: 0,
@@ -114,10 +155,10 @@ impl CollidableDestroyableDamageableLayer {
         this.isDragged = false;
         this.isDropped = false;
         // super(...) is in the struct literal above
-        this.initWidth = jcall!(layerInfo).getWidth();
-        this.initHeight = jcall!(layerInfo).getHeight();
+        this.initWidth = { let java_value = (jcall!(layerInfo).getWidth()).clone(); java_value };
+        this.initHeight = { let java_value = (jcall!(layerInfo).getHeight()).clone(); java_value };
         this.groupInterface = groupInterface.clone();
-        this.pickupBehavior = PickupBehavior::getNullInstance();
+        this.pickupBehavior = { let java_value = (PickupBehavior::getNullInstance()).clone(); java_value };
         this
     }
 
@@ -128,7 +169,7 @@ impl CollidableDestroyableDamageableLayer {
 
     // throws Exception
     pub fn initPosition(&mut self) {
-        self.setPosition(self.initX.clone(), self.initY.clone(), self.initZ.clone());
+        { let java_arguments = (self.initX.clone(), self.initY.clone(), self.initZ.clone(),); self.setPosition(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
     
 
@@ -140,26 +181,26 @@ impl CollidableDestroyableDamageableLayer {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.paint(graphics.clone());
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(),); self.base.paint(java_arguments.0) };
     }
     
 
     // throws Exception
     pub fn damage(&mut self, mut damage: i32, mut damageType: i32) {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
     // throws Exception
     pub fn getDamage(&mut self, mut damageType: i32) -> i32 {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
     // throws Exception
     pub fn isDestroyed(&mut self) -> bool {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
@@ -334,30 +375,30 @@ impl CollidableDestroyableDamageableLayer {
     pub fn toStringAppend(&mut self, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) {
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
         let mut positionStrings: Option<Rc<RefCell<PositionStrings>>> = PositionStrings::getInstance();
-        self.base.toStringAppend(stringBuffer.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        { let java_arguments = (stringBuffer.clone(),); self.base.toStringAppend(java_arguments.0) };
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         let mut groupInterfaceArray: Vec<Option<Rc<RefCell<Group>>>> = self.getGroupInterface();
         let mut size: i32 = (groupInterfaceArray.len() as i32).clone();
         for index in (0..size) {
             jcall!(stringBuffer).append(jcall!(groupInterfaceArray[(index) as usize]).toString());
-            jcall!(stringBuffer).append(jcall!(commonSeps).COMMA.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).COMMA.clone(); java_field }.clone());
         }
         let mut pickupBehavior: Option<Rc<RefCell<PickupBehavior>>> = self.getPickupBehavior();
         if pickupBehavior.is_some() {
-            jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
             jcall!(stringBuffer).append(jcall!(pickupBehavior).toString());
         }
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(CollidableDestroyableDamageableLayer_READYFOREXPLOSION.with(Clone::clone).clone());
         jcall!(stringBuffer).appendboolean(self.readyForExplosion.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonStrings).INIT.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).X_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).X_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.initX.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).Y_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).Y_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.initX.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).Z_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).Z_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.initZ.clone());
     }
     
@@ -439,7 +480,16 @@ impl crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn for Collida
 impl crate::org::allbinary::layer::Layer::LayerDyn for CollidableDestroyableDamageableLayer {
     fn as_Layer(&self) -> &crate::org::allbinary::layer::Layer::Layer { &self.base.base.base.base }
     fn as_Layer_mut(&mut self) -> &mut crate::org::allbinary::layer::Layer::Layer { &mut self.base.base.base.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+    fn setPosition(&mut self, p1: i32, p2: i32, p3: i32) { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::setPosition(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self), p1, p2, p3) }
+    fn moveDXYZ(&mut self, p1: i32, p2: i32, p3: i32) { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::moveDXYZ(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self), p1, p2, p3) }
+    fn getXP(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getXP(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getYP(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getYP(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getZP(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getZP(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getWidth(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getHeight(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn setVisible(&mut self, p1: bool) { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::setVisible(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self), p1) }
+    fn isVisible(&mut self) -> bool { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::isVisible(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
     fn toStringAppend(&mut self, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) { Self::toStringAppend(self, stringBuffer) }
 }
 impl crate::org::allbinary::game::collision::CollidableInterfaceCompositeInterface::CollidableInterfaceCompositeInterface for CollidableDestroyableDamageableLayer {

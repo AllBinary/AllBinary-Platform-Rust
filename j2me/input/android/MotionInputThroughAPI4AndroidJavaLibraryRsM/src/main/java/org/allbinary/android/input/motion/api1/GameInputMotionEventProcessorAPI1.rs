@@ -23,6 +23,7 @@ use crate::org::allbinary::input::motion::AllMotionRecognizer::AllMotionRecogniz
 use crate::org::allbinary::input::motion::MotionRecognizer::MotionRecognizer;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,16 +38,16 @@ pub struct GameInputMotionEventProcessorAPI1 {
     pub motionRecognizer: Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::MotionRecognizer::MotionRecognizerDyn>>>,
 }
 
-pub static mut GameInputMotionEventProcessorAPI1_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut GameInputMotionEventProcessorAPI1_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl GameInputMotionEventProcessorAPI1 {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GameInputMotionEventProcessorAPI1>>> {
-        if match (&unsafe { GameInputMotionEventProcessorAPI1_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *GameInputMotionEventProcessorAPI1_instance = GameInputMotionEventProcessorAPI1::new() };
+        if match (&unsafe { GameInputMotionEventProcessorAPI1_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *GameInputMotionEventProcessorAPI1_instance = crate::java_into_object(GameInputMotionEventProcessorAPI1::new()) };
         }
-        return (unsafe { GameInputMotionEventProcessorAPI1_instance.clone() }).clone() /* as GameInputMotionEventProcessorAPI1 */;
+        return { let java_object = (unsafe { GameInputMotionEventProcessorAPI1_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameInputMotionEventProcessorAPI1>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -57,7 +58,7 @@ impl GameInputMotionEventProcessorAPI1 {
             motionRecognizer: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.motionRecognizer = AllMotionRecognizer::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::MotionRecognizer::MotionRecognizerDyn>>);
+        this.motionRecognizer = AllMotionRecognizer::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::MotionRecognizer::MotionRecognizerDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::MotionRecognizer::MotionRecognizerDyn>>);
         this
     }
 
@@ -81,9 +82,9 @@ impl GameInputMotionEventProcessorAPI1 {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

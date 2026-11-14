@@ -35,7 +35,7 @@ pub struct CurrentlyPressedTouchButtonSingletonDebug {
     pub base: CurrentlyPressedTouchButtonSingleton,
     pub string: String,
     pub listString: String,
-    pub append: String,
+    pub appendText: String,
     pub PRESSED_AND_FIRED: String,
     pub PRESSED_AND_NOT_FIRED: String,
     pub ASSOCIATED_RELEASED_AND_FIRED: String,
@@ -53,7 +53,7 @@ impl CurrentlyPressedTouchButtonSingletonDebug {
             base: CurrentlyPressedTouchButtonSingleton::new_struct(),
             string: String::new(),
             listString: String::new(),
-            append: String::new(),
+            appendText: String::new(),
             PRESSED_AND_FIRED: String::new(),
             PRESSED_AND_NOT_FIRED: String::new(),
             ASSOCIATED_RELEASED_AND_FIRED: String::new(),
@@ -61,9 +61,9 @@ impl CurrentlyPressedTouchButtonSingletonDebug {
             RELEASED_AND_FIRED_2: String::new(),
             RELEASED_AND_NOT_FIRED: String::new(),
         };
-        this.string = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.listString = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.append = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.string = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.listString = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.appendText = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.PRESSED_AND_FIRED = String::from("pressed & fired");
         this.PRESSED_AND_NOT_FIRED = String::from("pressed in button but not fired");
         this.ASSOCIATED_RELEASED_AND_FIRED = String::from("assoc. rel & fired");
@@ -79,82 +79,82 @@ impl CurrentlyPressedTouchButtonSingletonDebug {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::CurrentlyPressedTouchButtonSingleton::CurrentlyPressedTouchButtonSingletonDyn>>> {
-        return CurrentlyPressedTouchButtonSingletonDebug_instanceC.with(Clone::clone).clone();
+        return CurrentlyPressedTouchButtonSingletonDebug_instanceC.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::button::CurrentlyPressedTouchButtonSingleton::CurrentlyPressedTouchButtonSingletonDyn>>);
     }
     
 
     pub fn appendTouchButtonInput(&mut self, mut append: String, mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>>) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(touchButtonInput).toString());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(append.clone());
-        self.append = jcall!(stringBuffer).toString();
-        self.string = jcall!(StringMaker::new()).append(self.listString.clone()).append(self.append.clone()).toString();
+        self.appendText = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
+        self.string = { let java_value = (jcall!(StringMaker::new()).append(self.listString.clone()).append(self.appendText.clone()).toString()).clone(); java_value };
     }
     
 
     pub fn append(&mut self, mut append: String) {
-        self.append = jcall!(StringMaker::new()).append(self.append.clone()).append(append.clone()).toString();
-        self.string = jcall!(StringMaker::new()).append(self.listString.clone()).append(self.append.clone()).toString();
+        self.appendText = { let java_value = (jcall!(StringMaker::new()).append(self.appendText.clone()).append(append.clone()).toString()).clone(); java_value };
+        self.string = { let java_value = (jcall!(StringMaker::new()).append(self.listString.clone()).append(self.appendText.clone()).toString()).clone(); java_value };
     }
     
 
     pub fn clearLog(&mut self, mut x: i32, mut y: i32) {
-        self.append = jcall!(StringMaker::new()).append(GPoint::toStringStatic(x.clone(), y.clone(), 0)).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).toString();
-        self.string = jcall!(StringMaker::new()).append(self.listString.clone()).append(self.append.clone()).toString();
+        self.appendText = { let java_value = (jcall!(StringMaker::new()).append(GPoint::toStringStatic(x.clone(), y.clone(), 0)).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).toString()).clone(); java_value };
+        self.string = { let java_value = (jcall!(StringMaker::new()).append(self.listString.clone()).append(self.appendText.clone()).toString()).clone(); java_value };
     }
     
 
     pub fn releaseAndNotFired(&mut self) {
-        self.append(self.RELEASED_AND_NOT_FIRED.clone());
+        { let java_arguments = (self.RELEASED_AND_NOT_FIRED.clone(),); self.append(java_arguments.0) };
     }
     
 
     pub fn releaseAndFired(&mut self, mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>>) {
-        self.appendTouchButtonInput(self.RELEASED_AND_FIRED.clone(), touchButtonInput.clone());
+        { let java_arguments = (self.RELEASED_AND_FIRED.clone(), touchButtonInput.clone(),); self.appendTouchButtonInput(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn releaseAndFired2(&mut self, mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>>) {
-        self.appendTouchButtonInput(self.RELEASED_AND_FIRED_2.clone(), touchButtonInput.clone());
+        { let java_arguments = (self.RELEASED_AND_FIRED_2.clone(), touchButtonInput.clone(),); self.appendTouchButtonInput(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn releaseAndFiredAssociated(&mut self, mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>>) {
-        self.appendTouchButtonInput(self.ASSOCIATED_RELEASED_AND_FIRED.clone(), touchButtonInput.clone());
+        { let java_arguments = (self.ASSOCIATED_RELEASED_AND_FIRED.clone(), touchButtonInput.clone(),); self.appendTouchButtonInput(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn pressedAndFired(&mut self, mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>>) {
-        self.appendTouchButtonInput(self.PRESSED_AND_FIRED.clone(), touchButtonInput.clone());
+        { let java_arguments = (self.PRESSED_AND_FIRED.clone(), touchButtonInput.clone(),); self.appendTouchButtonInput(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn pressedAndNotFired(&mut self, mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>>) {
-        self.appendTouchButtonInput(self.PRESSED_AND_NOT_FIRED.clone(), touchButtonInput.clone());
+        { let java_arguments = (self.PRESSED_AND_NOT_FIRED.clone(), touchButtonInput.clone(),); self.appendTouchButtonInput(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn removeAt(&mut self, mut index: i32) -> Option<Rc<RefCell<TouchButtonInput>>> {
-        let mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>> = self.base.removeAt(index.clone());
-        self.listString = jcall!(self.list).toString();
-        self.string = jcall!(StringMaker::new()).append(self.listString.clone()).append(self.append.clone()).toString();
+        let mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>> = { let java_arguments = (index.clone(),); self.base.removeAt(java_arguments.0) };
+        self.listString = { let java_value = (jcall!(self.list).toString()).clone(); java_value };
+        self.string = { let java_value = (jcall!(StringMaker::new()).append(self.listString.clone()).append(self.appendText.clone()).toString()).clone(); java_value };
         return touchButtonInput.clone();
     }
     
 
     pub fn remove(&mut self, mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>>) -> bool {
-        let mut isRemoved: bool = self.base.remove(touchButtonInput.clone());
-        self.listString = jcall!(self.list).toString();
-        self.string = jcall!(StringMaker::new()).append(self.listString.clone()).append(self.append.clone()).toString();
+        let mut isRemoved: bool = { let java_arguments = (touchButtonInput.clone(),); self.base.remove(java_arguments.0) };
+        self.listString = { let java_value = (jcall!(self.list).toString()).clone(); java_value };
+        self.string = { let java_value = (jcall!(StringMaker::new()).append(self.listString.clone()).append(self.appendText.clone()).toString()).clone(); java_value };
         return isRemoved.clone();
     }
     
 
     pub fn add(&mut self, mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>>) {
-        self.base.add(touchButtonInput.clone());
-        self.listString = jcall!(self.list).toString();
-        self.string = jcall!(StringMaker::new()).append(self.listString.clone()).append(self.append.clone()).toString();
+        { let java_arguments = (touchButtonInput.clone(),); self.base.add(java_arguments.0) };
+        self.listString = { let java_value = (jcall!(self.list).toString()).clone(); java_value };
+        self.string = { let java_value = (jcall!(StringMaker::new()).append(self.listString.clone()).append(self.appendText.clone()).toString()).clone(); java_value };
     }
     
 

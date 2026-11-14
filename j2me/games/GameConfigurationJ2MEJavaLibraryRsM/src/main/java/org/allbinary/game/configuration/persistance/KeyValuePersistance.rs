@@ -19,10 +19,10 @@ use std::rc::Rc;
 use super::*;
 // use crate::java::io::ByteArrayInputStream::ByteArrayInputStream;
 // use crate::java::io::ByteArrayOutputStream::ByteArrayOutputStream;
-// use crate::java::io::DataInputStream::DataInputStream;
-// use crate::java::io::DataOutputStream::DataOutputStream;
-// use crate::javax::microedition::rms::RecordEnumeration::RecordEnumeration;
-// use crate::javax::microedition::rms::RecordStore::RecordStore;
+use crate::java::io::DataInputStream::DataInputStream;
+use crate::java::io::DataOutputStream::DataOutputStream;
+use crate::javax::microedition::rms::RecordEnumeration::RecordEnumeration;
+use crate::javax::microedition::rms::RecordStore::RecordStore;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::logic::math::SmallIntegerSingletonFactory::SmallIntegerSingletonFactory;
@@ -32,6 +32,7 @@ use crate::org::allbinary::logic::system::security::licensing::AbeClientInformat
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::HashtableUtil::HashtableUtil;
+use crate::java::lang::Exception::*;
 use super::BasicPersitance::BasicPersitance;
 
 // Borrows the object of a Java reference
@@ -73,31 +74,31 @@ impl KeyValuePersistance {
 
     // throws Exception
     pub fn loadAllSize(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut size: i32) {
-        let mut recordStore: Option<Rc<RefCell<RecordStore>>> = unsafe { NullRecordStore_NULL_RECORD_STORE.clone() }.clone();
+        let mut recordStore: Option<Rc<RefCell<dyn crate::javax::microedition::rms::RecordStore::RecordStoreDyn>>> = unsafe { NullRecordStore_NULL_RECORD_STORE.clone() }.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::rms::RecordStore::RecordStoreDyn>>);
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            recordStore = RecordStore::openRecordStore(self.getRecordId(abeClientInformation.clone()), true);
-            let mut recordEnum: Option<Rc<RefCell<RecordEnumeration>>> = jcall!(recordStore).enumerateRecords(unsafe { NullRecordFilter_NULL_RECORD_FILTER.clone() }.clone(), NullRecordComparator_NULL_RECORD_COMPARATOR.with(Clone::clone).clone(), true);
-            let mut hashtable: Option<Rc<RefCell<ABHashtable<String, String>>>> = None;
+            recordStore = { let java_value = (RecordStore::openRecordStore(self.getRecordId(abeClientInformation.clone()), true)).clone(); java_value };
+            let mut recordEnum: Option<Rc<RefCell<dyn RecordEnumeration>>> = jcall!(recordStore).enumerateRecords(unsafe { NullRecordFilter_NULL_RECORD_FILTER.clone() }.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::rms::RecordFilter::RecordFilter>>), NullRecordComparator_NULL_RECORD_COMPARATOR.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::rms::RecordComparator::RecordComparator>>), true);
+            let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = None;
             let mut name: String = String::new();
             let mut value: String = String::new();
             let mut smallIntegerSingletonFactory: Option<Rc<RefCell<SmallIntegerSingletonFactory>>> = SmallIntegerSingletonFactory::getInstance();
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             let mut recordAsBytes: Vec<i8> = Vec::new();
-            let mut byteArrayInputStream: Option<Rc<RefCell<ByteArrayInputStream>>> = None;
+            let mut byteArrayInputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = None;
             let mut inputStream: Option<Rc<RefCell<DataInputStream>>> = None;
             while jcall!(recordEnum).hasNextElement() {
                 let mut id: i32 = jcall!(recordEnum).nextRecordId();
                 jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).append(jcall!(self.persistanceStrings).LOADING_ID.clone()).appendint(id.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.persistanceStrings).LOAD_ALL.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-                recordAsBytes = jcall!(self.tsUtil).getRecord(recordStore.clone(), id.clone());
-                if recordAsBytes.is_some() {
-                    byteArrayInputStream = ByteArrayInputStream::new(recordAsBytes.clone());
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).append({ let java_field = jcall!(self.persistanceStrings).LOADING_ID.clone(); java_field }.clone()).appendint(id.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.persistanceStrings).LOAD_ALL.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                recordAsBytes = { let java_value = (jcall!(self.tsUtil).getRecord(crate::java_into_object(recordStore.clone()), id.clone())).clone(); java_value };
+                if !recordAsBytes.is_empty() {
+                    byteArrayInputStream = crate::java::io::InputStream::InputStream::new1(recordAsBytes.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>);
                     inputStream = DataInputStream::new(byteArrayInputStream.clone());
                     hashtable = ABHashtable::new();
                     for index in (0..size) {
-                        name = jcall!(inputStream).readUTF();
+                        name = { let java_value = (jcall!(inputStream).readUTF()).clone(); java_value };
                         jcall!(inputStream).readUTF();
-                        value = jcall!(inputStream).readUTF();
+                        value = { let java_value = (jcall!(inputStream).readUTF()).clone(); java_value };
                         jcall!(hashtable).put(crate::java_into_object(name.clone()), crate::java_into_object(value.clone()));
                     }
                     jcall!(self.valueList).add(crate::java_into_object(hashtable.clone()));
@@ -107,14 +108,14 @@ impl KeyValuePersistance {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
             }
         }
         { // finally
             if recordStore.is_some() {
-                PreLogUtil::put(jcall!(self.persistanceStrings).CLOSING_RECORDSTORE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.persistanceStrings).LOAD_ALL.clone());
+                PreLogUtil::put({ let java_field = jcall!(self.persistanceStrings).CLOSING_RECORDSTORE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.persistanceStrings).LOAD_ALL.clone(); java_field }.clone());
                 jcall!(recordStore).closeRecordStore();
             }
         }
@@ -122,12 +123,12 @@ impl KeyValuePersistance {
     
 
     // throws Exception
-    pub fn save(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) {
-        let mut recordStore: Option<Rc<RefCell<RecordStore>>> = unsafe { NullRecordStore_NULL_RECORD_STORE.clone() }.clone();
+    pub fn save(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) {
+        let mut recordStore: Option<Rc<RefCell<dyn crate::javax::microedition::rms::RecordStore::RecordStoreDyn>>> = unsafe { NullRecordStore_NULL_RECORD_STORE.clone() }.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::rms::RecordStore::RecordStoreDyn>>);
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.persistanceStrings).SAVING.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(hashtable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).SAVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            recordStore = RecordStore::openRecordStore(self.getRecordId(abeClientInformation.clone()), true);
-            let mut byteArrayOutputStream: Vec<u8> = Vec::new();
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.persistanceStrings).SAVING.clone(); java_field }.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(hashtable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).SAVE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            recordStore = { let java_value = (RecordStore::openRecordStore(self.getRecordId(abeClientInformation.clone()), true)).clone(); java_value };
+            let mut byteArrayOutputStream: Option<Rc<RefCell<crate::java::io::OutputStream::OutputStream>>> = crate::java::io::OutputStream::OutputStream::new();
             let mut outputStream: Option<Rc<RefCell<DataOutputStream>>> = DataOutputStream::new(byteArrayOutputStream.clone());
             let mut value: String = String::new();
             let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
@@ -135,34 +136,34 @@ impl KeyValuePersistance {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = None;
             let mut size: i32 = (objectArray.len() as i32).clone();
             for index in (0..size) {
-                jcall!(outputStream).writeUTF((objectArray[(index) as usize]).clone() /* as String */);
-                jcall!(outputStream).writeUTF(jcall!(commonSeps).EQUALS.clone());
-                anyType = (objectArray[(index) as usize]).clone() /* as Any */;
-                value = (jcall!(hashtable).get(anyType.clone())).clone() /* as String */;
+                jcall!(outputStream).writeUTF({ let java_object = (objectArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() });
+                jcall!(outputStream).writeUTF({ let java_field = jcall!(commonSeps).EQUALS.clone(); java_field }.clone());
+                anyType = (objectArray[(index) as usize]).clone();
+                value = { let java_value = ({ let java_object = (jcall!(hashtable).get(anyType.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
                 jcall!(outputStream).writeUTF(value.clone());
             }
             let mut tsUtil: Option<Rc<RefCell<TsUtil>>> = TsUtil::getInstance();
-            let mut savedGameBytes: Vec<i8> = jcall!(tsUtil).getByteArray(String::from_utf8_lossy(&byteArrayOutputStream).into_owned());
+            let mut savedGameBytes: Vec<i8> = jcall!(tsUtil).getByteArray(jcall!(byteArrayOutputStream).toString());
             jcall!(recordStore).addRecord(savedGameBytes.clone(), 0, (savedGameBytes.len() as i32).clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
             }
         }
         { // finally
             if recordStore.is_some() {
-                PreLogUtil::put(jcall!(self.persistanceStrings).CLOSING_RECORDSTORE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).SAVE.clone());
+                PreLogUtil::put({ let java_field = jcall!(self.persistanceStrings).CLOSING_RECORDSTORE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).SAVE.clone(); java_field }.clone());
                 jcall!(recordStore).closeRecordStore();
             }
         }
     }
     
 
-    pub fn get(&mut self, mut index: i32) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = { let java_object = (jcall!(self.valueList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ABHashtable>>>>().expect("ClassCastException").clone()) };
+    pub fn get(&mut self, mut index: i32) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = { let java_object = (jcall!(self.valueList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>>().expect("ClassCastException").clone()) };
         return hashtable.clone();
     }
 }
@@ -179,8 +180,8 @@ pub trait KeyValuePersistanceDyn: crate::org::allbinary::game::configuration::pe
     fn as_KeyValuePersistance_mut(&mut self) -> &mut KeyValuePersistance;
     fn loadAll(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>) { KeyValuePersistance::loadAll(self.as_KeyValuePersistance_mut(), abeClientInformation) }
     fn loadAllSize(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut size: i32) { KeyValuePersistance::loadAllSize(self.as_KeyValuePersistance_mut(), abeClientInformation, size) }
-    fn save(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) { KeyValuePersistance::save(self.as_KeyValuePersistance_mut(), abeClientInformation, hashtable) }
-    fn get(&mut self, mut index: i32) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { KeyValuePersistance::get(self.as_KeyValuePersistance_mut(), index) }
+    fn save(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) { KeyValuePersistance::save(self.as_KeyValuePersistance_mut(), abeClientInformation, hashtable) }
+    fn get(&mut self, mut index: i32) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { KeyValuePersistance::get(self.as_KeyValuePersistance_mut(), index) }
 }
 impl KeyValuePersistanceDyn for KeyValuePersistance {
     fn as_KeyValuePersistance(&self) -> &KeyValuePersistance { self }

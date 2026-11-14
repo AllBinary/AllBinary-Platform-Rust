@@ -16,11 +16,11 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::user::UserFactoryInterface::UserFactoryInterface;
 use crate::org::allbinary::business::user::UserInterface::UserInterface;
+use crate::java::lang::Exception::*;
 use super::User::User;
 
 // Borrows the object of a Java reference
@@ -33,9 +33,15 @@ macro_rules! jcall {
 pub struct UserFactory {
 }
 
-// impl UserFactoryInterface for UserFactory with the methods of the trait
+impl UserFactoryInterface for UserFactory {
+    fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn UserInterface>>> { Self::getInstance(self, hashMap) }
+}
 
 impl UserFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -50,8 +56,8 @@ impl UserFactory {
     
 
     // throws Exception
-    pub fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<dyn UserInterface>>> {
-        return User::new1(hashMap.clone()).map(|reference| reference as Rc<RefCell<dyn UserInterface>>);
+    pub fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn UserInterface>>> {
+        return User::new1_HashMap(hashMap.clone()).map(|reference| reference as Rc<RefCell<dyn UserInterface>>).map(|_java_reference| -> Rc<RefCell<dyn UserInterface>> { panic!("ClassCastException: the Rust trait of User does not have UserInterface as a base trait") });
     }
 }
 

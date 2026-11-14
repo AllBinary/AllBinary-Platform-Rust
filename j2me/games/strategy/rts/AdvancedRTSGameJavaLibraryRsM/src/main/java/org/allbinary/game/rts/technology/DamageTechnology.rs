@@ -48,6 +48,10 @@ impl RTSInterface for DamageTechnology {
 }
 
 impl DamageTechnology {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut maxLevel: i32) -> Self {
@@ -120,7 +124,7 @@ impl DamageTechnology {
     pub fn upgrade(&mut self) {
         self.level += 1;
         let mut unitTechnologySingletonFactory: Option<Rc<RefCell<UnitTechnologySingletonFactory>>> = UnitTechnologySingletonFactory::getInstance();
-        jcall!(unitTechnologySingletonFactory).setDamage(jcall!(unitTechnologySingletonFactory).getDamage() + (self.getLevel() * 100));
+        jcall!(unitTechnologySingletonFactory).setDamage({ let java_value = jcall!(unitTechnologySingletonFactory).getDamage(); java_value } + (self.getLevel() * 100));
     }
     
 

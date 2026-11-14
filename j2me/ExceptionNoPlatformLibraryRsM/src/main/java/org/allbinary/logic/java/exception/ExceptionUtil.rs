@@ -17,6 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +35,10 @@ pub struct ExceptionUtil {
 thread_local! { pub static ExceptionUtil_instance: Option<Rc<RefCell<ExceptionUtil>>> = ExceptionUtil::new(); }
 
 impl ExceptionUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ExceptionUtil>>> {

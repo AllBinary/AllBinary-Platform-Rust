@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation;
 use crate::org::allbinary::animation::IndexedAnimationBehavior::IndexedAnimationBehavior;
@@ -53,28 +53,19 @@ pub struct TitleAnimation {
     pub CLEAR_COLOR: Option<Rc<RefCell<BasicColor>>>,
 }
 
-impl crate::org::allbinary::animation::special::SpecialAnimationInterface::SpecialAnimationInterface for TitleAnimation {
-    fn setLastFrame(&mut self) { Self::setLastFrame(self) }
-    fn isComplete(&mut self) -> bool { Self::isComplete(self) }
-}
-impl crate::org::allbinary::animation::IndexedAnimationInterface::IndexedAnimationInterface for TitleAnimation {
-    fn reset(&mut self) { Self::reset(self) }
-    fn setFrame(&mut self, mut frame: i32) { Self::setFrame(self, frame) }
-    fn getFrame(&mut self) -> i32 { Self::getFrame(self) }
-}
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for TitleAnimation {
-    fn getSize(&mut self) -> i32 { Self::getSize(self) }
-    fn previousFrame(&mut self) { Self::previousFrame(self) }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for TitleAnimation {
+    fn nextFrame(&mut self) { Self::nextFrame(self) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for TitleAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut ax: i32, mut ay: i32) { Self::paintXY(self, graphics, ax, ay) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut ax: i32, mut ay: i32) { Self::paintXY(self, graphics, ax, ay) }
 }
 
 impl TitleAnimation {
     
 
     pub fn createAnimation(mut animationInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>>>, mut basicColorArray: Vec<Option<Rc<RefCell<BasicColor>>>>, mut dxArray: Vec<i32>, mut dyArray: Vec<i32>, mut y: i32, mut width: i32) -> Option<Rc<RefCell<TitleAnimation>>> {
-        return TitleAnimation::new(animationInterfaceArray.clone(), basicColorArray.clone(), dxArray.clone(), dyArray.clone(), y.clone(), width.clone(), IndexedAnimationBehavior::new(1, 250));
+        return TitleAnimation::new(animationInterfaceArray.clone(), basicColorArray.clone(), dxArray.clone(), dyArray.clone(), y.clone(), width.clone(), IndexedAnimationBehavior::new(1, 250).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>));
     }
     
 
@@ -98,11 +89,11 @@ impl TitleAnimation {
         };
         this.systemWrapper = ABSystemWrapper::getInstance();
         this.displayInfoSingleton = DisplayInfoSingleton::getInstance();
-        this.CLEAR_COLOR = jcall!(BasicColorFactory::getInstance()).CLEAR_COLOR.clone();
+        this.CLEAR_COLOR = { let java_field = jcall!(BasicColorFactory::getInstance()).CLEAR_COLOR.clone(); java_field }.clone();
         // super(...) is in the struct literal above
-        this.lastFrameStartTime = jcall!(this.systemWrapper).currentTimeMillis();
+        this.lastFrameStartTime = { let java_value = (jcall!(this.systemWrapper).currentTimeMillis()).clone(); java_value };
         this.animationInterfaceArray = animationInterfaceArray.clone();
-        this.sizeP = (this.animationInterfaceArray.len() as i32).clone();
+        this.sizeP = { let java_value = ((this.animationInterfaceArray.len() as i32)).clone(); java_value }.clone();
         this.basicColorArray = basicColorArray.clone();
         this.dxArray = dxArray.clone();
         this.dyArray = dyArray.clone();
@@ -120,8 +111,8 @@ impl TitleAnimation {
     pub fn nextFrame(&mut self) {
         let mut currentTime: i64 = jcall!(self.systemWrapper).currentTimeMillis();
         let mut totalTimeElapsed: i64 = currentTime - self.lastFrameStartTime;
-        let mut indexedAnimationBehavior: Option<Rc<RefCell<IndexedAnimationBehavior>>> = (self.getAnimationBehavior()).clone() /* as IndexedAnimationBehavior */;
-        if totalTimeElapsed > jcall!(indexedAnimationBehavior).frameDelayTime {
+        let mut indexedAnimationBehavior: Option<Rc<RefCell<IndexedAnimationBehavior>>> = (self.getAnimationBehavior()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<IndexedAnimationBehavior>() }, "ClassCastException: not a IndexedAnimationBehavior"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<IndexedAnimationBehavior>) } });
+        if totalTimeElapsed > { let java_field = jcall!(indexedAnimationBehavior).frameDelayTime.clone(); java_field } {
             self.previousFrame();
             self.lastFrameStartTime = currentTime.clone();
         }
@@ -132,8 +123,8 @@ impl TitleAnimation {
     
 
     pub fn isComplete(&mut self) -> bool {
-        let mut indexedAnimationBehavior: Option<Rc<RefCell<IndexedAnimationBehavior>>> = (self.getAnimationBehavior()).clone() /* as IndexedAnimationBehavior */;
-        if jcall!(indexedAnimationBehavior).loopTotal == -1 || jcall!(indexedAnimationBehavior).loopIndex < jcall!(indexedAnimationBehavior).loopTotal || self.getFrame() != 0 {
+        let mut indexedAnimationBehavior: Option<Rc<RefCell<IndexedAnimationBehavior>>> = (self.getAnimationBehavior()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<IndexedAnimationBehavior>() }, "ClassCastException: not a IndexedAnimationBehavior"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<IndexedAnimationBehavior>) } });
+        if { let java_field = jcall!(indexedAnimationBehavior).loopTotal.clone(); java_field } == -1 || { let java_field = jcall!(indexedAnimationBehavior).loopIndex.clone(); java_field } < { let java_field = jcall!(indexedAnimationBehavior).loopTotal.clone(); java_field } || self.getFrame() != 0 {
             return false;
         } else {
             return true;
@@ -174,7 +165,7 @@ impl TitleAnimation {
 
     pub fn reset(&mut self) {
         self.setLastFrame();
-        let mut indexedAnimationBehavior: Option<Rc<RefCell<IndexedAnimationBehavior>>> = ((self.getAnimationBehavior()).clone() /* as IndexedAnimationBehavior */);
+        let mut indexedAnimationBehavior: Option<Rc<RefCell<IndexedAnimationBehavior>>> = ((self.getAnimationBehavior()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<IndexedAnimationBehavior>() }, "ClassCastException: not a IndexedAnimationBehavior"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<IndexedAnimationBehavior>) } }));
         jcall!(indexedAnimationBehavior).reset();
     }
     
@@ -186,16 +177,16 @@ impl TitleAnimation {
     }
     
 
-    pub fn paintFrameXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut frame: i32, mut x: i32, mut y: i32) {
+    pub fn paintFrameXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut frame: i32, mut x: i32, mut y: i32) {
         self.setFrame(frame.clone());
         self.paintXY(graphics.clone(), x.clone(), y.clone());
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut ax: i32, mut ay: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut ax: i32, mut ay: i32) {
         let mut x: i32 = 0;
         if self.widthP != i32::MIN {
-            x = ((jcall!(self.displayInfoSingleton).getLastWidth() - self.widthP) / 2);
+            x = { let java_value = (((jcall!(self.displayInfoSingleton).getLastWidth() - self.widthP) / 2)).clone(); java_value };
         }
         let mut deltaX: i32 = 0;
         let mut deltaY: i32 = 0;
@@ -227,7 +218,7 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for TitleAnimatio
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base.base }
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut ax: i32, mut ay: i32) { Self::paintXY(self, graphics, ax, ay) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut ax: i32, mut ay: i32) { Self::paintXY(self, graphics, ax, ay) }
 }
 impl crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn for TitleAnimation {
     fn as_IndexedAnimation(&self) -> &crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &self.base.base }

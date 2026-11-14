@@ -19,15 +19,16 @@ use std::rc::Rc;
 use super::*;
 // use crate::java::awt::*;
 // use crate::java::awt::event::ActionEvent::ActionEvent;
-// use crate::java::io::File::File;
-// use crate::java::net::URI::URI;
-// use crate::java::net::URL::URL;
+use crate::java::io::File::File;
+use crate::java::net::URI::URI;
+use crate::java::net::URL::URL;
 // use crate::javax::help::CSH::CSH;
 // use crate::javax::help::HelpBroker::HelpBroker;
 // use crate::javax::help::HelpSet::HelpSet;
 // use crate::javax::swing::*;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -47,6 +48,10 @@ pub struct JavaHelpUtil {
 thread_local! { pub static JavaHelpUtil_instance: Option<Rc<RefCell<JavaHelpUtil>>> = JavaHelpUtil::new(); }
 
 impl JavaHelpUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<JavaHelpUtil>>> {
@@ -76,35 +81,37 @@ impl JavaHelpUtil {
     
 
     pub fn getHelpSet(&mut self, mut filePath: String) -> Option<Rc<RefCell<HelpSet>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut helpSetURI: Option<Rc<RefCell<URI>>> = jcall!(File::new(filePath.clone())).toURI();
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut helpSetURI: Option<Rc<RefCell<URI>>> = jcall!(File::new1(filePath.clone())).toURI();
             let mut helpSetURL: Option<Rc<RefCell<URL>>> = jcall!(helpSetURI).toURL();
-            return self.getHelpSet(helpSetURL.clone());
+            return Some(self.getHelpSet_URL(helpSetURL.clone()));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(Self::getInstance()), String::from("set"), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(Self::getInstance()), String::from("set"), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
             return None;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn getHelpSet(&mut self, mut url: Option<Rc<RefCell<URL>>>) -> Option<Rc<RefCell<HelpSet>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            return HelpSet::new(None, url.clone());
+    pub fn getHelpSet_URL(&mut self, mut url: Option<Rc<RefCell<URL>>>) -> Option<Rc<RefCell<HelpSet>>> {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            return Some(HelpSet::new(None, url.clone()));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(Self::getInstance()), String::from("set"), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(Self::getInstance()), String::from("set"), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
             return None;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -118,9 +125,9 @@ impl JavaHelpUtil {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(Self::getInstance()), String::from("show"), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(Self::getInstance()), String::from("show"), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
             }
         }
     }
@@ -133,7 +140,7 @@ impl JavaHelpUtil {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             }
         }

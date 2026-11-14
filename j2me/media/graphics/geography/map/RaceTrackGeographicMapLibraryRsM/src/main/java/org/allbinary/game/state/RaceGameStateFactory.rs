@@ -33,9 +33,13 @@ pub struct RaceGameStateFactory {
     pub RED_LIGHT_GAME_STATE: Option<Rc<RefCell<GameState>>>,
 }
 
-pub static mut RaceGameStateFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut RaceGameStateFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl RaceGameStateFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -55,10 +59,10 @@ impl RaceGameStateFactory {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<RaceGameStateFactory>>> {
-        if match (&unsafe { RaceGameStateFactory_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *RaceGameStateFactory_instance = RaceGameStateFactory::new() };
+        if match (&unsafe { RaceGameStateFactory_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *RaceGameStateFactory_instance = crate::java_into_object(RaceGameStateFactory::new()) };
         }
-        return (unsafe { RaceGameStateFactory_instance.clone() }).clone() /* as RaceGameStateFactory */;
+        return { let java_object = (unsafe { RaceGameStateFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<RaceGameStateFactory>>>>().expect("ClassCastException").clone()) };
     }
 }
 

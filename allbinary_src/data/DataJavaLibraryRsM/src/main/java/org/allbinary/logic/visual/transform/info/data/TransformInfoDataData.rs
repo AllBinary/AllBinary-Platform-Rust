@@ -34,6 +34,10 @@ pub struct TransformInfoDataData {
 thread_local! { pub static TransformInfoDataData_instance: Option<Rc<RefCell<TransformInfoDataData>>> = TransformInfoDataData::new(); }
 
 impl TransformInfoDataData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<TransformInfoDataData>>> {
@@ -46,8 +50,8 @@ impl TransformInfoDataData {
             UNCRYPTED_EXTENSION: String::new(),
             ENCRYPTED_EXTENSION: String::new(),
         };
-        this.UNCRYPTED_EXTENSION = jcall!(CommonDataFileStrings::getInstance()).UNCRYPTED_EXTENSION.clone();
-        this.ENCRYPTED_EXTENSION = jcall!(CommonDataFileStrings::getInstance()).ENCRYPTED_EXTENSION.clone();
+        this.UNCRYPTED_EXTENSION = { let java_field = jcall!(CommonDataFileStrings::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field }.clone();
+        this.ENCRYPTED_EXTENSION = { let java_field = jcall!(CommonDataFileStrings::getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone();
         this
     }
 

@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait RTSInterface {
+pub trait RTSInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn isSelfUpgradeable(&mut self) -> bool;
@@ -62,8 +62,6 @@ pub trait RTSInterface {
     
 
     fn upgrade(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

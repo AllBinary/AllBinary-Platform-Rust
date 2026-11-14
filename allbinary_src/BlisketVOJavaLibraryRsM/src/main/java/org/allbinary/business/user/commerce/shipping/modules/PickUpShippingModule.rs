@@ -42,6 +42,10 @@ impl ShippingInterface for PickUpShippingModule {
 }
 
 impl PickUpShippingModule {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -75,7 +79,7 @@ impl PickUpShippingModule {
         return self.name.clone();
     }
 }
-pub trait PickUpShippingModuleDyn: crate::org::allbinary::business::user::commerce::shipping::modules::ShippingInterface::ShippingInterface {
+pub trait PickUpShippingModuleDyn: std::any::Any + crate::org::allbinary::business::user::commerce::shipping::modules::ShippingInterface::ShippingInterface {
     fn as_PickUpShippingModule(&self) -> &PickUpShippingModule;
     fn as_PickUpShippingModule_mut(&mut self) -> &mut PickUpShippingModule;
 }

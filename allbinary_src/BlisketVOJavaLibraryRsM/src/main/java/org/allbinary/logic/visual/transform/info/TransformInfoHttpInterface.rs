@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::logic::communication::http::request::session::WeblisketSessionInterface::WeblisketSessionInterface;
 use super::TransformInfoInterface::TransformInfoInterface;
@@ -39,7 +38,7 @@ pub trait TransformInfoHttpInterface: TransformInfoInterface {
     fn getPageContext(&mut self) -> Option<Rc<RefCell<PageContext>>>;
     
 
-    fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>>;
+    fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>;
 }
 
 

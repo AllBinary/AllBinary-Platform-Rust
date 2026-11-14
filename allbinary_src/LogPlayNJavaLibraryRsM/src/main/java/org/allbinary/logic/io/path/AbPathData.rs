@@ -37,6 +37,10 @@ pub struct AbPathData {
 thread_local! { pub static AbPathData_instance: Option<Rc<RefCell<AbPathData>>> = AbPathData::new(); }
 
 impl AbPathData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AbPathData>>> {
@@ -50,9 +54,9 @@ impl AbPathData {
             SEPARATORCHAR: '\0',
             SEPARATOR: String::new(),
         };
-        this.EXTENSION_SEP = jcall!(CommonSeps::getInstance()).PERIOD.clone();
+        this.EXTENSION_SEP = { let java_field = jcall!(CommonSeps::getInstance()).PERIOD.clone(); java_field }.clone();
         this.SEPARATORCHAR = '/';
-        this.SEPARATOR = jcall!(CommonSeps::getInstance()).FORWARD_SLASH.clone();
+        this.SEPARATOR = { let java_field = jcall!(CommonSeps::getInstance()).FORWARD_SLASH.clone(); java_field }.clone();
         this
     }
 
@@ -76,9 +80,9 @@ impl AbPathData {
 
     pub fn getExtensionWithDot(&mut self, mut filePath: String) -> String {
         let mut indexOfFileExtensionDelmiter: i32 = self.getExtensionIndex(filePath.clone());
-        let mut extension: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        let mut extension: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         if indexOfFileExtensionDelmiter >= 0 {
-            extension = filePath[(indexOfFileExtensionDelmiter.clone()) as usize..].to_string();
+            extension = { let java_value = (filePath[(indexOfFileExtensionDelmiter.clone()) as usize..].to_string()).clone(); java_value };
         }
         return extension.clone();
     }
@@ -86,9 +90,9 @@ impl AbPathData {
 
     pub fn getExtension(&mut self, mut filePath: String) -> String {
         let mut indexOfFileExtensionDelmiter: i32 = self.getExtensionIndex(filePath.clone());
-        let mut extension: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        let mut extension: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         if indexOfFileExtensionDelmiter >= 0 {
-            extension = filePath[(indexOfFileExtensionDelmiter + 1) as usize..].to_string();
+            extension = { let java_value = (filePath[(indexOfFileExtensionDelmiter + 1) as usize..].to_string()).clone(); java_value };
         }
         return extension.clone();
     }
@@ -97,7 +101,7 @@ impl AbPathData {
     pub fn getNameFromPath(&mut self, mut path: String) -> String {
         let mut endIndex: i32 = path.rfind(self.SEPARATORCHAR.clone()).map(|index| index as i32).unwrap_or(-1);
         if endIndex < 0 {
-            endIndex = path.rfind(jcall!(FilePathData::getInstance()).SEPARATORCHAR.clone()).map(|index| index as i32).unwrap_or(-1);
+            endIndex = { let java_value = (path.rfind({ let java_field = jcall!(FilePathData::getInstance()).SEPARATORCHAR.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1)).clone(); java_value };
         }
         if endIndex < 0 {
             return path.clone();
@@ -115,10 +119,10 @@ impl AbPathData {
     pub fn removeNameFromPath(&mut self, mut path: String) -> String {
         let mut endIndex: i32 = path.rfind(self.SEPARATORCHAR.clone()).map(|index| index as i32).unwrap_or(-1);
         if endIndex < 0 {
-            endIndex = path.rfind(jcall!(FilePathData::getInstance()).SEPARATORCHAR.clone()).map(|index| index as i32).unwrap_or(-1);
+            endIndex = { let java_value = (path.rfind({ let java_field = jcall!(FilePathData::getInstance()).SEPARATORCHAR.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1)).clone(); java_value };
         }
         if endIndex < 0 {
-            return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         }
         if (path.chars().count() as i32) == endIndex + 1 {
             return { let java_arguments = (path[(0) as usize..(endIndex - 1) as usize].to_string(),); self.removeNameFromPath(java_arguments.0) };

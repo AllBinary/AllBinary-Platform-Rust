@@ -21,6 +21,7 @@ use super::*;
 use crate::org::allbinary::logic::communication::http::request::AbResponseHandler::AbResponseHandler;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::tags::StoreValidationTransformTag::StoreValidationTransformTag;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -62,29 +63,30 @@ impl DateRangeOrderHistoryTag {
 
     // throws JspTagException
     pub fn doStartTag(&mut self) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).JSPTAG.clone()) {
-                jcall!(self.logUtil).putF(String::from("Tag Start"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.base.tagStrings).DO_START_TAG.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).JSPTAG.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).putF(String::from("Tag Start"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.base.tagStrings).DO_START_TAG.clone(); java_field }.clone());
             }
             self.setName(String::from("Range Order History View"));
             self.setObjectFile(String::from("views.admin.orderhistory.DateRangeOrderHistoryView"));
-            if self.getCommand().is_some() {
-                if jcall!(self.getCommand()).compareTo(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).GLOBALS2).VIEW.clone()) == 0 {
+            if true {
+                if { let java_value = (self.getCommand().cmp(&{ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).GLOBALS2.clone(); java_field }).VIEW.clone(); java_field }.clone()) as i32); java_value } == 0 {
                 } else {
                     panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("No Such View Command: "), self.getCommand()))));
                 }
-                return self.base.doStartTag();
+                return Some(self.base.doStartTag());
             }
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Command Null"))));
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             AbResponseHandler::sendJspTagRedirect(self.pageContext.clone(), e.clone());
             return SKIP_BODY.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for DateRangeOrderHistoryTag {
@@ -111,6 +113,23 @@ impl crate::tags::TransformTag::TransformTagDyn for DateRangeOrderHistoryTag {
 impl crate::tags::ValidationTransformTag::ValidationTransformTagDyn for DateRangeOrderHistoryTag {
     fn as_ValidationTransformTag(&self) -> &crate::tags::ValidationTransformTag::ValidationTransformTag { &self.base.base }
     fn as_ValidationTransformTag_mut(&mut self) -> &mut crate::tags::ValidationTransformTag::ValidationTransformTag { &mut self.base.base }
+}
+impl crate::tags::CommandTag::CommandTagDyn for DateRangeOrderHistoryTag {
+    fn as_CommandTag(&self) -> &crate::tags::CommandTag::CommandTag { &self.base.base.base.base.base.base.base.base }
+    fn as_CommandTag_mut(&mut self) -> &mut crate::tags::CommandTag::CommandTag { &mut self.base.base.base.base.base.base.base.base }
+}
+impl crate::tags::CustomTagSupport::CustomTagSupportDyn for DateRangeOrderHistoryTag {
+    fn as_CustomTagSupport(&self) -> &crate::tags::CustomTagSupport::CustomTagSupport { &self.base.base.base.base.base.base.base.base.base }
+    fn as_CustomTagSupport_mut(&mut self) -> &mut crate::tags::CustomTagSupport::CustomTagSupport { &mut self.base.base.base.base.base.base.base.base.base }
+}
+impl crate::tags::HelperTag::HelperTagDyn for DateRangeOrderHistoryTag {
+    fn as_HelperTag(&self) -> &crate::tags::HelperTag::HelperTag { &self.base.base.base.base.base.base }
+    fn as_HelperTag_mut(&mut self) -> &mut crate::tags::HelperTag::HelperTag { &mut self.base.base.base.base.base.base }
+}
+impl crate::tags::PropertiesTag::PropertiesTagDyn for DateRangeOrderHistoryTag {
+    fn as_PropertiesTag(&self) -> &crate::tags::PropertiesTag::PropertiesTag { &self.base.base.base.base.base.base.base }
+    fn as_PropertiesTag_mut(&mut self) -> &mut crate::tags::PropertiesTag::PropertiesTag { &mut self.base.base.base.base.base.base.base }
+    fn doEndTag(&mut self) -> i32 { crate::tags::ValidationTransformTag::ValidationTransformTag::doEndTag(crate::tags::ValidationTransformTag::ValidationTransformTagDyn::as_ValidationTransformTag_mut(self)) }
 }
 impl crate::tags::transform::info::TransformInfoTag::TransformInfoTagDyn for DateRangeOrderHistoryTag {
     fn as_TransformInfoTag(&self) -> &crate::tags::transform::info::TransformInfoTag::TransformInfoTag { &self.base.base.base.base }

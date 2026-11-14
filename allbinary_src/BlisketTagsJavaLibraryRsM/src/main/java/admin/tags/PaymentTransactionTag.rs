@@ -39,8 +39,8 @@ impl PaymentTransactionTag {
         let mut this = Self {
             base: TableTag::new_struct(),
         };
-        this.setTagHelperFactory(PaymentTransactionHelperFactory::new());
-        this.setTagRequestHelperFactory(PaymentTransactionHelperFactory::new());
+        this.setTagHelperFactory(PaymentTransactionHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(PaymentTransactionHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 

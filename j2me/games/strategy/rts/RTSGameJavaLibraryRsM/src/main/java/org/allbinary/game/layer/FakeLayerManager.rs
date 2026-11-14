@@ -47,7 +47,7 @@ impl FakeLayerManager {
 
     pub fn new_struct(mut gameInfo: Option<Rc<RefCell<GameInfo>>>) -> Self {
         let mut this = Self {
-            base: AllBinaryGameLayerManager::new_struct(jcall!(BasicColorFactory::getInstance()).BLACK.clone(), jcall!(BasicColorFactory::getInstance()).WHITE.clone(), gameInfo.clone()),
+            base: AllBinaryGameLayerManager::new_struct({ let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone(), gameInfo.clone()),
             geographicMapInterfaceArray: Vec::new(),
             geographicMapCellTypeArray: Vec::new(),
         };
@@ -69,7 +69,7 @@ impl FakeLayerManager {
 
     pub fn setGeographicMapInterface(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>) {
         self.geographicMapInterfaceArray = geographicMapInterfaceArray.clone();
-        self.geographicMapCellTypeArray = vec![None; ((self.geographicMapInterfaceArray.len() as i32)) as usize];
+        self.geographicMapCellTypeArray = { let java_value = (vec![None; ((self.geographicMapInterfaceArray.len() as i32)) as usize]).clone(); java_value };
     }
     
 

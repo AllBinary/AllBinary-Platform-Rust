@@ -48,8 +48,8 @@ impl GeographicMapCellPosition {
         let mut x: i32 = this.getColumn() * width;
         let mut y: i32 = this.getRow() * height;
         let mut pointFactory: Option<Rc<RefCell<PointFactory>>> = PointFactory::getInstance();
-        this.point = jcall!(pointFactory).createXY(x.clone(), y.clone());
-        this.midPoint = jcall!(pointFactory).createXY(x + (width >> 1), y + (height >> 1));
+        this.point = { let java_value = (jcall!(pointFactory).createXY(x.clone(), y.clone())).clone(); java_value };
+        this.midPoint = { let java_value = (jcall!(pointFactory).createXY(x + (width >> 1), y + (height >> 1))).clone(); java_value };
         this
     }
 

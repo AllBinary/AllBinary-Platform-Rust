@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::TextField::TextField;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::TextField::TextField;
 use crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBox;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
@@ -28,6 +28,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::CustomTextBox2::CustomTextBox2;
 use super::CustomTextBoxIndexedAnimation::CustomTextBoxIndexedAnimation;
 
@@ -52,6 +53,10 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 }
 
 impl CustomTextBoxIndexedAnimationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut fontSize: i32, mut maxLength: i32) -> Self {
@@ -75,17 +80,17 @@ impl CustomTextBoxIndexedAnimationFactory {
     // throws Exception
     pub fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
         let mut abToGBUtil: Option<Rc<RefCell<ABToGBUtil>>> = ABToGBUtil::getInstance();
-        let mut abCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>> = (jcall!(abToGBUtil).abCanvas).clone() /* as AllBinaryGameCanvas */;
-        let mut font: Option<Rc<RefCell<Font>>> = Font::getFont(unsafe { crate::javax::microedition::lcdui::Font::Font_FACE_SYSTEM.clone() }.clone(), unsafe { crate::javax::microedition::lcdui::Font::Font_STYLE_PLAIN.clone() }.clone(), jcall!(self.scaleProperties).scaleHeight.clone());
-        let mut customTextBox: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDyn>>> = CustomTextBox2::new(jcall!(abCanvas).getCustomCommandListener(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), self.maxLength.clone(), unsafe { crate::javax::microedition::lcdui::TextField::TextField_ANY.clone() }.clone(), font.clone(), jcall!(jcall!(abCanvas).getLayerManager()).getBackgroundBasicColor(), jcall!(jcall!(abCanvas).getLayerManager()).getForegroundBasicColor()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDyn>>);
-        return CustomTextBoxIndexedAnimation::new(customTextBox.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+        let mut abCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>> { panic!("ClassCastException: a Rust dyn Canvas cannot be cast to AllBinaryGameCanvas") })();
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = Font::getFont(crate::javax::microedition::lcdui::Font::Font_FACE_SYSTEM.with(Clone::clone).clone(), crate::javax::microedition::lcdui::Font::Font_STYLE_PLAIN.with(Clone::clone).clone(), { let java_field = jcall!(self.scaleProperties).scaleHeight.clone(); java_field }.clone());
+        let mut customTextBox: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDyn>>> = CustomTextBox2::new(jcall!(abCanvas).getCustomCommandListener(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), self.maxLength.clone(), crate::javax::microedition::lcdui::TextField::TextField_ANY.with(Clone::clone).clone(), font.clone(), jcall!(jcall!(abCanvas).getLayerManager()).getBackgroundBasicColor(), jcall!(jcall!(abCanvas).getLayerManager()).getForegroundBasicColor()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDyn>>);
+        return CustomTextBoxIndexedAnimation::new(customTextBox.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
     }
     
 
     pub fn setInitialScale(&mut self, mut scaleProperties: Option<Rc<RefCell<ScaleProperties>>>) {
-        let mut fontSize: i32 = jcall!(self.scaleProperties).scaleHeight.clone();
+        let mut fontSize: i32 = { let java_field = jcall!(self.scaleProperties).scaleHeight.clone(); java_field }.clone();
         self.scaleProperties = scaleProperties.clone();
-        if jcall!(self.scaleProperties).scaleHeight < 6 {
+        if { let java_field = jcall!(self.scaleProperties).scaleHeight.clone(); java_field } < 6 {
             jcall!(self.scaleProperties).scaleHeight = fontSize.clone();
         }
     }

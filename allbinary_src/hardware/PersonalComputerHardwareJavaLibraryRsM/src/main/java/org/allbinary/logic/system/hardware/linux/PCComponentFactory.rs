@@ -31,6 +31,7 @@ use crate::org::allbinary::logic::system::hardware::components::linux::Unknown::
 use crate::org::allbinary::logic::system::hardware::components::linux::Usb::Usb;
 use crate::org::allbinary::logic::system::hardware::components::linux::Video::Video;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -47,6 +48,10 @@ pub struct PCComponentFactory {
 thread_local! { pub static PCComponentFactory_instance: Option<Rc<RefCell<PCComponentFactory>>> = PCComponentFactory::new(); }
 
 impl PCComponentFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<PCComponentFactory>>> {
@@ -71,61 +76,62 @@ impl PCComponentFactory {
 
     // Java overloaded method: Rust needs a different name
     pub fn getInstance2(&mut self, mut component: String, mut componentData: String) -> Option<Rc<RefCell<dyn HardwareComponentInterface>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if true {
-                if (component.cmp(&jcall!(jcall!(self.componentFactory).ETHERNET).toString()) as i32) == 0 {
-                    return (Ethernet::new(componentData.clone())).clone() /* as HardwareComponentInterface */;
-                } else if (component.cmp(&jcall!(jcall!(self.componentFactory).BRIDGE).toString()) as i32) == 0 {
-                    return (Bridge::new(componentData.clone())).clone() /* as HardwareComponentInterface */;
-                } else if (component.cmp(&jcall!(jcall!(self.componentFactory).IDE).toString()) as i32) == 0 {
-                    return (HardDriveController::new(componentData.clone())).clone() /* as HardwareComponentInterface */;
-                } else if (component.cmp(&jcall!(jcall!(self.componentFactory).MULTIMEDIA).toString()) as i32) == 0 {
-                    return (Media::new(componentData.clone())).clone() /* as HardwareComponentInterface */;
-                } else if (component.cmp(&jcall!(jcall!(self.componentFactory).SCSI).toString()) as i32) == 0 {
-                    return (HardDriveController::new(componentData.clone())).clone() /* as HardwareComponentInterface */;
-                } else if (component.cmp(&jcall!(jcall!(self.componentFactory).USB).toString()) as i32) == 0 {
-                    return (Usb::new(componentData.clone())).clone() /* as HardwareComponentInterface */;
-                } else if (component.cmp(&jcall!(jcall!(self.componentFactory).VGA).toString()) as i32) == 0 {
-                    return (Video::new(componentData.clone())).clone() /* as HardwareComponentInterface */;
-                } else if (component.cmp(&jcall!(jcall!(self.componentFactory).PCI).toString()) as i32) == 0 {
-                    return (PCI::new(componentData.clone())).clone() /* as HardwareComponentInterface */;
+                if (component.cmp(&jcall!({ let java_field = jcall!(self.componentFactory).ETHERNET.clone(); java_field }).toString()) as i32) == 0 {
+                    return Some((Ethernet::new(componentData.clone())).clone() /* as HardwareComponentInterface */);
+                } else if (component.cmp(&jcall!({ let java_field = jcall!(self.componentFactory).BRIDGE.clone(); java_field }).toString()) as i32) == 0 {
+                    return Some((Bridge::new(componentData.clone())).clone() /* as HardwareComponentInterface */);
+                } else if (component.cmp(&jcall!({ let java_field = jcall!(self.componentFactory).IDE.clone(); java_field }).toString()) as i32) == 0 {
+                    return Some((HardDriveController::new(componentData.clone())).clone() /* as HardwareComponentInterface */);
+                } else if (component.cmp(&jcall!({ let java_field = jcall!(self.componentFactory).MULTIMEDIA.clone(); java_field }).toString()) as i32) == 0 {
+                    return Some((Media::new(componentData.clone())).clone() /* as HardwareComponentInterface */);
+                } else if (component.cmp(&jcall!({ let java_field = jcall!(self.componentFactory).SCSI.clone(); java_field }).toString()) as i32) == 0 {
+                    return Some((HardDriveController::new(componentData.clone())).clone() /* as HardwareComponentInterface */);
+                } else if (component.cmp(&jcall!({ let java_field = jcall!(self.componentFactory).USB.clone(); java_field }).toString()) as i32) == 0 {
+                    return Some((Usb::new(componentData.clone())).clone() /* as HardwareComponentInterface */);
+                } else if (component.cmp(&jcall!({ let java_field = jcall!(self.componentFactory).VGA.clone(); java_field }).toString()) as i32) == 0 {
+                    return Some((Video::new(componentData.clone())).clone() /* as HardwareComponentInterface */);
+                } else if (component.cmp(&jcall!({ let java_field = jcall!(self.componentFactory).PCI.clone(); java_field }).toString()) as i32) == 0 {
+                    return Some((PCI::new(componentData.clone())).clone() /* as HardwareComponentInterface */);
                 }
             }
-            return (Unknown::new(componentData.clone())).clone() /* as HardwareComponentInterface */;
+            return Some((Unknown::new(componentData.clone())).clone() /* as HardwareComponentInterface */);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).FACTORYERROR.clone())) {
-                jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).FACTORYERROR.clone(); java_field }.clone())) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
-            return Unknown::new(jcall!(commonStrings).EXCEPTION.clone()).map(|reference| reference as Rc<RefCell<dyn HardwareComponentInterface>>);
+            return Unknown::new({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn HardwareComponentInterface>>).map(|reference| reference as Rc<RefCell<dyn HardwareComponentInterface>>);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn getComponentType(&mut self, mut component: String) -> String {
-        if component.find(&jcall!(jcall!(self.componentFactory).ETHERNET).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            return jcall!(jcall!(self.componentFactory).ETHERNET).toString();
-        } else if component.find(&jcall!(jcall!(self.componentFactory).BRIDGE).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            return jcall!(jcall!(self.componentFactory).BRIDGE).toString();
-        } else if component.find(&jcall!(jcall!(self.componentFactory).IDE).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            return jcall!(jcall!(self.componentFactory).IDE).toString();
-        } else if component.find(&jcall!(jcall!(self.componentFactory).MULTIMEDIA).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            return jcall!(jcall!(self.componentFactory).MULTIMEDIA).toString();
-        } else if component.find(&jcall!(jcall!(self.componentFactory).SCSI).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            return jcall!(jcall!(self.componentFactory).SCSI).toString();
-        } else if component.find(&jcall!(jcall!(self.componentFactory).USB).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            return jcall!(jcall!(self.componentFactory).USB).toString();
-        } else if component.find(&jcall!(jcall!(self.componentFactory).VGA).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            return jcall!(jcall!(self.componentFactory).VGA).toString();
-        } else if (component.cmp(&jcall!(jcall!(self.componentFactory).PCI).toString()) as i32) == 0 {
-            return jcall!(jcall!(self.componentFactory).PCI).toString();
+        if component.find(&jcall!({ let java_field = jcall!(self.componentFactory).ETHERNET.clone(); java_field }).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).ETHERNET.clone(); java_field }).toString();
+        } else if component.find(&jcall!({ let java_field = jcall!(self.componentFactory).BRIDGE.clone(); java_field }).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).BRIDGE.clone(); java_field }).toString();
+        } else if component.find(&jcall!({ let java_field = jcall!(self.componentFactory).IDE.clone(); java_field }).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).IDE.clone(); java_field }).toString();
+        } else if component.find(&jcall!({ let java_field = jcall!(self.componentFactory).MULTIMEDIA.clone(); java_field }).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).MULTIMEDIA.clone(); java_field }).toString();
+        } else if component.find(&jcall!({ let java_field = jcall!(self.componentFactory).SCSI.clone(); java_field }).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).SCSI.clone(); java_field }).toString();
+        } else if component.find(&jcall!({ let java_field = jcall!(self.componentFactory).USB.clone(); java_field }).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).USB.clone(); java_field }).toString();
+        } else if component.find(&jcall!({ let java_field = jcall!(self.componentFactory).VGA.clone(); java_field }).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).VGA.clone(); java_field }).toString();
+        } else if (component.cmp(&jcall!({ let java_field = jcall!(self.componentFactory).PCI.clone(); java_field }).toString()) as i32) == 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).PCI.clone(); java_field }).toString();
         }
-        return jcall!(jcall!(self.componentFactory).UNKNOWN).toString();
+        return jcall!({ let java_field = jcall!(self.componentFactory).UNKNOWN.clone(); java_field }).toString();
     }
 }
 

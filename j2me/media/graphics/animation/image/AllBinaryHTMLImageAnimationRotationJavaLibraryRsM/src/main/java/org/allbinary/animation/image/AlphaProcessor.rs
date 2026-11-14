@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::media::image::ImageModifierUtil::ImageModifierUtil;
 use super::AlphaBaseProcessor::AlphaBaseProcessor;
 
@@ -53,7 +53,7 @@ impl AlphaProcessor {
     }
     
 
-    pub fn setAlpha(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut imageToShow: Option<Rc<RefCell<Image>>>, mut alpha: i32) {
+    pub fn setAlpha(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageToShow: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut alpha: i32) {
         jcall!(imageModifierUtil).setAlpha3(imageToShow.clone(), alpha.clone());
     }
 }
@@ -68,7 +68,7 @@ impl std::ops::DerefMut for AlphaProcessor {
 impl crate::org::allbinary::animation::image::AlphaBaseProcessor::AlphaBaseProcessorDyn for AlphaProcessor {
     fn as_AlphaBaseProcessor(&self) -> &crate::org::allbinary::animation::image::AlphaBaseProcessor::AlphaBaseProcessor { &self.base }
     fn as_AlphaBaseProcessor_mut(&mut self) -> &mut crate::org::allbinary::animation::image::AlphaBaseProcessor::AlphaBaseProcessor { &mut self.base }
-    fn setAlpha(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut imageToShow: Option<Rc<RefCell<Image>>>, mut alpha: i32) { Self::setAlpha(self, imageModifierUtil, originalImage, imageToShow, alpha) }
+    fn setAlpha(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageToShow: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut alpha: i32) { Self::setAlpha(self, imageModifierUtil, originalImage, imageToShow, alpha) }
 }
 
 

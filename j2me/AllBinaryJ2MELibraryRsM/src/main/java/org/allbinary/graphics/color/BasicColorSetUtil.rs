@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use super::BasicColor::BasicColor;
 
 // Borrows the object of a Java reference
@@ -33,6 +33,10 @@ pub struct BasicColorSetUtil {
 thread_local! { pub static BasicColorSetUtil_instance: Option<Rc<RefCell<dyn BasicColorSetUtilDyn>>> = BasicColorSetUtil::new().map(|reference| reference as Rc<RefCell<dyn BasicColorSetUtilDyn>>); }
 
 impl BasicColorSetUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn BasicColorSetUtilDyn>>> {
@@ -51,20 +55,20 @@ impl BasicColorSetUtil {
     }
     
 
-    pub fn setBasicColorP(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
+    pub fn setBasicColorP(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
         jcall!(graphics).setColor(jcall!(basicColor).intValue());
     }
     
 
-    pub fn setBasicColorP3(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut value: i32) {
+    pub fn setBasicColorP3(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut value: i32) {
         jcall!(graphics).setColor(value.clone());
     }
 }
-pub trait BasicColorSetUtilDyn {
+pub trait BasicColorSetUtilDyn: std::any::Any {
     fn as_BasicColorSetUtil(&self) -> &BasicColorSetUtil;
     fn as_BasicColorSetUtil_mut(&mut self) -> &mut BasicColorSetUtil;
-    fn setBasicColorP(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { BasicColorSetUtil::setBasicColorP(self.as_BasicColorSetUtil_mut(), graphics, basicColor) }
-    fn setBasicColorP3(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut value: i32) { BasicColorSetUtil::setBasicColorP3(self.as_BasicColorSetUtil_mut(), graphics, basicColor, value) }
+    fn setBasicColorP(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { BasicColorSetUtil::setBasicColorP(self.as_BasicColorSetUtil_mut(), graphics, basicColor) }
+    fn setBasicColorP3(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut value: i32) { BasicColorSetUtil::setBasicColorP3(self.as_BasicColorSetUtil_mut(), graphics, basicColor, value) }
 }
 impl BasicColorSetUtilDyn for BasicColorSetUtil {
     fn as_BasicColorSetUtil(&self) -> &BasicColorSetUtil { self }

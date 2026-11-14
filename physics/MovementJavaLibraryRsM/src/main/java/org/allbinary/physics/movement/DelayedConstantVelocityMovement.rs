@@ -22,6 +22,7 @@ use crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::Bas
 use crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal;
 use crate::org::allbinary::time::GameTickTimeDelayHelperFactory::GameTickTimeDelayHelperFactory;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
+use crate::java::lang::Exception::*;
 use super::BasicConstantVelocityMovement::BasicConstantVelocityMovement;
 
 // Borrows the object of a Java reference
@@ -61,8 +62,8 @@ impl DelayedConstantVelocityMovement {
 
     // throws Exception
     pub fn process(&mut self, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayerDyn>>>) {
-        if { let java_receiver = self.timeDelayHelper.clone(); let java_arguments = (jcall!(GameTickTimeDelayHelperFactory::getInstance()).startTime.clone(),); let java_result = jcall!(java_receiver).isTime(java_arguments.0); java_result } {
-            self.base.process(layer.clone());
+        if { let java_receiver = self.timeDelayHelper.clone(); let java_arguments = ({ let java_field = jcall!(GameTickTimeDelayHelperFactory::getInstance()).startTime.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).isTime(java_arguments.0); java_result } {
+            { let java_arguments = (layer.clone(),); self.base.process(java_arguments.0) };
         }
     }
 }

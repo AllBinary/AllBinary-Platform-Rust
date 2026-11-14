@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::control::validate::ValidationInterface::ValidationInterface;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::CssElementValidation::CssElementValidation;
 
 // Borrows the object of a Java reference
@@ -33,6 +34,10 @@ pub struct CssElementValidationFactory {
 
 
 impl CssElementValidationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

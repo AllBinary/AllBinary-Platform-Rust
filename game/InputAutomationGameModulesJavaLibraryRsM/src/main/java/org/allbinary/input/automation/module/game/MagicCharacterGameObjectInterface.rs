@@ -27,15 +27,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait MagicCharacterGameObjectInterface {
+pub trait MagicCharacterGameObjectInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getHitPointGameObjectInterface(&mut self) -> Option<Rc<RefCell<dyn HitPointGameObjectInterface>>>;
     
 
     fn getMagicGameObjectInterface(&mut self) -> Option<Rc<RefCell<dyn MagicGameObjectInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

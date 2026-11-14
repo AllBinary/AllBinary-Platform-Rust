@@ -16,10 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
-// use crate::java::util::Set::Set;
+use crate::java::util::HashMap::HashMap;
+use crate::java::util::Set::Set;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::user::address::StreetAddressData::StreetAddressData;
@@ -27,6 +26,7 @@ use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::OrderItemInterface::OrderItemInterface;
 use super::BasicItemView::BasicItemView;
 
@@ -44,6 +44,10 @@ pub struct ItemView {
 
 
 impl ItemView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut itemInterface: Option<Rc<RefCell<dyn OrderItemInterface>>>, mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Self {
@@ -63,18 +67,18 @@ impl ItemView {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(self.itemInterface).toHashMap();
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(self.itemInterface).toHashMap();
         let mut keySet: Option<Rc<RefCell<dyn Set>>> = jcall!(hashMap).keySet();
         let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(ItemData_ITEM.with(Clone::clone).clone());
-        let mut basicItemView: Option<Rc<RefCell<BasicItemView>>> = BasicItemView::new(self.itemInterface.clone(), self.vector.clone());
+        let mut basicItemView: Option<Rc<RefCell<BasicItemView>>> = BasicItemView::new(self.itemInterface.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::ItemInterface::ItemInterface>>), self.vector.clone());
         jcall!(node).appendChild(jcall!(basicItemView).toXmlNode(document.clone()));
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
         let mut nameArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(keySet).toArray();
         let mut size: i32 = (nameArray.len() as i32).clone();
         for index in (0..size) {
-            let mut name: String = (nameArray[(index) as usize]).clone() /* as String */;
-            let mut value: String = (jcall!(hashMap).get(name.clone())).clone() /* as String */;
-            value = jcall!(stringUtil).getNonNull(value.clone());
+            let mut name: String = { let java_object = (nameArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut value: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(name.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            value = { let java_value = (jcall!(stringUtil).getNonNull(value.clone())).clone(); java_value };
             jcall!(node).appendChild(ModDomHelper::createNameValueNodes(document.clone(), name.clone(), value.clone()));
         }
         let mut shippingAddressNode: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(crate::org::allbinary::business::user::address::StreetAddressData::StreetAddressData_NAME.with(Clone::clone).clone());

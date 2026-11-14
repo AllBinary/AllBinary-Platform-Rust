@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::util::EventListener::EventListener;
+use crate::java::lang::Exception::*;
 use super::EmailEvent::EmailEvent;
 
 // Borrows the object of a Java reference

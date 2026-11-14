@@ -20,6 +20,7 @@ use super::*;
 // use crate::java::lang::reflect::Method::Method;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::WorkFlowWrapper::WorkFlowWrapper;
 
 // Borrows the object of a Java reference
@@ -40,7 +41,7 @@ impl StoreWorkFlowWrapper {
 
     pub fn new_struct(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Self {
         let mut this = Self {
-            base: WorkFlowWrapper::new_struct(anyType.clone()),
+            base: WorkFlowWrapper::new_struct(crate::java_into_object(anyType.clone())),
             logUtil: None,
         };
         this.logUtil = LogUtil::getInstance();
@@ -55,24 +56,25 @@ impl StoreWorkFlowWrapper {
 
     // throws Exception
     pub fn getStoreName(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut helperClass: &'static str = std::any::type_name_of_val(&self.getWorkFlowObject());
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(helperClass).getMethod(String::from("getStoreName"), None);
             let mut result: String = (jcall!(method).invoke(self.getWorkFlowObject(), None)).clone() /* as String */;
-            return result.clone();
+            return Some(result.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut error: String = String::from("Reflection Exception");
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getStoreName()"), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getStoreName()"), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", format!("{}: {:?}", "Exception", (error.clone())));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for StoreWorkFlowWrapper {

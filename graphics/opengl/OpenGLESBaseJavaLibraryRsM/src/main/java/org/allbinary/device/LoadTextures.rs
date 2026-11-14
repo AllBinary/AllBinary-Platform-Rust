@@ -17,7 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,6 +32,10 @@ pub struct LoadTextures {
 
 
 impl LoadTextures {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -47,7 +52,7 @@ impl LoadTextures {
     pub fn load(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) {
     }
 }
-pub trait LoadTexturesDyn {
+pub trait LoadTexturesDyn: std::any::Any {
     fn as_LoadTextures(&self) -> &LoadTextures;
     fn as_LoadTextures_mut(&mut self) -> &mut LoadTextures;
     fn load(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) { LoadTextures::load(self.as_LoadTextures_mut(), gl) }

@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation;
 use crate::org::allbinary::graphics::Anchor::Anchor;
@@ -30,6 +30,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::TextChangeListener::TextChangeListener;
 
 // Borrows the object of a Java reference
@@ -51,14 +52,14 @@ pub struct TextAnimation {
 }
 
 impl UpdateMyFontInterface for TextAnimation {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for TextAnimation {
-    fn getSize(&mut self) -> i32 { self.base.getSize() }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for TextAnimation {
+    fn nextFrame(&mut self) { Self::nextFrame(self) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for TextAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 impl TextAnimation {
@@ -75,9 +76,8 @@ impl TextAnimation {
             offsetY: 0,
             textChangeListener: None,
         };
-        this.updateMyFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
         this.myFontProcessor = this.updateMyFontProcessor.clone();
-        this.textArrayP = jcall!(StringUtil::getInstance()).ONE_EMPTY_STRING_ARRAY.clone();
+        this.textArrayP = { let java_field = jcall!(StringUtil::getInstance()).ONE_EMPTY_STRING_ARRAY.clone(); java_field }.clone();
         this.anchor = unsafe { crate::org::allbinary::graphics::Anchor::Anchor_TOP_LEFT.clone() }.clone();
         this.fontHeight = 0;
         this.offsetY = 0;
@@ -88,18 +88,20 @@ impl TextAnimation {
     }
 
     pub fn new(mut text: String, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(text, animationBehavior))))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(text.clone(), animationBehavior.clone()))));
+        jcall!(this).updateMyFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.fontHeight = jcall!(font).getHeight();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.fontHeight = { let java_value = (jcall!(font).getHeight()).clone(); java_value };
         let mut adjustedFontHeight: i32 = ((-(((self.fontHeight) as f64) * 2.00)) as i32);
-        self.offsetY = (if jcall!(SWTJOGLProcessor::getInstance()).isJOGL() { adjustedFontHeight } else { 0 });
+        self.offsetY = { let java_value = ((if jcall!(SWTJOGLProcessor::getInstance()).isJOGL() { adjustedFontHeight.clone() } else { 0 })).clone(); java_value };
         jcall!(self.textChangeListener).onMeasure();
-        self.textChangeListener = TextChangeListener::getInstance();
-        self.myFontProcessor = MyFontProcessor::getInstance();
+        self.textChangeListener = { let java_value = (TextChangeListener::getInstance()).clone(); java_value };
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
@@ -108,13 +110,13 @@ impl TextAnimation {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         self.paintXYNoUpdate(graphics.clone(), x.clone(), y.clone());
     }
     
 
-    pub fn paintXYNoUpdate(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXYNoUpdate(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         { let java_receiver = self.basicSetColorUtil.clone(); let java_arguments = (graphics.clone(), self.getBasicColorP(), self.getColor(),); jcall!(java_receiver).setBasicColorP3(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut size: i32 = (self.textArrayP.len() as i32).clone();
         for index in (0..size) {
@@ -130,17 +132,17 @@ impl TextAnimation {
     
 
     pub fn setText(&mut self, mut text: String) {
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        if true && (text.chars().count() as i32) > 0 {
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        if (text.chars().count() as i32) > 0 {
             let mut index: i32 = 0;
             let mut startIndex: i32 = 0;
             let mut endIndex: i32 = 0;
             while index >= 0 {
                 startIndex = index.clone();
-                index = jcall!(text).indexOf('\n', startIndex.clone());
+                index = { let java_value = ({ let java_from = (startIndex).max(0) as usize; text.get(java_from..).and_then(|java_rest| java_rest.find('\n')).map(|index| (index + java_from) as i32).unwrap_or(-1) }).clone(); java_value };
                 endIndex = index.clone();
                 if index < 0 {
-                    endIndex = (text.chars().count() as i32);
+                    endIndex = { let java_value = ((text.chars().count() as i32)).clone(); java_value };
                 }
                 jcall!(list).add(crate::java_into_object(text[(startIndex) as usize..(endIndex) as usize].to_string()));
                 if index < 0 {
@@ -153,11 +155,11 @@ impl TextAnimation {
             let mut textArray: Vec<String> = vec![String::new(); (jcall!(list).size()) as usize];
             let mut size: i32 = jcall!(list).size();
             for index in (0..size) {
-                textArray[(index) as usize] = (jcall!(list).get(index.clone())).clone() /* as String */;
+                textArray[(index) as usize] = { let java_object = (jcall!(list).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             }
             self.textArrayP = textArray.clone();
         } else {
-            self.textArrayP = jcall!(StringUtil::getInstance()).ONE_EMPTY_STRING_ARRAY.clone();
+            self.textArrayP = { let java_value = ({ let java_field = jcall!(StringUtil::getInstance()).ONE_EMPTY_STRING_ARRAY.clone(); java_field }).clone(); java_value }.clone();
         }
         self.myFontProcessor = self.updateMyFontProcessor.clone();
     }
@@ -180,11 +182,10 @@ impl std::ops::DerefMut for TextAnimation {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait TextAnimationDyn: crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn {
+pub trait TextAnimationDyn: crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn + crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface {
     fn as_TextAnimation(&self) -> &TextAnimation;
     fn as_TextAnimation_mut(&mut self) -> &mut TextAnimation;
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { TextAnimation::updateMeasurement(self.as_TextAnimation_mut(), graphics) }
-    fn paintXYNoUpdate(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { TextAnimation::paintXYNoUpdate(self.as_TextAnimation_mut(), graphics, x, y) }
+    fn paintXYNoUpdate(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { TextAnimation::paintXYNoUpdate(self.as_TextAnimation_mut(), graphics, x, y) }
     fn setTextWithOnMeasure(&mut self, mut text: String, mut textChangeListener: Option<Rc<RefCell<TextChangeListener>>>) { TextAnimation::setTextWithOnMeasure(self.as_TextAnimation_mut(), text, textChangeListener) }
     fn setText(&mut self, mut text: String) { TextAnimation::setText(self.as_TextAnimation_mut(), text) }
     fn getTextArray(&mut self) -> Vec<String> { TextAnimation::getTextArray(self.as_TextAnimation_mut()) }
@@ -199,7 +200,7 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for TextAnimation
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base }
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 impl crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn for TextAnimation {
     fn as_IndexedAnimation(&self) -> &crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &self.base }

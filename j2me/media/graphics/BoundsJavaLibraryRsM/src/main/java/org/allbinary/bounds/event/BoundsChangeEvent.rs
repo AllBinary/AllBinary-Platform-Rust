@@ -37,7 +37,7 @@ impl BoundsChangeEvent {
 
     pub fn new_struct(mut rectangle: Option<Rc<RefCell<Rectangle>>>) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(rectangle.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(rectangle.clone())),
         };
         // super(...) is in the struct literal above
         this

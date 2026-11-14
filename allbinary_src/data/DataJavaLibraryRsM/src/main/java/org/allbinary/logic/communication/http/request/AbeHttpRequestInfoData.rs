@@ -37,6 +37,10 @@ pub struct AbeHttpRequestInfoData {
 thread_local! { pub static AbeHttpRequestInfoData_instance: Option<Rc<RefCell<AbeHttpRequestInfoData>>> = AbeHttpRequestInfoData::new(); }
 
 impl AbeHttpRequestInfoData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AbeHttpRequestInfoData>>> {

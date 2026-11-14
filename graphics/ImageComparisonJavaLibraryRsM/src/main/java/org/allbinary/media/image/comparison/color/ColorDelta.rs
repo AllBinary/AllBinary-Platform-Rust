@@ -50,7 +50,7 @@ impl ColorDelta {
         };
         this.setRgb1(rgb1.clone());
         this.setRgb2(rgb2.clone());
-        this.key = ColorDelta::getKey2(rgb1.clone(), rgb2.clone());
+        this.key = { let java_value = (ColorDelta::getKey2(rgb1.clone(), rgb2.clone())).clone(); java_value };
         this
     }
 
@@ -66,7 +66,7 @@ impl ColorDelta {
 
     // Java overloaded method: Rust needs a different name
     pub fn getKey2(mut rgb1: i32, mut rgb2: i32) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return jcall!(StringMaker::new()).append((rgb1.clone()).to_string()).append(jcall!(CommonSeps::getInstance()).UNDERSCORE.clone()).append((rgb2.clone()).to_string()).toString();
+        return crate::java_into_object(jcall!(StringMaker::new()).append((rgb1.clone()).to_string()).append({ let java_field = jcall!(CommonSeps::getInstance()).UNDERSCORE.clone(); java_field }.clone()).append((rgb2.clone()).to_string()).toString());
     }
     
 
@@ -91,7 +91,7 @@ impl ColorDelta {
     
 
     pub fn toString(&mut self) -> String {
-        return jcall!(StringMaker::new()).append(String::from("ColorDelta: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getKey()))).append(String::from(" RGB1: ")).appendint(self.getRgb1()).append(String::from(" RGB2: ")).appendint(self.getRgb2()).toString();
+        return jcall!(StringMaker::new()).append(String::from("ColorDelta: ")).append({ let java_argument = jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getKey())); java_argument }).append(String::from(" RGB1: ")).appendint(self.getRgb1()).append(String::from(" RGB2: ")).appendint(self.getRgb2()).toString();
     }
 }
 

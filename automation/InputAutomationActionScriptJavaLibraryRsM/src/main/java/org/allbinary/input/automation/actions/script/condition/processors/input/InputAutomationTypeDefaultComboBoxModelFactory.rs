@@ -17,9 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::util::Set::Set;
+use crate::java::util::Set::Set;
 // use crate::javax::swing::*;
 use crate::org::allbinary::input::automation::robot::InputRobotFactory::InputRobotFactory;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +34,10 @@ pub struct InputAutomationTypeDefaultComboBoxModelFactory {
 
 
 impl InputAutomationTypeDefaultComboBoxModelFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -53,7 +58,7 @@ impl InputAutomationTypeDefaultComboBoxModelFactory {
         let mut nameArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(set).toArray();
         let mut size: i32 = (nameArray.len() as i32).clone();
         for index in (0..size) {
-            jcall!(defaultComboBoxModel).addElement((nameArray[(index) as usize]).clone() /* as String */);
+            jcall!(defaultComboBoxModel).addElement({ let java_object = (nameArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() });
         }
         return defaultComboBoxModel.clone();
     }

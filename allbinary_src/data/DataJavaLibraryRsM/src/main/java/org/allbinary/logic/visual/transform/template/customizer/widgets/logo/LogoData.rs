@@ -35,6 +35,10 @@ pub struct LogoData {
 thread_local! { pub static LogoData_instance: Option<Rc<RefCell<LogoData>>> = LogoData::new(); }
 
 impl LogoData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogoData>>> {

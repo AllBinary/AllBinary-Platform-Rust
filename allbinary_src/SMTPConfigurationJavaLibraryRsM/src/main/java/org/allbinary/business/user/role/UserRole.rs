@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 // use crate::java::io::Serializable::Serializable;
 use crate::org::allbinary::business::user::UserFactoryInterface::UserFactoryInterface;
+use crate::java::lang::Exception::*;
 use super::BasicUserRole::BasicUserRole;
 
 // Borrows the object of a Java reference
@@ -78,7 +79,7 @@ impl UserRole {
         return jcall!(self.basicUserRole).getSessionInactivityTimeout();
     }
 }
-pub trait UserRoleDyn {
+pub trait UserRoleDyn: std::any::Any {
     fn as_UserRole(&self) -> &UserRole;
     fn as_UserRole_mut(&mut self) -> &mut UserRole;
     fn toString(&mut self) -> String { UserRole::toString(self.as_UserRole_mut()) }

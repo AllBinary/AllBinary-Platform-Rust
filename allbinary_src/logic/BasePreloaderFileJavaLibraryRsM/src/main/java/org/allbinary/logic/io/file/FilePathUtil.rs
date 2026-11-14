@@ -34,6 +34,10 @@ pub struct FilePathUtil {
 
 
 impl FilePathUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -52,9 +56,9 @@ impl FilePathUtil {
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
         let mut filePathData: Option<Rc<RefCell<FilePathData>>> = FilePathData::getInstance();
         if jcall!(stringValidationUtil).isEmpty(path.clone()) {
-            return jcall!(filePathData).PATH_START.clone();
+            return { let java_field = jcall!(filePathData).PATH_START.clone(); java_field }.clone();
         }
-        path = path.replace(&jcall!(abPathData).SEPARATORCHAR, &jcall!(filePathData).SEPARATORCHAR);
+        path = { let java_value = (path.replace(&({ let java_field = jcall!(abPathData).SEPARATORCHAR.clone(); java_field }).to_string(), &({ let java_field = jcall!(filePathData).SEPARATORCHAR.clone(); java_field }).to_string())).clone(); java_value };
         return path.clone();
     }
 }

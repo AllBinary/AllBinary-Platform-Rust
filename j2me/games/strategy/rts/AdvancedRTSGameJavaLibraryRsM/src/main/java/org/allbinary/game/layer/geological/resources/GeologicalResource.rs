@@ -32,6 +32,10 @@ pub struct GeologicalResource {
 
 
 impl GeologicalResource {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut initTotal: i32) -> Self {
@@ -50,7 +54,7 @@ impl GeologicalResource {
     
 
     pub fn init(&mut self) {
-        self.setTotal(self.initTotal.clone());
+        { let java_arguments = (self.initTotal.clone(),); self.setTotal(java_arguments.0) };
     }
     
 

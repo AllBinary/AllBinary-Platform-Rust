@@ -41,16 +41,20 @@ pub struct InputFactory {
     pub NO_INPUT: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>,
 }
 
-pub static mut InputFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut InputFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl InputFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<InputFactory>>> {
-        if match (&unsafe { InputFactory_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *InputFactory_instance = InputFactory::new() };
+        if match (&unsafe { InputFactory_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *InputFactory_instance = crate::java_into_object(InputFactory::new()) };
         }
-        return (unsafe { InputFactory_instance.clone() }).clone() /* as InputFactory */;
+        return { let java_object = (unsafe { InputFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<InputFactory>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -70,10 +74,10 @@ impl InputFactory {
         this.DEVICE_ID_LABEL = String::from("DeviceId: ");
         this.MAX = jcall!(SmallIntegerSingletonFactory::getInstance()).getMin();
         this.inputIntegerArray = vec![None; (this.MAX) as usize];
-        this.NO_INPUT = Input::new(0, jcall!(this.commonStrings).UNKNOWN.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>);
+        this.NO_INPUT = Input::new(0, { let java_field = jcall!(this.commonStrings).UNKNOWN.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>);
         let mut size: i32 = (this.inputIntegerArray.len() as i32).clone();
         for index in (0..size) {
-            this.inputIntegerArray[(index) as usize] = this.NO_INPUT.clone();
+            { let java_index = (index) as usize; this.inputIntegerArray[java_index] = this.NO_INPUT.clone(); };
         }
         this
     }
@@ -84,7 +88,7 @@ impl InputFactory {
     
 
     pub fn add(&mut self, mut id: i32, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) {
-        self.inputIntegerArray[(id) as usize] = input.clone();
+        { let java_index = (id) as usize; self.inputIntegerArray[java_index] = input.clone(); };
     }
     
 
@@ -93,7 +97,7 @@ impl InputFactory {
             id = -id;
         }
         if id > (self.inputIntegerArray.len() as i32) {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Warning id: ")).appendint(id.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET_INSTANCE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Warning id: ")).appendint(id.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET_INSTANCE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             return self.NO_INPUT.clone();
         }
         return self.inputIntegerArray[(id) as usize].clone();

@@ -37,13 +37,17 @@ thread_local! { pub static LicenseTypeFactory_instance: Option<Rc<RefCell<Licens
 
 impl LicenseTypeFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             UNKNOWN: None,
             DEMO: None,
             NORMAL: None,
         };
-        this.UNKNOWN = LicenseType::new(jcall!(CommonStrings::getInstance()).UNKNOWN.clone());
+        this.UNKNOWN = LicenseType::new({ let java_field = jcall!(CommonStrings::getInstance()).UNKNOWN.clone(); java_field }.clone());
         this.DEMO = LicenseType::new(String::from("Demo"));
         this.NORMAL = LicenseType::new(String::from("Normal"));
         this
@@ -61,9 +65,9 @@ impl LicenseTypeFactory {
 
     // Java overloaded method: Rust needs a different name
     pub fn getInstance1(&mut self, mut name: String) -> Option<Rc<RefCell<LicenseType>>> {
-        if jcall!(jcall!(self.DEMO).getName()).compareTo(name.clone()) == 0 {
+        if (jcall!(self.DEMO).getName().cmp(&name.clone()) as i32) == 0 {
             return self.DEMO.clone();
-        } else if jcall!(jcall!(self.NORMAL).getName()).compareTo(name.clone()) == 0 {
+        } else if (jcall!(self.NORMAL).getName().cmp(&name.clone()) as i32) == 0 {
             return self.NORMAL.clone();
         }
         return self.UNKNOWN.clone();

@@ -43,6 +43,10 @@ thread_local! { pub static GameKeyEventHandler_instance: Option<Rc<RefCell<GameK
 
 impl GameKeyEventHandler {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,
@@ -78,7 +82,7 @@ impl GameKeyEventHandler {
     
 
     pub fn addListenerForPlayer(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>, mut playerInputId: i32) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(eventListenerInterface).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).ADD_LISTENER.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(eventListenerInterface).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).ADD_LISTENER.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         jcall!(self.pressGameKeyEventHandler).addListenerSingleThreaded(eventListenerInterface.clone());
         jcall!(jcall!(self.upGameKeyEventHandler).getInstanceForPlayer(playerInputId.clone())).addListenerSingleThreaded(eventListenerInterface.clone());
         jcall!(jcall!(self.downGameKeyEventHandler).getInstanceForPlayer(playerInputId.clone())).addListenerSingleThreaded(eventListenerInterface.clone());
@@ -86,7 +90,7 @@ impl GameKeyEventHandler {
     
 
     pub fn addListener(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(eventListenerInterface).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).ADD_LISTENER.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(eventListenerInterface).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).ADD_LISTENER.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         jcall!(self.pressGameKeyEventHandler).addListenerSingleThreaded(eventListenerInterface.clone());
         jcall!(self.upGameKeyEventHandler).addListenerSingleThreaded(eventListenerInterface.clone());
         jcall!(self.downGameKeyEventHandler).addListenerSingleThreaded(eventListenerInterface.clone());
@@ -94,7 +98,7 @@ impl GameKeyEventHandler {
     
 
     pub fn removeListener(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(eventListenerInterface).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).REMOVE_LISTENER.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(eventListenerInterface).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).REMOVE_LISTENER.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         jcall!(self.pressGameKeyEventHandler).removeListenerSingleThreaded(eventListenerInterface.clone());
         jcall!(self.upGameKeyEventHandler).removeListenerSingleThreaded(eventListenerInterface.clone());
         jcall!(self.downGameKeyEventHandler).removeListenerSingleThreaded(eventListenerInterface.clone());

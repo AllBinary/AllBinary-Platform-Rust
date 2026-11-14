@@ -22,6 +22,7 @@ use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::layer::LayerManager::LayerManager;
 use crate::org::allbinary::layer::LayerProcessor::LayerProcessor;
+use crate::java::lang::Exception::*;
 use super::OptimizedAllBinaryCollisionLayerManager::OptimizedAllBinaryCollisionLayerManager;
 use super::CollidableBaseBehavior::CollidableBaseBehavior;
 
@@ -36,13 +37,21 @@ pub struct OptimizedAllBinaryCollisionLayerProcessorForCollidableLayer {
     pub base: LayerProcessor,
 }
 
+impl crate::org::allbinary::layer::BasicLayerProcessorInterface::BasicLayerProcessorInterface for OptimizedAllBinaryCollisionLayerProcessorForCollidableLayer {
+    fn process(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { crate::org::allbinary::layer::LayerProcessor::LayerProcessor::process(crate::org::allbinary::layer::LayerProcessor::LayerProcessorDyn::as_LayerProcessor_mut(self), p1) }
+}
+impl crate::org::allbinary::layer::LayerProcessorInterface::LayerProcessorInterface for OptimizedAllBinaryCollisionLayerProcessorForCollidableLayer {
+    fn getLayerManager(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>> { crate::org::allbinary::layer::LayerProcessor::LayerProcessor::getLayerManager(crate::org::allbinary::layer::LayerProcessor::LayerProcessorDyn::as_LayerProcessor_mut(self)) }
+    fn processAt(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut startIndex: i32) { Self::processAt(self, allBinaryLayerManager, layerInterface, startIndex) }
+    fn isProcessorLayer(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> bool { Self::isProcessorLayer(self, layerInterface) }
+}
 
 impl OptimizedAllBinaryCollisionLayerProcessorForCollidableLayer {
     
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: LayerProcessor::new_struct(OptimizedAllBinaryCollisionLayerManager::new()),
+            base: LayerProcessor::new_struct(OptimizedAllBinaryCollisionLayerManager::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>)),
         };
         // super(...) is in the struct literal above
         this
@@ -55,16 +64,16 @@ impl OptimizedAllBinaryCollisionLayerProcessorForCollidableLayer {
 
     // throws Exception
     pub fn processAt(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut startIndex: i32) {
-        let mut collidableInterfaceCompositeInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>> = (layerInterface).clone() /* as CollidableCompositeLayer */;
-        let mut collidableBase: Option<Rc<RefCell<dyn crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn>>> = jcall!(collidableInterfaceCompositeInterface).getCollidableInferface();
+        let mut collidableInterfaceCompositeInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to CollidableCompositeLayer") })();
+        let mut collidableBase: Option<Rc<RefCell<dyn crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn>>> = jcall!(collidableInterfaceCompositeInterface).as_CollidableCompositeLayer_mut().getCollidableInferface();
         if jcall!(collidableBase).isCollidable(collidableInterfaceCompositeInterface.clone()) {
             let mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>> = self.getLayerManager();
             let mut size: i32 = jcall!(layerManager).getSize();
             let mut collidableInterfaceCompositeInterface2: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>> = None;
             let mut collidableBase2: Option<Rc<RefCell<dyn crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn>>> = None;
             for index in (startIndex + 1..size) {
-                collidableInterfaceCompositeInterface2 = (jcall!(layerManager).getLayerAt(index.clone())).clone() /* as CollidableCompositeLayer */;
-                collidableBase2 = jcall!(collidableInterfaceCompositeInterface2).getCollidableInferface();
+                collidableInterfaceCompositeInterface2 = { let java_value = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>> { panic!("ClassCastException: a Rust dyn Layer cannot be cast to CollidableCompositeLayer") })()).clone(); java_value };
+                collidableBase2 = { let java_value = (jcall!(collidableInterfaceCompositeInterface2).as_CollidableCompositeLayer_mut().getCollidableInferface()).clone(); java_value };
                 if jcall!(collidableBase2).isCollidable(collidableInterfaceCompositeInterface.clone()) && jcall!(collidableBase).isCollision(collidableInterfaceCompositeInterface.clone(), collidableInterfaceCompositeInterface2.clone()) {
                     jcall!(collidableBase).collide(collidableInterfaceCompositeInterface.clone(), collidableInterfaceCompositeInterface2.clone());
                     jcall!(collidableBase2).collide(collidableInterfaceCompositeInterface2.clone(), collidableInterfaceCompositeInterface.clone());

@@ -35,6 +35,10 @@ pub struct RaceTracksPathPrinter {
 
 impl RaceTracksPathPrinter {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -50,7 +54,7 @@ impl RaceTracksPathPrinter {
         let mut size: i32 = jcall!(list).size();
         for index in (0..size) {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(list).get(index.clone());
-            PreLogUtil::put(jcall!(StringMaker::new()).append(String::from("pathList.add(cellPositionFactory.getInstance")).append({ let value = jcall!(anyType); value.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", value.as_ref().type_id())) }).append(String::from(");")).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("printPath"));
+            PreLogUtil::put(jcall!(StringMaker::new()).append(String::from("pathList.add(cellPositionFactory.getInstance")).append({ let java_object = (anyType).clone(); let value = jcall!(java_object); value.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", value.as_ref().type_id())) }).append(String::from(");")).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("printPath"));
         }
     }
     
@@ -58,12 +62,12 @@ impl RaceTracksPathPrinter {
     pub fn printPaths(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         let mut size: i32 = jcall!(list).size();
         for index in (0..size) {
-            println!("{}", jcall!(StringMaker::new()).append(String::from(" Path ")).appendint(index.clone()).append(jcall!(CommonLabels::getInstance()).COLON_SEP.clone()).toString());
+            println!("{}", jcall!(StringMaker::new()).append(String::from(" Path ")).appendint(index.clone()).append({ let java_field = jcall!(CommonLabels::getInstance()).COLON_SEP.clone(); java_field }.clone()).toString());
             { let java_arguments = ({ let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) },); self.printPath(java_arguments.0) };
         }
     }
 }
-pub trait RaceTracksPathPrinterDyn {
+pub trait RaceTracksPathPrinterDyn: std::any::Any {
     fn as_RaceTracksPathPrinter(&self) -> &RaceTracksPathPrinter;
     fn as_RaceTracksPathPrinter_mut(&mut self) -> &mut RaceTracksPathPrinter;
     fn printPath(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) { RaceTracksPathPrinter::printPath(self.as_RaceTracksPathPrinter_mut(), list) }

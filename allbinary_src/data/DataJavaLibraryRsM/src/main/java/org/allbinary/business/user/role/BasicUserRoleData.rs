@@ -31,6 +31,10 @@ pub struct BasicUserRoleData {
 thread_local! { pub static BasicUserRoleData_NAME: String = String::from("BASIC_USER_ROLE_NAME"); }
 
 impl BasicUserRoleData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

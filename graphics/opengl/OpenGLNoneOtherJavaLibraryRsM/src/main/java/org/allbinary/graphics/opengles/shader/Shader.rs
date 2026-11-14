@@ -38,6 +38,10 @@ pub struct Shader {
 
 impl Shader {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             shaderName: String::new(),
@@ -45,9 +49,9 @@ impl Shader {
             shaderAsString: String::new(),
             shaderHandle: 0,
         };
-        this.shaderName = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.shaderName = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.shaderStringList = jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance();
-        this.shaderAsString = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.shaderAsString = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this
     }
 

@@ -20,6 +20,7 @@ use super::*;
 // use crate::java::awt::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
 // use crate::javax::help::HelpSet::HelpSet;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -28,7 +29,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait InputRobotInterface {
+pub trait InputRobotInterface: std::any::Any {
     
 
     fn getName(&mut self) -> String;

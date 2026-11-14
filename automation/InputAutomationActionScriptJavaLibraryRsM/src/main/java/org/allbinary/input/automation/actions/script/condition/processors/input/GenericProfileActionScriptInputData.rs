@@ -33,6 +33,10 @@ pub static mut GenericProfileActionScriptInputData_TYPE: std::cell::LazyCell<Str
 pub static mut GenericProfileActionScriptInputData_DELAY: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("GENERIC_CONFIGURATION_PROFILE_ACTION_INPUT_DELAY"));
 
 impl GenericProfileActionScriptInputData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

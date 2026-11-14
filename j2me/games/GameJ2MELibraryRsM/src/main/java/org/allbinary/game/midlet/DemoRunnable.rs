@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::DemoGameMidlet::DemoGameMidlet;
 use super::DemoGameMidletEvent::DemoGameMidletEvent;
 
@@ -46,6 +47,10 @@ impl Runnable for DemoRunnable {
 }
 
 impl DemoRunnable {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut demoGameMidlet: Option<Rc<RefCell<dyn crate::org::allbinary::game::midlet::DemoGameMidlet::DemoGameMidletDyn>>>) -> Self {
@@ -58,7 +63,7 @@ impl DemoRunnable {
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
         this.demoGameMidlet = demoGameMidlet.clone();
-        this.startDemoGameMidletEvent = DemoGameMidletEvent::new(this.demoGameMidlet.clone(), jcall!(DemoGameMidletStateFactory::DemoGameMidletStateFactory::getInstance()).START_DEMO.clone());
+        this.startDemoGameMidletEvent = { let java_value = (DemoGameMidletEvent::new(crate::java_into_object(this.demoGameMidlet.clone()), { let java_field = jcall!(DemoGameMidletStateFactory::DemoGameMidletStateFactory::getInstance()).START_DEMO.clone(); java_field }.clone())).clone(); java_value };
         this
     }
 
@@ -69,20 +74,20 @@ impl DemoRunnable {
 
     pub fn run(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).START_LABEL.clone()).append(String::from("GameCanvasRunnableInterface")).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            { let java_receiver = self.demoGameMidlet.clone(); let java_arguments = (jcall!(MyCommandsFactory::getInstance()).SET_DISPLAYABLE.clone(), ProgressCanvasFactory::getInstance(),); jcall!(java_receiver).commandAction(java_arguments.0, java_arguments.1); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).START_LABEL.clone(); java_field }.clone()).append(String::from("GameCanvasRunnableInterface")).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.demoGameMidlet.clone(); let java_arguments = ({ let java_field = jcall!(MyCommandsFactory::getInstance()).SET_DISPLAYABLE.clone(); java_field }.clone(), ProgressCanvasFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>),); jcall!(java_receiver).as_DemoGameMidlet_mut().commandAction(java_arguments.0, java_arguments.1); };
             { let java_receiver = self.demoGameMidlet.clone(); let java_arguments = (jcall!(self.demoGameMidlet).createDemoGameCanvasRunnableInterface(),); jcall!(java_receiver).setGameCanvasRunnableInterface(java_arguments.0); };
             jcall!(self.demoGameMidlet).demoSetup();
-            jcall!(DemoGameMidletEventHandler::DemoGameMidletEventHandler::getInstance()).fireEvent(self.startDemoGameMidletEvent.clone());
+            jcall!(DemoGameMidletEventHandler::DemoGameMidletEventHandler::getInstance()).fireEvent(self.startDemoGameMidletEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
             jcall!(self.demoGameMidlet).startGameCanvasRunnableInterface();
             jcall!(self.demoGameMidlet).postDemoSetup();
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).END_RUNNABLE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).END_RUNNABLE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

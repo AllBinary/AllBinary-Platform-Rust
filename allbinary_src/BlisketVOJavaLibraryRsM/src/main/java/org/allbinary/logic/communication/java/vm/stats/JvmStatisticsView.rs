@@ -16,13 +16,13 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::JvmStatisticsMapping::JvmStatisticsMapping;
 
 // Borrows the object of a Java reference
@@ -58,8 +58,8 @@ impl JvmStatisticsView {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = self.toHashMap();
-        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes(document.clone(), JvmStatisticsData_NAME.with(Clone::clone).clone(), hashMap.clone());
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.toHashMap();
+        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), JvmStatisticsData_NAME.with(Clone::clone).clone(), hashMap.clone());
         return node.clone();
     }
 }

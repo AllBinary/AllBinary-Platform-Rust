@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::RuntimeException::*;
 use super::HighScoresHelperBaseInterface::HighScoresHelperBaseInterface;
 use super::HighScores::HighScores;
 
@@ -46,13 +47,17 @@ impl crate::org::allbinary::game::score::HighScoresResultsListener::HighScoresRe
 
 impl HighScoresHelperBase {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,
             highScoresArrayP: Vec::new(),
         };
         this.logUtil = LogUtil::getInstance();
-        this.highScoresArrayP = jcall!(LastFetchHighScoresFactory::LastFetchHighScoresFactory::getInstance()).highScoresArray.clone();
+        this.highScoresArrayP = { let java_field = jcall!(LastFetchHighScoresFactory::LastFetchHighScoresFactory::getInstance()).highScoresArray.clone(); java_field }.clone();
         this
     }
 
@@ -62,12 +67,12 @@ impl HighScoresHelperBase {
     
 
     pub fn setHighScoresArray(&mut self, mut highScoresArrayP: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>>>) {
-        if highScoresArrayP.is_some() {
+        if !highScoresArrayP.is_empty() {
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(commonStrings).START.clone()).appendint((highScoresArrayP.len() as i32).clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setHighScoresArray"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone()).appendint((highScoresArrayP.len() as i32).clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setHighScoresArray"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         } else {
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setHighScoresArray"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setHighScoresArray"));
         }
         self.highScoresArrayP = highScoresArrayP.clone();
     }
@@ -100,7 +105,7 @@ impl HighScoresHelperBase {
     pub fn selectHighScores(&mut self) {
     }
 }
-pub trait HighScoresHelperBaseDyn {
+pub trait HighScoresHelperBaseDyn: std::any::Any {
     fn as_HighScoresHelperBase(&self) -> &HighScoresHelperBase;
     fn as_HighScoresHelperBase_mut(&mut self) -> &mut HighScoresHelperBase;
     fn setHighScoresArray(&mut self, mut highScoresArrayP: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>>>) { HighScoresHelperBase::setHighScoresArray(self.as_HighScoresHelperBase_mut(), highScoresArrayP) }

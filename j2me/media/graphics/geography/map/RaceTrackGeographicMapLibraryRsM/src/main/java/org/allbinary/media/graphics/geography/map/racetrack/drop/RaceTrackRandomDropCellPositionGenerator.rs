@@ -28,6 +28,7 @@ use crate::org::allbinary::graphics::GPoint::GPoint;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
+use crate::java::lang::Exception::*;
 use super::RaceTrackDropCellPositionGenerator::RaceTrackDropCellPositionGenerator;
 
 // Borrows the object of a Java reference
@@ -84,10 +85,10 @@ impl RaceTrackRandomDropCellPositionGenerator {
 
     // throws Exception
     pub fn update(&mut self, mut allBinaryGameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>) {
-        self.base.update(allBinaryGameLayerManager.clone(), geographicMapInterface.clone());
+        { let java_arguments = (allBinaryGameLayerManager.clone(), geographicMapInterface.clone(),); self.base.update(java_arguments.0, java_arguments.1) };
         let mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(geographicMapInterface).getAllBinaryTiledLayer();
-        self.cellWidth = jcall!(tiledLayer).getCellWidth() / self.cellsPerRowOrColumn;
-        self.cellHeight = jcall!(tiledLayer).getCellHeight() / self.cellsPerRowOrColumn;
+        self.cellWidth = { let java_value = (jcall!(tiledLayer).getCellWidth() / self.cellsPerRowOrColumn).clone(); java_value };
+        self.cellHeight = { let java_value = (jcall!(tiledLayer).getCellHeight() / self.cellsPerRowOrColumn).clone(); java_value };
     }
     
 
@@ -102,9 +103,9 @@ impl RaceTrackRandomDropCellPositionGenerator {
         let mut y: i32 = jcall!(point).getY() + (column * self.cellHeight);
         let mut pickedUpLayerInterfaceFactory: Option<Rc<RefCell<dyn PickedUpLayerInterfaceFactoryInterface>>> = jcall!(DropLayerFactory::getInstance()).getRandomInstance();
         let mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(self.raceTrackGeographicMap).getAllBinaryTiledLayer();
-        let mut pickupLayer: Option<Rc<RefCell<RaceTrackPickupLayer>>> = (jcall!(PickupLayerCircularStaticPool::getInstance()).getInstanceXYZ(pickedUpLayerInterfaceFactory.clone(), x.clone(), y.clone(), jcall!(tiledLayer).getZP() + 3)).clone() /* as RaceTrackPickupLayer */;
+        let mut pickupLayer: Option<Rc<RefCell<RaceTrackPickupLayer>>> = (jcall!(PickupLayerCircularStaticPool::getInstance()).getInstanceXYZ(pickedUpLayerInterfaceFactory.clone(), x.clone(), y.clone(), jcall!(tiledLayer).getZP() + 3)).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<RaceTrackPickupLayer>() }, "ClassCastException: not a RaceTrackPickupLayer"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<RaceTrackPickupLayer>) } });
         jcall!(pickupLayer).setTiledLayer(tiledLayer.clone());
-        jcall!(allBinaryLayerManager).append(pickupLayer.clone());
+        jcall!(allBinaryLayerManager).append(pickupLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>));
     }
 }
 impl std::ops::Deref for RaceTrackRandomDropCellPositionGenerator {

@@ -33,6 +33,10 @@ pub struct FrictionProperties {
 
 
 impl FrictionProperties {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -50,7 +54,7 @@ impl FrictionProperties {
         jcall!(crate::org::allbinary::game::physics::velocity::DragVelocityBehavior::DragVelocityBehavior_instance.with(Clone::clone)).reduce(velocityProperties.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn>>), nominator.clone(), FrictionData::getFrictionDenominator());
     }
 }
-pub trait FrictionPropertiesDyn {
+pub trait FrictionPropertiesDyn: std::any::Any {
     fn as_FrictionProperties(&self) -> &FrictionProperties;
     fn as_FrictionProperties_mut(&mut self) -> &mut FrictionProperties;
     fn friction(&mut self, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut nominator: i32) { FrictionProperties::friction(self.as_FrictionProperties_mut(), velocityProperties, nominator) }

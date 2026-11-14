@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -25,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait FullScreenInterface {
+pub trait FullScreenInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn isFullScreenMode(&mut self) -> bool;
@@ -40,8 +41,6 @@ pub trait FullScreenInterface {
 
     // throws Exception
     fn waitOnNotify(&mut self, wait: i32);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

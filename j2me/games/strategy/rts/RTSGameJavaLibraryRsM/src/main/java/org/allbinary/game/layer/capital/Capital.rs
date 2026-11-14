@@ -31,6 +31,10 @@ pub struct Capital {
 
 
 impl Capital {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -59,7 +63,7 @@ impl Capital {
         self.value += points.clone();
     }
 }
-pub trait CapitalDyn {
+pub trait CapitalDyn: std::any::Any {
     fn as_Capital(&self) -> &Capital;
     fn as_Capital_mut(&mut self) -> &mut Capital;
     fn getTotalMoney(&mut self) -> i32 { Capital::getTotalMoney(self.as_Capital_mut()) }

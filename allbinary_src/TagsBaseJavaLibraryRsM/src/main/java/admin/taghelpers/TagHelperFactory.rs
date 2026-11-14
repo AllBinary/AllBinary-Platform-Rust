@@ -16,12 +16,13 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::TagHelperFactoryInterface::TagHelperFactoryInterface;
 
 // Borrows the object of a Java reference
@@ -36,10 +37,14 @@ pub struct TagHelperFactory {
 }
 
 impl TagHelperFactoryInterface for TagHelperFactory {
-    fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getInstance(self, hashMap, pageContext) }
+    fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getInstance(self, hashMap, pageContext) }
 }
 
 impl TagHelperFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -55,14 +60,14 @@ impl TagHelperFactory {
     
 
     // throws Exception, LicensingException
-    pub fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
+    pub fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait TagHelperFactoryDyn {
+pub trait TagHelperFactoryDyn: std::any::Any {
     fn as_TagHelperFactory(&self) -> &TagHelperFactory;
     fn as_TagHelperFactory_mut(&mut self) -> &mut TagHelperFactory;
-    fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { TagHelperFactory::getInstance(self.as_TagHelperFactory_mut(), hashMap, pageContext) }
+    fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { TagHelperFactory::getInstance(self.as_TagHelperFactory_mut(), hashMap, pageContext) }
 }
 impl TagHelperFactoryDyn for TagHelperFactory {
     fn as_TagHelperFactory(&self) -> &TagHelperFactory { self }

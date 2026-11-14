@@ -23,6 +23,7 @@ use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::KeyboardActionScriptInputInterface::KeyboardActionScriptInputInterface;
 
 // Borrows the object of a Java reference
@@ -37,6 +38,10 @@ pub struct KeyboardInputAutomationProcessor {
 
 
 impl KeyboardInputAutomationProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -54,23 +59,23 @@ impl KeyboardInputAutomationProcessor {
     pub fn process(mut keyActionScriptInputInterface: Option<Rc<RefCell<dyn KeyboardActionScriptInputInterface>>>) {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(logUtil).putF(format!("{}{}", jcall!(CommonLabels::getInstance()).START, jcall!(keyActionScriptInputInterface).toString()), crate::java_into_object(String::from("KeyInputAutomationProcessor")), jcall!(commonStrings).PROCESS.clone());
+        jcall!(logUtil).putF(format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).START.clone(); java_field }, jcall!(keyActionScriptInputInterface).toString()), crate::java_into_object(String::from("KeyInputAutomationProcessor")), { let java_field = jcall!(commonStrings).PROCESS.clone(); java_field }.clone());
         let mut inputRobotInterface: Option<Rc<RefCell<dyn InputRobotInterface>>> = jcall!(keyActionScriptInputInterface).getInputRobotInterface();
         let mut integer: Vec<Option<i32>> = jcall!(keyActionScriptInputInterface).getKeyArray();
         if jcall!(keyActionScriptInputInterface).getDelayBetweenKeys() == 0 {
-            for index in (0..(jcall!(keyActionScriptInputInterface).getKeyArray().len() as i32)) {
+            for index in (0..{ let java_bound = (jcall!(keyActionScriptInputInterface).getKeyArray().len() as i32); java_bound }) {
                 if jcall!(keyActionScriptInputInterface).isPress() {
                     jcall!(inputRobotInterface).keyPress(integer[(index) as usize].clone());
                 }
             }
             std::thread::sleep(std::time::Duration::from_millis((jcall!(keyActionScriptInputInterface).getTime()) as u64));
-            for index in (0..=(jcall!(keyActionScriptInputInterface).getKeyArray().len() as i32) - 1).rev() {
+            for index in (0..={ let java_bound = (jcall!(keyActionScriptInputInterface).getKeyArray().len() as i32) - 1; java_bound }).rev() {
                 if jcall!(keyActionScriptInputInterface).isRelease() {
                     jcall!(inputRobotInterface).keyRelease(integer[(index) as usize].clone());
                 }
             }
         } else {
-            for index in (0..(jcall!(keyActionScriptInputInterface).getKeyArray().len() as i32)) {
+            for index in (0..{ let java_bound = (jcall!(keyActionScriptInputInterface).getKeyArray().len() as i32); java_bound }) {
                 if jcall!(keyActionScriptInputInterface).isPress() {
                     jcall!(inputRobotInterface).keyPress(integer[(index) as usize].clone());
                 }

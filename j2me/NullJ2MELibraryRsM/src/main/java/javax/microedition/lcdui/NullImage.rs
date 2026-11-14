@@ -29,10 +29,14 @@ macro_rules! jcall {
 pub struct NullImage {
 }
 
-thread_local! { pub static NullImage_NULL_IMAGE_ARRAY: Vec<Option<Rc<RefCell<Image>>>> = vec![None; (0) as usize]; }
-thread_local! { pub static NullImage_NULL_IMAGE: Option<Rc<RefCell<Image>>> = Image::new(); }
+thread_local! { pub static NullImage_NULL_IMAGE_ARRAY: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> = vec![None; (0) as usize]; }
+thread_local! { pub static NullImage_NULL_IMAGE: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = Image::new().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>); }
 
 impl NullImage {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

@@ -7,6 +7,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -20,6 +21,10 @@ pub struct ContextConfigurationPathUtil {
 
 
 impl ContextConfigurationPathUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

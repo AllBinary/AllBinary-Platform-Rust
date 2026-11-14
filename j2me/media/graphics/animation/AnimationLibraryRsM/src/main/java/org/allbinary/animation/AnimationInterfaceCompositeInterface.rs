@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait AnimationInterfaceCompositeInterface {
+pub trait AnimationInterfaceCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getAnimationInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

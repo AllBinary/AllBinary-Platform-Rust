@@ -20,6 +20,7 @@ use super::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
+use crate::java::lang::Exception::*;
 use super::MeteredGameObject::MeteredGameObject;
 use super::HitPointGameObjectInterface::HitPointGameObjectInterface;
 
@@ -59,12 +60,12 @@ impl HitPointGameObject {
         this.IS_DAMAGED_LABEL = String::from("isDamaged: ");
         this.IS_CLOSE_DEATH_LABEL = String::from("isCloseDeath: ");
         // super(...) is in the struct literal above
-        if ((this.getRatios()[((bufferedImage.len() as i32) - 1) as usize]).unwrap() as f64) < ((1.0_f32) as f64) {
+        if { let java_value = ((this.getRatios()[((bufferedImage.len() as i32) - 1) as usize]).unwrap() as f64); java_value } < ((1.0_f32) as f64) {
             this.setDamaged(true);
         } else {
             this.setDamaged(false);
         }
-        if ((this.getRatios()[((bufferedImage.len() as i32) - 1) as usize]).unwrap() as f64) > ((0.25_f32) as f64) {
+        if { let java_value = ((this.getRatios()[((bufferedImage.len() as i32) - 1) as usize]).unwrap() as f64); java_value } > ((0.25_f32) as f64) {
             this.closeDeath = false;
         } else {
             this.closeDeath = true;
@@ -78,7 +79,7 @@ impl HitPointGameObject {
     
 
     pub fn isMoreThan(&mut self, mut aFloat: f32) -> bool {
-        if ((self.getRatios()[((self.getRatios().len() as i32) - 1) as usize]).unwrap() as f64) > ((aFloat) as f64) {
+        if { let java_value = (({ let java_index = (self.getRatios().len() as i32) - 1; self.getRatios()[(java_index) as usize].clone() }).unwrap() as f64); java_value } > ((aFloat) as f64) {
             return true;
         } else {
             return false;
@@ -111,10 +112,10 @@ impl HitPointGameObject {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(self.HP_LABEL.clone());
         jcall!(stringBuffer).append(self.base.toString());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.IS_DAMAGED_LABEL.clone());
         jcall!(stringBuffer).appendboolean(self.isDamaged());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.IS_CLOSE_DEATH_LABEL.clone());
         jcall!(stringBuffer).appendboolean(self.isCloseDeath());
         return jcall!(stringBuffer).toString();

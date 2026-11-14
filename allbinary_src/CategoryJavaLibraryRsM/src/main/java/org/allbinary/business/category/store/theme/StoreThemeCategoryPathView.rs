@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::visual::theme::ThemePropertiesView::ThemePrope
 use crate::org::allbinary::logic::visual::theme::ThemeValidation::ThemeValidation;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::StoreThemeCategoryInterface::StoreThemeCategoryInterface;
 
 // Borrows the object of a Java reference
@@ -46,7 +47,7 @@ impl StoreThemeCategoryPathView {
 
     pub fn new_struct(mut categoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>>) -> Self {
         let mut this = Self {
-            base: CategoryView::new_struct((categoryInterface).clone() /* as StoreThemeCategoryInterface */),
+            base: CategoryView::new_struct((categoryInterface).clone()),
         };
         // super(...) is in the struct literal above
         this
@@ -59,13 +60,13 @@ impl StoreThemeCategoryPathView {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut node: Option<Rc<RefCell<Node>>> = self.base.toXmlNode(document.clone());
-        let mut storeThemeCategoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>> = (self.getCategoryInterface()).clone() /* as StoreThemeCategoryInterface */;
+        let mut node: Option<Rc<RefCell<Node>>> = { let java_arguments = (document.clone(),); self.base.toXmlNode(java_arguments.0) };
+        let mut storeThemeCategoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>> = (|| -> Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>> { panic!("ClassCastException: a Rust dyn CategoryInterface cannot be cast to dyn StoreThemeCategoryInterface") })();
         let mut themeArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(storeThemeCategoryInterface).getThemes()).toArray();
         let mut size: i32 = (themeArray.len() as i32).clone();
         for i in (0..size) {
-            let mut themeValidation: Option<Rc<RefCell<ThemeValidation>>> = (themeArray[(i) as usize]).clone() /* as ThemeValidation */;
-            let mut domNodeInterface: Option<Rc<RefCell<dyn DomNodeInterface>>> = (ThemePropertiesView::new((themeValidation).clone() /* as ThemeInterface */)).clone() /* as DomNodeInterface */;
+            let mut themeValidation: Option<Rc<RefCell<ThemeValidation>>> = { let java_object = (themeArray[(i) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ThemeValidation>>>>().expect("ClassCastException").clone()) };
+            let mut domNodeInterface: Option<Rc<RefCell<dyn DomNodeInterface>>> = (ThemePropertiesView::new((themeValidation).clone().map(|reference| reference as Rc<RefCell<dyn ThemeInterface>>))).clone() /* as DomNodeInterface */;
             jcall!(node).appendChild(jcall!(domNodeInterface).toXmlNode(document.clone()));
         }
         return node.clone();

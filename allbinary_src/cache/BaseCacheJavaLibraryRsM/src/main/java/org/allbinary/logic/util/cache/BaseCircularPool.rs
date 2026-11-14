@@ -22,6 +22,7 @@ use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::util::CircularIndexUtil::CircularIndexUtil;
 use crate::jsinterop::annotations::JsMethod;
 use crate::jsinterop::annotations::JsProperty;
+use crate::java::lang::Exception::*;
 use super::AllBinaryObjectFactoryInterface::AllBinaryObjectFactoryInterface;
 
 // Borrows the object of a Java reference
@@ -39,13 +40,17 @@ pub struct BaseCircularPool {
 
 impl BaseCircularPool {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             circularIndexUtil: None,
             OBJECT_ARRAY: Vec::new(),
         };
         this.circularIndexUtil = crate::org::allbinary::util::CircularIndexUtil::CircularIndexUtil_NULL_CIRCULAR_INDEX_UTIL.with(Clone::clone).clone();
-        this.OBJECT_ARRAY = jcall!(NullUtil::getInstance()).NULL_OBJECT_ARRAY.clone();
+        this.OBJECT_ARRAY = { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT_ARRAY.clone(); java_field }.clone();
         this
     }
 
@@ -67,7 +72,7 @@ impl BaseCircularPool {
         jcall!(self.circularIndexUtil).setIndex(0);
         let mut size: i32 = jcall!(self.circularIndexUtil).getSize();
         for index in (0..size) {
-            self.OBJECT_ARRAY[(index) as usize] = jcall!(allBinaryObjectFactoryInterface).getInstance();
+            { let java_index = (index) as usize; self.OBJECT_ARRAY[java_index] = jcall!(allBinaryObjectFactoryInterface).getInstance(); };
         }
     }
     
@@ -77,7 +82,7 @@ impl BaseCircularPool {
         return self.OBJECT_ARRAY[(index) as usize].clone();
     }
 }
-pub trait BaseCircularPoolDyn {
+pub trait BaseCircularPoolDyn: std::any::Any {
     fn as_BaseCircularPool(&self) -> &BaseCircularPool;
     fn as_BaseCircularPool_mut(&mut self) -> &mut BaseCircularPool;
     fn getNextInstance(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { BaseCircularPool::getNextInstance(self.as_BaseCircularPool_mut()) }

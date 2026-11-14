@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Displayable::Displayable;
-// use crate::javax::microedition::midlet::MIDlet::MIDlet;
+use crate::javax::microedition::lcdui::Displayable::Displayable;
+use crate::javax::microedition::midlet::MIDlet::MIDlet;
 use super::EmulatorViewInterface::EmulatorViewInterface;
 
 // Borrows the object of a Java reference
@@ -33,12 +33,16 @@ pub struct NullEmulatorView {
 
 thread_local! { pub static NullEmulatorView_NULL_EMULATOR_VIEW: Option<Rc<RefCell<NullEmulatorView>>> = NullEmulatorView::new(); }
 impl EmulatorViewInterface for NullEmulatorView {
-    fn setMidlet(&mut self, mut midlet: Option<Rc<RefCell<MIDlet>>>) { Self::setMidlet(self, midlet) }
+    fn setMidlet(&mut self, mut midlet: Option<Rc<RefCell<dyn crate::javax::microedition::midlet::MIDlet::MIDletDyn>>>) { Self::setMidlet(self, midlet) }
     fn onEmulatorInitComplete(&mut self, mut midletActivity: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { Self::onEmulatorInitComplete(self, midletActivity) }
-    fn onSetDisplayable(&mut self, mut displayable: Option<Rc<RefCell<Displayable>>>) { Self::onSetDisplayable(self, displayable) }
+    fn onSetDisplayable(&mut self, mut displayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) { Self::onSetDisplayable(self, displayable) }
 }
 
 impl NullEmulatorView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -51,7 +55,7 @@ impl NullEmulatorView {
     }
     
 
-    pub fn setMidlet(&mut self, mut midlet: Option<Rc<RefCell<MIDlet>>>) {
+    pub fn setMidlet(&mut self, mut midlet: Option<Rc<RefCell<dyn crate::javax::microedition::midlet::MIDlet::MIDletDyn>>>) {
     }
     
 
@@ -59,7 +63,7 @@ impl NullEmulatorView {
     }
     
 
-    pub fn onSetDisplayable(&mut self, mut displayable: Option<Rc<RefCell<Displayable>>>) {
+    pub fn onSetDisplayable(&mut self, mut displayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) {
     }
 }
 

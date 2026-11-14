@@ -19,6 +19,10 @@ pub struct SuperCrypt {
 pub static mut SuperCrypt_KEYMAX: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 0);
 
 impl SuperCrypt {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut key: i32) -> Self {

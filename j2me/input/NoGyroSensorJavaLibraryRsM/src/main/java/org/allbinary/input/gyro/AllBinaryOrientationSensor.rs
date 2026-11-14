@@ -21,6 +21,7 @@ use crate::org::allbinary::game::input::CompleteMotionGestureInputEventListenerI
 use crate::org::allbinary::game::input::motion::action::NoCompleteMotionGestureInputEventListener::NoCompleteMotionGestureInputEventListener;
 use crate::org::allbinary::input::AllBinarySensor::AllBinarySensor;
 use crate::org::allbinary::logic::math::Orientation::Orientation;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -49,7 +50,7 @@ impl AllBinaryOrientationSensor {
             base: AllBinarySensor::new_struct(),
             listener: None,
         };
-        this.listener = NoCompleteMotionGestureInputEventListener::getInstance();
+        this.listener = NoCompleteMotionGestureInputEventListener::getInstance().map(|reference| reference as Rc<RefCell<dyn CompleteMotionGestureInputEventListenerInterface>>);
         this
     }
 
@@ -60,7 +61,7 @@ impl AllBinaryOrientationSensor {
 
     // throws Exception
     pub fn getOrientation(&mut self) -> Option<Rc<RefCell<Orientation>>> {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
 }
 impl std::ops::Deref for AllBinaryOrientationSensor {

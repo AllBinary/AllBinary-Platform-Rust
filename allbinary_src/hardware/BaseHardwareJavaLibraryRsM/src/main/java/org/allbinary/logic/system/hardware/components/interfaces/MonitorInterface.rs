@@ -25,9 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait MonitorInterface {
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+pub trait MonitorInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
 }
 
 

@@ -20,6 +20,7 @@ use super::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 use super::ImageUtil::ImageUtil;
 use super::ImageProcessorInput::ImageProcessorInput;
 use super::ImageProcessedVisitor::ImageProcessedVisitor;
@@ -39,6 +40,10 @@ pub struct CanvasExpandUtil {
 thread_local! { pub static CanvasExpandUtil_instance: Option<Rc<RefCell<CanvasExpandUtil>>> = CanvasExpandUtil::new(); }
 
 impl CanvasExpandUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -68,9 +73,9 @@ impl CanvasExpandUtil {
         let mut size: i32 = (bufferedImageArray.len() as i32).clone();
         let mut bufferedImage: Option<Rc<RefCell<BufferedImage>>> = None;
         for index in (0..size) {
-            bufferedImage = bufferedImageArray[(index) as usize].clone();
+            bufferedImage = { let java_value = (bufferedImageArray[(index) as usize]).clone(); java_value }.clone();
             subBufferedImageArray[(index) as usize] = jcall!(imageUtil).createBufferedImage(bufferedImage.clone(), jcall!(bufferedImage).getWidth() + increaseX, jcall!(bufferedImage).getHeight() + increaseY, false);
-            jcall!(visitor).visit(subBufferedImageArray[(index) as usize].clone(), jcall!(self.stringUtil).EMPTY_STRING.clone(), index.clone());
+            jcall!(visitor).visit(subBufferedImageArray[(index) as usize].clone(), { let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }.clone(), index.clone());
         }
     }
 }

@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
+use crate::java::lang::Exception::*;
 use super::DemoGameMidletEventListener::DemoGameMidletEventListener;
 use super::DemoGameMidletEvent::DemoGameMidletEvent;
 
@@ -58,8 +59,8 @@ impl DemoGameMidletEventHandler {
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut demoGameMidletEventListener: Option<Rc<RefCell<dyn DemoGameMidletEventListener>>> = panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn DemoGameMidletEventListener");
-        jcall!(demoGameMidletEventListener).onDemoGameMidletEvent((eventObject).clone() /* as DemoGameMidletEvent */);
+        let mut demoGameMidletEventListener: Option<Rc<RefCell<dyn DemoGameMidletEventListener>>> = (|| -> Option<Rc<RefCell<dyn DemoGameMidletEventListener>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn DemoGameMidletEventListener") })();
+        jcall!(demoGameMidletEventListener).onDemoGameMidletEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<DemoGameMidletEvent>() }, "ClassCastException: not a DemoGameMidletEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<DemoGameMidletEvent>) } }));
     }
 }
 impl std::ops::Deref for DemoGameMidletEventHandler {

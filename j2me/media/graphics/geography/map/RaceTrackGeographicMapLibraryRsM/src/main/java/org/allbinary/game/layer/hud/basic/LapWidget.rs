@@ -17,12 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud;
 use crate::org::allbinary::game::layer::hud::LapInfo::LapInfo;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -51,7 +52,7 @@ impl LapWidget {
         };
         this.LAP_STR = String::from("Lap ");
         this.OF_STR = String::from(" of ");
-        this.string = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.string = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this.updateMaxHeight = 15;
         this.updateMaxWidth = 40;
@@ -70,12 +71,12 @@ impl LapWidget {
         jcall!(stringBuffer).appendint(jcall!(lapInfo).getCurrentLap());
         jcall!(stringBuffer).append(self.OF_STR.clone());
         jcall!(stringBuffer).appendint(jcall!(lapInfo).getTotalLaps());
-        self.string = jcall!(stringBuffer).toString();
+        self.string = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.paintString(graphics.clone(), self.string.clone());
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(), self.string.clone(),); self.base.paintString(java_arguments.0, java_arguments.1) };
     }
 }
 impl std::ops::Deref for LapWidget {
@@ -89,6 +90,9 @@ impl std::ops::DerefMut for LapWidget {
 impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for LapWidget {
     fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self.base }
     fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self.base }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for LapWidget {
+    fn updateMeasurement(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud::updateMeasurement(crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn::as_BasicHud_mut(self), p1) }
 }
 
 

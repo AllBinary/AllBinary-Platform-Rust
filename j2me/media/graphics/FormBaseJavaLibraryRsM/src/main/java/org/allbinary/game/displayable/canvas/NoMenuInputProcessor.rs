@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::NullCanvas::NullCanvas;
+use crate::javax::microedition::lcdui::NullCanvas::NullCanvas;
 use crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent;
 use crate::org::allbinary::input::motion::gesture::observer::MotionGestureEvent::MotionGestureEvent;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
@@ -35,13 +35,23 @@ pub struct NoMenuInputProcessor {
 }
 
 thread_local! { pub static NoMenuInputProcessor_SINGLETON: Option<Rc<RefCell<NoMenuInputProcessor>>> = NoMenuInputProcessor::new(); }
+impl crate::org::allbinary::input::motion::gesture::observer::BaseMotionGestureEventListener::BaseMotionGestureEventListener for NoMenuInputProcessor {
+    fn onMotionGestureEvent(&mut self, mut motionGestureEvent: Option<Rc<RefCell<MotionGestureEvent>>>) { Self::onMotionGestureEvent(self, motionGestureEvent) }
+    fn onScrolledMotionGestureEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::input::motion::gesture::observer::MotionGestureEvent::MotionGestureEvent>>>) { crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessor::onScrolledMotionGestureEvent(crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn::as_BasicMenuInputProcessor_mut(self), p1) }
+}
 impl crate::org::allbinary::game::input::event::DownGameKeyEventListenerInterface::DownGameKeyEventListenerInterface for NoMenuInputProcessor {
     fn onDownGameKeyEvent(&mut self, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) { Self::onDownGameKeyEvent(self, gameKeyEvent) }
 }
 impl crate::org::allbinary::game::input::event::GameKeyEventListenerInterface::GameKeyEventListenerInterface for NoMenuInputProcessor {
 }
+impl crate::org::allbinary::game::input::event::PressGameKeyEventListenerInterface::PressGameKeyEventListenerInterface for NoMenuInputProcessor {
+    fn onPressGameKeyEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onPressGameKeyEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
+}
 impl crate::org::allbinary::game::input::event::UpGameKeyEventListenerInterface::UpGameKeyEventListenerInterface for NoMenuInputProcessor {
     fn onUpGameKeyEvent(&mut self, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) { Self::onUpGameKeyEvent(self, gameKeyEvent) }
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for NoMenuInputProcessor {
+    fn onEvent(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
 }
 
 impl NoMenuInputProcessor {
@@ -54,7 +64,7 @@ impl NoMenuInputProcessor {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: BasicMenuInputProcessor::new_struct(jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance(), -1, crate::javax::microedition::lcdui::NullCanvas::NullCanvas_NULL_CANVAS.with(Clone::clone).clone()),
+            base: BasicMenuInputProcessor::new_struct(jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance(), -1, crate::javax::microedition::lcdui::NullCanvas::NullCanvas_NULL_CANVAS.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>)),
         };
         // super(...) is in the struct literal above
         this

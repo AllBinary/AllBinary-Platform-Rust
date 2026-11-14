@@ -43,14 +43,14 @@ impl GameNotificationEvent {
 
     pub fn new_struct(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut string: String, mut seconds: Option<i32>, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut permanent: Option<bool>) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(anyType.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(anyType.clone())),
             string: String::new(),
             seconds: None,
             basicColor: None,
             removeable: None,
         };
-        this.string = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.basicColor = jcall!(BasicColorFactory::getInstance()).BLACK.clone();
+        this.string = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.basicColor = { let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this.setString(string.clone());
         this.seconds = seconds.clone();

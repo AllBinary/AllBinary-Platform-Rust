@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,6 +32,10 @@ pub struct LicenseUtil {
 thread_local! { pub static LicenseUtil_instance: Option<Rc<RefCell<LicenseUtil>>> = LicenseUtil::new(); }
 
 impl LicenseUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -64,7 +68,7 @@ impl LicenseUtil {
     }
     
 
-    pub fn shouldWait(&mut self, mut commandListener: Option<Rc<RefCell<CommandListener>>>) -> bool {
+    pub fn shouldWait(&mut self, mut commandListener: Option<Rc<RefCell<dyn CommandListener>>>) -> bool {
         return self.isRunning();
     }
 }

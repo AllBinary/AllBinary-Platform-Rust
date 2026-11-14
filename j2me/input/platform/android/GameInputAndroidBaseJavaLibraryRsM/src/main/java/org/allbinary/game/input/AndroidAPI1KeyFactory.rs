@@ -19,16 +19,16 @@ pub struct AndroidAPI1KeyFactory {
     pub base: AndroidKeyFactory,
 }
 
-pub static mut AndroidAPI1KeyFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut AndroidAPI1KeyFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl AndroidAPI1KeyFactory {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AndroidAPI1KeyFactory>>> {
-        if match (&unsafe { AndroidAPI1KeyFactory_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *AndroidAPI1KeyFactory_instance = AndroidAPI1KeyFactory::new() };
+        if match (&unsafe { AndroidAPI1KeyFactory_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *AndroidAPI1KeyFactory_instance = crate::java_into_object(AndroidAPI1KeyFactory::new()) };
         }
-        return (unsafe { AndroidAPI1KeyFactory_instance.clone() }).clone() /* as AndroidAPI1KeyFactory */;
+        return { let java_object = (unsafe { AndroidAPI1KeyFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AndroidAPI1KeyFactory>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -54,6 +54,10 @@ impl std::ops::DerefMut for AndroidAPI1KeyFactory {
 impl crate::org::allbinary::game::input::AndroidKeyFactory::AndroidKeyFactoryDyn for AndroidAPI1KeyFactory {
     fn as_AndroidKeyFactory(&self) -> &crate::org::allbinary::game::input::AndroidKeyFactory::AndroidKeyFactory { &self.base }
     fn as_AndroidKeyFactory_mut(&mut self) -> &mut crate::org::allbinary::game::input::AndroidKeyFactory::AndroidKeyFactory { &mut self.base }
+}
+impl crate::org::allbinary::android::ActivityFractureUtil::ActivityFractureUtilDyn for AndroidAPI1KeyFactory {
+    fn as_ActivityFractureUtil(&self) -> &crate::org::allbinary::android::ActivityFractureUtil::ActivityFractureUtil { &self.base.base }
+    fn as_ActivityFractureUtil_mut(&mut self) -> &mut crate::org::allbinary::android::ActivityFractureUtil::ActivityFractureUtil { &mut self.base.base }
 }
 
 

@@ -16,10 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::io::Serializable::Serializable;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
+use crate::java::lang::Exception::*;
 use super::UserInterface::UserInterface;
 
 // Borrows the object of a Java reference
@@ -33,7 +33,7 @@ pub trait UserFactoryInterface: Serializable {
     
 
     // throws Exception
-    fn getInstance(&mut self, hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<dyn UserInterface>>>;
+    fn getInstance(&mut self, hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn UserInterface>>>;
 }
 
 

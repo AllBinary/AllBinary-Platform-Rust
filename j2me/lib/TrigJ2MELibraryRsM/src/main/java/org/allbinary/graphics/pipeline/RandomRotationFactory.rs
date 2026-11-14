@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::rand::MyRandomFactory::MyRandomFactory;
 use crate::org::allbinary::math::AngleFactory::AngleFactory;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::BasicGraphicsPipeline::BasicGraphicsPipeline;
 
 // Borrows the object of a Java reference
@@ -37,6 +38,10 @@ pub struct RandomRotationFactory {
 thread_local! { pub static RandomRotationFactory_instance: Option<Rc<RefCell<RandomRotationFactory>>> = RandomRotationFactory::new(); }
 
 impl RandomRotationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -62,7 +67,7 @@ impl RandomRotationFactory {
     pub fn getInstanceList(&mut self, mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut howMuch: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
         let mut graphicsPipe: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::pipeline::BasicGraphicsPipeline::BasicGraphicsPipelineDyn>>> = BasicGraphicsPipeline::new(vector.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::pipeline::BasicGraphicsPipeline::BasicGraphicsPipelineDyn>>);
         jcall!(graphicsPipe).createMatrix();
-        jcall!(graphicsPipe).rotateToAngle({ let java_receiver = self.angleFactory.clone(); let java_arguments = (self.getNextRandomAngle(howMuch.clone()),); let java_result = jcall!(java_receiver).getAt(java_arguments.0); java_result });
+        jcall!(graphicsPipe).rotateToAngle({ let java_argument = { let java_receiver = self.angleFactory.clone(); let java_arguments = (self.getNextRandomAngle(howMuch.clone()),); let java_result = jcall!(java_receiver).getAt(java_arguments.0); java_result }; java_argument });
         return jcall!(graphicsPipe).getMatrix();
     }
     

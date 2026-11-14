@@ -17,11 +17,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImage;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,11 +38,15 @@ pub struct AllBinaryRendererBase3 {
 
 impl AllBinaryRendererBase3 {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             list: None,
         };
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -55,21 +60,21 @@ impl AllBinaryRendererBase3 {
         while jcall!(self.list).size() > 0 {
             let mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> = { let java_object = (jcall!(self.list).removeAt(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>>>().expect("ClassCastException").clone()) };
             if openGLESImage.is_some() {
-                jcall!(openGLESImage).set(gl.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::khronos::opengles::GL::GL>>));
+                jcall!(openGLESImage).as_OpenGLESImage_mut().set(gl.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::khronos::opengles::GL::GL>>));
             }
         }
     }
     
 
-    pub fn add(&mut self, mut image: Option<Rc<RefCell<Image>>>) {
+    pub fn add(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) {
         jcall!(self.list).add(crate::java_into_object(image.clone()));
     }
 }
-pub trait AllBinaryRendererBase3Dyn {
+pub trait AllBinaryRendererBase3Dyn: std::any::Any {
     fn as_AllBinaryRendererBase3(&self) -> &AllBinaryRendererBase3;
     fn as_AllBinaryRendererBase3_mut(&mut self) -> &mut AllBinaryRendererBase3;
     fn update(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) { AllBinaryRendererBase3::update(self.as_AllBinaryRendererBase3_mut(), gl) }
-    fn add(&mut self, mut image: Option<Rc<RefCell<Image>>>) { AllBinaryRendererBase3::add(self.as_AllBinaryRendererBase3_mut(), image) }
+    fn add(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) { AllBinaryRendererBase3::add(self.as_AllBinaryRendererBase3_mut(), image) }
 }
 impl AllBinaryRendererBase3Dyn for AllBinaryRendererBase3 {
     fn as_AllBinaryRendererBase3(&self) -> &AllBinaryRendererBase3 { self }

@@ -39,7 +39,7 @@ impl CapturedImageWorkerResultsEvent {
 
     pub fn new_struct(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut frame: Option<i64>, mut bufferedImage: Option<Rc<RefCell<BufferedImage>>>) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(anyType.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(anyType.clone())),
             frame: None,
             bufferedImage: None,
         };

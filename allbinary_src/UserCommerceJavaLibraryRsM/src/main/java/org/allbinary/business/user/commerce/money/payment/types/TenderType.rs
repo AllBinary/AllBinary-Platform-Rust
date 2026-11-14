@@ -47,7 +47,7 @@ impl TenderType {
     
 
     pub fn isEqual(&mut self, mut tenderType: Option<Rc<RefCell<TenderType>>>) -> bool {
-        if (self.toString().cmp(&jcall!(tenderType).toString()) as i32) == 0 {
+        if { let java_value = (self.toString().cmp(&jcall!(tenderType).toString()) as i32); java_value } == 0 {
             return true;
         } else {
             return false;

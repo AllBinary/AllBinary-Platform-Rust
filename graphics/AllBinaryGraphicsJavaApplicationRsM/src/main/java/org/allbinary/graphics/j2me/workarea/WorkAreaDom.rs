@@ -22,6 +22,7 @@ use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,6 +41,10 @@ thread_local! { pub static WorkAreaDom_NAME: String = String::from("name"); }
 thread_local! { pub static WorkAreaDom_FRAMES: String = String::from("frames"); }
 
 impl WorkAreaDom {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut document: Option<Rc<RefCell<Document>>>) -> Self {
@@ -54,11 +59,11 @@ impl WorkAreaDom {
                 let mut numberOfNodes: i32 = jcall!(workAreaNodeList).getLength();
                 let mut nameNode: Option<Rc<RefCell<Node>>> = jcall!(DomHelper::getInstance()).searchNodeList(WorkAreaDom_NAME.with(Clone::clone).clone(), jcall!(jcall!(workAreaNodeList).item(0)).getChildNodes());
                 let mut nameTextNode: Option<Rc<RefCell<Node>>> = jcall!(nameNode).getFirstChild();
-                this.name = jcall!(nameTextNode).getNodeValue();
+                this.name = { let java_value = (jcall!(nameTextNode).getNodeValue()).clone(); java_value };
             } else {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Wrong Number of WorkAreas: "), numberOfworkAreas))));
             }
-            this.canvasNodeList = jcall!(DomHelper::getInstance()).getChildrenWithoutTextNodes(WorkAreaDom_FRAMES.with(Clone::clone).clone(), jcall!(jcall!(workAreaNodeList).item(0)).getChildNodes());
+            this.canvasNodeList = { let java_value = (jcall!(DomHelper::getInstance()).getChildrenWithoutTextNodes(WorkAreaDom_FRAMES.with(Clone::clone).clone(), jcall!(jcall!(workAreaNodeList).item(0)).getChildNodes())).clone(); java_value };
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("workArea Node Not Found"))));
         }

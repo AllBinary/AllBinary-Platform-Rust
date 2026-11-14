@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait IdentifierInterface {
+pub trait IdentifierInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getId(&mut self) -> i32;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

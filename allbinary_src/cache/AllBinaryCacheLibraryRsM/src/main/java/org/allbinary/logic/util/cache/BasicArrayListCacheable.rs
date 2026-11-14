@@ -51,7 +51,7 @@ impl BasicArrayListCacheable {
     
 
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return crate::java_into_object({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
     }
 }
 impl std::ops::Deref for BasicArrayListCacheable {

@@ -23,6 +23,7 @@ use crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::Animat
 use crate::org::allbinary::image::ImageCacheFactory::ImageCacheFactory;
 use crate::org::allbinary::logic::communication::log::ForcedLogUtil::ForcedLogUtil;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::BaseImageAnimationFactory::BaseImageAnimationFactory;
 use super::LazyImageRotationAnimation::LazyImageRotationAnimation;
 
@@ -47,6 +48,10 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 }
 
 impl LazyImageRotationAnimationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut layoutIndex: i32, mut associatedLazyAnimationId: i32, mut animationInterfaceFactoryInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::image::BaseImageAnimationFactory::BaseImageAnimationFactoryDyn>>>) -> Self {
@@ -58,8 +63,8 @@ impl LazyImageRotationAnimationFactory {
         this.scaleProperties = crate::org::allbinary::media::ScaleProperties::ScaleProperties_instance.with(Clone::clone).clone();
         this.layoutIndex = layoutIndex.clone();
         this.animationInterfaceFactoryInterface = animationInterfaceFactoryInterface.clone();
-        jcall!(ImageCacheFactory::getInstance()).hasAnyLazyAnimationFactories = true;
-        if match (&jcall!(this.animationInterfaceFactoryInterface).as_BaseImageAnimationFactory_mut().animationBehaviorFactory, &AnimationBehaviorFactory::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        jcall!(ImageCacheFactory::getInstance()).as_ImageCache_mut().hasAnyLazyAnimationFactories = true;
+        if match (&{ let java_field = jcall!(this.animationInterfaceFactoryInterface).as_BaseImageAnimationFactory_mut().animationBehaviorFactory.clone(); java_field }, &AnimationBehaviorFactory::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             ForcedLogUtil::log(String::from("Using default AnimationBehaviorFactory with IndexedAnimationFactory"), crate::java_into_object(String::from(std::any::type_name::<Self>())));
         }
         this
@@ -72,11 +77,11 @@ impl LazyImageRotationAnimationFactory {
 
     // throws Exception
     pub fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
-        if jcall!(jcall!(self.animationInterfaceFactoryInterface).getImage()).isReady() {
+        if jcall!(jcall!(self.animationInterfaceFactoryInterface).getImage()).as_Image_mut().isReady() {
             jcall!(self.animationInterfaceFactoryInterface).setInitialScale(self.scaleProperties.clone());
             return jcall!(self.animationInterfaceFactoryInterface).getInstance(instanceId.clone());
         } else {
-            return LazyImageRotationAnimation::new(self.layoutIndex.clone(), instanceId.clone(), self.scaleProperties.clone(), self.animationInterfaceFactoryInterface.clone(), jcall!(jcall!(self.animationInterfaceFactoryInterface).as_BaseImageAnimationFactory_mut().animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+            return LazyImageRotationAnimation::new(self.layoutIndex.clone(), instanceId.clone(), self.scaleProperties.clone(), self.animationInterfaceFactoryInterface.clone(), jcall!({ let java_field = jcall!(self.animationInterfaceFactoryInterface).as_BaseImageAnimationFactory_mut().animationBehaviorFactory.clone(); java_field }).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
         }
     }
     

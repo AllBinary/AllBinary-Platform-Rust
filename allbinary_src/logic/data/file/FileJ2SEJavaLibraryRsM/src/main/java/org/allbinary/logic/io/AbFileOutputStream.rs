@@ -18,7 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::io::FileNotFoundException::FileNotFoundException;
-// use crate::java::io::FileOutputStream::FileOutputStream;
+use crate::java::io::FileOutputStream::FileOutputStream;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::logic::io::file::AbFileNativeUtil::AbFileNativeUtil;
 
@@ -33,6 +33,9 @@ pub struct AbFileOutputStream {
     pub base: FileOutputStream,
 }
 
+impl crate::java::io::Closeable::Closeable for AbFileOutputStream {
+    fn close(&mut self) { crate::java::io::Closeable::Closeable::close(&mut self.base) }
+}
 
 impl AbFileOutputStream {
     
@@ -81,5 +84,13 @@ impl std::ops::DerefMut for AbFileOutputStream {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::java::io::OutputStream::OutputStreamDyn for AbFileOutputStream {
+    fn as_OutputStream(&self) -> &crate::java::io::OutputStream::OutputStream { &self.base.base }
+    fn as_OutputStream_mut(&mut self) -> &mut crate::java::io::OutputStream::OutputStream { &mut self.base.base }
+}
+impl crate::java::io::FileOutputStream::FileOutputStreamDyn for AbFileOutputStream {
+    fn as_FileOutputStream(&self) -> &crate::java::io::FileOutputStream::FileOutputStream { &self.base }
+    fn as_FileOutputStream_mut(&mut self) -> &mut crate::java::io::FileOutputStream::FileOutputStream { &mut self.base }
+}
 
 

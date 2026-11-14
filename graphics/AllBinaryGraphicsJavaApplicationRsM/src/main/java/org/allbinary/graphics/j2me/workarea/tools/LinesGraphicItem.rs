@@ -38,6 +38,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -70,6 +71,10 @@ thread_local! { pub static LinesGraphicItem_NAME: String = String::from("Line To
 // impl GraphicItemInterface for LinesGraphicItem with the methods of the trait
 
 impl LinesGraphicItem {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -91,7 +96,7 @@ impl LinesGraphicItem {
         this.gameInputStrings = GameInputStrings::getInstance();
         this.active = false;
         this.theta = 0.0;
-        this.color = Color::new(jcall!(jcall!(BasicColorFactory::getInstance()).WHITE).intValue());
+        this.color = Color::new(jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }).intValue());
         this.points = Points::new();
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             this.init();
@@ -99,9 +104,9 @@ impl LinesGraphicItem {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(this.logUtil).put(jcall!(this.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(e.clone()));
+            jcall!(this.logUtil).put({ let java_field = jcall!(this.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         this
@@ -131,7 +136,7 @@ impl LinesGraphicItem {
         this.gameInputStrings = GameInputStrings::getInstance();
         this.active = false;
         this.theta = 0.0;
-        this.color = Color::new(jcall!(jcall!(BasicColorFactory::getInstance()).WHITE).intValue());
+        this.color = Color::new(jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }).intValue());
         this.points = Points::new();
         this.init();
         this.active = false;
@@ -140,10 +145,10 @@ impl LinesGraphicItem {
         for index in (0..numberOfLines) {
             let mut lineNode: Option<Rc<RefCell<Node>>> = (jcall!(lineNodes).get(index.clone())).clone() /* as Node */;
             let mut pointNodes: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(DomHelper::getInstance()).getWithoutTextNodes(jcall!(lineNode).getChildNodes());
-            let mut pointOneNode: Option<Rc<RefCell<Node>>> = jcall!(DomHelper::getInstance()).searchNodeList(jcall!(PointsDomUtil::PointsDomUtil::getInstance()).POINTONE.clone(), pointNodes.clone());
+            let mut pointOneNode: Option<Rc<RefCell<Node>>> = jcall!(DomHelper::getInstance()).searchNodeList_String_BasicArrayList({ let java_field = jcall!(PointsDomUtil::PointsDomUtil::getInstance()).POINTONE.clone(); java_field }.clone(), pointNodes.clone());
             { let java_arguments = (jcall!(pointOneNode).getChildNodes(),); this.addPoint(java_arguments.0) };
             if index == numberOfLines - 1 {
-                let mut pointTwoNode: Option<Rc<RefCell<Node>>> = jcall!(DomHelper::getInstance()).searchNodeList(jcall!(PointsDomUtil::PointsDomUtil::getInstance()).POINTTWO.clone(), pointNodes.clone());
+                let mut pointTwoNode: Option<Rc<RefCell<Node>>> = jcall!(DomHelper::getInstance()).searchNodeList_String_BasicArrayList({ let java_field = jcall!(PointsDomUtil::PointsDomUtil::getInstance()).POINTTWO.clone(); java_field }.clone(), pointNodes.clone());
                 { let java_arguments = (jcall!(pointTwoNode).getChildNodes(),); this.addPoint(java_arguments.0) };
             }
         }
@@ -160,11 +165,11 @@ impl LinesGraphicItem {
 
     // throws Exception
     pub fn init(&mut self) {
-        self.treeNode = DefaultMutableTreeNode::new(format!("{}{}", jcall!(PointsDomUtil::PointsDomUtil::getInstance()).LINES, unsafe { LinesGraphicItem_item.clone() }));
+        self.treeNode = { let java_value = (DefaultMutableTreeNode::new(format!("{}{}", { let java_field = jcall!(PointsDomUtil::PointsDomUtil::getInstance()).LINES.clone(); java_field }, unsafe { LinesGraphicItem_item.clone() }))).clone(); java_value };
         unsafe { *LinesGraphicItem_item += 1 };
         jcall!(self.points).init();
         self.pointTreeNodeVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        self.fulcrumPoint = jcall!(PointFactory::getInstance()).createXY(0, 0);
+        self.fulcrumPoint = { let java_value = (jcall!(PointFactory::getInstance()).createXY(0, 0)).clone(); java_value };
     }
     
 
@@ -190,7 +195,7 @@ impl LinesGraphicItem {
     
 
     pub fn addRotate(&mut self, mut theta: f64) {
-        self.setRotate(self.theta + theta);
+        { let java_arguments = (self.theta + theta,); self.setRotate(java_arguments.0) };
     }
     
 
@@ -223,21 +228,21 @@ impl LinesGraphicItem {
     // synchronized
     pub fn addPoint(&mut self, mut pointNodes: Option<Rc<RefCell<NodeList>>>) {
         let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(DomHelper::getInstance()).getWithoutTextNodes(pointNodes.clone());
-        let mut xNode: Option<Rc<RefCell<Node>>> = jcall!(DomHelper::getInstance()).searchNodeList(jcall!(PositionStrings::getInstance()).X.clone(), list.clone());
+        let mut xNode: Option<Rc<RefCell<Node>>> = jcall!(DomHelper::getInstance()).searchNodeList_String_BasicArrayList({ let java_field = jcall!(PositionStrings::getInstance()).X.clone(); java_field }.clone(), list.clone());
         let mut xTextNode: Option<Rc<RefCell<Node>>> = jcall!(xNode).getFirstChild();
         let mut xInteger: Option<i32> = Some((jcall!(xTextNode).getNodeValue()) as i32);
-        let mut yNode: Option<Rc<RefCell<Node>>> = jcall!(DomHelper::getInstance()).searchNodeList(jcall!(PositionStrings::getInstance()).Y.clone(), list.clone());
+        let mut yNode: Option<Rc<RefCell<Node>>> = jcall!(DomHelper::getInstance()).searchNodeList_String_BasicArrayList({ let java_field = jcall!(PositionStrings::getInstance()).Y.clone(); java_field }.clone(), list.clone());
         let mut yTextNode: Option<Rc<RefCell<Node>>> = jcall!(yNode).getFirstChild();
         let mut yInteger: Option<i32> = Some((jcall!(yTextNode).getNodeValue()) as i32);
         let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(PointFactory::getInstance()).createXY(((xInteger).unwrap() as i32), ((yInteger).unwrap() as i32));
-        self.addPoint(point.clone());
+        self.addPoint_GPoint(point.clone());
     }
     
 
     // Java overloaded method: Rust needs a different name
     // synchronized
-    pub fn addPoint(&mut self, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) {
-        jcall!(jcall!(self.points).getPoints()).add(point.clone());
+    pub fn addPoint_GPoint(&mut self, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) {
+        jcall!(jcall!(self.points).getPoints()).add(crate::java_into_object(point.clone()));
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(point).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addPoint"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         { let java_receiver = self.pointTreeNodeVector.clone(); let java_arguments = (crate::java_into_object(DefaultMutableTreeNode::new(jcall!(point).toString())),); jcall!(java_receiver).add(java_arguments.0); };
         { let java_receiver = self.treeNode.clone(); let java_arguments = (({ let java_receiver = self.pointTreeNodeVector.clone(); let java_arguments = (jcall!(self.pointTreeNodeVector).size() - 1,); let java_result = jcall!(java_receiver).get(java_arguments.0); java_result }).clone() /* as DefaultMutableTreeNode */,); jcall!(java_receiver).add(java_arguments.0); };
@@ -249,7 +254,7 @@ impl LinesGraphicItem {
         let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = None;
         if jcall!(self.points).getSize() > 0 {
             let mut lastPoint: i32 = jcall!(self.points).getSize() - 1;
-            point = (jcall!(jcall!(self.points).getPoints()).removeAt(lastPoint.clone())).clone() /* as GPoint */;
+            point = { let java_value = ({ let java_object = (jcall!(jcall!(self.points).getPoints()).removeAt(lastPoint.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             let mut index: i32 = jcall!(self.pointTreeNodeVector).size() - 1;
             if index > 0 {
                 { let java_receiver = self.treeNode.clone(); let java_arguments = ((jcall!(self.pointTreeNodeVector).get(index.clone())).clone() /* as DefaultMutableTreeNode */,); jcall!(java_receiver).remove(java_arguments.0); };
@@ -281,7 +286,7 @@ impl LinesGraphicItem {
         for index in (0..size) {
             let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = { let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) };
             if point.is_some() {
-                jcall!(jcall!(self.points).getPoints()).add(jcall!(PointFactory::getInstance()).createXY(jcall!(point).getX(), jcall!(point).getY()));
+                jcall!(jcall!(self.points).getPoints()).add(crate::java_into_object(jcall!(PointFactory::getInstance()).createXY(jcall!(point).getX(), jcall!(point).getY())));
                 { let java_receiver = self.pointTreeNodeVector.clone(); let java_arguments = (crate::java_into_object(DefaultMutableTreeNode::new(jcall!(point).toString())),); jcall!(java_receiver).add(java_arguments.0); };
                 { let java_receiver = self.treeNode.clone(); let java_arguments = (({ let java_receiver = self.pointTreeNodeVector.clone(); let java_arguments = (jcall!(self.pointTreeNodeVector).size() - 1,); let java_result = jcall!(java_receiver).get(java_arguments.0); java_result }).clone() /* as DefaultMutableTreeNode */,); jcall!(java_receiver).add(java_arguments.0); };
             }
@@ -308,22 +313,22 @@ impl LinesGraphicItem {
     }
     
 
-    pub fn paint(&mut self, mut g: Option<Rc<RefCell<Graphics>>>, mut canvasAngle: Option<f64>, mut dimension: Option<Rc<RefCell<IntegerDimension>>>, mut x: i32, mut y: i32) {
+    pub fn paint(&mut self, mut g: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut canvasAngle: Option<f64>, mut dimension: Option<Rc<RefCell<IntegerDimension>>>, mut x: i32, mut y: i32) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut graphics: Option<Rc<RefCell<Graphics2D>>> = (g).clone() /* as Graphics2D */;
             jcall!(graphics).setColor(self.getColor());
             jcall!(graphics).setStroke(BasicStroke::new(x.clone()));
             if self.isActive() && self.currentMousePoint.is_some() {
-                jcall!(jcall!(self.points).getPoints()).add(self.currentMousePoint.clone());
+                jcall!(jcall!(self.points).getPoints()).add(crate::java_into_object(self.currentMousePoint.clone()));
             }
             let mut tempPointVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(PointsUtil::PointsUtil::getInstance()).doTransforms(jcall!(self.points).getPoints(), canvasAngle.clone(), jcall!(PointFactory::getInstance()).createXY(jcall!(dimension).getWidth(), jcall!(dimension).getHeight()));
             if self.isActive() && self.currentMousePoint.is_some() {
-                self.currentMousePoint = (jcall!(jcall!(self.points).getPoints()).removeAt(jcall!(self.points).getSize() - 1)).clone() /* as GPoint */;
+                self.currentMousePoint = { let java_value = ({ let java_object = (jcall!(jcall!(self.points).getPoints()).removeAt(jcall!(self.points).getSize() - 1)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             }
             let mut size: i32 = jcall!(tempPointVector).size();
             let mut firstPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = None;
             if size > 0 {
-                firstPoint = { let java_object = (jcall!(tempPointVector).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) };
+                firstPoint = { let java_value = ({ let java_object = (jcall!(tempPointVector).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             }
             for index in (1..size) {
                 let mut secondPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = { let java_object = (jcall!(tempPointVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) };
@@ -333,9 +338,9 @@ impl LinesGraphicItem {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("mouseMoved"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("mouseMoved"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -374,12 +379,12 @@ impl LinesGraphicItem {
 
     pub fn mouseClicked(&mut self, mut mouseEvent: Option<Rc<RefCell<MouseEvent>>>, mut x: i32, mut y: i32) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut mousePoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(PointFactory::getInstance()).createXY(jcall!(jcall!(mouseEvent).getPoint()).x.clone(), jcall!(jcall!(mouseEvent).getPoint()).y.clone());
-            if match (&(jcall!(mouseEvent).getModifiers() & jcall!(mouseEvent).BUTTON1_MASK), &jcall!(mouseEvent).BUTTON1_MASK) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            let mut mousePoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(PointFactory::getInstance()).createXY({ let java_field = jcall!(jcall!(mouseEvent).getPoint()).x.clone(); java_field }.clone(), { let java_field = jcall!(jcall!(mouseEvent).getPoint()).y.clone(); java_field }.clone());
+            if match (&(jcall!(mouseEvent).getModifiers() & { let java_field = jcall!(mouseEvent).BUTTON1_MASK.clone(); java_field }), &{ let java_field = jcall!(mouseEvent).BUTTON1_MASK.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(PointFactory::getInstance()).createXY(jcall!(mousePoint).getX() / x, jcall!(mousePoint).getY() / y);
                 jcall!(StatusFactory::getInstance()).setStatus(format!("{}{}", String::from("Line Point Added: "), jcall!(point).toString()));
-                self.addPoint(point.clone());
-            } else if match (&(jcall!(mouseEvent).getModifiers() & jcall!(mouseEvent).BUTTON3_MASK), &jcall!(mouseEvent).BUTTON3_MASK) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                self.addPoint_GPoint(point.clone());
+            } else if match (&(jcall!(mouseEvent).getModifiers() & { let java_field = jcall!(mouseEvent).BUTTON3_MASK.clone(); java_field }), &{ let java_field = jcall!(mouseEvent).BUTTON3_MASK.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 jcall!(StatusFactory::getInstance()).setStatus(String::from("Line Point Removed"));
                 self.removePoint();
             }
@@ -387,9 +392,9 @@ impl LinesGraphicItem {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("mouseMoved"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("mouseMoved"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -417,15 +422,15 @@ impl LinesGraphicItem {
 
     pub fn mouseMoved(&mut self, mut mouseEvent: Option<Rc<RefCell<MouseEvent>>>, mut x: i32, mut y: i32) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut mousePoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(PointFactory::getInstance()).createXY(jcall!(jcall!(mouseEvent).getPoint()).x.clone(), jcall!(jcall!(mouseEvent).getPoint()).y.clone());
+            let mut mousePoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(PointFactory::getInstance()).createXY({ let java_field = jcall!(jcall!(mouseEvent).getPoint()).x.clone(); java_field }.clone(), { let java_field = jcall!(jcall!(mouseEvent).getPoint()).y.clone(); java_field }.clone());
             let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(PointFactory::getInstance()).createXY(jcall!(mousePoint).getX() / x, jcall!(mousePoint).getY() / y);
             self.currentMousePoint = point.clone();
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("mouseMoved"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("mouseMoved"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -434,24 +439,24 @@ impl LinesGraphicItem {
     pub fn keyPressed(&mut self, mut keyEvent: Option<Rc<RefCell<KeyEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut keyCode: i32 = jcall!(keyEvent).getKeyCode();
-            if keyCode == jcall!(keyEvent).VK_ESCAPE {
+            if keyCode == { let java_field = jcall!(keyEvent).VK_ESCAPE.clone(); java_field } {
                 jcall!(StatusFactory::getInstance()).setStatus(String::from("Deactivated"));
                 self.deactivate();
-            } else if keyCode == jcall!(keyEvent).VK_UP {
+            } else if keyCode == { let java_field = jcall!(keyEvent).VK_UP.clone(); java_field } {
                 self.translate(0, -1);
-            } else if keyCode == jcall!(keyEvent).VK_DOWN {
+            } else if keyCode == { let java_field = jcall!(keyEvent).VK_DOWN.clone(); java_field } {
                 self.translate(0, 1);
-            } else if keyCode == jcall!(keyEvent).VK_LEFT {
+            } else if keyCode == { let java_field = jcall!(keyEvent).VK_LEFT.clone(); java_field } {
                 self.translate(-1, 0);
-            } else if keyCode == jcall!(keyEvent).VK_RIGHT {
+            } else if keyCode == { let java_field = jcall!(keyEvent).VK_RIGHT.clone(); java_field } {
                 self.translate(1, 0);
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).KEY_PRESSED.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).KEY_PRESSED.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

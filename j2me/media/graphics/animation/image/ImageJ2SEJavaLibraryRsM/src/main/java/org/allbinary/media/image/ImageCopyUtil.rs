@@ -18,10 +18,11 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::graphics::Anchor::Anchor;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::microemu::device::j2se::J2SEImmutableImage::J2SEImmutableImage;
+use crate::java::lang::Exception::*;
 use super::ImageUtil::ImageUtil;
 use super::ImageCreationUtil::ImageCreationUtil;
 
@@ -42,6 +43,10 @@ pub struct ImageCopyUtil {
 thread_local! { pub static ImageCopyUtil_instance: Option<Rc<RefCell<ImageCopyUtil>>> = ImageCopyUtil::new(); }
 
 impl ImageCopyUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ImageCopyUtil>>> {
@@ -69,14 +74,14 @@ impl ImageCopyUtil {
     
 
     // throws Exception
-    pub fn createImageForRotation(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>) -> Option<Rc<RefCell<Image>>> {
+    pub fn createImageForRotation(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return self.createImage(originalImage.clone());
     }
     
 
     // throws Exception
-    pub fn createImage(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>) -> Option<Rc<RefCell<Image>>> {
-        let mut image: Option<Rc<RefCell<Image>>> = { let java_receiver = self.imageCreationUtil.clone(); let java_arguments = (jcall!(originalImage).getWidth(), jcall!(originalImage).getHeight(),); let java_result = jcall!(java_receiver).createImageWH(java_arguments.0, java_arguments.1); java_result };
+    pub fn createImage(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = { let java_receiver = self.imageCreationUtil.clone(); let java_arguments = (jcall!(originalImage).getWidth(), jcall!(originalImage).getHeight(),); let java_result = jcall!(java_receiver).createImageWH(java_arguments.0, java_arguments.1); java_result };
         if jcall!(image).isMutable() {
             jcall!(jcall!(image).getGraphics()).drawImage(originalImage.clone(), 0, 0, self.anchor.clone());
             return image.clone();
@@ -87,9 +92,9 @@ impl ImageCopyUtil {
     
 
     // throws Exception
-    pub fn createImageScale(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut canvasScale: f32, mut resize: bool) -> Option<Rc<RefCell<Image>>> {
-        let mut newWidth: i32 = (((jcall!(originalImage).getWidth() * canvasScale)) as i32);
-        let mut newHeight: i32 = (((jcall!(originalImage).getHeight() * canvasScale)) as i32);
+    pub fn createImageScale(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut canvasScale: f32, mut resize: bool) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut newWidth: i32 = (((((jcall!(originalImage).getWidth()) as f32) * canvasScale)) as i32);
+        let mut newHeight: i32 = (((((jcall!(originalImage).getHeight()) as f32) * canvasScale)) as i32);
         if resize {
             if newWidth < newHeight {
                 newWidth = newHeight.clone();
@@ -100,8 +105,8 @@ impl ImageCopyUtil {
         }
         let mut originalBufferedImage: Option<Rc<RefCell<BufferedImage>>> = jcall!(self.imageUtil).getBufferedImage(originalImage.clone());
         let mut bufferedImage: Option<Rc<RefCell<BufferedImage>>> = jcall!(self.imageUtil).createBufferedImageWithLargerCanvas(originalBufferedImage.clone(), newWidth.clone(), newHeight.clone());
-        let mut image: Option<Rc<RefCell<J2SEImmutableImage>>> = J2SEImmutableImage::new(bufferedImage.clone());
-        return image.clone();
+        let mut image: Option<Rc<RefCell<J2SEImmutableImage>>> = J2SEImmutableImage::new1(bufferedImage.clone());
+        return image.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>);
     }
 }
 

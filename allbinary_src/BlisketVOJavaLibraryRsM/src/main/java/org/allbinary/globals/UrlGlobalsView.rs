@@ -16,14 +16,14 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,6 +40,10 @@ impl DomNodeInterface for UrlGlobalsView {
 }
 
 impl UrlGlobalsView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -55,9 +59,9 @@ impl UrlGlobalsView {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(UrlGlobalsData_WEBAPPPATH.with(Clone::clone).clone(), jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).URLGLOBALS).getWebappPath());
-        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes(document.clone(), UrlGlobalsData_NAME.with(Clone::clone).clone(), hashMap.clone());
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object(UrlGlobalsData_WEBAPPPATH.with(Clone::clone).clone()), crate::java_into_object(jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).URLGLOBALS.clone(); java_field }).getWebappPath()));
+        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), UrlGlobalsData_NAME.with(Clone::clone).clone(), hashMap.clone());
         return node.clone();
     }
 }

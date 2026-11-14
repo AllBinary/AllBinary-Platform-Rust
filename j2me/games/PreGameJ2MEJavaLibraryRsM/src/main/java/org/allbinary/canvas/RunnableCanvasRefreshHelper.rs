@@ -51,7 +51,7 @@ impl RunnableCanvasRefreshHelper {
     
 
     pub fn process(&mut self) {
-        jcall!(self.runnableCanvas).as_MyCanvas_mut().repaint();
+        jcall!(self.runnableCanvas).repaint();
     }
 }
 impl std::ops::Deref for RunnableCanvasRefreshHelper {

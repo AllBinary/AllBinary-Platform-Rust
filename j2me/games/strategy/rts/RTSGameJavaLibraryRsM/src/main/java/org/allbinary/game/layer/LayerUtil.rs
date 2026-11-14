@@ -48,20 +48,20 @@ impl LayerUtil {
     }
     
 
-    pub fn toString(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut x: i32, mut y: i32, mut z: i32) -> String {
+    pub fn toString(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut x: i32, mut y: i32, mut z: i32) -> String {
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
         let mut positionStrings: Option<Rc<RefCell<PositionStrings>>> = PositionStrings::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(LayerUtil_HASHTABLE.with(Clone::clone).clone());
         jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(hashtable.clone())));
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).X_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).X_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(x.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).Y_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).Y_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(y.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).Z_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).Z_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(z.clone());
         return jcall!(stringBuffer).toString();
     }

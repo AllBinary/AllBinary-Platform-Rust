@@ -32,6 +32,10 @@ pub struct TileMapPlacementVisitor {
 
 impl TileMapPlacementVisitor {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -46,7 +50,7 @@ impl TileMapPlacementVisitor {
     pub fn visit(&mut self, mut lastMap: Option<Rc<RefCell<TiledMap>>>, mut mapData: Vec<Vec<i32>>) {
     }
 }
-pub trait TileMapPlacementVisitorDyn {
+pub trait TileMapPlacementVisitorDyn: std::any::Any {
     fn as_TileMapPlacementVisitor(&self) -> &TileMapPlacementVisitor;
     fn as_TileMapPlacementVisitor_mut(&mut self) -> &mut TileMapPlacementVisitor;
     fn visit(&mut self, mut lastMap: Option<Rc<RefCell<TiledMap>>>, mut mapData: Vec<Vec<i32>>) { TileMapPlacementVisitor::visit(self.as_TileMapPlacementVisitor_mut(), lastMap, mapData) }

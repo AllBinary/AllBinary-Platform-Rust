@@ -22,6 +22,8 @@ use crate::org::allbinary::logic::system::security::licensing::AbeClientInformat
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::TransformInfoObjectConfigAndManipulatorFactoryInterface::TransformInfoObjectConfigAndManipulatorFactoryInterface;
 use super::TransformInfoObjectConfigInterface::TransformInfoObjectConfigInterface;
 
@@ -39,6 +41,10 @@ pub struct TransformInfoObjectConfigAndManipulatorFactoryBase {
 // impl TransformInfoObjectConfigAndManipulatorFactoryInterface for TransformInfoObjectConfigAndManipulatorFactoryBase with the methods of the trait
 
 impl TransformInfoObjectConfigAndManipulatorFactoryBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -68,11 +74,11 @@ impl TransformInfoObjectConfigAndManipulatorFactoryBase {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn getInstance3(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<dyn TransformInfoObjectConfigInterface>>> {
+    pub fn getInstance3_AbeClientInformationInterface_TransformInfoInterface_Document(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<dyn TransformInfoObjectConfigInterface>>> {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait TransformInfoObjectConfigAndManipulatorFactoryBaseDyn {
+pub trait TransformInfoObjectConfigAndManipulatorFactoryBaseDyn: std::any::Any {
     fn as_TransformInfoObjectConfigAndManipulatorFactoryBase(&self) -> &TransformInfoObjectConfigAndManipulatorFactoryBase;
     fn as_TransformInfoObjectConfigAndManipulatorFactoryBase_mut(&mut self) -> &mut TransformInfoObjectConfigAndManipulatorFactoryBase;
     fn getInstance(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Option<Rc<RefCell<dyn TransformInfoObjectConfigInterface>>> { TransformInfoObjectConfigAndManipulatorFactoryBase::getInstance(self.as_TransformInfoObjectConfigAndManipulatorFactoryBase_mut(), abeClientInformation, transformInfoInterface) }

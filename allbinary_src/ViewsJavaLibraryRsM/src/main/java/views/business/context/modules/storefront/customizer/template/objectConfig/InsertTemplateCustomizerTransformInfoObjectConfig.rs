@@ -25,6 +25,7 @@ use crate::org::allbinary::logic::visual::transform::info::objectConfig::Transfo
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::NoTemplateTransformInfoObjectConfig::NoTemplateTransformInfoObjectConfig;
 
 // Borrows the object of a Java reference
@@ -92,28 +93,28 @@ impl InsertTemplateCustomizerTransformInfoObjectConfig {
 
     // throws Exception
     pub fn set(&mut self, mut aParentViewName: String) {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             jcall!(self.logUtil).putF(format!("{}{}", String::from("Setting: "), aParentViewName), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("set()"));
         }
         let mut document: Option<Rc<RefCell<Document>>> = self.toXmlDoc();
-        let mut parentComponentsNodeList: Option<Rc<RefCell<NodeList>>> = jcall!(document).getElementsByTagName(jcall!(TransformInfosData::getInstance()).NAME.clone());
+        let mut parentComponentsNodeList: Option<Rc<RefCell<NodeList>>> = jcall!(document).getElementsByTagName({ let java_field = jcall!(TransformInfosData::getInstance()).NAME.clone(); java_field }.clone());
         if parentComponentsNodeList.is_some() && jcall!(parentComponentsNodeList).getLength() > 0 {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).putF(String::from("Replacing"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("set()"));
             }
             let mut componentNode: Option<Rc<RefCell<Node>>> = jcall!(jcall!(jcall!(parentComponentsNodeList).item(0)).getChildNodes()).item(0);
             if componentNode.is_some() {
                 jcall!(document).removeChild(componentNode.clone());
             }
-            jcall!(jcall!(parentComponentsNodeList).item(0)).appendChild(jcall!(TransformInfoDomNodeView::new1(aParentViewName.clone())).toXmlNode(document.clone()));
+            jcall!(jcall!(parentComponentsNodeList).item(0)).appendChild(jcall!(TransformInfoDomNodeView::new1_String(aParentViewName.clone())).toXmlNode(document.clone()));
         } else {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).putF(String::from("Setting"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("set()"));
             }
-            let mut objectConfigNode: Option<Rc<RefCell<Node>>> = jcall!(jcall!(document).getElementsByTagName(jcall!(TransformInfoObjectConfigData::getInstance()).NAME.clone())).item(0);
-            let mut parentComponentsNode: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(jcall!(TransformInfosData::getInstance()).NAME.clone());
+            let mut objectConfigNode: Option<Rc<RefCell<Node>>> = jcall!(jcall!(document).getElementsByTagName({ let java_field = jcall!(TransformInfoObjectConfigData::getInstance()).NAME.clone(); java_field }.clone())).item(0);
+            let mut parentComponentsNode: Option<Rc<RefCell<Node>>> = jcall!(document).createElement({ let java_field = jcall!(TransformInfosData::getInstance()).NAME.clone(); java_field }.clone());
             jcall!(objectConfigNode).appendChild(parentComponentsNode.clone());
-            let mut transformInfoDomNodeView: Option<Rc<RefCell<TransformInfoDomNodeView>>> = TransformInfoDomNodeView::new1(aParentViewName.clone());
+            let mut transformInfoDomNodeView: Option<Rc<RefCell<TransformInfoDomNodeView>>> = TransformInfoDomNodeView::new1_String(aParentViewName.clone());
             jcall!(parentComponentsNode).appendChild(jcall!(transformInfoDomNodeView).toXmlNode(document.clone()));
         }
     }

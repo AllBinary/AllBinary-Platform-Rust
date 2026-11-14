@@ -38,6 +38,10 @@ thread_local! { pub static IntermissionFactory_instance: Option<Rc<RefCell<Inter
 
 impl IntermissionFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             START_LEVEL_INTERMISSION_GAME_STATE: None,

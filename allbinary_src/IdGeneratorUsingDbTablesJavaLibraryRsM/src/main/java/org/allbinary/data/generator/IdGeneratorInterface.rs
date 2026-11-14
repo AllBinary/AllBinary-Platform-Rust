@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::IOException::IOException;
+use crate::java::io::IOException::IOException;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -26,13 +26,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait IdGeneratorInterface {
+pub trait IdGeneratorInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws IOException
     fn getNext(&mut self) -> String;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

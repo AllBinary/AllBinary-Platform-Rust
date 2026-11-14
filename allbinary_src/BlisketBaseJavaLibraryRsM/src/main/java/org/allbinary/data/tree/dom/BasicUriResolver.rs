@@ -29,6 +29,7 @@ use crate::org::allbinary::logic::io::path::AbFilePath::AbFilePath;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::visual::transform::info::template::TransformInfoTemplateData::TransformInfoTemplateData;
+use crate::java::lang::Exception::*;
 use super::URIResolverStrings::URIResolverStrings;
 
 // Borrows the object of a Java reference
@@ -73,54 +74,56 @@ impl BasicUriResolver {
 
     // throws TransformerException
     pub fn resolve(&mut self, mut href: String, mut base: String) -> Option<Rc<RefCell<Source>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(URLGLOBALS::getMainPath());
-            jcall!(stringBuffer).append(jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }.clone());
             jcall!(stringBuffer).append(href.clone());
             let mut abPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = (AbFilePath::new(jcall!(stringBuffer).toString())).clone() /* as AbPath */;
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).XMLLOGGING.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).XMLLOGGING.clone(); java_field }.clone()) {
                 jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
-                jcall!(stringBuffer).append(jcall!(self.uriResolverStrings).ATTEMPT.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(self.uriResolverStrings).ATTEMPT.clone(); java_field }.clone());
                 jcall!(stringBuffer).append(href.clone());
-                jcall!(stringBuffer).append(jcall!(self.uriResolverStrings).BASE.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(self.uriResolverStrings).BASE.clone(); java_field }.clone());
                 jcall!(stringBuffer).append(base.clone());
-                jcall!(stringBuffer).append(jcall!(self.uriResolverStrings).NEW_PATH.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(self.uriResolverStrings).NEW_PATH.clone(); java_field }.clone());
                 jcall!(stringBuffer).append(jcall!(abPath).toString());
-                jcall!(stringBuffer).append(jcall!(self.uriResolverStrings).NOTE.clone());
-                jcall!(stringBuffer).append(jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone());
-                jcall!(stringBuffer).append(jcall!(self.uriResolverStrings).URL_GLOBAL.clone());
-                jcall!(stringBuffer).append(jcall!(self.uriResolverStrings).REQUIRED_EXTENSION.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(self.uriResolverStrings).NOTE.clone(); java_field }.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(self.uriResolverStrings).URL_GLOBAL.clone(); java_field }.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(self.uriResolverStrings).REQUIRED_EXTENSION.clone(); java_field }.clone());
                 jcall!(stringBuffer).append(self.extension.clone());
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.uriResolverStrings).RESOLVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.uriResolverStrings).RESOLVE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
-            return StreamSource::new(jcall!(CryptFileReader::new(jcall!(TransformInfoTemplateData::getInstance()).UNCRYPTED_EXTENSION.clone(), jcall!(TransformInfoTemplateData::getInstance()).ENCRYPTED_EXTENSION.clone())).getInputStream(abPath.clone()));
+            return Some(StreamSource::new(jcall!(CryptFileReader::new({ let java_field = jcall!(TransformInfoTemplateData::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field }.clone(), { let java_field = jcall!(TransformInfoTemplateData::getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone())).getInputStream(abPath.clone())));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn toString(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(URLGLOBALS::getMainPath());
-            jcall!(stringBuffer).append(jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone());
-            jcall!(stringBuffer).append(jcall!(self.uriResolverStrings).IMPORT_URL.clone());
-            return jcall!(stringBuffer).toString();
+            jcall!(stringBuffer).append({ let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(self.uriResolverStrings).IMPORT_URL.clone(); java_field }.clone());
+            return Some(jcall!(stringBuffer).toString());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return String::from("BasicUriResolver - Does not work without webapp path should be changed");
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

@@ -16,10 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::io::ByteArrayInputStream::ByteArrayInputStream;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
@@ -43,6 +42,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::apache::commons::fileupload::FileItem::FileItem;
 use crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -59,12 +59,15 @@ pub struct DownloadableInventoryItemView {
     pub id: String,
     pub itemInterface: Option<Rc<RefCell<dyn ItemInterface>>>,
     pub downloadableItem: Option<Rc<RefCell<DownloadableItem>>>,
-    pub requestHashMap: Option<Rc<RefCell<HashMap>>>,
+    pub requestHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 pub static mut DownloadableInventoryItemView_TYPE_ID: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 11);
 impl RequestMapInterface for DownloadableInventoryItemView {
-    fn getRequestHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::getRequestHashMap(self) }
+    fn getRequestHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::getRequestHashMap(self) }
+}
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for DownloadableInventoryItemView {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }
 }
 
 impl DownloadableInventoryItemView {
@@ -84,7 +87,7 @@ impl DownloadableInventoryItemView {
         this.logUtil = LogUtil::getInstance();
         this.basicItemData = BasicItemData::getInstance();
         // super(...) is in the struct literal above
-        this.request = (jcall!(this.getPageContext()).getRequest()).clone() /* as HttpServletRequest */;
+        this.request = { let java_value = ((jcall!(this.getPageContext()).getRequest()).clone() /* as HttpServletRequest */).clone(); java_value };
         this.getFormData();
         this
     }
@@ -108,7 +111,7 @@ impl DownloadableInventoryItemView {
         this.logUtil = LogUtil::getInstance();
         this.basicItemData = BasicItemData::getInstance();
         // super(...) is in the struct literal above
-        this.request = (jcall!(this.getPageContext()).getRequest()).clone() /* as HttpServletRequest */;
+        this.request = { let java_value = ((jcall!(this.getPageContext()).getRequest()).clone() /* as HttpServletRequest */).clone(); java_value };
         this
     }
 
@@ -125,35 +128,36 @@ impl DownloadableInventoryItemView {
     // throws Exception
     pub fn getFormData(&mut self) {
         { let java_arguments = (jcall!(MultipartRequestParams::new1(self.request.clone())).toHashMap(),); self.setRequestHashMap(java_arguments.0) };
-        self.id = (jcall!(self.getRequestHashMap()).get(jcall!(self.basicItemData).ID.clone())).clone() /* as String */;
+        self.id = { let java_value = ({ let java_object = (jcall!(self.getRequestHashMap()).get(crate::java_into_object({ let java_field = jcall!(self.basicItemData).ID.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
     }
     
 
     pub fn addDomNodeInterfaces(&mut self) {
-        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         if self.downloadableItem.is_some() {
             jcall!(vector).add(crate::java_into_object(DownloadableItemView::new(self.downloadableItem.clone())));
         }
-        self.addDomNodeInterface(BasicItemView::new(self.itemInterface.clone(), vector.clone()));
+        { let java_arguments = (BasicItemView::new(self.itemInterface.clone(), vector.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface>>),); self.addDomNodeInterface(java_arguments.0) };
     }
     
 
     // throws Exception
     pub fn view(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             self.addDomNodeInterfaces();
-            return self.base.view();
+            return Some(self.base.view());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("view()"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("view()"), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -171,7 +175,7 @@ impl DownloadableInventoryItemView {
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(file).getPath(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("processFiles()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         jcall!(file).createNewFile();
         let mut byteArray: Vec<i8> = jcall!(fileItem).get();
-        jcall!(FileUtil::getInstance()).write(ByteArrayInputStream::new(byteArray.clone()), file.clone());
+        jcall!(FileUtil::getInstance()).write(crate::java::io::InputStream::InputStream::new1(byteArray.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>), file.clone());
     }
     
 
@@ -190,27 +194,27 @@ impl DownloadableInventoryItemView {
     
 
     pub fn getItemFilePath(&mut self) -> String {
-        let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(self.getWeblisketSession()).getStoreName());
+        let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance({ let java_argument = jcall!(self.getWeblisketSession()).getStoreName(); java_argument }).map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
         let mut filePathData: Option<Rc<RefCell<FilePathData>>> = FilePathData::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(URLGLOBALS::getWebappPath());
         jcall!(stringBuffer).append(jcall!(storeFrontInterface).getCurrentHostNamePath());
         jcall!(stringBuffer).append(jcall!(self.itemInterface).getCategory());
-        jcall!(stringBuffer).appendchar(jcall!(filePathData).SEPARATORCHAR.clone());
+        jcall!(stringBuffer).appendchar({ let java_field = jcall!(filePathData).SEPARATORCHAR.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(self.itemInterface).getId());
-        jcall!(stringBuffer).appendchar(jcall!(filePathData).SEPARATORCHAR.clone());
+        jcall!(stringBuffer).appendchar({ let java_field = jcall!(filePathData).SEPARATORCHAR.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(self.downloadableItem).getId());
-        jcall!(stringBuffer).appendchar(jcall!(filePathData).SEPARATORCHAR.clone());
+        jcall!(stringBuffer).appendchar({ let java_field = jcall!(filePathData).SEPARATORCHAR.clone(); java_field }.clone());
         return jcall!(stringBuffer).toString();
     }
     
 
-    pub fn setRequestHashMap(&mut self, mut requestHashMap: Option<Rc<RefCell<HashMap>>>) {
+    pub fn setRequestHashMap(&mut self, mut requestHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
         self.requestHashMap = requestHashMap.clone();
     }
     
 
-    pub fn getRequestHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn getRequestHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return self.requestHashMap.clone();
     }
     
@@ -235,8 +239,8 @@ pub trait DownloadableInventoryItemViewDyn: crate::views::business::context::mod
     fn processFile(&mut self, mut fileItem: Option<Rc<RefCell<FileItem>>>) { DownloadableInventoryItemView::processFile(self.as_DownloadableInventoryItemView_mut(), fileItem) }
     fn unzip(&mut self, mut fileItem: Option<Rc<RefCell<FileItem>>>) { DownloadableInventoryItemView::unzip(self.as_DownloadableInventoryItemView_mut(), fileItem) }
     fn getItemFilePath(&mut self) -> String { DownloadableInventoryItemView::getItemFilePath(self.as_DownloadableInventoryItemView_mut()) }
-    fn setRequestHashMap(&mut self, mut requestHashMap: Option<Rc<RefCell<HashMap>>>) { DownloadableInventoryItemView::setRequestHashMap(self.as_DownloadableInventoryItemView_mut(), requestHashMap) }
-    fn getRequestHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { DownloadableInventoryItemView::getRequestHashMap(self.as_DownloadableInventoryItemView_mut()) }
+    fn setRequestHashMap(&mut self, mut requestHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) { DownloadableInventoryItemView::setRequestHashMap(self.as_DownloadableInventoryItemView_mut(), requestHashMap) }
+    fn getRequestHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { DownloadableInventoryItemView::getRequestHashMap(self.as_DownloadableInventoryItemView_mut()) }
     fn getDownloadableItem(&mut self) -> Option<Rc<RefCell<DownloadableItem>>> { DownloadableInventoryItemView::getDownloadableItem(self.as_DownloadableInventoryItemView_mut()) }
 }
 impl DownloadableInventoryItemViewDyn for DownloadableInventoryItemView {
@@ -244,6 +248,10 @@ impl DownloadableInventoryItemViewDyn for DownloadableInventoryItemView {
     fn as_DownloadableInventoryItemView_mut(&mut self) -> &mut DownloadableInventoryItemView { self }
 }
 
+impl crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn for DownloadableInventoryItemView {
+    fn as_TransformInfoHttpComposite(&self) -> &crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &self.base.base.base }
+    fn as_TransformInfoHttpComposite_mut(&mut self) -> &mut crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &mut self.base.base.base }
+}
 impl crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentViewDyn for DownloadableInventoryItemView {
     fn as_HttpStoreComponentView(&self) -> &crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &self.base }
     fn as_HttpStoreComponentView_mut(&mut self) -> &mut crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &mut self.base }

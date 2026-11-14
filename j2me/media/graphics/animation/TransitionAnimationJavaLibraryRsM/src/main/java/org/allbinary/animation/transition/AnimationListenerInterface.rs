@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AnimationListenerInterface {
+pub trait AnimationListenerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn onPlatformAnimationStart(&mut self);
@@ -35,8 +35,6 @@ pub trait AnimationListenerInterface {
     
 
     fn onPlatformAnimationRepeat(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

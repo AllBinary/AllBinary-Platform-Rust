@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 // use crate::java::awt::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait MotionRectangleConstraintsInterface {
+pub trait MotionRectangleConstraintsInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getMaxMotionRectangles(&mut self) -> i32;
@@ -53,8 +54,6 @@ pub trait MotionRectangleConstraintsInterface {
 
     // throws Exception
     fn isValid(&mut self, frame: Option<i64>, bufferedImage: Option<Rc<RefCell<BufferedImage>>>, rectangle: Option<Rc<RefCell<Rectangle>>>) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

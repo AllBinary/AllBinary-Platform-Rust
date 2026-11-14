@@ -19,9 +19,10 @@ use std::rc::Rc;
 use super::*;
 // use crate::java::io::ByteArrayInputStream::ByteArrayInputStream;
 // use crate::java::io::ByteArrayOutputStream::ByteArrayOutputStream;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::InputStream::InputStream;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 use super::CryptInterface::CryptInterface;
 
 // Borrows the object of a Java reference
@@ -40,6 +41,10 @@ pub struct BasicCryptUtil {
 thread_local! { pub static BasicCryptUtil_instance: Option<Rc<RefCell<BasicCryptUtil>>> = BasicCryptUtil::new(); }
 
 impl BasicCryptUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -64,11 +69,11 @@ impl BasicCryptUtil {
     
 
     // throws Exception
-    pub fn getDecryptedInputStream(&mut self, mut inputStream: Option<Rc<RefCell<InputStream>>>, mut cryptInterface: Option<Rc<RefCell<dyn CryptInterface>>>) -> Option<Rc<RefCell<InputStream>>> {
-        let mut buffer: Vec<u8> = Vec::new();
+    pub fn getDecryptedInputStream(&mut self, mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>, mut cryptInterface: Option<Rc<RefCell<dyn CryptInterface>>>) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
+        let mut buffer: Option<Rc<RefCell<crate::java::io::OutputStream::OutputStream>>> = crate::java::io::OutputStream::OutputStream::new();
         let mut ch: i32 = 0;
         while true {
-            ch = jcall!(inputStream).read();
+            ch = { let java_value = (jcall!(inputStream).as_InputStream_mut().read()).clone(); java_value };
             if ch == -1 {
                 break;
             }
@@ -78,9 +83,9 @@ impl BasicCryptUtil {
         let mut decryptedString: String = String::from_utf8(decrypted.clone().iter().map(|value| *value as u8).collect()).unwrap();
         let mut index: i32 = decryptedString.find(&self.XML_START.clone()).map(|index| index as i32).unwrap_or(-1);
         if index > 0 {
-            decryptedString = decryptedString[(index.clone()) as usize..].to_string();
+            decryptedString = { let java_value = (decryptedString[(index.clone()) as usize..].to_string()).clone(); java_value };
         }
-        return ByteArrayInputStream::new(jcall!(self.tsUtil).getByteArray(decryptedString.clone()));
+        return crate::java::io::InputStream::InputStream::new1(jcall!(self.tsUtil).getByteArray(decryptedString.clone())).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>);
     }
 }
 

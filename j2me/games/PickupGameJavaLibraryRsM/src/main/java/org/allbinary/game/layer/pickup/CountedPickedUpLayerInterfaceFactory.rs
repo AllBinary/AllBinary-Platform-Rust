@@ -23,6 +23,7 @@ use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::PickedUpLayerInterfaceFactory::PickedUpLayerInterfaceFactory;
 use super::CountedPickedUpLayerInterfaceFactoryInterface::CountedPickedUpLayerInterfaceFactoryInterface;
 use super::PickedUpLayerType::PickedUpLayerType;
@@ -40,7 +41,7 @@ pub struct CountedPickedUpLayerInterfaceFactory {
     pub id: i32,
 }
 
-thread_local! { pub static CountedPickedUpLayerInterfaceFactory_NULL_COUNTED_PICKUP_LAYER_FACTORY: Option<Rc<RefCell<dyn CountedPickedUpLayerInterfaceFactoryDyn>>> = CountedPickedUpLayerInterfaceFactory::new(jcall!(PickedUpLayerTypeFactory::PickedUpLayerTypeFactory::getInstance()).NONE.clone(), IconLayer_NULL_ICON_LAYER.with(Clone::clone).clone(), jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0)).map(|reference| reference as Rc<RefCell<dyn CountedPickedUpLayerInterfaceFactoryDyn>>); }
+thread_local! { pub static CountedPickedUpLayerInterfaceFactory_NULL_COUNTED_PICKUP_LAYER_FACTORY: Option<Rc<RefCell<dyn CountedPickedUpLayerInterfaceFactoryDyn>>> = CountedPickedUpLayerInterfaceFactory::new({ let java_field = jcall!(PickedUpLayerTypeFactory::PickedUpLayerTypeFactory::getInstance()).NONE.clone(); java_field }.clone(), IconLayer_NULL_ICON_LAYER.with(Clone::clone).clone(), jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0)).map(|reference| reference as Rc<RefCell<dyn CountedPickedUpLayerInterfaceFactoryDyn>>); }
 // impl CountedPickedUpLayerInterfaceFactoryInterface for CountedPickedUpLayerInterfaceFactory with the methods of the trait
 
 impl CountedPickedUpLayerInterfaceFactory {
@@ -53,20 +54,21 @@ impl CountedPickedUpLayerInterfaceFactory {
         };
         // super(...) is in the struct literal above
         let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(CountedPickedUpLayerInterfaceFactoryPool::CountedPickedUpLayerInterfaceFactoryPool::getInstance()).getList();
-        this.id = jcall!(list).size();
+        this.id = { let java_value = (jcall!(list).size()).clone(); java_value };
         this
     }
 
     pub fn new(mut pickeUpLayerType: Option<Rc<RefCell<PickedUpLayerType>>>, mut iconLayer: Option<Rc<RefCell<IconLayer>>>, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(pickeUpLayerType, iconLayer, animationInterface))));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(pickeUpLayerType.clone(), iconLayer.clone(), animationInterface.clone()))));
+            let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(CountedPickedUpLayerInterfaceFactoryPool::CountedPickedUpLayerInterfaceFactoryPool::getInstance()).getList();
             jcall!(list).add((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
         this
     }
     
 
     // throws Exception
-    pub fn getNextInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut x: i32, mut y: i32, mut z: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone())));
+    pub fn getNextInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut x: i32, mut y: i32, mut z: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> {
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
@@ -90,7 +92,7 @@ impl std::ops::DerefMut for CountedPickedUpLayerInterfaceFactory {
 pub trait CountedPickedUpLayerInterfaceFactoryDyn: crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactory::PickedUpLayerInterfaceFactoryDyn {
     fn as_CountedPickedUpLayerInterfaceFactory(&self) -> &CountedPickedUpLayerInterfaceFactory;
     fn as_CountedPickedUpLayerInterfaceFactory_mut(&mut self) -> &mut CountedPickedUpLayerInterfaceFactory;
-    fn getNextInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut x: i32, mut y: i32, mut z: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> { CountedPickedUpLayerInterfaceFactory::getNextInstance(self.as_CountedPickedUpLayerInterfaceFactory_mut(), hashtable, x, y, z) }
+    fn getNextInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut x: i32, mut y: i32, mut z: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> { CountedPickedUpLayerInterfaceFactory::getNextInstance(self.as_CountedPickedUpLayerInterfaceFactory_mut(), hashtable, x, y, z) }
     fn getTotal(&mut self) -> i32 { CountedPickedUpLayerInterfaceFactory::getTotal(self.as_CountedPickedUpLayerInterfaceFactory_mut()) }
     fn getId(&mut self) -> i32 { CountedPickedUpLayerInterfaceFactory::getId(self.as_CountedPickedUpLayerInterfaceFactory_mut()) }
 }
@@ -106,6 +108,11 @@ impl crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactory::
 impl crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactoryBase::PickedUpLayerInterfaceFactoryBaseDyn for CountedPickedUpLayerInterfaceFactory {
     fn as_PickedUpLayerInterfaceFactoryBase(&self) -> &crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactoryBase::PickedUpLayerInterfaceFactoryBase { &self.base.base }
     fn as_PickedUpLayerInterfaceFactoryBase_mut(&mut self) -> &mut crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactoryBase::PickedUpLayerInterfaceFactoryBase { &mut self.base.base }
+}
+impl crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactoryInterface::PickedUpLayerInterfaceFactoryInterface for CountedPickedUpLayerInterfaceFactory {
+    fn getPickedUpLayerType(&mut self) -> Option<Rc<RefCell<crate::org::allbinary::game::layer::pickup::PickedUpLayerType::PickedUpLayerType>>> { crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactory::PickedUpLayerInterfaceFactory::getPickedUpLayerType(crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactory::PickedUpLayerInterfaceFactoryDyn::as_PickedUpLayerInterfaceFactory_mut(self)) }
+    fn getIconLayer(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> { crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactory::PickedUpLayerInterfaceFactory::getIconLayer(crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactory::PickedUpLayerInterfaceFactoryDyn::as_PickedUpLayerInterfaceFactory_mut(self)) }
+    fn getAnimationInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactory::PickedUpLayerInterfaceFactory::getAnimationInterface(crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactory::PickedUpLayerInterfaceFactoryDyn::as_PickedUpLayerInterfaceFactory_mut(self)) }
 }
 
 

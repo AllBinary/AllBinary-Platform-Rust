@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessor;
 use crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface;
 use crate::org::allbinary::graphics::font::UpdateMyFontProcessor::UpdateMyFontProcessor;
@@ -41,10 +41,14 @@ pub struct CanvasDrawLineString {
 
 thread_local! { pub static CanvasDrawLineString_NULL_CANVAS_DRAW_LINE_STRING: Option<Rc<RefCell<CanvasDrawLineString>>> = CanvasDrawLineString::new(0, 0); }
 impl UpdateMyFontInterface for CanvasDrawLineString {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 impl CanvasDrawLineString {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut x: i32, mut y: i32) -> Self {
@@ -56,7 +60,6 @@ impl CanvasDrawLineString {
             fontHeight: 0,
         };
         this.drawStringUtil = DrawStringUtil::getInstance();
-        this.myFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
         this.fontHeight = 0;
         this.x = x.clone();
         this.y = y.clone();
@@ -64,18 +67,20 @@ impl CanvasDrawLineString {
     }
 
     pub fn new(mut x: i32, mut y: i32) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(x, y))))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(x.clone(), y.clone()))));
+        jcall!(this).myFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.fontHeight = jcall!(font).getHeight();
-        self.myFontProcessor = MyFontProcessor::getInstance();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.fontHeight = { let java_value = (jcall!(font).getHeight()).clone(); java_value };
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut string: String, mut line: i32) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut string: String, mut line: i32) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         { let java_receiver = self.drawStringUtil.clone(); let java_arguments = (graphics.clone(), string.clone(), 0, (string.chars().count() as i32), self.x.clone(), self.y + (line * self.fontHeight),); jcall!(java_receiver).drawCenterString(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5); };
     }

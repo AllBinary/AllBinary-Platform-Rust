@@ -30,6 +30,7 @@ use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapUt
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMap::RaceTrackGeographicMap;
 use crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNode;
+use crate::java::lang::Exception::*;
 use super::BasePathFinderGraphVisitor::BasePathFinderGraphVisitor;
 
 // Borrows the object of a Java reference
@@ -75,9 +76,9 @@ impl<V, E> PathFinderGraphHackVisitor<V, E> {
     pub fn fixStart(&mut self, mut graph: Option<Rc<RefCell<SimpleWeightedGraph<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>, Option<Rc<RefCell<DefaultWeightedEdge>>>>>>>, mut startPathFindingNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         let mut geographicMapCellPositionFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactoryDyn>>> = jcall!(self.geographicMapInterface).getGeographicMapCellPositionFactory();
         let mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(self.geographicMapInterface).getAllBinaryTiledLayer();
-        for index in (0..=jcall!(startPathFindingNodeList).size() - 1).rev() {
+        for index in (0..={ let java_bound = jcall!(startPathFindingNodeList).size() - 1; java_bound }).rev() {
             let mut startPathFindingNode: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>> = { let java_object = (jcall!(startPathFindingNodeList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>>>().expect("ClassCastException").clone()) };
-            let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = jcall!(startPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone();
+            let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = { let java_field = jcall!(startPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone(); java_field }.clone();
             let mut column: i32 = jcall!(geographicMapCellPosition).getColumn();
             let mut row: i32 = jcall!(geographicMapCellPosition).getRow();
             let mut nextRow: i32 = row + 1;
@@ -93,9 +94,9 @@ impl<V, E> PathFinderGraphHackVisitor<V, E> {
     pub fn fixEnd(&mut self, mut graph: Option<Rc<RefCell<SimpleWeightedGraph<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>, Option<Rc<RefCell<DefaultWeightedEdge>>>>>>>, mut endPathFindingNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         let mut geographicMapCellPositionFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactoryDyn>>> = jcall!(self.geographicMapInterface).getGeographicMapCellPositionFactory();
         let mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(self.geographicMapInterface).getAllBinaryTiledLayer();
-        for index in (0..=jcall!(endPathFindingNodeList).size() - 1).rev() {
+        for index in (0..={ let java_bound = jcall!(endPathFindingNodeList).size() - 1; java_bound }).rev() {
             let mut endPathFindingNode: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>> = { let java_object = (jcall!(endPathFindingNodeList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>>>().expect("ClassCastException").clone()) };
-            let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = jcall!(endPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone();
+            let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = { let java_field = jcall!(endPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone(); java_field }.clone();
             jcall!(graph).addVertex(geographicMapCellPosition.clone());
             let mut column: i32 = jcall!(geographicMapCellPosition).getColumn();
             let mut row: i32 = jcall!(geographicMapCellPosition).getRow();
@@ -111,7 +112,7 @@ impl<V, E> PathFinderGraphHackVisitor<V, E> {
     // throws Exception
     pub fn fixOverPassEdges(&mut self, mut graph: Option<Rc<RefCell<SimpleWeightedGraph<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>, Option<Rc<RefCell<DefaultWeightedEdge>>>>>>>) {
         let mut geographicMapCellPositionFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactoryDyn>>> = jcall!(self.geographicMapInterface).getGeographicMapCellPositionFactory();
-        let mut raceTrackGeographicMap: Option<Rc<RefCell<RaceTrackGeographicMap>>> = (self.geographicMapInterface).clone() /* as RaceTrackGeographicMap */;
+        let mut raceTrackGeographicMap: Option<Rc<RefCell<RaceTrackGeographicMap>>> = (self.geographicMapInterface).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<RaceTrackGeographicMap>() }, "ClassCastException: not a RaceTrackGeographicMap"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<RaceTrackGeographicMap>) } });
         let mut CellPositionArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>> = jcall!(jcall!(raceTrackGeographicMap).getRaceTrackData()).getOverPassGeographicMapCellPositionArray();
         for index in (0..=(CellPositionArray.len() as i32) - 1).rev() {
             let mut overPassGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>> = CellPositionArray[(index) as usize].clone();
@@ -130,13 +131,13 @@ impl<V, E> PathFinderGraphHackVisitor<V, E> {
 
     // throws Exception
     pub fn fixPath(&mut self, mut startPathFindingNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut endPathFindingNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut pathList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
-        for index in (0..=jcall!(startPathFindingNodeList).size() - 1).rev() {
+        for index in (0..={ let java_bound = jcall!(startPathFindingNodeList).size() - 1; java_bound }).rev() {
             let mut endPathFindingNode: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>> = { let java_object = (jcall!(endPathFindingNodeList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>>>().expect("ClassCastException").clone()) };
             let mut startPathFindingNode: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>> = { let java_object = (jcall!(startPathFindingNodeList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>>>().expect("ClassCastException").clone()) };
-            if jcall!(BasicGeographicMapUtil::getInstance()).isSameCellPosition(jcall!(startPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone(), jcall!(endPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone()) {
-                if jcall!(pathList).remove(crate::java_into_object(jcall!(endPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone())) {
-                    jcall!(pathList).remove(crate::java_into_object(jcall!(startPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone()));
-                    jcall!(pathList).addAt(0, crate::java_into_object(jcall!(startPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone()));
+            if jcall!(BasicGeographicMapUtil::getInstance()).isSameCellPosition({ let java_field = jcall!(startPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone(); java_field }.clone(), { let java_field = jcall!(endPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone(); java_field }.clone()) {
+                if jcall!(pathList).remove(crate::java_into_object({ let java_field = jcall!(endPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone(); java_field }.clone())) {
+                    jcall!(pathList).remove(crate::java_into_object({ let java_field = jcall!(startPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone(); java_field }.clone()));
+                    jcall!(pathList).addAt(0, crate::java_into_object({ let java_field = jcall!(startPathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone(); java_field }.clone()));
                 }
             }
         }
@@ -147,7 +148,7 @@ impl<V, E> PathFinderGraphHackVisitor<V, E> {
     // throws Exception
     pub fn removeOverPassEdges(&mut self, mut pathList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         let mut geographicMapCellPositionFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactoryDyn>>> = jcall!(self.geographicMapInterface).getGeographicMapCellPositionFactory();
-        let mut raceTrackGeographicMap: Option<Rc<RefCell<RaceTrackGeographicMap>>> = (self.geographicMapInterface).clone() /* as RaceTrackGeographicMap */;
+        let mut raceTrackGeographicMap: Option<Rc<RefCell<RaceTrackGeographicMap>>> = (self.geographicMapInterface).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<RaceTrackGeographicMap>() }, "ClassCastException: not a RaceTrackGeographicMap"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<RaceTrackGeographicMap>) } });
         let mut CellPositionArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>> = jcall!(jcall!(raceTrackGeographicMap).getRaceTrackData()).getOverPassGeographicMapCellPositionArray();
         for index in (0..=(CellPositionArray.len() as i32) - 1).rev() {
             let mut overPassGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>> = CellPositionArray[(index) as usize].clone();

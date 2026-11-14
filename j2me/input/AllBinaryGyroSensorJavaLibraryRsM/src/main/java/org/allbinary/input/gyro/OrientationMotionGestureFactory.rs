@@ -37,16 +37,20 @@ pub struct OrientationMotionGestureFactory {
     pub ROLL_RIGHT: Option<Rc<RefCell<MotionGestureInput>>>,
 }
 
-pub static mut OrientationMotionGestureFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut OrientationMotionGestureFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl OrientationMotionGestureFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<OrientationMotionGestureFactory>>> {
-        if match (&unsafe { OrientationMotionGestureFactory_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *OrientationMotionGestureFactory_instance = OrientationMotionGestureFactory::new() };
+        if match (&unsafe { OrientationMotionGestureFactory_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *OrientationMotionGestureFactory_instance = crate::java_into_object(OrientationMotionGestureFactory::new()) };
         }
-        return (unsafe { OrientationMotionGestureFactory_instance.clone() }).clone() /* as OrientationMotionGestureFactory */;
+        return { let java_object = (unsafe { OrientationMotionGestureFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<OrientationMotionGestureFactory>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -59,7 +63,7 @@ impl OrientationMotionGestureFactory {
             ROLL_LEFT: None,
             ROLL_RIGHT: None,
         };
-        let mut MAX: i32 = jcall!(InputFactory::getInstance()).MAX.clone();
+        let mut MAX: i32 = { let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field }.clone();
         this.LEFT = MotionGestureInput::new(MAX - 20, String::from("Left Orient"));
         this.RIGHT = MotionGestureInput::new(MAX - 21, String::from("Right Orient"));
         this.UP = MotionGestureInput::new(MAX - 22, String::from("Up Orient"));

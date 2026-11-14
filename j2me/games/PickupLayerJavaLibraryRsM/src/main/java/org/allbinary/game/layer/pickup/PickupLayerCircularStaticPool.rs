@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::layer::AllBinaryLayerCircularPool::AllBinaryLayerCircularPool;
+use crate::java::lang::Exception::*;
 use super::PickupLayer::PickupLayer;
 use super::PickedUpLayerInterface::PickedUpLayerInterface;
 use super::PickedUpLayerInterfaceFactoryInterface::PickedUpLayerInterfaceFactoryInterface;
@@ -60,7 +61,7 @@ impl PickupLayerCircularStaticPool {
         let mut pickupLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::pickup::PickupLayer::PickupLayerDyn>>> = { let java_object = (self.getNextInstance()).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::pickup::PickupLayer::PickupLayerDyn>>>>().expect("ClassCastException").clone()) };
         jcall!(pickupLayer).initXYZ(x.clone(), y.clone(), z.clone());
         jcall!(pickupLayer).init(pickedUpLayerInterfaceFactoryInterface.clone(), jcall!(pickedUpLayerInterfaceFactoryInterface).getAnimationInterface());
-        return pickupLayer.clone().map(|reference| reference as Rc<RefCell<dyn PickedUpLayerInterface>>);
+        return pickupLayer.clone().map(|_java_reference| -> Rc<RefCell<dyn PickedUpLayerInterface>> { panic!("ClassCastException: the Rust trait of PickupLayer does not have PickedUpLayerInterface as a base trait") });
     }
 }
 impl std::ops::Deref for PickupLayerCircularStaticPool {

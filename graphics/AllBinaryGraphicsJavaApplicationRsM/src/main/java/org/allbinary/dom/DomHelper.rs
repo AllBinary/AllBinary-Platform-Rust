@@ -18,7 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::io::ByteArrayOutputStream::ByteArrayOutputStream;
-// use crate::java::io::File::File;
+use crate::java::io::File::File;
 // use crate::javax::xml::parsers::DocumentBuilder::DocumentBuilder;
 // use crate::javax::xml::parsers::DocumentBuilderFactory::DocumentBuilderFactory;
 // use crate::javax::xml::transform::Transformer::Transformer;
@@ -31,6 +31,7 @@ use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -67,59 +68,62 @@ impl DomHelper {
     
 
     pub fn createDocument(&mut self) -> Option<Rc<RefCell<Document>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut factory: Option<Rc<RefCell<DocumentBuilderFactory>>> = DocumentBuilderFactory::newInstance();
             let mut builder: Option<Rc<RefCell<DocumentBuilder>>> = jcall!(factory).newDocumentBuilder();
             let mut document: Option<Rc<RefCell<Document>>> = jcall!(builder).newDocument();
-            return document.clone();
+            return Some(document.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return None;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
     pub fn createDocument1(&mut self, mut xmlFile: Option<Rc<RefCell<File>>>) -> Option<Rc<RefCell<Document>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut factory: Option<Rc<RefCell<DocumentBuilderFactory>>> = DocumentBuilderFactory::newInstance();
             let mut builder: Option<Rc<RefCell<DocumentBuilder>>> = jcall!(factory).newDocumentBuilder();
             let mut document: Option<Rc<RefCell<Document>>> = jcall!(builder).parse(xmlFile.clone());
-            return document.clone();
+            return Some(document.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws Exception
     pub fn toString(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut domSource: Option<Rc<RefCell<DOMSource>>> = DOMSource::new(document.clone());
-            let mut byteArrayOutputStream: Vec<u8> = Vec::new();
+            let mut byteArrayOutputStream: Option<Rc<RefCell<crate::java::io::OutputStream::OutputStream>>> = crate::java::io::OutputStream::OutputStream::new();
             let mut streamResult: Option<Rc<RefCell<StreamResult>>> = StreamResult::new(byteArrayOutputStream.clone());
             let mut copyTransformerFactory: Option<Rc<RefCell<TransformerFactory>>> = TransformerFactory::newInstance();
             let mut copyTransformer: Option<Rc<RefCell<Transformer>>> = jcall!(copyTransformerFactory).newTransformer();
             jcall!(copyTransformer).transform(domSource.clone(), streamResult.clone());
-            return String::from_utf8_lossy(&byteArrayOutputStream).into_owned();
+            return Some(jcall!(byteArrayOutputStream).toString());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -135,7 +139,7 @@ impl DomHelper {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
             }
@@ -158,7 +162,7 @@ impl DomHelper {
 
     // throws Exception
     pub fn getChildrenWithoutTextNodes(&mut self, mut nodeName: String, mut nodeList: Option<Rc<RefCell<NodeList>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut childNodeList: Option<Rc<RefCell<NodeList>>> = self.getChildNodeList(nodeName.clone(), nodeList.clone());
         let mut numberOfChildren: i32 = jcall!(childNodeList).getLength();
         for index in (0..numberOfChildren) {
@@ -173,7 +177,7 @@ impl DomHelper {
 
     // throws Exception
     pub fn getWithoutTextNodes(&mut self, mut nodeList: Option<Rc<RefCell<NodeList>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut numberOfChildren: i32 = jcall!(nodeList).getLength();
         for index in (0..numberOfChildren) {
             let mut node: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
@@ -201,7 +205,7 @@ impl DomHelper {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn searchNodeList(&mut self, mut nodeName: String, mut nodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Option<Rc<RefCell<Node>>> {
+    pub fn searchNodeList_String_BasicArrayList(&mut self, mut nodeName: String, mut nodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Option<Rc<RefCell<Node>>> {
         let mut numberOfNodes: i32 = jcall!(nodeList).size();
         for index in (0..numberOfNodes) {
             let mut node: Option<Rc<RefCell<Node>>> = (jcall!(nodeList).get(index.clone())).clone() /* as Node */;

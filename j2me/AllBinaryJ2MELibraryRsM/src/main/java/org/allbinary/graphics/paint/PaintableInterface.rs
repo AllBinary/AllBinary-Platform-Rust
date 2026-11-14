@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait PaintableInterface {
+pub trait PaintableInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
-    fn paint(&mut self, graphics: Option<Rc<RefCell<Graphics>>>);
+    fn paint(&mut self, graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>);
     
 
-    fn paintThreed(&mut self, graphics: Option<Rc<RefCell<Graphics>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn paintThreed(&mut self, graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>);
 }
 
 

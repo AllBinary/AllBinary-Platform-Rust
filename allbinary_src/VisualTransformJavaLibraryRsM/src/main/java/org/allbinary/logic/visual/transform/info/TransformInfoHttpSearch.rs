@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::logic::io::path::AbPathData::AbPathData;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 use super::TransformInfoHttp::TransformInfoHttp;
 
 // Borrows the object of a Java reference
@@ -49,7 +50,7 @@ impl TransformInfoHttpSearch {
         if true {
             { let java_arguments = (jcall!(jcall!(searchRequest).getStoreFront()).getName(),); this.setStoreName(java_arguments.0) };
         } else {
-            { let java_arguments = (jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(),); this.setStoreName(java_arguments.0) };
+            { let java_arguments = ({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(),); this.setStoreName(java_arguments.0) };
         }
         let mut dataFileName: String = jcall!(searchRequest).getXslFile();
         this.setTemplateFile(dataFileName.clone());
@@ -65,9 +66,9 @@ impl TransformInfoHttpSearch {
     pub fn getPath(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(URLGLOBALS::getMainPath());
-        jcall!(stringBuffer).append(jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.getStoreName());
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
         return jcall!(stringBuffer).toString();
     }
     

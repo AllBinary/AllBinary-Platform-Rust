@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -35,6 +36,10 @@ pub struct SystemProperties {
 thread_local! { pub static SystemProperties_instance: Option<Rc<RefCell<SystemProperties>>> = SystemProperties::new(); }
 
 impl SystemProperties {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<SystemProperties>>> {

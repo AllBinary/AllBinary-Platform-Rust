@@ -26,6 +26,7 @@ use crate::org::allbinary::input::automation::robot::InputRobotInterface::InputR
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -41,6 +42,10 @@ pub struct ScreenScavangerRobot {
 
 
 impl ScreenScavangerRobot {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -60,13 +65,13 @@ impl ScreenScavangerRobot {
 
     // throws Exception
     pub fn getScreenAsBufferedImages(&mut self) -> Vec<Option<Rc<RefCell<BufferedImage>>>> {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getScreenAsBufferedImages"));
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getScreenAsBufferedImages"));
         let mut dimScreenSize: Option<Rc<RefCell<Dimension>>> = jcall!(Toolkit::getDefaultToolkit()).getScreenSize();
         let mut rectScreenSize: Option<Rc<RefCell<Rectangle>>> = Rectangle::new(dimScreenSize.clone());
-        let mut robotHashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(InputRobotFactory::getInstance()).get();
+        let mut robotHashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(InputRobotFactory::getInstance()).get();
         let mut bufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>> = vec![None; (1) as usize];
         let mut index: i32 = 0;
-        let mut inputRobotInterface: Option<Rc<RefCell<dyn InputRobotInterface>>> = { let java_object = jcall!(robotHashtable).get(crate::java_into_object(String::from("Java Robot"))); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn InputRobotInterface>>>>().expect("ClassCastException").clone()) };
+        let mut inputRobotInterface: Option<Rc<RefCell<dyn InputRobotInterface>>> = { let java_object = (jcall!(robotHashtable).get(crate::java_into_object(String::from("Java Robot")))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn InputRobotInterface>>>>().expect("ClassCastException").clone()) };
         bufferedImageArray[(index) as usize] = jcall!(inputRobotInterface).createScreenCapture(rectScreenSize.clone());
         jcall!(self.logUtil).putF(String::from("Finish"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getScreenAsBufferedImages"));
         return bufferedImageArray.clone();

@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
@@ -49,14 +49,11 @@ pub struct MultiSelectPaintable {
 
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintableInterface::InitUpdatePaintableInterface for MultiSelectPaintable {
 }
-impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for MultiSelectPaintable {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
-}
 impl crate::org::allbinary::init::InitInterface::InitInterface for MultiSelectPaintable {
-    fn init(&mut self) { self.base.init() }
+    fn init(&mut self) { crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintable::init(crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn::as_InitUpdatePaintable_mut(self)) }
 }
 impl crate::org::allbinary::init::UpdateInterface::UpdateInterface for MultiSelectPaintable {
-    fn update(&mut self) { self.base.update() }
+    fn update(&mut self) { crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable::update(crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn::as_SelectionHudPaintable_mut(self)) }
 }
 
 impl MultiSelectPaintable {
@@ -73,11 +70,11 @@ impl MultiSelectPaintable {
             totalWidth: 0,
             textLine2Y: 0,
         };
-        this.rootNameList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.totalCharArray = jcall!(NullUtil::getInstance()).NULL_CHAR_ARRAY.clone();
-        this.rootNamesString = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.rootNameList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.totalCharArray = { let java_field = jcall!(NullUtil::getInstance()).NULL_CHAR_ARRAY.clone(); java_field }.clone();
+        this.rootNamesString = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.TOTAL = String::from("Total Selected: ");
-        this.backgroundColor = jcall!(jcall!(BasicColorFactory::getInstance()).GREY).intValue();
+        this.backgroundColor = jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).GREY.clone(); java_field }).intValue();
         this
     }
 
@@ -86,34 +83,34 @@ impl MultiSelectPaintable {
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.updateMeasurement(graphics.clone());
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.totalWidth = jcall!(font).stringWidth(self.TOTAL.clone());
-        self.textLine2Y = (self.y + jcall!(font).getHeight());
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(),); self.base.updateMeasurement(java_arguments.0) };
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.totalWidth = { let java_value = (jcall!(font).stringWidth(self.TOTAL.clone())).clone(); java_value };
+        self.textLine2Y = { let java_value = ((self.y + jcall!(font).getHeight())).clone(); java_value };
     }
     
 
     pub fn update(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         self.clear();
         let mut size: i32 = jcall!(list).size();
-        self.totalCharArray = jcall!(self.getPrimitiveLongUtil()).getCharArray(size.clone());
-        for index in (0..=jcall!(list).size() - 1).rev() {
+        self.totalCharArray = { let java_value = (jcall!(self.getPrimitiveLongUtil()).getCharArray(size.clone())).clone(); java_value };
+        for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
             let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = { let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>>().expect("ClassCastException").clone()) };
             if !{ let java_receiver = self.rootNameList.clone(); let java_arguments = (crate::java_into_object(jcall!(rtsLayer).getRootName()),); let java_result = jcall!(java_receiver).contains(java_arguments.0); java_result } {
                 { let java_receiver = self.rootNameList.clone(); let java_arguments = (crate::java_into_object(jcall!(rtsLayer).getRootName()),); jcall!(java_receiver).add(java_arguments.0); };
             }
         }
-        let mut COMMA_SEP: String = jcall!(CommonSeps::getInstance()).COMMA_SEP.clone();
+        let mut COMMA_SEP: String = { let java_field = jcall!(CommonSeps::getInstance()).COMMA_SEP.clone(); java_field }.clone();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        for index in (0..=jcall!(self.rootNameList).size() - 1).rev() {
-            let mut rootName: String = (jcall!(self.rootNameList).get(index.clone())).clone() /* as String */;
+        for index in (0..={ let java_bound = jcall!(self.rootNameList).size() - 1; java_bound }).rev() {
+            let mut rootName: String = { let java_object = (jcall!(self.rootNameList).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             jcall!(stringBuffer).append(rootName.clone());
             if index != 0 {
                 jcall!(stringBuffer).append(COMMA_SEP.clone());
             }
         }
-        self.rootNamesString = jcall!(stringBuffer).toString();
+        self.rootNamesString = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
     }
     
 
@@ -122,12 +119,12 @@ impl MultiSelectPaintable {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(graphics).setColor(self.backgroundColor.clone());
         jcall!(graphics).drawRect(self.getX(), self.y.clone(), self.getWidth(), self.getHeight());
         jcall!(graphics).setColor(self.getColor());
         jcall!(graphics).drawString(self.TOTAL.clone(), self.textX.clone(), self.y.clone(), 0);
-        jcall!(graphics).drawChars(self.totalCharArray.clone(), 0, jcall!(self.getPrimitiveLongUtil()).getCurrentTotalDigits(), self.textX + self.totalWidth, self.y.clone(), 0);
+        jcall!(graphics).drawChars(self.totalCharArray.clone(), 0, { let java_argument = jcall!(self.getPrimitiveLongUtil()).getCurrentTotalDigits(); java_argument }, self.textX + self.totalWidth, self.y.clone(), 0);
         jcall!(graphics).drawString(self.rootNamesString.clone(), self.textX.clone(), self.textLine2Y.clone(), 0);
     }
 }
@@ -142,7 +139,6 @@ impl std::ops::DerefMut for MultiSelectPaintable {
 impl crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn for MultiSelectPaintable {
     fn as_SelectionHudPaintable(&self) -> &crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable { &self.base }
     fn as_SelectionHudPaintable_mut(&mut self) -> &mut crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable { &mut self.base }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
 }
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn for MultiSelectPaintable {
     fn as_InitUpdatePaintable(&self) -> &crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintable { &self.base.base }
@@ -153,7 +149,13 @@ impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for MultiSe
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base.base }
     fn setBasicColorP(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable::setBasicColorP(crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn::as_SelectionHudPaintable_mut(self), p1) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for MultiSelectPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for MultiSelectPaintable {
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 

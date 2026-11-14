@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::android::ActivityFractureUtil::ActivityFractureUtil;
 use crate::android::app::Activity::Activity;
 use crate::android::view::WindowManager::WindowManager;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -59,7 +60,7 @@ impl ActivityFractureUtilAPI1 {
     
 
     pub fn setFullScreen(&mut self, mut activity: Option<Rc<RefCell<Activity>>>) {
-        jcall!(jcall!(activity).getWindow()).setFlags(jcall!(unsafe { crate::android::view::WindowManager::WindowManager_LayoutParams.clone() }).FLAG_FULLSCREEN.clone(), jcall!(unsafe { crate::android::view::WindowManager::WindowManager_LayoutParams.clone() }).FLAG_FULLSCREEN.clone());
+        jcall!(jcall!(activity).getWindow()).setFlags({ let java_field = jcall!(unsafe { crate::android::view::WindowManager::WindowManager_LayoutParams.clone() }).FLAG_FULLSCREEN.clone(); java_field }.clone(), { let java_field = jcall!(unsafe { crate::android::view::WindowManager::WindowManager_LayoutParams.clone() }).FLAG_FULLSCREEN.clone(); java_field }.clone());
     }
 }
 impl std::ops::Deref for ActivityFractureUtilAPI1 {

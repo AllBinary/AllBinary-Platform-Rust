@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait BasicCompositeEventHandlerInterface {
+pub trait BasicCompositeEventHandlerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getEventHandler(&mut self) -> Option<Rc<RefCell<dyn BasicEventHandlerInterface>>>;
     
 
     fn setEventHandler(&mut self, basicEventHandlerInterface: Option<Rc<RefCell<dyn BasicEventHandlerInterface>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

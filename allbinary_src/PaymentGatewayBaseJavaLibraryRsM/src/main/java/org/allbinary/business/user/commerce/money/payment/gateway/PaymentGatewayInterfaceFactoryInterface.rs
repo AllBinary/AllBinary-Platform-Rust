@@ -16,9 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
+use crate::java::lang::Exception::*;
 use super::PaymentGatewayInterface::PaymentGatewayInterface;
 
 // Borrows the object of a Java reference
@@ -28,13 +28,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait PaymentGatewayInterfaceFactoryInterface {
+pub trait PaymentGatewayInterfaceFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
-    fn getInstance(&mut self, hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<dyn PaymentGatewayInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn getInstance(&mut self, hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn PaymentGatewayInterface>>>;
 }
 
 

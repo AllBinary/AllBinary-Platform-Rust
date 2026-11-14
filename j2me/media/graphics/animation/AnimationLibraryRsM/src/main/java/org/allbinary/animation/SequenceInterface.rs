@@ -25,15 +25,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait SequenceInterface {
+pub trait SequenceInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn setSequence(&mut self, sequence: Vec<i32>);
     
 
     fn getSequence(&mut self) -> Vec<i32>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

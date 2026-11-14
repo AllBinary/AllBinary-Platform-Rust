@@ -5,7 +5,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::DisposalUtil::DisposalUtil;
 use crate::org::allbinary::platform::graphics::PlatformBitmapBase::PlatformBitmapBase;
 use crate::org::microemu::device::swt::SwtImmutableImage::SwtImmutableImage;
@@ -20,7 +20,7 @@ macro_rules! jcall {
 
 pub struct OpenGLBitmap {
     pub base: PlatformBitmapBase,
-    pub image: Option<Rc<RefCell<Image>>>,
+    pub image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
 }
 
 
@@ -32,7 +32,7 @@ impl OpenGLBitmap {
             base: PlatformBitmapBase::new_struct(),
             image: None,
         };
-        this.image = (bitmap).clone() /* as Image */;
+        this.image = { let java_object = (bitmap).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>().expect("ClassCastException").clone()) };
         this
     }
 
@@ -41,17 +41,17 @@ impl OpenGLBitmap {
     }
     
 
-    pub fn getImage(&mut self) -> Option<Rc<RefCell<Image>>> {
+    pub fn getImage(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return self.image.clone();
     }
     
 
     pub fn getDepth(&mut self) -> i32 {
         if jcall!(self.image).isMutable() {
-            let mut mutableImage: Option<Rc<RefCell<SwtMutableImage>>> = (self.image).clone() /* as SwtMutableImage */;
+            let mut mutableImage: Option<Rc<RefCell<SwtMutableImage>>> = (self.image).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<SwtMutableImage>() }, "ClassCastException: not a SwtMutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<SwtMutableImage>) } });
             return jcall!(mutableImage).getDepth();
         } else {
-            let mut immutableImage: Option<Rc<RefCell<SwtImmutableImage>>> = (self.image).clone() /* as SwtImmutableImage */;
+            let mut immutableImage: Option<Rc<RefCell<SwtImmutableImage>>> = (self.image).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<SwtImmutableImage>() }, "ClassCastException: not a SwtImmutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<SwtImmutableImage>) } });
             return jcall!(immutableImage).getDepth();
         }
     }
@@ -59,10 +59,10 @@ impl OpenGLBitmap {
 
     pub fn getPixels(&mut self, mut pixels: Vec<i32>, mut offset: i32, mut stride: i32, mut x: i32, mut y: i32, mut width: i32, mut height: i32) {
         if jcall!(self.image).isMutable() {
-            let mut mutableImage: Option<Rc<RefCell<SwtMutableImage>>> = (self.image).clone() /* as SwtMutableImage */;
+            let mut mutableImage: Option<Rc<RefCell<SwtMutableImage>>> = (self.image).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<SwtMutableImage>() }, "ClassCastException: not a SwtMutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<SwtMutableImage>) } });
             jcall!(mutableImage).getRGB(pixels.clone(), offset.clone(), stride.clone(), x.clone(), y.clone(), width.clone(), height.clone());
         } else {
-            let mut immutableImage: Option<Rc<RefCell<SwtImmutableImage>>> = (self.image).clone() /* as SwtImmutableImage */;
+            let mut immutableImage: Option<Rc<RefCell<SwtImmutableImage>>> = (self.image).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<SwtImmutableImage>() }, "ClassCastException: not a SwtImmutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<SwtImmutableImage>) } });
             jcall!(immutableImage).getRGB(pixels.clone(), offset.clone(), stride.clone(), x.clone(), y.clone(), width.clone(), height.clone());
         }
     }
@@ -100,7 +100,7 @@ impl crate::org::allbinary::platform::graphics::PlatformBitmapBase::PlatformBitm
     fn as_PlatformBitmapBase_mut(&mut self) -> &mut crate::org::allbinary::platform::graphics::PlatformBitmapBase::PlatformBitmapBase { &mut self.base }
     fn getWidth(&mut self) -> i32 { Self::getWidth(self) }
     fn getHeight(&mut self) -> i32 { Self::getHeight(self) }
-    fn getImage(&mut self) -> Option<Rc<RefCell<Image>>> { Self::getImage(self) }
+    fn getImage(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { Self::getImage(self) }
 }
 
 

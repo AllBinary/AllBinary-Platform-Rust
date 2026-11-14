@@ -42,7 +42,7 @@ impl ProfilingRefreshHelper {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn>>> {
-        return ProfilingRefreshHelper_instance.with(Clone::clone).clone();
+        return ProfilingRefreshHelper_instance.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn>>);
     }
     
 
@@ -64,15 +64,15 @@ impl ProfilingRefreshHelper {
     
 
     pub fn initView(&mut self, mut view: Option<Rc<RefCell<View>>>) {
-        self.base.initView(view.clone());
-        self.frameProcessingTimeElapsed = jcall!(self.getTimeDelayHelper()).getStartTime();
-        self.bestFrameProcessingTime = i32::MAX.clone();
+        { let java_arguments = (view.clone(),); self.base.initView(java_arguments.0) };
+        self.frameProcessingTimeElapsed = { let java_value = (jcall!(self.getTimeDelayHelper()).getStartTime()).clone(); java_value };
+        self.bestFrameProcessingTime = { let java_value = (i32::MAX).clone(); java_value }.clone();
         self.worstFrameProcessingTime = 0;
     }
     
 
     pub fn nextFrame(&mut self) {
-        self.frameProcessingTimeElapsed = (std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64) - self.frameProcessingTimeElapsed;
+        self.frameProcessingTimeElapsed = { let java_value = ((std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64) - self.frameProcessingTimeElapsed).clone(); java_value };
         if self.firstTime != true {
             if self.frameProcessingTimeElapsed > ((self.worstFrameProcessingTime) as i64) {
                 self.worstFrameProcessingTime = ((self.frameProcessingTimeElapsed) as i32);
@@ -109,6 +109,7 @@ impl crate::org::allbinary::canvas::BaseGameStatistics::BaseGameStatisticsDyn fo
     fn as_BaseGameStatistics_mut(&mut self) -> &mut crate::org::allbinary::canvas::BaseGameStatistics::BaseGameStatistics { &mut self.base.base }
     fn process(&mut self) { crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatistics::process(crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn::as_AndroidGameStatistics_mut(self)) }
     fn nextFrame(&mut self) { Self::nextFrame(self) }
+    fn toStringArray(&mut self) -> Vec<String> { crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatistics::toStringArray(crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn::as_AndroidGameStatistics_mut(self)) }
     fn toString(&mut self) -> String { Self::toString(self) }
 }
 

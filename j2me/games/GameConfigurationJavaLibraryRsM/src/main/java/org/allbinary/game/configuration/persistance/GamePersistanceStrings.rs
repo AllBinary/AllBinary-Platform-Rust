@@ -36,6 +36,10 @@ thread_local! { pub static GamePersistanceStrings_instance: Option<Rc<RefCell<Ga
 
 impl GamePersistanceStrings {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             SAVED_GAME_RECORD_ID: String::new(),

@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::canvas::GameStatisticsFactory::GameStatisticsFactory;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
 use crate::org::allbinary::graphics::displayable::DisplayInfoSingleton::DisplayInfoSingleton;
@@ -45,7 +45,7 @@ pub struct GamePerformanceInitUpdatePaintable {
 }
 
 impl UpdateMyFontInterface for GamePerformanceInitUpdatePaintable {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintableInterface::InitUpdatePaintableInterface for GamePerformanceInitUpdatePaintable {
 }
@@ -70,9 +70,8 @@ impl GamePerformanceInitUpdatePaintable {
         };
         this.halfHeight = jcall!(DisplayInfoSingleton::getInstance()).getLastHalfHeight();
         this.yArray = vec![this.halfHeight + 30, this.halfHeight + 30, this.halfHeight + 30 + 15, this.halfHeight + 30 + 15, this.halfHeight + 30 + 30, this.halfHeight + 30 + 30, this.halfHeight + 30 + 45, this.halfHeight + 30 + 45];
-        this.myFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
         this.baseRefreshHelperCharArray = vec![vec!['\0'; (0) as usize]; (0) as usize];
-        this.RED = jcall!(jcall!(BasicColorFactory::getInstance()).RED).intValue();
+        this.RED = jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }).intValue();
         this
     }
 
@@ -81,10 +80,10 @@ impl GamePerformanceInitUpdatePaintable {
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.defaultStringWidth = MyFontProcessor::defaultStringWidth(font.clone(), 2);
-        self.myFontProcessor = MyFontProcessor::getInstance();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.defaultStringWidth = { let java_value = (MyFontProcessor::defaultStringWidth(font.clone(), 2)).clone(); java_value };
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
@@ -93,11 +92,11 @@ impl GamePerformanceInitUpdatePaintable {
     
 
     pub fn update(&mut self) {
-        self.baseRefreshHelperCharArray = jcall!(GameStatisticsFactory::getInstance()).to2DCharArray();
+        self.baseRefreshHelperCharArray = { let java_value = (jcall!(GameStatisticsFactory::getInstance()).to2DCharArray()).clone(); java_value };
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         jcall!(graphics).setColor(self.RED.clone());
         let mut charArray: Vec<char> = Vec::new();
@@ -106,10 +105,10 @@ impl GamePerformanceInitUpdatePaintable {
         let mut size3: i32 = 0;
         let mut size: i32 = (self.baseRefreshHelperCharArray.len() as i32) - 2;
         for index in (0..=size).rev().step_by((2) as usize) {
-            charArray = self.baseRefreshHelperCharArray[(index) as usize].clone();
-            charArray2 = self.baseRefreshHelperCharArray[(index + 1) as usize].clone();
-            size2 = (charArray.len() as i32).clone();
-            size3 = (charArray2.len() as i32).clone();
+            charArray = { let java_value = (self.baseRefreshHelperCharArray[(index) as usize]).clone(); java_value }.clone();
+            charArray2 = { let java_value = (self.baseRefreshHelperCharArray[(index + 1) as usize]).clone(); java_value }.clone();
+            size2 = { let java_value = ((charArray.len() as i32)).clone(); java_value }.clone();
+            size3 = { let java_value = ((charArray2.len() as i32)).clone(); java_value }.clone();
             jcall!(graphics).drawChars(charArray.clone(), 0, size2.clone(), 0, self.yArray[(index) as usize].clone(), 0);
             jcall!(graphics).drawChars(charArray2.clone(), 0, size3.clone(), size2 * self.defaultStringWidth, self.yArray[(index + 1) as usize].clone(), 0);
         }
@@ -132,7 +131,10 @@ impl crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePain
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for GamePerformanceInitUpdatePaintable {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for GamePerformanceInitUpdatePaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

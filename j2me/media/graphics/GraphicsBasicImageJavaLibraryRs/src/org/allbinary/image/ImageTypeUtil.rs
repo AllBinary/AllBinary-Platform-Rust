@@ -37,6 +37,10 @@ pub struct ImageTypeUtil {
 pub static mut ImageTypeUtil_SINGLETON: std::cell::LazyCell<Option<Rc<RefCell<ImageTypeUtil>>>> = std::cell::LazyCell::new(|| ImageTypeUtil::new());
 
 impl ImageTypeUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -62,8 +66,8 @@ impl ImageTypeUtil {
     
 
     pub fn isSupported(&mut self, mut mediaFileType: String) -> bool {
-        mediaFileType = mediaFileType.to_lowercase();
-        for index in (0..=jcall!(self.list).size() - 1).rev() {
+        mediaFileType = { let java_value = (mediaFileType.to_lowercase()).clone(); java_value };
+        for index in (0..={ let java_bound = jcall!(self.list).size() - 1; java_bound }).rev() {
             let mut name: String = (jcall!(self.list).objectArray[(index) as usize]).clone() /* as String */;
             if (mediaFileType.cmp(&name.clone()) as i32) == 0 {
                 return true;

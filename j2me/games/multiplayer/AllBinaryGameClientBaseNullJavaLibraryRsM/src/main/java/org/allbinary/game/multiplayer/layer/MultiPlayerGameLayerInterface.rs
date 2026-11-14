@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait MultiPlayerGameLayerInterface {
+pub trait MultiPlayerGameLayerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getMultiplayerBehavior(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::multiplayer::layer::MultiplayerBehavior::MultiplayerBehaviorDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

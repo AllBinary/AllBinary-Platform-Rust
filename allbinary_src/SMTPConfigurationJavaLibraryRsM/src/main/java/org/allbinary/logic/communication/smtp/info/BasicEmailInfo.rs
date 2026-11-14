@@ -22,6 +22,8 @@ use crate::org::allbinary::logic::communication::smtp::configuration::server::Em
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -49,9 +51,9 @@ impl BasicEmailInfo {
             emailServerConfigurationInterface: None,
         };
         this.logUtil = LogUtil::getInstance();
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).EMAILLOGGING.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).EMAILLOGGING.clone(); java_field }.clone()) {
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(this.logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone());
+            jcall!(this.logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         }
         this.subject = subject.clone();
         this.textBody = textBody.clone();
@@ -85,8 +87,8 @@ impl BasicEmailInfo {
 
     pub fn toString(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(jcall!(self.getEmailServerConfigurationInterface()).toString());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_argument = jcall!(self.getEmailServerConfigurationInterface()).toString(); java_argument });
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("Subject: \n"));
         jcall!(stringBuffer).append(self.getSubject());
         jcall!(stringBuffer).append(String::from("\nText Body: \n"));
@@ -100,7 +102,7 @@ impl BasicEmailInfo {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait BasicEmailInfoDyn {
+pub trait BasicEmailInfoDyn: std::any::Any {
     fn as_BasicEmailInfo(&self) -> &BasicEmailInfo;
     fn as_BasicEmailInfo_mut(&mut self) -> &mut BasicEmailInfo;
     fn getSubject(&mut self) -> String { BasicEmailInfo::getSubject(self.as_BasicEmailInfo_mut()) }

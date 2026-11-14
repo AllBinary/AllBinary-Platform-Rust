@@ -27,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait TransactionResultInterface {
+pub trait TransactionResultInterface: std::any::Any {
     
 
     fn toString(&mut self) -> String;

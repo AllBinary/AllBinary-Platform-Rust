@@ -29,6 +29,7 @@ use crate::org::allbinary::logic::system::security::licensing::AbeClientInformat
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::HashtableUtil::HashtableUtil;
+use crate::java::lang::Exception::*;
 use super::RemoteHighScoresProcessorInterface::RemoteHighScoresProcessorInterface;
 use super::XmlRpcRemoteHighScoresClient::XmlRpcRemoteHighScoresClient;
 use super::RemoteHighScores::RemoteHighScores;
@@ -51,6 +52,10 @@ impl RemoteHighScoresProcessorInterface for RemoteHighScoresProcessor {
 }
 
 impl RemoteHighScoresProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -73,17 +78,17 @@ impl RemoteHighScoresProcessor {
     // throws Exception
     // synchronized
     pub fn process(&mut self, mut remoteHighScores: Option<Rc<RefCell<RemoteHighScores>>>, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut gameInfo: Option<Rc<RefCell<GameInfo>>>) {
-        jcall!(self.logUtil).putF(String::from("Begin Remote HighScores Retrieval"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
+        jcall!(self.logUtil).putF(String::from("Begin Remote HighScores Retrieval"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
         let mut gameInfoData: Option<Rc<RefCell<GameInfoData>>> = GameInfoData::getInstance();
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(abeClientInformation).toHashtable();
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(abeClientInformation).toHashtable();
         jcall!(HashtableUtil::getInstance()).putAll(jcall!(gameInfo).toHashtable(), hashtable.clone());
-        jcall!(hashtable).put(crate::java_into_object(jcall!(gameInfoData).SOFTWARE_INFORMATION.clone()), crate::java_into_object(jcall!(jcall!(remoteHighScores).getSoftwareInformation()).toString()));
-        jcall!(hashtable).put(crate::java_into_object(jcall!(remoteHighScores).ASCENDING.clone()), crate::java_into_object(jcall!(jcall!(remoteHighScores).getAscending()).toString()));
+        jcall!(hashtable).put(crate::java_into_object({ let java_field = jcall!(gameInfoData).SOFTWARE_INFORMATION.clone(); java_field }.clone()), crate::java_into_object(jcall!(jcall!(remoteHighScores).getSoftwareInformation()).toString()));
+        jcall!(hashtable).put(crate::java_into_object({ let java_field = jcall!(remoteHighScores).ASCENDING.clone(); java_field }.clone()), crate::java_into_object((jcall!(remoteHighScores).getAscending()).expect("null Boolean").to_string()));
         let mut displayInfoSingleton: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
-        jcall!(hashtable).put(crate::java_into_object(jcall!(displayInfoSingleton).ORIENTATION.clone()), crate::java_into_object(jcall!(BooleanFactory::getInstance()).toStringb(jcall!(displayInfoSingleton).isPortrait())));
-        jcall!(hashtable).put(crate::java_into_object(jcall!(RemoteHighScoresData::RemoteHighScoresData::getInstance()).GAME_CONFIGURATION.clone()), crate::java_into_object(jcall!(GameConfigurationCentral::getInstance()).toString()));
+        jcall!(hashtable).put(crate::java_into_object({ let java_field = jcall!(displayInfoSingleton).ORIENTATION.clone(); java_field }.clone()), crate::java_into_object(jcall!(BooleanFactory::getInstance()).toStringb(jcall!(displayInfoSingleton).isPortrait())));
+        jcall!(hashtable).put(crate::java_into_object({ let java_field = jcall!(RemoteHighScoresData::RemoteHighScoresData::getInstance()).GAME_CONFIGURATION.clone(); java_field }.clone()), crate::java_into_object(jcall!(GameConfigurationCentral::getInstance()).toString()));
         if unsafe { crate::org::allbinary::logic::communication::xmlrpc::XmlRpcAbeClient::XmlRpcAbeClient_isOnline.clone() } {
-            let mut resultHashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = (jcall!(XmlRpcRemoteHighScoresClient::new(abeClientInformation.clone(), String::from("highscoresservicessl.php"), String::from("HighScoresService.process"))).get(hashtable.clone(), self.noCrypt.clone())).clone() /* as ABHashtable */;
+            let mut resultHashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = { let java_object = (jcall!(XmlRpcRemoteHighScoresClient::new(abeClientInformation.clone(), String::from("highscoresservicessl.php"), String::from("HighScoresService.process"))).get(crate::java_into_object(hashtable.clone()), self.noCrypt.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::init::crypt::jcehelper::CryptInterface::CryptInterface>>))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>>().expect("ClassCastException").clone()) };
             jcall!(remoteHighScores).update(resultHashtable.clone());
         }
     }

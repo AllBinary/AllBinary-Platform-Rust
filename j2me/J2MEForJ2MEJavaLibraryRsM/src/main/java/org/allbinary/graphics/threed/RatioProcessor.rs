@@ -31,6 +31,10 @@ pub struct RatioProcessor {
 
 impl RatioProcessor {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -45,10 +49,9 @@ impl RatioProcessor {
     pub fn setCustom(&mut self, mut width: i32, mut height: i32, mut ratio: f32) {
     }
 }
-pub trait RatioProcessorDyn {
+pub trait RatioProcessorDyn: std::any::Any {
     fn as_RatioProcessor(&self) -> &RatioProcessor;
     fn as_RatioProcessor_mut(&mut self) -> &mut RatioProcessor;
-    fn setCustom(&mut self, mut width: i32, mut height: i32, mut ratio: f32) { RatioProcessor::setCustom(self.as_RatioProcessor_mut(), width, height, ratio) }
     fn setCustom(&mut self, mut width: i32, mut height: i32, mut ratio: f32) { RatioProcessor::setCustom(self.as_RatioProcessor_mut(), width, height, ratio) }
 }
 impl RatioProcessorDyn for RatioProcessor {

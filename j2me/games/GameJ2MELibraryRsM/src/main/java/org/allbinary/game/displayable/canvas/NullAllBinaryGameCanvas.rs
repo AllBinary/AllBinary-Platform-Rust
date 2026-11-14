@@ -17,9 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
 use crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManager;
+use crate::java::lang::RuntimeException::*;
 use super::AllBinaryGameCanvasInterface::AllBinaryGameCanvasInterface;
 
 // Borrows the object of a Java reference
@@ -37,14 +38,18 @@ impl AllBinaryGameCanvasInterface for NullAllBinaryGameCanvas {
     fn getLayerManager(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>> { Self::getLayerManager(self) }
 }
 impl crate::org::allbinary::graphics::displayable::DisplayableInterface::DisplayableInterface for NullAllBinaryGameCanvas {
-    fn addCommand(&mut self, mut cmd: Option<Rc<RefCell<Command>>>) { Self::addCommand(self, cmd) }
+    fn addCommand(&mut self, mut cmd: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { Self::addCommand(self, cmd) }
     fn getHeight(&mut self) -> i32 { Self::getHeight(self) }
     fn getWidth(&mut self) -> i32 { Self::getWidth(self) }
-    fn removeCommand(&mut self, mut cmd: Option<Rc<RefCell<Command>>>) { Self::removeCommand(self, cmd) }
-    fn setCommandListener(&mut self, mut l: Option<Rc<RefCell<CommandListener>>>) { Self::setCommandListener(self, l) }
+    fn removeCommand(&mut self, mut cmd: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { Self::removeCommand(self, cmd) }
+    fn setCommandListener(&mut self, mut l: Option<Rc<RefCell<dyn CommandListener>>>) { Self::setCommandListener(self, l) }
 }
 
 impl NullAllBinaryGameCanvas {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -62,7 +67,7 @@ impl NullAllBinaryGameCanvas {
     }
     
 
-    pub fn addCommand(&mut self, mut cmd: Option<Rc<RefCell<Command>>>) {
+    pub fn addCommand(&mut self, mut cmd: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     
@@ -77,12 +82,12 @@ impl NullAllBinaryGameCanvas {
     }
     
 
-    pub fn removeCommand(&mut self, mut cmd: Option<Rc<RefCell<Command>>>) {
+    pub fn removeCommand(&mut self, mut cmd: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     
 
-    pub fn setCommandListener(&mut self, mut l: Option<Rc<RefCell<CommandListener>>>) {
+    pub fn setCommandListener(&mut self, mut l: Option<Rc<RefCell<dyn CommandListener>>>) {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }

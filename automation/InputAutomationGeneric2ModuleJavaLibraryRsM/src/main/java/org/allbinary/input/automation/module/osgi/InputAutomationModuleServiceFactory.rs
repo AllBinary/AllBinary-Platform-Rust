@@ -35,13 +35,17 @@ macro_rules! jcall {
 pub struct InputAutomationModuleServiceFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
-    pub inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>>,
+    pub inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>>,
 }
 
 impl ServiceFactory for InputAutomationModuleServiceFactory {
 }
 
 impl InputAutomationModuleServiceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -61,8 +65,8 @@ impl InputAutomationModuleServiceFactory {
     
 
     pub fn getService(&mut self, mut bundle: Option<Rc<RefCell<dyn Bundle>>>, mut registration: Option<Rc<RefCell<dyn ServiceRegistration>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getService"));
-        return InputAutomationModuleService::new(self.getInputAutomationModuleInterfaceArray());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getService"));
+        return (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(InputAutomationModuleService::new(self.getInputAutomationModuleInterfaceArray()));
     }
     
 
@@ -70,22 +74,22 @@ impl InputAutomationModuleServiceFactory {
     }
     
 
-    pub fn getInputAutomationModuleInterfaceArray(&mut self) -> Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>> {
+    pub fn getInputAutomationModuleInterfaceArray(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>> {
         return self.inputAutomationModuleInterfaceArray.clone();
     }
     
 
-    pub fn setInputAutomationModuleInterfaceArray(&mut self, mut inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>>) {
+    pub fn setInputAutomationModuleInterfaceArray(&mut self, mut inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>>) {
         self.inputAutomationModuleInterfaceArray = inputAutomationModuleInterfaceArray.clone();
     }
 }
-pub trait InputAutomationModuleServiceFactoryDyn: crate::org::osgi::framework::ServiceFactory::ServiceFactory {
+pub trait InputAutomationModuleServiceFactoryDyn: std::any::Any + crate::org::osgi::framework::ServiceFactory::ServiceFactory {
     fn as_InputAutomationModuleServiceFactory(&self) -> &InputAutomationModuleServiceFactory;
     fn as_InputAutomationModuleServiceFactory_mut(&mut self) -> &mut InputAutomationModuleServiceFactory;
     fn getService(&mut self, mut bundle: Option<Rc<RefCell<dyn Bundle>>>, mut registration: Option<Rc<RefCell<dyn ServiceRegistration>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { InputAutomationModuleServiceFactory::getService(self.as_InputAutomationModuleServiceFactory_mut(), bundle, registration) }
     fn ungetService(&mut self, mut bundle: Option<Rc<RefCell<dyn Bundle>>>, mut registration: Option<Rc<RefCell<dyn ServiceRegistration>>>, mut service: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { InputAutomationModuleServiceFactory::ungetService(self.as_InputAutomationModuleServiceFactory_mut(), bundle, registration, service) }
-    fn getInputAutomationModuleInterfaceArray(&mut self) -> Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>> { InputAutomationModuleServiceFactory::getInputAutomationModuleInterfaceArray(self.as_InputAutomationModuleServiceFactory_mut()) }
-    fn setInputAutomationModuleInterfaceArray(&mut self, mut inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>>) { InputAutomationModuleServiceFactory::setInputAutomationModuleInterfaceArray(self.as_InputAutomationModuleServiceFactory_mut(), inputAutomationModuleInterfaceArray) }
+    fn getInputAutomationModuleInterfaceArray(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>> { InputAutomationModuleServiceFactory::getInputAutomationModuleInterfaceArray(self.as_InputAutomationModuleServiceFactory_mut()) }
+    fn setInputAutomationModuleInterfaceArray(&mut self, mut inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>>) { InputAutomationModuleServiceFactory::setInputAutomationModuleInterfaceArray(self.as_InputAutomationModuleServiceFactory_mut(), inputAutomationModuleInterfaceArray) }
 }
 impl InputAutomationModuleServiceFactoryDyn for InputAutomationModuleServiceFactory {
     fn as_InputAutomationModuleServiceFactory(&self) -> &InputAutomationModuleServiceFactory { self }

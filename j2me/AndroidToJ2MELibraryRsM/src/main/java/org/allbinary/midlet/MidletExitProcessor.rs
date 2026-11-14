@@ -17,8 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::midlet::MIDlet::MIDlet;
+use crate::javax::microedition::midlet::MIDlet::MIDlet;
 use crate::org::allbinary::canvas::Processor::Processor;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -29,14 +30,14 @@ macro_rules! jcall {
 
 pub struct MidletExitProcessor {
     pub base: Processor,
-    pub midlet: Option<Rc<RefCell<MIDlet>>>,
+    pub midlet: Option<Rc<RefCell<dyn crate::javax::microedition::midlet::MIDlet::MIDletDyn>>>,
 }
 
 
 impl MidletExitProcessor {
     
 
-    pub fn new_struct(mut midlet: Option<Rc<RefCell<MIDlet>>>) -> Self {
+    pub fn new_struct(mut midlet: Option<Rc<RefCell<dyn crate::javax::microedition::midlet::MIDlet::MIDletDyn>>>) -> Self {
         let mut this = Self {
             base: Processor::new_struct(),
             midlet: None,
@@ -45,7 +46,7 @@ impl MidletExitProcessor {
         this
     }
 
-    pub fn new(mut midlet: Option<Rc<RefCell<MIDlet>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut midlet: Option<Rc<RefCell<dyn crate::javax::microedition::midlet::MIDlet::MIDletDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(midlet))))
     }
     

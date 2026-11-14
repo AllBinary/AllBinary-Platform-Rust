@@ -32,6 +32,10 @@ pub static mut TimeIntervalActionScriptConditionData_NAME: std::cell::LazyCell<S
 pub static mut TimeIntervalActionScriptConditionData_TIME: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("TIME_INTERVAL_ACTION_CONDITION_TIME"));
 
 impl TimeIntervalActionScriptConditionData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

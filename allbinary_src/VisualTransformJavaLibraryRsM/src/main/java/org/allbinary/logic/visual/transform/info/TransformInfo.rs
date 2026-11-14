@@ -16,11 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::Calendar;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::Calendar::Calendar;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::Calendar::Calendar;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontData::StoreFrontData;
@@ -51,6 +49,7 @@ use crate::org::allbinary::logic::visual::transform::info::viewObject::Transform
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 use super::TransformInfoInterface::TransformInfoInterface;
 use super::TransformInfoData::TransformInfoData;
 
@@ -80,7 +79,7 @@ pub struct TransformInfo {
 
 impl TransformInfoInterface for TransformInfo {
     fn log(&mut self) -> String { Self::log(self) }
-    fn r#override(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) { Self::r#override(self, hashMap) }
+    fn r#override(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) { Self::r#override(self, hashMap) }
     fn getName(&mut self) -> String { Self::getName(self) }
     fn setStoreName(&mut self, mut value: String) { Self::setStoreName(self, value) }
     fn getStoreName(&mut self) -> String { Self::getStoreName(self) }
@@ -107,10 +106,14 @@ impl TransformInfoInterface for TransformInfo {
 impl crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface for TransformInfo {
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getKey(self) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::toVector(self) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::toHashMap(self) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toHashMap(self) }
 }
 
 impl TransformInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -134,7 +137,7 @@ impl TransformInfo {
         this.commonStrings = CommonStrings::getInstance();
         this.abeClientInformation = ServiceClientInformationInterfaceFactory::getInstance();
         this.isChild = false;
-        this.data = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.data = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this
     }
 
@@ -164,7 +167,7 @@ impl TransformInfo {
         this.commonStrings = CommonStrings::getInstance();
         this.abeClientInformation = ServiceClientInformationInterfaceFactory::getInstance();
         this.isChild = false;
-        this.data = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.data = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.setName(name.clone());
         this
     }
@@ -195,7 +198,7 @@ impl TransformInfo {
         this.commonStrings = CommonStrings::getInstance();
         this.abeClientInformation = ServiceClientInformationInterfaceFactory::getInstance();
         this.isChild = false;
-        this.data = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.data = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.setName(name.clone());
         this.setObjectFile(objectFileName.clone());
         this.setObjectConfigFile(objectConfigFileName.clone());
@@ -210,14 +213,14 @@ impl TransformInfo {
     
 
     // throws Exception
-    pub fn r#override(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) {
+    pub fn r#override(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
         let mut transformInfoData: Option<Rc<RefCell<TransformInfoData>>> = TransformInfoData::getInstance();
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
-        let mut aName: String = (jcall!(hashMap).get(jcall!(transformInfoData).NAME.clone())).clone() /* as String */;
+        let mut aName: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if !jcall!(stringValidationUtil).isEmpty(aName.clone()) {
             self.name = aName.clone();
         }
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(String::from("TransformInfo properties overridden for: "));
             jcall!(stringBuffer).append(self.getName());
@@ -225,86 +228,86 @@ impl TransformInfo {
             jcall!(stringBuffer).append(jcall!(hashMap).toString());
             { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("override(HashMap hashMap)"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
-        let mut aStoreName: String = (jcall!(hashMap).get(jcall!(StoreFrontData::getInstance()).NAME.clone())).clone() /* as String */;
+        let mut aStoreName: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if !jcall!(stringValidationUtil).isEmpty(aStoreName.clone()) {
             self.storeName = aStoreName.clone();
         }
-        let mut aObjectFileName: String = (jcall!(hashMap).get(jcall!(transformInfoData).OBJECTFILENAME.clone())).clone() /* as String */;
+        let mut aObjectFileName: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).OBJECTFILENAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if !jcall!(stringValidationUtil).isEmpty(aObjectFileName.clone()) {
             self.objectFileName = aObjectFileName.clone();
         }
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(URLGLOBALS::getMainPath());
-        jcall!(stringBuffer).append(jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.storeName.clone());
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-        let mut fileAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-        let mut aObject: String = (jcall!(hashMap).get(jcall!(transformInfoData).OBJECT.clone())).clone() /* as String */;
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+        let mut fileAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        let mut aObject: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).OBJECT.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if !jcall!(stringValidationUtil).isEmpty(aObject.clone()) {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("TransformInfo override view Object for: "), self.getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("override(HashMap hashMap)"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
-            let mut fileDataString: String = jcall!(CryptFileReader::new(jcall!(TransformInfoObjectData::getInstance()).UNCRYPTED_EXTENSION.clone(), jcall!(TransformInfoObjectData::getInstance()).ENCRYPTED_EXTENSION.clone())).get(AbPath::new(jcall!(fileAbPath).toString(), aObject.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>));
+            let mut fileDataString: String = jcall!(CryptFileReader::new({ let java_field = jcall!(TransformInfoObjectData::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field }.clone(), { let java_field = jcall!(TransformInfoObjectData::getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone())).get(AbPath::new(jcall!(fileAbPath).toString(), aObject.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>));
             if true {
-                self.anyType = fileDataString.clone();
+                self.anyType = crate::java_into_object(fileDataString.clone());
             }
         }
-        if !jcall!(stringValidationUtil).isEmpty((jcall!(hashMap).get(jcall!(transformInfoData).OBJECTCONFIG.clone())).clone() /* as String */) {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if !jcall!(stringValidationUtil).isEmpty({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).OBJECTCONFIG.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("TransformInfo override ObjectConfig for: "), self.getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("override(HashMap hashMap)"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
-            { let java_arguments = ((jcall!(hashMap).get(jcall!(transformInfoData).OBJECTCONFIG.clone())).clone() /* as String */,); self.setObjectConfig(java_arguments.0) };
+            { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).OBJECTCONFIG.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setObjectConfig(java_arguments.0) };
         }
-        let mut objectConfigFileName: String = (jcall!(hashMap).get(jcall!(transformInfoData).OBJECTCONFIGFILENAME.clone())).clone() /* as String */;
+        let mut objectConfigFileName: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).OBJECTCONFIGFILENAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if !jcall!(stringValidationUtil).isEmpty(objectConfigFileName.clone()) {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("TransformInfo override ObjectConfig File for: "), self.getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("override(HashMap hashMap)"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
             self.setObjectConfigFile(objectConfigFileName.clone());
         }
-        let mut r#type: String = (jcall!(hashMap).get(jcall!(OutputTypeData::getInstance()).NAME.clone())).clone() /* as String */;
+        let mut r#type: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(OutputTypeData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if !jcall!(stringValidationUtil).isEmpty(r#type.clone()) {
             if self.getObjectConfigInterface().is_none() {
-                self.setObjectConfigInterface(TransformInfoObjectConfig::new1(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::objectConfig::TransformInfoObjectConfig::TransformInfoObjectConfigDyn>>));
+                self.setObjectConfigInterface(TransformInfoObjectConfig::new1(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::objectConfig::TransformInfoObjectConfig::TransformInfoObjectConfigDyn>>).map(|_java_reference| -> Rc<RefCell<dyn TransformInfoObjectConfigInterface>> { panic!("ClassCastException: the Rust trait of TransformInfoObjectConfig does not have TransformInfoObjectConfigInterface as a base trait") }));
             }
             jcall!(self.getObjectConfigInterface()).setOutputTypeName(r#type.clone());
         }
-        let mut aTemplateFileName: String = (jcall!(hashMap).get(jcall!(transformInfoData).TEMPLATEFILENAME.clone())).clone() /* as String */;
+        let mut aTemplateFileName: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).TEMPLATEFILENAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if !jcall!(stringValidationUtil).isEmpty(aTemplateFileName.clone()) {
             self.templateFileName = aTemplateFileName.clone();
         }
-        let mut aTemplate: String = (jcall!(hashMap).get(jcall!(transformInfoData).TEMPLATE.clone())).clone() /* as String */;
+        let mut aTemplate: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).TEMPLATE.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if !jcall!(stringValidationUtil).isEmpty(aTemplate.clone()) {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("TransformInfo override Template for: "), self.getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("override(HashMap hashMap)"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
-            let mut fileDataString: String = jcall!(CryptFileReader::new(jcall!(TransformInfoTemplateData::getInstance()).UNCRYPTED_EXTENSION.clone(), jcall!(TransformInfoTemplateData::getInstance()).ENCRYPTED_EXTENSION.clone())).get(AbPath::new(jcall!(fileAbPath).toString(), aTemplate.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>));
+            let mut fileDataString: String = jcall!(CryptFileReader::new({ let java_field = jcall!(TransformInfoTemplateData::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field }.clone(), { let java_field = jcall!(TransformInfoTemplateData::getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone())).get(AbPath::new(jcall!(fileAbPath).toString(), aTemplate.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>));
             if !jcall!(stringValidationUtil).isEmpty(fileDataString.clone()) {
                 self.template = fileDataString.clone();
             }
         }
-        let mut aDataFileName: String = (jcall!(hashMap).get(jcall!(transformInfoData).DATAFILENAME.clone())).clone() /* as String */;
+        let mut aDataFileName: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).DATAFILENAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if !jcall!(stringValidationUtil).isEmpty(aDataFileName.clone()) {
             self.dataFileName = aDataFileName.clone();
         }
-        let mut aData: String = (jcall!(hashMap).get(jcall!(transformInfoData).DATA.clone())).clone() /* as String */;
+        let mut aData: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).DATA.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if !jcall!(stringValidationUtil).isEmpty(aData.clone()) {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("TransformInfo override Data for: "), self.getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("override(HashMap hashMap)"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
-            let mut fileDataString: String = jcall!(CryptFileReader::new(jcall!(TransformInfoDataData::getInstance()).UNCRYPTED_EXTENSION.clone(), jcall!(TransformInfoDataData::getInstance()).ENCRYPTED_EXTENSION.clone())).get(AbPath::new(jcall!(fileAbPath).toString(), aData.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>));
+            let mut fileDataString: String = jcall!(CryptFileReader::new({ let java_field = jcall!(TransformInfoDataData::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field }.clone(), { let java_field = jcall!(TransformInfoDataData::getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone())).get(AbPath::new(jcall!(fileAbPath).toString(), aData.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>));
             if !jcall!(stringValidationUtil).isEmpty(fileDataString.clone()) {
                 self.data = fileDataString.clone();
             }
         }
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             stringBuffer = StringMaker::new();
             jcall!(stringBuffer).append(String::from("Name: "));
             jcall!(stringBuffer).append(aName.clone());
             jcall!(stringBuffer).append(String::from("\nTemp Object File: "));
             jcall!(stringBuffer).append(aObject.clone());
             jcall!(stringBuffer).append(String::from("\nTemp Object Config File: "));
-            jcall!(stringBuffer).append(jcall!(self.getObjectConfigFilePath()).toString());
+            jcall!(stringBuffer).append({ let java_argument = jcall!(self.getObjectConfigFilePath()).toString(); java_argument });
             jcall!(stringBuffer).append(String::from("\nTemp Template File: "));
             jcall!(stringBuffer).append(aTemplate.clone());
             jcall!(stringBuffer).append(String::from("\nTemp Data File: "));
@@ -316,7 +319,7 @@ impl TransformInfo {
             jcall!(stringBuffer).append(String::from("->TransformInfo"));
             { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("TransformInfoInterface(HashMap)"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).TAGHELPERFACTORY.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).TAGHELPERFACTORY.clone(); java_field }.clone()) {
             { let java_receiver = self.logUtil.clone(); let java_arguments = (self.log(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("override"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
     }
@@ -336,7 +339,7 @@ impl TransformInfo {
         jcall!(stringBuffer).append(self.dataFileName.clone());
         jcall!(stringBuffer).append(String::from("\nStore Name: "));
         jcall!(stringBuffer).append(self.storeName.clone());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.getObjectFile());
         jcall!(stringBuffer).append(String::from("->TransformInfo"));
         jcall!(stringBuffer).append(String::from("TransformInfoInterface(HashMap)"));
@@ -388,13 +391,13 @@ impl TransformInfo {
     // throws Exception
     pub fn setObjectConfigFile(&mut self, mut value: String) {
         self.objectConfigFileName = value.clone();
-        { let java_arguments = (jcall!(TransformInfoObjectConfigAndManipulatorFactory::getInstance()).getInstance3(self.abeClientInformation.clone(), None /* Java this: a &mut self method has no Rc of itself */, self.getObjectConfigFilePath()),); self.setObjectConfigInterface(java_arguments.0) };
+        { let java_arguments = ({ let java_argument = jcall!(TransformInfoObjectConfigAndManipulatorFactory::getInstance()).getInstance3(self.abeClientInformation.clone(), None /* Java this: a &mut self method has no Rc of itself */, self.getObjectConfigFilePath()); java_argument },); self.setObjectConfigInterface(java_arguments.0) };
     }
     
 
     // throws Exception
     pub fn setObjectConfig(&mut self, mut value: String) {
-        let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1(value.clone());
+        let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1_String(value.clone());
         { let java_arguments = (jcall!(TransformInfoObjectConfigAndManipulatorFactory::getInstance()).getInstance3(self.abeClientInformation.clone(), None /* Java this: a &mut self method has no Rc of itself */, document.clone()),); self.setObjectConfigInterface(java_arguments.0) };
     }
     
@@ -436,19 +439,19 @@ impl TransformInfo {
 
     // throws Exception
     pub fn getTemplateFilePath(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> {
-        return AbFilePath::new(self.getTemplateFile()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        return AbFilePath::new(self.getTemplateFile()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
     }
     
 
     // throws Exception
     pub fn getObjectConfigFilePath(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> {
-        return AbFilePath::new(self.getObjectConfigFile()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        return AbFilePath::new(self.getObjectConfigFile()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
     }
     
 
     // throws Exception
     pub fn getDataFilePath(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> {
-        return AbFilePath::new(self.getDataFile()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        return AbFilePath::new(self.getDataFile()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
     }
     
 
@@ -462,9 +465,9 @@ impl TransformInfo {
         let mut dataFileString: String = self.getDataFile();
         if !jcall!(stringValidationUtil).isEmpty(dataFileString.clone()) {
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                let mut fileData: String = jcall!(CryptFileReader::new(jcall!(TransformInfoDataData::getInstance()).UNCRYPTED_EXTENSION.clone(), jcall!(TransformInfoDataData::getInstance()).ENCRYPTED_EXTENSION.clone())).get(self.getDataFilePath());
+                let mut fileData: String = jcall!(CryptFileReader::new({ let java_field = jcall!(TransformInfoDataData::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field }.clone(), { let java_field = jcall!(TransformInfoDataData::getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone())).get(self.getDataFilePath());
                 if !jcall!(stringValidationUtil).isEmpty(self.data.clone()) {
-                    if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+                    if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                         { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Data File overriding existing data: "), self.getDataFilePath()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getData()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                     }
                 }
@@ -472,9 +475,9 @@ impl TransformInfo {
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
                     { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Could Not Load Data from: "), self.getDataFile()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getData()"), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
                 }
                 }
@@ -482,19 +485,19 @@ impl TransformInfo {
         }
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if !jcall!(stringValidationUtil).isEmpty(self.data.clone()) {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
-                    { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Data: "), XmlDocumentHelper::toString(DomDocumentHelper::create1(self.data.clone()))), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getData()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
+                    { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Data: "), XmlDocumentHelper::toString(DomDocumentHelper::create1_String(self.data.clone()))), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getData()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
             } else {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
                     let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                     jcall!(stringBuffer).append(String::from("Name: "));
                     jcall!(stringBuffer).append(self.name.clone());
                     jcall!(stringBuffer).append(String::from("\nEmpty Data For: "));
                     jcall!(stringBuffer).append(dataFileString.clone());
                     jcall!(stringBuffer).append(String::from("\nPath: "));
-                    jcall!(stringBuffer).append(jcall!(self.getDataFilePath()).toFileSystemString());
-                    if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
+                    jcall!(stringBuffer).append({ let java_argument = jcall!(self.getDataFilePath()).toFileSystemString(); java_argument });
+                    if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
                         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getData()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                     }
                 }
@@ -502,9 +505,9 @@ impl TransformInfo {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).put(format!("{}{}", String::from("Could Not Preview Data: "), self.data), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getData()"), crate::java_into_object(e.clone()));
             }
             }
@@ -518,12 +521,12 @@ impl TransformInfo {
         let mut localData: String = self.getData();
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
         if jcall!(stringValidationUtil).isEmpty(localData.clone()) {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).putF(String::from("No Data So Creating New Document"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getDataDocument()"));
             }
             return DomDocumentHelper::create();
         } else {
-            let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1(localData.clone());
+            let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1_String(localData.clone());
             return document.clone();
         }
     }
@@ -534,40 +537,40 @@ impl TransformInfo {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         let mut transformInfoData: Option<Rc<RefCell<TransformInfoData>>> = TransformInfoData::getInstance();
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(jcall!(transformInfoData).NAME.clone(), self.name.clone());
-        jcall!(hashMap).put(jcall!(StoreFrontData::getInstance()).NAME.clone(), self.storeName.clone());
-        jcall!(hashMap).put(jcall!(transformInfoData).OBJECTFILENAME.clone(), self.objectFileName.clone());
-        jcall!(hashMap).put(jcall!(transformInfoData).OBJECT.clone(), self.anyType.clone());
-        jcall!(hashMap).put(jcall!(transformInfoData).OBJECTCONFIGFILENAME.clone(), self.getObjectConfigFile());
-        jcall!(hashMap).put(jcall!(transformInfoData).OBJECTCONFIG.clone(), Encoder::encode(jcall!(self.getObjectConfigInterface()).toString().bytes().map(|value| value as i8).collect::<Vec<i8>>()));
-        jcall!(hashMap).put(jcall!(transformInfoData).TEMPLATEFILENAME.clone(), self.templateFileName.clone());
-        jcall!(hashMap).put(jcall!(transformInfoData).TEMPLATE.clone(), self.template.clone());
-        jcall!(hashMap).put(jcall!(transformInfoData).DATAFILENAME.clone(), self.dataFileName.clone());
-        jcall!(hashMap).put(jcall!(transformInfoData).DATA.clone(), Encoder::encode(self.data.bytes().map(|value| value as i8).collect::<Vec<i8>>()));
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(transformInfoData).NAME.clone(); java_field }.clone()), crate::java_into_object(self.name.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(self.storeName.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(transformInfoData).OBJECTFILENAME.clone(); java_field }.clone()), crate::java_into_object(self.objectFileName.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(transformInfoData).OBJECT.clone(); java_field }.clone()), self.anyType.clone());
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(transformInfoData).OBJECTCONFIGFILENAME.clone(); java_field }.clone()), crate::java_into_object(self.getObjectConfigFile()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(transformInfoData).OBJECTCONFIG.clone(); java_field }.clone()), { let java_argument = crate::java_into_object(Encoder::encode({ let java_argument = jcall!(self.getObjectConfigInterface()).toString().bytes().map(|value| value as i8).collect::<Vec<i8>>(); java_argument })); java_argument });
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(transformInfoData).TEMPLATEFILENAME.clone(); java_field }.clone()), crate::java_into_object(self.templateFileName.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(transformInfoData).TEMPLATE.clone(); java_field }.clone()), crate::java_into_object(self.template.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(transformInfoData).DATAFILENAME.clone(); java_field }.clone()), crate::java_into_object(self.dataFileName.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(transformInfoData).DATA.clone(); java_field }.clone()), crate::java_into_object(Encoder::encode(self.data.bytes().map(|value| value as i8).collect::<Vec<i8>>())));
         let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-        let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString().clone();
-        jcall!(hashMap).put(jcall!(EntryData::getInstance()).LASTMODIFIED.clone(), time.clone());
+        let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string().clone();
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone()), crate::java_into_object(time.clone()));
         return hashMap.clone();
     }
     
 
     pub fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         jcall!(vector).add(crate::java_into_object(self.name.clone()));
         jcall!(vector).add(crate::java_into_object(self.storeName.clone()));
         jcall!(vector).add(crate::java_into_object(self.objectFileName.clone()));
         jcall!(vector).add(crate::java_into_object(self.anyType.clone()));
         jcall!(vector).add(crate::java_into_object(self.getObjectConfigFile()));
-        jcall!(vector).add(crate::java_into_object(Encoder::encode(jcall!(self.getObjectConfigInterface()).toString().bytes().map(|value| value as i8).collect::<Vec<i8>>())));
+        jcall!(vector).add({ let java_argument = crate::java_into_object(Encoder::encode({ let java_argument = jcall!(self.getObjectConfigInterface()).toString().bytes().map(|value| value as i8).collect::<Vec<i8>>(); java_argument })); java_argument });
         jcall!(vector).add(crate::java_into_object(self.templateFileName.clone()));
         jcall!(vector).add(crate::java_into_object(self.template.clone()));
         jcall!(vector).add(crate::java_into_object(self.dataFileName.clone()));
         jcall!(vector).add(crate::java_into_object(Encoder::encode(self.data.bytes().map(|value| value as i8).collect::<Vec<i8>>())));
         let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-        let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString().clone();
+        let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string().clone();
         jcall!(vector).add(crate::java_into_object(time.clone()));
         jcall!(vector).add(crate::java_into_object(time.clone()));
         return vector.clone();
@@ -575,7 +578,7 @@ impl TransformInfo {
     
 
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return (self.getName()).clone() /* as Any */;
+        return crate::java_into_object(crate::java_into_object((self.getName()).clone()));
     }
     
 
@@ -598,10 +601,10 @@ impl TransformInfo {
         self.objectConfigInterface = objectConfigInterface.clone();
     }
 }
-pub trait TransformInfoDyn {
+pub trait TransformInfoDyn: std::any::Any {
     fn as_TransformInfo(&self) -> &TransformInfo;
     fn as_TransformInfo_mut(&mut self) -> &mut TransformInfo;
-    fn r#override(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) { TransformInfo::r#override(self.as_TransformInfo_mut(), hashMap) }
+    fn r#override(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) { TransformInfo::r#override(self.as_TransformInfo_mut(), hashMap) }
     fn log(&mut self) -> String { TransformInfo::log(self.as_TransformInfo_mut()) }
     fn setName(&mut self, mut value: String) { TransformInfo::setName(self.as_TransformInfo_mut(), value) }
     fn setStoreName(&mut self, mut value: String) { TransformInfo::setStoreName(self.as_TransformInfo_mut(), value) }
@@ -627,7 +630,7 @@ pub trait TransformInfoDyn {
     fn getData(&mut self) -> String { TransformInfo::getData(self.as_TransformInfo_mut()) }
     fn getDataDocument(&mut self) -> Option<Rc<RefCell<Document>>> { TransformInfo::getDataDocument(self.as_TransformInfo_mut()) }
     fn getDataFile(&mut self) -> String { TransformInfo::getDataFile(self.as_TransformInfo_mut()) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { TransformInfo::toHashMap(self.as_TransformInfo_mut()) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { TransformInfo::toHashMap(self.as_TransformInfo_mut()) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { TransformInfo::toVector(self.as_TransformInfo_mut()) }
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { TransformInfo::getKey(self.as_TransformInfo_mut()) }
     fn setChild(&mut self) { TransformInfo::setChild(self.as_TransformInfo_mut()) }

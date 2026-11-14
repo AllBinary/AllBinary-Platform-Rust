@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,6 +33,10 @@ pub struct PreLogUtil {
 
 
 impl PreLogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -46,7 +51,7 @@ impl PreLogUtil {
     
 
     pub fn put(mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String) {
-        PreLogUtil::putOE(specialMessage.clone(), anyType.clone(), functionName.clone(), jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+        PreLogUtil::putOE(specialMessage.clone(), crate::java_into_object(anyType.clone()), functionName.clone(), crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()));
     }
     
 

@@ -48,6 +48,10 @@ impl ThirdPartyInApplicationPurchaseInterface for ThirdPartyInApplicationPurchas
 
 impl ThirdPartyInApplicationPurchase {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -101,7 +105,7 @@ impl ThirdPartyInApplicationPurchase {
     
 
     pub fn getUserName(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 
@@ -113,7 +117,7 @@ impl ThirdPartyInApplicationPurchase {
     pub fn requestProducts(&mut self) {
     }
 }
-pub trait ThirdPartyInApplicationPurchaseDyn: crate::org::allbinary::logic::system::security::licensing::ThirdPartyInApplicationPurchaseInterface::ThirdPartyInApplicationPurchaseInterface {
+pub trait ThirdPartyInApplicationPurchaseDyn: std::any::Any + crate::org::allbinary::logic::system::security::licensing::ThirdPartyInApplicationPurchaseInterface::ThirdPartyInApplicationPurchaseInterface {
     fn as_ThirdPartyInApplicationPurchase(&self) -> &ThirdPartyInApplicationPurchase;
     fn as_ThirdPartyInApplicationPurchase_mut(&mut self) -> &mut ThirdPartyInApplicationPurchase;
     fn requestProducts(&mut self) { ThirdPartyInApplicationPurchase::requestProducts(self.as_ThirdPartyInApplicationPurchase_mut()) }

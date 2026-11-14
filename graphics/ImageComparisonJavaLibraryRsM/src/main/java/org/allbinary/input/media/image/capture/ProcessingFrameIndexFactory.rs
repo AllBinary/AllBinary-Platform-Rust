@@ -31,6 +31,10 @@ pub struct ProcessingFrameIndexFactory {
 pub static mut ProcessingFrameIndexFactory_currentFrame: std::cell::LazyCell<i64> = std::cell::LazyCell::new(|| 0_i64);
 
 impl ProcessingFrameIndexFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

@@ -42,6 +42,10 @@ pub struct CategoryData {
 thread_local! { pub static CategoryData_instance: Option<Rc<RefCell<CategoryData>>> = CategoryData::new(); }
 
 impl CategoryData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<CategoryData>>> {
@@ -70,8 +74,8 @@ impl CategoryData {
         this.LEVEL = String::from("CATEGORY_LEVEL");
         this.REQUEST = String::from("request");
         this.ROOTCATEGORY = String::from("Category");
-        this.UNCRYPTED_EXTENSION = jcall!(CommonDataFileStrings::getInstance()).UNCRYPTED_EXTENSION.clone();
-        this.ENCRYPTED_EXTENSION = jcall!(CommonDataFileStrings::getInstance()).ENCRYPTED_EXTENSION.clone();
+        this.UNCRYPTED_EXTENSION = { let java_field = jcall!(CommonDataFileStrings::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field }.clone();
+        this.ENCRYPTED_EXTENSION = { let java_field = jcall!(CommonDataFileStrings::getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone();
         this
     }
 

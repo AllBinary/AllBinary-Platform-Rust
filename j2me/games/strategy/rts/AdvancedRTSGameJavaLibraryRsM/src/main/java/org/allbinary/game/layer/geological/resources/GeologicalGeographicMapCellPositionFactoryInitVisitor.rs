@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayer;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionFactoryInitVisitorInterface::GeographicMapCellPositionFactoryInitVisitorInterface;
+use crate::java::lang::Exception::*;
 use super::GeologicalGeographicMapCellPosition::GeologicalGeographicMapCellPosition;
 
 // Borrows the object of a Java reference
@@ -38,6 +39,10 @@ impl GeographicMapCellPositionFactoryInitVisitorInterface for GeologicalGeograph
 
 impl GeologicalGeographicMapCellPositionFactoryInitVisitor {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -51,7 +56,7 @@ impl GeologicalGeographicMapCellPositionFactoryInitVisitor {
 
     // throws Exception
     pub fn visit(&mut self, mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>>, mut cellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) {
-        let mut geologicalGeographicMapCellPosition: Option<Rc<RefCell<GeologicalGeographicMapCellPosition>>> = ((cellPosition).clone() /* as GeologicalGeographicMapCellPosition */);
+        let mut geologicalGeographicMapCellPosition: Option<Rc<RefCell<GeologicalGeographicMapCellPosition>>> = ((cellPosition).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<GeologicalGeographicMapCellPosition>() }, "ClassCastException: not a GeologicalGeographicMapCellPosition"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<GeologicalGeographicMapCellPosition>) } }));
         jcall!(jcall!(geologicalGeographicMapCellPosition).getGeologicalResource()).init();
     }
 }

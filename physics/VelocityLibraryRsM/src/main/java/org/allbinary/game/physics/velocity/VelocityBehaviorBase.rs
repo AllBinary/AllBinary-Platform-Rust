@@ -32,6 +32,10 @@ pub struct VelocityBehaviorBase {
 
 impl VelocityBehaviorBase {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -54,7 +58,7 @@ impl VelocityBehaviorBase {
     pub fn reduceY(&mut self, mut velocityProperties: Option<Rc<RefCell<dyn crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn>>>, mut nominator: i32, mut denominator: i32) {
     }
 }
-pub trait VelocityBehaviorBaseDyn {
+pub trait VelocityBehaviorBaseDyn: std::any::Any {
     fn as_VelocityBehaviorBase(&self) -> &VelocityBehaviorBase;
     fn as_VelocityBehaviorBase_mut(&mut self) -> &mut VelocityBehaviorBase;
     fn reduce(&mut self, mut velocityProperties: Option<Rc<RefCell<dyn crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn>>>, mut nominator: i32, mut denominator: i32) { VelocityBehaviorBase::reduce(self.as_VelocityBehaviorBase_mut(), velocityProperties, nominator, denominator) }

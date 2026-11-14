@@ -44,17 +44,17 @@ pub struct AllBinaryGameLayerManager {
     pub playerGameInputCompositeInterface: Option<Rc<RefCell<dyn PlayerGameInputCompositeInterface>>>,
 }
 
-pub static mut AllBinaryGameLayerManager_NULL_ALLBINARY_LAYER_MANAGER: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut AllBinaryGameLayerManager_NULL_ALLBINARY_LAYER_MANAGER: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 thread_local! { pub static AllBinaryGameLayerManager_ID: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(22); }
 
 impl AllBinaryGameLayerManager {
     
 
     pub fn getNullInstance() -> Option<Rc<RefCell<dyn AllBinaryGameLayerManagerDyn>>> {
-        if match (&unsafe { AllBinaryGameLayerManager_NULL_ALLBINARY_LAYER_MANAGER.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *AllBinaryGameLayerManager_NULL_ALLBINARY_LAYER_MANAGER = AllBinaryGameLayerManager::new(jcall!(BasicColorFactory::getInstance()).BLACK.clone(), jcall!(BasicColorFactory::getInstance()).WHITE.clone(), crate::org::allbinary::game::GameInfo::GameInfo_NONE.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn AllBinaryGameLayerManagerDyn>>) };
+        if match (&unsafe { AllBinaryGameLayerManager_NULL_ALLBINARY_LAYER_MANAGER.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *AllBinaryGameLayerManager_NULL_ALLBINARY_LAYER_MANAGER = crate::java_into_object(AllBinaryGameLayerManager::new({ let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone(), crate::org::allbinary::game::GameInfo::GameInfo_NONE.with(Clone::clone).clone())) };
         }
-        return (unsafe { AllBinaryGameLayerManager_NULL_ALLBINARY_LAYER_MANAGER.clone() }).clone() /* as AllBinaryGameLayerManager */;
+        return { let java_object = (unsafe { AllBinaryGameLayerManager_NULL_ALLBINARY_LAYER_MANAGER.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn AllBinaryGameLayerManagerDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -66,7 +66,7 @@ impl AllBinaryGameLayerManager {
             gameInfo: None,
             playerGameInputCompositeInterface: None,
         };
-        this.playerGameInputCompositeInterface = crate::org::allbinary::game::input::NullPlayerGameInputComposite::NullPlayerGameInputComposite_NULL_PLAYER_GAME_INPUT_COMPOSITE.with(Clone::clone).clone();
+        this.playerGameInputCompositeInterface = crate::org::allbinary::game::input::NullPlayerGameInputComposite::NullPlayerGameInputComposite_NULL_PLAYER_GAME_INPUT_COMPOSITE.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn PlayerGameInputCompositeInterface>>);
         this.backgroundBasicColor = backgroundBasicColor.clone();
         this.foregroundBasicColor = foregroundBasicColor.clone();
         let mut itemColorFactory: Option<Rc<RefCell<ItemColorFactory>>> = ItemColorFactory::getInstance();
@@ -82,7 +82,7 @@ impl AllBinaryGameLayerManager {
     
 
     pub fn getLayerManager(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>> {
-        return self;
+        return None /* Java this: a &mut self method has no Rc of itself */;
     }
     
 

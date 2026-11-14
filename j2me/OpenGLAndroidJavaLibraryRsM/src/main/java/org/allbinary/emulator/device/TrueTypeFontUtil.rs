@@ -17,10 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::File::File;
-// use crate::java::io::FileOutputStream::FileOutputStream;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::java::io::File::File;
+use crate::java::io::FileOutputStream::FileOutputStream;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::android::graphics::Bitmap::Bitmap;
 use crate::android::graphics::Canvas::Canvas;
 use crate::android::graphics::Paint::Paint;
@@ -36,6 +36,7 @@ use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::microemu::android::device::AndroidImageInterface::AndroidImageInterface;
 use crate::org::microemu::android::device::AndroidImmutableImage::AndroidImmutableImage;
+use crate::java::lang::Exception::*;
 use super::TrueTypeFontUtilBase::TrueTypeFontUtilBase;
 
 // Borrows the object of a Java reference
@@ -89,24 +90,24 @@ impl TrueTypeFontUtil {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
             let mut file: Option<Rc<RefCell<File>>> = jcall!(jcall!(ResourceUtil::getInstance()).getContext()).getFilesDir();
-            let mut path: String = format!("{}{}", jcall!(file).getAbsolutePath(), jcall!(CanvasStrings::getInstance()).FONT_ATLAS);
-            jcall!(self.logUtil).putF(path.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone());
-            let mut fos: Option<Rc<RefCell<FileOutputStream>>> = FileOutputStream::new(path.clone());
-            let mut bitmap: Option<Rc<RefCell<Bitmap>>> = jcall!(((jcall!(jcall!(self.fontImage).as_OpenGLESImage_mut().openGLBitmap).getImage()).clone() /* as AndroidImageInterface */)).getBitmap();
-            jcall!(bitmap).compress(jcall!(unsafe { crate::android::graphics::Bitmap::Bitmap_CompressFormat.clone() }).PNG.clone(), 100, fos.clone());
+            let mut path: String = format!("{}{}", jcall!(file).getAbsolutePath(), { let java_field = jcall!(CanvasStrings::getInstance()).FONT_ATLAS.clone(); java_field });
+            jcall!(self.logUtil).putF(path.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
+            let mut fos: Option<Rc<RefCell<dyn crate::java::io::FileOutputStream::FileOutputStreamDyn>>> = FileOutputStream::new1(path.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::FileOutputStream::FileOutputStreamDyn>>);
+            let mut bitmap: Option<Rc<RefCell<Bitmap>>> = jcall!(((|| -> Option<Rc<RefCell<dyn AndroidImageInterface>>> { panic!("ClassCastException: a Rust dyn Image cannot be cast to AndroidImageInterface") })())).getBitmap();
+            jcall!(bitmap).compress({ let java_field = jcall!(unsafe { crate::android::graphics::Bitmap::Bitmap_CompressFormat.clone() }).PNG.clone(); java_field }.clone(), 100, fos.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            PreLogUtil::putOE(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).EXCEPTION.clone(), e.clone());
+            PreLogUtil::putOE({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
-    pub fn getFontBitmapGL(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut filename: String, mut cellSize: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Image>>> {
+    pub fn getFontBitmapGL(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut filename: String, mut cellSize: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         if match (&self.fontImage, &crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImage_NULL_OPENGL_IMAGE.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             let mut cellsPerRow2: i32 = self.CELLS_PER_ROW * 2;
             let mut cellsPerRow3: i32 = self.CELLS_PER_ROW * 3;
@@ -115,13 +116,13 @@ impl TrueTypeFontUtil {
             let mut cellsPerRow6: i32 = self.CELLS_PER_ROW * 6;
             let mut cellsPerRow7: i32 = self.CELLS_PER_ROW * 7;
             let mut typeface: Option<Rc<RefCell<Typeface>>> = unsafe { crate::android::graphics::Typeface::Typeface_DEFAULT.clone() }.clone();
-            let mut textureSize: i32 = self.getAsTextureSize(self.CELLS_PER_ROW * cellSize);
-            let mut bitmap: Option<Rc<RefCell<Bitmap>>> = Bitmap::createBitmap(textureSize.clone(), textureSize.clone(), jcall!(unsafe { crate::android::graphics::Bitmap::Bitmap_Config.clone() }).ARGB_8888.clone());
-            let mut canvas: Option<Rc<RefCell<Canvas>>> = Canvas::new(bitmap.clone());
+            let mut textureSize: i32 = { let java_arguments = (self.CELLS_PER_ROW * cellSize,); self.getAsTextureSize(java_arguments.0) };
+            let mut bitmap: Option<Rc<RefCell<Bitmap>>> = Bitmap::createBitmap(textureSize.clone(), textureSize.clone(), { let java_field = jcall!(unsafe { crate::android::graphics::Bitmap::Bitmap_Config.clone() }).ARGB_8888.clone(); java_field }.clone());
+            let mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>> = Canvas::new(bitmap.clone()).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>);
             let mut paint: Option<Rc<RefCell<Paint>>> = Paint::new();
             jcall!(paint).setTypeface(typeface.clone());
             jcall!(paint).setTextSize(((self.realFontSize) as f32));
-            jcall!(paint).setAlpha(((jcall!(basicColor).alpha) as i32));
+            jcall!(paint).setAlpha((({ let java_field = jcall!(basicColor).alpha.clone(); java_field }) as i32));
             jcall!(paint).setColor(jcall!(basicColor).intValue());
             let mut biggestHeight: i32 = 0;
             let mut bounds: Option<Rc<RefCell<Rect>>> = Rect::new();
@@ -130,9 +131,9 @@ impl TrueTypeFontUtil {
             for index in (0..self.size) {
                 self.characterArray[(0) as usize] = self.pattern.chars().nth((index.clone()) as usize).unwrap();
                 jcall!(paint).getTextBounds(self.characterArray.clone(), 0, 1, bounds.clone());
-                self._characterWidth[(index) as usize] = jcall!(bounds).right.clone();
-                if jcall!(bounds).bottom - jcall!(bounds).top > biggestHeight {
-                    biggestHeight = jcall!(bounds).bottom - jcall!(bounds).top;
+                { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field }.clone(); };
+                if { let java_field = jcall!(bounds).bottom.clone(); java_field } - { let java_field = jcall!(bounds).top.clone(); java_field } > biggestHeight {
+                    biggestHeight = { let java_value = ({ let java_field = jcall!(bounds).bottom.clone(); java_field } - { let java_field = jcall!(bounds).top.clone(); java_field }).clone(); java_value };
                 }
                 x = (index % self.CELLS_PER_ROW) * cellSize;
                 x += (cellSize >> 1);
@@ -161,14 +162,14 @@ impl TrueTypeFontUtil {
                 }
                 y += cellSize.clone();
                 y -= (cellSize >> 2);
-                jcall!(canvas).drawText(self.characterArray.clone(), 0, 1, ((x) as f32) - 3.0_f32, ((y) as f32) - 6.0_f32, paint.clone());
+                jcall!(canvas).as_Canvas_mut().drawText(self.characterArray.clone(), 0, 1, ((x) as f32) - 3.0_f32, ((y) as f32) - 6.0_f32, paint.clone());
             }
-            jcall!(canvas).save();
-            let mut image: Option<Rc<RefCell<Image>>> = AndroidImmutableImage::create(bitmap.clone());
-            self.fontImage = (jcall!(self.preResourceImageUtil).encapsulate(image.clone())).clone() /* as OpenGLESImage */;
-            return self.fontImage.clone();
+            jcall!(canvas).as_Canvas_mut().save();
+            let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = AndroidImmutableImage::create(bitmap.clone());
+            self.fontImage = { let java_value = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> { panic!("ClassCastException: a Rust dyn Image cannot be cast to OpenGLESImage") })()).clone(); java_value };
+            return self.fontImage.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>);
         } else {
-            return self.fontImage.clone();
+            return self.fontImage.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>);
         }
     }
     
@@ -185,39 +186,39 @@ impl TrueTypeFontUtil {
             jcall!(paint).getTextBounds(self.characterArray.clone(), 0, 1, bounds.clone());
             if index < self.lastCapIndex {
                 if self.characterArray[(0) as usize] == '1' {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right + 3;
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field } + 3; };
                 } else if self.characterArray[(0) as usize] == 'J' || self.characterArray[(0) as usize] == 'V' || self.characterArray[(0) as usize] == '2' || self.characterArray[(0) as usize] == '9' || self.characterArray[(0) as usize] == 'I' || self.characterArray[(0) as usize] == 'N' || self.characterArray[(0) as usize] == 'U' {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right + 1;
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field } + 1; };
                 } else if self.characterArray[(0) as usize] == '4' || self.characterArray[(0) as usize] == 'C' || self.characterArray[(0) as usize] == 'E' || self.characterArray[(0) as usize] == 'O' {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right - 2;
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field } - 2; };
                 } else if self.characterArray[(0) as usize] == 'B' || self.characterArray[(0) as usize] == 'D' || self.characterArray[(0) as usize] == 'G' || self.characterArray[(0) as usize] == 'H' || self.characterArray[(0) as usize] == 'T' || self.characterArray[(0) as usize] == 'W' {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right - 3;
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field } - 3; };
                 } else if self.characterArray[(0) as usize] == 'A' || self.characterArray[(0) as usize] == 'Q' || self.characterArray[(0) as usize] == 'R' {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right - 5;
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field } - 5; };
                 } else if self.characterArray[(0) as usize] == 'M' {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right - 6;
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field } - 6; };
                 } else if self.characterArray[(0) as usize] == 'm' {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right - 8;
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field } - 8; };
                 } else {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right.clone();
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field }.clone(); };
                 }
             } else {
                 if self.characterArray[(0) as usize] == ' ' {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right + 10;
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field } + 10; };
                 } else if self.characterArray[(0) as usize] == 'l' || self.characterArray[(0) as usize] == 'i' || self.characterArray[(0) as usize] == 'j' || self.characterArray[(0) as usize] == '.' || self.characterArray[(0) as usize] == '!' || self.characterArray[(0) as usize] == '|' {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right + 6;
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field } + 6; };
                 } else if self.characterArray[(0) as usize] == 'f' || self.characterArray[(0) as usize] == 't' || self.characterArray[(0) as usize] == 'u' || self.characterArray[(0) as usize] == 'v' {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right + 1;
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field } + 1; };
                 } else if self.characterArray[(0) as usize] == 'r' {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right + 2;
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field } + 2; };
                 } else if self.characterArray[(0) as usize] == 'a' || self.characterArray[(0) as usize] == 'b' || self.characterArray[(0) as usize] == 'g' || self.characterArray[(0) as usize] == 'u' {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right - 1;
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field } - 1; };
                 } else if self.characterArray[(0) as usize] == 'o' || self.characterArray[(0) as usize] == 'e' {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right - 2;
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field } - 2; };
                 } else if self.characterArray[(0) as usize] == 'm' {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right - 7;
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field } - 7; };
                 } else {
-                    self._characterWidth[(index) as usize] = jcall!(bounds).right.clone();
+                    { let java_index = (index) as usize; self._characterWidth[java_index] = { let java_field = jcall!(bounds).right.clone(); java_field }.clone(); };
                 }
             }
         }

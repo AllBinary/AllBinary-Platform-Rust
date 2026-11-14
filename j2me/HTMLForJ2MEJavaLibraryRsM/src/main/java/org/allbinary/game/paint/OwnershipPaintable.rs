@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::Anchor::Anchor;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
@@ -50,7 +50,7 @@ pub struct OwnershipPaintable {
 }
 
 impl UpdateMyFontInterface for OwnershipPaintable {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 impl OwnershipPaintable {
@@ -74,30 +74,31 @@ impl OwnershipPaintable {
             beginWidth: 0,
         };
         this.displayInfo = DisplayInfoSingleton::getInstance();
-        this.myFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
         this.COPYRIGHT = String::from("AllBinary Copyright (c) 2011");
-        this.basicColor = jcall!(BasicColorFactory::getInstance()).WHITE.clone();
+        this.basicColor = { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone();
         this.color = jcall!(this.basicColor).intValue();
         this.anchor = unsafe { crate::org::allbinary::graphics::Anchor::Anchor_TOP_LEFT.clone() }.clone();
         this
     }
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct())))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct())));
+        jcall!(this).myFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.COPYRIGHT_Y = 2 * jcall!(font).getHeight();
-        self.beginWidth = (jcall!(font).stringWidth(self.COPYRIGHT.clone()) >> 1);
-        self.myFontProcessor = MyFontProcessor::getInstance();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.COPYRIGHT_Y = { let java_value = (2 * jcall!(font).getHeight()).clone(); java_value };
+        self.beginWidth = { let java_value = ((jcall!(font).stringWidth(self.COPYRIGHT.clone()) >> 1)).clone(); java_value };
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
     pub fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
         self.basicColor = basicColor.clone();
-        self.color = jcall!(basicColor).intValue();
+        self.color = { let java_value = (jcall!(basicColor).intValue()).clone(); java_value };
     }
     
 
@@ -106,7 +107,7 @@ impl OwnershipPaintable {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         jcall!(graphics).setColor(self.color.clone());
         let mut halfWidth: i32 = jcall!(self.displayInfo).getLastHalfWidth();
@@ -126,7 +127,10 @@ impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for Ownersh
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base }
     fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::setBasicColorP(self, basicColor) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for OwnershipPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

@@ -17,10 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::nio::Buffer::Buffer;
-// use crate::java::nio::ByteBuffer::ByteBuffer;
+use crate::java::nio::Buffer::Buffer;
+use crate::java::nio::ByteBuffer::ByteBuffer;
 // use crate::java::nio::ByteOrder::ByteOrder;
-// use crate::java::nio::FloatBuffer::FloatBuffer;
+use crate::java::nio::FloatBuffer::FloatBuffer;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,17 +31,24 @@ macro_rules! jcall {
 
 pub struct GLUtil {
     pub BYTES_PER_FLOAT: i32,
+    pub NULL_FLOAT_BUFFER: Option<Rc<RefCell<FloatBuffer>>>,
 }
 
 thread_local! { pub static GLUtil_instance: Option<Rc<RefCell<GLUtil>>> = GLUtil::new(); }
 
 impl GLUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             BYTES_PER_FLOAT: 0,
+            NULL_FLOAT_BUFFER: None,
         };
         this.BYTES_PER_FLOAT = 4;
+        this.NULL_FLOAT_BUFFER = jcall!(ByteBuffer::allocateDirect(0)).asFloatBuffer();
         this
     }
 
@@ -87,7 +94,7 @@ impl GLUtil {
         let mut unsigned: i32 = 0;
         let mut v: f32 = 0.0_f32;
         while jcall!(byteBuffer).hasRemaining() {
-            unsigned = jcall!(byteBuffer).get() & 0xFF_u32 as i32;
+            unsigned = { let java_value = ((((jcall!(byteBuffer).get()) as i32)) & 0xFF).clone(); java_value };
             v = (((unsigned) as f32)) / 255.0_f32;
             jcall!(buffer).put(v.clone());
         }
@@ -102,7 +109,7 @@ impl GLUtil {
     
 
     pub fn rotateUVs(&mut self, mut uvs: Vec<f32>, mut angleDegrees: f32, mut pivotU: f32, mut pivotV: f32) {
-        let mut angleRad: f64 = ((angleDegrees.clone()) as f64).to_radians();
+        let mut angleRad: f64 = ((((angleDegrees) as f64)) as f64).to_radians();
         let mut cosA: f64 = ((angleRad.clone()) as f64).cos();
         let mut sinA: f64 = ((angleRad.clone()) as f64).sin();
         for i in (0..(uvs.len() as i32)).step_by((2) as usize) {

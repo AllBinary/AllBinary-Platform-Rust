@@ -21,6 +21,7 @@ use crate::org::allbinary::input::media::image::capture::CapturedImageInputOutpu
 use crate::org::allbinary::media::image::comparison::ComparisonImageInputOutput::ComparisonImageInputOutput;
 use crate::org::allbinary::media::image::comparison::motion::MotionRectanglesImageInputOutput::MotionRectanglesImageInputOutput;
 use crate::org::allbinary::media::image::io::ImageIOInterface::ImageIOInterface;
+use crate::java::lang::Exception::*;
 use super::InputImageType::InputImageType;
 
 // Borrows the object of a Java reference
@@ -35,6 +36,10 @@ pub struct InputImageIOInterfaceFactory {
 
 
 impl InputImageIOInterfaceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -51,11 +56,11 @@ impl InputImageIOInterfaceFactory {
     // throws Exception
     pub fn getInstance(mut imageType: Option<Rc<RefCell<InputImageType>>>) -> Option<Rc<RefCell<dyn ImageIOInterface>>> {
         if match (&imageType, &unsafe { InputImageType_CAPTURE.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            return CapturedImageInputOutput::new().map(|reference| reference as Rc<RefCell<dyn ImageIOInterface>>);
+            return CapturedImageInputOutput::new().map(|reference| reference as Rc<RefCell<dyn ImageIOInterface>>).map(|reference| reference as Rc<RefCell<dyn ImageIOInterface>>);
         } else if match (&imageType, &unsafe { InputImageType_COMPARISON.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            return ComparisonImageInputOutput::new().map(|reference| reference as Rc<RefCell<dyn ImageIOInterface>>);
+            return ComparisonImageInputOutput::new().map(|reference| reference as Rc<RefCell<dyn ImageIOInterface>>).map(|reference| reference as Rc<RefCell<dyn ImageIOInterface>>);
         } else if match (&imageType, &unsafe { InputImageType_MOTION.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            return MotionRectanglesImageInputOutput::new().map(|reference| reference as Rc<RefCell<dyn ImageIOInterface>>);
+            return MotionRectanglesImageInputOutput::new().map(|reference| reference as Rc<RefCell<dyn ImageIOInterface>>).map(|reference| reference as Rc<RefCell<dyn ImageIOInterface>>);
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("No ImageIOInterface for: "), jcall!(imageType).toString()))));
         }

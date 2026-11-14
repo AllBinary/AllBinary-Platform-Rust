@@ -21,6 +21,7 @@ use crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOpe
 use crate::org::allbinary::logic::system::os::OperatingSystems::OperatingSystems;
 use crate::org::allbinary::logic::system::hardware::linux::LinuxHardware::LinuxHardware;
 use crate::org::allbinary::logic::system::hardware::windows::WindowsHardware::WindowsHardware;
+use crate::java::lang::Exception::*;
 use super::HardwareInterface::HardwareInterface;
 
 // Borrows the object of a Java reference
@@ -36,6 +37,10 @@ pub struct HardwareFactory {
 thread_local! { pub static HardwareFactory_instance: Option<Rc<RefCell<HardwareFactory>>> = HardwareFactory::new(); }
 
 impl HardwareFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<HardwareFactory>>> {
@@ -57,22 +62,23 @@ impl HardwareFactory {
     // throws Exception
     // Java overloaded method: Rust needs a different name
     pub fn getInstance1(mut os: Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>>) -> Option<Rc<RefCell<dyn HardwareInterface>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut operatingSystems: Option<Rc<RefCell<OperatingSystems>>> = OperatingSystems::getInstance();
-            if jcall!(jcall!(os).getName()).compareTo(jcall!(operatingSystems).LINUX.clone()) == 0 {
-                return (LinuxHardware::new()).clone() /* as HardwareInterface */;
-            } else if jcall!(jcall!(os).getName()).indexOf(jcall!(operatingSystems).WINDOWS.clone()) >= 0 {
-                return (WindowsHardware::new()).clone() /* as HardwareInterface */;
+            if (jcall!(os).as_GenericOperatingSystem_mut().getName().cmp(&{ let java_field = jcall!(operatingSystems).LINUX.clone(); java_field }.clone()) as i32) == 0 {
+                return Some((LinuxHardware::new()).clone() /* as HardwareInterface */);
+            } else if jcall!(os).as_GenericOperatingSystem_mut().getName().find(&{ let java_field = jcall!(operatingSystems).WINDOWS.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+                return Some((WindowsHardware::new()).clone() /* as HardwareInterface */);
             }
-            panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("No Hardware Imp for: "), jcall!(os).getName()))));
+            panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("No Hardware Imp for: "), jcall!(os).as_GenericOperatingSystem_mut().getName()))));
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

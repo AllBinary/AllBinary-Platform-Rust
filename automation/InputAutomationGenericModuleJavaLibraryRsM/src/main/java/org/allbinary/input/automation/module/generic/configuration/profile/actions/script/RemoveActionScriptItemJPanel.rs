@@ -22,14 +22,9 @@ use crate::org::allbinary::input::automation::module::generic::configuration::pr
 use crate::org::allbinary::input::automation::module::generic::configuration::profile::actions::GenericProfileActionJPanel::GenericProfileActionJPanel;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use super::Panel::Panel;
-use super::awt::awt;
-use super::java::java;
 use super::JButton::JButton;
-use super::swing::swing;
-use super::javax::javax;
 use super::GridLayout::GridLayout;
 use super::ActionListener::ActionListener;
-use super::event::event;
 use super::ActionEvent::ActionEvent;
 
 // Borrows the object of a Java reference
@@ -82,7 +77,7 @@ impl RemoveActionScriptItemJPanel {
                 self.removeJButtonActionPerformed(evt.clone());
             }
 */,); jcall!(java_receiver).addActionListener(java_arguments.0); };
-        self.add(self.removeJButton.clone());
+        { let java_arguments = (self.removeJButton.clone(),); self.add(java_arguments.0) };
     }
     
 
@@ -92,7 +87,7 @@ impl RemoveActionScriptItemJPanel {
             jcall!(self.logUtil).putF(String::from("GenericProfileAction was null"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeJButtonActionPerformed"));
             return;
         }
-        jcall!(jcall!(genericProfileAction).getGenericProfileActionScript()).removeCondition(self.profileActionScriptConditionInterface.clone());
+        jcall!(jcall!(genericProfileAction).getGenericProfileActionScript()).removeCondition(self.profileActionScriptConditionInterface.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::automation::actions::script::ProfileActionScriptNodeInterface::ProfileActionScriptNodeInterface>>));
         jcall!(self.genericProfileActionJPanel).updateProfileActionUI();
     }
 }

@@ -73,14 +73,14 @@ impl RaceTrackGeographicMapCellTypeFactory {
         this.EASY_CELL_TYPE = this.EMPTY_CELL_TYPE.clone();
         this.FINISH_LINE_ROAD_CELL_TYPE = crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellType_NULL_GEOGRAPHIC_MAP_CELL_TYPE.with(Clone::clone).clone();
         let mut raceTrackGeographicMapCellTypes: Option<Rc<RefCell<RaceTrackGeographicMapCellTypes>>> = RaceTrackGeographicMapCellTypes::getInstance();
-        this.BOTTOM_LEFT_TURN_ROAD_CELL_TYPE = jcall!(raceTrackGeographicMapCellTypes).BOTTOM_LEFT_TURN_ROAD_CELL_TYPE.clone();
-        this.BOTTOM_RIGHT_TURN_ROAD_CELL_TYPE = jcall!(raceTrackGeographicMapCellTypes).BOTTOM_RIGHT_TURN_ROAD_CELL_TYPE.clone();
-        this.TOP_LEFT_TURN_ROAD_CELL_TYPE = jcall!(raceTrackGeographicMapCellTypes).TOP_LEFT_TURN_ROAD_CELL_TYPE.clone();
-        this.TOP_RIGHT_TURN_ROAD_CELL_TYPE = jcall!(raceTrackGeographicMapCellTypes).TOP_RIGHT_TURN_ROAD_CELL_TYPE.clone();
-        this.HORIZONTAL_STRAIGHT_ROAD_CELL_TYPE = jcall!(raceTrackGeographicMapCellTypes).HORIZONTAL_STRAIGHT_ROAD_CELL_TYPE.clone();
-        this.VERTICAL_STRAIGHT_ROAD_CELL_TYPE = jcall!(raceTrackGeographicMapCellTypes).VERTICAL_STRAIGHT_ROAD_CELL_TYPE.clone();
-        this.START_LINE_ROAD_CELL_TYPE = jcall!(raceTrackGeographicMapCellTypes).START_LINE_ROAD_CELL_TYPE.clone();
-        this.DEFAULT_FINISH_LINE_ROAD_CELL_TYPE = jcall!(raceTrackGeographicMapCellTypes).DEFAULT_FINISH_LINE_ROAD_CELL_TYPE.clone();
+        this.BOTTOM_LEFT_TURN_ROAD_CELL_TYPE = { let java_value = ({ let java_field = jcall!(raceTrackGeographicMapCellTypes).BOTTOM_LEFT_TURN_ROAD_CELL_TYPE.clone(); java_field }).clone(); java_value }.clone();
+        this.BOTTOM_RIGHT_TURN_ROAD_CELL_TYPE = { let java_value = ({ let java_field = jcall!(raceTrackGeographicMapCellTypes).BOTTOM_RIGHT_TURN_ROAD_CELL_TYPE.clone(); java_field }).clone(); java_value }.clone();
+        this.TOP_LEFT_TURN_ROAD_CELL_TYPE = { let java_value = ({ let java_field = jcall!(raceTrackGeographicMapCellTypes).TOP_LEFT_TURN_ROAD_CELL_TYPE.clone(); java_field }).clone(); java_value }.clone();
+        this.TOP_RIGHT_TURN_ROAD_CELL_TYPE = { let java_value = ({ let java_field = jcall!(raceTrackGeographicMapCellTypes).TOP_RIGHT_TURN_ROAD_CELL_TYPE.clone(); java_field }).clone(); java_value }.clone();
+        this.HORIZONTAL_STRAIGHT_ROAD_CELL_TYPE = { let java_value = ({ let java_field = jcall!(raceTrackGeographicMapCellTypes).HORIZONTAL_STRAIGHT_ROAD_CELL_TYPE.clone(); java_field }).clone(); java_value }.clone();
+        this.VERTICAL_STRAIGHT_ROAD_CELL_TYPE = { let java_value = ({ let java_field = jcall!(raceTrackGeographicMapCellTypes).VERTICAL_STRAIGHT_ROAD_CELL_TYPE.clone(); java_field }).clone(); java_value }.clone();
+        this.START_LINE_ROAD_CELL_TYPE = { let java_value = ({ let java_field = jcall!(raceTrackGeographicMapCellTypes).START_LINE_ROAD_CELL_TYPE.clone(); java_field }).clone(); java_value }.clone();
+        this.DEFAULT_FINISH_LINE_ROAD_CELL_TYPE = { let java_value = ({ let java_field = jcall!(raceTrackGeographicMapCellTypes).DEFAULT_FINISH_LINE_ROAD_CELL_TYPE.clone(); java_field }).clone(); java_value }.clone();
         this
     }
 

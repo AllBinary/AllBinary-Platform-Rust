@@ -34,11 +34,15 @@ thread_local! { pub static AngleIncrementInfoFactory_instance: Option<Rc<RefCell
 
 impl AngleIncrementInfoFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             angleIncrementInfo: Vec::new(),
         };
-        this.angleIncrementInfo = vec![None; (((jcall!(AngleFactory::AngleFactory::getInstance()).TOTAL_ANGLE) as i32)) as usize];
+        this.angleIncrementInfo = vec![None; ((({ let java_field = jcall!(AngleFactory::AngleFactory::getInstance()).TOTAL_ANGLE.clone(); java_field }) as i32)) as usize];
         this
     }
 
@@ -58,7 +62,7 @@ impl AngleIncrementInfoFactory {
         let mut angleIncrementInfoCanBeNull: Option<Rc<RefCell<AngleIncrementInfo>>> = self.angleIncrementInfo[(halfAngleIncrement) as usize].clone();
         if angleIncrementInfoCanBeNull.is_none() {
             angleIncrementInfo = AngleIncrementInfo::new(angleIncrement.clone());
-            self.angleIncrementInfo[(halfAngleIncrement) as usize] = angleIncrementInfo.clone();
+            { let java_index = (halfAngleIncrement) as usize; self.angleIncrementInfo[java_index] = angleIncrementInfo.clone(); };
             return angleIncrementInfo.clone();
         } else {
             angleIncrementInfo = angleIncrementInfoCanBeNull.clone();

@@ -38,6 +38,10 @@ pub struct InputFeatureFactory {
 thread_local! { pub static InputFeatureFactory_instance: Option<Rc<RefCell<InputFeatureFactory>>> = InputFeatureFactory::new(); }
 
 impl InputFeatureFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<InputFeatureFactory>>> {

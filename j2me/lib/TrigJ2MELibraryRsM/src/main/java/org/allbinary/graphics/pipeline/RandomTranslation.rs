@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::rand::MyRandomFactory::MyRandomFactory;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::BasicGraphicsPipeline::BasicGraphicsPipeline;
 
 // Borrows the object of a Java reference
@@ -33,6 +34,10 @@ pub struct RandomTranslation {
 
 
 impl RandomTranslation {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,10 +27,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait DisplayableInterface {
+pub trait DisplayableInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
-    fn addCommand(&mut self, cmd: Option<Rc<RefCell<Command>>>);
+    fn addCommand(&mut self, cmd: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>);
     
 
     fn getHeight(&mut self) -> i32;
@@ -39,12 +39,10 @@ pub trait DisplayableInterface {
     fn getWidth(&mut self) -> i32;
     
 
-    fn removeCommand(&mut self, cmd: Option<Rc<RefCell<Command>>>);
+    fn removeCommand(&mut self, cmd: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>);
     
 
-    fn setCommandListener(&mut self, l: Option<Rc<RefCell<CommandListener>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn setCommandListener(&mut self, l: Option<Rc<RefCell<dyn CommandListener>>>);
 }
 
 

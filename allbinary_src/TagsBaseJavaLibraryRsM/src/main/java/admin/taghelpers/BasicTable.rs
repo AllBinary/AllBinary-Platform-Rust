@@ -18,6 +18,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::BasicTableInterface::BasicTableInterface;
 
 // Borrows the object of a Java reference
@@ -39,6 +41,10 @@ impl BasicTableInterface for BasicTable {
 }
 
 impl BasicTable {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -76,7 +82,7 @@ impl BasicTable {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait BasicTableDyn: crate::admin::taghelpers::BasicTableInterface::BasicTableInterface {
+pub trait BasicTableDyn: std::any::Any + crate::admin::taghelpers::BasicTableInterface::BasicTableInterface {
     fn as_BasicTable(&self) -> &BasicTable;
     fn as_BasicTable_mut(&mut self) -> &mut BasicTable;
 }

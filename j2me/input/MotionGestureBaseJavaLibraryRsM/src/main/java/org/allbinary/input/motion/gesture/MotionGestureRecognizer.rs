@@ -31,6 +31,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::math::J2SEMath::J2SEMath;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::TouchMotionGestureFactory::TouchMotionGestureFactory;
 use super::MotionGestureInput::MotionGestureInput;
 
@@ -56,6 +57,10 @@ pub struct MotionGestureRecognizer {
 
 
 impl MotionGestureRecognizer {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut id: i32) -> Self {
@@ -73,28 +78,28 @@ impl MotionGestureRecognizer {
         };
         this.logUtil = LogUtil::getInstance();
         this.j2seMath = J2SEMath::getInstance();
-        this.origin = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone();
+        this.origin = { let java_field = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone();
         this.previous = this.origin.clone();
         this.intermediate = this.origin.clone();
         this.line = Line::new(this.origin.clone(), this.origin.clone());
-        this.motionEventCircularPool = MotionEventCircularPool::createPool(id.clone());
+        this.motionEventCircularPool = { let java_value = (MotionEventCircularPool::createPool(id.clone())).clone(); java_value };
         let mut motionGesturesHandler: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>> = BasicEventHandler::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>);
-        let mut movedMotionGesturesHandler: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>> = motionGesturesHandler.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>);
-        let mut scrolledMotionGesturesHandler: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>> = motionGesturesHandler.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>);
+        let mut movedMotionGesturesHandler: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>> = motionGesturesHandler.clone();
+        let mut scrolledMotionGesturesHandler: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>> = motionGesturesHandler.clone();
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            motionGesturesHandler = BasicMotionGesturesHandler::getInstance();
-            movedMotionGesturesHandler = MovedMotionGesturesHandler::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>);
-            scrolledMotionGesturesHandler = ScrolledMotionGesturesHandler::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>);
+            motionGesturesHandler = { let java_value = (BasicMotionGesturesHandler::getInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>);
+            movedMotionGesturesHandler = { let java_value = (MovedMotionGesturesHandler::getInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>);
+            scrolledMotionGesturesHandler = { let java_value = (ScrolledMotionGesturesHandler::getInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>);
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(this.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(e.clone()));
+            jcall!(this.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
-        this.motionGesturesHandler = (motionGesturesHandler).clone() /* as BasicMotionGesturesHandler */;
+        this.motionGesturesHandler = (motionGesturesHandler).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<BasicMotionGesturesHandler>() }, "ClassCastException: not a BasicMotionGesturesHandler"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<BasicMotionGesturesHandler>) } });
         this.movedMotionGesturesHandler = movedMotionGesturesHandler.clone();
         this.scrolledMotionGesturesHandler = scrolledMotionGesturesHandler.clone();
         this
@@ -109,20 +114,20 @@ impl MotionGestureRecognizer {
     pub fn processPressedMotionEvent(&mut self, mut current: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut deviceId: i32, mut button: i32) -> bool {
         self.intermediate = self.origin.clone();
         self.previous = self.origin.clone();
-        let mut event: Option<Rc<RefCell<MotionGestureEvent>>> = { let java_receiver = self.motionEventCircularPool.clone(); let java_arguments = (jcall!(TouchMotionGestureFactory::getInstance()).PRESSED.clone(),); let java_result = jcall!(java_receiver).getInstance(java_arguments.0); java_result };
+        let mut event: Option<Rc<RefCell<MotionGestureEvent>>> = { let java_receiver = self.motionEventCircularPool.clone(); let java_arguments = ({ let java_field = jcall!(TouchMotionGestureFactory::getInstance()).PRESSED.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).getInstance(java_arguments.0); java_result };
         jcall!(event).setPreviousPoint(self.previous.clone());
         jcall!(event).setCurrentPoint(current.clone());
-        jcall!(self.motionGesturesHandler).fireEvent(event.clone());
+        jcall!(self.motionGesturesHandler).fireEvent(event.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
         return true;
     }
     
 
     // throws Exception
     pub fn processReleasedMotionEvent(&mut self, mut current: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut deviceId: i32, mut button: i32) -> bool {
-        let mut event: Option<Rc<RefCell<MotionGestureEvent>>> = { let java_receiver = self.motionEventCircularPool.clone(); let java_arguments = (jcall!(TouchMotionGestureFactory::getInstance()).RELEASED.clone(),); let java_result = jcall!(java_receiver).getInstance(java_arguments.0); java_result };
+        let mut event: Option<Rc<RefCell<MotionGestureEvent>>> = { let java_receiver = self.motionEventCircularPool.clone(); let java_arguments = ({ let java_field = jcall!(TouchMotionGestureFactory::getInstance()).RELEASED.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).getInstance(java_arguments.0); java_result };
         jcall!(event).setPreviousPoint(self.previous.clone());
         jcall!(event).setCurrentPoint(current.clone());
-        jcall!(self.motionGesturesHandler).fireEvent(event.clone());
+        jcall!(self.motionGesturesHandler).fireEvent(event.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
         return true;
     }
     
@@ -145,38 +150,38 @@ impl MotionGestureRecognizer {
         let mut absGradient: f64 = ((jcall!(self.j2seMath).abs(((gradient) as f32))) as f64);
         let mut conf: Option<Rc<RefCell<MotionGestureConfiguration>>> = MotionGestureConfigurationFactory::getInstance();
         let mut touchMotionGestureFactory: Option<Rc<RefCell<TouchMotionGestureFactory>>> = TouchMotionGestureFactory::getInstance();
-        let mut newMotionGesture: Option<Rc<RefCell<MotionGestureInput>>> = jcall!(touchMotionGestureFactory).NO_MOTION.clone();
+        let mut newMotionGesture: Option<Rc<RefCell<MotionGestureInput>>> = { let java_field = jcall!(touchMotionGestureFactory).NO_MOTION.clone(); java_field }.clone();
         let mut diagonalToleranceHigher: f64 = 12.0;
         let mut diagonalToleranceLower: f64 = 12.0;
         if jcall!(conf).isDiagonalMotionGestureAllowed() {
-            diagonalToleranceHigher = (((90 - jcall!(conf).getDiagonalTolerance())) as f64);
-            diagonalToleranceLower = ((jcall!(conf).getDiagonalTolerance()) as f64);
+            diagonalToleranceHigher = { let java_value = ((((90 - jcall!(conf).getDiagonalTolerance())) as f64)).clone(); java_value };
+            diagonalToleranceLower = { let java_value = (((jcall!(conf).getDiagonalTolerance()) as f64)).clone(); java_value };
         }
         if absGradient > ((((diagonalToleranceHigher.clone()) as f64).to_radians()) as f64).tan() {
             if jcall!(self.line).getDeltaY() > 0.0 {
-                newMotionGesture = jcall!(touchMotionGestureFactory).UP.clone();
+                newMotionGesture = { let java_value = ({ let java_field = jcall!(touchMotionGestureFactory).UP.clone(); java_field }).clone(); java_value }.clone();
             } else {
-                newMotionGesture = jcall!(touchMotionGestureFactory).DOWN.clone();
+                newMotionGesture = { let java_value = ({ let java_field = jcall!(touchMotionGestureFactory).DOWN.clone(); java_field }).clone(); java_value }.clone();
             }
         } else {
             if absGradient < ((((diagonalToleranceLower.clone()) as f64).to_radians()) as f64).tan() {
                 if jcall!(self.line).getDeltaX() > 0.0 {
-                    newMotionGesture = jcall!(touchMotionGestureFactory).LEFT.clone();
+                    newMotionGesture = { let java_value = ({ let java_field = jcall!(touchMotionGestureFactory).LEFT.clone(); java_field }).clone(); java_value }.clone();
                 } else {
-                    newMotionGesture = jcall!(touchMotionGestureFactory).RIGHT.clone();
+                    newMotionGesture = { let java_value = ({ let java_field = jcall!(touchMotionGestureFactory).RIGHT.clone(); java_field }).clone(); java_value }.clone();
                 }
             } else {
                 if gradient > 0.0 {
                     if jcall!(self.line).getDeltaX() > 0.0 {
-                        newMotionGesture = jcall!(touchMotionGestureFactory).DIAGONAL_UP_LEFT.clone();
+                        newMotionGesture = { let java_value = ({ let java_field = jcall!(touchMotionGestureFactory).DIAGONAL_UP_LEFT.clone(); java_field }).clone(); java_value }.clone();
                     } else {
-                        newMotionGesture = jcall!(touchMotionGestureFactory).DIAGONAL_DOWN_RIGHT.clone();
+                        newMotionGesture = { let java_value = ({ let java_field = jcall!(touchMotionGestureFactory).DIAGONAL_DOWN_RIGHT.clone(); java_field }).clone(); java_value }.clone();
                     }
                 } else {
                     if jcall!(self.line).getDeltaX() > 0.0 {
-                        newMotionGesture = jcall!(touchMotionGestureFactory).DIAGONAL_DOWN_LEFT.clone();
+                        newMotionGesture = { let java_value = ({ let java_field = jcall!(touchMotionGestureFactory).DIAGONAL_DOWN_LEFT.clone(); java_field }).clone(); java_value }.clone();
                     } else {
-                        newMotionGesture = jcall!(touchMotionGestureFactory).DIAGONAL_UP_RIGHT.clone();
+                        newMotionGesture = { let java_value = ({ let java_field = jcall!(touchMotionGestureFactory).DIAGONAL_UP_RIGHT.clone(); java_field }).clone(); java_value }.clone();
                     }
                 }
             }
@@ -186,17 +191,17 @@ impl MotionGestureRecognizer {
         let mut event: Option<Rc<RefCell<MotionGestureEvent>>> = jcall!(self.motionEventCircularPool).getInstance(newMotionGesture.clone());
         jcall!(event).setPreviousPoint(self.previous.clone());
         jcall!(event).setCurrentPoint(current.clone());
-        jcall!(self.motionGesturesHandler).fireEvent(event.clone());
+        jcall!(self.motionGesturesHandler).fireEvent(event.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
         return;
     }
     
 
     // throws Exception
     pub fn processMovedMotionEvent(&mut self, mut current: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut deviceId: i32, mut button: i32) -> bool {
-        let mut event: Option<Rc<RefCell<MotionGestureEvent>>> = { let java_receiver = self.motionEventCircularPool.clone(); let java_arguments = (jcall!(TouchMotionGestureFactory::getInstance()).NO_MOTION.clone(),); let java_result = jcall!(java_receiver).getInstance(java_arguments.0); java_result };
+        let mut event: Option<Rc<RefCell<MotionGestureEvent>>> = { let java_receiver = self.motionEventCircularPool.clone(); let java_arguments = ({ let java_field = jcall!(TouchMotionGestureFactory::getInstance()).NO_MOTION.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).getInstance(java_arguments.0); java_result };
         jcall!(event).setPreviousPoint(self.previous.clone());
         jcall!(event).setCurrentPoint(current.clone());
-        jcall!(self.movedMotionGesturesHandler).fireEvent(event.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
+        jcall!(self.movedMotionGesturesHandler).as_BasicEventHandler_mut().fireEvent(event.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
         return true;
     }
     
@@ -204,16 +209,16 @@ impl MotionGestureRecognizer {
     // throws Exception
     pub fn processScrolledMotionEvent(&mut self, mut current: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut deviceId: i32, mut button: i32) -> bool {
         let mut touchMotionGestureFactory: Option<Rc<RefCell<TouchMotionGestureFactory>>> = TouchMotionGestureFactory::getInstance();
-        let mut newMotionGesture: Option<Rc<RefCell<MotionGestureInput>>> = jcall!(touchMotionGestureFactory).NO_MOTION.clone();
+        let mut newMotionGesture: Option<Rc<RefCell<MotionGestureInput>>> = { let java_field = jcall!(touchMotionGestureFactory).NO_MOTION.clone(); java_field }.clone();
         if button > 0 {
-            newMotionGesture = jcall!(touchMotionGestureFactory).SCROLL_UP.clone();
+            newMotionGesture = { let java_value = ({ let java_field = jcall!(touchMotionGestureFactory).SCROLL_UP.clone(); java_field }).clone(); java_value }.clone();
         } else if button < 0 {
-            newMotionGesture = jcall!(touchMotionGestureFactory).SCROLL_DOWN.clone();
+            newMotionGesture = { let java_value = ({ let java_field = jcall!(touchMotionGestureFactory).SCROLL_DOWN.clone(); java_field }).clone(); java_value }.clone();
         }
         let mut event: Option<Rc<RefCell<MotionGestureEvent>>> = jcall!(self.motionEventCircularPool).getInstance(newMotionGesture.clone());
         jcall!(event).setPreviousPoint(self.previous.clone());
         jcall!(event).setCurrentPoint(current.clone());
-        jcall!(self.scrolledMotionGesturesHandler).fireEvent(event.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
+        jcall!(self.scrolledMotionGesturesHandler).as_BasicEventHandler_mut().fireEvent(event.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
         return true;
     }
     

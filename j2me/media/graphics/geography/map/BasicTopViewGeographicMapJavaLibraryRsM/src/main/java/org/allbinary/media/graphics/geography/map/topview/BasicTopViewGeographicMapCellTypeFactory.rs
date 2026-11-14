@@ -51,7 +51,7 @@ pub struct BasicTopViewGeographicMapCellTypeFactory {
 impl BasicTopViewGeographicMapCellTypeFactory {
     
 
-    pub fn new_struct(mut tileTypeToTileIdsMap: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut maxTileId: i32) -> Self {
+    pub fn new_struct(mut tileTypeToTileIdsMap: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut maxTileId: i32) -> Self {
         let mut this = Self {
             base: GeographicMapCellTypeFactory::new_struct(),
             BLOCK_CELL_TYPE: None,
@@ -64,17 +64,17 @@ impl BasicTopViewGeographicMapCellTypeFactory {
             maxTileId: 0,
         };
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(this.logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this.maxTileId = maxTileId.clone();
         let mut basicTopViewGeographicMapStrings: Option<Rc<RefCell<BasicTopViewGeographicMapStrings>>> = BasicTopViewGeographicMapStrings::getInstance();
         let mut geographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellTypeFactory::GeographicMapCellTypeFactoryDyn>>> = GeographicMapCellTypeFactory::getInstance();
         let mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>> = jcall!(geographicMapCellTypeFactory).getGeographicMapCellTypeArray();
         let mut r#type: i32 = 0;
         if geographicMapCellTypeArray[(r#type) as usize].is_none() {
-            RaceTrackGeographicMapCellType::new(jcall!(CommonStrings::getInstance()).UNKNOWN.clone(), r#type.clone(), 999, 0);
+            RaceTrackGeographicMapCellType::new({ let java_field = jcall!(CommonStrings::getInstance()).UNKNOWN.clone(); java_field }.clone(), r#type.clone(), 999, 0);
         } else {
         }
-        let mut BLOCK_CELL_TYPE: Option<Rc<RefCell<BasicTopViewGeographicMapCellType>>> = BasicTopViewGeographicMapCellType::createType(jcall!(basicTopViewGeographicMapStrings).DEFAULT.clone(), 1, 1);
+        let mut BLOCK_CELL_TYPE: Option<Rc<RefCell<BasicTopViewGeographicMapCellType>>> = BasicTopViewGeographicMapCellType::createType({ let java_field = jcall!(basicTopViewGeographicMapStrings).DEFAULT.clone(); java_field }.clone(), 1, 1);
         let mut OFF_MAP_CELL_TYPE: Option<Rc<RefCell<BasicTopViewGeographicMapCellType>>> = BLOCK_CELL_TYPE.clone();
         let mut FLOOR_CELL_TYPE: Option<Rc<RefCell<BasicTopViewGeographicMapCellType>>> = BLOCK_CELL_TYPE.clone();
         let mut DOOR_CELL_TYPE: Option<Rc<RefCell<BasicTopViewGeographicMapCellType>>> = BLOCK_CELL_TYPE.clone();
@@ -87,28 +87,28 @@ impl BasicTopViewGeographicMapCellTypeFactory {
         let mut key: String = String::new();
         let mut basicPlatormGeographicMapCellType: Option<Rc<RefCell<BasicTopViewGeographicMapCellType>>> = None;
         for index in (0..size) {
-            key = (keyArray[(index) as usize]).clone() /* as String */;
-            idsWithTypeList = { let java_object = (jcall!(tileTypeToTileIdsMap).get(crate::java_into_object(key.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
-            if (key == jcall!(basicTopViewGeographicMapStrings).WALL.clone()) {
-                basicPlatormGeographicMapCellType = BasicTopViewGeographicMapCellType::new(jcall!(basicTopViewGeographicMapStrings).WALL.clone(), idsWithTypeList.clone(), 1000);
+            key = { let java_object = (keyArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            idsWithTypeList = { let java_value = ({ let java_object = (jcall!(tileTypeToTileIdsMap).get(crate::java_into_object(key.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            if (key == { let java_field = jcall!(basicTopViewGeographicMapStrings).WALL.clone(); java_field }.clone()) {
+                basicPlatormGeographicMapCellType = { let java_value = (BasicTopViewGeographicMapCellType::new({ let java_field = jcall!(basicTopViewGeographicMapStrings).WALL.clone(); java_field }.clone(), idsWithTypeList.clone(), 1000)).clone(); java_value };
                 BLOCK_CELL_TYPE = basicPlatormGeographicMapCellType.clone();
-            } else if (key == jcall!(basicTopViewGeographicMapStrings).OFF_MAP.clone()) {
-                basicPlatormGeographicMapCellType = BasicTopViewGeographicMapCellType::new(jcall!(basicTopViewGeographicMapStrings).OFF_MAP.clone(), idsWithTypeList.clone(), 1001);
+            } else if (key == { let java_field = jcall!(basicTopViewGeographicMapStrings).OFF_MAP.clone(); java_field }.clone()) {
+                basicPlatormGeographicMapCellType = { let java_value = (BasicTopViewGeographicMapCellType::new({ let java_field = jcall!(basicTopViewGeographicMapStrings).OFF_MAP.clone(); java_field }.clone(), idsWithTypeList.clone(), 1001)).clone(); java_value };
                 OFF_MAP_CELL_TYPE = basicPlatormGeographicMapCellType.clone();
-            } else if (key == jcall!(basicTopViewGeographicMapStrings).FLOOR.clone()) {
-                basicPlatormGeographicMapCellType = BasicTopViewGeographicMapCellType::new(jcall!(basicTopViewGeographicMapStrings).FLOOR.clone(), idsWithTypeList.clone(), 1);
+            } else if (key == { let java_field = jcall!(basicTopViewGeographicMapStrings).FLOOR.clone(); java_field }.clone()) {
+                basicPlatormGeographicMapCellType = { let java_value = (BasicTopViewGeographicMapCellType::new({ let java_field = jcall!(basicTopViewGeographicMapStrings).FLOOR.clone(); java_field }.clone(), idsWithTypeList.clone(), 1)).clone(); java_value };
                 FLOOR_CELL_TYPE = basicPlatormGeographicMapCellType.clone();
-            } else if (key == jcall!(basicTopViewGeographicMapStrings).DOOR.clone()) {
-                basicPlatormGeographicMapCellType = BasicTopViewGeographicMapCellType::new(jcall!(basicTopViewGeographicMapStrings).DOOR.clone(), idsWithTypeList.clone(), 1);
+            } else if (key == { let java_field = jcall!(basicTopViewGeographicMapStrings).DOOR.clone(); java_field }.clone()) {
+                basicPlatormGeographicMapCellType = { let java_value = (BasicTopViewGeographicMapCellType::new({ let java_field = jcall!(basicTopViewGeographicMapStrings).DOOR.clone(); java_field }.clone(), idsWithTypeList.clone(), 1)).clone(); java_value };
                 DOOR_CELL_TYPE = basicPlatormGeographicMapCellType.clone();
-            } else if (key == jcall!(basicTopViewGeographicMapStrings).STAIRS_UP.clone()) {
-                basicPlatormGeographicMapCellType = BasicTopViewGeographicMapCellType::new(jcall!(basicTopViewGeographicMapStrings).STAIRS_UP.clone(), idsWithTypeList.clone(), 1);
+            } else if (key == { let java_field = jcall!(basicTopViewGeographicMapStrings).STAIRS_UP.clone(); java_field }.clone()) {
+                basicPlatormGeographicMapCellType = { let java_value = (BasicTopViewGeographicMapCellType::new({ let java_field = jcall!(basicTopViewGeographicMapStrings).STAIRS_UP.clone(); java_field }.clone(), idsWithTypeList.clone(), 1)).clone(); java_value };
                 STAIRS_UP_CELL_TYPE = basicPlatormGeographicMapCellType.clone();
-            } else if (key == jcall!(basicTopViewGeographicMapStrings).STAIRS_DOWN.clone()) {
-                basicPlatormGeographicMapCellType = BasicTopViewGeographicMapCellType::new(jcall!(basicTopViewGeographicMapStrings).STAIRS_DOWN.clone(), idsWithTypeList.clone(), 1);
+            } else if (key == { let java_field = jcall!(basicTopViewGeographicMapStrings).STAIRS_DOWN.clone(); java_field }.clone()) {
+                basicPlatormGeographicMapCellType = { let java_value = (BasicTopViewGeographicMapCellType::new({ let java_field = jcall!(basicTopViewGeographicMapStrings).STAIRS_DOWN.clone(); java_field }.clone(), idsWithTypeList.clone(), 1)).clone(); java_value };
                 STAIRS_DOWN_CELL_TYPE = basicPlatormGeographicMapCellType.clone();
-            } else if (key == jcall!(basicTopViewGeographicMapStrings).OTHER.clone()) {
-                basicPlatormGeographicMapCellType = BasicTopViewGeographicMapCellType::new(jcall!(basicTopViewGeographicMapStrings).OTHER.clone(), idsWithTypeList.clone(), 1);
+            } else if (key == { let java_field = jcall!(basicTopViewGeographicMapStrings).OTHER.clone(); java_field }.clone()) {
+                basicPlatormGeographicMapCellType = { let java_value = (BasicTopViewGeographicMapCellType::new({ let java_field = jcall!(basicTopViewGeographicMapStrings).OTHER.clone(); java_field }.clone(), idsWithTypeList.clone(), 1)).clone(); java_value };
                 OTHER_CELL_TYPE = basicPlatormGeographicMapCellType.clone();
             }
         }
@@ -121,18 +121,18 @@ impl BasicTopViewGeographicMapCellTypeFactory {
         this.OTHER_CELL_TYPE = OTHER_CELL_TYPE.clone();
         r#type = this.maxTileId - 1;
         if geographicMapCellTypeArray[(r#type) as usize].is_none() {
-            RaceTrackGeographicMapCellType::new(jcall!(commonStrings).START.clone(), r#type.clone(), 1, 0);
+            RaceTrackGeographicMapCellType::new({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), r#type.clone(), 1, 0);
         } else {
         }
         r#type = this.maxTileId - 2;
         if geographicMapCellTypeArray[(r#type) as usize].is_none() {
-            RaceTrackGeographicMapCellType::new(jcall!(commonStrings).START.clone(), r#type.clone(), 1, 0);
+            RaceTrackGeographicMapCellType::new({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), r#type.clone(), 1, 0);
         } else {
         }
         this
     }
 
-    pub fn new(mut tileTypeToTileIdsMap: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut maxTileId: i32) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut tileTypeToTileIdsMap: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut maxTileId: i32) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(tileTypeToTileIdsMap, maxTileId))))
     }
     

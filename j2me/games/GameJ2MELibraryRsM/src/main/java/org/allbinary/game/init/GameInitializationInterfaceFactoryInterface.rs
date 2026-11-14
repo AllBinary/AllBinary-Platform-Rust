@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait GameInitializationInterfaceFactoryInterface {
+pub trait GameInitializationInterfaceFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getInstance(&mut self) -> Option<Rc<RefCell<dyn GameInitializationInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

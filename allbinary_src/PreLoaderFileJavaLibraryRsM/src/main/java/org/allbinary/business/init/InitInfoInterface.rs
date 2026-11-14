@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -26,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait InitInfoInterface {
+pub trait InitInfoInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn isTesting(&mut self) -> bool;
@@ -58,8 +59,6 @@ pub trait InitInfoInterface {
     
 
     fn isMainPathValid(&mut self, value: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

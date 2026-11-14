@@ -21,6 +21,7 @@ use crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGame
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
+use crate::java::lang::Exception::*;
 use super::DropCellPositionGeneratorInterface::DropCellPositionGeneratorInterface;
 
 // Borrows the object of a Java reference
@@ -41,6 +42,10 @@ impl DropCellPositionGeneratorInterface for BaseDropCellPositionGenerator {
 }
 
 impl BaseDropCellPositionGenerator {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -73,7 +78,7 @@ impl BaseDropCellPositionGenerator {
     pub fn processTick(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) {
     }
 }
-pub trait BaseDropCellPositionGeneratorDyn: crate::org::allbinary::media::graphics::geography::map::drop::DropCellPositionGeneratorInterface::DropCellPositionGeneratorInterface {
+pub trait BaseDropCellPositionGeneratorDyn: std::any::Any + crate::org::allbinary::media::graphics::geography::map::drop::DropCellPositionGeneratorInterface::DropCellPositionGeneratorInterface {
     fn as_BaseDropCellPositionGenerator(&self) -> &BaseDropCellPositionGenerator;
     fn as_BaseDropCellPositionGenerator_mut(&mut self) -> &mut BaseDropCellPositionGenerator;
 }

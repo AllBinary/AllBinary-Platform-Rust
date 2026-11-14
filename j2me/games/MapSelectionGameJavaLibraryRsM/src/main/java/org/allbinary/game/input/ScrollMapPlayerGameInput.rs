@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::game::configuration::feature::InputFeatureFactory::InputFeatureFactory;
@@ -31,6 +31,7 @@ use crate::org::allbinary::layer::event::ScrollMapEvent::ScrollMapEvent;
 use crate::org::allbinary::layer::event::ScrollMapEventHandler::ScrollMapEventHandler;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::PlayerGameInput::PlayerGameInput;
 use super::GameInputProcessor::GameInputProcessor;
 use super::ScrollMapUpGameInputProcessor::ScrollMapUpGameInputProcessor;
@@ -57,15 +58,13 @@ pub struct ScrollMapPlayerGameInput {
     pub scrollMapEvent: Option<Rc<RefCell<ScrollMapEvent>>>,
 }
 
-impl crate::org::allbinary::game::input::event::GameKeyEventListenerInterface::GameKeyEventListenerInterface for ScrollMapPlayerGameInput {
-}
 
 impl ScrollMapPlayerGameInput {
     
 
     pub fn new_struct(mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut playerInputId: i32) -> Self {
         let mut this = Self {
-            base: PlayerGameInput::new_struct(list.clone(), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>), playerInputId.clone()),
+            base: PlayerGameInput::new_struct(list.clone(), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>), playerInputId.clone()),
             inputProcessorArray: Vec::new(),
             border: 0,
             inputList: None,
@@ -75,10 +74,9 @@ impl ScrollMapPlayerGameInput {
             maxRight: 0,
             scrollMapEvent: None,
         };
-        this.inputProcessorArray = vec![None; (jcall!(InputFactory::InputFactory::getInstance()).MAX) as usize];
+        this.inputProcessorArray = vec![None; ({ let java_field = jcall!(InputFactory::InputFactory::getInstance()).MAX.clone(); java_field }) as usize];
         this.border = 150;
-        this.isSingleKeyProcessing = jcall!(Features::getInstance()).isFeature(jcall!(InputFeatureFactory::getInstance()).SINGLE_KEY_REPEAT_PRESS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(Features::getInstance()).isFeature(jcall!(InputFeatureFactory::getInstance()).SINGLE_KEY_PRESS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-        this.scrollMapEvent = ScrollMapEvent::new(this);
+        this.isSingleKeyProcessing = jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(InputFeatureFactory::getInstance()).SINGLE_KEY_REPEAT_PRESS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(InputFeatureFactory::getInstance()).SINGLE_KEY_PRESS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
         // super(...) is in the struct literal above
         this.initInputProcessors();
         this.geographicMapInterface = geographicMapInterface.clone();
@@ -88,7 +86,9 @@ impl ScrollMapPlayerGameInput {
     }
 
     pub fn new(mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut playerInputId: i32) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(geographicMapInterface, list, playerInputId))))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(geographicMapInterface.clone(), list.clone(), playerInputId.clone()))));
+        jcall!(this).scrollMapEvent = ScrollMapEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        this
     }
     
 
@@ -97,7 +97,7 @@ impl ScrollMapPlayerGameInput {
         let mut terrainTiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(self.geographicMapInterface).getAllBinaryTiledLayer();
         jcall!(terrainTiledLayer).moveDXY(-dx, -dy);
         jcall!(self.scrollMapEvent).setDxDy(-dx, -dy);
-        jcall!(ScrollMapEventHandler::getInstance()).fireEvent(self.scrollMapEvent.clone());
+        jcall!(ScrollMapEventHandler::getInstance()).fireEvent(self.scrollMapEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
     }
     
 
@@ -126,13 +126,13 @@ impl ScrollMapPlayerGameInput {
     pub fn scrollY(&mut self, mut anchor: i32) {
         let mut terrainTiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(self.geographicMapInterface).getAllBinaryTiledLayer();
         let mut displayInfo: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
-        if anchor == unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_TOP.clone() } {
+        if anchor == crate::javax::microedition::lcdui::Graphics::Graphics_TOP.with(Clone::clone) {
             jcall!(self.logUtil).putF(String::from("Top"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("scrollY"));
-        } else if anchor == unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_BOTTOM.clone() } {
+        } else if anchor == crate::javax::microedition::lcdui::Graphics::Graphics_BOTTOM.with(Clone::clone) {
             jcall!(self.logUtil).putF(String::from("Bottom"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("scrollY"));
             let mut diffY: i32 = (jcall!(terrainTiledLayer).getHeight() - jcall!(displayInfo).getLastHeight());
             self.r#move(0, diffY.clone());
-        } else if anchor == unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_VCENTER.clone() } {
+        } else if anchor == crate::javax::microedition::lcdui::Graphics::Graphics_VCENTER.with(Clone::clone) {
             jcall!(self.logUtil).putF(String::from("Center"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("scrollY"));
             let mut diffY: i32 = (jcall!(terrainTiledLayer).getHeight() - jcall!(displayInfo).getLastHeight()) / 2;
             self.r#move(0, diffY.clone());
@@ -179,17 +179,17 @@ impl ScrollMapPlayerGameInput {
     
 
     pub fn initInputProcessors(&mut self) {
-        self.inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() }) as usize] = ScrollMapUpGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */);
-        self.inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.clone() }) as usize] = ScrollMapDownGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */);
-        self.inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM9.clone() }) as usize] = ScrollMapRightGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */);
-        self.inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM7.clone() }) as usize] = ScrollMapLeftGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */);
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone)) as usize; self.inputProcessorArray[java_index] = ScrollMapUpGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>); };
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.with(Clone::clone)) as usize; self.inputProcessorArray[java_index] = ScrollMapDownGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>); };
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM9.with(Clone::clone)) as usize; self.inputProcessorArray[java_index] = ScrollMapRightGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>); };
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM7.with(Clone::clone)) as usize; self.inputProcessorArray[java_index] = ScrollMapLeftGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>); };
         GameInputProcessorUtil::GameInputProcessorUtil::init(self.inputProcessorArray.clone());
     }
     
 
     // throws Exception
     pub fn processInputKey(&mut self, mut key: i32) {
-        jcall!(self.inputProcessorArray[(key) as usize]).processEvent(AllBinaryGameLayerManager::getNullInstance(), crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent_NONE.with(Clone::clone).clone());
+        { let java_receiver = self.inputProcessorArray[(key) as usize].clone(); let java_arguments = (AllBinaryGameLayerManager::getNullInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>), crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent_NONE.with(Clone::clone).clone(),); jcall!(java_receiver).processEvent(java_arguments.0, java_arguments.1); };
     }
     
 
@@ -200,7 +200,7 @@ impl ScrollMapPlayerGameInput {
             let mut key: i32 = 0;
             for index in (0..size) {
                 let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = { let java_object = (jcall!(self.inputList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameKeyEvent>>>>().expect("ClassCastException").clone()) };
-                key = jcall!(gameKeyEvent).getKey();
+                key = { let java_value = (jcall!(gameKeyEvent).getKey()).clone(); java_value };
                 self.processInputKey(key.clone());
             }
             if self.isSingleKeyProcessing {
@@ -211,9 +211,9 @@ impl ScrollMapPlayerGameInput {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).PROCESS_INPUT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).PROCESS_INPUT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

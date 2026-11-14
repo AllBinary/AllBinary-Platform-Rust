@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 
@@ -36,6 +36,10 @@ pub struct OpenGLESImageExclusionUtil {
 thread_local! { pub static OpenGLESImageExclusionUtil_instance: Option<Rc<RefCell<OpenGLESImageExclusionUtil>>> = OpenGLESImageExclusionUtil::new(); }
 
 impl OpenGLESImageExclusionUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<OpenGLESImageExclusionUtil>>> {
@@ -49,7 +53,7 @@ impl OpenGLESImageExclusionUtil {
             list: None,
         };
         this.EXCLUSION = String::from("font");
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -58,7 +62,7 @@ impl OpenGLESImageExclusionUtil {
     }
     
 
-    pub fn isCustomScaling(&mut self, mut image: Option<Rc<RefCell<Image>>>) -> bool {
+    pub fn isCustomScaling(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) -> bool {
         let mut imageName: String = jcall!(image).getName();
         let mut isNormalScaling: bool = jcall!(self.list).size() == 0 || imageName.starts_with(&self.EXCLUSION.clone());
         if isNormalScaling {
@@ -67,7 +71,7 @@ impl OpenGLESImageExclusionUtil {
             let mut size: i32 = jcall!(self.list).size();
             let mut name: String = String::new();
             for index in (0..size) {
-                name = (jcall!(self.list).get(index.clone())).clone() /* as String */;
+                name = { let java_value = ({ let java_object = (jcall!(self.list).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
                 if imageName.starts_with(&name.clone()) {
                     isNormalScaling = true;
                 }

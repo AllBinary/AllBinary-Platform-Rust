@@ -17,12 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::game::input::GameInput::GameInput;
 use crate::org::allbinary::game::rand::MyRandomFactory::MyRandomFactory;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::BasePatrolAI::BasePatrolAI;
 
 // Borrows the object of a Java reference
@@ -41,13 +42,13 @@ impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntel
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for RandomPatrolAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl RandomPatrolAI {
     
 
-    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
+    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
         let mut this = Self {
             base: BasePatrolAI::new_struct(hashtable.clone(), ownerLayerInterface.clone(), gameInput.clone()),
             changedDirection: false,
@@ -58,22 +59,22 @@ impl RandomPatrolAI {
         this
     }
 
-    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(hashtable, ownerLayerInterface, gameInput))))
     }
     
 
     pub fn updateRandomDistance(&mut self) {
-        self.currentDistance = jcall!(MyRandomFactory::getInstance()).getAbsoluteNextInt(((self.maxDistance).unwrap() as i32));
+        self.currentDistance = { let java_value = (jcall!(MyRandomFactory::getInstance()).getAbsoluteNextInt(((self.maxDistance).unwrap() as i32))).clone(); java_value };
     }
     
 
     // throws Exception
     pub fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) {
         self.base.update();
-        self.base.processKeyAI(self.keyDirection.clone());
+        { let java_arguments = (self.keyDirection.clone(),); self.base.processKeyAI(java_arguments.0) };
         if self.changedDirection {
-            self.base.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }.clone());
+            { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone).clone(),); self.base.processKeyAI(java_arguments.0) };
             self.updateRandomDistance();
             self.changedDirection = false;
         }

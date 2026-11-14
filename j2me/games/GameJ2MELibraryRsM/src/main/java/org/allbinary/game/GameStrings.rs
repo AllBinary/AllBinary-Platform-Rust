@@ -42,6 +42,10 @@ thread_local! { pub static GameStrings_instance: Option<Rc<RefCell<GameStrings>>
 
 impl GameStrings {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             PROCESS_TICK: String::new(),

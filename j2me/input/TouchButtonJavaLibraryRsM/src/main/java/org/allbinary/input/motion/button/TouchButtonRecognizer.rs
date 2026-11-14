@@ -25,6 +25,7 @@ use crate::org::allbinary::graphics::Rectangle::Rectangle;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::math::RectangleCollisionUtil::RectangleCollisionUtil;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::TouchButtonInput::TouchButtonInput;
 use super::CurrentlyPressedTouchButtonSingleton::CurrentlyPressedTouchButtonSingleton;
 use super::ReleaseHelper::ReleaseHelper;
@@ -45,11 +46,15 @@ pub struct TouchButtonRecognizer {
     pub downGameKeyEventHandler: Option<Rc<RefCell<DownGameKeyEventHandler>>>,
     pub lastPressedTouchButtonInput: Option<Rc<RefCell<TouchButtonInput>>>,
     pub currentlyPressedTouchButtonSingleton: Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::CurrentlyPressedTouchButtonSingleton::CurrentlyPressedTouchButtonSingletonDyn>>>,
-    pub releaseHelper: Option<Rc<RefCell<ReleaseHelper>>>,
+    pub releaseHelper: Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::ReleaseHelper::ReleaseHelperDyn>>>,
 }
 
 
 impl TouchButtonRecognizer {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -66,7 +71,7 @@ impl TouchButtonRecognizer {
         this.rectangleCollisionUtil = RectangleCollisionUtil::getInstance();
         this.upGameKeyEventHandler = UpGameKeyEventHandler::getInstance();
         this.downGameKeyEventHandler = DownGameKeyEventHandler::getInstance();
-        this.lastPressedTouchButtonInput = jcall!(BasicTouchInputFactory::BasicTouchInputFactory::getInstance()).NONE.clone();
+        this.lastPressedTouchButtonInput = { let java_field = jcall!(BasicTouchInputFactory::BasicTouchInputFactory::getInstance()).NONE.clone(); java_field }.clone();
         this.currentlyPressedTouchButtonSingleton = CurrentlyPressedTouchButtonSingleton::getInstance();
         this
     }
@@ -74,9 +79,9 @@ impl TouchButtonRecognizer {
     pub fn new() -> Option<Rc<RefCell<Self>>> {
         let this = Some(Rc::new(RefCell::new(Self::new_struct())));
             if jcall!(TouchScreenFactory::TouchScreenFactory::getInstance()).isMultiTouch() {
-            this.releaseHelper = MultitouchReleaseHelper::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+            jcall!(this).releaseHelper = MultitouchReleaseHelper::new(this.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::button::ReleaseHelper::ReleaseHelperDyn>>);
         } else {
-            this.releaseHelper = ReleaseHelper::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+            jcall!(this).releaseHelper = ReleaseHelper::new(this.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::button::ReleaseHelper::ReleaseHelperDyn>>);
         }
         this
     }
@@ -86,8 +91,8 @@ impl TouchButtonRecognizer {
     pub fn processRelease(&mut self, mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>>, mut deviceId: i32) {
         jcall!(self.releaseHelper).release(touchButtonInput.clone(), deviceId.clone());
         let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = jcall!(touchButtonInput).getGameKeyEvent();
-        jcall!(self.upGameKeyEventHandler).fireEvent(gameKeyEvent.clone());
-        jcall!(jcall!(self.upGameKeyEventHandler).getInstanceForDevice(deviceId.clone())).fireEvent(gameKeyEvent.clone());
+        jcall!(self.upGameKeyEventHandler).fireEvent(gameKeyEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
+        jcall!(jcall!(self.upGameKeyEventHandler).getInstanceForDevice(deviceId.clone())).as_UpGameKeyEventHandlerBase_mut().fireEvent(gameKeyEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
         jcall!(self.currentlyPressedTouchButtonSingleton).remove(touchButtonInput.clone());
     }
     
@@ -97,7 +102,7 @@ impl TouchButtonRecognizer {
     pub fn releaseTouchButtonInput(&mut self, mut x: i32, mut y: i32, mut deviceId: i32) -> bool {
         let mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>> = self.lastPressedTouchButtonInput.clone();
         if jcall!(self.currentlyPressedTouchButtonSingleton).contains(touchButtonInput.clone()) {
-            self.lastPressedTouchButtonInput = jcall!(BasicTouchInputFactory::BasicTouchInputFactory::getInstance()).NONE.clone();
+            self.lastPressedTouchButtonInput = { let java_value = ({ let java_field = jcall!(BasicTouchInputFactory::BasicTouchInputFactory::getInstance()).NONE.clone(); java_field }).clone(); java_value }.clone();
             self.processRelease(touchButtonInput.clone(), deviceId.clone());
             return true;
         } else {
@@ -105,12 +110,12 @@ impl TouchButtonRecognizer {
             let mut rectangle: Option<Rc<RefCell<Rectangle>>> = None;
             let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = None;
             let mut touchButton: Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButton::TouchButtonDyn>>> = None;
-            for index in (0..=jcall!(list).size() - 1).rev() {
-                touchButton = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButton::TouchButtonDyn>>>>().expect("ClassCastException").clone()) };
-                rectangle = jcall!(touchButton).getRectangle();
-                point = jcall!(rectangle).getPoint();
+            for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
+                touchButton = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButton::TouchButtonDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+                rectangle = { let java_value = (jcall!(touchButton).getRectangle()).clone(); java_value };
+                point = { let java_value = (jcall!(rectangle).getPoint()).clone(); java_value };
                 if { let java_receiver = self.rectangleCollisionUtil.clone(); let java_arguments = (jcall!(point).getX(), jcall!(point).getY(), jcall!(rectangle).getMaxX(), jcall!(rectangle).getMaxY(), x.clone(), y.clone(),); let java_result = jcall!(java_receiver).isInside(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5); java_result } {
-                    touchButtonInput = jcall!(touchButton).getTouchButtonInput();
+                    touchButtonInput = { let java_value = (jcall!(touchButton).getTouchButtonInput()).clone(); java_value };
                     self.processRelease(touchButtonInput.clone(), deviceId.clone());
                     return true;
                 }
@@ -129,19 +134,19 @@ impl TouchButtonRecognizer {
         let mut touchButton: Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButton::TouchButtonDyn>>> = None;
         let mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>> = None;
         let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = None;
-        for index in (0..=jcall!(list).size() - 1).rev() {
-            touchButton = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButton::TouchButtonDyn>>>>().expect("ClassCastException").clone()) };
-            rectangle = jcall!(touchButton).getRectangle();
-            point = jcall!(rectangle).getPoint();
+        for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
+            touchButton = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButton::TouchButtonDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            rectangle = { let java_value = (jcall!(touchButton).getRectangle()).clone(); java_value };
+            point = { let java_value = (jcall!(rectangle).getPoint()).clone(); java_value };
             if { let java_receiver = self.rectangleCollisionUtil.clone(); let java_arguments = (jcall!(point).getX(), jcall!(point).getY(), jcall!(rectangle).getMaxX(), jcall!(rectangle).getMaxY(), x.clone(), y.clone(),); let java_result = jcall!(java_receiver).isInside(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5); java_result } {
-                touchButtonInput = jcall!(touchButton).getTouchButtonInput();
+                touchButtonInput = { let java_value = (jcall!(touchButton).getTouchButtonInput()).clone(); java_value };
                 if !jcall!(self.currentlyPressedTouchButtonSingleton).contains(touchButtonInput.clone()) {
                     jcall!(self.releaseHelper).release(touchButtonInput.clone(), deviceId.clone());
                     self.lastPressedTouchButtonInput = touchButtonInput.clone();
                     jcall!(self.currentlyPressedTouchButtonSingleton).add(touchButtonInput.clone());
-                    gameKeyEvent = jcall!(touchButtonInput).getGameKeyEvent();
-                    jcall!(self.downGameKeyEventHandler).fireEvent(gameKeyEvent.clone());
-                    jcall!(jcall!(self.downGameKeyEventHandler).getInstanceForDevice(deviceId.clone())).fireEvent(gameKeyEvent.clone());
+                    gameKeyEvent = { let java_value = (jcall!(touchButtonInput).getGameKeyEvent()).clone(); java_value };
+                    jcall!(self.downGameKeyEventHandler).fireEvent(gameKeyEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
+                    jcall!(jcall!(self.downGameKeyEventHandler).getInstanceForDevice(deviceId.clone())).as_DownGameKeyEventHandlerBase_mut().fireEvent(gameKeyEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
                 }
                 return true;
             }
@@ -149,87 +154,4 @@ impl TouchButtonRecognizer {
         return false;
     }
 }
-
-//CurrentlyPressedTouchButtonSingletonDebug.getInstance();
-pub struct ReleaseHelper {
-    pub touchButtonRecognizer: Option<Rc<RefCell<TouchButtonRecognizer>>>,
-}
-
-
-impl ReleaseHelper {
-        
-
-        pub fn new_struct(mut touchButtonRecognizer: Option<Rc<RefCell<TouchButtonRecognizer>>>) -> Self {
-            let mut this = Self {
-            touchButtonRecognizer: None,
-            };
-            this.touchButtonRecognizer = touchButtonRecognizer.clone();
-            this
-        }
-
-        pub fn new(mut touchButtonRecognizer: Option<Rc<RefCell<TouchButtonRecognizer>>>) -> Option<Rc<RefCell<Self>>> {
-            Some(Rc::new(RefCell::new(Self::new_struct(touchButtonRecognizer))))
-        }
-        
-
-        // throws Exception
-        pub fn release(&mut self, mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>>, mut deviceId: i32) {
-            let mut nextTouchButtonInput: Option<Rc<RefCell<TouchButtonInput>>> = None;
-            let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = None;
-            for index in (0..=jcall!(jcall!(self.touchButtonRecognizer).currentlyPressedTouchButtonSingleton).size() - 1).rev() {
-                nextTouchButtonInput = jcall!(jcall!(self.touchButtonRecognizer).currentlyPressedTouchButtonSingleton).get(index.clone());
-                gameKeyEvent = jcall!(nextTouchButtonInput).getGameKeyEvent();
-                jcall!(jcall!(self.touchButtonRecognizer).upGameKeyEventHandler).fireEvent(gameKeyEvent.clone());
-                jcall!(jcall!(jcall!(self.touchButtonRecognizer).upGameKeyEventHandler).getInstanceForDevice(deviceId.clone())).fireEvent(gameKeyEvent.clone());
-                jcall!(jcall!(self.touchButtonRecognizer).currentlyPressedTouchButtonSingleton).removeAt(index.clone());
-            }
-        }
-}
-
-pub struct MultitouchReleaseHelper {
-    pub base: ReleaseHelper,
-}
-
-
-impl MultitouchReleaseHelper {
-        
-
-        pub fn new_struct(mut touchButtonRecognizer: Option<Rc<RefCell<TouchButtonRecognizer>>>) -> Self {
-            let mut this = Self {
-            base: ReleaseHelper::new_struct1(touchButtonRecognizer.clone()),
-            };
-            // super(...) is in the struct literal above
-            this
-        }
-
-        pub fn new(mut touchButtonRecognizer: Option<Rc<RefCell<TouchButtonRecognizer>>>) -> Option<Rc<RefCell<Self>>> {
-            Some(Rc::new(RefCell::new(Self::new_struct(touchButtonRecognizer))))
-        }
-        
-
-        // throws Exception
-        pub fn release(&mut self, mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>>, mut deviceId: i32) {
-            let mut cancelTouchButtonInput: Option<Rc<RefCell<TouchButtonInput>>> = jcall!(CancelTouchButtonInputFactory::CancelTouchButtonInputFactory::getInstance()).getCancel(touchButtonInput.clone());
-            let mut nextTouchButtonInput: Option<Rc<RefCell<TouchButtonInput>>> = None;
-            let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = None;
-            for index in (0..=jcall!(jcall!(self.touchButtonRecognizer).currentlyPressedTouchButtonSingleton).size() - 1).rev() {
-                nextTouchButtonInput = jcall!(jcall!(self.touchButtonRecognizer).currentlyPressedTouchButtonSingleton).get(index.clone());
-                if match (&cancelTouchButtonInput, &nextTouchButtonInput) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                    gameKeyEvent = jcall!(nextTouchButtonInput).getGameKeyEvent();
-                    jcall!(jcall!(self.touchButtonRecognizer).upGameKeyEventHandler).fireEvent(gameKeyEvent.clone());
-                    jcall!(jcall!(jcall!(self.touchButtonRecognizer).upGameKeyEventHandler).getInstanceForDevice(deviceId.clone())).fireEvent(gameKeyEvent.clone());
-                    jcall!(jcall!(self.touchButtonRecognizer).currentlyPressedTouchButtonSingleton).removeAt(index.clone());
-                }
-            }
-        }
-}
-impl std::ops::Deref for MultitouchReleaseHelper {
-    type Target = ReleaseHelper;
-    fn deref(&self) -> &Self::Target { &self.base }
-}
-impl std::ops::DerefMut for MultitouchReleaseHelper {
-    fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
-}
-
-
 

@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::BufferedWriter::BufferedWriter;
-// use crate::java::io::FileWriter::FileWriter;
+use crate::java::io::BufferedWriter::BufferedWriter;
+use crate::java::io::FileWriter::FileWriter;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::logic::io::file::AbFileNativeUtil::AbFileNativeUtil;
@@ -26,6 +26,7 @@ use crate::org::allbinary::logic::io::path::AbPathData::AbPathData;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -44,6 +45,10 @@ pub struct BufferedWriterUtil {
 thread_local! { pub static BufferedWriterUtil_instance: Option<Rc<RefCell<BufferedWriterUtil>>> = BufferedWriterUtil::new(); }
 
 impl BufferedWriterUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -73,7 +78,7 @@ impl BufferedWriterUtil {
     pub fn overwrite(&mut self, mut path: String, mut data: String) {
         let mut abFile: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFile(path.clone());
         if jcall!(abFile).exists() {
-            jcall!(self.logUtil).putF(format!("{}{}", self.REMOVING_OLD, path), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CREATE.clone());
+            jcall!(self.logUtil).putF(format!("{}{}", self.REMOVING_OLD, path), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CREATE.clone(); java_field }.clone());
             jcall!(abFile).delete();
         } else {
             let mut name: String = jcall!(AbPathData::getInstance()).removeNameFromPath(path.clone());
@@ -81,10 +86,10 @@ impl BufferedWriterUtil {
             if jcall!(abFileDirectory).exists() {
             } else {
                 let mut stringBuilder: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuilder).append(jcall!(self.commonStrings).CREATE.clone()).append(jcall!(self.commonLabels).COLON_SEP.clone()).append(name.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CREATE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuilder).append({ let java_field = jcall!(self.commonStrings).CREATE.clone(); java_field }.clone()).append({ let java_field = jcall!(self.commonLabels).COLON_SEP.clone(); java_field }.clone()).append(name.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CREATE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 let mut result: bool = jcall!(abFileDirectory).mkdirs();
                 jcall!(stringBuilder).delete(0, jcall!(stringBuilder).length());
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuilder).append(jcall!(self.commonLabels).RESULT_.clone()).appendboolean(result.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CREATE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuilder).append({ let java_field = jcall!(self.commonLabels).RESULT_.clone(); java_field }.clone()).appendboolean(result.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CREATE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
         }
         self.write(abFile.clone(), data.clone());
@@ -93,9 +98,9 @@ impl BufferedWriterUtil {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn overwrite(&mut self, mut abFile: Option<Rc<RefCell<AbFile>>>, mut data: String) {
+    pub fn overwrite_AbFile_String(&mut self, mut abFile: Option<Rc<RefCell<AbFile>>>, mut data: String) {
         if jcall!(abFile).exists() {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", self.REMOVING_OLD, jcall!(abFile).getPath()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CREATE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", self.REMOVING_OLD, jcall!(abFile).getPath()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CREATE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             jcall!(abFile).delete();
         } else {
             let mut name: String = jcall!(AbPathData::getInstance()).removeNameFromPath(jcall!(abFile).getAbsolutePath());
@@ -103,10 +108,10 @@ impl BufferedWriterUtil {
             if jcall!(abFileDirectory).exists() {
             } else {
                 let mut stringBuilder: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuilder).append(jcall!(self.commonStrings).CREATE.clone()).append(jcall!(self.commonLabels).COLON_SEP.clone()).append(name.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CREATE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuilder).append({ let java_field = jcall!(self.commonStrings).CREATE.clone(); java_field }.clone()).append({ let java_field = jcall!(self.commonLabels).COLON_SEP.clone(); java_field }.clone()).append(name.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CREATE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 let mut result: bool = jcall!(abFileDirectory).mkdirs();
                 jcall!(stringBuilder).delete(0, jcall!(stringBuilder).length());
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuilder).append(jcall!(self.commonLabels).RESULT_.clone()).appendboolean(result.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CREATE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuilder).append({ let java_field = jcall!(self.commonLabels).RESULT_.clone(); java_field }.clone()).appendboolean(result.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CREATE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
         }
         self.write(abFile.clone(), data.clone());
@@ -115,8 +120,8 @@ impl BufferedWriterUtil {
 
     // throws Exception
     pub fn write(&mut self, mut abFile: Option<Rc<RefCell<AbFile>>>, mut data: String) {
-        let mut fileOut: Option<Rc<RefCell<BufferedWriter>>> = BufferedWriter::new(FileWriter::new(AbFileNativeUtil::get(abFile.clone())));
-        jcall!(fileOut).write(data.clone(), 0, (data.chars().count() as i32));
+        let mut fileOut: Option<Rc<RefCell<BufferedWriter>>> = BufferedWriter::new(FileWriter::new1(AbFileNativeUtil::get(abFile.clone())));
+        jcall!(fileOut).write3(data.clone(), 0, (data.chars().count() as i32));
         jcall!(fileOut).newLine();
         jcall!(fileOut).flush();
     }

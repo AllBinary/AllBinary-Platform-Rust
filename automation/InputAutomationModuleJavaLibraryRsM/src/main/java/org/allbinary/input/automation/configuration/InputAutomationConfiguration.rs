@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::File::File;
+use crate::java::io::File::File;
 // use crate::java::util::List::List;
 // use crate::javax::xml::bind::JAXBContext::JAXBContext;
 // use crate::javax::xml::bind::Marshaller::Marshaller;
@@ -35,6 +35,7 @@ use crate::org::allbinary::logic::io::file::FileWrapperUtil::FileWrapperUtil;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -53,6 +54,10 @@ pub struct InputAutomationConfiguration {
 thread_local! { pub static InputAutomationConfiguration_FILENAME: String = String::from("InputAutomationConfig.xml"); }
 
 impl InputAutomationConfiguration {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -71,7 +76,7 @@ impl InputAutomationConfiguration {
     
 
     pub fn getFile() -> Option<Rc<RefCell<File>>> {
-        return File::new(InputAutomationConfiguration_FILENAME.with(Clone::clone).clone());
+        return File::new1(InputAutomationConfiguration_FILENAME.with(Clone::clone).clone());
     }
     
 
@@ -94,8 +99,8 @@ impl InputAutomationConfiguration {
     // throws Exception
     pub fn save(&mut self) {
         let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create();
-        let mut file: Option<Rc<RefCell<File>>> = File::new(InputAutomationConfiguration_FILENAME.with(Clone::clone).clone());
-        jcall!(FileUtil::getInstance()).copy(AbPath::new(jcall!(file).getAbsolutePath(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>), AbPath::new(format!("{}{}", jcall!(file).getAbsolutePath(), String::from(".bak.xml")), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>));
+        let mut file: Option<Rc<RefCell<File>>> = File::new1(InputAutomationConfiguration_FILENAME.with(Clone::clone).clone());
+        jcall!(FileUtil::getInstance()).copy_AbPath_AbPath(AbPath::new(jcall!(file).getAbsolutePath(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>), AbPath::new(format!("{}{}", jcall!(file).getAbsolutePath(), String::from(".bak.xml")), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>));
         let mut jaxbContext: Option<Rc<RefCell<JAXBContext>>> = JAXBContext::newInstance(std::any::type_name::<InputAutomationConfiguration>());
         let mut marshaller: Option<Rc<RefCell<Marshaller>>> = jcall!(jaxbContext).createMarshaller();
         jcall!(marshaller).setProperty(unsafe { crate::javax::xml::bind::Marshaller::Marshaller_JAXB_FORMATTED_OUTPUT.clone() }.clone(), true);

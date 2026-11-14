@@ -31,6 +31,10 @@ pub struct ByteUtil {
 thread_local! { pub static ByteUtil_instance: Option<Rc<RefCell<ByteUtil>>> = ByteUtil::new(); }
 
 impl ByteUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ByteUtil>>> {
@@ -55,7 +59,7 @@ impl ByteUtil {
         let mut index: i32 = 0;
         let mut currentByte: i8 = 0;
         while index < size {
-            currentByte = array[(index) as usize].clone();
+            currentByte = { let java_value = (array[(index) as usize]).clone(); java_value }.clone();
             bytes[(index) as usize] = (((((currentByte) as i32) ^ ((mask) as i32))) as i8);
             index += 1;
         }

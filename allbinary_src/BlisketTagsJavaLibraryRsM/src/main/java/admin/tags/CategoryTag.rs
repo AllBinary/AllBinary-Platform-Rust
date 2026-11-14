@@ -26,6 +26,7 @@ use crate::org::allbinary::logic::communication::http::request::AbResponseHandle
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoData::TransformInfoData;
+use crate::java::lang::Exception::*;
 use super::TableTag::TableTag;
 
 // Borrows the object of a Java reference
@@ -52,8 +53,8 @@ impl CategoryTag {
             xsl: String::new(),
         };
         this.logUtil = LogUtil::getInstance();
-        this.setTagHelperFactory(CategoryHelperFactory::new());
-        this.setTagRequestHelperFactory(CategoryRequestHelperFactory::new());
+        this.setTagHelperFactory(CategoryHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(CategoryRequestHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 
@@ -69,73 +70,76 @@ impl CategoryTag {
 
     // throws LicensingException
     pub fn viewCategory(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(CategoryRequestHelperFactory::new()).getInstance(self.getPropertiesHashMap(), self.pageContext.clone());
             let mut helperClass: &'static str = std::any::type_name_of_val(&anyType);
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(helperClass).getMethod(String::from("viewCategory"), None);
             let mut result: String = (jcall!(method).invoke(anyType.clone(), None)).clone() /* as String */;
-            return result.clone();
+            return Some(result.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws LicensingException
     pub fn viewCategories(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(CategoryRequestHelperFactory::new()).getInstance(self.getPropertiesHashMap(), self.pageContext.clone());
             let mut helperClass: &'static str = std::any::type_name_of_val(&anyType);
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(helperClass).getMethod(String::from("viewCategories"), None);
             let mut result: String = (jcall!(method).invoke(anyType.clone(), None)).clone() /* as String */;
-            return result.clone();
+            return Some(result.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws JspTagException
     pub fn doStartTag(&mut self) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if self.isEnabled() {
-                if self.getCommand().is_some() {
-                    jcall!(self.getPropertiesHashMap()).put(jcall!(TransformInfoData::getInstance()).TEMPLATEFILENAME.clone(), self.xsl.clone());
-                    if jcall!(self.getCommand()).compareTo(jcall!(CategoryData::getInstance()).VIEW.clone()) == 0 {
+                if true {
+                    jcall!(self.getPropertiesHashMap()).put(crate::java_into_object({ let java_field = jcall!(TransformInfoData::getInstance()).TEMPLATEFILENAME.clone(); java_field }.clone()), crate::java_into_object(self.xsl.clone()));
+                    if { let java_value = (self.getCommand().cmp(&{ let java_field = jcall!(CategoryData::getInstance()).VIEW.clone(); java_field }.clone()) as i32); java_value } == 0 {
                         let mut output: String = self.viewCategory();
-                        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).JSPTAGEXTRAOUTPUT.clone()) {
+                        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).JSPTAGEXTRAOUTPUT.clone(); java_field }.clone()) {
                             jcall!(jcall!(self.base.pageContext).getOut()).print(output.clone());
                         }
-                    } else if jcall!(self.getCommand()).compareTo(jcall!(CategoryData::getInstance()).VIEW.clone()) == 0 {
+                    } else if { let java_value = (self.getCommand().cmp(&{ let java_field = jcall!(CategoryData::getInstance()).VIEW.clone(); java_field }.clone()) as i32); java_value } == 0 {
                         let mut output: String = self.viewCategories();
-                        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).JSPTAGEXTRAOUTPUT.clone()) {
+                        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).JSPTAGEXTRAOUTPUT.clone(); java_field }.clone()) {
                             jcall!(jcall!(self.base.pageContext).getOut()).print(output.clone());
                         }
                     } else {
-                        return self.base.doStartTag();
+                        return Some(self.base.doStartTag());
                     }
                 }
             }
-            return SKIP_BODY.clone();
+            return Some(SKIP_BODY.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             AbResponseHandler::sendJspTagLicensingRedirect(self.pageContext.clone(), e.clone());
             return SKIP_BODY.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for CategoryTag {

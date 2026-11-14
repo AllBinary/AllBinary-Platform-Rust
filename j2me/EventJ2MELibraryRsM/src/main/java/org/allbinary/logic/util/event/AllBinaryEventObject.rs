@@ -34,9 +34,13 @@ pub struct AllBinaryEventObject {
     pub source: Option<Rc<RefCell<Box<dyn std::any::Any>>>>,
 }
 
-thread_local! { pub static AllBinaryEventObject_NULL_EVENT: Option<Rc<RefCell<dyn AllBinaryEventObjectDyn>>> = AllBinaryEventObject::new(jcall!(NullUtil::getInstance()).NULL_OBJECT.clone()).map(|reference| reference as Rc<RefCell<dyn AllBinaryEventObjectDyn>>); }
+thread_local! { pub static AllBinaryEventObject_NULL_EVENT: Option<Rc<RefCell<dyn AllBinaryEventObjectDyn>>> = AllBinaryEventObject::new(crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone())).map(|reference| reference as Rc<RefCell<dyn AllBinaryEventObjectDyn>>); }
 
 impl AllBinaryEventObject {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Self {
@@ -61,7 +65,7 @@ impl AllBinaryEventObject {
         self.source = source.clone();
     }
 }
-pub trait AllBinaryEventObjectDyn {
+pub trait AllBinaryEventObjectDyn: std::any::Any {
     fn as_AllBinaryEventObject(&self) -> &AllBinaryEventObject;
     fn as_AllBinaryEventObject_mut(&mut self) -> &mut AllBinaryEventObject;
     fn getSource(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { AllBinaryEventObject::getSource(self.as_AllBinaryEventObject_mut()) }

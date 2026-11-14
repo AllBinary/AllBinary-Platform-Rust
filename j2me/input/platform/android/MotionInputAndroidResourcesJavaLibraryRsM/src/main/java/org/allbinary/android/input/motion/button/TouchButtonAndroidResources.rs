@@ -62,34 +62,34 @@ impl TouchButtonAndroidResources {
     pub fn init(&mut self) {
         let mut resourceUtil: Option<Rc<RefCell<ResourceUtil>>> = ResourceUtil::getInstance();
         let mut androidResources: Option<Rc<RefCell<AndroidResources>>> = AndroidResources::getInstance();
-        let mut RESOURCE_STRING_ARRAY: Vec<Option<Rc<RefCell<TouchButtonResource>>>> = vec![TouchButtonBlankResource::getInstance(), TouchButtonGenericActionResource::getInstance(), TouchButtonStartResource::getInstance(), TouchButtonUpResource::getInstance(), TouchButtonDownResource::getInstance(), TouchButtonTurnLeftResource::getInstance(), TouchButtonTurnRightResource::getInstance(), TouchButtonStrafeLeftResource::getInstance(), TouchButtonStrafeRightResource::getInstance()];
+        let mut RESOURCE_STRING_ARRAY: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButtonResource::TouchButtonResourceDyn>>>> = vec![TouchButtonBlankResource::getInstance(), TouchButtonGenericActionResource::getInstance(), TouchButtonStartResource::getInstance(), TouchButtonUpResource::getInstance(), TouchButtonDownResource::getInstance(), TouchButtonTurnLeftResource::getInstance(), TouchButtonTurnRightResource::getInstance(), TouchButtonStrafeLeftResource::getInstance(), TouchButtonStrafeRightResource::getInstance()];
         let mut RESOURCE_ARRAY: Vec<i32> = vec![0; ((RESOURCE_STRING_ARRAY.len() as i32)) as usize];
-        if jcall!(CommonButtons::getInstance()).STANDARD_BUTTON_SIZE == 128 {
-            RESOURCE_ARRAY[(0) as usize] = jcall!(jcall!(androidResources).raw).touch_button_128_by_128.clone();
-            RESOURCE_ARRAY[(1) as usize] = jcall!(jcall!(androidResources).raw).touch_button_generic_action_128_by_128.clone();
-            RESOURCE_ARRAY[(2) as usize] = jcall!(jcall!(androidResources).raw).touch_button_start_128_by_128.clone();
-            RESOURCE_ARRAY[(3) as usize] = jcall!(jcall!(androidResources).raw).touch_button_up_arrow_128_by_128.clone();
-            RESOURCE_ARRAY[(4) as usize] = jcall!(jcall!(androidResources).raw).touch_button_down_arrow_128_by_128.clone();
-            RESOURCE_ARRAY[(5) as usize] = jcall!(jcall!(androidResources).raw).touch_button_turn_left_arrow_128_by_128.clone();
-            RESOURCE_ARRAY[(6) as usize] = jcall!(jcall!(androidResources).raw).touch_button_turn_right_arrow_128_by_128.clone();
-            RESOURCE_ARRAY[(7) as usize] = jcall!(jcall!(androidResources).raw).touch_button_strafe_left_arrow_128_by_128.clone();
-            RESOURCE_ARRAY[(8) as usize] = jcall!(jcall!(androidResources).raw).touch_button_strafe_right_arrow_128_by_128.clone();
-            if jcall!(jcall!(OperatingSystemFactory::getInstance()).getOperatingSystemInstance()).isOverScan() {
-                jcall!(resourceUtil).addResource(jcall!(RESOURCE_STRING_ARRAY[(2) as usize]).HINT.clone(), (jcall!(jcall!(androidResources).raw).ouya_o.clone()).to_string());
+        if { let java_field = jcall!(CommonButtons::getInstance()).STANDARD_BUTTON_SIZE.clone(); java_field } == 128 {
+            RESOURCE_ARRAY[(0) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_128_by_128.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(1) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_generic_action_128_by_128.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(2) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_start_128_by_128.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(3) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_up_arrow_128_by_128.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(4) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_down_arrow_128_by_128.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(5) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_turn_left_arrow_128_by_128.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(6) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_turn_right_arrow_128_by_128.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(7) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_strafe_left_arrow_128_by_128.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(8) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_strafe_right_arrow_128_by_128.clone(); java_field }.clone();
+            if jcall!(jcall!(OperatingSystemFactory::getInstance()).getOperatingSystemInstance()).as_GenericOperatingSystem_mut().isOverScan() {
+                jcall!(resourceUtil).addResource({ let java_field = jcall!(RESOURCE_STRING_ARRAY[(2) as usize]).as_TouchButtonResource_mut().HINT.clone(); java_field }.clone(), Some(({ let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).ouya_o.clone(); java_field }.clone()) as i32));
             }
         } else {
-            RESOURCE_ARRAY[(0) as usize] = jcall!(jcall!(androidResources).raw).touch_button_64_by_64.clone();
-            RESOURCE_ARRAY[(1) as usize] = jcall!(jcall!(androidResources).raw).touch_button_generic_action_64_by_64.clone();
-            RESOURCE_ARRAY[(2) as usize] = jcall!(jcall!(androidResources).raw).touch_button_start_64_by_64.clone();
-            RESOURCE_ARRAY[(3) as usize] = jcall!(jcall!(androidResources).raw).touch_button_up_arrow_64_by_64.clone();
-            RESOURCE_ARRAY[(4) as usize] = jcall!(jcall!(androidResources).raw).touch_button_down_arrow_64_by_64.clone();
-            RESOURCE_ARRAY[(5) as usize] = jcall!(jcall!(androidResources).raw).touch_button_turn_left_arrow_64_by_64.clone();
-            RESOURCE_ARRAY[(6) as usize] = jcall!(jcall!(androidResources).raw).touch_button_turn_right_arrow_64_by_64.clone();
-            RESOURCE_ARRAY[(7) as usize] = jcall!(jcall!(androidResources).raw).touch_button_strafe_left_arrow_64_by_64.clone();
-            RESOURCE_ARRAY[(8) as usize] = jcall!(jcall!(androidResources).raw).touch_button_strafe_right_arrow_64_by_64.clone();
+            RESOURCE_ARRAY[(0) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_64_by_64.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(1) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_generic_action_64_by_64.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(2) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_start_64_by_64.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(3) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_up_arrow_64_by_64.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(4) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_down_arrow_64_by_64.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(5) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_turn_left_arrow_64_by_64.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(6) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_turn_right_arrow_64_by_64.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(7) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_strafe_left_arrow_64_by_64.clone(); java_field }.clone();
+            RESOURCE_ARRAY[(8) as usize] = { let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).touch_button_strafe_right_arrow_64_by_64.clone(); java_field }.clone();
         }
         for index in (0..(RESOURCE_ARRAY.len() as i32)) {
-            jcall!(resourceUtil).addResource(jcall!(RESOURCE_STRING_ARRAY[(index) as usize]).RESOURCE.clone(), (RESOURCE_ARRAY[(index) as usize].clone()).to_string());
+            jcall!(resourceUtil).addResource({ let java_field = jcall!(RESOURCE_STRING_ARRAY[(index) as usize]).as_TouchButtonResource_mut().RESOURCE.clone(); java_field }.clone(), Some((RESOURCE_ARRAY[(index) as usize].clone()) as i32));
         }
     }
 }
@@ -101,5 +101,12 @@ impl std::ops::DerefMut for TouchButtonAndroidResources {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::org::allbinary::init::Init::InitDyn for TouchButtonAndroidResources {
+    fn as_Init(&self) -> &crate::org::allbinary::init::Init::Init { &self.base }
+    fn as_Init_mut(&mut self) -> &mut crate::org::allbinary::init::Init::Init { &mut self.base }
+}
+impl crate::org::allbinary::init::InitInterface::InitInterface for TouchButtonAndroidResources {
+    fn init(&mut self) { Self::init(self) }
+}
 
 

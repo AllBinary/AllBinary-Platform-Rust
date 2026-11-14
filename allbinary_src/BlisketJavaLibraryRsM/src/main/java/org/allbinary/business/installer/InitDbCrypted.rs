@@ -47,6 +47,7 @@ use crate::org::allbinary::logic::io::DataOutputStreamFactory::DataOutputStreamF
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::logic::io::file::FileFactory::FileFactory;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -73,7 +74,7 @@ impl InitDbCrypted {
 
     pub fn new_struct(mut databaseConnectionInfoInterface: Option<Rc<RefCell<dyn DatabaseConnectionInfoInterface>>>) -> Self {
         let mut this = Self {
-            base: AbDatabaseManagement::new_struct1((databaseConnectionInfoInterface).clone() /* as DbConnectionInfo */),
+            base: AbDatabaseManagement::new_struct1_DbConnectionInfo((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfoDyn>>> { panic!("ClassCastException: a Rust dyn DatabaseConnectionInfoInterface cannot be cast to DbConnectionInfo") })()),
             logUtil: None,
             userDbInitInfo: None,
             inventoryDbInitInfo: None,
@@ -94,8 +95,8 @@ impl InitDbCrypted {
     
 
     pub fn addUsers(&mut self) -> Option<bool> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_USERS.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_USERS.clone());
             self.userDbInitInfo = UserDbInitInfo::new();
             self.inventoryDbInitInfo = InventoryDbInitInfo::new();
             self.historyDbInitInfo = HistoryDbInitInfo::new();
@@ -106,53 +107,54 @@ impl InitDbCrypted {
             let mut CUSTOMERDBPASSWORD: String = jcall!(self.userDbInitInfo).getPassword();
             if !self.addDbUser(CUSTOMERDB.clone(), CUSTOMERDBUSER.clone(), CUSTOMERDBPASSWORD.clone()) {
                 jcall!(self.logUtil).putF(format!("{}{}", self.UNABLE_TO_CREATE_USER, CUSTOMERDBUSER), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_USERS.clone());
-                return false;
+                return Some(false);
             }
             let mut INVENTORYDB: String = jcall!(self.inventoryDbInitInfo).getName();
             let mut INVENTORYDBUSER: String = jcall!(self.inventoryDbInitInfo).getUserName();
             let mut INVENTORYDBPASSWORD: String = jcall!(self.inventoryDbInitInfo).getPassword();
             if !self.addDbUser(INVENTORYDB.clone(), INVENTORYDBUSER.clone(), INVENTORYDBPASSWORD.clone()) {
                 jcall!(self.logUtil).putF(format!("{}{}", self.UNABLE_TO_CREATE_USER, INVENTORYDBUSER), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_USERS.clone());
-                return false;
+                return Some(false);
             }
             let mut HISTORYDB: String = jcall!(self.historyDbInitInfo).getName();
             let mut HISTORYDBUSER: String = jcall!(self.historyDbInitInfo).getUserName();
             let mut HISTORYDBPASSWORD: String = jcall!(self.historyDbInitInfo).getPassword();
             if !self.addDbUser(HISTORYDB.clone(), HISTORYDBUSER.clone(), HISTORYDBPASSWORD.clone()) {
                 jcall!(self.logUtil).putF(format!("{}{}", self.UNABLE_TO_CREATE_USER, HISTORYDBUSER), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_USERS.clone());
-                return false;
+                return Some(false);
             }
             let mut STATICPAGESDB: String = jcall!(self.staticpagesDbInitInfo).getName();
             let mut STATICPAGESDBUSER: String = jcall!(self.staticpagesDbInitInfo).getUserName();
             let mut STATICPAGESDBPASSWORD: String = jcall!(self.staticpagesDbInitInfo).getPassword();
             if !self.addDbUser(STATICPAGESDB.clone(), STATICPAGESDBUSER.clone(), STATICPAGESDBPASSWORD.clone()) {
                 jcall!(self.logUtil).putF(format!("{}{}", self.UNABLE_TO_CREATE_USER, STATICPAGESDBUSER), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_USERS.clone());
-                return false;
+                return Some(false);
             }
             let mut LOGDB: String = jcall!(self.logDbInitInfo).getName();
             let mut LOGDBUSER: String = jcall!(self.logDbInitInfo).getUserName();
             let mut LOGDBPASSWORD: String = jcall!(self.logDbInitInfo).getPassword();
             if !self.addDbUser(LOGDB.clone(), LOGDBUSER.clone(), LOGDBPASSWORD.clone()) {
                 jcall!(self.logUtil).putF(format!("{}{}", self.UNABLE_TO_CREATE_USER, LOGDBUSER), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_USERS.clone());
-                return false;
+                return Some(false);
             }
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).END.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_USERS.clone());
-            return true;
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).END.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_USERS.clone());
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_USERS.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_USERS.clone(), crate::java_into_object(e.clone()));
             return true;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn addDatabases(&mut self) -> Option<bool> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_DATABASES.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_DATABASES.clone());
             self.userDbInitInfo = UserDbInitInfo::new();
             self.inventoryDbInitInfo = InventoryDbInitInfo::new();
             self.historyDbInitInfo = HistoryDbInitInfo::new();
@@ -161,53 +163,54 @@ impl InitDbCrypted {
             let mut CUSTOMERDB: String = jcall!(self.userDbInitInfo).getName();
             if !self.addDb(CUSTOMERDB.clone()) {
                 jcall!(self.logUtil).putF(format!("{}{}", self.UNABLE_TO_CREATE_DATABASE, CUSTOMERDB), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_DATABASES.clone());
-                return false;
+                return Some(false);
             }
             let mut INVENTORYDB: String = jcall!(self.inventoryDbInitInfo).getName();
             if !self.addDb(INVENTORYDB.clone()) {
                 jcall!(self.logUtil).putF(format!("{}{}", self.UNABLE_TO_CREATE_DATABASE, INVENTORYDB), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_DATABASES.clone());
-                return false;
+                return Some(false);
             }
             let mut HISTORYDB: String = jcall!(self.historyDbInitInfo).getName();
             if !self.addDb(HISTORYDB.clone()) {
                 jcall!(self.logUtil).putF(format!("{}{}", self.UNABLE_TO_CREATE_DATABASE, HISTORYDB), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_DATABASES.clone());
-                return false;
+                return Some(false);
             }
             let mut STATICPAGESDB: String = jcall!(self.staticpagesDbInitInfo).getName();
             if !self.addDb(STATICPAGESDB.clone()) {
                 jcall!(self.logUtil).putF(format!("{}{}", self.UNABLE_TO_CREATE_DATABASE, STATICPAGESDB), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_DATABASES.clone());
-                return false;
+                return Some(false);
             }
             let mut LOGDB: String = jcall!(self.logDbInitInfo).getName();
             if !self.addDb(LOGDB.clone()) {
                 jcall!(self.logUtil).putF(format!("{}{}", self.UNABLE_TO_CREATE_DATABASE, LOGDB), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_DATABASES.clone());
-                return false;
+                return Some(false);
             }
             let mut file: Option<Rc<RefCell<AbFile>>> = jcall!(FileFactory::getInstance()).getInstance1(self.SQL_FILE.clone());
             jcall!(file).createNewFile();
             let mut idOutData: Option<Rc<RefCell<AbDataOutputStream>>> = jcall!(DataOutputStreamFactory::getInstance()).getInstanceForAbFile(file.clone());
             jcall!(idOutData).writeBytes(jcall!(self.sqlCommandLog).toString());
-            return true;
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_DATABASES.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_DATABASES.clone(), crate::java_into_object(e.clone()));
             return true;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn addTables(&mut self) -> Option<bool> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_TABLES.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_TABLES.clone());
             jcall!(stringBuffer).append(jcall!(UserEntityFactory::getInstance()).createTable());
             jcall!(stringBuffer).append(jcall!(jcall!(StoreFrontsEntityFactory::getInstance()).getStoreFrontsEntityInstance()).createTable());
-            jcall!(stringBuffer).append(jcall!(jcall!(BillingAddressesEntityFactory::getInstance()).getInstance1(jcall!(self.stringUtil).EMPTY_STRING.clone())).createTable());
-            jcall!(stringBuffer).append(jcall!(jcall!(ShippingAddressesEntityFactory::getInstance()).getInstance1(jcall!(self.stringUtil).EMPTY_STRING.clone())).createTable());
+            jcall!(stringBuffer).append(jcall!(jcall!(BillingAddressesEntityFactory::getInstance()).getInstance1({ let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }.clone())).createTable());
+            jcall!(stringBuffer).append(jcall!(jcall!(ShippingAddressesEntityFactory::getInstance()).getInstance1({ let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }.clone())).createTable());
             jcall!(stringBuffer).append(jcall!(jcall!(PaymentEntityFactory::getInstance()).getPaymentEntityInstance()).createTable());
             jcall!(stringBuffer).append(jcall!(jcall!(QuoteRequestEntityFactory::getInstance()).getQuoteRequestEntityInstance()).createTable());
             jcall!(stringBuffer).append(jcall!(OrderHistoryEntityFactory::getInstance()).createTable());
@@ -220,17 +223,18 @@ impl InitDbCrypted {
             jcall!(stringBuffer).append(jcall!(jcall!(LogTableEntityFactory::getInstance()).getLogTableEntityInstance()).createTable());
             jcall!(stringBuffer).append(jcall!(jcall!(StaticPagesEntityFactory::getInstance()).getStaticPagesEntityInstance()).createTable());
             jcall!(stringBuffer).append(jcall!(TransformInfoEntityBuilder::getInstance()).createTable());
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", ADD_TABLES_RESULTS_LABEL, jcall!(stringBuffer).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_TABLES.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            return true;
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", self.base.ADD_TABLES_RESULTS_LABEL, jcall!(stringBuffer).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_TABLES.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_TABLES.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_TABLES.clone(), crate::java_into_object(e.clone()));
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for InitDbCrypted {

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::eclipse::swt::graphics::Resource::Resource;
 
 // Borrows the object of a Java reference
@@ -33,6 +33,10 @@ pub struct DisposalUtil {
 thread_local! { pub static DisposalUtil_instance: Option<Rc<RefCell<DisposalUtil>>> = DisposalUtil::new(); }
 
 impl DisposalUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -50,7 +54,7 @@ impl DisposalUtil {
     }
     
 
-    pub fn disposeImage(&mut self, mut image: Option<Rc<RefCell<Image>>>) {
+    pub fn disposeImage(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) {
     }
     
 

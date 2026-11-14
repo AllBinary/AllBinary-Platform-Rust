@@ -32,7 +32,7 @@ pub struct LOGGING {
     pub name: String,
 }
 
-pub static mut LOGGING_logging: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = std::cell::LazyCell::new(|| BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
+pub static mut LOGGING_logging: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = std::cell::LazyCell::new(|| BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
 thread_local! { pub static LOGGING_GRAPHICSPAINT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Graphics Paint")); }
 thread_local! { pub static LOGGING_GRAPHICSCREATION: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Graphics Creation")); }
 thread_local! { pub static LOGGING_GRAPHICSDELETION: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Graphics Deletion")); }

@@ -38,6 +38,10 @@ thread_local! { pub static GameTickDisplayInfoSingleton_instance: Option<Rc<RefC
 
 impl GameTickDisplayInfoSingleton {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             displayInfoSingleton: None,
@@ -65,10 +69,10 @@ impl GameTickDisplayInfoSingleton {
     
 
     pub fn update(&mut self) {
-        self.lastWidth = jcall!(self.displayInfoSingleton).getLastWidth();
-        self.lastHeight = jcall!(self.displayInfoSingleton).getLastHeight();
-        self.lastHalfWidth = jcall!(self.displayInfoSingleton).getLastHalfWidth();
-        self.lastHalfHeight = jcall!(self.displayInfoSingleton).getLastHalfHeight();
+        self.lastWidth = { let java_value = (jcall!(self.displayInfoSingleton).getLastWidth()).clone(); java_value };
+        self.lastHeight = { let java_value = (jcall!(self.displayInfoSingleton).getLastHeight()).clone(); java_value };
+        self.lastHalfWidth = { let java_value = (jcall!(self.displayInfoSingleton).getLastHalfWidth()).clone(); java_value };
+        self.lastHalfHeight = { let java_value = (jcall!(self.displayInfoSingleton).getLastHalfHeight()).clone(); java_value };
     }
     
 

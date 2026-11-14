@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::graphics::opengles::OpenGLFeatureFactory::OpenGLFeatureFactory;
 use crate::org::allbinary::image::opengles::OpenGLImageCacheFactory::OpenGLImageCacheFactory;
+use crate::java::lang::Exception::*;
 use super::TouchButtonResourceAnimationInterfaceFactoryInterfaceFactory::TouchButtonResourceAnimationInterfaceFactoryInterfaceFactory;
 
 // Borrows the object of a Java reference
@@ -33,6 +34,14 @@ pub struct TouchButtonResourceOpenGLESAnimationInterfaceFactoryInterfaceFactory 
     pub base: TouchButtonResourceAnimationInterfaceFactoryInterfaceFactory,
 }
 
+impl crate::org::allbinary::game::configuration::feature::GameFeatureControlledInterface::GameFeatureControlledInterface for TouchButtonResourceOpenGLESAnimationInterfaceFactoryInterfaceFactory {
+    fn init(&mut self, mut level: i32) { Self::init(self, level) }
+    fn isFeature(&mut self) -> bool { Self::isFeature(self) }
+    fn isLoadingLevel(&mut self, p1: i32) -> bool { crate::org::allbinary::input::motion::button::TouchButtonResourceAnimationInterfaceFactoryInterfaceFactory::TouchButtonResourceAnimationInterfaceFactoryInterfaceFactory::isLoadingLevel(crate::org::allbinary::input::motion::button::TouchButtonResourceAnimationInterfaceFactoryInterfaceFactory::TouchButtonResourceAnimationInterfaceFactoryInterfaceFactoryDyn::as_TouchButtonResourceAnimationInterfaceFactoryInterfaceFactory_mut(self), p1) }
+}
+impl crate::org::allbinary::animation::resource::ResourceAnimationInterfaceFactoryInterface::ResourceAnimationInterfaceFactoryInterface for TouchButtonResourceOpenGLESAnimationInterfaceFactoryInterfaceFactory {
+    fn getBasicAnimationInterfaceFactoryInstance(&mut self, p1: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface>>> { crate::org::allbinary::animation::resource::BaseResourceAnimationInterfaceFactoryInterfaceFactory::BaseResourceAnimationInterfaceFactoryInterfaceFactory::getBasicAnimationInterfaceFactoryInstance(crate::org::allbinary::animation::resource::BaseResourceAnimationInterfaceFactoryInterfaceFactory::BaseResourceAnimationInterfaceFactoryInterfaceFactoryDyn::as_BaseResourceAnimationInterfaceFactoryInterfaceFactory_mut(self), p1) }
+}
 
 impl TouchButtonResourceOpenGLESAnimationInterfaceFactoryInterfaceFactory {
     
@@ -52,12 +61,12 @@ impl TouchButtonResourceOpenGLESAnimationInterfaceFactoryInterfaceFactory {
 
     // throws Exception
     pub fn init(&mut self, mut level: i32) {
-        self.base.initImageCache(OpenGLImageCacheFactory::getInstance(), level.clone());
+        { let java_arguments = (OpenGLImageCacheFactory::getInstance(), level.clone(),); self.base.initImageCache(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn isFeature(&mut self) -> bool {
-        if jcall!(Features::getInstance()).isDefault(jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        if jcall!(Features::getInstance()).isDefault({ let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             return true;
         } else {
             return false;

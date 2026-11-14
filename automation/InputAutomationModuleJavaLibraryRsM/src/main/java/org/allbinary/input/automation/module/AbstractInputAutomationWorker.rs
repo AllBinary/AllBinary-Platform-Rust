@@ -27,6 +27,8 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::thread::RunnableInterface::RunnableInterface;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::InputAutomationActionInterface::InputAutomationActionInterface;
 
 // Borrows the object of a Java reference
@@ -58,6 +60,10 @@ impl crate::Runnable for AbstractInputAutomationWorker {
 }
 
 impl AbstractInputAutomationWorker {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut inputAutomationActionInterface: Option<Rc<RefCell<dyn InputAutomationActionInterface>>>) -> Self {
@@ -101,7 +107,7 @@ impl AbstractInputAutomationWorker {
 
     // synchronized
     pub fn isAnyDataWorkerRunning(&mut self) -> bool {
-        if self.captureThread.is_some() && (jcall!(self.captureThread).isAlive() || jcall!(self.getCaptureWorker()).isRunning() || jcall!(self.getMotionRectanglesWorker()).isRunning() || jcall!(self.getImageComparisonWorker()).isRunning()) {
+        if self.captureThread.is_some() && ({ let java_value = jcall!(self.captureThread).isAlive(); java_value } || { let java_value = jcall!(self.getCaptureWorker()).isRunning(); java_value } || { let java_value = jcall!(self.getMotionRectanglesWorker()).isRunning(); java_value } || { let java_value = jcall!(self.getImageComparisonWorker()).isRunning(); java_value }) {
             return true;
         }
         return false;
@@ -123,7 +129,7 @@ impl AbstractInputAutomationWorker {
     // synchronized
     pub fn waitForDataWorkers(&mut self) {
         while self.isAnyDataWorkerRunning() {
-            jcall!(self.logUtil).putF(String::from("Waiting"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.logUtil).putF(String::from("Waiting"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
             std::thread::sleep(std::time::Duration::from_millis((250) as u64));
         }
     }
@@ -143,24 +149,24 @@ impl AbstractInputAutomationWorker {
 
     pub fn run(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
             self.setRunning(true);
             let mut timeHelper: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>> = TimeDelayHelper::new(1000).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
             while self.isRunning() {
                 jcall!(timeHelper).setStartTimeTNT();
                 self.process();
                 self.index += 1;
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", format!("{}{}", jcall!(CommonLabels::getInstance()).ELAPSED, jcall!(timeHelper).getElapsedTNT()), String::from(" Index: ")), self.index), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).ELAPSED.clone(); java_field }, jcall!(timeHelper).getElapsedTNT()), String::from(" Index: ")), self.index), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
             self.stopDataWorkers();
             self.waitForDataWorkers();
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).END.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).END.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -205,7 +211,7 @@ impl AbstractInputAutomationWorker {
         self.motionRectanglesWorker = motionRectanglesWorker.clone();
     }
 }
-pub trait AbstractInputAutomationWorkerDyn {
+pub trait AbstractInputAutomationWorkerDyn: std::any::Any {
     fn as_AbstractInputAutomationWorker(&self) -> &AbstractInputAutomationWorker;
     fn as_AbstractInputAutomationWorker_mut(&mut self) -> &mut AbstractInputAutomationWorker;
     fn setThread(&mut self, mut thread: Option<Rc<RefCell<Thread>>>) { AbstractInputAutomationWorker::setThread(self.as_AbstractInputAutomationWorker_mut(), thread) }

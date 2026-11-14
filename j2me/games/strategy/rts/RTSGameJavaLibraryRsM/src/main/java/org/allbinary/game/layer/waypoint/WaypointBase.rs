@@ -30,6 +30,8 @@ use crate::org::allbinary::media::graphics::geography::pathfinding::MultipassSta
 use crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingInfo::PathFindingInfo;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -44,12 +46,16 @@ pub struct WaypointBase {
     pub allBinaryGameLayerManagerP: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>,
 }
 
-pub static mut WaypointBase_NULL_WAYPOINT_BASE: std::cell::LazyCell<Option<Rc<RefCell<dyn WaypointBaseDyn>>>> = std::cell::LazyCell::new(|| WaypointBase::new(NoSound::getInstance()).map(|reference| reference as Rc<RefCell<dyn WaypointBaseDyn>>));
+pub static mut WaypointBase_NULL_WAYPOINT_BASE: std::cell::LazyCell<Option<Rc<RefCell<dyn WaypointBaseDyn>>>> = std::cell::LazyCell::new(|| WaypointBase::new(NoSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>)).map(|reference| reference as Rc<RefCell<dyn WaypointBaseDyn>>));
 impl EventListenerInterface for WaypointBase {
     fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, eventObject) }
 }
 
 impl WaypointBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut sound: Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>) -> Self {
@@ -58,7 +64,7 @@ impl WaypointBase {
             sound: None,
             allBinaryGameLayerManagerP: None,
         };
-        this.connectedWaypointList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.connectedWaypointList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.allBinaryGameLayerManagerP = AllBinaryGameLayerManager::getNullInstance();
         this.sound = sound.clone();
         this
@@ -86,7 +92,7 @@ impl WaypointBase {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
@@ -127,7 +133,7 @@ impl WaypointBase {
         return 0;
     }
 }
-pub trait WaypointBaseDyn: crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface {
+pub trait WaypointBaseDyn: std::any::Any + crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface {
     fn as_WaypointBase(&self) -> &WaypointBase;
     fn as_WaypointBase_mut(&mut self) -> &mut WaypointBase;
     fn getSound(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>> { WaypointBase::getSound(self.as_WaypointBase_mut()) }

@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::game::Sprite::Sprite;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::game::Sprite::Sprite;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,12 +27,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait SpriteFactoryInterface {
+pub trait SpriteFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
-    fn createSprite(&mut self, image: Option<Rc<RefCell<Image>>>, frameWidth: i32, frameHeight: i32) -> Option<Rc<RefCell<Sprite>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn createSprite(&mut self, image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, frameWidth: i32, frameHeight: i32) -> Option<Rc<RefCell<Sprite>>>;
 }
 
 

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::paint::NullPaintable::NullPaintable;
 use crate::org::allbinary::graphics::paint::Paintable::Paintable;
 use crate::org::allbinary::graphics::paint::StatePaintable::StatePaintable;
@@ -51,7 +51,7 @@ impl BasicGameDemoPaintable {
         };
         this.currentStatePaintable = NullPaintable::getInstance();
         this.mainDemoStatePaintable = mainDemoStatePaintable.clone();
-        { let java_arguments = (NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>),); this.setCurrentStatePaintable(java_arguments.0) };
+        { let java_arguments = (NullPaintable::getInstance(),); this.setCurrentStatePaintable(java_arguments.0) };
         this.ownershipPaintable = ownershipPaintable.clone();
         this.helpPaintableInterface = helpPaintableInterface.clone();
         this
@@ -66,15 +66,15 @@ impl BasicGameDemoPaintable {
         if state == 0 {
             { let java_arguments = (self.getMainDemoStatePaintable(),); self.setCurrentStatePaintable(java_arguments.0) };
         } else if state == 1 {
-            self.setCurrentStatePaintable(self.helpPaintableInterface.clone());
+            { let java_arguments = (self.helpPaintableInterface.clone(),); self.setCurrentStatePaintable(java_arguments.0) };
         } else {
-            self.setCurrentStatePaintable(self.ownershipPaintable.clone());
+            { let java_arguments = (self.ownershipPaintable.clone(),); self.setCurrentStatePaintable(java_arguments.0) };
         }
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        jcall!(self.getCurrentStatePaintable()).paint(graphics.clone());
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        jcall!(self.getCurrentStatePaintable()).as_Paintable_mut().paint(graphics.clone());
     }
     
 
@@ -121,11 +121,14 @@ impl BasicGameDemoPaintableDyn for BasicGameDemoPaintable {
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for BasicGameDemoPaintable {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
 }
 impl crate::org::allbinary::graphics::paint::StatePaintable::StatePaintableDyn for BasicGameDemoPaintable {
     fn as_StatePaintable(&self) -> &crate::org::allbinary::graphics::paint::StatePaintable::StatePaintable { &self.base }
     fn as_StatePaintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::StatePaintable::StatePaintable { &mut self.base }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for BasicGameDemoPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 impl crate::org::allbinary::graphics::displayable::StateControlledInterface::StateControlledInterface for BasicGameDemoPaintable {
     fn setState(&mut self, mut state: i32) { Self::setState(self, state) }

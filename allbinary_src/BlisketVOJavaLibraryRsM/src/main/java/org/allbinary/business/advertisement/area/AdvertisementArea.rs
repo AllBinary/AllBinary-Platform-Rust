@@ -16,13 +16,13 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::advertisement::campaign::AdvertisementCampaignData::AdvertisementCampaignData;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontData::StoreFrontData;
 use crate::org::allbinary::data::tree::dom::document::DomDocumentHelper::DomDocumentHelper;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 use super::AdvertisementAreaInterface::AdvertisementAreaInterface;
 use super::AdvertisementAreaConstraintsInterface::AdvertisementAreaConstraintsInterface;
 use super::AdvertisementAreaConstraints::AdvertisementAreaConstraints;
@@ -56,9 +56,13 @@ impl AdvertisementAreaInterface for AdvertisementArea {
 }
 
 impl AdvertisementArea {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             name: String::new(),
             storeName: String::new(),
@@ -66,17 +70,17 @@ impl AdvertisementArea {
             advertisementAreaConstraintsInterface: None,
             campaign: String::new(),
         };
-        this.name = (jcall!(hashMap).get(jcall!(AdvertisementAreaData::AdvertisementAreaData::getInstance()).NAME.clone())).clone() /* as String */;
-        this.storeName = (jcall!(hashMap).get(jcall!(StoreFrontData::getInstance()).NAME.clone())).clone() /* as String */;
-        this.description = (jcall!(hashMap).get(jcall!(AdvertisementAreaData::AdvertisementAreaData::getInstance()).DESCRIPTION.clone())).clone() /* as String */;
-        let mut constraintsDomString: String = (jcall!(hashMap).get(jcall!(AdvertisementAreaData::AdvertisementAreaData::getInstance()).CONSTRAINTS.clone())).clone() /* as String */;
-        let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1(constraintsDomString.clone());
+        this.name = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(AdvertisementAreaData::AdvertisementAreaData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.storeName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.description = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(AdvertisementAreaData::AdvertisementAreaData::getInstance()).DESCRIPTION.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        let mut constraintsDomString: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(AdvertisementAreaData::AdvertisementAreaData::getInstance()).CONSTRAINTS.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+        let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1_String(constraintsDomString.clone());
         this.advertisementAreaConstraintsInterface = AdvertisementAreaConstraints::new(document.clone()).map(|reference| reference as Rc<RefCell<dyn AdvertisementAreaConstraintsInterface>>);
-        this.campaign = (jcall!(hashMap).get(jcall!(AdvertisementCampaignData::getInstance()).NAME.clone())).clone() /* as String */;
+        this.campaign = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(AdvertisementCampaignData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         this
     }
 
-    pub fn new(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(hashMap))))
     }
     

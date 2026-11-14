@@ -33,11 +33,14 @@ pub struct SpecialAnimation {
     pub base: IndexedAnimation,
 }
 
-thread_local! { pub static SpecialAnimation_NULL_SPECIAL_ANIMATION: Option<Rc<RefCell<dyn SpecialAnimationDyn>>> = SpecialAnimation::new(IndexedAnimationBehavior::new(1, 250)).map(|reference| reference as Rc<RefCell<dyn SpecialAnimationDyn>>); }
+thread_local! { pub static SpecialAnimation_NULL_SPECIAL_ANIMATION: Option<Rc<RefCell<dyn SpecialAnimationDyn>>> = SpecialAnimation::new(IndexedAnimationBehavior::new(1, 250).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>)).map(|reference| reference as Rc<RefCell<dyn SpecialAnimationDyn>>); }
 // impl SpecialAnimationInterface for SpecialAnimation with the methods of the trait
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for SpecialAnimation {
-    fn getSize(&mut self) -> i32 { self.base.getSize() }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for SpecialAnimation {
+    fn nextFrame(&mut self) { Self::nextFrame(self) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
+}
+impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for SpecialAnimation {
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::animation::Animation::Animation::paintXY(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3) }
 }
 
 impl SpecialAnimation {
@@ -62,7 +65,7 @@ impl SpecialAnimation {
     
 
     pub fn nextFrame(&mut self) {
-        let mut indexedAnimationBehavior: Option<Rc<RefCell<IndexedAnimationBehavior>>> = ((self.animationBehaviorP).clone() /* as IndexedAnimationBehavior */);
+        let mut indexedAnimationBehavior: Option<Rc<RefCell<IndexedAnimationBehavior>>> = ((self.animationBehaviorP).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<IndexedAnimationBehavior>() }, "ClassCastException: not a IndexedAnimationBehavior"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<IndexedAnimationBehavior>) } }));
         jcall!(indexedAnimationBehavior).loopIndex += 1;
     }
     

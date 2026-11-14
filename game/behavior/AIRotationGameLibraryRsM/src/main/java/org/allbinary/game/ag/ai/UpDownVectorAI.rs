@@ -24,6 +24,7 @@ use crate::org::allbinary::game::physics::velocity::VelocityInterfaceCompositeIn
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -42,7 +43,7 @@ impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntel
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for UpDownVectorAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl UpDownVectorAI {
@@ -56,9 +57,9 @@ impl UpDownVectorAI {
         };
         this.index = 0;
         // super(...) is in the struct literal above
-        let mut velocityInterfaceCompositeInterface: Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> = (this.getOwnerLayerInterface()).clone() /* as VelocityInterfaceCompositeInterface */;
-        this.velocityInterface = jcall!(velocityInterfaceCompositeInterface).getVelocityProperties();
-        jcall!(jcall!(this.velocityInterface).getVelocityYBasicDecimalP()).setint(0);
+        let mut velocityInterfaceCompositeInterface: Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to VelocityInterfaceCompositeInterface") })();
+        this.velocityInterface = { let java_value = (jcall!(velocityInterfaceCompositeInterface).getVelocityProperties()).clone(); java_value };
+        jcall!(jcall!(this.velocityInterface).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP()).setint(0);
         this
     }
 
@@ -69,14 +70,14 @@ impl UpDownVectorAI {
 
     // throws Exception
     pub fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) {
-        let mut y: i32 = jcall!(self.getOwnerLayerInterface()).getHeight() * 270;
+        let mut y: i32 = { let java_value = jcall!(self.getOwnerLayerInterface()).getHeight(); java_value } * 270;
         if self.index < 5 {
-            let mut basicDecimal: Option<Rc<RefCell<BasicDecimal>>> = jcall!(self.velocityInterface).getVelocityYBasicDecimalP();
+            let mut basicDecimal: Option<Rc<RefCell<BasicDecimal>>> = jcall!(self.velocityInterface).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP();
             jcall!(basicDecimal).setint(0);
             jcall!(basicDecimal).addint(y.clone());
             self.index += 1;
         } else if self.index < 10 {
-            let mut basicDecimal: Option<Rc<RefCell<BasicDecimal>>> = jcall!(self.velocityInterface).getVelocityYBasicDecimalP();
+            let mut basicDecimal: Option<Rc<RefCell<BasicDecimal>>> = jcall!(self.velocityInterface).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP();
             jcall!(basicDecimal).setint(0);
             jcall!(basicDecimal).subtractint(y.clone());
             self.index += 1;

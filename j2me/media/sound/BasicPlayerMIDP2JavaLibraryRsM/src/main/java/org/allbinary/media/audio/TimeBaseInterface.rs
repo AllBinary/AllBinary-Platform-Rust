@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::media::MediaException::MediaException;
-// use crate::javax::microedition::media::TimeBase::TimeBase;
+use crate::javax::microedition::media::MediaException::MediaException;
+use crate::javax::microedition::media::TimeBase::TimeBase;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,16 +27,14 @@ macro_rules! jcall {
     };
 }
 
-pub trait TimeBaseInterface {
+pub trait TimeBaseInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
-    fn getTimeBase(&mut self) -> Option<Rc<RefCell<TimeBase>>>;
+    fn getTimeBase(&mut self) -> Option<Rc<RefCell<dyn TimeBase>>>;
     
 
     // throws MediaException
-    fn setTimeBase(&mut self, timeBase: Option<Rc<RefCell<TimeBase>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn setTimeBase(&mut self, timeBase: Option<Rc<RefCell<dyn TimeBase>>>);
 }
 
 

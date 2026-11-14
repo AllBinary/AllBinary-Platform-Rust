@@ -17,10 +17,11 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::IOException::IOException;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::IOException::IOException;
+use crate::java::io::InputStream::InputStream;
 use crate::org::allbinary::graphics::OpenGLBitmap::OpenGLBitmap;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,6 +35,10 @@ pub struct OpenGLImageUtilBase {
 
 
 impl OpenGLImageUtilBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -64,17 +69,17 @@ impl OpenGLImageUtilBase {
     
 
     // throws IOException
-    pub fn createImageFromInputStream(&mut self, mut inputStream: Option<Rc<RefCell<InputStream>>>) -> Option<Rc<RefCell<OpenGLBitmap>>> {
+    pub fn createImageFromInputStream(&mut self, mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>) -> Option<Rc<RefCell<OpenGLBitmap>>> {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait OpenGLImageUtilBaseDyn {
+pub trait OpenGLImageUtilBaseDyn: std::any::Any {
     fn as_OpenGLImageUtilBase(&self) -> &OpenGLImageUtilBase;
     fn as_OpenGLImageUtilBase_mut(&mut self) -> &mut OpenGLImageUtilBase;
     fn paint(&mut self, mut alphaBitmap: Option<Rc<RefCell<OpenGLBitmap>>>, mut originalBitmap: Option<Rc<RefCell<OpenGLBitmap>>>, mut index: i32) -> Option<Rc<RefCell<OpenGLBitmap>>> { OpenGLImageUtilBase::paint(self.as_OpenGLImageUtilBase_mut(), alphaBitmap, originalBitmap, index) }
     fn paint4(&mut self, mut colorBitmap: Option<Rc<RefCell<OpenGLBitmap>>>, mut originalBitmap: Option<Rc<RefCell<OpenGLBitmap>>>, mut alpha: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<OpenGLBitmap>>> { OpenGLImageUtilBase::paint4(self.as_OpenGLImageUtilBase_mut(), colorBitmap, originalBitmap, alpha, basicColor) }
     fn createImage(&mut self, mut name: String) -> Option<Rc<RefCell<OpenGLBitmap>>> { OpenGLImageUtilBase::createImage(self.as_OpenGLImageUtilBase_mut(), name) }
-    fn createImageFromInputStream(&mut self, mut inputStream: Option<Rc<RefCell<InputStream>>>) -> Option<Rc<RefCell<OpenGLBitmap>>> { OpenGLImageUtilBase::createImageFromInputStream(self.as_OpenGLImageUtilBase_mut(), inputStream) }
+    fn createImageFromInputStream(&mut self, mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>) -> Option<Rc<RefCell<OpenGLBitmap>>> { OpenGLImageUtilBase::createImageFromInputStream(self.as_OpenGLImageUtilBase_mut(), inputStream) }
 }
 impl OpenGLImageUtilBaseDyn for OpenGLImageUtilBase {
     fn as_OpenGLImageUtilBase(&self) -> &OpenGLImageUtilBase { self }

@@ -36,6 +36,10 @@ pub static mut GenericConfigData_MMO_GAME_MODULE_RELATIVE_PATH: std::cell::LazyC
 pub static mut GenericConfigData_FREE_MMO_GAME_MODULE_RELATIVE_PATH: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("free/"));
 
 impl GenericConfigData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

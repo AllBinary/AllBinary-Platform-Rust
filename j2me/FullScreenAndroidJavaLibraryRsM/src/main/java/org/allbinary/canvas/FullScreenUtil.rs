@@ -17,8 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +34,10 @@ pub struct FullScreenUtil {
 thread_local! { pub static FullScreenUtil_instance: Option<Rc<RefCell<FullScreenUtil>>> = FullScreenUtil::new(); }
 
 impl FullScreenUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -51,11 +56,11 @@ impl FullScreenUtil {
     
 
     // throws Exception
-    pub fn initOnRun(&mut self, mut fullScreenInterface: Option<Rc<RefCell<Canvas>>>, mut commandListener: Option<Rc<RefCell<CommandListener>>>) {
+    pub fn initOnRun(&mut self, mut fullScreenInterface: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>, mut commandListener: Option<Rc<RefCell<dyn CommandListener>>>) {
     }
     
 
-    pub fn init(&mut self, mut fullScreenInterface: Option<Rc<RefCell<Canvas>>>) {
+    pub fn init(&mut self, mut fullScreenInterface: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>) {
     }
     
 
@@ -64,7 +69,7 @@ impl FullScreenUtil {
     }
     
 
-    pub fn isScreenChangeCanvas(&mut self, mut fullScreenInterface: Option<Rc<RefCell<Canvas>>>) -> bool {
+    pub fn isScreenChangeCanvas(&mut self, mut fullScreenInterface: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>) -> bool {
         return { let java_arguments = (jcall!(fullScreenInterface).isFullScreenMode(),); self.isScreenChange(java_arguments.0) };
     }
 }

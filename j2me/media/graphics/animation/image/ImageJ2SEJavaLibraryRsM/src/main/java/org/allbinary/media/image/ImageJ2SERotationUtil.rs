@@ -39,6 +39,10 @@ pub struct ImageJ2SERotationUtil {
 thread_local! { pub static ImageJ2SERotationUtil_instance: Option<Rc<RefCell<ImageJ2SERotationUtil>>> = ImageJ2SERotationUtil::new(); }
 
 impl ImageJ2SERotationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ImageJ2SERotationUtil>>> {
@@ -63,40 +67,40 @@ impl ImageJ2SERotationUtil {
     }
     
 
-    pub fn getRotatedImage(&mut self, mut bufferedImage: Option<Rc<RefCell<Image>>>, mut totalAngle: i32) -> Option<Rc<RefCell<BufferedImage>>> {
+    pub fn getRotatedImage(&mut self, mut bufferedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut totalAngle: i32) -> Option<Rc<RefCell<BufferedImage>>> {
         return self.getRotatedImageRadians(bufferedImage.clone(), self.TWO_PIE * ((totalAngle) as f64) / 360.0);
     }
     
 
-    pub fn getRotatedImageRadians(&mut self, mut bufferedImage: Option<Rc<RefCell<Image>>>, mut radians: f64) -> Option<Rc<RefCell<BufferedImage>>> {
-        let mut newBufferedImage: Option<Rc<RefCell<BufferedImage>>> = { let java_receiver = self.imageUtil.clone(); let java_arguments = (jcall!(bufferedImage).getWidth(None), jcall!(bufferedImage).getHeight(None),); let java_result = jcall!(java_receiver).create(java_arguments.0, java_arguments.1); java_result };
+    pub fn getRotatedImageRadians(&mut self, mut bufferedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut radians: f64) -> Option<Rc<RefCell<BufferedImage>>> {
+        let mut newBufferedImage: Option<Rc<RefCell<BufferedImage>>> = { let java_receiver = self.imageUtil.clone(); let java_arguments = (jcall!(bufferedImage).as_Image_mut().getWidth(None), jcall!(bufferedImage).as_Image_mut().getHeight(None),); let java_result = jcall!(java_receiver).create(java_arguments.0, java_arguments.1); java_result };
         return { let java_arguments = (bufferedImage.clone(), newBufferedImage.clone(), jcall!(newBufferedImage).createGraphics(), radians.clone(),); self.drawRotatedImageRadians(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3) };
     }
     
 
-    pub fn drawRotatedImageRadians(&mut self, mut bufferedImage: Option<Rc<RefCell<Image>>>, mut newBufferedImage: Option<Rc<RefCell<BufferedImage>>>, mut g: Option<Rc<RefCell<Graphics2D>>>, mut radians: f64) -> Option<Rc<RefCell<BufferedImage>>> {
+    pub fn drawRotatedImageRadians(&mut self, mut bufferedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut newBufferedImage: Option<Rc<RefCell<BufferedImage>>>, mut g: Option<Rc<RefCell<Graphics2D>>>, mut radians: f64) -> Option<Rc<RefCell<BufferedImage>>> {
         jcall!(g).rotate(radians.clone(), jcall!(newBufferedImage).getWidth(None) / 2, jcall!(newBufferedImage).getHeight(None) / 2);
-        jcall!(g).drawImage(bufferedImage.clone(), 0, 0, jcall!(bufferedImage).getWidth(None), jcall!(bufferedImage).getHeight(None), None);
+        jcall!(g).drawImage(bufferedImage.clone(), 0, 0, jcall!(bufferedImage).as_Image_mut().getWidth(None), jcall!(bufferedImage).as_Image_mut().getHeight(None), None);
         jcall!(g).dispose();
         return newBufferedImage.clone();
     }
     
 
-    pub fn rotateImage(&mut self, mut bufferedImage: Option<Rc<RefCell<Image>>>, mut newBufferedImage: Option<Rc<RefCell<BufferedImage>>>, mut totalAngle: i32) -> Option<Rc<RefCell<BufferedImage>>> {
+    pub fn rotateImage(&mut self, mut bufferedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut newBufferedImage: Option<Rc<RefCell<BufferedImage>>>, mut totalAngle: i32) -> Option<Rc<RefCell<BufferedImage>>> {
         let mut g: Option<Rc<RefCell<Graphics2D>>> = jcall!(newBufferedImage).createGraphics();
-        jcall!(g).setBackground(jcall!(self.imageJ2SEUtil).TRANSPARENT_COLOR.clone());
+        jcall!(g).setBackground({ let java_field = jcall!(self.imageJ2SEUtil).TRANSPARENT_COLOR.clone(); java_field }.clone());
         jcall!(g).clearRect(0, 0, jcall!(newBufferedImage).getWidth(), jcall!(newBufferedImage).getHeight());
         return self.drawRotatedImageRadians(bufferedImage.clone(), newBufferedImage.clone(), g.clone(), self.TWO_PIE * ((totalAngle) as f64) / 360.0);
     }
     
 
-    pub fn createRotatedImage(&mut self, mut bufferedImage: Option<Rc<RefCell<Image>>>, mut newBufferedImage: Option<Rc<RefCell<BufferedImage>>>, mut totalAngle: i32) -> Option<Rc<RefCell<BufferedImage>>> {
+    pub fn createRotatedImage(&mut self, mut bufferedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut newBufferedImage: Option<Rc<RefCell<BufferedImage>>>, mut totalAngle: i32) -> Option<Rc<RefCell<BufferedImage>>> {
         let mut g: Option<Rc<RefCell<Graphics2D>>> = jcall!(newBufferedImage).createGraphics();
         return self.drawRotatedImageRadians(bufferedImage.clone(), newBufferedImage.clone(), g.clone(), self.TWO_PIE * ((totalAngle) as f64) / 360.0);
     }
     
 
-    pub fn getRotatedImages(&mut self, mut bufferedImage: Option<Rc<RefCell<Image>>>, mut numberOfFrames: i32, mut totalAngle: i32) -> Vec<Option<Rc<RefCell<BufferedImage>>>> {
+    pub fn getRotatedImages(&mut self, mut bufferedImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut numberOfFrames: i32, mut totalAngle: i32) -> Vec<Option<Rc<RefCell<BufferedImage>>>> {
         let mut bufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>> = vec![None; (numberOfFrames) as usize];
         let mut arc: f64 = (self.TWO_PIE) * ((totalAngle) as f64) / 360.0;
         let mut size: i32 = (bufferedImageArray.len() as i32).clone();
@@ -130,7 +134,7 @@ impl ImageJ2SERotationUtil {
                 rowIndex += 1;
                 columnIndex = 0;
             }
-            nextBufferedImage = bufferedImageArray[(index) as usize].clone();
+            nextBufferedImage = { let java_value = (bufferedImageArray[(index) as usize]).clone(); java_value }.clone();
             jcall!(g).drawImage(nextBufferedImage.clone(), jcall!(nextBufferedImage).getWidth(None) * columnIndex, jcall!(nextBufferedImage).getHeight(None) * rowIndex, jcall!(nextBufferedImage).getWidth(None), jcall!(nextBufferedImage).getHeight(None), None);
             columnIndex += 1;
         }

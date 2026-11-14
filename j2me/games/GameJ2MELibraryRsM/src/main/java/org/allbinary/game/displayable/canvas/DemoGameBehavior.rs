@@ -22,6 +22,7 @@ use crate::org::allbinary::graphics::paint::NullPaintable::NullPaintable;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::AllBinaryGameCanvas::AllBinaryGameCanvas;
 
 // Borrows the object of a Java reference
@@ -38,6 +39,10 @@ pub struct DemoGameBehavior {
 thread_local! { pub static DemoGameBehavior_instance: Option<Rc<RefCell<dyn DemoGameBehaviorDyn>>> = DemoGameBehavior::new().map(|reference| reference as Rc<RefCell<dyn DemoGameBehaviorDyn>>); }
 
 impl DemoGameBehavior {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -77,7 +82,7 @@ impl DemoGameBehavior {
 
     // throws Exception
     pub fn updateScreenButtonPaintable(&mut self, mut allBinaryGameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>) {
-        jcall!(allBinaryGameCanvas).setTouchPaintableP(NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>));
+        jcall!(allBinaryGameCanvas).setTouchPaintableP(NullPaintable::getInstance());
     }
     
 
@@ -103,7 +108,7 @@ impl DemoGameBehavior {
     // throws Exception
     pub fn run(&mut self, mut allBinaryGameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>) {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(jcall!(GameTypeFactory::getInstance()).BOT).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!({ let java_field = jcall!(GameTypeFactory::getInstance()).BOT.clone(); java_field }).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
@@ -111,7 +116,7 @@ impl DemoGameBehavior {
     pub fn setHighScore(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut allBinaryGameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>, mut name: String, mut score: i64, mut autoSubmit: bool, mut isLast: bool) {
     }
 }
-pub trait DemoGameBehaviorDyn {
+pub trait DemoGameBehaviorDyn: std::any::Any {
     fn as_DemoGameBehavior(&self) -> &DemoGameBehavior;
     fn as_DemoGameBehavior_mut(&mut self) -> &mut DemoGameBehavior;
     fn init(&mut self) { DemoGameBehavior::init(self.as_DemoGameBehavior_mut()) }

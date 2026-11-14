@@ -21,6 +21,7 @@ use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,12 +32,16 @@ macro_rules! jcall {
 
 pub struct PathCacheFactory {
     pub basicArrayListUtil: Option<Rc<RefCell<BasicArrayListUtil>>>,
-    pub hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 pub static mut PathCacheFactory_pathFactory: std::cell::LazyCell<Option<Rc<RefCell<PathCacheFactory>>>> = std::cell::LazyCell::new(|| PathCacheFactory::new());
 
 impl PathCacheFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -87,9 +92,9 @@ impl PathCacheFactory {
     pub fn getOrCreate(&mut self, mut pathIdInteger: Option<i32>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
         let mut listCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(self.hashtable).get(crate::java_into_object((pathIdInteger.clone()).expect("NullPointerException")));
         if listCanBeNull.is_none() {
-            listCanBeNull = jcall!(self.basicArrayListUtil).getImmutableInstance();
+            listCanBeNull = crate::java_into_object({ let java_value = (jcall!(self.basicArrayListUtil).getImmutableInstance()).clone(); java_value });
         }
-        return (listCanBeNull).clone() /* as BasicArrayList */;
+        return { let java_object = (listCanBeNull).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
     }
 }
 

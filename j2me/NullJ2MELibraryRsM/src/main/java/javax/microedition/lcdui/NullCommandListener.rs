@@ -20,9 +20,15 @@ pub struct NullCommandListener {
 }
 
 thread_local! { pub static NullCommandListener_NULL_COMMAND_LISTENER: Option<Rc<RefCell<dyn NullCommandListenerDyn>>> = NullCommandListener::new().map(|reference| reference as Rc<RefCell<dyn NullCommandListenerDyn>>); }
-// impl CommandListener for NullCommandListener with the methods of the trait
+impl CommandListener for NullCommandListener {
+    fn commandAction(&mut self, mut c: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut d: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) { Self::commandAction(self, c, d) }
+}
 
 impl NullCommandListener {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -35,13 +41,12 @@ impl NullCommandListener {
     }
     
 
-    pub fn commandAction(&mut self, mut c: Option<Rc<RefCell<Command>>>, mut d: Option<Rc<RefCell<Displayable>>>) {
+    pub fn commandAction(&mut self, mut c: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut d: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) {
     }
 }
-pub trait NullCommandListenerDyn {
+pub trait NullCommandListenerDyn: std::any::Any + crate::javax::microedition::lcdui::CommandListener::CommandListener {
     fn as_NullCommandListener(&self) -> &NullCommandListener;
     fn as_NullCommandListener_mut(&mut self) -> &mut NullCommandListener;
-    fn commandAction(&mut self, mut c: Option<Rc<RefCell<Command>>>, mut d: Option<Rc<RefCell<Displayable>>>) { NullCommandListener::commandAction(self.as_NullCommandListener_mut(), c, d) }
 }
 impl NullCommandListenerDyn for NullCommandListener {
     fn as_NullCommandListener(&self) -> &NullCommandListener { self }

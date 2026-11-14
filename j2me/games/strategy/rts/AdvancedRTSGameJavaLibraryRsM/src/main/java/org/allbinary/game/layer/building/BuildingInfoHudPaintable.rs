@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud;
 use crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHudFactory::NumberStringHudFactory;
 use crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable;
@@ -30,10 +30,7 @@ use crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLa
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessor;
 use crate::org::allbinary::logic::math::MathUtil::MathUtil;
-use super::ProductivityNumberStringHud::ProductivityNumberStringHud;
-use super::EfficiencyNumberStringHud::EfficiencyNumberStringHud;
-use super::HealthNumberStringHud::HealthNumberStringHud;
-use super::MaxHealthNumberStringHud::MaxHealthNumberStringHud;
+use crate::java::lang::Exception::*;
 use super::BuildingLayer::BuildingLayer;
 
 // Borrows the object of a Java reference
@@ -56,16 +53,13 @@ pub struct BuildingInfoHudPaintable {
 }
 
 thread_local! { pub static BuildingInfoHudPaintable_instance: Option<Rc<RefCell<BuildingInfoHudPaintable>>> = BuildingInfoHudPaintable::new(); }
-impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for BuildingInfoHudPaintable {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
-}
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintableInterface::InitUpdatePaintableInterface for BuildingInfoHudPaintable {
 }
 impl crate::org::allbinary::init::InitInterface::InitInterface for BuildingInfoHudPaintable {
-    fn init(&mut self) { self.base.init() }
+    fn init(&mut self) { crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintable::init(crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn::as_InitUpdatePaintable_mut(self)) }
 }
 impl crate::org::allbinary::init::UpdateInterface::UpdateInterface for BuildingInfoHudPaintable {
-    fn update(&mut self) { self.base.update() }
+    fn update(&mut self) { crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable::update(crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn::as_SelectionHudPaintable_mut(self)) }
 }
 
 impl BuildingInfoHudPaintable {
@@ -90,13 +84,13 @@ impl BuildingInfoHudPaintable {
         };
         this.logUtil = LogUtil::getInstance();
         this.HEALTH = String::from("Health:");
-        this.rtsLayer = crate::org::allbinary::game::layer::NullPathFindingLayer::NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone();
+        this.rtsLayer = crate::org::allbinary::game::layer::NullPathFindingLayer::NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of NullPathFindingLayer does not have PathFindingLayerInterface as a base trait") });
         this.currentHealth = 0;
         let mut numberStringHudFactory: Option<Rc<RefCell<NumberStringHudFactory>>> = NumberStringHudFactory::getInstance();
-        let mut productivityHud: Option<Rc<RefCell<dyn crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn>>> = jcall!(numberStringHudFactory).NULL_NUMBER_STRING_HUD.clone();
-        let mut efficiencyHud: Option<Rc<RefCell<dyn crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn>>> = jcall!(numberStringHudFactory).NULL_NUMBER_STRING_HUD.clone();
-        let mut healthHud: Option<Rc<RefCell<dyn crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn>>> = jcall!(numberStringHudFactory).NULL_NUMBER_STRING_HUD.clone();
-        let mut maxHealthHud: Option<Rc<RefCell<dyn crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn>>> = jcall!(numberStringHudFactory).NULL_NUMBER_STRING_HUD.clone();
+        let mut productivityHud: Option<Rc<RefCell<dyn crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn>>> = { let java_field = jcall!(numberStringHudFactory).NULL_NUMBER_STRING_HUD.clone(); java_field }.clone();
+        let mut efficiencyHud: Option<Rc<RefCell<dyn crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn>>> = { let java_field = jcall!(numberStringHudFactory).NULL_NUMBER_STRING_HUD.clone(); java_field }.clone();
+        let mut healthHud: Option<Rc<RefCell<dyn crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn>>> = { let java_field = jcall!(numberStringHudFactory).NULL_NUMBER_STRING_HUD.clone(); java_field }.clone();
+        let mut maxHealthHud: Option<Rc<RefCell<dyn crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn>>> = { let java_field = jcall!(numberStringHudFactory).NULL_NUMBER_STRING_HUD.clone(); java_field }.clone();
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut index: i32 = 0;
             let mut basicHudFactory: Option<Rc<RefCell<BasicHudFactory>>> = BasicHudFactory::getInstance();
@@ -109,16 +103,13 @@ pub struct ProductivityNumberStringHud {
     pub base: NumberStringHud,
 }
 
-impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for ProductivityNumberStringHud {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
-}
 
 impl ProductivityNumberStringHud {
                 
 
                 pub fn new_struct() -> Self {
                     let mut this = Self {
-            base: NumberStringHud::new_struct(String::from("Productivity:"), 999, jcall!(this.base.basicHudFactory).ABSOLUTE.clone(), jcall!(this.base.basicHudFactory).HORIZONTAL.clone(), 0, this.base.basicColor.clone()),
+            base: NumberStringHud::new_struct(String::from("Productivity:"), 999, { let java_field = jcall!(this.base.basicHudFactory).ABSOLUTE.clone(); java_field }.clone(), { let java_field = jcall!(this.base.basicHudFactory).HORIZONTAL.clone(); java_field }.clone(), 0, this.base.basicColor.clone()),
                     };
                     // super(...) is in the struct literal above
                     this
@@ -129,11 +120,11 @@ impl ProductivityNumberStringHud {
                 }
                 
 
-                pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-                    let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
+                pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+                    let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
                     self.updateMaxWidth = self.base.textX.clone();
-                    self.updateMaxHeight = self.base.y + ((self.base.firstIndex + 1) * jcall!(font).getHeight());
-                    self.base.updateMeasurement(graphics.clone());
+                    self.updateMaxHeight = { let java_value = (self.base.y + ((self.base.firstIndex + 1) * jcall!(font).getHeight())).clone(); java_value };
+                    { let java_arguments = (graphics.clone(),); self.base.updateMeasurement(java_arguments.0) };
                 }
 }
 impl std::ops::Deref for ProductivityNumberStringHud {
@@ -145,13 +136,19 @@ impl std::ops::DerefMut for ProductivityNumberStringHud {
 }
 
 impl crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn for ProductivityNumberStringHud {
-    fn as_NumberStringHud(&self) -> &crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &self }
-    fn as_NumberStringHud_mut(&mut self) -> &mut crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &mut self }
+    fn as_NumberStringHud(&self) -> &crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &self.base }
+    fn as_NumberStringHud_mut(&mut self) -> &mut crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &mut self.base }
 }
 impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for ProductivityNumberStringHud {
-    fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self }
-    fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self.base.base }
+    fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self.base.base }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for ProductivityNumberStringHud {
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for ProductivityNumberStringHud {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud::paint(crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn::as_NumberStringHud_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud::paintThreed(crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn::as_NumberStringHud_mut(self), p1) }
 }
 
 */
@@ -163,16 +160,13 @@ pub struct EfficiencyNumberStringHud {
     pub base: NumberStringHud,
 }
 
-impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for EfficiencyNumberStringHud {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
-}
 
 impl EfficiencyNumberStringHud {
                 
 
                 pub fn new_struct() -> Self {
                     let mut this = Self {
-            base: NumberStringHud::new_struct(String::from("Efficiency:"), 999, jcall!(this.base.basicHudFactory).ABSOLUTE.clone(), jcall!(this.base.basicHudFactory).HORIZONTAL.clone(), 0, this.base.basicColor.clone()),
+            base: NumberStringHud::new_struct(String::from("Efficiency:"), 999, { let java_field = jcall!(this.base.basicHudFactory).ABSOLUTE.clone(); java_field }.clone(), { let java_field = jcall!(this.base.basicHudFactory).HORIZONTAL.clone(); java_field }.clone(), 0, this.base.basicColor.clone()),
                     };
                     // super(...) is in the struct literal above
                     this
@@ -183,11 +177,11 @@ impl EfficiencyNumberStringHud {
                 }
                 
 
-                pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-                    self.base.updateMeasurement(graphics.clone());
-                    let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
+                pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+                    { let java_arguments = (graphics.clone(),); self.base.updateMeasurement(java_arguments.0) };
+                    let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
                     self.updateMaxWidth = self.base.textX.clone();
-                    self.updateMaxHeight = self.base.y + ((self.base.secondIndex + 1) * jcall!(font).getHeight());
+                    self.updateMaxHeight = { let java_value = (self.base.y + ((self.base.secondIndex + 1) * jcall!(font).getHeight())).clone(); java_value };
                 }
 }
 impl std::ops::Deref for EfficiencyNumberStringHud {
@@ -199,13 +193,19 @@ impl std::ops::DerefMut for EfficiencyNumberStringHud {
 }
 
 impl crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn for EfficiencyNumberStringHud {
-    fn as_NumberStringHud(&self) -> &crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &self }
-    fn as_NumberStringHud_mut(&mut self) -> &mut crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &mut self }
+    fn as_NumberStringHud(&self) -> &crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &self.base }
+    fn as_NumberStringHud_mut(&mut self) -> &mut crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &mut self.base }
 }
 impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for EfficiencyNumberStringHud {
-    fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self }
-    fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self.base.base }
+    fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self.base.base }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for EfficiencyNumberStringHud {
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for EfficiencyNumberStringHud {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud::paint(crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn::as_NumberStringHud_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud::paintThreed(crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn::as_NumberStringHud_mut(self), p1) }
 }
 
 */
@@ -218,16 +218,13 @@ pub struct HealthNumberStringHud {
     pub base: NumberStringHud,
 }
 
-impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for HealthNumberStringHud {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
-}
 
 impl HealthNumberStringHud {
                 
 
                 pub fn new_struct() -> Self {
                     let mut this = Self {
-            base: NumberStringHud::new_struct(this.HEALTH.clone(), 99999, jcall!(this.base.basicHudFactory).ABSOLUTE.clone(), jcall!(this.base.basicHudFactory).HORIZONTAL.clone(), 0, this.base.basicColor.clone()),
+            base: NumberStringHud::new_struct(this.HEALTH.clone(), 99999, { let java_field = jcall!(this.base.basicHudFactory).ABSOLUTE.clone(); java_field }.clone(), { let java_field = jcall!(this.base.basicHudFactory).HORIZONTAL.clone(); java_field }.clone(), 0, this.base.basicColor.clone()),
                     };
                     // super(...) is in the struct literal above
                     this
@@ -238,11 +235,11 @@ impl HealthNumberStringHud {
                 }
                 
 
-                pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-                    let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
+                pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+                    let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
                     self.updateMaxWidth = self.base.textX.clone();
-                    self.updateMaxHeight = self.base.y + ((self.base.thirdIndex + 1) * jcall!(font).getHeight());
-                    self.base.updateMeasurement(graphics.clone());
+                    self.updateMaxHeight = { let java_value = (self.base.y + ((self.base.thirdIndex + 1) * jcall!(font).getHeight())).clone(); java_value };
+                    { let java_arguments = (graphics.clone(),); self.base.updateMeasurement(java_arguments.0) };
                 }
 }
 impl std::ops::Deref for HealthNumberStringHud {
@@ -254,13 +251,19 @@ impl std::ops::DerefMut for HealthNumberStringHud {
 }
 
 impl crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn for HealthNumberStringHud {
-    fn as_NumberStringHud(&self) -> &crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &self }
-    fn as_NumberStringHud_mut(&mut self) -> &mut crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &mut self }
+    fn as_NumberStringHud(&self) -> &crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &self.base }
+    fn as_NumberStringHud_mut(&mut self) -> &mut crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &mut self.base }
 }
 impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for HealthNumberStringHud {
-    fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self }
-    fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self.base.base }
+    fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self.base.base }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for HealthNumberStringHud {
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for HealthNumberStringHud {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud::paint(crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn::as_NumberStringHud_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud::paintThreed(crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn::as_NumberStringHud_mut(self), p1) }
 }
 
 */
@@ -272,16 +275,13 @@ pub struct MaxHealthNumberStringHud {
     pub base: NumberStringHud,
 }
 
-impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for MaxHealthNumberStringHud {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
-}
 
 impl MaxHealthNumberStringHud {
                 
 
                 pub fn new_struct() -> Self {
                     let mut this = Self {
-            base: NumberStringHud::new_struct(String::from("/ "), 99999, jcall!(this.base.basicHudFactory).ABSOLUTE.clone(), jcall!(this.base.basicHudFactory).HORIZONTAL.clone(), 0, this.base.basicColor.clone()),
+            base: NumberStringHud::new_struct(String::from("/ "), 99999, { let java_field = jcall!(this.base.basicHudFactory).ABSOLUTE.clone(); java_field }.clone(), { let java_field = jcall!(this.base.basicHudFactory).HORIZONTAL.clone(); java_field }.clone(), 0, this.base.basicColor.clone()),
                     };
                     // super(...) is in the struct literal above
                     this
@@ -292,11 +292,11 @@ impl MaxHealthNumberStringHud {
                 }
                 
 
-                pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-                    self.base.updateMeasurement(graphics.clone());
-                    let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-                    self.updateMaxWidth = self.base.textX + (self.base.totalLength * jcall!(font).getHeight());
-                    self.updateMaxHeight = self.base.y + ((self.base.fourthIndex + 1) * jcall!(font).getHeight());
+                pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+                    { let java_arguments = (graphics.clone(),); self.base.updateMeasurement(java_arguments.0) };
+                    let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+                    self.updateMaxWidth = { let java_value = (self.base.textX + (self.base.totalLength * jcall!(font).getHeight())).clone(); java_value };
+                    self.updateMaxHeight = { let java_value = (self.base.y + ((self.base.fourthIndex + 1) * jcall!(font).getHeight())).clone(); java_value };
                 }
 }
 impl std::ops::Deref for MaxHealthNumberStringHud {
@@ -308,13 +308,19 @@ impl std::ops::DerefMut for MaxHealthNumberStringHud {
 }
 
 impl crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn for MaxHealthNumberStringHud {
-    fn as_NumberStringHud(&self) -> &crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &self }
-    fn as_NumberStringHud_mut(&mut self) -> &mut crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &mut self }
+    fn as_NumberStringHud(&self) -> &crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &self.base }
+    fn as_NumberStringHud_mut(&mut self) -> &mut crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud { &mut self.base }
 }
 impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for MaxHealthNumberStringHud {
-    fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self }
-    fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self.base.base }
+    fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self.base.base }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for MaxHealthNumberStringHud {
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for MaxHealthNumberStringHud {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud::paint(crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn::as_NumberStringHud_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHud::paintThreed(crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn::as_NumberStringHud_mut(self), p1) }
 }
 
 */
@@ -322,10 +328,10 @@ impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for MaxHe
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(this.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(e.clone()));
+            jcall!(this.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         this.productivityHud = productivityHud.clone();
@@ -340,16 +346,16 @@ impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for MaxHe
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
         let mut totalLength: i32 = (self.HEALTH.chars().count() as i32) + jcall!(MathUtil::getInstance()).getTotalDigits(self.currentHealth.clone());
         { let java_receiver = self.maxHealthHud.clone(); let java_arguments = (self.textX + MyFontProcessor::defaultStringWidth(font.clone(), totalLength.clone()),); jcall!(java_receiver).setX(java_arguments.0); };
-        self.myFontProcessor = MyFontProcessor::getInstance();
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
     pub fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
-        self.base.setBasicColorP(basicColor.clone());
+        { let java_arguments = (basicColor.clone(),); self.base.setBasicColorP(java_arguments.0) };
         jcall!(self.productivityHud).setBasicColorP(basicColor.clone());
         jcall!(self.efficiencyHud).setBasicColorP(basicColor.clone());
         jcall!(self.healthHud).setBasicColorP(basicColor.clone());
@@ -357,24 +363,24 @@ impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for MaxHe
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.paint(graphics.clone());
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(),); self.base.paint(java_arguments.0) };
         jcall!(self.myFontProcessor).process(graphics.clone());
-        jcall!(self.productivityHud).paint(graphics.clone());
-        jcall!(self.efficiencyHud).paint(graphics.clone());
-        jcall!(self.healthHud).paint(graphics.clone());
-        jcall!(self.maxHealthHud).paint(graphics.clone());
+        jcall!(self.productivityHud).as_NumberStringHud_mut().paint(graphics.clone());
+        jcall!(self.efficiencyHud).as_NumberStringHud_mut().paint(graphics.clone());
+        jcall!(self.healthHud).as_NumberStringHud_mut().paint(graphics.clone());
+        jcall!(self.maxHealthHud).as_NumberStringHud_mut().paint(graphics.clone());
         jcall!(self.getAnimationInterface()).paintXY(graphics.clone(), self.imageX.clone(), self.y.clone());
     }
     
 
     pub fn updateSelectionInfo(&mut self) {
-        let mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>> = (self.rtsLayer).clone() /* as BuildingLayer */;
+        let mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>> = (self.rtsLayer).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<BuildingLayer>() }, "ClassCastException: not a BuildingLayer"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<BuildingLayer>) } });
         { let java_arguments = (jcall!(buildingLayer).getName(),); self.setName(java_arguments.0) };
         { let java_arguments = (jcall!(buildingLayer).getVerticleBuildAnimationInterface(),); self.setAnimationInterface(java_arguments.0) };
         { let java_receiver = self.productivityHud.clone(); let java_arguments = (jcall!(buildingLayer).getProductivity(),); jcall!(java_receiver).set(java_arguments.0); };
         { let java_receiver = self.efficiencyHud.clone(); let java_arguments = (jcall!(buildingLayer).getEfficiency() / 100,); jcall!(java_receiver).set(java_arguments.0); };
-        self.currentHealth = jcall!(jcall!(buildingLayer).getHealthInterface()).getHealth();
+        self.currentHealth = { let java_value = (jcall!(jcall!(buildingLayer).getHealthInterface()).getHealth()).clone(); java_value };
         jcall!(self.healthHud).set(self.currentHealth.clone());
         self.myFontProcessor = self.updateMyFontProcessor.clone();
         { let java_receiver = self.maxHealthHud.clone(); let java_arguments = (jcall!(jcall!(buildingLayer).getHealthInterface()).getMaxHealth(),); jcall!(java_receiver).set(java_arguments.0); };
@@ -396,7 +402,6 @@ impl std::ops::DerefMut for BuildingInfoHudPaintable {
 impl crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn for BuildingInfoHudPaintable {
     fn as_SelectionHudPaintable(&self) -> &crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable { &self.base }
     fn as_SelectionHudPaintable_mut(&mut self) -> &mut crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable { &mut self.base }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
     fn updateSelectionInfo(&mut self) { Self::updateSelectionInfo(self) }
 }
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn for BuildingInfoHudPaintable {
@@ -408,7 +413,13 @@ impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for Buildin
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base.base }
     fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::setBasicColorP(self, basicColor) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for BuildingInfoHudPaintable {
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for BuildingInfoHudPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

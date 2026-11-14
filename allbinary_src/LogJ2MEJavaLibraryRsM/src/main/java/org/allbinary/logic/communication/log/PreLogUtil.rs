@@ -35,6 +35,10 @@ pub struct PreLogUtil {
 thread_local! { pub static PreLogUtil_LOG_SUCCESS: String = String::from("org.allbinary: "); }
 
 impl PreLogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -49,14 +53,14 @@ impl PreLogUtil {
     
 
     pub fn put(mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String) {
-        PreLogUtil::putOE(specialMessage.clone(), anyType.clone(), functionName.clone(), jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+        PreLogUtil::putOE(specialMessage.clone(), crate::java_into_object(anyType.clone()), functionName.clone(), crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()));
     }
     
 
     pub fn putOE(mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {
-        let mut className: String = jcall!(CommonStrings::getInstance()).EMPTY.clone();
+        let mut className: String = { let java_field = jcall!(CommonStrings::getInstance()).EMPTY.clone(); java_field }.clone();
         if true {
-            className = std::any::type_name_of_val(&anyType).to_string().clone();
+            className = { let java_value = (std::any::type_name_of_val(&anyType).to_string().clone()).clone(); java_value };
         }
         let mut message: String = jcall!(LogFormatUtil::LogFormatUtil::getInstance()).get(className.clone(), functionName.clone(), specialMessage.clone(), crate::java_into_object(exception.clone()));
         print!("{}", PreLogUtil_LOG_SUCCESS.with(Clone::clone).clone());
@@ -65,7 +69,7 @@ impl PreLogUtil {
     
 
     pub fn putS(mut specialMessage: String, mut className: String, mut functionName: String) {
-        PreLogUtil::putSE(specialMessage.clone(), className.clone(), functionName.clone(), jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+        PreLogUtil::putSE(specialMessage.clone(), className.clone(), functionName.clone(), crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()));
     }
     
 

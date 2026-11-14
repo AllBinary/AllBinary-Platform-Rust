@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait DirectionalCompositeInterface {
+pub trait DirectionalCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getDirectionalInterface(&mut self) -> Option<Rc<RefCell<dyn DirectionalInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

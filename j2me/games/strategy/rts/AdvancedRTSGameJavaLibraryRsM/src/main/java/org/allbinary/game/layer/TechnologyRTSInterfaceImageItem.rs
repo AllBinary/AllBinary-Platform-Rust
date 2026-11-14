@@ -17,10 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::NullImage::NullImage;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::NullImage::NullImage;
 use crate::org::allbinary::graphics::form::item::ABCustomImageItem::ABCustomImageItem;
 use crate::org::allbinary::logic::java::character::CharArrayFactory::CharArrayFactory;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
@@ -28,6 +28,7 @@ use crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessor;
 use crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface;
 use crate::org::allbinary::graphics::font::UpdateMyFontProcessor::UpdateMyFontProcessor;
 use crate::org::allbinary::logic::math::PrimitiveLongUtil::PrimitiveLongUtil;
+use crate::java::lang::Exception::*;
 use super::RTSInterface::RTSInterface;
 
 // Borrows the object of a Java reference
@@ -57,15 +58,28 @@ pub struct TechnologyRTSInterfaceImageItem {
 }
 
 impl UpdateMyFontInterface for TechnologyRTSInterfaceImageItem {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 impl crate::org::allbinary::graphics::form::item::ABCustomItemInterface::ABCustomItemInterface for TechnologyRTSInterfaceImageItem {
+    fn getMinimumWidth(&mut self) -> i32 { crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItem::getMinimumWidth(crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItemDyn::as_CustomImageItem_mut(self)) }
+    fn getMinimumHeight(&mut self) -> i32 { crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItem::getMinimumHeight(crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItemDyn::as_CustomImageItem_mut(self)) }
+    fn getLabel(&mut self) -> String { crate::javax::microedition::lcdui::Item::Item::getLabel(crate::javax::microedition::lcdui::Item::ItemDyn::as_Item_mut(self)) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintUnselected(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItem::paintUnselected(crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItemDyn::as_CustomImageItem_mut(self), p1, p2, p3) }
+}
+impl crate::org::microemu::graphics::form::item::CustomItemInterface::CustomItemInterface for TechnologyRTSInterfaceImageItem {
+    fn setOwner(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Screen::ScreenDyn>>>) { crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItem::setOwner(crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItemDyn::as_CustomImageItem_mut(self), p1) }
+    fn getMinimumWidth(&mut self) -> i32 { crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItem::getMinimumWidth(crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItemDyn::as_CustomImageItem_mut(self)) }
+    fn getMinimumHeight(&mut self) -> i32 { crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItem::getMinimumHeight(crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItemDyn::as_CustomImageItem_mut(self)) }
+    fn getLabel(&mut self) -> String { crate::javax::microedition::lcdui::Item::Item::getLabel(crate::javax::microedition::lcdui::Item::ItemDyn::as_Item_mut(self)) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintUnselected(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItem::paintUnselected(crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItemDyn::as_CustomImageItem_mut(self), p1, p2, p3) }
 }
 
 impl TechnologyRTSInterfaceImageItem {
     
 
-    pub fn new_struct(mut label: String, mut img: Option<Rc<RefCell<Image>>>, mut layout: i32, mut altText: String, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut rtsInterface: Option<Rc<RefCell<dyn RTSInterface>>>) -> Self {
+    pub fn new_struct(mut label: String, mut img: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut layout: i32, mut altText: String, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut rtsInterface: Option<Rc<RefCell<dyn RTSInterface>>>) -> Self {
         let mut this = Self {
             base: ABCustomImageItem::new_struct(label.clone(), img.clone(), layout.clone(), altText.clone(), basicColor.clone(), 0),
             rtsInterface: None,
@@ -88,7 +102,6 @@ impl TechnologyRTSInterfaceImageItem {
         this.LEVEL = String::from("Level");
         this.COST = String::from("Cost");
         this.DOLLAR = String::from("$");
-        this.myFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
         this.costString = jcall!(CharArrayFactory::getInstance()).getZeroCharArray();
         this.levelString = jcall!(CharArrayFactory::getInstance()).getZeroCharArray();
         // super(...) is in the struct literal above
@@ -97,25 +110,27 @@ impl TechnologyRTSInterfaceImageItem {
         this
     }
 
-    pub fn new(mut label: String, mut img: Option<Rc<RefCell<Image>>>, mut layout: i32, mut altText: String, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut rtsInterface: Option<Rc<RefCell<dyn RTSInterface>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(label, img, layout, altText, basicColor, rtsInterface))))
+    pub fn new(mut label: String, mut img: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut layout: i32, mut altText: String, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut rtsInterface: Option<Rc<RefCell<dyn RTSInterface>>>) -> Option<Rc<RefCell<Self>>> {
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(label.clone(), img.clone(), layout.clone(), altText.clone(), basicColor.clone(), rtsInterface.clone()))));
+        jcall!(this).myFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
         let mut fontHeight: i32 = jcall!(font).getHeight();
         let mut imageHeight: i32 = 0;
-        let mut image: Option<Rc<RefCell<Image>>> = self.getImage();
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = self.getImage();
         if !match (&image, &crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            imageHeight = jcall!(image).getHeight();
+            imageHeight = { let java_value = (jcall!(image).getHeight()).clone(); java_value };
         }
         self.adjustedCostLabelY = -self.yOffset + imageHeight - (3 * fontHeight);
         self.adjustedCostY = -self.yOffset + imageHeight - (2 * fontHeight);
-        self.adjustedCostX = 2 + ((self.DOLLAR.chars().count() as i32) * (fontHeight - 1));
+        self.adjustedCostX = { let java_value = (2 + ((self.DOLLAR.chars().count() as i32) * (fontHeight - 1))).clone(); java_value };
         self.adjustedLevelY = -self.yOffset + imageHeight - fontHeight;
-        self.adjustedLevelX = 2 + ((self.LEVEL.chars().count() as i32) * (fontHeight - 1));
-        self.myFontProcessor = MyFontProcessor::getInstance();
+        self.adjustedLevelX = { let java_value = (2 + ((self.LEVEL.chars().count() as i32) * (fontHeight - 1))).clone(); java_value };
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
@@ -125,14 +140,14 @@ impl TechnologyRTSInterfaceImageItem {
     
 
     pub fn update(&mut self) {
-        self.costString = { let java_receiver = self.primitiveLongUtil.clone(); let java_arguments = (jcall!(self.getRtsInterface()).getUpgradeCost(),); let java_result = jcall!(java_receiver).getCharArray(java_arguments.0); java_result };
-        self.levelString = { let java_receiver = self.primitiveLongUtil.clone(); let java_arguments = (jcall!(self.getRtsInterface()).getLevel(),); let java_result = jcall!(java_receiver).getCharArray(java_arguments.0); java_result };
+        self.costString = { let java_value = ({ let java_receiver = self.primitiveLongUtil.clone(); let java_arguments = ({ let java_argument = jcall!(self.getRtsInterface()).getUpgradeCost(); java_argument },); let java_result = jcall!(java_receiver).getCharArray(java_arguments.0); java_result }).clone(); java_value };
+        self.levelString = { let java_value = ({ let java_receiver = self.primitiveLongUtil.clone(); let java_arguments = ({ let java_argument = jcall!(self.getRtsInterface()).getLevel(); java_argument },); let java_result = jcall!(java_receiver).getCharArray(java_arguments.0); java_result }).clone(); java_value };
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         jcall!(self.myFontProcessor).process(graphics.clone());
-        self.base.paintXY(graphics.clone(), x.clone(), y.clone());
+        { let java_arguments = (graphics.clone(), x.clone(), y.clone(),); self.base.paintXY(java_arguments.0, java_arguments.1, java_arguments.2) };
         let mut xa: i32 = x + 2;
         jcall!(graphics).drawString(self.COST.clone(), xa.clone(), y + self.adjustedCostLabelY, 0);
         jcall!(graphics).drawString(self.DOLLAR.clone(), xa.clone(), y + self.adjustedCostY, 0);
@@ -149,19 +164,31 @@ impl std::ops::DerefMut for TechnologyRTSInterfaceImageItem {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::javax::microedition::lcdui::ImageItem::ImageItemDyn for TechnologyRTSInterfaceImageItem {
+    fn as_ImageItem(&self) -> &crate::javax::microedition::lcdui::ImageItem::ImageItem { &self.base.base.base }
+    fn as_ImageItem_mut(&mut self) -> &mut crate::javax::microedition::lcdui::ImageItem::ImageItem { &mut self.base.base.base }
+    fn getImage(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { crate::org::allbinary::graphics::form::item::ABCustomImageItem::ABCustomImageItem::getImage(crate::org::allbinary::graphics::form::item::ABCustomImageItem::ABCustomImageItemDyn::as_ABCustomImageItem_mut(self)) }
+}
+impl crate::javax::microedition::lcdui::Item::ItemDyn for TechnologyRTSInterfaceImageItem {
+    fn as_Item(&self) -> &crate::javax::microedition::lcdui::Item::Item { &self.base.base.base.base }
+    fn as_Item_mut(&mut self) -> &mut crate::javax::microedition::lcdui::Item::Item { &mut self.base.base.base.base }
+    fn getLayout(&mut self) -> i32 { crate::javax::microedition::lcdui::ImageItem::ImageItem::getLayout(crate::javax::microedition::lcdui::ImageItem::ImageItemDyn::as_ImageItem_mut(self)) }
+    fn getMinimumHeight(&mut self) -> i32 { crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItem::getMinimumHeight(crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItemDyn::as_CustomImageItem_mut(self)) }
+    fn getMinimumWidth(&mut self) -> i32 { crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItem::getMinimumWidth(crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItemDyn::as_CustomImageItem_mut(self)) }
+    fn setLayout(&mut self, p1: i32) { crate::javax::microedition::lcdui::ImageItem::ImageItem::setLayout(crate::javax::microedition::lcdui::ImageItem::ImageItemDyn::as_ImageItem_mut(self), p1) }
+    fn getHeight(&mut self) -> i32 { crate::javax::microedition::lcdui::ImageItem::ImageItem::getHeight(crate::javax::microedition::lcdui::ImageItem::ImageItemDyn::as_ImageItem_mut(self)) }
+    fn paintItem(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) -> i32 { crate::javax::microedition::lcdui::ImageItem::ImageItem::paintItem(crate::javax::microedition::lcdui::ImageItem::ImageItemDyn::as_ImageItem_mut(self), p1) }
+    fn setOwner(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Screen::ScreenDyn>>>) { crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItem::setOwner(crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItemDyn::as_CustomImageItem_mut(self), p1) }
+    fn traverseItem(&mut self, p1: i32, p2: i32, p3: i32, p4: bool) -> i32 { crate::javax::microedition::lcdui::ImageItem::ImageItem::traverseItem(crate::javax::microedition::lcdui::ImageItem::ImageItemDyn::as_ImageItem_mut(self), p1, p2, p3, p4) }
+}
 impl crate::org::allbinary::graphics::form::item::ABCustomImageItem::ABCustomImageItemDyn for TechnologyRTSInterfaceImageItem {
     fn as_ABCustomImageItem(&self) -> &crate::org::allbinary::graphics::form::item::ABCustomImageItem::ABCustomImageItem { &self.base }
     fn as_ABCustomImageItem_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::item::ABCustomImageItem::ABCustomImageItem { &mut self.base }
 }
-impl crate::org::allbinary::graphics::form::item::ImageItem::ImageItemDyn for TechnologyRTSInterfaceImageItem {
-    fn as_ImageItem(&self) -> &crate::org::allbinary::graphics::form::item::ImageItem::ImageItem { &self.base.base.base }
-    fn as_ImageItem_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::item::ImageItem::ImageItem { &mut self.base.base.base }
-}
 impl crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItemDyn for TechnologyRTSInterfaceImageItem {
     fn as_CustomImageItem(&self) -> &crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItem { &self.base.base }
     fn as_CustomImageItem_mut(&mut self) -> &mut crate::org::microemu::graphics::form::item::CustomImageItem::CustomImageItem { &mut self.base.base }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 

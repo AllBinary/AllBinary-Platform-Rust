@@ -16,10 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
-// use crate::java::util::Set::Set;
+use crate::java::util::HashMap::HashMap;
+use crate::java::util::Set::Set;
 use crate::org::allbinary::business::user::commerce::money::Money::Money;
 use crate::org::allbinary::business::user::commerce::money::MoneyException::MoneyException;
 
@@ -30,7 +29,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait BasketInterface {
+pub trait BasketInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn addItem(&mut self, id: String, num: String);
@@ -51,7 +50,7 @@ pub trait BasketInterface {
     fn getIds(&mut self) -> Option<Rc<RefCell<dyn Set>>>;
     
 
-    fn getItems(&mut self) -> Option<Rc<RefCell<HashMap>>>;
+    fn getItems(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>;
     
 
     fn getNumberOf(&mut self, product: String) -> Option<i32>;
@@ -59,8 +58,6 @@ pub trait BasketInterface {
 
     // throws MoneyException
     fn getSubTotal(&mut self) -> Option<Rc<RefCell<Money>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -10,6 +10,7 @@ use crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::Bas
 use crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal;
 use crate::org::allbinary::logic::math::MathUtil::MathUtil;
 use crate::org::allbinary::logic::math::ScaleFactorFactory::ScaleFactorFactory;
+use crate::java::lang::Exception::*;
 use super::BasicConstantVelocityMovement::BasicConstantVelocityMovement;
 
 // Borrows the object of a Java reference
@@ -39,7 +40,7 @@ impl PreciseConstantVelocityMovement {
             accumulatedZ: 0,
             factorValue: 0,
         };
-        this.factorValue = jcall!(ScaleFactorFactory::getInstance()).DEFAULT_SCALE_VALUE.clone();
+        this.factorValue = { let java_field = jcall!(ScaleFactorFactory::getInstance()).DEFAULT_SCALE_VALUE.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this
     }
@@ -57,9 +58,9 @@ impl PreciseConstantVelocityMovement {
     pub fn process(&mut self, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayerDyn>>>) {
         let mut mathUtil: Option<Rc<RefCell<MathUtil>>> = MathUtil::getInstance();
         let mut velocityProperties: Option<Rc<RefCell<dyn crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn>>> = self.getVelocityProperties();
-        self.accumulatedX = (((self.accumulatedX + jcall!(jcall!(velocityProperties).getVelocityXBasicDecimalP()).getUnscaled())) as i32);
-        self.accumulatedY = (((self.accumulatedY + jcall!(jcall!(velocityProperties).getVelocityYBasicDecimalP()).getUnscaled())) as i32);
-        self.accumulatedZ = (((self.accumulatedZ + jcall!(jcall!(velocityProperties).getVelocityZBasicDecimalP()).getUnscaled())) as i32);
+        self.accumulatedX = { let java_value = ((((((self.accumulatedX) as i64) + jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityXBasicDecimalP()).getUnscaled())) as i32)).clone(); java_value };
+        self.accumulatedY = { let java_value = ((((((self.accumulatedY) as i64) + jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP()).getUnscaled())) as i32)).clone(); java_value };
+        self.accumulatedZ = { let java_value = ((((((self.accumulatedZ) as i64) + jcall!(jcall!(velocityProperties).getVelocityZBasicDecimalP()).getUnscaled())) as i32)).clone(); java_value };
         jcall!(layer).moveDXYZ(self.accumulatedX / self.factorValue, self.accumulatedY / self.factorValue, self.accumulatedZ / self.factorValue);
         if jcall!(mathUtil).abs(self.accumulatedX.clone()) > self.factorValue {
             self.accumulatedX = 0;

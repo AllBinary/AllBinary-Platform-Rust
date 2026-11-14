@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayer;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::NamedInterface::NamedInterface;
+use crate::java::lang::Exception::*;
 use super::CollisionType::CollisionType;
 
 // Borrows the object of a Java reference

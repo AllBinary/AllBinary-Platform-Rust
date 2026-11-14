@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait ImageProcessorInputCompositeInterface {
+pub trait ImageProcessorInputCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getImageProcessorInput(&mut self) -> Option<Rc<RefCell<ImageProcessorInput>>>;
     
 
     fn setImageProcessorInput(&mut self, imageProcessorInput: Option<Rc<RefCell<ImageProcessorInput>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

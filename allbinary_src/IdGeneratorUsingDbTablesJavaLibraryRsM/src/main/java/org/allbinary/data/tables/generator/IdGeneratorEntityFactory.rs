@@ -19,12 +19,8 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::IdGeneratorEntity::IdGeneratorEntity;
-use super::generator::generator;
-use super::tables::tables;
-use super::data::data;
-use super::allbinary::allbinary;
-use super::org::org;
 use super::IdGeneratorEntityInterface::IdGeneratorEntityInterface;
 
 // Borrows the object of a Java reference
@@ -39,6 +35,10 @@ pub struct IdGeneratorEntityFactory {
 
 
 impl IdGeneratorEntityFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -53,19 +53,20 @@ impl IdGeneratorEntityFactory {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn IdGeneratorEntityInterface>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            return (IdGeneratorEntity::new()).clone() /* as IdGeneratorEntityInterface */;
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            return Some((IdGeneratorEntity::new()).clone() /* as IdGeneratorEntityInterface */);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from("ServerLicenseRequestEntityFactory")), jcall!(commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
+            jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from("ServerLicenseRequestEntityFactory")), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             return None;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

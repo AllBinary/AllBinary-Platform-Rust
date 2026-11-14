@@ -17,9 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::InputStream::InputStream;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
+use crate::java::lang::Exception::*;
 use super::AbFileInputStream::AbFileInputStream;
 use super::AbFileLocalInputStream::AbFileLocalInputStream;
 
@@ -37,6 +38,10 @@ pub struct CloudStreamUtil {
 thread_local! { pub static CloudStreamUtil_instance: Option<Rc<RefCell<CloudStreamUtil>>> = CloudStreamUtil::new(); }
 
 impl CloudStreamUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -57,11 +62,11 @@ impl CloudStreamUtil {
     
 
     // throws Exception
-    pub fn getFile(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<InputStream>>> {
-        let mut inputStream: Option<Rc<RefCell<InputStream>>> = AbFileInputStream::new(file.clone());
-        let mut available: i32 = jcall!(inputStream).available();
+    pub fn getFile(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
+        let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = AbFileInputStream::new(file.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>);
+        let mut available: i32 = jcall!(inputStream).as_InputStream_mut().available();
         if available > 0 {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).putF(format!("{}{}", String::from("Cloud File Bytes: "), available), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("processRequest()"));
             }
         }
@@ -70,18 +75,18 @@ impl CloudStreamUtil {
     
 
     // throws Exception
-    pub fn getFileAnyWhere(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<InputStream>>> {
-        let mut inputStream: Option<Rc<RefCell<InputStream>>> = AbFileLocalInputStream::new(file.clone());
-        let mut available: i32 = jcall!(inputStream).available();
+    pub fn getFileAnyWhere(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
+        let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = AbFileLocalInputStream::new(file.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>);
+        let mut available: i32 = jcall!(inputStream).as_InputStream_mut().available();
         if available > 0 {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).putF(format!("{}{}", String::from("Local File Bytes: "), available), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("processRequest()"));
             }
         } else {
-            inputStream = AbFileInputStream::new(file.clone());
-            available = jcall!(inputStream).available();
+            inputStream = AbFileInputStream::new(file.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>);
+            available = { let java_value = (jcall!(inputStream).as_InputStream_mut().available()).clone(); java_value };
             if available > 0 {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
                     jcall!(self.logUtil).putF(format!("{}{}", String::from("Cloud File Bytes: "), available), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("processRequest()"));
                 }
             }
@@ -91,11 +96,11 @@ impl CloudStreamUtil {
     
 
     // throws Exception
-    pub fn getFileLocal(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<InputStream>>> {
-        let mut inputStream: Option<Rc<RefCell<InputStream>>> = AbFileLocalInputStream::new(file.clone());
-        let mut available: i32 = jcall!(inputStream).available();
+    pub fn getFileLocal(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
+        let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = AbFileLocalInputStream::new(file.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>);
+        let mut available: i32 = jcall!(inputStream).as_InputStream_mut().available();
         if available > 0 {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).putF(format!("{}{}", String::from("Local File Bytes: "), available), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("processRequest()"));
             }
         }

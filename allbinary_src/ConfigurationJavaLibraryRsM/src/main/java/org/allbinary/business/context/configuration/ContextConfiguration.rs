@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::communication::smtp::configuration::server::EmailServerConfiguration::EmailServerConfiguration;
 use crate::org::allbinary::logic::communication::smtp::configuration::server::EmailServerConfigurationInterface::EmailServerConfigurationInterface;
@@ -44,6 +43,10 @@ impl ContextConfigurationInterface for ContextConfiguration {
 }
 
 impl ContextConfiguration {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -54,7 +57,7 @@ impl ContextConfiguration {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("ContextConfiguration"));
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("ContextConfiguration"));
         this.setEmailServerConfigurationInterface((EmailServerConfiguration::new()).clone() /* as EmailServerConfigurationInterface */);
         this
     }
@@ -64,7 +67,7 @@ impl ContextConfiguration {
     }
     
 
-    pub fn new_struct1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -72,12 +75,12 @@ impl ContextConfiguration {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("ContextConfiguration(HashMap)"));
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("ContextConfiguration(HashMap)"));
         this.setEmailServerConfigurationInterface((EmailServerConfiguration::new1(hashMap.clone())).clone() /* as EmailServerConfigurationInterface */);
         this
     }
 
-    pub fn new1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new1(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct1(hashMap))))
     }
     

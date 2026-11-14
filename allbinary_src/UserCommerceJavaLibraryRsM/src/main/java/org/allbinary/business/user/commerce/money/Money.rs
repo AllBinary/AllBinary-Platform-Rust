@@ -45,7 +45,7 @@ impl Money {
             DEFAULT_CURRENCY: String::new(),
         };
         this.DEFAULT_CURRENCY = String::from("USD");
-        this.units = Some((jcall!(money).getUnits()) as i64);
+        this.units = { let java_value = (Some((jcall!(money).getUnits()) as i64)).clone(); java_value };
         this
     }
 
@@ -69,7 +69,7 @@ impl Money {
     }
     
 
-    pub fn new_struct1(mut usDollarStr: String) -> Self {
+    pub fn new_struct1_String(mut usDollarStr: String) -> Self {
         let mut this = Self {
             units: None,
             DEFAULT_CURRENCY: String::new(),
@@ -81,12 +81,12 @@ impl Money {
         this
     }
 
-    pub fn new1(mut usDollarStr: String) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(usDollarStr))))
+    pub fn new1_String(mut usDollarStr: String) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_String(usDollarStr))))
     }
     
 
-    pub fn new_struct1(mut units: i64) -> Self {
+    pub fn new_struct1_long(mut units: i64) -> Self {
         let mut this = Self {
             units: None,
             DEFAULT_CURRENCY: String::new(),
@@ -96,8 +96,8 @@ impl Money {
         this
     }
 
-    pub fn new1(mut units: i64) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(units))))
+    pub fn new1_long(mut units: i64) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_long(units))))
     }
     
 
@@ -116,24 +116,24 @@ impl Money {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn add(&mut self, mut usDollarStr: String) {
-        self.units = Some((((self.units).unwrap() as i64) + self.convertUsdToUnits(usDollarStr.clone())) as i64);
+    pub fn add_String(&mut self, mut usDollarStr: String) {
+        self.units = { let java_value = (Some(({ let java_value = ((self.units).unwrap() as i64); java_value } + self.convertUsdToUnits(usDollarStr.clone())) as i64)).clone(); java_value };
     }
     
 
     pub fn subtract(&mut self, mut usDollarStr: String) {
-        self.units = Some((((self.units).unwrap() as i64) - self.convertUsdToUnits(usDollarStr.clone())) as i64);
+        self.units = { let java_value = (Some(({ let java_value = ((self.units).unwrap() as i64); java_value } - self.convertUsdToUnits(usDollarStr.clone())) as i64)).clone(); java_value };
     }
     
 
     pub fn multiply(&mut self, mut multiplier: Option<f32>) {
-        self.units = Some((((Some((((((self.units).unwrap() as i64)) as f32) * ((multiplier).unwrap() as f32)) as f32)).unwrap() as i64)) as i64);
+        self.units = { let java_value = (Some((((Some((((((self.units).unwrap() as i64)) as f32) * ((multiplier).unwrap() as f32)) as f32)).unwrap() as i64)) as i64)).clone(); java_value };
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn multiply(&mut self, mut multiplier: i32) {
-        self.units = Some((((self.units).unwrap() as i64) * ((multiplier) as i64)) as i64);
+    pub fn multiply_int(&mut self, mut multiplier: i32) {
+        self.units = { let java_value = (Some((((self.units).unwrap() as i64) * ((multiplier) as i64)) as i64)).clone(); java_value };
     }
     
 
@@ -142,12 +142,12 @@ impl Money {
         if (currency.cmp(&self.DEFAULT_CURRENCY.clone()) as i32) == 0 {
             let mut dollar: i64 = ((self.units).unwrap() as i64) / 100_i64;
             let mut cents: i64 = ((self.units).unwrap() as i64) - (dollar * 100_i64);
-            jcall!(stringBuffer).append(jcall!(Some((dollar.clone()) as i64)).toString());
-            jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone());
+            jcall!(stringBuffer).append((Some((dollar.clone()) as i64)).expect("NullPointerException").to_string());
+            jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(); java_field }.clone());
             if cents < 10_i64 {
-                jcall!(stringBuffer).append(jcall!(CommonPhoneStrings::getInstance()).ZERO.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(CommonPhoneStrings::getInstance()).ZERO.clone(); java_field }.clone());
             }
-            jcall!(stringBuffer).append(jcall!(Some((cents.clone()) as i64)).toString());
+            jcall!(stringBuffer).append((Some((cents.clone()) as i64)).expect("NullPointerException").to_string());
         }
         return jcall!(stringBuffer).toString();
     }
@@ -155,19 +155,19 @@ impl Money {
 
     pub fn convertUsdToUnits(&mut self, mut usDollarStr: String) -> i64 {
         let mut localUnit: i64 = 0_i64;
-        let mut index: i32 = usDollarStr.find(&jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone()).map(|index| index as i32).unwrap_or(-1);
+        let mut index: i32 = usDollarStr.find(&{ let java_field = jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1);
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        let mut dollarStr: String = jcall!(stringUtil).EMPTY_STRING.clone();
-        let mut centsStr: String = jcall!(stringUtil).EMPTY_STRING.clone();
+        let mut dollarStr: String = { let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        let mut centsStr: String = { let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone();
         if index < 1 {
             dollarStr = usDollarStr.clone().clone();
             centsStr = String::from("00");
         } else {
-            dollarStr = usDollarStr[(0) as usize..(index) as usize].to_string().clone();
-            centsStr = usDollarStr[(index + 1) as usize..].to_string().clone();
+            dollarStr = { let java_value = (usDollarStr[(0) as usize..(index) as usize].to_string().clone()).clone(); java_value };
+            centsStr = { let java_value = (usDollarStr[(index + 1) as usize..].to_string().clone()).clone(); java_value };
         }
-        localUnit = ((Some((((Some((dollarStr.clone()) as i64)).unwrap() as i64) * 100_i64) as i64)).unwrap() as i64);
-        localUnit += ((Some((centsStr.clone()) as i64)).unwrap() as i64);
+        localUnit = { let java_value = (((Some((((Some((dollarStr.clone()).trim().parse::<i64>().expect("NumberFormatException"))).unwrap() as i64) * 100_i64) as i64)).unwrap() as i64)).clone(); java_value };
+        localUnit += ((Some((centsStr.clone()).trim().parse::<i64>().expect("NumberFormatException"))).unwrap() as i64);
         return localUnit.clone();
     }
     
@@ -183,7 +183,7 @@ impl Money {
     
 
     pub fn toString(&mut self) -> String {
-        return self.convertUnitsTo(self.DEFAULT_CURRENCY.clone()).clone();
+        return { let java_arguments = (self.DEFAULT_CURRENCY.clone(),); self.convertUnitsTo(java_arguments.0) }.clone();
     }
 }
 

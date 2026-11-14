@@ -16,12 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::Calendar;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::Calendar::Calendar;
-// use crate::java::util::HashMap::HashMap;
-// use crate::java::util::Set::Set;
+use crate::java::util::Calendar::Calendar;
+use crate::java::util::HashMap::HashMap;
+use crate::java::util::Set::Set;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
@@ -40,6 +38,7 @@ use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -58,6 +57,10 @@ pub struct BasicWorkFlow {
 
 
 impl BasicWorkFlow {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -70,9 +73,9 @@ impl BasicWorkFlow {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        this.workFlowName = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.workFlowDoc = DomDocumentHelper::create();
-        let mut workFlowNode: Option<Rc<RefCell<Node>>> = { let java_receiver = this.workFlowDoc.clone(); let java_arguments = (jcall!(WorkFlowData::getInstance()).WORKFLOW.clone(),); let java_result = jcall!(java_receiver).createElement(java_arguments.0); java_result };
+        this.workFlowName = { let java_value = ({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }).clone(); java_value }.clone();
+        this.workFlowDoc = { let java_value = (DomDocumentHelper::create()).clone(); java_value };
+        let mut workFlowNode: Option<Rc<RefCell<Node>>> = { let java_receiver = this.workFlowDoc.clone(); let java_arguments = ({ let java_field = jcall!(WorkFlowData::getInstance()).WORKFLOW.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).createElement(java_arguments.0); java_result };
         jcall!(this.workFlowDoc).appendChild(workFlowNode.clone());
         this
     }
@@ -82,7 +85,7 @@ impl BasicWorkFlow {
     }
     
 
-    pub fn new_struct2(mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
+    pub fn new_struct2(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -93,19 +96,19 @@ impl BasicWorkFlow {
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
         let mut weblisketSession: Option<Rc<RefCell<WeblisketSession>>> = WeblisketSession::new2(hashMap.clone(), pageContext.clone());
-        this.storeName = jcall!(weblisketSession).getStoreName();
-        let mut requestHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(RequestParams::new1(pageContext.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParamsDyn>>)).toHashMap();
-        this.workFlowName = (jcall!(requestHashMap).get(jcall!(WorkFlowData::getInstance()).NAME.clone())).clone() /* as String */;
-        this.workFlowDoc = DomDocumentHelper::create1((jcall!(requestHashMap).get(jcall!(WorkFlowData::getInstance()).DATA.clone())).clone() /* as String */);
+        this.storeName = { let java_value = (jcall!(weblisketSession).getStoreName()).clone(); java_value };
+        let mut requestHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(RequestParams::new1_PageContext(pageContext.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParamsDyn>>)).toHashMap();
+        this.workFlowName = { let java_value = ({ let java_object = (jcall!(requestHashMap).get(crate::java_into_object({ let java_field = jcall!(WorkFlowData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.workFlowDoc = { let java_value = (DomDocumentHelper::create1_String({ let java_object = (jcall!(requestHashMap).get(crate::java_into_object({ let java_field = jcall!(WorkFlowData::getInstance()).DATA.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
         this
     }
 
-    pub fn new2(mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new2(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct2(hashMap, pageContext))))
     }
     
 
-    pub fn new_struct1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -115,13 +118,13 @@ impl BasicWorkFlow {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        this.workFlowName = (jcall!(hashMap).get(jcall!(WorkFlowData::getInstance()).NAME.clone())).clone() /* as String */;
-        this.storeName = (jcall!(hashMap).get(jcall!(StoreFrontData::getInstance()).NAME.clone())).clone() /* as String */;
-        this.workFlowDoc = DomDocumentHelper::create1((jcall!(hashMap).get(jcall!(WorkFlowData::getInstance()).DATA.clone())).clone() /* as String */);
+        this.workFlowName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(WorkFlowData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.storeName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.workFlowDoc = { let java_value = (DomDocumentHelper::create1_String({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(WorkFlowData::getInstance()).DATA.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
         this
     }
 
-    pub fn new1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new1(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct1(hashMap))))
     }
     
@@ -137,18 +140,18 @@ impl BasicWorkFlow {
     
 
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return (self.getName()).clone() /* as Any */;
+        return crate::java_into_object(crate::java_into_object((self.getName()).clone()));
     }
     
 
     // throws Exception
     pub fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         jcall!(values).add(crate::java_into_object(self.workFlowName.clone()));
         jcall!(values).add(crate::java_into_object(self.storeName.clone()));
         jcall!(values).add(crate::java_into_object(XmlDocumentHelper::toString(self.workFlowDoc.clone())));
         let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-        let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString().clone();
+        let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string().clone();
         jcall!(values).add(crate::java_into_object(time.clone()));
         jcall!(values).add(crate::java_into_object(time.clone()));
         return values.clone();
@@ -156,101 +159,105 @@ impl BasicWorkFlow {
     
 
     // throws Exception
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(jcall!(WorkFlowData::getInstance()).NAME.clone(), self.workFlowName.clone());
-        jcall!(hashMap).put(jcall!(StoreFrontData::getInstance()).NAME.clone(), self.storeName.clone());
-        jcall!(hashMap).put(jcall!(WorkFlowData::getInstance()).DATA.clone(), XmlDocumentHelper::toString(self.workFlowDoc.clone()));
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(WorkFlowData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(self.workFlowName.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(self.storeName.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(WorkFlowData::getInstance()).DATA.clone(); java_field }.clone()), crate::java_into_object(XmlDocumentHelper::toString(self.workFlowDoc.clone())));
         let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-        let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString().clone();
-        jcall!(hashMap).put(jcall!(EntryData::getInstance()).LASTMODIFIED.clone(), time.clone());
+        let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string().clone();
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone()), crate::java_into_object(time.clone()));
         return hashMap.clone();
     }
     
 
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut hashMap: Option<Rc<RefCell<HashMap>>> = self.toHashMap();
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.toHashMap();
             let mut keySet: Option<Rc<RefCell<dyn Set>>> = jcall!(hashMap).keySet();
-            let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(jcall!(WorkFlowData::getInstance()).WORKFLOW.clone());
+            let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement({ let java_field = jcall!(WorkFlowData::getInstance()).WORKFLOW.clone(); java_field }.clone());
             let mut nameArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(keySet).toArray();
             let mut size: i32 = (nameArray.len() as i32).clone();
             for index in (0..size) {
-                let mut name: String = (nameArray[(index) as usize]).clone() /* as String */;
-                let mut value: String = (jcall!(hashMap).get(name.clone())).clone() /* as String */;
+                let mut name: String = { let java_object = (nameArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+                let mut value: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(name.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
                 jcall!(node).appendChild(ModDomHelper::createNameValueNodes(document.clone(), name.clone(), value.clone()));
             }
-            return node.clone();
+            return Some(node.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toXmlNode()"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toXmlNode()"), crate::java_into_object(e.clone()));
             }
             return None;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn toXmlDoc(&mut self) -> Option<Rc<RefCell<Document>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            return self.workFlowDoc.clone();
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            return Some(self.workFlowDoc.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toXmlDoc()"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toXmlDoc()"), crate::java_into_object(e.clone()));
             }
             return None;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut returnBoolean: Option<bool> = true;
             if false {
-                returnBoolean = false;
+                returnBoolean = { let java_value = (false).clone(); java_value }.clone();
             }
-            return returnBoolean.clone();
+            return Some(returnBoolean.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
-                jcall!(self.logUtil).put(String::from("Failed to validate"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put(String::from("Failed to validate"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn validationInfo(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             if false {
                 jcall!(stringBuffer).append(String::from("No WorkFlow name specified."));
             }
-            return jcall!(stringBuffer).toString();
+            return Some(jcall!(stringBuffer).toString());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).put(String::from("Failed to generate validation error info"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("validationInfo()"), crate::java_into_object(e.clone()));
             }
             return String::from("Error Getting Validation Info");
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -263,14 +270,14 @@ impl BasicWorkFlow {
         return None;
     }
 }
-pub trait BasicWorkFlowDyn {
+pub trait BasicWorkFlowDyn: std::any::Any {
     fn as_BasicWorkFlow(&self) -> &BasicWorkFlow;
     fn as_BasicWorkFlow_mut(&mut self) -> &mut BasicWorkFlow;
     fn getName(&mut self) -> String { BasicWorkFlow::getName(self.as_BasicWorkFlow_mut()) }
     fn getStoreName(&mut self) -> String { BasicWorkFlow::getStoreName(self.as_BasicWorkFlow_mut()) }
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { BasicWorkFlow::getKey(self.as_BasicWorkFlow_mut()) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { BasicWorkFlow::toVector(self.as_BasicWorkFlow_mut()) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { BasicWorkFlow::toHashMap(self.as_BasicWorkFlow_mut()) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { BasicWorkFlow::toHashMap(self.as_BasicWorkFlow_mut()) }
     fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { BasicWorkFlow::toXmlNode(self.as_BasicWorkFlow_mut(), document) }
     fn toXmlDoc(&mut self) -> Option<Rc<RefCell<Document>>> { BasicWorkFlow::toXmlDoc(self.as_BasicWorkFlow_mut()) }
     fn isValid(&mut self) -> Option<bool> { BasicWorkFlow::isValid(self.as_BasicWorkFlow_mut()) }

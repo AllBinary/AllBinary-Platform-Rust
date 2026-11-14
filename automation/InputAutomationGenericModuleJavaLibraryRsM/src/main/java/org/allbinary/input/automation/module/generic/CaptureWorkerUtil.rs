@@ -22,6 +22,7 @@ use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::input::automation::actions::script::condition::ProfileActionScriptConditionInterface::ProfileActionScriptConditionInterface;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,6 +37,10 @@ pub struct CaptureWorkerUtil {
 
 
 impl CaptureWorkerUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -55,10 +60,10 @@ impl CaptureWorkerUtil {
     pub fn processProfileActionConditions(mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut frame: Option<i64>) {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(String::from("CaptureWorkerUtil")), String::from("processProfileActionConditions"));
+        jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from("CaptureWorkerUtil")), String::from("processProfileActionConditions"));
         let mut size: i32 = jcall!(vector).size();
         for index in (0..size) {
-            let mut profileActionConditionInterface: Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>> = { let java_object = jcall!(vector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>>>().expect("ClassCastException").clone()) };
+            let mut profileActionConditionInterface: Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>> = { let java_object = (jcall!(vector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>>>().expect("ClassCastException").clone()) };
             if jcall!(profileActionConditionInterface).shouldProcess(frame.clone()) {
                 jcall!(profileActionConditionInterface).process(frame.clone());
             } else {

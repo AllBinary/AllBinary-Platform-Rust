@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::communication::log::ForcedLogUtil::ForcedLogUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::AllBinarySensorListener::AllBinarySensorListener;
 
 // Borrows the object of a Java reference
@@ -41,6 +42,10 @@ impl AllBinarySensorListener for AllBinarySensor {
 }
 
 impl AllBinarySensor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -83,15 +88,15 @@ impl AllBinarySensor {
     
 
     pub fn shutdown(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("shutdown"));
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("shutdown"));
     }
     
 
     pub fn onSensorChange(&mut self) {
-        ForcedLogUtil::log(jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
 }
-pub trait AllBinarySensorDyn: crate::org::allbinary::input::AllBinarySensorListener::AllBinarySensorListener {
+pub trait AllBinarySensorDyn: std::any::Any + crate::org::allbinary::input::AllBinarySensorListener::AllBinarySensorListener {
     fn as_AllBinarySensor(&self) -> &AllBinarySensor;
     fn as_AllBinarySensor_mut(&mut self) -> &mut AllBinarySensor;
     fn init(&mut self) { AllBinarySensor::init(self.as_AllBinarySensor_mut()) }

@@ -17,11 +17,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Item::Item;
+use crate::javax::microedition::lcdui::Item::Item;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::math::SmallIntegerSingletonFactory::SmallIntegerSingletonFactory;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::GameConfigurationSingleton::GameConfigurationSingleton;
 use super::GameConfiguration::GameConfiguration;
 use super::GameOptionsForm::GameOptionsForm;
@@ -47,6 +48,10 @@ pub struct GameConfigurationUtil {
 thread_local! { pub static GameConfigurationUtil_instance: Option<Rc<RefCell<GameConfigurationUtil>>> = GameConfigurationUtil::new(); }
 
 impl GameConfigurationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -98,7 +103,7 @@ impl GameConfigurationUtil {
         jcall!(stringBuffer).appendint(((jcall!(gameConfiguration).getValue()).unwrap() as i32));
         jcall!(stringBuffer).append(self.TO.clone());
         jcall!(stringBuffer).appendint(((value).unwrap() as i32));
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).UPDATE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         jcall!(gameConfiguration).setValue(value.clone());
     }
     
@@ -122,27 +127,27 @@ impl GameConfigurationUtil {
     pub fn updateChallange(&mut self, mut gameOptionsForm: Option<Rc<RefCell<GameOptionsForm>>>, mut gameConfiguration: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::GameConfiguration::GameConfigurationDyn>>>) {
         let mut gameConfigurationSingleton: Option<Rc<RefCell<GameConfigurationSingleton>>> = GameConfigurationSingleton::getInstance();
         let mut gameConfigurationCentral: Option<Rc<RefCell<GameConfigurationCentral>>> = GameConfigurationCentral::getInstance();
-        if match (&gameConfiguration, &jcall!(gameConfigurationCentral).CHALLENGE_LEVEL) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateChallange"));
-            jcall!(jcall!(gameConfigurationCentral).COLLIDE_DAMAGE).setValue(jcall!(gameConfiguration).getValue());
-            jcall!(jcall!(gameConfigurationCentral).ATTACK_CHALLENGE_LEVEL).setValue(jcall!(gameConfiguration).getValue());
-            jcall!(jcall!(gameConfigurationCentral).DURABILITY_CHALLENGE_LEVEL).setValue(jcall!(gameConfiguration).getValue());
-            jcall!(jcall!(gameConfigurationCentral).SPEED_CHALLENGE_LEVEL).setValue(jcall!(gameConfiguration).getValue());
+        if match (&gameConfiguration, &{ let java_field = jcall!(gameConfigurationCentral).CHALLENGE_LEVEL.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateChallange"));
+            jcall!({ let java_field = jcall!(gameConfigurationCentral).COLLIDE_DAMAGE.clone(); java_field }).setValue(jcall!(gameConfiguration).getValue());
+            jcall!({ let java_field = jcall!(gameConfigurationCentral).ATTACK_CHALLENGE_LEVEL.clone(); java_field }).setValue(jcall!(gameConfiguration).getValue());
+            jcall!({ let java_field = jcall!(gameConfigurationCentral).DURABILITY_CHALLENGE_LEVEL.clone(); java_field }).setValue(jcall!(gameConfiguration).getValue());
+            jcall!({ let java_field = jcall!(gameConfigurationCentral).SPEED_CHALLENGE_LEVEL.clone(); java_field }).setValue(jcall!(gameConfiguration).getValue());
             let mut size: i32 = jcall!(gameOptionsForm).size();
             for index in (0..size) {
-                let mut item: Option<Rc<RefCell<Item>>> = jcall!(gameOptionsForm).get(index.clone());
+                let mut item: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Item::ItemDyn>>> = jcall!(gameOptionsForm).get(index.clone());
                 if (item).is_some() /* instanceof GameConfigurationGauge */ {
-                    let mut gauge: Option<Rc<RefCell<GameConfigurationGauge>>> = (item).clone() /* as GameConfigurationGauge */;
+                    let mut gauge: Option<Rc<RefCell<GameConfigurationGauge>>> = (item).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<GameConfigurationGauge>() }, "ClassCastException: not a GameConfigurationGauge"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<GameConfigurationGauge>) } });
                     let mut name: String = jcall!(item).getLabel();
                     let mut nextGameConfiguration: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::GameConfiguration::GameConfigurationDyn>>> = jcall!(gameConfigurationSingleton).getInstanceByName(name.clone());
-                    if match (&nextGameConfiguration, &jcall!(gameConfigurationCentral).COLLIDE_DAMAGE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                        jcall!(gauge).setValue(((jcall!(jcall!(gameConfigurationCentral).COLLIDE_DAMAGE).getValue()).unwrap() as i32) - ((jcall!(gameConfiguration).getMinValue()).unwrap() as i32));
-                    } else if match (&nextGameConfiguration, &jcall!(gameConfigurationCentral).DURABILITY_CHALLENGE_LEVEL) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                        jcall!(gauge).setValue(((jcall!(jcall!(gameConfigurationCentral).DURABILITY_CHALLENGE_LEVEL).getValue()).unwrap() as i32) - ((jcall!(gameConfiguration).getMinValue()).unwrap() as i32));
-                    } else if match (&nextGameConfiguration, &jcall!(gameConfigurationCentral).ATTACK_CHALLENGE_LEVEL) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                        jcall!(gauge).setValue(((jcall!(jcall!(gameConfigurationCentral).ATTACK_CHALLENGE_LEVEL).getValue()).unwrap() as i32) - ((jcall!(gameConfiguration).getMinValue()).unwrap() as i32));
-                    } else if match (&nextGameConfiguration, &jcall!(gameConfigurationCentral).SPEED_CHALLENGE_LEVEL) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                        jcall!(gauge).setValue(((jcall!(jcall!(gameConfigurationCentral).SPEED_CHALLENGE_LEVEL).getValue()).unwrap() as i32) - ((jcall!(gameConfiguration).getMinValue()).unwrap() as i32));
+                    if match (&nextGameConfiguration, &{ let java_field = jcall!(gameConfigurationCentral).COLLIDE_DAMAGE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                        jcall!(gauge).setValue(((jcall!({ let java_field = jcall!(gameConfigurationCentral).COLLIDE_DAMAGE.clone(); java_field }).getValue()).unwrap() as i32) - ((jcall!(gameConfiguration).getMinValue()).unwrap() as i32));
+                    } else if match (&nextGameConfiguration, &{ let java_field = jcall!(gameConfigurationCentral).DURABILITY_CHALLENGE_LEVEL.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                        jcall!(gauge).setValue(((jcall!({ let java_field = jcall!(gameConfigurationCentral).DURABILITY_CHALLENGE_LEVEL.clone(); java_field }).getValue()).unwrap() as i32) - ((jcall!(gameConfiguration).getMinValue()).unwrap() as i32));
+                    } else if match (&nextGameConfiguration, &{ let java_field = jcall!(gameConfigurationCentral).ATTACK_CHALLENGE_LEVEL.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                        jcall!(gauge).setValue(((jcall!({ let java_field = jcall!(gameConfigurationCentral).ATTACK_CHALLENGE_LEVEL.clone(); java_field }).getValue()).unwrap() as i32) - ((jcall!(gameConfiguration).getMinValue()).unwrap() as i32));
+                    } else if match (&nextGameConfiguration, &{ let java_field = jcall!(gameConfigurationCentral).SPEED_CHALLENGE_LEVEL.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                        jcall!(gauge).setValue(((jcall!({ let java_field = jcall!(gameConfigurationCentral).SPEED_CHALLENGE_LEVEL.clone(); java_field }).getValue()).unwrap() as i32) - ((jcall!(gameConfiguration).getMinValue()).unwrap() as i32));
                     }
                 }
             }
@@ -151,9 +156,9 @@ impl GameConfigurationUtil {
     
 
     pub fn updateCompetitionValue(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateCompetitionValue"));
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateCompetitionValue"));
         let mut gameConfigurationCentral: Option<Rc<RefCell<GameConfigurationCentral>>> = GameConfigurationCentral::getInstance();
-        self.COMPETITION_VALUE = ((jcall!(jcall!(gameConfigurationCentral).COLLIDE_DAMAGE).getValue()).unwrap() as i32) + ((jcall!(jcall!(gameConfigurationCentral).ATTACK_CHALLENGE_LEVEL).getValue()).unwrap() as i32) + ((jcall!(jcall!(gameConfigurationCentral).DURABILITY_CHALLENGE_LEVEL).getValue()).unwrap() as i32) + ((jcall!(jcall!(gameConfigurationCentral).SPEED_CHALLENGE_LEVEL).getValue()).unwrap() as i32);
+        self.COMPETITION_VALUE = { let java_value = (((jcall!({ let java_field = jcall!(gameConfigurationCentral).COLLIDE_DAMAGE.clone(); java_field }).getValue()).unwrap() as i32) + ((jcall!({ let java_field = jcall!(gameConfigurationCentral).ATTACK_CHALLENGE_LEVEL.clone(); java_field }).getValue()).unwrap() as i32) + ((jcall!({ let java_field = jcall!(gameConfigurationCentral).DURABILITY_CHALLENGE_LEVEL.clone(); java_field }).getValue()).unwrap() as i32) + ((jcall!({ let java_field = jcall!(gameConfigurationCentral).SPEED_CHALLENGE_LEVEL.clone(); java_field }).getValue()).unwrap() as i32)).clone(); java_value };
         self.COMPETITION_VALUE = (self.COMPETITION_VALUE >> 2);
     }
     

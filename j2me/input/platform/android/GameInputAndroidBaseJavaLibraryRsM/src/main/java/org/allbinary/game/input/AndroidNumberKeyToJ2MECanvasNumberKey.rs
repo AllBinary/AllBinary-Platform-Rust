@@ -5,7 +5,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::android::view::KeyEvent::KeyEvent;
 
 // Borrows the object of a Java reference
@@ -21,19 +21,23 @@ pub struct AndroidNumberKeyToJ2MECanvasNumberKey {
 thread_local! { pub static AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap: Vec<i32> = vec![0; (17) as usize]; }
 
 impl AndroidNumberKeyToJ2MECanvasNumberKey {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn init() {
-        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_0.clone() }) as usize] = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM0.clone() }.clone();
-        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_1.clone() }) as usize] = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }.clone();
-        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_2.clone() }) as usize] = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM2.clone() }.clone();
-        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_3.clone() }) as usize] = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM3.clone() }.clone();
-        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_4.clone() }) as usize] = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM4.clone() }.clone();
-        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_5.clone() }) as usize] = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM5.clone() }.clone();
-        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_6.clone() }) as usize] = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM6.clone() }.clone();
-        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_7.clone() }) as usize] = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM7.clone() }.clone();
-        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_8.clone() }) as usize] = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM8.clone() }.clone();
-        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_9.clone() }) as usize] = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM9.clone() }.clone();
+        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_0.clone() }) as usize] = crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM0.with(Clone::clone).clone();
+        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_1.clone() }) as usize] = crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone).clone();
+        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_2.clone() }) as usize] = crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM2.with(Clone::clone).clone();
+        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_3.clone() }) as usize] = crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM3.with(Clone::clone).clone();
+        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_4.clone() }) as usize] = crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM4.with(Clone::clone).clone();
+        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_5.clone() }) as usize] = crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM5.with(Clone::clone).clone();
+        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_6.clone() }) as usize] = crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM6.with(Clone::clone).clone();
+        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_7.clone() }) as usize] = crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM7.with(Clone::clone).clone();
+        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_8.clone() }) as usize] = crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM8.with(Clone::clone).clone();
+        AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap.with(Clone::clone)[(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_9.clone() }) as usize] = crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM9.with(Clone::clone).clone();
     }
     
 

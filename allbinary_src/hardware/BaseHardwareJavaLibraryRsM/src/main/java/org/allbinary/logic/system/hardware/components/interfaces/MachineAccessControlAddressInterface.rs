@@ -25,9 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait MachineAccessControlAddressInterface {
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+pub trait MachineAccessControlAddressInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
 }
 
 

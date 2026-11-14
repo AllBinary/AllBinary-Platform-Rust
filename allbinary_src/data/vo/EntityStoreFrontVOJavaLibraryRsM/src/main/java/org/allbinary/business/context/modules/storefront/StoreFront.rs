@@ -16,11 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::Calendar;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::Calendar::Calendar;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::Calendar::Calendar;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
@@ -54,6 +52,7 @@ use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::apache::commons::lang3::StringEscapeUtils::StringEscapeUtils;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 use super::StoreFrontInterface::StoreFrontInterface;
 use super::StoreFrontData::StoreFrontData;
 
@@ -105,7 +104,7 @@ pub struct StoreFront {
     pub ONE_EMPTY_STRING_ARRAY: Vec<String>,
 }
 
-thread_local! { pub static StoreFront_RESOURCES: String = format!("{}{}", String::from(" Resources"), jcall!(AbPathData::getInstance()).SEPARATOR); }
+thread_local! { pub static StoreFront_RESOURCES: String = format!("{}{}", String::from(" Resources"), { let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }); }
 impl StoreFrontInterface for StoreFront {
     fn isNameValid(&mut self) -> Option<bool> { Self::isNameValid(self) }
     fn isValid(&mut self) -> Option<bool> { Self::isValid(self) }
@@ -174,10 +173,14 @@ impl StoreFrontInterface for StoreFront {
 impl crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface for StoreFront {
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getKey(self) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::toVector(self) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::toHashMap(self) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toHashMap(self) }
 }
 
 impl StoreFront {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -226,38 +229,38 @@ impl StoreFront {
         this.directory = Directory::getInstance();
         this.stringUtil = StringUtil::getInstance();
         this.abPathUtil = AbPathUtil::getInstance();
-        this.name = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.basketName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.homeHostName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.homeHostNamePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.hostName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.hostNamePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.testHomeHostName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testHomeHostNamePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.testHostName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testHostNamePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.imagePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.staticPath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.categoryPath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.inventoryControl = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.subStores = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.tagLocation = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.packageLocation = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.ftp = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.ftpPath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.ftpUserName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.ftpPassword = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testFtp = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testFtpPath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.testFtpUserName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testFtpPassword = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.timeCreated = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.lastModified = jcall!(this.stringUtil).EMPTY_STRING.clone();
+        this.name = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.basketName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.homeHostName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.homeHostNamePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.hostName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.hostNamePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.testHomeHostName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testHomeHostNamePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.testHostName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testHostNamePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.imagePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.staticPath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.categoryPath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.inventoryControl = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.subStores = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.tagLocation = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.packageLocation = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.ftp = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.ftpPath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.ftpUserName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.ftpPassword = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testFtp = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testFtpPath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.testFtpUserName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testFtpPassword = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.timeCreated = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.lastModified = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
         this.MINCHAR = 0;
         this.MINSTORENAMELENGTH = 1;
         this.MAXCHAR = 255;
-        this.EMPTY_STRING = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.ONE_EMPTY_STRING_ARRAY = jcall!(StringUtil::getInstance()).ONE_EMPTY_STRING_ARRAY.clone();
+        this.EMPTY_STRING = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.ONE_EMPTY_STRING_ARRAY = { let java_field = jcall!(StringUtil::getInstance()).ONE_EMPTY_STRING_ARRAY.clone(); java_field }.clone();
         this.contextConfigurationInterface = ContextConfiguration::new().map(|reference| reference as Rc<RefCell<dyn ContextConfigurationInterface>>);
         this
     }
@@ -313,43 +316,43 @@ impl StoreFront {
         this.directory = Directory::getInstance();
         this.stringUtil = StringUtil::getInstance();
         this.abPathUtil = AbPathUtil::getInstance();
-        this.name = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.basketName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.homeHostName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.homeHostNamePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.hostName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.hostNamePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.testHomeHostName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testHomeHostNamePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.testHostName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testHostNamePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.imagePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.staticPath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.categoryPath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.inventoryControl = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.subStores = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.tagLocation = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.packageLocation = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.ftp = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.ftpPath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.ftpUserName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.ftpPassword = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testFtp = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testFtpPath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.testFtpUserName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testFtpPassword = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.timeCreated = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.lastModified = jcall!(this.stringUtil).EMPTY_STRING.clone();
+        this.name = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.basketName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.homeHostName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.homeHostNamePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.hostName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.hostNamePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.testHomeHostName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testHomeHostNamePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.testHostName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testHostNamePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.imagePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.staticPath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.categoryPath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.inventoryControl = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.subStores = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.tagLocation = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.packageLocation = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.ftp = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.ftpPath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.ftpUserName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.ftpPassword = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testFtp = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testFtpPath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.testFtpUserName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testFtpPassword = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.timeCreated = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.lastModified = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
         this.MINCHAR = 0;
         this.MINSTORENAMELENGTH = 1;
         this.MAXCHAR = 255;
-        this.EMPTY_STRING = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.ONE_EMPTY_STRING_ARRAY = jcall!(StringUtil::getInstance()).ONE_EMPTY_STRING_ARRAY.clone();
+        this.EMPTY_STRING = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.ONE_EMPTY_STRING_ARRAY = { let java_field = jcall!(StringUtil::getInstance()).ONE_EMPTY_STRING_ARRAY.clone(); java_field }.clone();
         { let java_arguments = (jcall!(RequestParams::new1(request.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParamsDyn>>)).toHashMap(),); this.getFormData(java_arguments.0) };
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).EMAILLOGGING.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).EMAILLOGGING.clone(); java_field }.clone()) {
             jcall!(this.logUtil).putF(String::from("TWB- needs update for adding and updating context configuration - currently defaults to admin context config"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("StoreFront"));
         }
-        { let java_arguments = (jcall!(ContextConfigurationInterfaceFactory::getInstance()).getInstance1(String::from("Admin")),); this.setContextConfigurationInterface(java_arguments.0) };
+        { let java_arguments = (jcall!(ContextConfigurationInterfaceFactory::getInstance()).getInstance1_String(String::from("Admin")),); this.setContextConfigurationInterface(java_arguments.0) };
         this
     }
 
@@ -358,7 +361,7 @@ impl StoreFront {
     }
     
 
-    pub fn new_struct1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1_HashMap(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -404,54 +407,54 @@ impl StoreFront {
         this.directory = Directory::getInstance();
         this.stringUtil = StringUtil::getInstance();
         this.abPathUtil = AbPathUtil::getInstance();
-        this.name = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.basketName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.homeHostName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.homeHostNamePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.hostName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.hostNamePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.testHomeHostName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testHomeHostNamePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.testHostName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testHostNamePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.imagePath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.staticPath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.categoryPath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.inventoryControl = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.subStores = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.tagLocation = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.packageLocation = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.ftp = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.ftpPath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.ftpUserName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.ftpPassword = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testFtp = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testFtpPath = jcall!(this.abPathUtil).NO_ABPATH.clone();
-        this.testFtpUserName = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.testFtpPassword = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.timeCreated = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.lastModified = jcall!(this.stringUtil).EMPTY_STRING.clone();
+        this.name = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.basketName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.homeHostName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.homeHostNamePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.hostName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.hostNamePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.testHomeHostName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testHomeHostNamePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.testHostName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testHostNamePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.imagePath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.staticPath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.categoryPath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.inventoryControl = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.subStores = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.tagLocation = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.packageLocation = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.ftp = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.ftpPath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.ftpUserName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.ftpPassword = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testFtp = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testFtpPath = { let java_field = jcall!(this.abPathUtil).NO_ABPATH.clone(); java_field }.clone();
+        this.testFtpUserName = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.testFtpPassword = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.timeCreated = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.lastModified = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
         this.MINCHAR = 0;
         this.MINSTORENAMELENGTH = 1;
         this.MAXCHAR = 255;
-        this.EMPTY_STRING = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.ONE_EMPTY_STRING_ARRAY = jcall!(StringUtil::getInstance()).ONE_EMPTY_STRING_ARRAY.clone();
+        this.EMPTY_STRING = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.ONE_EMPTY_STRING_ARRAY = { let java_field = jcall!(StringUtil::getInstance()).ONE_EMPTY_STRING_ARRAY.clone(); java_field }.clone();
         this.getFormData(hashMap.clone());
-        let mut domDocumentString: String = (jcall!(hashMap).get(jcall!(StoreFrontData::getInstance()).CONFIGURATION.clone())).clone() /* as String */;
+        let mut domDocumentString: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).CONFIGURATION.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if false {
-            let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1(domDocumentString.clone());
+            let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1_String(domDocumentString.clone());
             { let java_arguments = (jcall!(ContextConfigurationInterfaceFactory::getInstance()).getInstance1(document.clone()),); this.setContextConfigurationInterface(java_arguments.0) };
         }
         this
     }
 
-    pub fn new1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(hashMap))))
+    pub fn new1_HashMap(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_HashMap(hashMap))))
     }
     
 
     pub fn isColumn(&mut self, mut columnName: String) -> bool {
-        if (columnName.cmp(&jcall!(StoreFrontData::getInstance()).NAME.clone()) as i32) == 0 || (columnName.cmp(&crate::org::allbinary::business::user::UserData::UserData_MAINEMAIL.with(Clone::clone).clone()) as i32) == 0 {
+        if (columnName.cmp(&{ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()) as i32) == 0 || (columnName.cmp(&crate::org::allbinary::business::user::UserData::UserData_MAINEMAIL.with(Clone::clone).clone()) as i32) == 0 {
             return true;
         } else {
             return false;
@@ -460,30 +463,30 @@ impl StoreFront {
     
 
     // throws Exception
-    pub fn createPath(&mut self, mut key: String, mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> {
-        return AbPath::new(self.create(self.EMPTY_STRING.clone(), key.clone(), hashMap.clone()), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+    pub fn createPath(&mut self, mut key: String, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> {
+        return AbPath::new({ let java_arguments = (self.EMPTY_STRING.clone(), key.clone(), hashMap.clone(),); self.create(java_arguments.0, java_arguments.1, java_arguments.2) }, { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn createPath3(&mut self, mut append: String, mut key: String, mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> {
-        return AbPath::new(self.create(append.clone(), key.clone(), hashMap.clone()), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+    pub fn createPath3(&mut self, mut append: String, mut key: String, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> {
+        return AbPath::new(self.create(append.clone(), key.clone(), hashMap.clone()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
     }
     
 
-    pub fn get(&mut self, mut key: String, mut hashMap: Option<Rc<RefCell<HashMap>>>) -> String {
-        return self.create(self.EMPTY_STRING.clone(), key.clone(), hashMap.clone());
+    pub fn get(&mut self, mut key: String, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> String {
+        return { let java_arguments = (self.EMPTY_STRING.clone(), key.clone(), hashMap.clone(),); self.create(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
     
 
-    pub fn create(&mut self, mut append: String, mut key: String, mut hashMap: Option<Rc<RefCell<HashMap>>>) -> String {
-        let mut path: String = (jcall!(hashMap).get(key.clone())).clone() /* as String */;
+    pub fn create(&mut self, mut append: String, mut key: String, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> String {
+        let mut path: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(key.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if jcall!(StringValidationUtil::getInstance()).isEmpty(path.clone()) {
             return self.EMPTY_STRING.clone();
         } else {
             if self.isColumn(path.clone()) {
-                return format!("{}{}", (jcall!(hashMap).get(path.clone())).clone() /* as String */, append);
+                return format!("{}{}", { let java_object = (jcall!(hashMap).get(crate::java_into_object(path.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, append);
             } else {
                 return path.clone();
             }
@@ -492,35 +495,35 @@ impl StoreFront {
     
 
     // throws Exception
-    pub fn getFormData(&mut self, mut storeHashMap: Option<Rc<RefCell<HashMap>>>) {
+    pub fn getFormData(&mut self, mut storeHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
         let mut storeFrontData: Option<Rc<RefCell<StoreFrontData>>> = StoreFrontData::getInstance();
-        self.name = (jcall!(storeHashMap).get(jcall!(storeFrontData).NAME.clone())).clone() /* as String */;
-        self.basketName = (jcall!(storeHashMap).get(jcall!(storeFrontData).NAME.clone())).clone() /* as String */;
-        self.homeHostName = (jcall!(storeHashMap).get(jcall!(storeFrontData).HOMEHOSTNAME.clone())).clone() /* as String */;
-        self.homeHostNamePath = self.createPath(jcall!(storeFrontData).HOMEHOSTNAMEPATH.clone(), storeHashMap.clone());
-        self.hostName = (jcall!(storeHashMap).get(jcall!(storeFrontData).HOSTNAME.clone())).clone() /* as String */;
-        self.hostNamePath = self.createPath(jcall!(storeFrontData).HOSTNAMEPATH.clone(), storeHashMap.clone());
-        self.testHomeHostName = (jcall!(storeHashMap).get(jcall!(storeFrontData).TESTHOMEHOSTNAME.clone())).clone() /* as String */;
-        self.testHomeHostNamePath = self.createPath(jcall!(storeFrontData).TESTHOMEHOSTNAMEPATH.clone(), storeHashMap.clone());
-        self.testHostName = (jcall!(storeHashMap).get(jcall!(storeFrontData).TESTHOSTNAME.clone())).clone() /* as String */;
-        self.testHostNamePath = self.createPath(jcall!(storeFrontData).TESTHOSTNAMEPATH.clone(), storeHashMap.clone());
-        self.imagePath = self.createPath3(StoreFront_RESOURCES.with(Clone::clone).clone(), jcall!(storeFrontData).IMAGEPATH.clone(), storeHashMap.clone());
-        self.staticPath = { let java_arguments = (format!("{}{}", String::from(" Products"), jcall!(AbPathData::getInstance()).SEPARATOR), jcall!(storeFrontData).STATICPATH.clone(), storeHashMap.clone(),); self.createPath3(java_arguments.0, java_arguments.1, java_arguments.2) };
-        self.categoryPath = self.createPath3(StoreFront_RESOURCES.with(Clone::clone).clone(), jcall!(storeFrontData).CATEGORYPATH.clone(), storeHashMap.clone());
-        self.inventoryControl = (jcall!(storeHashMap).get(jcall!(storeFrontData).INVENTORYCONTROL.clone())).clone() /* as String */;
-        self.subStores = (jcall!(storeHashMap).get(jcall!(storeFrontData).SUBSTORES.clone())).clone() /* as String */;
-        self.tagLocation = (jcall!(storeHashMap).get(jcall!(storeFrontData).TAGLOCATION.clone())).clone() /* as String */;
-        self.packageLocation = (jcall!(storeHashMap).get(jcall!(storeFrontData).PACKAGELOCATION.clone())).clone() /* as String */;
-        self.ftp = (jcall!(storeHashMap).get(jcall!(storeFrontData).FTP.clone())).clone() /* as String */;
-        self.ftpPath = self.createPath(jcall!(storeFrontData).FTPPATH.clone(), storeHashMap.clone());
-        self.ftpUserName = (jcall!(storeHashMap).get(jcall!(storeFrontData).FTPUSERNAME.clone())).clone() /* as String */;
-        self.ftpPassword = (jcall!(storeHashMap).get(jcall!(storeFrontData).FTPPASSWORD.clone())).clone() /* as String */;
-        self.testFtp = (jcall!(storeHashMap).get(jcall!(storeFrontData).TESTFTP.clone())).clone() /* as String */;
-        self.testFtpPath = self.createPath(jcall!(storeFrontData).TESTFTPPATH.clone(), storeHashMap.clone());
-        self.testFtpUserName = (jcall!(storeHashMap).get(jcall!(storeFrontData).TESTFTPUSERNAME.clone())).clone() /* as String */;
-        self.testFtpPassword = (jcall!(storeHashMap).get(jcall!(storeFrontData).TESTFTPPASSWORD.clone())).clone() /* as String */;
-        self.timeCreated = (jcall!(storeHashMap).get(jcall!(EntryData::getInstance()).TIMECREATED.clone())).clone() /* as String */;
-        self.lastModified = (jcall!(storeHashMap).get(jcall!(EntryData::getInstance()).LASTMODIFIED.clone())).clone() /* as String */;
+        self.name = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.basketName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.homeHostName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).HOMEHOSTNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.homeHostNamePath = { let java_value = ({ let java_arguments = ({ let java_field = jcall!(storeFrontData).HOMEHOSTNAMEPATH.clone(); java_field }.clone(), storeHashMap.clone(),); self.createPath(java_arguments.0, java_arguments.1) }).clone(); java_value };
+        self.hostName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).HOSTNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.hostNamePath = { let java_value = ({ let java_arguments = ({ let java_field = jcall!(storeFrontData).HOSTNAMEPATH.clone(); java_field }.clone(), storeHashMap.clone(),); self.createPath(java_arguments.0, java_arguments.1) }).clone(); java_value };
+        self.testHomeHostName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTHOMEHOSTNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.testHomeHostNamePath = { let java_value = ({ let java_arguments = ({ let java_field = jcall!(storeFrontData).TESTHOMEHOSTNAMEPATH.clone(); java_field }.clone(), storeHashMap.clone(),); self.createPath(java_arguments.0, java_arguments.1) }).clone(); java_value };
+        self.testHostName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTHOSTNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.testHostNamePath = { let java_value = ({ let java_arguments = ({ let java_field = jcall!(storeFrontData).TESTHOSTNAMEPATH.clone(); java_field }.clone(), storeHashMap.clone(),); self.createPath(java_arguments.0, java_arguments.1) }).clone(); java_value };
+        self.imagePath = { let java_value = ({ let java_arguments = (StoreFront_RESOURCES.with(Clone::clone).clone(), { let java_field = jcall!(storeFrontData).IMAGEPATH.clone(); java_field }.clone(), storeHashMap.clone(),); self.createPath3(java_arguments.0, java_arguments.1, java_arguments.2) }).clone(); java_value };
+        self.staticPath = { let java_value = ({ let java_arguments = (format!("{}{}", String::from(" Products"), { let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }), { let java_field = jcall!(storeFrontData).STATICPATH.clone(); java_field }.clone(), storeHashMap.clone(),); self.createPath3(java_arguments.0, java_arguments.1, java_arguments.2) }).clone(); java_value };
+        self.categoryPath = { let java_value = ({ let java_arguments = (StoreFront_RESOURCES.with(Clone::clone).clone(), { let java_field = jcall!(storeFrontData).CATEGORYPATH.clone(); java_field }.clone(), storeHashMap.clone(),); self.createPath3(java_arguments.0, java_arguments.1, java_arguments.2) }).clone(); java_value };
+        self.inventoryControl = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).INVENTORYCONTROL.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.subStores = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).SUBSTORES.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.tagLocation = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TAGLOCATION.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.packageLocation = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).PACKAGELOCATION.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.ftp = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).FTP.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.ftpPath = { let java_value = ({ let java_arguments = ({ let java_field = jcall!(storeFrontData).FTPPATH.clone(); java_field }.clone(), storeHashMap.clone(),); self.createPath(java_arguments.0, java_arguments.1) }).clone(); java_value };
+        self.ftpUserName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).FTPUSERNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.ftpPassword = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).FTPPASSWORD.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.testFtp = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTFTP.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.testFtpPath = { let java_value = ({ let java_arguments = ({ let java_field = jcall!(storeFrontData).TESTFTPPATH.clone(); java_field }.clone(), storeHashMap.clone(),); self.createPath(java_arguments.0, java_arguments.1) }).clone(); java_value };
+        self.testFtpUserName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTFTPUSERNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.testFtpPassword = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTFTPPASSWORD.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.timeCreated = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).TIMECREATED.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.lastModified = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
     }
     
 
@@ -539,9 +542,9 @@ impl StoreFront {
                 isSpacesContained = true;
             }
             if isSpacesContained || isEscapedCharactersContained {
-                let mut hashMap: Option<Rc<RefCell<HashMap>>> = SpecialCharacterUtil::getHashMap();
-                jcall!(hashMap).put(vec![jcall!(CommonSeps::getInstance()).SPACE.clone()], self.ONE_EMPTY_STRING_ARRAY.clone());
-                self.name = jcall!(Replace::new1(hashMap.clone())).all(self.name.clone());
+                let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = SpecialCharacterUtil::getHashMap();
+                jcall!(hashMap).put(crate::java_into_object(vec![{ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()]), crate::java_into_object(self.ONE_EMPTY_STRING_ARRAY.clone()));
+                self.name = { let java_value = (jcall!(Replace::new1(hashMap.clone())).all(self.name.clone())).clone(); java_value };
             }
         }
         return true;
@@ -553,76 +556,76 @@ impl StoreFront {
         valid = self.isNameValid();
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
         if !jcall!(stringValidationUtil).isValidRequired(self.basketName.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidRequired(self.homeHostName.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(jcall!(self.homeHostNamePath).toString(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidRequired(self.hostName.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidRequired(jcall!(self.hostNamePath).toString(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(self.testHomeHostName.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(jcall!(self.testHomeHostNamePath).toString(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(self.testHostName.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(jcall!(self.testHostNamePath).toString(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidRequired(jcall!(self.imagePath).toString(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidRequired(jcall!(self.staticPath).toString(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidRequired(jcall!(self.categoryPath).toString(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidRequired(self.inventoryControl.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(self.subStores.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(self.tagLocation.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidRequired(self.packageLocation.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(self.ftp.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(jcall!(self.ftpPath).toString(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(self.ftpUserName.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(self.ftpPassword.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(self.testFtp.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(jcall!(self.testFtpPath).toString(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(self.testFtpUserName.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if !jcall!(stringValidationUtil).isValidNotRequired(self.testFtpPassword.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
-            valid = false;
+            valid = { let java_value = (false).clone(); java_value }.clone();
         }
         if valid.unwrap() == true {
             return true;
@@ -646,7 +649,7 @@ impl StoreFront {
     
 
     pub fn validationInfo(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(self.nameValidationInfo());
@@ -732,29 +735,30 @@ impl StoreFront {
             if !jcall!(stringValidationUtil).isValidNotRequired(self.testFtpPassword.clone(), self.MINCHAR.clone(), self.MAXCHAR.clone()) {
                 jcall!(stringBuffer).append(format!("{}{}", format!("{}{}", String::from("Test ftp password is invalid. Must be < "), self.MAXCHAR), String::from(" and > 0 characters.<br>")));
             }
-            return jcall!(stringBuffer).toString();
+            return Some(jcall!(stringBuffer).toString());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).put(String::from("Failed to generate validation error info"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("validationInfo()"), crate::java_into_object(e.clone()));
             }
             return String::from("Error Validating Form");
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn getTestHtmlPath(&mut self) -> String {
-        return jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).URLGLOBALS).getTestHtmlPath() + self.getCurrentHostNamePath();
+        return format!("{}{}", { let java_value = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).URLGLOBALS.clone(); java_field }).getTestHtmlPath(); java_value }, self.getCurrentHostNamePath());
     }
     
 
     pub fn getCurrentHostName(&mut self) -> String {
         let mut location: String = self.EMPTY_STRING.clone();
-        if jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).URLGLOBALS).isTestingMode() {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).URLGLOBALS.clone(); java_field }).isTestingMode() {
             location = self.getTestHostName();
         } else {
             location = self.getHostName();
@@ -765,7 +769,7 @@ impl StoreFront {
 
     pub fn getCurrentHostNamePath(&mut self) -> String {
         let mut location: String = self.EMPTY_STRING.clone();
-        if jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).URLGLOBALS).isTestingMode() {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).URLGLOBALS.clone(); java_field }).isTestingMode() {
             location = self.getTestHostNamePath();
         } else {
             location = self.getHostNamePath();
@@ -776,7 +780,7 @@ impl StoreFront {
 
     pub fn getCurrentHomeHostName(&mut self) -> String {
         let mut location: String = self.EMPTY_STRING.clone();
-        if jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).URLGLOBALS).isTestingMode() {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).URLGLOBALS.clone(); java_field }).isTestingMode() {
             location = self.getTestHomeHostName();
         } else {
             location = self.getHomeHostName();
@@ -787,7 +791,7 @@ impl StoreFront {
 
     pub fn getCurrentHomeHostNamePath(&mut self) -> String {
         let mut location: String = self.EMPTY_STRING.clone();
-        if jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).URLGLOBALS).isTestingMode() {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).URLGLOBALS.clone(); java_field }).isTestingMode() {
             location = self.getTestHomeHostNamePath();
         } else {
             location = self.getHomeHostNamePath();
@@ -863,18 +867,19 @@ impl StoreFront {
 
     // throws Exception
     pub fn getSubStores(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut tokenizer: Option<Rc<RefCell<Tokenizer>>> = Tokenizer::new(jcall!(CommonSeps::getInstance()).SEMICOLON.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut tokenizer: Option<Rc<RefCell<Tokenizer>>> = Tokenizer::new({ let java_field = jcall!(CommonSeps::getInstance()).SEMICOLON.clone(); java_field }.clone());
             let mut subStoreVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(tokenizer).getTokensFromString(self.subStores.clone(), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
-            return subStoreVector.clone();
+            return Some(subStoreVector.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -955,7 +960,7 @@ impl StoreFront {
 
     // throws Exception
     pub fn setHomeHostNamePath(&mut self, mut value: String) {
-        self.homeHostNamePath = AbPath::new(value.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        self.homeHostNamePath = { let java_value = (AbPath::new(value.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
     }
     
 
@@ -966,7 +971,7 @@ impl StoreFront {
 
     // throws Exception
     pub fn setHostNamePath(&mut self, mut value: String) {
-        self.hostNamePath = AbPath::new(value.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        self.hostNamePath = { let java_value = (AbPath::new(value.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
     }
     
 
@@ -977,7 +982,7 @@ impl StoreFront {
 
     // throws Exception
     pub fn setTestHomeHostNamePath(&mut self, mut value: String) {
-        self.testHomeHostNamePath = AbPath::new(value.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        self.testHomeHostNamePath = { let java_value = (AbPath::new(value.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
     }
     
 
@@ -988,25 +993,25 @@ impl StoreFront {
 
     // throws Exception
     pub fn setTestHostNamePath(&mut self, mut value: String) {
-        self.testHostNamePath = AbPath::new(value.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        self.testHostNamePath = { let java_value = (AbPath::new(value.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
     }
     
 
     // throws Exception
     pub fn setImagePath(&mut self, mut value: String) {
-        self.imagePath = AbPath::new(value.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        self.imagePath = { let java_value = (AbPath::new(value.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
     }
     
 
     // throws Exception
     pub fn setStaticPath(&mut self, mut value: String) {
-        self.staticPath = AbPath::new(value.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        self.staticPath = { let java_value = (AbPath::new(value.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
     }
     
 
     // throws Exception
     pub fn setCategoryPath(&mut self, mut value: String) {
-        self.categoryPath = AbPath::new(value.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        self.categoryPath = { let java_value = (AbPath::new(value.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
     }
     
 
@@ -1078,26 +1083,26 @@ impl StoreFront {
 
     // throws Exception
     pub fn setFtpPath(&mut self, mut value: String) {
-        self.ftpPath = AbPath::new(value.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        self.ftpPath = { let java_value = (AbPath::new(value.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
     }
     
 
     // throws Exception
     pub fn setTestFtpPath(&mut self, mut value: String) {
-        self.testFtpPath = AbPath::new(value.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        self.testFtpPath = { let java_value = (AbPath::new(value.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
     }
     
 
     // throws Exception
     pub fn createDirectories(&mut self) -> bool {
-        let mut storeAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(URLGLOBALS::getWebappPath() + self.getCurrentHomeHostNamePath(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        let mut storeAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(format!("{}{}", { let java_value = URLGLOBALS::getWebappPath(); java_value }, self.getCurrentHomeHostNamePath()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
         if !jcall!(self.directory).create(storeAbPath.clone()) {
             return false;
         }
-        if !{ let java_receiver = self.directory.clone(); let java_arguments = (AbPath::new(storeAbPath + self.getCategoryPath(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>),); let java_result = jcall!(java_receiver).create(java_arguments.0); java_result } {
+        if !{ let java_receiver = self.directory.clone(); let java_arguments = (AbPath::new(format!("{}{}", storeAbPath, self.getCategoryPath()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>),); let java_result = jcall!(java_receiver).create(java_arguments.0); java_result } {
             return false;
         }
-        if !{ let java_receiver = self.directory.clone(); let java_arguments = (AbPath::new(storeAbPath + self.getStaticPath(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>),); let java_result = jcall!(java_receiver).create(java_arguments.0); java_result } {
+        if !{ let java_receiver = self.directory.clone(); let java_arguments = (AbPath::new(format!("{}{}", storeAbPath, self.getStaticPath()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>),); let java_result = jcall!(java_receiver).create(java_arguments.0); java_result } {
             return false;
         }
         return true;
@@ -1113,22 +1118,22 @@ impl StoreFront {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
             jcall!(stringBuffer).append(URLGLOBALS::getMainPath());
-            jcall!(stringBuffer).append(jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }.clone());
             let mut viewPath: String = jcall!(stringBuffer).toString();
             jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
             jcall!(stringBuffer).append(viewPath.clone());
-            jcall!(stringBuffer).append(jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).INSTALLPATH.clone());
-            let mut fromDirectoryAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+            jcall!(stringBuffer).append({ let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).INSTALLPATH.clone(); java_field }.clone());
+            let mut fromDirectoryAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
             jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
             jcall!(stringBuffer).append(viewPath.clone());
             jcall!(stringBuffer).append(String::from("special"));
-            jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-            let mut fromSpecialDirectoryAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+            jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+            let mut fromSpecialDirectoryAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
             jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
             jcall!(stringBuffer).append(viewPath.clone());
             jcall!(stringBuffer).append(self.getName());
-            jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-            let mut toDirectoryAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+            jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+            let mut toDirectoryAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
             if current == 0 {
                 if !jcall!(self.directory).create(toDirectoryAbPath.clone()) {
                     panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Unable to create store view directory: "), jcall!(toDirectoryAbPath).toString()))));
@@ -1156,10 +1161,10 @@ impl StoreFront {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("install()"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("install()"), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", e);
             }
@@ -1177,16 +1182,16 @@ impl StoreFront {
     pub fn installResources(&mut self, mut fromDirectoryAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>, mut current: i32, mut total: i32) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(fromDirectoryAbPath).toString());
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("Resources"));
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-        let mut installCategoryAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+        let mut installCategoryAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(URLGLOBALS::getMainPath());
         jcall!(stringBuffer).append(self.getCurrentHomeHostNamePath());
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.getCategoryPath());
-        let mut categoryAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        let mut categoryAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
         jcall!(FileUtil::getInstance()).copyDirectoryPortion(installCategoryAbPath.clone(), categoryAbPath.clone(), true, false, current.clone(), total.clone());
     }
     
@@ -1195,19 +1200,19 @@ impl StoreFront {
     pub fn installMedia(&mut self, mut fromDirectoryAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>, mut current: i32, mut total: i32) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(fromDirectoryAbPath).toString());
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-        jcall!(stringBuffer).append(jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).TEMPLATEPATH.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).TEMPLATEPATH.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("images"));
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-        let mut viewStoreImagesDirectoryAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-        let mut storeAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(URLGLOBALS::getWebappPath() + self.getCurrentHomeHostNamePath(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+        let mut viewStoreImagesDirectoryAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        let mut storeAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(format!("{}{}", { let java_value = URLGLOBALS::getWebappPath(); java_value }, self.getCurrentHomeHostNamePath()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
         jcall!(FileUtil::getInstance()).copyDirectoryPortion(viewStoreImagesDirectoryAbPath.clone(), storeAbPath.clone(), true, false, current.clone(), total.clone());
     }
     
 
     // throws Exception
     pub fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut dataVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut dataVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         jcall!(dataVector).add(crate::java_into_object(self.name.clone()));
         jcall!(dataVector).add(crate::java_into_object(self.homeHostName.clone()));
         jcall!(dataVector).add(crate::java_into_object(jcall!(self.homeHostNamePath).toString()));
@@ -1235,7 +1240,7 @@ impl StoreFront {
         jcall!(dataVector).add(crate::java_into_object(self.testFtpUserName.clone()));
         jcall!(dataVector).add(crate::java_into_object(self.testFtpPassword.clone()));
         let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-        let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString().clone();
+        let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string().clone();
         jcall!(dataVector).add(crate::java_into_object(time.clone()));
         jcall!(dataVector).add(crate::java_into_object(time.clone()));
         return dataVector.clone();
@@ -1243,44 +1248,44 @@ impl StoreFront {
     
 
     // throws Exception
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         let mut storeFrontData: Option<Rc<RefCell<StoreFrontData>>> = StoreFrontData::getInstance();
-        let mut dataHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(dataHashMap).put(jcall!(storeFrontData).NAME.clone(), self.name.clone());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).HOMEHOSTNAME.clone(), self.homeHostName.clone());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).HOMEHOSTNAMEPATH.clone(), jcall!(self.homeHostNamePath).toString());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).HOSTNAME.clone(), self.hostName.clone());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).HOSTNAMEPATH.clone(), jcall!(self.hostNamePath).toString());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).TESTHOMEHOSTNAME.clone(), self.testHomeHostName.clone());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).TESTHOMEHOSTNAMEPATH.clone(), jcall!(self.testHomeHostNamePath).toString());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).TESTHOSTNAME.clone(), self.testHostName.clone());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).TESTHOSTNAMEPATH.clone(), jcall!(self.testHostNamePath).toString());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).IMAGEPATH.clone(), jcall!(self.imagePath).toString());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).STATICPATH.clone(), jcall!(self.staticPath).toString());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).CATEGORYPATH.clone(), jcall!(self.categoryPath).toString());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).INVENTORYCONTROL.clone(), self.inventoryControl.clone());
+        let mut dataHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).NAME.clone(); java_field }.clone()), crate::java_into_object(self.name.clone()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).HOMEHOSTNAME.clone(); java_field }.clone()), crate::java_into_object(self.homeHostName.clone()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).HOMEHOSTNAMEPATH.clone(); java_field }.clone()), crate::java_into_object(jcall!(self.homeHostNamePath).toString()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).HOSTNAME.clone(); java_field }.clone()), crate::java_into_object(self.hostName.clone()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).HOSTNAMEPATH.clone(); java_field }.clone()), crate::java_into_object(jcall!(self.hostNamePath).toString()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTHOMEHOSTNAME.clone(); java_field }.clone()), crate::java_into_object(self.testHomeHostName.clone()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTHOMEHOSTNAMEPATH.clone(); java_field }.clone()), crate::java_into_object(jcall!(self.testHomeHostNamePath).toString()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTHOSTNAME.clone(); java_field }.clone()), crate::java_into_object(self.testHostName.clone()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTHOSTNAMEPATH.clone(); java_field }.clone()), crate::java_into_object(jcall!(self.testHostNamePath).toString()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).IMAGEPATH.clone(); java_field }.clone()), crate::java_into_object(jcall!(self.imagePath).toString()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).STATICPATH.clone(); java_field }.clone()), crate::java_into_object(jcall!(self.staticPath).toString()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).CATEGORYPATH.clone(); java_field }.clone()), crate::java_into_object(jcall!(self.categoryPath).toString()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).INVENTORYCONTROL.clone(); java_field }.clone()), crate::java_into_object(self.inventoryControl.clone()));
         let mut contextConfigurationDomDocumentMapping: Option<Rc<RefCell<ContextConfigurationDomDocumentMapping>>> = ContextConfigurationDomDocumentMapping::new(self.getContextConfigurationInterface());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).CONFIGURATION.clone(), jcall!(contextConfigurationDomDocumentMapping).toDomDocumentString());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).SUBSTORES.clone(), self.subStores.clone());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).TAGLOCATION.clone(), self.tagLocation.clone());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).PACKAGELOCATION.clone(), self.packageLocation.clone());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).FTP.clone(), self.ftp.clone());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).FTPPATH.clone(), jcall!(self.ftpPath).toString());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).FTPUSERNAME.clone(), self.ftpUserName.clone());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).FTPPASSWORD.clone(), self.ftpPassword.clone());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).TESTFTP.clone(), self.testFtp.clone());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).TESTFTPPATH.clone(), jcall!(self.testFtpPath).toString());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).TESTFTPUSERNAME.clone(), self.testFtpUserName.clone());
-        jcall!(dataHashMap).put(jcall!(storeFrontData).TESTFTPPASSWORD.clone(), self.testFtpPassword.clone());
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).CONFIGURATION.clone(); java_field }.clone()), crate::java_into_object(jcall!(contextConfigurationDomDocumentMapping).toDomDocumentString()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).SUBSTORES.clone(); java_field }.clone()), crate::java_into_object(self.subStores.clone()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).TAGLOCATION.clone(); java_field }.clone()), crate::java_into_object(self.tagLocation.clone()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).PACKAGELOCATION.clone(); java_field }.clone()), crate::java_into_object(self.packageLocation.clone()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).FTP.clone(); java_field }.clone()), crate::java_into_object(self.ftp.clone()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).FTPPATH.clone(); java_field }.clone()), crate::java_into_object(jcall!(self.ftpPath).toString()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).FTPUSERNAME.clone(); java_field }.clone()), crate::java_into_object(self.ftpUserName.clone()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).FTPPASSWORD.clone(); java_field }.clone()), crate::java_into_object(self.ftpPassword.clone()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTFTP.clone(); java_field }.clone()), crate::java_into_object(self.testFtp.clone()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTFTPPATH.clone(); java_field }.clone()), crate::java_into_object(jcall!(self.testFtpPath).toString()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTFTPUSERNAME.clone(); java_field }.clone()), crate::java_into_object(self.testFtpUserName.clone()));
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTFTPPASSWORD.clone(); java_field }.clone()), crate::java_into_object(self.testFtpPassword.clone()));
         let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-        let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString().clone();
-        jcall!(dataHashMap).put(jcall!(EntryData::getInstance()).LASTMODIFIED.clone(), time.clone());
+        let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string().clone();
+        jcall!(dataHashMap).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone()), crate::java_into_object(time.clone()));
         return dataHashMap.clone();
     }
     
 
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return (self.getName()).clone() /* as Any */;
+        return crate::java_into_object(crate::java_into_object((self.getName()).clone()));
     }
     
 

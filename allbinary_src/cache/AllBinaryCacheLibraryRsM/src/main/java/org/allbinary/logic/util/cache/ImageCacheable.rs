@@ -38,7 +38,7 @@ impl ImageCacheable {
         let mut this = Self {
             name: String::new(),
         };
-        this.name = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.name = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this
     }
 
@@ -48,7 +48,7 @@ impl ImageCacheable {
     
 
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return self.name.clone();
+        return crate::java_into_object(self.name.clone());
     }
     
 

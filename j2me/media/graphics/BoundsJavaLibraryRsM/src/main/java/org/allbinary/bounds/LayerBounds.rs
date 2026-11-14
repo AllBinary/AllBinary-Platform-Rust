@@ -46,6 +46,10 @@ impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventLis
 }
 
 impl LayerBounds {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut rectangle: Option<Rc<RefCell<Rectangle>>>) -> Self {
@@ -73,15 +77,15 @@ impl LayerBounds {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
     pub fn onBoundsChangeEvent(&mut self, mut boundsChangeEvent: Option<Rc<RefCell<BoundsChangeEvent>>>) {
-        self.rectangle = jcall!(boundsChangeEvent).getRectangle();
+        self.rectangle = { let java_value = (jcall!(boundsChangeEvent).getRectangle()).clone(); java_value };
     }
 }
-pub trait LayerBoundsDyn {
+pub trait LayerBoundsDyn: std::any::Any {
     fn as_LayerBounds(&self) -> &LayerBounds;
     fn as_LayerBounds_mut(&mut self) -> &mut LayerBounds;
     fn getRectangleP(&mut self) -> Option<Rc<RefCell<Rectangle>>> { LayerBounds::getRectangleP(self.as_LayerBounds_mut()) }

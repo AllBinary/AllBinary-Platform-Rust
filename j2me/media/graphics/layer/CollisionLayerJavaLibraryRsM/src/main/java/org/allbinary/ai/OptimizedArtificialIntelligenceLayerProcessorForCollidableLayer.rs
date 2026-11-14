@@ -21,6 +21,7 @@ use crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableComp
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::layer::LayerProcessor::LayerProcessor;
+use crate::java::lang::Exception::*;
 use super::OptimizedArtificialIntelligenceLayerManager::OptimizedArtificialIntelligenceLayerManager;
 
 // Borrows the object of a Java reference
@@ -34,13 +35,21 @@ pub struct OptimizedArtificialIntelligenceLayerProcessorForCollidableLayer {
     pub base: LayerProcessor,
 }
 
+impl crate::org::allbinary::layer::BasicLayerProcessorInterface::BasicLayerProcessorInterface for OptimizedArtificialIntelligenceLayerProcessorForCollidableLayer {
+    fn process(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { crate::org::allbinary::layer::LayerProcessor::LayerProcessor::process(crate::org::allbinary::layer::LayerProcessor::LayerProcessorDyn::as_LayerProcessor_mut(self), p1) }
+}
+impl crate::org::allbinary::layer::LayerProcessorInterface::LayerProcessorInterface for OptimizedArtificialIntelligenceLayerProcessorForCollidableLayer {
+    fn getLayerManager(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>> { crate::org::allbinary::layer::LayerProcessor::LayerProcessor::getLayerManager(crate::org::allbinary::layer::LayerProcessor::LayerProcessorDyn::as_LayerProcessor_mut(self)) }
+    fn processAt(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut index: i32) { Self::processAt(self, allBinaryLayerManager, layerInterface, index) }
+    fn isProcessorLayer(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> bool { Self::isProcessorLayer(self, layerInterface) }
+}
 
 impl OptimizedArtificialIntelligenceLayerProcessorForCollidableLayer {
     
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: LayerProcessor::new_struct(OptimizedArtificialIntelligenceLayerManager::new()),
+            base: LayerProcessor::new_struct(OptimizedArtificialIntelligenceLayerManager::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>)),
         };
         // super(...) is in the struct literal above
         this
@@ -53,7 +62,7 @@ impl OptimizedArtificialIntelligenceLayerProcessorForCollidableLayer {
 
     // throws Exception
     pub fn processAt(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut index: i32) {
-        let mut artificialIntelligenceCompositeInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>> = (layerInterface).clone() /* as CollidableCompositeLayer */;
+        let mut artificialIntelligenceCompositeInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to CollidableCompositeLayer") })();
         jcall!(jcall!(artificialIntelligenceCompositeInterface).getArtificialIntelligenceInterface()).processAI(allBinaryLayerManager.clone());
     }
     

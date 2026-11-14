@@ -40,6 +40,10 @@ thread_local! { pub static URIResolverStrings_instance: Option<Rc<RefCell<URIRes
 
 impl URIResolverStrings {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             IMPORT_URL: String::new(),

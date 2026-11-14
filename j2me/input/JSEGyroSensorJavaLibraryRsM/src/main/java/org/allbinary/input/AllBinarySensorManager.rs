@@ -34,16 +34,20 @@ pub struct AllBinarySensorManager {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-pub static mut AllBinarySensorManager_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut AllBinarySensorManager_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl AllBinarySensorManager {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AllBinarySensorManager>>> {
-        if match (&unsafe { AllBinarySensorManager_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *AllBinarySensorManager_instance = AllBinarySensorManager::new() };
+        if match (&unsafe { AllBinarySensorManager_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *AllBinarySensorManager_instance = crate::java_into_object(AllBinarySensorManager::new()) };
         }
-        return (unsafe { AllBinarySensorManager_instance.clone() }).clone() /* as AllBinarySensorManager */;
+        return { let java_object = (unsafe { AllBinarySensorManager_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AllBinarySensorManager>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -55,7 +59,7 @@ impl AllBinarySensorManager {
         };
         this.ORIENTATION_SENSOR_INPUT = String::from("Orientation Sensor Input");
         this.ORIENTATION_TYPE = String::from("Orientation Type");
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 

@@ -28,6 +28,7 @@ use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::ProceduralAnimationInterfaceFactoryInterface::ProceduralAnimationInterfaceFactoryInterface;
 use super::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
 use super::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface;
@@ -75,7 +76,7 @@ impl FeaturedAnimationInterfaceFactoryInterfaceFactory {
     pub fn getRectangleXY(&mut self, mut resource: String, mut x: i32, mut y: i32) -> Option<Rc<RefCell<Rectangle>>> {
         let mut pointFactory: Option<Rc<RefCell<PointFactory>>> = PointFactory::getInstance();
         let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getList();
-        let mut scale: i32 = ((jcall!(jcall!(GameConfigurationCentral::getInstance()).SCALE).getValue()).unwrap() as i32);
+        let mut scale: i32 = ((jcall!({ let java_field = jcall!(GameConfigurationCentral::getInstance()).SCALE.clone(); java_field }).getValue()).unwrap() as i32);
         let mut size: i32 = jcall!(self.getList()).size();
         for index in (0..size) {
             let mut featureInterface: Option<Rc<RefCell<dyn FeatureResourceAnimationInterfaceFactoryInterface>>> = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn FeatureResourceAnimationInterfaceFactoryInterface>>>>().expect("ClassCastException").clone()) };
@@ -92,28 +93,28 @@ impl FeaturedAnimationInterfaceFactoryInterfaceFactory {
 
     // throws Exception
     pub fn getProcedural(&mut self, mut resource: String) -> Option<Rc<RefCell<dyn ProceduralAnimationInterfaceFactoryInterface>>> {
-        return (self.getBasicAnimationInterfaceFactoryInstance(resource.clone())).clone() /* as ProceduralAnimationInterfaceFactoryInterface */;
+        return (|| -> Option<Rc<RefCell<dyn ProceduralAnimationInterfaceFactoryInterface>>> { panic!("ClassCastException: a Rust dyn BasicAnimationInterfaceFactoryInterface cannot be cast to dyn ProceduralAnimationInterfaceFactoryInterface") })();
     }
     
 
     // throws Exception
     pub fn get(&mut self, mut resource: String) -> Option<Rc<RefCell<dyn AnimationInterfaceFactoryInterface>>> {
-        return (self.getBasicAnimationInterfaceFactoryInstance(resource.clone())).clone() /* as AnimationInterfaceFactoryInterface */;
+        return (|| -> Option<Rc<RefCell<dyn AnimationInterfaceFactoryInterface>>> { panic!("ClassCastException: a Rust dyn BasicAnimationInterfaceFactoryInterface cannot be cast to dyn AnimationInterfaceFactoryInterface") })();
     }
     
 
     // throws Exception
     pub fn getBasicAnimationInterfaceFactoryInstance(&mut self, mut resource: String) -> Option<Rc<RefCell<dyn BasicAnimationInterfaceFactoryInterface>>> {
         let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getList();
-        let mut resourceTypeAvailableList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut resourceTypeAvailableList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut size: i32 = jcall!(self.getList()).size();
         let mut featureInterface: Option<Rc<RefCell<dyn FeatureResourceAnimationInterfaceFactoryInterface>>> = None;
         let mut animationInterfaceFactoryInterface: Option<Rc<RefCell<dyn BasicAnimationInterfaceFactoryInterface>>> = None;
         for index in (0..size) {
-            featureInterface = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn FeatureResourceAnimationInterfaceFactoryInterface>>>>().expect("ClassCastException").clone()) };
+            featureInterface = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn FeatureResourceAnimationInterfaceFactoryInterface>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             if jcall!(featureInterface).isFeature() {
                 jcall!(resourceTypeAvailableList).add(crate::java_into_object(featureInterface.clone()));
-                animationInterfaceFactoryInterface = jcall!(featureInterface).getBasicAnimationInterfaceFactoryInstance(resource.clone());
+                animationInterfaceFactoryInterface = { let java_value = (jcall!(featureInterface).getBasicAnimationInterfaceFactoryInstance(resource.clone())).clone(); java_value };
                 if !match (&animationInterfaceFactoryInterface, &unsafe { NullAnimationFactory_NULL_NOT_FOR_USE_ANIMATION_FACTORY.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                     return animationInterfaceFactoryInterface.clone();
                 }
@@ -128,19 +129,19 @@ impl FeaturedAnimationInterfaceFactoryInterfaceFactory {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(NO_ANIMATION_AVAILABLE_FROM.clone());
             jcall!(stringBuffer).appendint(jcall!(resourceTypeAvailableList).size());
-            jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).FORWARD_SLASH.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).FORWARD_SLASH.clone(); java_field }.clone());
             jcall!(stringBuffer).appendint(size.clone());
             jcall!(stringBuffer).append(FOR_FACTORIES.clone());
             let mut size2: i32 = jcall!(resourceTypeAvailableList).size();
             for index in (0..size2) {
-                jcall!(stringBuffer).append(jcall!(jcall!(resourceTypeAvailableList).get(index.clone())).toString());
-                jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).COMMA_SEP.clone());
+                jcall!(stringBuffer).append({ let java_object = (jcall!(resourceTypeAvailableList).get(index.clone())).clone(); let value = jcall!(java_object); value.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", value.as_ref().type_id())) });
+                jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).COMMA_SEP.clone(); java_field }.clone());
             }
             jcall!(stringBuffer).append(FOR_RESOURCE.clone());
             jcall!(stringBuffer).append(resource.clone());
             for index in (0..size) {
-                jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
-                featureInterface = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn FeatureResourceAnimationInterfaceFactoryInterface>>>>().expect("ClassCastException").clone()) };
+                jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
+                featureInterface = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn FeatureResourceAnimationInterfaceFactoryInterface>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 if jcall!(featureInterface).isFeature() {
                     jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(featureInterface.clone())));
                     jcall!(stringBuffer).append(HAS_KEY.clone());
@@ -152,9 +153,9 @@ impl FeaturedAnimationInterfaceFactoryInterfaceFactory {
         } else {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             for index in (0..size) {
-                featureInterface = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn FeatureResourceAnimationInterfaceFactoryInterface>>>>().expect("ClassCastException").clone()) };
+                featureInterface = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn FeatureResourceAnimationInterfaceFactoryInterface>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 jcall!(stringBuffer).append(jcall!(featureInterface).toString());
-                jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
             }
             let mut result: String = jcall!(stringBuffer).toString();
             jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());

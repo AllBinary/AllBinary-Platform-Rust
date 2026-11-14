@@ -22,6 +22,7 @@ use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterfac
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView;
+use crate::java::lang::Exception::*;
 use super::SelectExistingView::SelectExistingView;
 
 // Borrows the object of a Java reference
@@ -36,6 +37,18 @@ pub struct SelectExistingValidationView {
 }
 
 // impl ValidationComponentInterface for SelectExistingValidationView with the methods of the trait
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for SelectExistingValidationView {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }
+}
+impl crate::org::allbinary::logic::visual::transform::TransformInterface::TransformInterface for SelectExistingValidationView {
+    fn getTypeId(&mut self) -> i32 { crate::views::HttpComponentView::HttpComponentView::getTypeId(crate::views::HttpComponentView::HttpComponentViewDyn::as_HttpComponentView_mut(self)) }
+    fn setTransformDocumentInterface(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::data::TransformDocumentInterface::TransformDocumentInterface>>>) { crate::views::HttpComponentView::HttpComponentView::setTransformDocumentInterface(crate::views::HttpComponentView::HttpComponentViewDyn::as_HttpComponentView_mut(self), p1) }
+    fn getTransformDocumentInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::data::TransformDocumentInterface::TransformDocumentInterface>>> { crate::views::HttpComponentView::HttpComponentView::getTransformDocumentInterface(crate::views::HttpComponentView::HttpComponentViewDyn::as_HttpComponentView_mut(self)) }
+    fn view(&mut self) -> String { Self::view(self) }
+}
+impl crate::org::allbinary::data::tree::dom::document::mapping::DomDocumentMappingInterface::DomDocumentMappingInterface for SelectExistingValidationView {
+    fn toXmlDoc(&mut self) -> Option<Rc<RefCell<Document>>> { Self::toXmlDoc(self) }
+}
 
 impl SelectExistingValidationView {
     
@@ -97,6 +110,10 @@ impl std::ops::DerefMut for SelectExistingValidationView {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn for SelectExistingValidationView {
+    fn as_TransformInfoHttpComposite(&self) -> &crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &self.base.base.base }
+    fn as_TransformInfoHttpComposite_mut(&mut self) -> &mut crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &mut self.base.base.base }
+}
 impl crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentViewDyn for SelectExistingValidationView {
     fn as_HttpStoreComponentView(&self) -> &crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &self.base }
     fn as_HttpStoreComponentView_mut(&mut self) -> &mut crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &mut self.base }
@@ -106,10 +123,6 @@ impl crate::views::HttpComponentView::HttpComponentViewDyn for SelectExistingVal
     fn as_HttpComponentView_mut(&mut self) -> &mut crate::views::HttpComponentView::HttpComponentView { &mut self.base.base }
     fn toXmlDoc(&mut self) -> Option<Rc<RefCell<Document>>> { Self::toXmlDoc(self) }
     fn view(&mut self) -> String { Self::view(self) }
-}
-impl crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn for SelectExistingValidationView {
-    fn as_TransformInfoHttpComposite(&self) -> &crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &self.base.base.base }
-    fn as_TransformInfoHttpComposite_mut(&mut self) -> &mut crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &mut self.base.base.base }
 }
 
 

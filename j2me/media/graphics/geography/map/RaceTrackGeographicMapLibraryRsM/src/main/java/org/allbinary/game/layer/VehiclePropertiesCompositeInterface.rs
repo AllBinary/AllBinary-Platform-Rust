@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait VehiclePropertiesCompositeInterface {
+pub trait VehiclePropertiesCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getVehicleProperties(&mut self) -> Option<Rc<RefCell<VehicleProperties>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -36,6 +36,10 @@ pub struct Driver {
 thread_local! { pub static Driver_NULL_DRIVER: Option<Rc<RefCell<Driver>>> = Driver::new(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0), jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0), Aggression::new(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0), jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0), jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0))); }
 
 impl Driver {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut turnSpeed: Option<i32>, mut trackPathSelectionSkill: Option<i32>, mut aggression: Option<Rc<RefCell<Aggression>>>) -> Self {

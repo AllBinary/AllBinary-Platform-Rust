@@ -26,6 +26,7 @@ use crate::org::allbinary::logic::system::security::licensing::ClientInformation
 use crate::org::allbinary::thread::PrimaryThreadPool::PrimaryThreadPool;
 use crate::org::allbinary::game::displayable::canvas::NullGameCanvasRunnable::NullGameCanvasRunnable;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::GameMidlet::GameMidlet;
 use super::DemoRunnable::DemoRunnable;
 use super::CreateGameRunnable::CreateGameRunnable;
@@ -60,7 +61,7 @@ impl DemoGameMidlet {
 
     // throws Exception
     pub fn isContinue(&mut self) -> bool {
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = self.getStartStateHashtable();
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = self.getStartStateHashtable();
         if hashtable.is_some() && jcall!(hashtable).size() > 0 {
             return true;
         } else {
@@ -76,14 +77,14 @@ impl DemoGameMidlet {
 
     // throws Exception
     pub fn createDemoGameCanvasRunnableInterface(&mut self) -> Option<Rc<RefCell<dyn GameCanvasRunnableInterface>>> {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CREATE.clone());
-        return crate::org::allbinary::game::displayable::canvas::NullGameCanvasRunnable::NullGameCanvasRunnable_NULL_GAME_CANVAS_RUNNABLE.with(Clone::clone).clone();
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CREATE.clone(); java_field }.clone());
+        return crate::org::allbinary::game::displayable::canvas::NullGameCanvasRunnable::NullGameCanvasRunnable_NULL_GAME_CANVAS_RUNNABLE.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn GameCanvasRunnableInterface>>);
     }
     
 
     // throws Exception
     pub fn createGameCanvasRunnable(&mut self, mut allBinaryGameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>) -> Option<Rc<RefCell<dyn GameCanvasRunnableInterface>>> {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
@@ -104,10 +105,10 @@ impl DemoGameMidlet {
     // throws Exception
     // synchronized
     pub fn setDemo(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setDemo"));
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setDemo"));
         let mut progressCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn>>> = ProgressCanvasFactory::getInstance();
         jcall!(progressCanvas).start();
-        jcall!(PrimaryThreadPool::getInstance()).runTask(DemoRunnable::new(None /* Java this: a &mut self method has no Rc of itself */));
+        jcall!(PrimaryThreadPool::getInstance()).runTask(DemoRunnable::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::Runnable>>));
     }
     
 
@@ -115,13 +116,13 @@ impl DemoGameMidlet {
     // synchronized
     pub fn createGame(&mut self) {
         let mut CREATE_GAME: String = String::from("createGame");
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), CREATE_GAME.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), CREATE_GAME.clone());
         let mut progressCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn>>> = ProgressCanvasFactory::getInstance();
         jcall!(progressCanvas).start();
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = self.getStartStateHashtable();
-        { let java_arguments = (jcall!(StdUtil::getInstance()).NULL_TABLE.clone(),); self.setStartStateHashtable(java_arguments.0) };
-        jcall!(PrimaryThreadPool::getInstance()).runTask(CreateGameRunnable::new(None /* Java this: a &mut self method has no Rc of itself */, hashtable.clone()));
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).END.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), CREATE_GAME.clone());
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = self.getStartStateHashtable();
+        { let java_arguments = ({ let java_field = jcall!(StdUtil::getInstance()).NULL_TABLE.clone(); java_field }.clone(),); self.setStartStateHashtable(java_arguments.0) };
+        jcall!(PrimaryThreadPool::getInstance()).runTask(CreateGameRunnable::new(None /* Java this: a &mut self method has no Rc of itself */, hashtable.clone()).map(|reference| reference as Rc<RefCell<dyn crate::Runnable>>));
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).END.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), CREATE_GAME.clone());
     }
     
 
@@ -160,17 +161,24 @@ impl crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn for DemoGame
     fn setDemo(&mut self) { Self::setDemo(self) }
     fn createGame(&mut self) { Self::createGame(self) }
 }
+impl crate::javax::microedition::midlet::MIDlet::MIDletDyn for DemoGameMidlet {
+    fn as_MIDlet(&self) -> &crate::javax::microedition::midlet::MIDlet::MIDlet { &self.base.base.base.base }
+    fn as_MIDlet_mut(&mut self) -> &mut crate::javax::microedition::midlet::MIDlet::MIDlet { &mut self.base.base.base.base }
+    fn startApp(&mut self) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::startApp(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self)) }
+    fn pauseApp(&mut self) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::pauseApp(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self)) }
+    fn destroyApp(&mut self, p1: bool) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::destroyApp(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self), p1) }
+}
 impl crate::org::allbinary::midlet::AllBinaryMidlet::AllBinaryMidletDyn for DemoGameMidlet {
     fn as_AllBinaryMidlet(&self) -> &crate::org::allbinary::midlet::AllBinaryMidlet::AllBinaryMidlet { &self.base.base.base }
     fn as_AllBinaryMidlet_mut(&mut self) -> &mut crate::org::allbinary::midlet::AllBinaryMidlet::AllBinaryMidlet { &mut self.base.base.base }
-    fn startApp(&mut self) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::startApp(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self)) }
-    fn pauseApp(&mut self) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::pauseApp(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self)) }
     fn destroyAppInRunnable(&mut self, p1: bool, p2: bool) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::destroyAppInRunnable(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self), p1, p2) }
-    fn destroyApp(&mut self, p1: bool) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::destroyApp(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self), p1) }
 }
 impl crate::org::allbinary::midlet::ProgressMidlet::ProgressMidletDyn for DemoGameMidlet {
     fn as_ProgressMidlet(&self) -> &crate::org::allbinary::midlet::ProgressMidlet::ProgressMidlet { &self.base.base }
     fn as_ProgressMidlet_mut(&mut self) -> &mut crate::org::allbinary::midlet::ProgressMidlet::ProgressMidlet { &mut self.base.base }
+}
+impl crate::javax::microedition::lcdui::CommandListener::CommandListener for DemoGameMidlet {
+    fn commandAction(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, p2: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::commandAction(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self), p1, p2) }
 }
 
 

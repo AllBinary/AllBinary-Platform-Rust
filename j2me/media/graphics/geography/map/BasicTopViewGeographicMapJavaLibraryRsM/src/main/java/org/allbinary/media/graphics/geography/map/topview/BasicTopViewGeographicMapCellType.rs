@@ -45,8 +45,8 @@ impl BasicTopViewGeographicMapCellType {
     
 
     pub fn createType(mut name: String, mut r#type: i32, mut cost: i32) -> Option<Rc<RefCell<BasicTopViewGeographicMapCellType>>> {
-        let mut types: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        jcall!(types).add(r#type.clone());
+        let mut types: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        jcall!(types).add(crate::java_into_object(r#type.clone()));
         return BasicTopViewGeographicMapCellType::new(name.clone(), types.clone(), cost.clone());
     }
     
@@ -64,8 +64,8 @@ impl BasicTopViewGeographicMapCellType {
         let mut typeAsInteger: Option<i32> = None;
         let mut r#type: i32 = 0;
         for index in (0..size) {
-            typeAsInteger = ((jcall!(types).get(index.clone())).clone() /* as Integer */);
-            r#type = ((typeAsInteger).unwrap() as i32);
+            typeAsInteger = { let java_value = (({ let java_object = (jcall!(types).get(index.clone())).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) })).clone(); java_value };
+            r#type = { let java_value = (((typeAsInteger).unwrap() as i32)).clone(); java_value };
             if jcall!(GeographicMapCellTypeFactory::getInstance()).getGeographicMapCellTypeArray()[(r#type) as usize].is_none() {
                 RaceTrackGeographicMapCellType::new(name.clone(), r#type.clone(), cost.clone(), 0);
             } else {
@@ -108,7 +108,7 @@ impl BasicTopViewGeographicMapCellType {
         let mut stringMaker: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut size: i32 = (self.types.len() as i32).clone();
         for index in (0..size) {
-            jcall!(stringMaker).appendint(self.types[(index) as usize].clone()).append(jcall!(CommonSeps::getInstance()).COMMA.clone());
+            jcall!(stringMaker).appendint(self.types[(index) as usize].clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).COMMA.clone(); java_field }.clone());
         }
         return jcall!(stringMaker).toString();
     }

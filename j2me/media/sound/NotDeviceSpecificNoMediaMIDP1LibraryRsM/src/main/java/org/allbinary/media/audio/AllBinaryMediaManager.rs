@@ -17,13 +17,14 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::InputStream::InputStream;
-// use crate::javax::microedition::media::Player::Player;
+use crate::java::io::InputStream::InputStream;
+use crate::javax::microedition::media::Player::Player;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvasFactory::ProgressCanvasFactory;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::Sounds::Sounds;
 use super::SoundsFactoryInterface::SoundsFactoryInterface;
 
@@ -41,6 +42,10 @@ pub struct AllBinaryMediaManager {
 thread_local! { pub static AllBinaryMediaManager_THIS: String = String::from("AllBinaryMediaManagerNoMediaMIDP1"); }
 
 impl AllBinaryMediaManager {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -72,7 +77,7 @@ impl AllBinaryMediaManager {
     pub fn init(mut soundsFactoryInterface: Option<Rc<RefCell<dyn SoundsFactoryInterface>>>) {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut commonString: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(logUtil).putF(jcall!(commonString).START.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), jcall!(commonString).INIT.clone());
+        jcall!(logUtil).putF({ let java_field = jcall!(commonString).START.clone(); java_field }.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), { let java_field = jcall!(commonString).INIT.clone(); java_field }.clone());
         jcall!(ProgressCanvasFactory::getInstance()).addNormalPortion(50, String::from("Media Manager"));
         jcall!(Sounds::new(soundsFactoryInterface.clone())).init();
     }
@@ -86,19 +91,19 @@ impl AllBinaryMediaManager {
     }
     
 
-    pub fn createPlayerFromInputStream(mut stream: Option<Rc<RefCell<InputStream>>>, mut r#type: String) -> Option<Rc<RefCell<Player>>> {
+    pub fn createPlayerFromInputStream(mut stream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>, mut r#type: String) -> Option<Rc<RefCell<dyn Player>>> {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut commonString: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(logUtil).putF(jcall!(commonString).START.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), String::from("creatPlayer(InputStream)"));
-        return (NoPlayer_NO_PLAYER.with(Clone::clone)).clone() /* as Player */;
+        jcall!(logUtil).putF({ let java_field = jcall!(commonString).START.clone(); java_field }.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), String::from("creatPlayer(InputStream)"));
+        return (NoPlayer_NO_PLAYER.with(Clone::clone)).clone().map(|reference| reference as Rc<RefCell<dyn Player>>);
     }
     
 
-    pub fn createPlayer(mut locator: String) -> Option<Rc<RefCell<Player>>> {
+    pub fn createPlayer(mut locator: String) -> Option<Rc<RefCell<dyn Player>>> {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut commonString: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(logUtil).putF(jcall!(commonString).START.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), String::from("creatPlayer(locator)"));
-        return (NoPlayer_NO_PLAYER.with(Clone::clone)).clone() /* as Player */;
+        jcall!(logUtil).putF({ let java_field = jcall!(commonString).START.clone(); java_field }.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), String::from("creatPlayer(locator)"));
+        return (NoPlayer_NO_PLAYER.with(Clone::clone)).clone().map(|reference| reference as Rc<RefCell<dyn Player>>);
     }
     
 

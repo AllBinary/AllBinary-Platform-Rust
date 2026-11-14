@@ -21,6 +21,7 @@ use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::layer::BasicLayerProcessor::BasicLayerProcessor;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::DropLayerInterface::DropLayerInterface;
 
 // Borrows the object of a Java reference
@@ -34,7 +35,7 @@ pub struct DropLayerProcessor {
     pub base: BasicLayerProcessor,
 }
 
-thread_local! { pub static DropLayerProcessor_LAYER_PROCESSOR: Option<Rc<RefCell<dyn crate::org::allbinary::layer::BasicLayerProcessor::BasicLayerProcessorDyn>>> = DropLayerProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::BasicLayerProcessor::BasicLayerProcessorDyn>>); }
+thread_local! { pub static DropLayerProcessor_LAYER_PROCESSOR: Option<Rc<RefCell<dyn crate::org::allbinary::layer::BasicLayerProcessor::BasicLayerProcessorDyn>>> = DropLayerProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::BasicLayerProcessor::BasicLayerProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::BasicLayerProcessor::BasicLayerProcessorDyn>>); }
 
 impl DropLayerProcessor {
     
@@ -63,9 +64,9 @@ impl DropLayerProcessor {
         let mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = None;
         let mut dropLayerInterface: Option<Rc<RefCell<dyn DropLayerInterface>>> = None;
         for index in (0..size) {
-            layerInterface = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>>().expect("ClassCastException").clone()) };
-            dropLayerInterface = (layerInterface).clone() /* as DropLayerInterface */;
-            layerInterface = (jcall!(dropLayerInterface).getDroppedLayer()).clone() /* as AllBinaryLayer */;
+            layerInterface = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            dropLayerInterface = (|| -> Option<Rc<RefCell<dyn DropLayerInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to DropLayerInterface") })();
+            layerInterface = { let java_value = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> { panic!("ClassCastException: a Rust dyn PickedUpLayerInterface cannot be cast to AllBinaryLayer") })()).clone(); java_value };
             jcall!(allBinaryLayerManager).append(layerInterface.clone());
         }
         jcall!(list).clear();

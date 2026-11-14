@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontInterface::StoreFrontInterface;
@@ -27,6 +26,7 @@ use crate::org::allbinary::business::user::commerce::money::Money::Money;
 use crate::org::allbinary::data::tables::user::commerce::inventory::order::OrderHistoryEntityFactory::OrderHistoryEntityFactory;
 use crate::org::allbinary::data::tables::user::commerce::inventory::order::OrderHistoryEntityInterface::OrderHistoryEntityInterface;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
+use crate::java::lang::Exception::*;
 use super::StoreFrontOrdersHistoryStatisticsInterface::StoreFrontOrdersHistoryStatisticsInterface;
 use super::StoreFrontOrdersHistoryStatisticsData::StoreFrontOrdersHistoryStatisticsData;
 
@@ -55,10 +55,14 @@ impl StoreFrontOrdersHistoryStatisticsInterface for StoreFrontOrdersHistoryStati
 impl crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface for StoreFrontOrdersHistoryStatistics {
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getKey(self) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::toVector(self) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::toHashMap(self) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toHashMap(self) }
 }
 
 impl StoreFrontOrdersHistoryStatistics {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>) -> Self {
@@ -79,7 +83,7 @@ impl StoreFrontOrdersHistoryStatistics {
         let mut orderHistoryInterface: Option<Rc<RefCell<dyn OrderHistoryInterface>>> = None;
         let mut size: i32 = jcall!(orderHistoryInterfaceVector).size();
         for index in (0..size) {
-            orderHistoryInterface = { let java_object = jcall!(orderHistoryInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn OrderHistoryInterface>>>>().expect("ClassCastException").clone()) };
+            orderHistoryInterface = { let java_value = ({ let java_object = (jcall!(orderHistoryInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn OrderHistoryInterface>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             numberOfOrders = numberOfOrders + 1_i64;
             { let java_receiver = this.subTotalMoney.clone(); let java_arguments = (jcall!(orderHistoryInterface).getSubTotal(),); jcall!(java_receiver).add(java_arguments.0); };
             { let java_receiver = this.shippingCostMoney.clone(); let java_arguments = (jcall!(orderHistoryInterface).getShippingCost(),); jcall!(java_receiver).add(java_arguments.0); };
@@ -120,14 +124,14 @@ impl StoreFrontOrdersHistoryStatistics {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
         let mut storeFrontOrdersHistoryStatisticsData: Option<Rc<RefCell<StoreFrontOrdersHistoryStatisticsData>>> = StoreFrontOrdersHistoryStatisticsData::getInstance();
-        jcall!(hashMap).put(jcall!(storeFrontOrdersHistoryStatisticsData).NUMBEROFORDERS.clone(), jcall!(self.getNumberOfOrders()).toString());
-        jcall!(hashMap).put(jcall!(storeFrontOrdersHistoryStatisticsData).SUBTOTAL.clone(), jcall!(self.getSubTotal()).toString());
-        jcall!(hashMap).put(jcall!(storeFrontOrdersHistoryStatisticsData).SHIPPINGCOST.clone(), jcall!(self.getShippingCost()).toString());
-        jcall!(hashMap).put(jcall!(storeFrontOrdersHistoryStatisticsData).TAXES.clone(), jcall!(self.getTaxes()).toString());
-        jcall!(hashMap).put(jcall!(storeFrontOrdersHistoryStatisticsData).TOTAL.clone(), jcall!(self.getTotal()).toString());
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontOrdersHistoryStatisticsData).NUMBEROFORDERS.clone(); java_field }.clone()), { let java_argument = crate::java_into_object((self.getNumberOfOrders()).expect("NullPointerException").to_string()); java_argument });
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontOrdersHistoryStatisticsData).SUBTOTAL.clone(); java_field }.clone()), { let java_argument = crate::java_into_object(jcall!(self.getSubTotal()).toString()); java_argument });
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontOrdersHistoryStatisticsData).SHIPPINGCOST.clone(); java_field }.clone()), { let java_argument = crate::java_into_object(jcall!(self.getShippingCost()).toString()); java_argument });
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontOrdersHistoryStatisticsData).TAXES.clone(); java_field }.clone()), { let java_argument = crate::java_into_object(jcall!(self.getTaxes()).toString()); java_argument });
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(storeFrontOrdersHistoryStatisticsData).TOTAL.clone(); java_field }.clone()), { let java_argument = crate::java_into_object(jcall!(self.getTotal()).toString()); java_argument });
         return hashMap.clone();
     }
     

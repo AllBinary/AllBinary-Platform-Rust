@@ -16,14 +16,14 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::data::tables::BasicDataTableInterface::BasicDataTableInterface;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,7 +36,7 @@ pub trait TransformInfoEntityInterface: BasicDataTableInterface {
     
 
     // throws Exception
-    fn get(&mut self, name: String, propertiesHashMap: Option<Rc<RefCell<HashMap>>>, pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<dyn TransformInfoInterface>>>;
+    fn get(&mut self, name: String, propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<dyn TransformInfoInterface>>>;
     
 
     // throws Exception
@@ -53,7 +53,7 @@ pub trait TransformInfoEntityInterface: BasicDataTableInterface {
     fn insert(&mut self, values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>);
     
 
-    fn update(&mut self, updatedValues: Option<Rc<RefCell<HashMap>>>);
+    fn update(&mut self, updatedValues: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>);
 }
 
 

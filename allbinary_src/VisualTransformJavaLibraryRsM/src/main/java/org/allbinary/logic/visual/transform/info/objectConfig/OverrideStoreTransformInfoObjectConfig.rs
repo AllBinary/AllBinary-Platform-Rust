@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 use super::GenericStoreTransformInfoObjectConfig::GenericStoreTransformInfoObjectConfig;
 
 // Borrows the object of a Java reference
@@ -80,7 +81,7 @@ impl OverrideStoreTransformInfoObjectConfig {
 
     // throws Exception
     pub fn generate(&mut self, mut objectConfigDocument: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Document>>> {
-        let mut newObjectConfigDocument: Option<Rc<RefCell<Document>>> = self.base.generate(objectConfigDocument.clone());
+        let mut newObjectConfigDocument: Option<Rc<RefCell<Document>>> = { let java_arguments = (objectConfigDocument.clone(),); self.base.generate(java_arguments.0) };
         return newObjectConfigDocument.clone();
     }
 }

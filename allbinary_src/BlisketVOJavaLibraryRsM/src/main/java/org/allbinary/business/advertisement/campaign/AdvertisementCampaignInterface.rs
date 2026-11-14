@@ -27,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AdvertisementCampaignInterface {
+pub trait AdvertisementCampaignInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getName(&mut self) -> String;
@@ -43,8 +43,6 @@ pub trait AdvertisementCampaignInterface {
     
 
     fn search(&mut self, advertisementSearchInterface: Option<Rc<RefCell<dyn AdvertisementSearchInterface>>>) -> Option<Rc<RefCell<dyn AdvertisementsInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

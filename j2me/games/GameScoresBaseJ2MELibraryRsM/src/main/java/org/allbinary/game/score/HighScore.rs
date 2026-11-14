@@ -18,10 +18,11 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::io::ByteArrayOutputStream::ByteArrayOutputStream;
-// use crate::java::io::DataOutputStream::DataOutputStream;
+use crate::java::io::DataOutputStream::DataOutputStream;
 use crate::org::allbinary::game::GameInfo::GameInfo;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -54,7 +55,7 @@ impl HighScore {
         this.name = name.clone();
         this.gameInfo = gameInfo.clone();
         this.score = score.clone();
-        this.scoreString = (this.score.clone()).to_string();
+        this.scoreString = { let java_value = ((this.score.clone()).to_string()).clone(); java_value };
         this
     }
 
@@ -80,7 +81,7 @@ impl HighScore {
 
     // throws Exception
     pub fn getAsBytes(&mut self) -> Vec<i8> {
-        let mut byteArrayOutputStream: Vec<u8> = Vec::new();
+        let mut byteArrayOutputStream: Option<Rc<RefCell<crate::java::io::OutputStream::OutputStream>>> = crate::java::io::OutputStream::OutputStream::new();
         let mut outputStream: Option<Rc<RefCell<DataOutputStream>>> = DataOutputStream::new(byteArrayOutputStream.clone());
         jcall!(outputStream).writeUTF(self.getName());
         jcall!(outputStream).writeLong(self.getScore());
@@ -105,7 +106,7 @@ impl HighScore {
 
     pub fn toString(&mut self) -> String {
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
-        return jcall!(StringMaker::new()).append(self.name.clone()).append(jcall!(commonSeps).COLON.clone()).appendlong(self.score.clone()).append(jcall!(commonSeps).FORWARD_SLASH.clone()).append(self.scoreString.clone()).toString();
+        return jcall!(StringMaker::new()).append(self.name.clone()).append({ let java_field = jcall!(commonSeps).COLON.clone(); java_field }.clone()).appendlong(self.score.clone()).append({ let java_field = jcall!(commonSeps).FORWARD_SLASH.clone(); java_field }.clone()).append(self.scoreString.clone()).toString();
     }
 }
 

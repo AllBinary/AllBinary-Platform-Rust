@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +34,10 @@ thread_local! { pub static BaseSecretComposite_NULL_SECRET_COMPOSITE: Option<Rc<
 
 impl BaseSecretComposite {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -46,16 +51,16 @@ impl BaseSecretComposite {
 
     // throws Exception
     pub fn encrypt(&mut self, mut array: Vec<i8>) -> Vec<i8> {
-        return jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone();
+        return { let java_field = jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone(); java_field }.clone();
     }
     
 
     // throws Exception
     pub fn decrypt(&mut self, mut array: Vec<i8>) -> Vec<i8> {
-        return jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone();
+        return { let java_field = jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone(); java_field }.clone();
     }
 }
-pub trait BaseSecretCompositeDyn {
+pub trait BaseSecretCompositeDyn: std::any::Any {
     fn as_BaseSecretComposite(&self) -> &BaseSecretComposite;
     fn as_BaseSecretComposite_mut(&mut self) -> &mut BaseSecretComposite;
     fn encrypt(&mut self, mut array: Vec<i8>) -> Vec<i8> { BaseSecretComposite::encrypt(self.as_BaseSecretComposite_mut(), array) }

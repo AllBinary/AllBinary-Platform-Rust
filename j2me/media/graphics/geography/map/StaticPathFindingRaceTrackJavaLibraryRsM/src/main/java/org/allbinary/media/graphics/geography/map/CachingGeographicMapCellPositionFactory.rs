@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::graphics::CellPosition::CellPosition;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactory;
 use super::BasicGeographicMap::BasicGeographicMap;
 use super::GeographicMapCellPosition::GeographicMapCellPosition;
@@ -53,15 +54,15 @@ impl CachingGeographicMapCellPositionFactory {
 
     // throws Exception
     pub fn createInstance(&mut self, mut i_column: i32, mut i_row: i32, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> {
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = GeographicMapCellPositionFactory::GeographicMapCellPositionFactory::getHashtable();
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = GeographicMapCellPositionFactory::GeographicMapCellPositionFactory::getHashtable();
         let mut cellPositionKey: String = CellPosition::toStringColRow(i_column.clone(), i_row.clone());
         let mut cellPositionCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(hashtable).get(crate::java_into_object(cellPositionKey.clone()));
         if cellPositionCanBeNull.is_none() {
-            cellPositionCanBeNull = { let java_receiver = self.geographicMapCellPositionFactoryInterface.clone(); let java_arguments = (self.geographicMapInterface.clone(), i_column.clone(), i_row.clone(), self.getColumns(), self.getRows(), width.clone(), height.clone(),); let java_result = jcall!(java_receiver).getInstance(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5, java_arguments.6); java_result };
-            self.geographicMapCellPositionArray[(i_row) as usize][(i_column) as usize] = (cellPositionCanBeNull).clone() /* as GeographicMapCellPosition */;
+            cellPositionCanBeNull = crate::java_into_object({ let java_value = ({ let java_receiver = self.geographicMapCellPositionFactoryInterface.clone(); let java_arguments = (self.geographicMapInterface.clone(), i_column.clone(), i_row.clone(), self.getColumns(), self.getRows(), width.clone(), height.clone(),); let java_result = jcall!(java_receiver).getInstance(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5, java_arguments.6); java_result }).clone(); java_value });
+            { let java_index = (i_column) as usize; self.geographicMapCellPositionArray[(i_row) as usize][java_index] = { let java_object = (cellPositionCanBeNull).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) }; };
             jcall!(hashtable).put(crate::java_into_object(cellPositionKey.clone()), cellPositionCanBeNull.clone());
         }
-        return (cellPositionCanBeNull).clone() /* as GeographicMapCellPosition */;
+        return { let java_object = (cellPositionCanBeNull).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) };
     }
 }
 impl std::ops::Deref for CachingGeographicMapCellPositionFactory {

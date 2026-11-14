@@ -21,16 +21,16 @@ pub struct AndroidAPI9KeyFactory {
     pub base: AndroidKeyFactory,
 }
 
-pub static mut AndroidAPI9KeyFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut AndroidAPI9KeyFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl AndroidAPI9KeyFactory {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn AndroidAPI9KeyFactoryDyn>>> {
-        if match (&unsafe { AndroidAPI9KeyFactory_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *AndroidAPI9KeyFactory_instance = AndroidAPI9KeyFactory::new().map(|reference| reference as Rc<RefCell<dyn AndroidAPI9KeyFactoryDyn>>) };
+        if match (&unsafe { AndroidAPI9KeyFactory_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *AndroidAPI9KeyFactory_instance = crate::java_into_object(AndroidAPI9KeyFactory::new()) };
         }
-        return (unsafe { AndroidAPI9KeyFactory_instance.clone() }).clone() /* as AndroidAPI9KeyFactory */;
+        return { let java_object = (unsafe { AndroidAPI9KeyFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn AndroidAPI9KeyFactoryDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -38,21 +38,21 @@ impl AndroidAPI9KeyFactory {
         let mut this = Self {
             base: AndroidKeyFactory::new_struct(),
         };
-        this.KEYCODE_BUTTON_L1 = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_L1.clone() }.clone(), String::from("BUTTON L1"));
-        this.KEYCODE_BUTTON_R1 = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_R1.clone() }.clone(), String::from("BUTTON R1"));
-        this.KEYCODE_BUTTON_THUMBR = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_THUMBR.clone() }.clone(), String::from("BUTTON THUMBR"));
-        this.KEYCODE_BUTTON_THUMBL = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_THUMBL.clone() }.clone(), String::from("BUTTON THUMBL"));
-        this.KEYCODE_BUTTON_START = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_START.clone() }.clone(), String::from("BUTTON START"));
-        this.KEYCODE_BUTTON_MODE = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_MODE.clone() }.clone(), String::from("BUTTON MODE"));
-        this.KEYCODE_BUTTON_B = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_B.clone() }.clone(), String::from("BUTTON B"));
-        this.KEYCODE_BUTTON_A = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_A.clone() }.clone(), String::from("BUTTON A"));
-        this.KEYCODE_BUTTON_X = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_X.clone() }.clone(), String::from("BUTTON X"));
-        this.KEYCODE_BUTTON_Y = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_Y.clone() }.clone(), String::from("BUTTON Y"));
-        this.KEYCODE_BUTTON_L2 = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_L2.clone() }.clone(), String::from("BUTTON L2"));
-        this.KEYCODE_BUTTON_R2 = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_R2.clone() }.clone(), String::from("BUTTON R2"));
-        this.KEYCODE_BUTTON_SELECT = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_SELECT.clone() }.clone(), String::from("BUTTON SELECT"));
-        this.KEYCODE_BUTTON_C = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_C.clone() }.clone(), String::from("BUTTON C"));
-        this.KEYCODE_BUTTON_Z = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_Z.clone() }.clone(), String::from("BUTTON Z"));
+        this.KEYCODE_BUTTON_L1 = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_L1.clone() }.clone(), String::from("BUTTON L1"))).clone(); java_value };
+        this.KEYCODE_BUTTON_R1 = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_R1.clone() }.clone(), String::from("BUTTON R1"))).clone(); java_value };
+        this.KEYCODE_BUTTON_THUMBR = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_THUMBR.clone() }.clone(), String::from("BUTTON THUMBR"))).clone(); java_value };
+        this.KEYCODE_BUTTON_THUMBL = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_THUMBL.clone() }.clone(), String::from("BUTTON THUMBL"))).clone(); java_value };
+        this.KEYCODE_BUTTON_START = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_START.clone() }.clone(), String::from("BUTTON START"))).clone(); java_value };
+        this.KEYCODE_BUTTON_MODE = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_MODE.clone() }.clone(), String::from("BUTTON MODE"))).clone(); java_value };
+        this.KEYCODE_BUTTON_B = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_B.clone() }.clone(), String::from("BUTTON B"))).clone(); java_value };
+        this.KEYCODE_BUTTON_A = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_A.clone() }.clone(), String::from("BUTTON A"))).clone(); java_value };
+        this.KEYCODE_BUTTON_X = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_X.clone() }.clone(), String::from("BUTTON X"))).clone(); java_value };
+        this.KEYCODE_BUTTON_Y = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_Y.clone() }.clone(), String::from("BUTTON Y"))).clone(); java_value };
+        this.KEYCODE_BUTTON_L2 = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_L2.clone() }.clone(), String::from("BUTTON L2"))).clone(); java_value };
+        this.KEYCODE_BUTTON_R2 = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_R2.clone() }.clone(), String::from("BUTTON R2"))).clone(); java_value };
+        this.KEYCODE_BUTTON_SELECT = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_SELECT.clone() }.clone(), String::from("BUTTON SELECT"))).clone(); java_value };
+        this.KEYCODE_BUTTON_C = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_C.clone() }.clone(), String::from("BUTTON C"))).clone(); java_value };
+        this.KEYCODE_BUTTON_Z = { let java_value = (AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BUTTON_Z.clone() }.clone(), String::from("BUTTON Z"))).clone(); java_value };
         this
     }
 
@@ -80,6 +80,10 @@ impl AndroidAPI9KeyFactoryDyn for AndroidAPI9KeyFactory {
 impl crate::org::allbinary::game::input::AndroidKeyFactory::AndroidKeyFactoryDyn for AndroidAPI9KeyFactory {
     fn as_AndroidKeyFactory(&self) -> &crate::org::allbinary::game::input::AndroidKeyFactory::AndroidKeyFactory { &self.base }
     fn as_AndroidKeyFactory_mut(&mut self) -> &mut crate::org::allbinary::game::input::AndroidKeyFactory::AndroidKeyFactory { &mut self.base }
+}
+impl crate::org::allbinary::android::ActivityFractureUtil::ActivityFractureUtilDyn for AndroidAPI9KeyFactory {
+    fn as_ActivityFractureUtil(&self) -> &crate::org::allbinary::android::ActivityFractureUtil::ActivityFractureUtil { &self.base.base }
+    fn as_ActivityFractureUtil_mut(&mut self) -> &mut crate::org::allbinary::android::ActivityFractureUtil::ActivityFractureUtil { &mut self.base.base }
 }
 
 

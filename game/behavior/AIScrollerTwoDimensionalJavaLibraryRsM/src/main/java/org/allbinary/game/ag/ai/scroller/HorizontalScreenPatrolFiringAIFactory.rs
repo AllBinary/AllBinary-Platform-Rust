@@ -22,6 +22,7 @@ use crate::org::allbinary::game::ai::ArtificialIntelligenceInterfaceFactoryInter
 use crate::org::allbinary::game::input::GameInput::GameInput;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::HorizontalScreenPatrolAI::HorizontalScreenPatrolAI;
 
 // Borrows the object of a Java reference
@@ -35,10 +36,14 @@ pub struct HorizontalScreenPatrolFiringAIFactory {
 }
 
 impl ArtificialIntelligenceInterfaceFactoryInterface for HorizontalScreenPatrolFiringAIFactory {
-    fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> { Self::getInstance(self, hashtable, ownerLayerInterface, gameInput) }
+    fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> { Self::getInstance(self, hashtable, ownerLayerInterface, gameInput) }
 }
 
 impl HorizontalScreenPatrolFiringAIFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -52,8 +57,8 @@ impl HorizontalScreenPatrolFiringAIFactory {
     
 
     // throws Exception
-    pub fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> {
-        return HorizontalScreenPatrolAI::new(hashtable.clone(), ownerLayerInterface.clone(), gameInput.clone()).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>);
+    pub fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> {
+        return HorizontalScreenPatrolAI::new(hashtable.clone(), ownerLayerInterface.clone(), gameInput.clone()).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>);
     }
 }
 

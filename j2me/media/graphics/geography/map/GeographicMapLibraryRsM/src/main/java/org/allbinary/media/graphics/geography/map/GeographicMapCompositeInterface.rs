@@ -27,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait GeographicMapCompositeInterface {
+pub trait GeographicMapCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn geographicMapCellTypeArray(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>;
@@ -37,8 +37,6 @@ pub trait GeographicMapCompositeInterface {
     
 
     fn setGeographicMapInterface(&mut self, geographicMapInterface: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait BuildMenuCompositeInterface {
+pub trait BuildMenuCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getCurrentScrollSelectionForm(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn>>>;
@@ -36,8 +36,6 @@ pub trait BuildMenuCompositeInterface {
     
 
     fn getBuildingScrollSelectionForm(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

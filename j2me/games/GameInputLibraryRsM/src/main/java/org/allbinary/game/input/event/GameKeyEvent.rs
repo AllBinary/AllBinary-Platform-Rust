@@ -37,19 +37,19 @@ pub struct GameKeyEvent {
     pub originalKey: i32,
 }
 
-thread_local! { pub static GameKeyEvent_NONE: Option<Rc<RefCell<GameKeyEvent>>> = GameKeyEvent::new(jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(), -1, -1, -1, -1, false); }
+thread_local! { pub static GameKeyEvent_NONE: Option<Rc<RefCell<GameKeyEvent>>> = GameKeyEvent::new(crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()), -1, -1, -1, -1, false); }
 
 impl GameKeyEvent {
     
 
     pub fn createEvent(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut sourceId: i32, mut key: i32) -> Option<Rc<RefCell<GameKeyEvent>>> {
-        return GameKeyEvent::new(anyType.clone(), sourceId.clone(), 0, 0, key.clone(), false);
+        return GameKeyEvent::new(crate::java_into_object(anyType.clone()), sourceId.clone(), 0, 0, key.clone(), false);
     }
     
 
     pub fn new_struct(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut sourceId: i32, mut originalKey: i32, mut gameActionKey: i32, mut key: i32, mut repeated: bool) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(anyType.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(anyType.clone())),
             sourceId: 0,
             repeated: false,
             key: 0,

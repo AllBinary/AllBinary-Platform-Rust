@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait TwoDimensionalConstraintInterface {
+pub trait TwoDimensionalConstraintInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getHeight(&mut self) -> Option<Rc<RefCell<dyn SizeConstraintInterface>>>;
@@ -39,8 +39,6 @@ pub trait TwoDimensionalConstraintInterface {
     
 
     fn setWidth(&mut self, widthSizeConstraintInterface: Option<Rc<RefCell<dyn SizeConstraintInterface>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

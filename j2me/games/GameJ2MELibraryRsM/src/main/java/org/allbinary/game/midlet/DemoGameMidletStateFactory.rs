@@ -36,6 +36,10 @@ pub struct DemoGameMidletStateFactory {
 pub static mut DemoGameMidletStateFactory_STATE: std::cell::LazyCell<Option<Rc<RefCell<DemoGameMidletStateFactory>>>> = std::cell::LazyCell::new(|| DemoGameMidletStateFactory::new());
 
 impl DemoGameMidletStateFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

@@ -16,11 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::io::IOException::IOException;
-// use crate::java::io::InputStream::InputStream;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::io::IOException::IOException;
+use crate::java::io::InputStream::InputStream;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::ServletException::ServletException;
 // use crate::javax::servlet::http::HttpServlet::HttpServlet;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
@@ -42,6 +41,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::servlet::BlisketServletUtil::BlisketServletUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::apache::commons::fileupload::FileItem::FileItem;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -54,7 +54,7 @@ pub struct UploadFileServlet {
     pub base: HttpServlet,
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
-    pub requestHashMap: Option<Rc<RefCell<HashMap>>>,
+    pub requestHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
     pub fileName: String,
 }
 
@@ -82,18 +82,18 @@ impl UploadFileServlet {
     // throws ServletException, IOException
     pub fn processRequest(&mut self, mut request: Option<Rc<RefCell<HttpServletRequest>>>, mut response: Option<Rc<RefCell<HttpServletResponse>>>) {
         let mut isError: bool = false;
-        let mut inputStream: Option<Rc<RefCell<InputStream>>> = None;
+        let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = None;
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(BlisketServletUtil::getInstance()).init(request.clone());
-            self.requestHashMap = jcall!(MultipartRequestParams::new1(request.clone())).toHashMap();
-            let mut filePath: String = ({ let java_receiver = self.requestHashMap.clone(); let java_arguments = (jcall!(FileUploadData::getInstance()).UPLOAD_TO_FILE_PATH.clone(),); let java_result = jcall!(java_receiver).get(java_arguments.0); java_result }).clone() /* as String */;
+            self.requestHashMap = { let java_value = (jcall!(MultipartRequestParams::new1(request.clone())).toHashMap()).clone(); java_value };
+            let mut filePath: String = { let java_object = ({ let java_receiver = self.requestHashMap.clone(); let java_arguments = (crate::java_into_object({ let java_field = jcall!(FileUploadData::getInstance()).UPLOAD_TO_FILE_PATH.clone(); java_field }.clone()),); let java_result = jcall!(java_receiver).get(java_arguments.0); java_result }).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             if false {
                 isError = true;
                 jcall!(response).sendError(unsafe { crate::javax::servlet::http::HttpServletResponse::HttpServletResponse_SC_NOT_FOUND.clone() }.clone());
                 return;
             }
-            let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-            let mut authenticationHelper: Option<Rc<RefCell<AuthenticationHelper>>> = (jcall!(AuthenticationHelperFactory::new()).getInstance(hashMap.clone(), request.clone())).clone() /* as AuthenticationHelper */;
+            let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+            let mut authenticationHelper: Option<Rc<RefCell<AuthenticationHelper>>> = { let java_object = (jcall!(AuthenticationHelperFactory::new()).getInstance_HashMap_HttpServletRequest(hashMap.clone(), request.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AuthenticationHelper>>>>().expect("ClassCastException").clone()) };
             if jcall!(authenticationHelper).isAuthenticated() {
                 if jcall!(AuthenticationHelperUtil::getInstance()).isAuthorized(authenticationHelper.clone(), filePath.clone()) {
                     self.saveFile(filePath.clone());
@@ -110,10 +110,10 @@ impl UploadFileServlet {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("processRequest()"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("processRequest()"), crate::java_into_object(e.clone()));
             }
             isError = true;
             jcall!(response).sendError(unsafe { crate::javax::servlet::http::HttpServletResponse::HttpServletResponse_SC_NOT_FOUND.clone() }.clone());
@@ -123,7 +123,7 @@ impl UploadFileServlet {
             if !isError {
                 jcall!(StreamUtil::getInstance()).close(jcall!(response).getOutputStream());
             }
-            if !jcall!(StreamUtil::getInstance()).close(inputStream.clone()) {
+            if !jcall!(StreamUtil::getInstance()).close(inputStream.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::java::io::Closeable::Closeable>> { panic!("ClassCastException: the Rust trait of InputStream does not have Closeable as a base trait") })) {
             }
         }
     }
@@ -133,14 +133,14 @@ impl UploadFileServlet {
     pub fn saveFile(&mut self, mut filePath: String) {
         let mut fileOutputStream: Option<Rc<RefCell<AbFileOutputStream>>> = None;
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut fileItem: Option<Rc<RefCell<FileItem>>> = ({ let java_receiver = self.requestHashMap.clone(); let java_arguments = (jcall!(FileUploadData::getInstance()).FILE_DATA.clone(),); let java_result = jcall!(java_receiver).get(java_arguments.0); java_result }).clone() /* as FileItem */;
+            let mut fileItem: Option<Rc<RefCell<FileItem>>> = ({ let java_receiver = self.requestHashMap.clone(); let java_arguments = (crate::java_into_object({ let java_field = jcall!(FileUploadData::getInstance()).FILE_DATA.clone(); java_field }.clone()),); let java_result = jcall!(java_receiver).get(java_arguments.0); java_result }).clone() /* as FileItem */;
             if fileItem.is_some() && jcall!(fileItem).getSize() > 1 {
-                self.fileName = jcall!(HttpRequestUtil::getInstance()).generateFileName(jcall!(fileItem).getName());
+                self.fileName = { let java_value = (jcall!(HttpRequestUtil::getInstance()).generateFileName(jcall!(fileItem).getName())).clone(); java_value };
                 if filePath.ends_with(&String::from("/")) || filePath.ends_with(&String::from("\\")) {
                     filePath = format!("{}{}", filePath, self.fileName);
                 }
                 let mut file: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFile(format!("{}{}", URLGLOBALS::getWebappPath(), filePath));
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).HTTPREQUEST.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).HTTPREQUEST.clone(); java_field }.clone()) {
                     let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                     jcall!(stringBuffer).append(String::from("Uploaded File: "));
                     jcall!(stringBuffer).append(self.fileName.clone());
@@ -148,14 +148,14 @@ impl UploadFileServlet {
                     jcall!(stringBuffer).append(jcall!(file).getPath());
                     { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("saveFile()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
-                HttpFileUploadUtil::log(fileItem.clone());
+                HttpFileUploadUtil::log_FileItem(fileItem.clone());
                 let mut byteArray: Vec<i8> = jcall!(fileItem).get();
                 if jcall!(file).isFile() {
                     jcall!(file).delete();
                     jcall!(file).createNewFile();
                 }
-                fileOutputStream = AbFileOutputStream::createFromAbFile(file.clone());
-                jcall!(fileOutputStream).write(byteArray.clone());
+                fileOutputStream = { let java_value = (AbFileOutputStream::createFromAbFile(file.clone())).clone(); java_value };
+                jcall!(fileOutputStream).write_byteArray(byteArray.clone());
             }
         })) {
             Ok(_) => {}

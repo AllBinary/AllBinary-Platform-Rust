@@ -20,6 +20,7 @@ use super::*;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::logic::communication::http::request::session::WeblisketSession::WeblisketSession;
 use crate::org::allbinary::logic::control::search::SearchRequest::SearchRequest;
+use crate::java::lang::Exception::*;
 use super::TransformStoreDocument::TransformStoreDocument;
 use super::TransformDocumentInterface::TransformDocumentInterface;
 
@@ -35,6 +36,10 @@ pub struct TransformStoreDocumentFactory {
 
 
 impl TransformStoreDocumentFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::File::File;
-// use crate::java::io::FileInputStream::FileInputStream;
+use crate::java::io::File::File;
+use crate::java::io::FileInputStream::FileInputStream;
 // use crate::java::util::List::List;
 // use crate::javax::xml::bind::JAXBContext::JAXBContext;
 // use crate::javax::xml::bind::JAXBElement::JAXBElement;
@@ -28,6 +28,7 @@ use crate::org::allbinary::input::automation::module::configuration::InputAutoma
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::InputAutomationConfiguration::InputAutomationConfiguration;
 
 // Borrows the object of a Java reference
@@ -45,6 +46,10 @@ pub struct InputAutomationConfigurationFactory {
 thread_local! { pub static InputAutomationConfigurationFactory_instance: Option<Rc<RefCell<InputAutomationConfigurationFactory>>> = InputAutomationConfigurationFactory::new(); }
 
 impl InputAutomationConfigurationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<InputAutomationConfigurationFactory>>> {
@@ -74,24 +79,24 @@ impl InputAutomationConfigurationFactory {
         let mut INPUT_AUTOMATION_CONFIGURATION: String = String::from("InputAutomationConfiguration");
         let mut file: Option<Rc<RefCell<File>>> = InputAutomationConfiguration::getFile();
         if jcall!(file).isFile() {
-            jcall!(logUtil).putF(String::from("LoadingConfiguration"), crate::java_into_object(INPUT_AUTOMATION_CONFIGURATION.clone()), jcall!(commonStrings).INIT.clone());
+            jcall!(logUtil).putF(String::from("LoadingConfiguration"), crate::java_into_object(INPUT_AUTOMATION_CONFIGURATION.clone()), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone());
             let mut jaxbContext: Option<Rc<RefCell<JAXBContext>>> = JAXBContext::newInstance(std::any::type_name::<InputAutomationConfiguration>());
             let mut unmarshaller: Option<Rc<RefCell<Unmarshaller>>> = jcall!(jaxbContext).createUnmarshaller();
-            let mut root: Option<Rc<RefCell<JAXBElement<Option<Rc<RefCell<InputAutomationConfiguration>>>>>>> = jcall!(unmarshaller).unmarshal(StreamSource::new(FileInputStream::new(file.clone())), std::any::type_name::<InputAutomationConfiguration>());
-            self.inputAutomationConfiguration = (jcall!(root).getValue()).clone() /* as InputAutomationConfiguration */;
+            let mut root: Option<Rc<RefCell<JAXBElement<Option<Rc<RefCell<InputAutomationConfiguration>>>>>>> = jcall!(unmarshaller).unmarshal(StreamSource::new(FileInputStream::new(file.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::FileInputStream::FileInputStreamDyn>>)), std::any::type_name::<InputAutomationConfiguration>());
+            self.inputAutomationConfiguration = { let java_value = ((jcall!(root).getValue()).clone()).clone(); java_value };
             let mut inputAutomationModuleConfigurationList: Option<Rc<RefCell<dyn List<Option<Rc<RefCell<InputAutomationModuleConfiguration>>>>>>> = jcall!(self.inputAutomationConfiguration).getInputAutomationModuleConfigurationList();
-            jcall!(logUtil).putF(format!("{}{}", format!("{}{}", format!("{}{}", String::from("isInstalled: "), jcall!(self.inputAutomationConfiguration).isInstalled()), String::from(" inputAutomationModuleConfigurationList: ")), inputAutomationModuleConfigurationList), crate::java_into_object(INPUT_AUTOMATION_CONFIGURATION.clone()), jcall!(commonStrings).INIT.clone());
+            jcall!(logUtil).putF(format!("{}{}", format!("{}{}", format!("{}{}", String::from("isInstalled: "), jcall!(self.inputAutomationConfiguration).isInstalled()), String::from(" inputAutomationModuleConfigurationList: ")), inputAutomationModuleConfigurationList), crate::java_into_object(INPUT_AUTOMATION_CONFIGURATION.clone()), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone());
             if inputAutomationModuleConfigurationList.is_some() {
                 let mut size: i32 = jcall!(inputAutomationModuleConfigurationList).size();
                 let mut inputAutomationModuleConfiguration: Option<Rc<RefCell<InputAutomationModuleConfiguration>>> = None;
                 for index in (0..size) {
-                    inputAutomationModuleConfiguration = jcall!(inputAutomationModuleConfigurationList).get(index.clone());
+                    inputAutomationModuleConfiguration = { let java_value = (jcall!(inputAutomationModuleConfigurationList).get(index.clone())).clone(); java_value };
                     jcall!(inputAutomationModuleConfiguration).init(abeClientInformation.clone());
                 }
             }
-            jcall!(logUtil).putF(String::from("LoadedConfiguration"), crate::java_into_object(INPUT_AUTOMATION_CONFIGURATION.clone()), jcall!(commonStrings).INIT.clone());
+            jcall!(logUtil).putF(String::from("LoadedConfiguration"), crate::java_into_object(INPUT_AUTOMATION_CONFIGURATION.clone()), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone());
         } else {
-            jcall!(logUtil).putF(String::from("New Configuration"), crate::java_into_object(INPUT_AUTOMATION_CONFIGURATION.clone()), jcall!(commonStrings).INIT.clone());
+            jcall!(logUtil).putF(String::from("New Configuration"), crate::java_into_object(INPUT_AUTOMATION_CONFIGURATION.clone()), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone());
             self.inputAutomationConfiguration = InputAutomationConfiguration::new();
         }
     }

@@ -36,6 +36,7 @@ use crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrack
 use crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackRoadsGeographicMapCellHistoryFactory::RaceTrackRoadsGeographicMapCellHistoryFactory;
 use crate::org::allbinary::time::GameTickTimeDelayHelperFactory::GameTickTimeDelayHelperFactory;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -68,9 +69,9 @@ impl RaceTrackDropCellPositionGenerator {
             raceTrackGeographicMapCellTypeFactory: None,
             basicArrayListUtil: None,
         };
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.STRAIGHTAWAY = 4;
-        this.raceTrackGeographicMap = crate::org::allbinary::media::graphics::geography::map::racetrack::NullRaceTrackGeographicMap::NullRaceTrackGeographicMap_NULL_RACE_TRACK_GEOGRAPHIC_MAP.with(Clone::clone).clone();
+        this.raceTrackGeographicMap = crate::org::allbinary::media::graphics::geography::map::racetrack::NullRaceTrackGeographicMap::NullRaceTrackGeographicMap_NULL_RACE_TRACK_GEOGRAPHIC_MAP.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn RaceTrackGeographicMapInterface>>);
         this.raceTrackGeographicMapCellTypeFactory = GeographicMapCellTypeFactory::getInstance();
         this.basicArrayListUtil = BasicArrayListUtil::getInstance();
         this.timeDelayHelper = TimeDelayHelper::new(10000).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
@@ -89,9 +90,9 @@ impl RaceTrackDropCellPositionGenerator {
 
     // throws Exception
     pub fn isDropAllowedAt(&mut self, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> bool {
-        let mut raceTrackGeographicMapCellType: Option<Rc<RefCell<RaceTrackGeographicMapCellType>>> = (jcall!(self.raceTrackGeographicMap).getCellTypeAt(geographicMapCellPosition.clone())).clone() /* as RaceTrackGeographicMapCellType */;
-        let mut raceTrackGeographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactoryDyn>>> = (self.raceTrackGeographicMapCellTypeFactory).clone() /* as RaceTrackGeographicMapCellTypeFactory */;
-        if match (&raceTrackGeographicMapCellType, &jcall!(raceTrackGeographicMapCellTypeFactory).as_GeographicMapCellTypeFactory_mut().HORIZONTAL_STRAIGHT_ROAD_CELL_TYPE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&raceTrackGeographicMapCellType, &jcall!(raceTrackGeographicMapCellTypeFactory).as_GeographicMapCellTypeFactory_mut().VERTICAL_STRAIGHT_ROAD_CELL_TYPE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        let mut raceTrackGeographicMapCellType: Option<Rc<RefCell<RaceTrackGeographicMapCellType>>> = (jcall!(self.raceTrackGeographicMap).getCellTypeAt(geographicMapCellPosition.clone())).clone();
+        let mut raceTrackGeographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactoryDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactoryDyn>>> { panic!("ClassCastException: a Rust dyn GeographicMapCellTypeFactory cannot be cast to RaceTrackGeographicMapCellTypeFactory") })();
+        if match (&raceTrackGeographicMapCellType, &{ let java_field = jcall!(raceTrackGeographicMapCellTypeFactory).as_RaceTrackGeographicMapCellTypeFactory_mut().HORIZONTAL_STRAIGHT_ROAD_CELL_TYPE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&raceTrackGeographicMapCellType, &{ let java_field = jcall!(raceTrackGeographicMapCellTypeFactory).as_RaceTrackGeographicMapCellTypeFactory_mut().VERTICAL_STRAIGHT_ROAD_CELL_TYPE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }
         return false;
@@ -101,9 +102,9 @@ impl RaceTrackDropCellPositionGenerator {
     // throws Exception
     pub fn update(&mut self, mut allBinaryGameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>) {
         self.init();
-        let mut baseRaceTrackGeographicMap: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::BaseRaceTrackGeographicMap::BaseRaceTrackGeographicMapDyn>>> = (geographicMapInterface).clone() /* as BaseRaceTrackGeographicMap */;
-        self.raceTrackGeographicMap = baseRaceTrackGeographicMap.clone().map(|reference| reference as Rc<RefCell<dyn RaceTrackGeographicMapInterface>>);
-        self.raceTrackGeographicMapCellTypeFactory = (jcall!(baseRaceTrackGeographicMap).getGeographicMapCellTypeFactory()).clone() /* as RaceTrackGeographicMapCellTypeFactory */;
+        let mut baseRaceTrackGeographicMap: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::BaseRaceTrackGeographicMap::BaseRaceTrackGeographicMapDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::BaseRaceTrackGeographicMap::BaseRaceTrackGeographicMapDyn>>> { panic!("ClassCastException: a Rust dyn BasicGeographicMap cannot be cast to BaseRaceTrackGeographicMap") })();
+        self.raceTrackGeographicMap = baseRaceTrackGeographicMap.clone().map(|_java_reference| -> Rc<RefCell<dyn RaceTrackGeographicMapInterface>> { panic!("ClassCastException: the Rust trait of BaseRaceTrackGeographicMap does not have RaceTrackGeographicMapInterface as a base trait") });
+        self.raceTrackGeographicMapCellTypeFactory = { let java_value = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactoryDyn>>> { panic!("ClassCastException: a Rust dyn GeographicMapCellTypeFactory cannot be cast to RaceTrackGeographicMapCellTypeFactory") })()).clone(); java_value };
         let mut roadGeographicMapCellHistory: Option<Rc<RefCell<GeographicMapCellHistory>>> = RaceTrackRoadsGeographicMapCellHistoryFactory::getInstance();
         let mut trackedList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(roadGeographicMapCellHistory).getTracked();
         let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = None;
@@ -111,7 +112,7 @@ impl RaceTrackDropCellPositionGenerator {
         let mut total: i32 = 0;
         let mut ahead: i32 = 0;
         for index in ((0) + 1..=lastIndex).rev() {
-            geographicMapCellPosition = { let java_object = (jcall!(trackedList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) };
+            geographicMapCellPosition = { let java_value = ({ let java_object = (jcall!(trackedList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             total = 0;
             ahead = index.clone();
             while { let java_arguments = ({ let java_object = (jcall!(trackedList).get(ahead.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) },); self.isDropAllowedAt(java_arguments.0) } {
@@ -135,7 +136,7 @@ impl RaceTrackDropCellPositionGenerator {
 
     // throws Exception
     pub fn processTick(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) {
-        if { let java_receiver = self.timeDelayHelper.clone(); let java_arguments = (jcall!(GameTickTimeDelayHelperFactory::getInstance()).startTime.clone(),); let java_result = jcall!(java_receiver).isTime(java_arguments.0); java_result } {
+        if { let java_receiver = self.timeDelayHelper.clone(); let java_arguments = ({ let java_field = jcall!(GameTickTimeDelayHelperFactory::getInstance()).startTime.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).isTime(java_arguments.0); java_result } {
             let mut index: i32 = jcall!(self.basicArrayListUtil).getRandomIndex(self.list.clone());
             self.drop(allBinaryLayerManager.clone(), index.clone());
         }
@@ -144,7 +145,7 @@ impl RaceTrackDropCellPositionGenerator {
 
     // throws Exception
     pub fn drop(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut index: i32) {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
 }
 impl std::ops::Deref for RaceTrackDropCellPositionGenerator {

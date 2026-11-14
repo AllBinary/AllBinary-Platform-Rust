@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface;
@@ -47,8 +47,8 @@ impl NamedInterface for AllBinaryTiledLayer {
     fn getName(&mut self) -> String { Self::getName(self) }
 }
 impl PaintableInterface for AllBinaryTiledLayer {
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paintThreed(self, graphics) }
 }
 
 impl AllBinaryTiledLayer {
@@ -124,11 +124,11 @@ impl AllBinaryTiledLayer {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 
@@ -143,7 +143,7 @@ impl AllBinaryTiledLayer {
     
 
     pub fn getZ2(&mut self) -> i32 {
-        return (((self.z + self.getDepth())) as i32);
+        return (((((self.z) as i64) + self.getDepth())) as i32);
     }
     
 
@@ -222,12 +222,11 @@ impl std::ops::DerefMut for AllBinaryTiledLayer {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait AllBinaryTiledLayerDyn: crate::org::allbinary::layer::Layer::LayerDyn + crate::org::allbinary::layer::NamedInterface::NamedInterface {
+pub trait AllBinaryTiledLayerDyn: crate::javax::microedition::lcdui::game::Layer::LayerDyn + crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface + crate::org::allbinary::layer::NamedInterface::NamedInterface {
     fn as_AllBinaryTiledLayer(&self) -> &AllBinaryTiledLayer;
     fn as_AllBinaryTiledLayer_mut(&mut self) -> &mut AllBinaryTiledLayer;
     fn setCells(&mut self, mut mapTwoDArray: Vec<Vec<i32>>) { AllBinaryTiledLayer::setCells(self.as_AllBinaryTiledLayer_mut(), mapTwoDArray) }
     fn updateCells(&mut self, mut mapTwoDArray: Vec<Vec<i32>>, mut fromTileId: i32, mut toTileId: i32) { AllBinaryTiledLayer::updateCells(self.as_AllBinaryTiledLayer_mut(), mapTwoDArray, fromTileId, toTileId) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { AllBinaryTiledLayer::paintThreed(self.as_AllBinaryTiledLayer_mut(), graphics) }
     fn getX2(&mut self) -> i32 { AllBinaryTiledLayer::getX2(self.as_AllBinaryTiledLayer_mut()) }
     fn getY2(&mut self) -> i32 { AllBinaryTiledLayer::getY2(self.as_AllBinaryTiledLayer_mut()) }
     fn getZ2(&mut self) -> i32 { AllBinaryTiledLayer::getZ2(self.as_AllBinaryTiledLayer_mut()) }
@@ -250,10 +249,10 @@ impl AllBinaryTiledLayerDyn for AllBinaryTiledLayer {
     fn as_AllBinaryTiledLayer_mut(&mut self) -> &mut AllBinaryTiledLayer { self }
 }
 
-impl crate::org::allbinary::layer::Layer::LayerDyn for AllBinaryTiledLayer {
-    fn as_Layer(&self) -> &crate::org::allbinary::layer::Layer::Layer { &self.base }
-    fn as_Layer_mut(&mut self) -> &mut crate::org::allbinary::layer::Layer::Layer { &mut self.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+impl crate::javax::microedition::lcdui::game::Layer::LayerDyn for AllBinaryTiledLayer {
+    fn as_Layer(&self) -> &crate::javax::microedition::lcdui::game::Layer::Layer { &self.base }
+    fn as_Layer_mut(&mut self) -> &mut crate::javax::microedition::lcdui::game::Layer::Layer { &mut self.base }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
 }
 
 

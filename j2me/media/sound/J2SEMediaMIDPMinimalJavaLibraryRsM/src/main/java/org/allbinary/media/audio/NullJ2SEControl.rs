@@ -37,7 +37,7 @@ impl NullJ2SEControl {
 
     pub fn new_struct(mut r#type: Option<Rc<RefCell<Type>>>) -> Self {
         let mut this = Self {
-            base: Control::new_struct1(r#type.clone()),
+            base: Control::new_struct(r#type.clone()),
         };
         // super(...) is in the struct literal above
         this

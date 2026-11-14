@@ -24,6 +24,7 @@ use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal;
 use crate::org::allbinary::logic::math::vector::AxisMathVectorUtil::AxisMathVectorUtil;
 use crate::org::allbinary::math::AngleFactory::AngleFactory;
+use crate::java::lang::Exception::*;
 use super::Movement::Movement;
 
 // Borrows the object of a Java reference
@@ -69,7 +70,7 @@ impl BasicConstantVelocityMovement {
     pub fn init(&mut self, mut speedBasicDecimal: Option<Rc<RefCell<BasicDecimal>>>, mut angle: i32, mut otherAngle: i32) {
         self.speedBasicDecimal = speedBasicDecimal.clone();
         let mut angleFactory: Option<Rc<RefCell<AngleFactory>>> = AngleFactory::getInstance();
-        { let java_receiver = self.velocityProperties.clone(); let java_arguments = (speedBasicDecimal.clone(), jcall!(angleFactory).getAt(angle.clone()), jcall!(angleFactory).getAt(otherAngle.clone()),); jcall!(java_receiver).setVelocityWithBigDecimal(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.velocityProperties.clone(); let java_arguments = (speedBasicDecimal.clone(), jcall!(angleFactory).getAt(angle.clone()), jcall!(angleFactory).getAt(otherAngle.clone()),); jcall!(java_receiver).as_BasicVelocityProperties_mut().setVelocityWithBigDecimal(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
@@ -84,17 +85,17 @@ impl BasicConstantVelocityMovement {
 
     // throws Exception
     pub fn process(&mut self, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayerDyn>>>) {
-        jcall!(layer).moveDXYZ(jcall!(jcall!(self.velocityProperties).getVelocityXBasicDecimalP()).getScaled(), jcall!(jcall!(self.velocityProperties).getVelocityYBasicDecimalP()).getScaled(), jcall!(jcall!(self.velocityProperties).getVelocityZBasicDecimalP()).getScaled());
+        jcall!(layer).moveDXYZ(jcall!(jcall!(self.velocityProperties).as_BasicVelocityProperties_mut().getVelocityXBasicDecimalP()).getScaled(), jcall!(jcall!(self.velocityProperties).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP()).getScaled(), jcall!(jcall!(self.velocityProperties).getVelocityZBasicDecimalP()).getScaled());
     }
     
 
     pub fn toString(&mut self) -> String {
-        return jcall!(self.velocityProperties).toString();
+        return jcall!(self.velocityProperties).as_BasicVelocityProperties_mut().toString();
     }
     
 
     pub fn stop(&mut self) {
-        jcall!(self.velocityProperties).zero();
+        jcall!(self.velocityProperties).as_BasicVelocityProperties_mut().zero();
     }
     
 

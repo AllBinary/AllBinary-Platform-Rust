@@ -23,6 +23,7 @@ use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::util::HashtableUtil::HashtableUtil;
 use crate::org::allbinary::game::ai::BasicAI::BasicAI;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -41,13 +42,13 @@ impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntel
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for KeyPressesAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl KeyPressesAI {
     
 
-    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
+    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
         let mut this = Self {
             base: BasicAI::new_struct(ownerLayerInterface.clone(), gameInput.clone()),
             on: false,
@@ -55,16 +56,16 @@ impl KeyPressesAI {
         };
         this.on = true;
         // super(...) is in the struct literal above
-        this.keys = vec![None; (jcall!(hashtable).size()) as usize];
+        this.keys = { let java_value = (vec![None; (jcall!(hashtable).size()) as usize]).clone(); java_value };
         let mut objectArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(HashtableUtil::getInstance()).getKeysAsArray(hashtable.clone());
         let mut size: i32 = (objectArray.len() as i32).clone();
         for index in (0..size) {
-            this.keys[(index) as usize] = { let java_object = jcall!(hashtable).get(crate::java_into_object((objectArray[(index) as usize]).clone() /* as Any */)); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
+            { let java_index = (index) as usize; this.keys[java_index] = { let java_object = (jcall!(hashtable).get(crate::java_into_object((objectArray[(index) as usize]).clone()))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) }; };
         }
         this
     }
 
-    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(hashtable, ownerLayerInterface, gameInput))))
     }
     
@@ -73,7 +74,7 @@ impl KeyPressesAI {
     pub fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) {
         if self.on {
             for index in (0..(self.keys.len() as i32)) {
-                self.base.processKeyAI(((self.keys[(index) as usize]).unwrap() as i32));
+                { let java_arguments = (((self.keys[(index) as usize]).unwrap() as i32),); self.base.processKeyAI(java_arguments.0) };
             }
         }
     }

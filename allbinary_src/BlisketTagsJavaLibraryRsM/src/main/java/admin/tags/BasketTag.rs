@@ -16,10 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::lang::reflect::Method::Method;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::JspTagException::JspTagException;
 use crate::admin::taghelpers::BasketHelperFactory::BasketHelperFactory;
 use crate::admin::taghelpers::BasketRequestHelperFactory::BasketRequestHelperFactory;
@@ -30,6 +29,7 @@ use crate::org::allbinary::logic::communication::http::request::AbResponseHandle
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
 use crate::tags::CustomTagSupport::CustomTagSupport;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -43,7 +43,7 @@ pub struct BasketTag {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub command: String,
     pub storeName: String,
-    pub propertiesHashMap: Option<Rc<RefCell<HashMap>>>,
+    pub propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 
@@ -79,82 +79,86 @@ impl BasketTag {
 
     // throws LicensingException
     pub fn isBasketEmpty(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(BasketHelperFactory::new()).getInstance(self.propertiesHashMap.clone(), self.pageContext.clone());
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(std::any::type_name_of_val(&anyType)).getMethod(String::from("isBasketEmpty"), None);
             let mut emptyBoolean: Option<bool> = (jcall!(method).invoke(anyType.clone(), None)).clone() /* as Boolean */;
-            return emptyBoolean.unwrap();
+            return Some(emptyBoolean.unwrap());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws LicensingException
     pub fn addItemToBasket(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(BasketRequestHelperFactory::new()).getInstance(self.propertiesHashMap.clone(), self.pageContext.clone());
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(std::any::type_name_of_val(&anyType)).getMethod(String::from("addItemToBasket"), None);
             let mut emptyBoolean: Option<bool> = (jcall!(method).invoke(anyType.clone(), None)).clone() /* as Boolean */;
-            return emptyBoolean.unwrap();
+            return Some(emptyBoolean.unwrap());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws LicensingException
     pub fn removeItemFromBasket(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(BasketRequestHelperFactory::new()).getInstance(self.propertiesHashMap.clone(), self.pageContext.clone());
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(std::any::type_name_of_val(&anyType)).getMethod(String::from("removeItemFromBasket"), None);
             let mut emptyBoolean: Option<bool> = (jcall!(method).invoke(anyType.clone(), None)).clone() /* as Boolean */;
-            return emptyBoolean.unwrap();
+            return Some(emptyBoolean.unwrap());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws LicensingException
     pub fn adjustBasket(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(BasketRequestHelperFactory::new()).getInstance(self.propertiesHashMap.clone(), self.pageContext.clone());
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(std::any::type_name_of_val(&anyType)).getMethod(String::from("adjustBasket"), None);
             let mut emptyBoolean: Option<bool> = (jcall!(method).invoke(anyType.clone(), None)).clone() /* as Boolean */;
-            return emptyBoolean.unwrap();
+            return Some(emptyBoolean.unwrap());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws JspTagException
     pub fn doStartTag(&mut self) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if true {
-                self.propertiesHashMap = jcall!(StdUtil::getInstance()).createHashMap();
-                { let java_receiver = self.propertiesHashMap.clone(); let java_arguments = (jcall!(StoreFrontData::getInstance()).NAME.clone(), self.storeName.clone(),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
+                self.propertiesHashMap = { let java_value = (jcall!(StdUtil::getInstance()).createHashMap()).clone(); java_value };
+                { let java_receiver = self.propertiesHashMap.clone(); let java_arguments = (crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(self.storeName.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
                 if (self.command.cmp(&crate::org::allbinary::business::user::commerce::inventory::basket::BasketData::BasketData_INSERT.with(Clone::clone).clone()) as i32) == 0 {
                     if !self.addItemToBasket() {
                         jcall!(jcall!(self.pageContext).getOut()).println(String::from("Item is not currently being sold.<p/>"));
@@ -165,22 +169,23 @@ impl BasketTag {
                     self.adjustBasket();
                 } else if (self.command.cmp(&crate::org::allbinary::business::user::commerce::inventory::basket::BasketData::BasketData_ISEMPTY.with(Clone::clone).clone()) as i32) == 0 {
                     if self.isBasketEmpty() {
-                        return self.EVAL_BODY_INCLUDE.clone();
+                        return Some(self.EVAL_BODY_INCLUDE.clone());
                     } else {
-                        return SKIP_BODY.clone();
+                        return Some(SKIP_BODY.clone());
                     }
                 }
             }
-            return SKIP_BODY.clone();
+            return Some(SKIP_BODY.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             AbResponseHandler::sendJspTagLicensingRedirect(self.pageContext.clone(), e.clone());
             return SKIP_BODY.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for BasketTag {

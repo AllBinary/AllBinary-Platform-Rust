@@ -22,6 +22,7 @@ use crate::org::osgi::framework::Bundle::Bundle;
 use crate::org::osgi::framework::BundleContext::BundleContext;
 use crate::bundle::input::automation::InputAutomationBundleActivator::InputAutomationBundleActivator;
 use crate::org::allbinary::gui::dialog::BasicTextJDialog::BasicTextJDialog;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,6 +38,10 @@ pub struct DesktopBundle {
 thread_local! { pub static DesktopBundle_DESKTOP_SYMBOLIC_NAME: String = String::from("org.knopflerfish.bundle.desktop"); }
 
 impl DesktopBundle {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

@@ -40,6 +40,10 @@ thread_local! { pub static ShapeTypeFactory_instance: Option<Rc<RefCell<ShapeTyp
 
 impl ShapeTypeFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             KEY_LINE: String::new(),

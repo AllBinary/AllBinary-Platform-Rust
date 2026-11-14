@@ -18,20 +18,21 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::io::ByteArrayOutputStream::ByteArrayOutputStream;
-// use crate::java::io::IOException::IOException;
-// use crate::java::io::InputStream::InputStream;
-// use crate::java::io::OutputStream::OutputStream;
-// use crate::java::io::Reader::Reader;
-// use crate::java::io::Writer::Writer;
-// use crate::java::nio::CharBuffer::CharBuffer;
+use crate::java::io::InputStream::InputStream;
+use crate::java::io::OutputStream::OutputStream;
+use crate::java::io::Reader::Reader;
+use crate::java::io::Writer::Writer;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::org::allbinary::logic::io::NullOutputStream::NullOutputStream;
+use crate::org::allbinary::logic::io::NullReader::NullReader;
+use crate::org::allbinary::logic::io::NullWriter::NullWriter;
 use crate::org::allbinary::logic::io::StreamUtil::StreamUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
-use super::CharSequence::CharSequence;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -42,8 +43,8 @@ macro_rules! jcall {
 
 pub struct SimpleFileUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
-    pub NULL_WRITER: Option<Rc<RefCell<Writer>>>,
-    pub NULL_READER: Option<Rc<RefCell<Reader>>>,
+    pub NULL_WRITER: Option<Rc<RefCell<dyn crate::java::io::Writer::WriterDyn>>>,
+    pub NULL_READER: Option<Rc<RefCell<dyn crate::java::io::Reader::ReaderDyn>>>,
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
     pub nullUtil: Option<Rc<RefCell<NullUtil>>>,
     pub streamUtil: Option<Rc<RefCell<StreamUtil>>>,
@@ -52,6 +53,10 @@ pub struct SimpleFileUtil {
 thread_local! { pub static SimpleFileUtil_instance: Option<Rc<RefCell<SimpleFileUtil>>> = SimpleFileUtil::new(); }
 
 impl SimpleFileUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -81,146 +86,46 @@ impl SimpleFileUtil {
     }
     
 
-    pub fn nullOutputStream() -> Option<Rc<RefCell<OutputStream>>> {
-        return OutputStream::new() /* Java anonymous class body: implement it as a named type
-            
-
-            // throws IOException
-            pub fn write(&mut self, mut b: i32) {
-            }
-            
-
-            // throws IOException
-            pub fn write(&mut self, mut b: Vec<i8>, mut off: i32, mut len: i32) {
-            }
-            
-
-            pub fn close(&mut self) {
-            }
-*/;
+    pub fn nullOutputStream() -> Option<Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>> {
+        return crate::org::allbinary::logic::io::NullOutputStream::NullOutputStream_NULL_OUTPUT_STREAM.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>);
     }
     
 
-    pub fn nullWriter() -> Option<Rc<RefCell<Writer>>> {
-        return Writer::new() /* Java anonymous class body: implement it as a named type
-            closed: false,
-            
-
-            // throws IOException
-            pub fn append(&mut self, mut c: char) -> Option<Rc<RefCell<Writer>>> {
-                return self;
-            }
-            
-
-            // throws IOException
-            pub fn append(&mut self, mut csq: Option<Rc<RefCell<dyn CharSequence>>>) -> Option<Rc<RefCell<Writer>>> {
-                return self;
-            }
-            
-
-            // throws IOException
-            pub fn append(&mut self, mut csq: Option<Rc<RefCell<dyn CharSequence>>>, mut start: i32, mut end: i32) -> Option<Rc<RefCell<Writer>>> {
-                return self;
-            }
-            
-
-            // throws IOException
-            pub fn write(&mut self, mut c: i32) {
-            }
-            
-
-            // throws IOException
-            pub fn write(&mut self, mut cbuf: Vec<char>, mut off: i32, mut len: i32) {
-            }
-            
-
-            // throws IOException
-            pub fn write(&mut self, mut str: String) {
-            }
-            
-
-            // throws IOException
-            pub fn write(&mut self, mut str: String, mut off: i32, mut len: i32) {
-            }
-            
-
-            // throws IOException
-            pub fn flush(&mut self) {
-            }
-            
-
-            // throws IOException
-            pub fn close(&mut self) {
-            }
-*/;
+    pub fn nullWriter() -> Option<Rc<RefCell<dyn crate::java::io::Writer::WriterDyn>>> {
+        return crate::org::allbinary::logic::io::NullWriter::NullWriter_NULL_WRITER.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::Writer::WriterDyn>>);
     }
     
 
-    pub fn nullReader() -> Option<Rc<RefCell<Reader>>> {
-        return Reader::new() /* Java anonymous class body: implement it as a named type
-            
-
-            // throws IOException
-            pub fn read(&mut self) -> i32 {
-                return -1;
-            }
-            
-
-            // throws IOException
-            pub fn read(&mut self, mut cbuf: Vec<char>, mut off: i32, mut len: i32) -> i32 {
-                return -1;
-            }
-            
-
-            // throws IOException
-            pub fn read(&mut self, mut target: Option<Rc<RefCell<CharBuffer>>>) -> i32 {
-                return -1;
-            }
-            
-
-            // throws IOException
-            pub fn ready(&mut self) -> bool {
-                return false;
-            }
-            
-
-            // throws IOException
-            pub fn skip(&mut self, mut n: i64) -> i64 {
-                return 0_i64;
-            }
-            
-
-            pub fn close(&mut self) {
-            }
-*/;
+    pub fn nullReader() -> Option<Rc<RefCell<dyn crate::java::io::Reader::ReaderDyn>>> {
+        return crate::org::allbinary::logic::io::NullReader::NullReader_NULL_READER.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::Reader::ReaderDyn>>);
     }
     
 
-    pub fn loadFileAsList(&mut self, mut inputStream: Option<Rc<RefCell<InputStream>>>, mut max: i32, mut byteArray1: Vec<i8>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+    pub fn loadFileAsList(&mut self, mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>, mut max: i32, mut byteArray1: Vec<i8>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
         return self.loadFileAsListReturnLine(inputStream.clone(), max.clone(), byteArray1.clone(), 0);
     }
     
 
-    pub fn loadFileAsListReturnLine(&mut self, mut inputStream: Option<Rc<RefCell<InputStream>>>, mut max: i32, mut byteArray1: Vec<i8>, mut includeReturnLine: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut stringList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+    pub fn loadFileAsListReturnLine(&mut self, mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>, mut max: i32, mut byteArray1: Vec<i8>, mut includeReturnLine: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+        let mut stringList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         if inputStream.is_none() {
             return stringList.clone();
         }
-        let mut byteArray: Vec<i8> = jcall!(self.nullUtil).NULL_BYTE_ARRAY.clone();
+        let mut byteArray: Vec<i8> = { let java_field = jcall!(self.nullUtil).NULL_BYTE_ARRAY.clone(); java_field }.clone();
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut outputStream2: Vec<u8> = Vec::new();
-            byteArray = jcall!(self.streamUtil).getByteArray(inputStream.clone(), outputStream2.clone(), byteArray1.clone());
-            jcall!(self.streamUtil).close(inputStream.clone());
+            let mut outputStream2: Option<Rc<RefCell<crate::java::io::OutputStream::OutputStream>>> = crate::java::io::OutputStream::OutputStream::new();
+            byteArray = { let java_value = (jcall!(self.streamUtil).getByteArray(inputStream.clone(), outputStream2.clone(), byteArray1.clone())).clone(); java_value };
+            jcall!(self.streamUtil).close(inputStream.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::java::io::Closeable::Closeable>> { panic!("ClassCastException: the Rust trait of InputStream does not have Closeable as a base trait") }));
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.streamUtil).close(inputStream.clone());
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).ADD.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.streamUtil).close(inputStream.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::java::io::Closeable::Closeable>> { panic!("ClassCastException: the Rust trait of InputStream does not have Closeable as a base trait") }));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).ADD.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
-        if byteArray.is_none() {
+        if byteArray.is_empty() {
             return stringList.clone();
         }
         let mut size: i32 = (byteArray.len() as i32).clone();
@@ -239,7 +144,7 @@ impl SimpleFileUtil {
                     returnLine = 0;
                 }
             }
-            let mut s: String = byteArray[(startIndex) as usize..(startIndex + (index + includeReturnLine - returnLine - startIndex)) as usize].iter().collect::<String>();
+            let mut s: String = String::from_utf8_lossy(&byteArray[(startIndex) as usize..(startIndex + (index + includeReturnLine - returnLine - startIndex)) as usize].iter().map(|value| *value as u8).collect::<Vec<u8>>()).into_owned();
             jcall!(stringList).add(crate::java_into_object(s.clone()));
             index += 1;
         }

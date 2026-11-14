@@ -38,6 +38,10 @@ thread_local! { pub static TouchScreenTypeFactory_instance: Option<Rc<RefCell<To
 
 impl TouchScreenTypeFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -59,23 +63,23 @@ impl TouchScreenTypeFactory {
         let mut touchScreenFactory: Option<Rc<RefCell<TouchScreenFactory>>> = TouchScreenFactory::getInstance();
         let mut touchScreenTypesFactory: Option<Rc<RefCell<TouchScreenTypesFactory>>> = TouchScreenTypesFactory::getInstance();
         let mut configuration: Option<Rc<RefCell<Configuration>>> = jcall!(jcall!(activity).getResources()).getConfiguration();
-        let mut touchScreen: i32 = jcall!(configuration).touchscreen.clone();
+        let mut touchScreen: i32 = { let java_field = jcall!(configuration).touchscreen.clone(); java_field }.clone();
         if touchScreen == unsafe { crate::android::content::res::Configuration::Configuration_TOUCHSCREEN_FINGER.clone() } {
-            jcall!(touchScreenFactory).setTouchScreenType(jcall!(touchScreenTypesFactory).FINGER.clone());
+            jcall!(touchScreenFactory).setTouchScreenType({ let java_field = jcall!(touchScreenTypesFactory).FINGER.clone(); java_field }.clone());
             if !jcall!(touchScreenFactory).isTouch() {
-                PreLogUtil::put(String::from("Not Really Exception: This indicates that a touch screen does exist but is not API8 so we will try it"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).PROCESS.clone());
+                PreLogUtil::put(String::from("Not Really Exception: This indicates that a touch screen does exist but is not API8 so we will try it"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).PROCESS.clone(); java_field }.clone());
                 jcall!(touchScreenFactory).setTouch(true);
             }
         } else if touchScreen == unsafe { crate::android::content::res::Configuration::Configuration_TOUCHSCREEN_STYLUS.clone() } {
-            jcall!(touchScreenFactory).setTouchScreenType(jcall!(touchScreenTypesFactory).STYLUS.clone());
+            jcall!(touchScreenFactory).setTouchScreenType({ let java_field = jcall!(touchScreenTypesFactory).STYLUS.clone(); java_field }.clone());
             if !jcall!(touchScreenFactory).isTouch() {
-                PreLogUtil::put(String::from("Not Really Exception: This indicates that a touch screen does exist but is not API8 so we will try it"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).PROCESS.clone());
+                PreLogUtil::put(String::from("Not Really Exception: This indicates that a touch screen does exist but is not API8 so we will try it"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).PROCESS.clone(); java_field }.clone());
                 jcall!(touchScreenFactory).setTouch(true);
             }
         } else if touchScreen == unsafe { crate::android::content::res::Configuration::Configuration_TOUCHSCREEN_NOTOUCH.clone() } {
-            jcall!(touchScreenFactory).setTouchScreenType(jcall!(touchScreenTypesFactory).NOTOUCH.clone());
+            jcall!(touchScreenFactory).setTouchScreenType({ let java_field = jcall!(touchScreenTypesFactory).NOTOUCH.clone(); java_field }.clone());
         } else if touchScreen == unsafe { crate::android::content::res::Configuration::Configuration_TOUCHSCREEN_UNDEFINED.clone() } {
-            jcall!(touchScreenFactory).setTouchScreenType(jcall!(touchScreenTypesFactory).UNDEFINED.clone());
+            jcall!(touchScreenFactory).setTouchScreenType({ let java_field = jcall!(touchScreenTypesFactory).UNDEFINED.clone(); java_field }.clone());
         }
     }
 }

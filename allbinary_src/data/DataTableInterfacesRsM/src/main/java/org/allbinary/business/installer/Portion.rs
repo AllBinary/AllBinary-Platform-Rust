@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,19 +33,23 @@ pub struct Portion {
 
 
 impl Portion {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             current: None,
             total: None,
         };
-        this.current = (jcall!(hashMap).get(String::from("current"))).clone() /* as Integer */;
-        this.total = (jcall!(hashMap).get(String::from("total"))).clone() /* as Integer */;
+        this.current = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(String::from("current")))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) }).clone(); java_value };
+        this.total = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(String::from("total")))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) }).clone(); java_value };
         this
     }
 
-    pub fn new(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(hashMap))))
     }
     

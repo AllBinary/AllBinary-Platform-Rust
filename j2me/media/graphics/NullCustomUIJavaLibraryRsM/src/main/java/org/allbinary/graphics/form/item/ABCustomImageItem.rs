@@ -5,9 +5,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::NullImage::NullImage;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::NullImage::NullImage;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
+use crate::java::lang::Exception::*;
 use super::ABCustomItem::ABCustomItem;
 
 // Borrows the object of a Java reference
@@ -26,7 +27,7 @@ pub struct ABCustomImageItem {
 impl ABCustomImageItem {
     
 
-    pub fn new_struct(mut label: String, mut image: Option<Rc<RefCell<Image>>>, mut layout: i32, mut altText: String, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut yOffset: i32) -> Self {
+    pub fn new_struct(mut label: String, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut layout: i32, mut altText: String, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut yOffset: i32) -> Self {
         let mut this = Self {
             base: ABCustomItem::new_struct(label.clone(), basicColor.clone(), basicColor.clone()),
             yOffset: 0,
@@ -36,12 +37,12 @@ impl ABCustomImageItem {
         this
     }
 
-    pub fn new(mut label: String, mut image: Option<Rc<RefCell<Image>>>, mut layout: i32, mut altText: String, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut yOffset: i32) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut label: String, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut layout: i32, mut altText: String, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut yOffset: i32) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(label, image, layout, altText, basicColor, yOffset))))
     }
     
 
-    pub fn getImage(&mut self) -> Option<Rc<RefCell<Image>>> {
+    pub fn getImage(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone).clone();
     }
 }
@@ -56,7 +57,7 @@ impl std::ops::DerefMut for ABCustomImageItem {
 pub trait ABCustomImageItemDyn: crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn {
     fn as_ABCustomImageItem(&self) -> &ABCustomImageItem;
     fn as_ABCustomImageItem_mut(&mut self) -> &mut ABCustomImageItem;
-    fn getImage(&mut self) -> Option<Rc<RefCell<Image>>> { ABCustomImageItem::getImage(self.as_ABCustomImageItem_mut()) }
+    fn getImage(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { ABCustomImageItem::getImage(self.as_ABCustomImageItem_mut()) }
 }
 impl ABCustomImageItemDyn for ABCustomImageItem {
     fn as_ABCustomImageItem(&self) -> &ABCustomImageItem { self }

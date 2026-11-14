@@ -6,8 +6,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::thread::ARunnable::ARunnable;
-// use crate::javax::microedition::media::Player::Player;
-// use crate::javax::microedition::media::PlayerListener::PlayerListener;
+use crate::javax::microedition::media::Player::Player;
+use crate::javax::microedition::media::PlayerListener::PlayerListener;
 use crate::org::allbinary::AvianUtil::AvianUtil;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
@@ -24,7 +24,7 @@ use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
 use crate::java::lang::Thread::*;
-use super::MusicManagerPlayerListener::MusicManagerPlayerListener;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,7 +40,7 @@ pub struct MusicManager {
     pub gameTickTimeDelayHelper: Option<Rc<RefCell<GameTickTimeDelayHelper>>>,
     pub playerStateUtil: Option<Rc<RefCell<PlayerStateUtil>>>,
     pub timeDelayHelper: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>>,
-    pub playerListener: Option<Rc<RefCell<PlayerListener>>>,
+    pub playerListener: Option<Rc<RefCell<dyn PlayerListener>>>,
     pub PLAY: String,
     pub SONG: String,
     pub NEXT_SONG: String,
@@ -59,6 +59,10 @@ pub struct MusicManager {
 
 
 impl MusicManager {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut musicServiceClass: &'static str, mut songList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Self {
@@ -91,17 +95,17 @@ impl MusicManager {
         this.gameTickTimeDelayHelper = GameTickTimeDelayHelperFactory::getInstance();
         this.playerStateUtil = PlayerStateUtil::getInstance();
         this.timeDelayHelper = TimeDelayHelper::new(0).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
-        this.playerListener = MusicManagerPlayerListener::new();
+        this.playerListener = MusicManagerPlayerListener::new().map(|reference| reference as Rc<RefCell<dyn PlayerListener>>);
         this.PLAY = String::from("Play ");
         this.SONG = String::from(" for: ");
-        this.NEXT_SONG = format!("{}{}", jcall!(CommonLabels::getInstance()).NEXT, String::from(" Song: "));
+        this.NEXT_SONG = format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).NEXT.clone(); java_field }, String::from(" Song: "));
         this.STOPPING = String::from("Stopping Current Song: ");
         this.ENDING = String::from("Ending Current Song: ");
         this.WAITING_FOR_MEDIA_TO_END = String::from("Waiting for media to end");
         this.ALREADY_PLAYING = String::from("Already Playing: ");
         this.ALREADY_ENDED = String::from("Last Song already ended: ");
-        this.currentSongSound = NoSound::getInstance();
-        this.nextSongSound = NoSound::getInstance();
+        this.currentSongSound = NoSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>);
+        this.nextSongSound = NoSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>);
         this.stopped = true;
         this.songList = songList.clone();
         this
@@ -122,7 +126,7 @@ impl MusicManager {
     
 
     pub fn nextSong(&mut self, mut nextSongSound: Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>, mut leftVolume: i32, mut rightVolume: i32) {
-        PreLogUtil::put(jcall!(StringMaker::new()).append(self.NEXT_SONG.clone()).append(jcall!(nextSongSound).getResource()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
+        PreLogUtil::put(jcall!(StringMaker::new()).append(self.NEXT_SONG.clone()).append(jcall!(nextSongSound).as_Sound_mut().getResource()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
         self.nextSongSound = nextSongSound.clone();
         self.reset();
         self.stopped = false;
@@ -142,14 +146,14 @@ impl MusicManager {
             if jcall!(self.songList).size() == 0 {
                 return;
             }
-            if (jcall!(self.timeDelayHelper).isTime(jcall!(self.gameTickTimeDelayHelper).startTime.clone()) && !self.noDuration) || self.reset {
+            if (jcall!(self.timeDelayHelper).isTime({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone()) && !self.noDuration) || self.reset {
                 self.reset = false;
                 self.noDuration = false;
                 let mut endingCurrentSongSound: Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>> = self.currentSongSound.clone();
                 let mut nextSongSound: Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>> = self.nextSongSound.clone();
-                self.nextSongSound = NoSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>);
+                self.nextSongSound = { let java_value = (NoSound::getInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>);
                 if match (&nextSongSound, &NoSound::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                    self.currentSongSound = { let java_object = (jcall!(BasicArrayListUtil::getInstance()).getRandom(self.songList.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>>().expect("ClassCastException").clone()) };
+                    self.currentSongSound = { let java_value = ({ let java_object = (jcall!(BasicArrayListUtil::getInstance()).getRandom(self.songList.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 } else {
                     self.currentSongSound = nextSongSound.clone();
                 }
@@ -158,45 +162,45 @@ impl MusicManager {
                 jcall!(self.timeDelayHelper).as_TimeDelayHelper_mut().delay = ((duration) as i32);
                 if duration <= 0_i64 {
                     let mut NO_DURATION_FOR: String = String::from("No Duration for: ");
-                    PreLogUtil::put(jcall!(StringMaker::new()).append(NO_DURATION_FOR.clone()).append(jcall!(self.currentSongSound).getResource()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
-                    jcall!(jcall!(self.currentSongSound).getPlayerP()).addPlayerListener(self.playerListener.clone());
+                    PreLogUtil::put(jcall!(StringMaker::new()).append(NO_DURATION_FOR.clone()).append(jcall!(self.currentSongSound).as_Sound_mut().getResource()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
+                    jcall!(jcall!(self.currentSongSound).as_Sound_mut().getPlayerP()).addPlayerListener(self.playerListener.clone());
                     self.noDuration = true;
                 }
                 if !match (&endingCurrentSongSound, &NoSound::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                    if match (&endingCurrentSongSound, &startingCurrentSongSound) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } && match (&jcall!(jcall!(endingCurrentSongSound).getPlayerP()).getState(), &unsafe { crate::javax::microedition::media::Player::Player_STARTED.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                        PreLogUtil::put(jcall!(StringMaker::new()).append(self.ALREADY_PLAYING.clone()).append(jcall!(endingCurrentSongSound).getResource()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
-                        PreLogUtil::put(jcall!(StringMaker::new()).append(self.STOPPING.clone()).append(jcall!(endingCurrentSongSound).getResource()).append(self.SONG.clone()).appendlong(duration.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
-                        jcall!(jcall!(endingCurrentSongSound).getPlayerP()).stop();
+                    if match (&endingCurrentSongSound, &startingCurrentSongSound) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } && jcall!(jcall!(endingCurrentSongSound).as_Sound_mut().getPlayerP()).getState() == crate::javax::microedition::media::Player::Player_STARTED.with(Clone::clone) {
+                        PreLogUtil::put(jcall!(StringMaker::new()).append(self.ALREADY_PLAYING.clone()).append(jcall!(endingCurrentSongSound).as_Sound_mut().getResource()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
+                        PreLogUtil::put(jcall!(StringMaker::new()).append(self.STOPPING.clone()).append(jcall!(endingCurrentSongSound).as_Sound_mut().getResource()).append(self.SONG.clone()).appendlong(duration.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
+                        jcall!(jcall!(endingCurrentSongSound).as_Sound_mut().getPlayerP()).stop();
                         self.waitForStateChange(endingCurrentSongSound.clone(), startingCurrentSongSound.clone());
                     } else {
-                        if match (&jcall!(jcall!(endingCurrentSongSound).getPlayerP()).getState(), &unsafe { crate::javax::microedition::media::Player::Player_STARTED.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                            PreLogUtil::put(jcall!(StringMaker::new()).append(self.STOPPING.clone()).append(jcall!(endingCurrentSongSound).getResource()).append(self.SONG.clone()).appendlong(duration.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
-                            jcall!(jcall!(endingCurrentSongSound).getPlayerP()).stop();
+                        if jcall!(jcall!(endingCurrentSongSound).as_Sound_mut().getPlayerP()).getState() == crate::javax::microedition::media::Player::Player_STARTED.with(Clone::clone) {
+                            PreLogUtil::put(jcall!(StringMaker::new()).append(self.STOPPING.clone()).append(jcall!(endingCurrentSongSound).as_Sound_mut().getResource()).append(self.SONG.clone()).appendlong(duration.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
+                            jcall!(jcall!(endingCurrentSongSound).as_Sound_mut().getPlayerP()).stop();
                             self.waitForStateChange(endingCurrentSongSound.clone(), startingCurrentSongSound.clone());
                         } else {
-                            PreLogUtil::put(jcall!(StringMaker::new()).append(self.ALREADY_ENDED.clone()).append(self.PLAY.clone()).append(jcall!(startingCurrentSongSound).getResource()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
+                            PreLogUtil::put(jcall!(StringMaker::new()).append(self.ALREADY_ENDED.clone()).append(self.PLAY.clone()).append(jcall!(startingCurrentSongSound).as_Sound_mut().getResource()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
                             if AvianUtil::isAvian() {
-                                jcall!(jcall!(endingCurrentSongSound).getPlayerP()).stop();
-                                jcall!(jcall!(startingCurrentSongSound).getPlayerP()).stop();
+                                jcall!(jcall!(endingCurrentSongSound).as_Sound_mut().getPlayerP()).stop();
+                                jcall!(jcall!(startingCurrentSongSound).as_Sound_mut().getPlayerP()).stop();
                             }
-                            jcall!(jcall!(startingCurrentSongSound).getPlayerP()).start();
+                            jcall!(jcall!(startingCurrentSongSound).as_Sound_mut().getPlayerP()).start();
                         }
                     }
                 } else {
-                    PreLogUtil::put(jcall!(StringMaker::new()).append(self.PLAY.clone()).append(jcall!(self.currentSongSound).getResource()).append(self.SONG.clone()).appendlong(duration.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
-                    jcall!(jcall!(self.currentSongSound).getPlayerP()).start();
+                    PreLogUtil::put(jcall!(StringMaker::new()).append(self.PLAY.clone()).append(jcall!(self.currentSongSound).as_Sound_mut().getResource()).append(self.SONG.clone()).appendlong(duration.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
+                    jcall!(jcall!(self.currentSongSound).as_Sound_mut().getPlayerP()).start();
                 }
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            let mut resource: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            let mut resource: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
             if !match (&self.currentSongSound, &NoSound::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                resource = jcall!(self.currentSongSound).getResource();
+                resource = { let java_value = (jcall!(self.currentSongSound).as_Sound_mut().getResource()).clone(); java_value };
             }
-            PreLogUtil::putOE(format!("{}{}", jcall!(self.commonStrings).EXCEPTION_LABEL, resource), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone(), e.clone());
+            PreLogUtil::putOE(format!("{}{}", { let java_field = jcall!(self.commonStrings).EXCEPTION_LABEL.clone(); java_field }, resource), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -204,12 +208,12 @@ impl MusicManager {
 
     // throws Exception
     pub fn waitForStateChange(&mut self, mut endingCurrentSongSound: Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>, mut startingCurrentSongSound: Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>) {
-        while match (&jcall!(jcall!(endingCurrentSongSound).getPlayerP()).getState(), &unsafe { crate::javax::microedition::media::Player::Player_STARTED.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            PreLogUtil::put(self.WAITING_FOR_MEDIA_TO_END.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
+        while jcall!(jcall!(endingCurrentSongSound).as_Sound_mut().getPlayerP()).getState() == crate::javax::microedition::media::Player::Player_STARTED.with(Clone::clone) {
+            PreLogUtil::put(self.WAITING_FOR_MEDIA_TO_END.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
             std::thread::sleep(std::time::Duration::from_millis((100) as u64));
         }
-        PreLogUtil::put(jcall!(StringMaker::new()).append({ let java_receiver = self.playerStateUtil.clone(); let java_arguments = (jcall!(jcall!(endingCurrentSongSound).getPlayerP()).getState(),); let java_result = jcall!(java_receiver).convert(java_arguments.0); java_result }).append(jcall!(self.commonSeps).SPACE.clone()).append(self.PLAY.clone()).append(jcall!(startingCurrentSongSound).getResource()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
-        jcall!(jcall!(startingCurrentSongSound).getPlayerP()).start();
+        PreLogUtil::put(jcall!(StringMaker::new()).append({ let java_receiver = self.playerStateUtil.clone(); let java_arguments = (jcall!(jcall!(endingCurrentSongSound).as_Sound_mut().getPlayerP()).getState(),); let java_result = jcall!(java_receiver).convert(java_arguments.0); java_result }).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone()).append(self.PLAY.clone()).append(jcall!(startingCurrentSongSound).as_Sound_mut().getResource()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
+        jcall!(jcall!(startingCurrentSongSound).as_Sound_mut().getPlayerP()).start();
     }
     
 
@@ -219,21 +223,21 @@ impl MusicManager {
             let mut currentSongSound: Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>> = self.currentSongSound.clone();
             if !match (&currentSongSound, &NoSound::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 self.stopped = true;
-                PreLogUtil::put(jcall!(StringMaker::new()).append(self.ENDING.clone()).append(jcall!(currentSongSound).getResource()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
-                jcall!(jcall!(currentSongSound).getPlayerP()).stop();
+                PreLogUtil::put(jcall!(StringMaker::new()).append(self.ENDING.clone()).append(jcall!(currentSongSound).as_Sound_mut().getResource()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
+                jcall!(jcall!(currentSongSound).as_Sound_mut().getPlayerP()).stop();
             }
             jcall!(self.timeDelayHelper).setStartTime(0);
-            PreLogUtil::put(jcall!(StringMaker::new()).append(jcall!(self.commonStrings).END.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(currentSongSound.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).END.clone());
+            PreLogUtil::put(jcall!(StringMaker::new()).append({ let java_field = jcall!(self.commonStrings).END.clone(); java_field }.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(currentSongSound.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).END.clone(); java_field }.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            let mut resource: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            let mut resource: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
             if !match (&currentSongSound, &NoSound::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                resource = jcall!(currentSongSound).getResource();
+                resource = { let java_value = (jcall!(currentSongSound).as_Sound_mut().getResource()).clone(); java_value };
             }
-            PreLogUtil::putOE(format!("{}{}", jcall!(self.commonStrings).EXCEPTION_LABEL, resource), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).END.clone(), e.clone());
+            PreLogUtil::putOE(format!("{}{}", { let java_field = jcall!(self.commonStrings).EXCEPTION_LABEL.clone(); java_field }, resource), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).END.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -243,9 +247,15 @@ impl MusicManager {
 pub struct MusicManagerPlayerListener {
 }
 
-// impl PlayerListener for MusicManagerPlayerListener with the methods of the trait
+impl PlayerListener for MusicManagerPlayerListener {
+    fn playerUpdate(&mut self, mut player: Option<Rc<RefCell<dyn Player>>>, mut event: String, mut eventData: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { Self::playerUpdate(self, player, event, eventData) }
+}
 
 impl MusicManagerPlayerListener {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -258,9 +268,9 @@ impl MusicManagerPlayerListener {
     }
         
 
-        pub fn playerUpdate(&mut self, mut player: Option<Rc<RefCell<Player>>>, mut event: String, mut eventData: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {
-            PreLogUtil::put(event.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
-            if event == unsafe { crate::javax::microedition::media::PlayerListener::PlayerListener_END_OF_MEDIA.clone() } || event == unsafe { crate::javax::microedition::media::PlayerListener::PlayerListener_STOPPED.clone() } || event == unsafe { crate::javax::microedition::media::PlayerListener::PlayerListener_CLOSED.clone() } {
+        pub fn playerUpdate(&mut self, mut player: Option<Rc<RefCell<dyn Player>>>, mut event: String, mut eventData: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {
+            PreLogUtil::put(event.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
+            if event == crate::javax::microedition::media::PlayerListener::PlayerListener_END_OF_MEDIA.with(Clone::clone) || event == crate::javax::microedition::media::PlayerListener::PlayerListener_STOPPED.with(Clone::clone) || event == crate::javax::microedition::media::PlayerListener::PlayerListener_CLOSED.with(Clone::clone) {
                 self.reset();
             }
         }

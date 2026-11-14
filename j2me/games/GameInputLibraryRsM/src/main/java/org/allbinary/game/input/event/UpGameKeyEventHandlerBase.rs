@@ -25,6 +25,7 @@ use crate::org::allbinary::logic::util::event::EventStrings::EventStrings;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::GameKeyEvent::GameKeyEvent;
 use super::UpGameKeyEventListenerInterface::UpGameKeyEventListenerInterface;
 
@@ -51,7 +52,7 @@ impl UpGameKeyEventHandlerBase {
             base: BasicEventHandler::new_struct(),
             list: None,
         };
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -75,14 +76,14 @@ impl UpGameKeyEventHandlerBase {
 
     pub fn removeListenerSingleThreaded(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
         jcall!(self.list).remove(crate::java_into_object(eventListenerInterface.clone()));
-        self.base.removeListenerSingleThreaded(eventListenerInterface.clone());
+        { let java_arguments = (eventListenerInterface.clone(),); self.base.removeListenerSingleThreaded(java_arguments.0) };
     }
     
 
     // synchronized
     pub fn removeListener(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
         jcall!(self.list).remove(crate::java_into_object(eventListenerInterface.clone()));
-        self.base.removeListener(eventListenerInterface.clone());
+        { let java_arguments = (eventListenerInterface.clone(),); self.base.removeListener(java_arguments.0) };
     }
     
 
@@ -93,25 +94,25 @@ impl UpGameKeyEventHandlerBase {
             while { index -= 1; index } >= 0 {
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                 let mut playerGameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>> = { let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>>>().expect("ClassCastException").clone()) };
-                jcall!(playerGameInput).onUpGameKeyEvent((eventObject).clone() /* as GameKeyEvent */);
+                jcall!(playerGameInput).onUpGameKeyEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<GameKeyEvent>() }, "ClassCastException: not a GameKeyEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<GameKeyEvent>) } }));
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
                 }
             }
             }
         }
-        self.base.fireEvent(eventObject.clone());
+        { let java_arguments = (eventObject.clone(),); self.base.fireEvent(java_arguments.0) };
     }
     
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut upGameKeyEventListenerInterface: Option<Rc<RefCell<dyn UpGameKeyEventListenerInterface>>> = panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn UpGameKeyEventListenerInterface");
-        jcall!(upGameKeyEventListenerInterface).onUpGameKeyEvent((eventObject).clone() /* as GameKeyEvent */);
+        let mut upGameKeyEventListenerInterface: Option<Rc<RefCell<dyn UpGameKeyEventListenerInterface>>> = (|| -> Option<Rc<RefCell<dyn UpGameKeyEventListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn UpGameKeyEventListenerInterface") })();
+        jcall!(upGameKeyEventListenerInterface).onUpGameKeyEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<GameKeyEvent>() }, "ClassCastException: not a GameKeyEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<GameKeyEvent>) } }));
     }
     
 
@@ -123,15 +124,15 @@ impl UpGameKeyEventHandlerBase {
         jcall!(stringBuffer).appendint(size.clone());
         for index in (0..size) {
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                let mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>> = { let java_object = jcall!(self.list).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EventListenerInterface>>>>().expect("ClassCastException").clone()) };
+                let mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>> = { let java_object = (jcall!(self.list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EventListenerInterface>>>>().expect("ClassCastException").clone()) };
                 jcall!(stringBuffer).append(UpGameKeyEventHandlerBase_LISTENER_LABEL.with(Clone::clone).clone());
                 jcall!(stringBuffer).append(jcall!(eventListenerInterface).toString());
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).TOSTRING.clone(), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).TOSTRING.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                 }
             }
         }

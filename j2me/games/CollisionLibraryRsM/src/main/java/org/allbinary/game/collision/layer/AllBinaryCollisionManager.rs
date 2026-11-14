@@ -21,6 +21,7 @@ use crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBa
 use crate::org::allbinary::game::collision::CollidableInterfaceCompositeInterface::CollidableInterfaceCompositeInterface;
 use crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayer;
 use crate::org::allbinary::layer::LayerManager::LayerManager;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -35,6 +36,10 @@ pub struct AllBinaryCollisionManager {
 pub static mut AllBinaryCollisionManager_allBinaryCollisionManager: std::cell::LazyCell<Option<Rc<RefCell<AllBinaryCollisionManager>>>> = std::cell::LazyCell::new(|| AllBinaryCollisionManager::new());
 
 impl AllBinaryCollisionManager {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -57,7 +62,7 @@ impl AllBinaryCollisionManager {
     pub fn process(&mut self, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>>, mut collidableInterfaceCompositeInterface: Option<Rc<RefCell<dyn CollidableInterfaceCompositeInterface>>>, mut startIndex: i32) {
         let mut size: i32 = jcall!(layerManager).getSize();
         for index in (startIndex + 1..size) {
-            let mut collidableInterfaceCompositeInterface2: Option<Rc<RefCell<dyn CollidableInterfaceCompositeInterface>>> = (jcall!(layerManager).getLayerAt(index.clone())).clone() /* as CollidableInterfaceCompositeInterface */;
+            let mut collidableInterfaceCompositeInterface2: Option<Rc<RefCell<dyn CollidableInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn CollidableInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn Layer cannot be cast to CollidableInterfaceCompositeInterface") })();
             self.collide(layerManager.clone(), collidableInterfaceCompositeInterface.clone(), collidableInterfaceCompositeInterface2.clone());
         }
     }
@@ -67,10 +72,10 @@ impl AllBinaryCollisionManager {
     pub fn collide(&mut self, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>>, mut collidableInterfaceCompositeInterface: Option<Rc<RefCell<dyn CollidableInterfaceCompositeInterface>>>, mut collidableInterfaceCompositeInterface2: Option<Rc<RefCell<dyn CollidableInterfaceCompositeInterface>>>) {
         let mut collidableBase2: Option<Rc<RefCell<dyn crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn>>> = jcall!(collidableInterfaceCompositeInterface2).getCollidableInferface();
         let mut collidableBase: Option<Rc<RefCell<dyn crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn>>> = jcall!(collidableInterfaceCompositeInterface).getCollidableInferface();
-        if jcall!(collidableBase2).isCollidable((collidableInterfaceCompositeInterface).clone() /* as CollidableCompositeLayer */) {
-            if jcall!(collidableBase).isCollisionInterface((collidableInterfaceCompositeInterface).clone() /* as CollidableCompositeLayer */, collidableInterfaceCompositeInterface2.clone()) {
-                jcall!(collidableBase).collideInterface((collidableInterfaceCompositeInterface).clone() /* as CollidableCompositeLayer */, collidableInterfaceCompositeInterface2.clone());
-                jcall!(collidableBase2).collideInterface((collidableInterfaceCompositeInterface).clone() /* as CollidableCompositeLayer */, collidableInterfaceCompositeInterface.clone());
+        if jcall!(collidableBase2).isCollidable((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableInterfaceCompositeInterface cannot be cast to CollidableCompositeLayer") })()) {
+            if jcall!(collidableBase).isCollisionInterface((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableInterfaceCompositeInterface cannot be cast to CollidableCompositeLayer") })(), collidableInterfaceCompositeInterface2.clone()) {
+                jcall!(collidableBase).collideInterface((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableInterfaceCompositeInterface cannot be cast to CollidableCompositeLayer") })(), collidableInterfaceCompositeInterface2.clone());
+                jcall!(collidableBase2).collideInterface((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableInterfaceCompositeInterface cannot be cast to CollidableCompositeLayer") })(), collidableInterfaceCompositeInterface.clone());
             }
         }
     }

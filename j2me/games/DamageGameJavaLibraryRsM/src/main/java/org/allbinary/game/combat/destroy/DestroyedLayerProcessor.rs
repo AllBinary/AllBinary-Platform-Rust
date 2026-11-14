@@ -27,6 +27,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -57,7 +58,7 @@ impl DestroyedLayerProcessor {
     
 
     pub fn init() {
-        unsafe { *DestroyedLayerProcessor_DESTROYED_LAYER_PROCESSOR = DestroyedLayerProcessor::new() };
+        unsafe { *DestroyedLayerProcessor_DESTROYED_LAYER_PROCESSOR = DestroyedLayerProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::BasicLayerProcessor::BasicLayerProcessorDyn>>) };
     }
     
 
@@ -77,9 +78,9 @@ impl DestroyedLayerProcessor {
         for index in (0..size) {
             let mut layerInterfaceCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize].clone();
             if layerInterfaceCanBeNull.is_some() {
-                layerInterface = (layerInterfaceCanBeNull).clone() /* as AllBinaryLayer */;
+                layerInterface = { let java_object = (layerInterfaceCanBeNull).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>>().expect("ClassCastException").clone()) };
                 jcall!(allBinaryLayerManager).remove(layerInterface.clone());
-                destroyedEvent = jcall!(destroyEventCircularStaticPool).getInstanceForLayer(layerInterface.clone());
+                destroyedEvent = { let java_value = (jcall!(destroyEventCircularStaticPool).getInstanceForLayer(layerInterface.clone())).clone(); java_value };
                 jcall!(destroyedEventHandler).fireEvent(destroyedEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
             } else {
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();

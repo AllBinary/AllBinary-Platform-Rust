@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellType;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -28,14 +29,14 @@ macro_rules! jcall {
     };
 }
 
-pub trait TopViewCharacterInterface {
+pub trait TopViewCharacterInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
-    fn terrainMove(&mut self, geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>, x: i32, y: i32);
+    fn terrainMove(&mut self, geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>, x: i32, y: i32);
     
 
     // throws Exception
-    fn terrainEvent(&mut self, x: i32, y: i32, geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>, geographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>>);
+    fn terrainEvent(&mut self, x: i32, y: i32, geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>, geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>);
     
 
     fn r#move(&mut self);
@@ -52,8 +53,6 @@ pub trait TopViewCharacterInterface {
 
     // throws Exception
     fn reset(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

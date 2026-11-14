@@ -53,8 +53,8 @@ impl AllAnalogControllerVisitor {
     pub fn process(&mut self, mut allbinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut analogLocationInputProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::android::input::motion::AnalogLocationInputProcessor::AnalogLocationInputProcessorDyn>>>) {
         let mut analogLocationInputList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(AnalogLocationInputFactory::getInstance()).getList();
         let mut analogLocationInput: Option<Rc<RefCell<AnalogLocationInput>>> = None;
-        for index in (0..=jcall!(analogLocationInputList).size() - 1).rev() {
-            analogLocationInput = { let java_object = (jcall!(analogLocationInputList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AnalogLocationInput>>>>().expect("ClassCastException").clone()) };
+        for index in (0..={ let java_bound = jcall!(analogLocationInputList).size() - 1; java_bound }).rev() {
+            analogLocationInput = { let java_value = ({ let java_object = (jcall!(analogLocationInputList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AnalogLocationInput>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             jcall!(analogLocationInputProcessor).process(allbinaryLayerManager.clone(), analogLocationInput.clone());
         }
     }

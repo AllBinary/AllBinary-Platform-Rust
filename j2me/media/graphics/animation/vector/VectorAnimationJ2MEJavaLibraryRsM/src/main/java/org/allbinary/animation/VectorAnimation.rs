@@ -17,12 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::NullImage::NullImage;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::NullImage::NullImage;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::math::PrimitiveIntUtil::PrimitiveIntUtil;
 use crate::org::allbinary::util::CircularIndexUtil::CircularIndexUtil;
+use crate::java::lang::Exception::*;
 use super::IndexedAnimation::IndexedAnimation;
 use super::VectorAnimationInterface::VectorAnimationInterface;
 use super::AnimationBehavior::AnimationBehavior;
@@ -41,12 +42,12 @@ pub struct VectorAnimation {
 }
 
 // impl VectorAnimationInterface for VectorAnimation with the methods of the trait
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for VectorAnimation {
-    fn getSize(&mut self) -> i32 { Self::getSize(self) }
-    fn previousFrame(&mut self) { Self::previousFrame(self) }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for VectorAnimation {
+    fn nextFrame(&mut self) { Self::nextFrame(self) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for VectorAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 impl VectorAnimation {
@@ -56,8 +57,8 @@ impl VectorAnimation {
         let mut currentPoints: Vec<Vec<Vec<i32>>> = vec![vec![vec![0; (2) as usize]; ((currentPoints2.len() as i32)) as usize]; (1) as usize];
         let mut size: i32 = (currentPoints2.len() as i32).clone();
         for index in (0..size) {
-            currentPoints[(0) as usize][(index) as usize][(0) as usize] = currentPoints2[(index) as usize][(0) as usize].clone();
-            currentPoints[(0) as usize][(index) as usize][(1) as usize] = currentPoints2[(index) as usize][(1) as usize].clone();
+            currentPoints[(0) as usize][(index) as usize][(0) as usize] = { let java_value = (currentPoints2[(index) as usize][(0) as usize]).clone(); java_value }.clone();
+            currentPoints[(0) as usize][(index) as usize][(1) as usize] = { let java_value = (currentPoints2[(index) as usize][(1) as usize]).clone(); java_value }.clone();
         }
         return VectorAnimation::new(currentPoints.clone(), basicColor.clone(), animationBehavior.clone()).map(|reference| reference as Rc<RefCell<dyn VectorAnimationDyn>>);
     }
@@ -69,7 +70,7 @@ impl VectorAnimation {
             currentPoints: Vec::new(),
             circularIndexUtil: None,
         };
-        this.currentPoints = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY_ARRAY.clone();
+        this.currentPoints = { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY_ARRAY.clone(); java_field }.clone();
         this.circularIndexUtil = CircularIndexUtil::createInstance(0);
         // super(...) is in the struct literal above
         this.setPoints(currentPoints.clone());
@@ -84,10 +85,10 @@ impl VectorAnimation {
 
     pub fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
         let mut changed: bool = false;
-        if self.getBasicColorP().is_none() || ((self.getBasicColorP()).unwrap() as i32) != jcall!(basicColor).intValue() {
+        if self.getBasicColorP().is_none() || { let java_value = jcall!(self.getBasicColorP()).intValue(); java_value } != { let java_value = jcall!(basicColor).intValue(); java_value } {
             changed = true;
         }
-        self.base.setBasicColorP(basicColor.clone());
+        { let java_arguments = (basicColor.clone(),); self.base.setBasicColorP(java_arguments.0) };
         if changed {
             self.updateModifiers();
         }
@@ -96,10 +97,10 @@ impl VectorAnimation {
 
     pub fn changeBasicColor(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
         let mut changed: bool = false;
-        if self.getChangeBasicColor().is_none() || ((self.getChangeBasicColor()).unwrap() as i32) != jcall!(basicColor).intValue() {
+        if self.getChangeBasicColor().is_none() || { let java_value = jcall!(self.getChangeBasicColor()).intValue(); java_value } != { let java_value = jcall!(basicColor).intValue(); java_value } {
             changed = true;
         }
-        self.base.changeBasicColor(basicColor.clone());
+        { let java_arguments = (basicColor.clone(),); self.base.changeBasicColor(java_arguments.0) };
         if changed {
             self.updateModifiers();
         }
@@ -111,7 +112,7 @@ impl VectorAnimation {
         if self.alphaP != alpha {
             changed = true;
         }
-        self.base.setAlpha(alpha.clone());
+        { let java_arguments = (alpha.clone(),); self.base.setAlpha(java_arguments.0) };
         if changed {
             self.updateModifiers();
         }
@@ -160,7 +161,7 @@ impl VectorAnimation {
     }
     
 
-    pub fn paintVectors(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintVectors(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut nextPointX: i32 = 0;
             let mut nextPointY: i32 = 0;
@@ -170,10 +171,10 @@ impl VectorAnimation {
             let mut size: i32 = (currentPointsFrame.len() as i32).clone();
             let mut index: i32 = size - 2;
             while { index -= 1; index } >= 0 {
-                nextPoint = currentPointsFrame[(index) as usize].clone();
-                point = currentPointsFrame[(index + 1) as usize].clone();
-                nextPointX = nextPoint[(0) as usize].clone();
-                nextPointY = nextPoint[(1) as usize].clone();
+                nextPoint = { let java_value = (currentPointsFrame[(index) as usize]).clone(); java_value }.clone();
+                point = { let java_value = (currentPointsFrame[(index + 1) as usize]).clone(); java_value }.clone();
+                nextPointX = { let java_value = (nextPoint[(0) as usize]).clone(); java_value }.clone();
+                nextPointY = { let java_value = (nextPoint[(1) as usize]).clone(); java_value }.clone();
                 if nextPointX != 1000 {
                     jcall!(graphics).drawLine(point[(0) as usize] + x, point[(1) as usize] + y, nextPointX + x, nextPointY + y);
                 } else {
@@ -183,15 +184,15 @@ impl VectorAnimation {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("paintVectors"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("paintVectors"), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         jcall!(self.basicSetColorUtil).setBasicColorP(graphics.clone(), self.basicColor.clone());
         self.paintVectors(graphics.clone(), x.clone(), y.clone());
     }
@@ -214,7 +215,12 @@ impl VectorAnimation {
 
     pub fn setPoints(&mut self, mut currentPoints: Vec<Vec<Vec<i32>>>) {
         self.currentPoints = currentPoints.clone();
-        self.circularIndexUtil = CircularIndexUtil::createInstance((currentPoints.len() as i32).clone());
+        self.circularIndexUtil = { let java_value = (CircularIndexUtil::createInstance((currentPoints.len() as i32).clone())).clone(); java_value };
+    }
+    
+
+    pub fn getBasicColorP(&mut self) -> Option<Rc<RefCell<BasicColor>>> {
+        return self.base.getBasicColorP();
     }
 }
 impl std::ops::Deref for VectorAnimation {
@@ -229,7 +235,7 @@ pub trait VectorAnimationDyn: crate::org::allbinary::animation::IndexedAnimation
     fn as_VectorAnimation(&self) -> &VectorAnimation;
     fn as_VectorAnimation_mut(&mut self) -> &mut VectorAnimation;
     fn updateModifiers(&mut self) { VectorAnimation::updateModifiers(self.as_VectorAnimation_mut()) }
-    fn paintVectors(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { VectorAnimation::paintVectors(self.as_VectorAnimation_mut(), graphics, x, y) }
+    fn paintVectors(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { VectorAnimation::paintVectors(self.as_VectorAnimation_mut(), graphics, x, y) }
     fn getPoints(&mut self, mut frame: i32) -> Vec<Vec<i32>> { VectorAnimation::getPoints(self.as_VectorAnimation_mut(), frame) }
     fn setPoints(&mut self, mut currentPoints: Vec<Vec<Vec<i32>>>) { VectorAnimation::setPoints(self.as_VectorAnimation_mut(), currentPoints) }
 }
@@ -243,7 +249,8 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for VectorAnimati
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base }
     fn setAlpha(&mut self, mut alpha: i32) { Self::setAlpha(self, alpha) }
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn getBasicColorP(&mut self) -> Option<Rc<RefCell<BasicColor>>> { Self::getBasicColorP(self) }
     fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::setBasicColorP(self, basicColor) }
     fn changeBasicColor(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::changeBasicColor(self, basicColor) }
     fn setScale(&mut self, mut scaleX: f32, mut scaleY: f32) { Self::setScale(self, scaleX, scaleY) }

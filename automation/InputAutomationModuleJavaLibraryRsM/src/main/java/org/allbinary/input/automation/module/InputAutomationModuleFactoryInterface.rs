@@ -20,6 +20,7 @@ use super::*;
 // use crate::javax::help::HelpSet::HelpSet;
 // use crate::javax::swing::*;
 use crate::org::allbinary::thread::RunnableInterface::RunnableInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +34,10 @@ pub struct InputAutomationModuleFactoryInterface {
 
 
 impl InputAutomationModuleFactoryInterface {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -65,7 +70,7 @@ impl InputAutomationModuleFactoryInterface {
         return None;
     }
 }
-pub trait InputAutomationModuleFactoryInterfaceDyn {
+pub trait InputAutomationModuleFactoryInterfaceDyn: std::any::Any {
     fn as_InputAutomationModuleFactoryInterface(&self) -> &InputAutomationModuleFactoryInterface;
     fn as_InputAutomationModuleFactoryInterface_mut(&mut self) -> &mut InputAutomationModuleFactoryInterface;
     fn getName(&mut self) -> String { InputAutomationModuleFactoryInterface::getName(self.as_InputAutomationModuleFactoryInterface_mut()) }

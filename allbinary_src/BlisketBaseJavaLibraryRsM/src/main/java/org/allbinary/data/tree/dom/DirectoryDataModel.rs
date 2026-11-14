@@ -27,6 +27,7 @@ use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterfac
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::DomNodeInterface::DomNodeInterface;
 use super::FileDomDataModel::FileDomDataModel;
 
@@ -60,6 +61,10 @@ impl crate::org::allbinary::data::tree::dom::document::mapping::DomDocumentMappi
 }
 
 impl DirectoryDataModel {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut file: Option<Rc<RefCell<AbFile>>>) -> Self {
@@ -69,8 +74,8 @@ impl DirectoryDataModel {
             NO_TYPE: 0,
         };
         this.NO_TYPE = 0;
-        this.fileBasicArrayList = jcall!(Directory::getInstance()).search(file.clone());
-        this.transformDocumentInterface = (TransformDocumentFactory::getInstance()).clone() /* as TransformDocumentInterface */;
+        this.fileBasicArrayList = { let java_value = (jcall!(Directory::getInstance()).search(file.clone())).clone(); java_value };
+        this.transformDocumentInterface = { let java_value = ((TransformDocumentFactory::getInstance()).clone()).clone(); java_value };
         this
     }
 
@@ -107,8 +112,8 @@ impl DirectoryDataModel {
         let mut nextFile: Option<Rc<RefCell<AbFile>>> = None;
         let mut fileNode: Option<Rc<RefCell<Node>>> = None;
         for index in (0..size) {
-            nextFile = { let java_object = (jcall!(self.fileBasicArrayList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AbFile>>>>().expect("ClassCastException").clone()) };
-            fileNode = jcall!(FileDomDataModel::new(nextFile.clone())).toXmlNode(document.clone());
+            nextFile = { let java_value = ({ let java_object = (jcall!(self.fileBasicArrayList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AbFile>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            fileNode = { let java_value = (jcall!(FileDomDataModel::new(nextFile.clone())).toXmlNode(document.clone())).clone(); java_value };
             jcall!(dirNode).appendChild(fileNode.clone());
         }
         return dirNode.clone();
@@ -123,9 +128,9 @@ impl DirectoryDataModel {
 
     // throws Exception
     pub fn view(&mut self) -> String {
-        let mut node: Option<Rc<RefCell<Node>>> = { let java_arguments = (jcall!(self.getTransformDocumentInterface()).getDoc(),); self.toXmlNode(java_arguments.0) };
+        let mut node: Option<Rc<RefCell<Node>>> = { let java_arguments = ({ let java_argument = jcall!(self.getTransformDocumentInterface()).getDoc(); java_argument },); self.toXmlNode(java_arguments.0) };
         jcall!(jcall!(self.getTransformDocumentInterface()).getBaseNode()).appendChild(node.clone());
-        return XmlDocumentHelper::toString(jcall!(self.getTransformDocumentInterface()).getDoc());
+        return XmlDocumentHelper::toString({ let java_argument = jcall!(self.getTransformDocumentInterface()).getDoc(); java_argument });
     }
 }
 

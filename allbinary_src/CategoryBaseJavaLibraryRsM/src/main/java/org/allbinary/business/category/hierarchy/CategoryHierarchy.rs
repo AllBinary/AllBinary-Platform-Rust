@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::category::CategoryData::CategoryData;
 use crate::org::allbinary::business::category::CategoryInterface::CategoryInterface;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
@@ -48,6 +47,10 @@ impl CategoryHierarchyInterface for CategoryHierarchy {
 }
 
 impl CategoryHierarchy {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct2(mut rootCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, mut parentCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>) -> Self {
@@ -84,21 +87,21 @@ impl CategoryHierarchy {
     }
     
 
-    pub fn new_struct3(mut rootCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, mut parentCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, mut categoryPropertiesHashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct3_CategoryInterface_CategoryInterface_HashMap(mut rootCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, mut parentCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, mut categoryPropertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             rootCategoryInterface: None,
             parentCategoryInterface: None,
             level: 0,
         };
-        let mut levelString: String = jcall!(StringUtil::getInstance()).getNonNull((jcall!(categoryPropertiesHashMap).get(jcall!(CategoryData::getInstance()).LEVEL.clone())).clone() /* as String */);
-        this.level = (((levelString.clone()).to_string()).unwrap() as i32);
+        let mut levelString: String = jcall!(StringUtil::getInstance()).getNonNull({ let java_object = (jcall!(categoryPropertiesHashMap).get(crate::java_into_object({ let java_field = jcall!(CategoryData::getInstance()).LEVEL.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() });
+        this.level = { let java_value = (((Some((levelString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32)).clone(); java_value };
         this.setRoot(rootCategoryInterface.clone());
         this.setParent(parentCategoryInterface.clone());
         this
     }
 
-    pub fn new3(mut rootCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, mut parentCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, mut categoryPropertiesHashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct3(rootCategoryInterface, parentCategoryInterface, categoryPropertiesHashMap))))
+    pub fn new3_CategoryInterface_CategoryInterface_HashMap(mut rootCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, mut parentCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, mut categoryPropertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct3_CategoryInterface_CategoryInterface_HashMap(rootCategoryInterface, parentCategoryInterface, categoryPropertiesHashMap))))
     }
     
 

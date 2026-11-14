@@ -20,6 +20,7 @@ use crate::Runnable;
 use super::*;
 use crate::org::allbinary::graphics::displayable::DisplayInfoSingleton::DisplayInfoSingleton;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,6 +40,10 @@ impl Runnable for GameRunnable {
 }
 
 impl GameRunnable {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -68,7 +73,7 @@ impl GameRunnable {
         std::thread::sleep(std::time::Duration::from_millis((self.waitInMillis.clone()) as u64));
     }
 }
-pub trait GameRunnableDyn: crate::Runnable {
+pub trait GameRunnableDyn: std::any::Any + crate::Runnable {
     fn as_GameRunnable(&self) -> &GameRunnable;
     fn as_GameRunnable_mut(&mut self) -> &mut GameRunnable;
     fn processLoopSleep(&mut self) { GameRunnable::processLoopSleep(self.as_GameRunnable_mut()) }

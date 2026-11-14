@@ -20,11 +20,9 @@ use super::*;
 use crate::org::allbinary::globals::MESSAGES::MESSAGES;
 use crate::org::allbinary::logic::control::validate::ValidationComponentInterface::ValidationComponentInterface;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
+use crate::java::lang::Exception::*;
 use super::ShippingMethodsView::ShippingMethodsView;
 use super::Document::Document;
-use super::dom::dom;
-use super::w3c::w3c;
-use super::org::org;
 use super::Node::Node;
 
 // Borrows the object of a Java reference
@@ -39,6 +37,9 @@ pub struct ValidationView {
 }
 
 // impl ValidationComponentInterface for ValidationView with the methods of the trait
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for ValidationView {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }
+}
 
 impl ValidationView {
     
@@ -86,6 +87,10 @@ impl std::ops::DerefMut for ValidationView {
 impl crate::views::generic::shipping::ShippingMethodsView::ShippingMethodsViewDyn for ValidationView {
     fn as_ShippingMethodsView(&self) -> &crate::views::generic::shipping::ShippingMethodsView::ShippingMethodsView { &self.base }
     fn as_ShippingMethodsView_mut(&mut self) -> &mut crate::views::generic::shipping::ShippingMethodsView::ShippingMethodsView { &mut self.base }
+}
+impl crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn for ValidationView {
+    fn as_TransformInfoHttpComposite(&self) -> &crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &self.base.base.base.base }
+    fn as_TransformInfoHttpComposite_mut(&mut self) -> &mut crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &mut self.base.base.base.base }
 }
 impl crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentViewDyn for ValidationView {
     fn as_HttpStoreComponentView(&self) -> &crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &self.base.base }

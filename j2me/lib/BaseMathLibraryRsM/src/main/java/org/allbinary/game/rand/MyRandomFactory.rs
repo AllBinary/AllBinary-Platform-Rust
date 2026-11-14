@@ -36,6 +36,7 @@ impl Random {
         (self.seed >> 16) as u32 as i32
     }
 }
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -53,6 +54,10 @@ pub struct MyRandomFactory {
 thread_local! { pub static MyRandomFactory_instance: Option<Rc<RefCell<MyRandomFactory>>> = MyRandomFactory::new(); }
 
 impl MyRandomFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<MyRandomFactory>>> {
@@ -66,7 +71,7 @@ impl MyRandomFactory {
             rand: None,
         };
         this.mathUtil = MathUtil::getInstance();
-        this.rand = Random::new((std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64));
+        this.rand = { let java_value = (Random::new((std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64))).clone(); java_value };
         this
     }
 
@@ -113,8 +118,8 @@ impl MyRandomFactory {
         for index in (0..shuffleTotal) {
             randomIndex = self.getAbsoluteNextIntAllowZero(size.clone());
             randomIndex2 = self.getAbsoluteNextIntAllowZero(size.clone());
-            value = intArray[(randomIndex) as usize].clone();
-            intArray[(randomIndex) as usize] = intArray[(randomIndex2) as usize].clone();
+            value = { let java_value = (intArray[(randomIndex) as usize]).clone(); java_value }.clone();
+            intArray[(randomIndex) as usize] = { let java_value = (intArray[(randomIndex2) as usize]).clone(); java_value }.clone();
             intArray[(randomIndex2) as usize] = value.clone();
         }
     }
@@ -134,11 +139,11 @@ impl MyRandomFactory {
         for index in (0..shuffleTotal) {
             randomIndex = self.getAbsoluteNextIntAllowZero(size.clone());
             randomIndex2 = self.getAbsoluteNextIntAllowZero(size.clone());
-            value = intArray[(randomIndex) as usize].clone();
-            value2 = intArray2[(randomIndex) as usize].clone();
-            intArray[(randomIndex) as usize] = intArray[(randomIndex2) as usize].clone();
+            value = { let java_value = (intArray[(randomIndex) as usize]).clone(); java_value }.clone();
+            value2 = { let java_value = (intArray2[(randomIndex) as usize]).clone(); java_value }.clone();
+            intArray[(randomIndex) as usize] = { let java_value = (intArray[(randomIndex2) as usize]).clone(); java_value }.clone();
             intArray[(randomIndex2) as usize] = value.clone();
-            intArray2[(randomIndex) as usize] = intArray2[(randomIndex2) as usize].clone();
+            intArray2[(randomIndex) as usize] = { let java_value = (intArray2[(randomIndex2) as usize]).clone(); java_value }.clone();
             intArray2[(randomIndex2) as usize] = value2.clone();
         }
     }
@@ -150,7 +155,7 @@ impl MyRandomFactory {
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
         let mut size2: i32 = 100;
         for index in (0..size2) {
-            jcall!(stringBuilder).appendint(jcall!(randomFactory).getAbsoluteNextInt(3)).append(jcall!(commonSeps).COMMA.clone());
+            jcall!(stringBuilder).appendint(jcall!(randomFactory).getAbsoluteNextInt(3)).append({ let java_field = jcall!(commonSeps).COMMA.clone(); java_field }.clone());
         }
         println!("{}", jcall!(stringBuilder).toString());
         jcall!(stringBuilder).delete(0, jcall!(stringBuilder).length());
@@ -163,12 +168,12 @@ impl MyRandomFactory {
         }
         jcall!(randomFactory).shuffle2(intArray.clone(), intArray2.clone());
         for index in (0..size) {
-            jcall!(stringBuilder).appendint(intArray[(index) as usize].clone()).append(jcall!(commonSeps).COMMA.clone());
+            jcall!(stringBuilder).appendint(intArray[(index) as usize].clone()).append({ let java_field = jcall!(commonSeps).COMMA.clone(); java_field }.clone());
         }
         println!("{}", jcall!(stringBuilder).toString());
         jcall!(stringBuilder).delete(0, jcall!(stringBuilder).length());
         for index in (0..size) {
-            jcall!(stringBuilder).appendint(intArray2[(index) as usize].clone()).append(jcall!(commonSeps).COMMA.clone());
+            jcall!(stringBuilder).appendint(intArray2[(index) as usize].clone()).append({ let java_field = jcall!(commonSeps).COMMA.clone(); java_field }.clone());
         }
         println!("{}", jcall!(stringBuilder).toString());
         let mut found: bool = false;

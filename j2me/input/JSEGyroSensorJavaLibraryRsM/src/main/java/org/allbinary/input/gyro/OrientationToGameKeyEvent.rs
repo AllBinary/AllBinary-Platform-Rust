@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::game::configuration::feature::SensorFeatureFactory::SensorFeatureFactory;
 use crate::org::allbinary::logic::math::Orientation::Orientation;
+use crate::java::lang::Exception::*;
 use super::AllBinaryOrientationSensor::AllBinaryOrientationSensor;
 use super::NoGyroSensor::NoGyroSensor;
 
@@ -37,6 +38,10 @@ pub struct OrientationToGameKeyEvent {
 
 
 impl OrientationToGameKeyEvent {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -45,7 +50,7 @@ impl OrientationToGameKeyEvent {
             MIN: 0,
         };
         this.MIN = 15;
-        if jcall!(Features::getInstance()).isFeature(jcall!(SensorFeatureFactory::getInstance()).NO_ORIENTATION.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        if jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(SensorFeatureFactory::getInstance()).NO_ORIENTATION.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             this.allBinaryGyroSensor = NoGyroSensor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::gyro::AllBinaryOrientationSensor::AllBinaryOrientationSensorDyn>>);
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Not Such Feature"))));

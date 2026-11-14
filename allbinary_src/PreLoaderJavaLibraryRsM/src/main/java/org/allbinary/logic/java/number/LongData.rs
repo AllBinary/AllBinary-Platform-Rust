@@ -28,9 +28,13 @@ macro_rules! jcall {
 pub struct LongData {
 }
 
-pub static mut LongData_MAX_LONG_LENGTH: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| (jcall!(Some((i64::MAX.clone()) as i64)).toString().chars().count() as i32));
+pub static mut LongData_MAX_LONG_LENGTH: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| ((Some((i64::MAX.clone()) as i64)).expect("NullPointerException").to_string().chars().count() as i32));
 
 impl LongData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

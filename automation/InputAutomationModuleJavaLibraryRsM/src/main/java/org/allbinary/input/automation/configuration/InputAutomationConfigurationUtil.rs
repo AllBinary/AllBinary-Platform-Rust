@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterface;
 use crate::org::allbinary::input::automation::module::configuration::InputAutomationModuleConfiguration::InputAutomationModuleConfiguration;
+use crate::java::lang::Exception::*;
 use super::InputAutomationConfigurationModuleChangeEvent::InputAutomationConfigurationModuleChangeEvent;
 
 // Borrows the object of a Java reference
@@ -33,6 +34,10 @@ pub struct InputAutomationConfigurationUtil {
 
 
 impl InputAutomationConfigurationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -47,7 +52,7 @@ impl InputAutomationConfigurationUtil {
     
 
     // throws Exception
-    pub fn getChangeEvent(mut inputAutomationModuleInterface: Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>) -> Option<Rc<RefCell<InputAutomationConfigurationModuleChangeEvent>>> {
+    pub fn getChangeEvent(mut inputAutomationModuleInterface: Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>) -> Option<Rc<RefCell<InputAutomationConfigurationModuleChangeEvent>>> {
         let mut inputAutomationModuleConfiguration: Option<Rc<RefCell<InputAutomationModuleConfiguration>>> = InputAutomationModuleConfiguration::new1(inputAutomationModuleInterface.clone());
         let mut inputAutomationConfigurationModuleChangeEvent: Option<Rc<RefCell<InputAutomationConfigurationModuleChangeEvent>>> = InputAutomationConfigurationModuleChangeEvent::new(inputAutomationModuleConfiguration.clone());
         return inputAutomationConfigurationModuleChangeEvent.clone();

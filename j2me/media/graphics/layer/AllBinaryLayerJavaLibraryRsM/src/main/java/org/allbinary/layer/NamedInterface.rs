@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait NamedInterface {
+pub trait NamedInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getName(&mut self) -> String;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

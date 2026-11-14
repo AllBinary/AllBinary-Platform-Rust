@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::util::Set::Set;
+use crate::java::util::Set::Set;
 use crate::org::allbinary::input::automation::robot::InputRobotFactory::InputRobotFactory;
 use crate::org::allbinary::input::automation::robot::InputRobotInterface::InputRobotInterface;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
@@ -25,6 +25,7 @@ use crate::org::allbinary::media::image::comparison::ImageComparatorConstraintsI
 use crate::org::allbinary::media::image::comparison::motion::MotionRectangleConstraintsInterface::MotionRectangleConstraintsInterface;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::AbstractInputAutomationWorker::AbstractInputAutomationWorker;
 use super::InputAutomationActionInterface::InputAutomationActionInterface;
 
@@ -41,8 +42,13 @@ pub struct TestInputAutomationActionWorker {
     pub sleep: i32,
 }
 
+impl crate::org::allbinary::thread::RunnableInterface::RunnableInterface for TestInputAutomationActionWorker {
+    fn isRunning(&mut self) -> bool { crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorker::isRunning(crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorkerDyn::as_AbstractInputAutomationWorker_mut(self)) }
+    fn setRunning(&mut self, p1: bool) { crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorker::setRunning(crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorkerDyn::as_AbstractInputAutomationWorker_mut(self), p1) }
+    fn setThread(&mut self, p1: Option<Rc<RefCell<crate::java::lang::Thread::Thread>>>) { crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorker::setThread(crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorkerDyn::as_AbstractInputAutomationWorker_mut(self), p1) }
+}
 impl crate::Runnable for TestInputAutomationActionWorker {
-    fn run(&mut self) { self.base.run() }
+    fn run(&mut self) { crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorker::run(crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorkerDyn::as_AbstractInputAutomationWorker_mut(self)) }
 }
 
 impl TestInputAutomationActionWorker {
@@ -56,7 +62,7 @@ impl TestInputAutomationActionWorker {
         };
         this.logUtil = LogUtil::getInstance();
         // super(...) is in the struct literal above
-        jcall!(this.logUtil).putF(String::from("BasicTestAttackWorder"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF(String::from("BasicTestAttackWorder"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this.sleep = sleep.clone();
         this
     }
@@ -74,14 +80,14 @@ impl TestInputAutomationActionWorker {
 
     // throws Exception
     pub fn process(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(InputRobotFactory::getInstance()).get();
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(InputRobotFactory::getInstance()).get();
         let mut set: Option<Rc<RefCell<dyn Set>>> = jcall!(hashtable).keySet();
         let mut inputTypeNameArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(set).toArray();
         let mut size: i32 = (inputTypeNameArray.len() as i32).clone();
         for index in (0..size) {
-            let mut inputTypeNameString: String = (inputTypeNameArray[(index) as usize]).clone() /* as String */;
-            let mut robot: Option<Rc<RefCell<dyn InputRobotInterface>>> = { let java_object = jcall!(hashtable).get(crate::java_into_object(inputTypeNameString.clone())); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn InputRobotInterface>>>>().expect("ClassCastException").clone()) };
+            let mut inputTypeNameString: String = { let java_object = (inputTypeNameArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut robot: Option<Rc<RefCell<dyn InputRobotInterface>>> = { let java_object = (jcall!(hashtable).get(crate::java_into_object(inputTypeNameString.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn InputRobotInterface>>>>().expect("ClassCastException").clone()) };
             if self.sleep > 0 {
                 std::thread::sleep(std::time::Duration::from_millis((self.sleep.clone()) as u64));
             }

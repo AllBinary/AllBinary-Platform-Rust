@@ -17,10 +17,11 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::InputStream::InputStream;
 // use crate::javax::xml::transform::URIResolver::URIResolver;
 // use crate::javax::xml::transform::stream::StreamSource::StreamSource;
 use crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,7 +33,7 @@ macro_rules! jcall {
 pub trait BasicTransformerInterface: CompositeTransformInfoInterface {
     
 
-    fn setInputStream(&mut self, inputStream: Option<Rc<RefCell<InputStream>>>);
+    fn setInputStream(&mut self, inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>);
     
 
     fn setURIResolver(&mut self, uriResolver: Option<Rc<RefCell<URIResolver>>>);
@@ -41,7 +42,7 @@ pub trait BasicTransformerInterface: CompositeTransformInfoInterface {
     fn getStreamSource(&mut self) -> Option<Rc<RefCell<StreamSource>>>;
     
 
-    fn getInputStream(&mut self) -> Option<Rc<RefCell<InputStream>>>;
+    fn getInputStream(&mut self) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>;
     
 
     fn getURIResolver(&mut self) -> Option<Rc<RefCell<URIResolver>>>;

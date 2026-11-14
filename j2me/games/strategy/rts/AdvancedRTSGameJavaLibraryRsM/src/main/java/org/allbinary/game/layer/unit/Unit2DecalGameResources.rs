@@ -21,6 +21,7 @@ use crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGame
 use crate::org::allbinary::game::layer::resources::GameGraphicsResourceUtil::GameGraphicsResourceUtil;
 use crate::org::allbinary::AndroidUtil::AndroidUtil;
 use crate::org::allbinary::game::configuration::feature::GraphicsFeatureFactory::GraphicsFeatureFactory;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -49,7 +50,7 @@ impl Unit2DecalGameResources {
         let mut SIZE_FIVE: String = SMALL.clone();
         let mut SIZE_SIX: String = SMALL.clone();
         let mut SIZE: Vec<String> = vec![SMALL.clone(), MEDIUM.clone(), SIZE_FOUR.clone(), SIZE_FIVE.clone(), SIZE_SIX.clone()];
-        this.base.init(ROOT.clone(), SIZE.clone());
+        { let java_arguments = (ROOT.clone(), SIZE.clone(),); this.base.init(java_arguments.0, java_arguments.1) };
         this
     }
 
@@ -60,14 +61,14 @@ impl Unit2DecalGameResources {
 
     // throws Exception
     pub fn append(&mut self, mut ROOT: String, mut sizeString: String) {
-        self.base.append(ROOT.clone(), sizeString.clone());
+        { let java_arguments = (ROOT.clone(), sizeString.clone(),); self.base.append(java_arguments.0, java_arguments.1) };
     }
     
 
     // throws Exception
     pub fn getString(&mut self) -> String {
         if AndroidUtil::isAndroid() {
-            return jcall!(GameGraphicsResourceUtil::getInstance()).getStringForFeature(jcall!(GraphicsFeatureFactory::getInstance()).SPRITE_QUARTER_ROTATION_GRAPHICS.clone());
+            return jcall!(GameGraphicsResourceUtil::getInstance()).getStringForFeature({ let java_field = jcall!(GraphicsFeatureFactory::getInstance()).SPRITE_QUARTER_ROTATION_GRAPHICS.clone(); java_field }.clone());
         } else {
             return self.base.getString();
         }
@@ -75,7 +76,7 @@ impl Unit2DecalGameResources {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResourcesDyn>>> {
-        return Unit2DecalGameResources_instance.with(Clone::clone).clone();
+        return Unit2DecalGameResources_instance.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResourcesDyn>>);
     }
 }
 impl std::ops::Deref for Unit2DecalGameResources {

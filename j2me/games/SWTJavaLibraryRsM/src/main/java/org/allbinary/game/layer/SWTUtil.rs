@@ -33,6 +33,10 @@ pub static mut SWTUtil_SWT: std::cell::LazyCell<String> = std::cell::LazyCell::n
 
 impl SWTUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };

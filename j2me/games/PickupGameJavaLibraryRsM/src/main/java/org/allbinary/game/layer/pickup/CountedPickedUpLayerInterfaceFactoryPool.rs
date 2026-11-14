@@ -34,6 +34,10 @@ pub struct CountedPickedUpLayerInterfaceFactoryPool {
 pub static mut CountedPickedUpLayerInterfaceFactoryPool_SINGLETON: std::cell::LazyCell<Option<Rc<RefCell<CountedPickedUpLayerInterfaceFactoryPool>>>> = std::cell::LazyCell::new(|| CountedPickedUpLayerInterfaceFactoryPool::new());
 
 impl CountedPickedUpLayerInterfaceFactoryPool {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

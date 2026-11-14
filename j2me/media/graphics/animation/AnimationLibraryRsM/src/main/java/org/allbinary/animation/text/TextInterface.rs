@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait TextInterface {
+pub trait TextInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn setTextWithOnMeasure(&mut self, text: String, textChangeListener: Option<Rc<RefCell<TextChangeListener>>>);
@@ -42,8 +42,6 @@ pub trait TextInterface {
     
 
     fn getWidth(&mut self) -> i32;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

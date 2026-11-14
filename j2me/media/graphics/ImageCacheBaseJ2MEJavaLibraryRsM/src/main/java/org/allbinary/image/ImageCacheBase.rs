@@ -17,9 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::InputStream::InputStream;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::NullImage::NullImage;
+use crate::java::io::InputStream::InputStream;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::NullImage::NullImage;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
@@ -28,6 +28,8 @@ use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::ImageFactory::ImageFactory;
 
 // Borrows the object of a Java reference
@@ -40,7 +42,7 @@ macro_rules! jcall {
 pub struct ImageCacheBase {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub imageFactory: Option<Rc<RefCell<ImageFactory>>>,
-    pub hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
     pub SIZE: i32,
     pub widths: Vec<i32>,
     pub heights: Vec<i32>,
@@ -78,10 +80,10 @@ impl ImageCacheBase {
         this.volume = 0;
         this.nextIndex = 0;
         for index in (0..=(this.listOfList.len() as i32) - 1).rev() {
-            this.listOfList[(index) as usize] = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>);
+            { let java_index = (index) as usize; this.listOfList[java_index] = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>); };
         }
         for index in (0..=(this.availableListOfList.len() as i32) - 1).rev() {
-            this.availableListOfList[(index) as usize] = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>);
+            { let java_index = (index) as usize; this.availableListOfList[java_index] = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>); };
         }
         this
     }
@@ -91,12 +93,12 @@ impl ImageCacheBase {
     }
     
 
-    pub fn getImage(&mut self, mut resourceId: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Image>>> {
+    pub fn getImage(&mut self, mut resourceId: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         let mut imageCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(self.hashtable).get(resourceId.clone());
         if imageCanBeNull.is_none() {
             return crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone).clone();
         }
-        return (imageCanBeNull).clone() /* as Image */;
+        return { let java_object = (imageCanBeNull).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -105,7 +107,7 @@ impl ImageCacheBase {
             jcall!(self.availableListOfList[(index) as usize]).clear();
             jcall!(self.availableListOfList[(index) as usize]).addAllList(self.listOfList[(index) as usize].clone());
         }
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("ImageCache: ")).append(self.toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("releaseAll"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_argument = jcall!(StringMaker::new()).append(String::from("ImageCache: ")).append(self.toString()).toString(); java_argument }, crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("releaseAll"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
@@ -122,11 +124,11 @@ impl ImageCacheBase {
     }
     
 
-    pub fn getFromAvailable(&mut self, mut foundIndex: i32, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> {
+    pub fn getFromAvailable(&mut self, mut foundIndex: i32, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         if foundIndex != -1 {
             if jcall!(self.availableListOfList[(foundIndex) as usize]).size() > 0 {
                 let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.availableListOfList[(foundIndex) as usize].clone();
-                return (jcall!(list).removeAt(jcall!(list).size() - 1)).clone() /* as Image */;
+                return { let java_object = (jcall!(list).removeAt(jcall!(list).size() - 1)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>().expect("ClassCastException").clone()) };
             }
         }
         return crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone).clone();
@@ -134,25 +136,25 @@ impl ImageCacheBase {
     
 
     // throws Exception
-    pub fn get(&mut self, mut caller: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> {
+    pub fn get(&mut self, mut caller: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     
 
     // throws Exception
-    pub fn getWithKey(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Image>>> {
+    pub fn getWithKey(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     
 
     // throws Exception
-    pub fn createImage(&mut self, mut caller: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> {
+    pub fn createImage(&mut self, mut caller: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return jcall!(self.imageFactory).createImage(caller.clone(), width.clone(), height.clone());
     }
     
 
     // throws Exception
-    pub fn createImageFromInputStream(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut inputStream: Option<Rc<RefCell<InputStream>>>) -> Option<Rc<RefCell<Image>>> {
+    pub fn createImageFromInputStream(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return jcall!(self.imageFactory).createImageFromInputStream2(crate::java_into_object(key.clone()), inputStream.clone());
     }
     
@@ -168,8 +170,8 @@ impl ImageCacheBase {
             jcall!(stringBuffer).appendint(width.clone());
             jcall!(stringBuffer).append(String::from(" h: "));
             jcall!(stringBuffer).appendint(height.clone());
-            jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-            jcall!(stringBuffer).append(jcall!(CommonLabels::getInstance()).TOTAL_LABEL.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonLabels::getInstance()).TOTAL_LABEL.clone(); java_field }.clone());
             jcall!(stringBuffer).appendint(total.clone());
             jcall!(stringBuffer).append(String::from(" available: "));
             jcall!(stringBuffer).appendint(totalAvailable.clone());
@@ -178,32 +180,32 @@ impl ImageCacheBase {
     }
     
 
-    pub fn getHashtableP(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn getHashtableP(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
         return self.hashtable.clone();
     }
     
 
-    pub fn init(&mut self, mut image: Option<Rc<RefCell<Image>>>) {
+    pub fn init(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) {
     }
     
 
     pub fn initProgress(&mut self) {
     }
 }
-pub trait ImageCacheBaseDyn {
+pub trait ImageCacheBaseDyn: std::any::Any {
     fn as_ImageCacheBase(&self) -> &ImageCacheBase;
     fn as_ImageCacheBase_mut(&mut self) -> &mut ImageCacheBase;
-    fn getImage(&mut self, mut resourceId: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Image>>> { ImageCacheBase::getImage(self.as_ImageCacheBase_mut(), resourceId) }
+    fn getImage(&mut self, mut resourceId: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { ImageCacheBase::getImage(self.as_ImageCacheBase_mut(), resourceId) }
     fn releaseAll(&mut self) { ImageCacheBase::releaseAll(self.as_ImageCacheBase_mut()) }
     fn getIndexWH(&mut self, mut width: i32, mut height: i32) -> i32 { ImageCacheBase::getIndexWH(self.as_ImageCacheBase_mut(), width, height) }
-    fn getFromAvailable(&mut self, mut foundIndex: i32, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> { ImageCacheBase::getFromAvailable(self.as_ImageCacheBase_mut(), foundIndex, width, height) }
-    fn get(&mut self, mut caller: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> { ImageCacheBase::get(self.as_ImageCacheBase_mut(), caller, width, height) }
-    fn getWithKey(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Image>>> { ImageCacheBase::getWithKey(self.as_ImageCacheBase_mut(), key) }
-    fn createImage(&mut self, mut caller: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> { ImageCacheBase::createImage(self.as_ImageCacheBase_mut(), caller, width, height) }
-    fn createImageFromInputStream(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut inputStream: Option<Rc<RefCell<InputStream>>>) -> Option<Rc<RefCell<Image>>> { ImageCacheBase::createImageFromInputStream(self.as_ImageCacheBase_mut(), key, inputStream) }
+    fn getFromAvailable(&mut self, mut foundIndex: i32, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { ImageCacheBase::getFromAvailable(self.as_ImageCacheBase_mut(), foundIndex, width, height) }
+    fn get(&mut self, mut caller: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { ImageCacheBase::get(self.as_ImageCacheBase_mut(), caller, width, height) }
+    fn getWithKey(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { ImageCacheBase::getWithKey(self.as_ImageCacheBase_mut(), key) }
+    fn createImage(&mut self, mut caller: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { ImageCacheBase::createImage(self.as_ImageCacheBase_mut(), caller, width, height) }
+    fn createImageFromInputStream(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { ImageCacheBase::createImageFromInputStream(self.as_ImageCacheBase_mut(), key, inputStream) }
     fn toString(&mut self) -> String { ImageCacheBase::toString(self.as_ImageCacheBase_mut()) }
-    fn getHashtableP(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { ImageCacheBase::getHashtableP(self.as_ImageCacheBase_mut()) }
-    fn init(&mut self, mut image: Option<Rc<RefCell<Image>>>) { ImageCacheBase::init(self.as_ImageCacheBase_mut(), image) }
+    fn getHashtableP(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { ImageCacheBase::getHashtableP(self.as_ImageCacheBase_mut()) }
+    fn init(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) { ImageCacheBase::init(self.as_ImageCacheBase_mut(), image) }
     fn initProgress(&mut self) { ImageCacheBase::initProgress(self.as_ImageCacheBase_mut()) }
 }
 impl ImageCacheBaseDyn for ImageCacheBase {

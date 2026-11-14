@@ -21,6 +21,7 @@ use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::TransformInfoInterface::TransformInfoInterface;
 
 // Borrows the object of a Java reference
@@ -39,6 +40,10 @@ impl DomNodeInterface for TransformInfoInterfaceView {
 }
 
 impl TransformInfoInterfaceView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Self {
@@ -56,7 +61,7 @@ impl TransformInfoInterfaceView {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        return ModDomHelper::createNameValueNodes(document.clone(), jcall!(TransformInfoData::TransformInfoData::getInstance()).NAME.clone(), jcall!(self.transformInfoInterface).toHashMap());
+        return ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), { let java_field = jcall!(TransformInfoData::TransformInfoData::getInstance()).NAME.clone(); java_field }.clone(), jcall!(self.transformInfoInterface).toHashMap());
     }
 }
 

@@ -19,8 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::communication::log::GuiLog::GuiLog;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
-use super::lang::lang;
-use super::java::java;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -54,7 +53,7 @@ impl GraphicsException {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             }
         }
@@ -66,7 +65,7 @@ impl GraphicsException {
     }
     
 
-    pub fn new_struct3(mut msg: String, mut className: String, mut method: String) -> Self {
+    pub fn new_struct3_String_String_String(mut msg: String, mut className: String, mut method: String) -> Self {
         let mut this = Self {
             base: Exception::new_struct1(msg.clone()),
             logUtil: None,
@@ -81,15 +80,15 @@ impl GraphicsException {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             }
         }
         this
     }
 
-    pub fn new3(mut msg: String, mut className: String, mut method: String) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct3(msg, className, method))))
+    pub fn new3_String_String_String(mut msg: String, mut className: String, mut method: String) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct3_String_String_String(msg, className, method))))
     }
 }
 impl std::ops::Deref for GraphicsException {

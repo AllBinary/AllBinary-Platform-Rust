@@ -37,6 +37,10 @@ thread_local! { pub static BlisketServletUtil_instance: Option<Rc<RefCell<Bliske
 
 impl BlisketServletUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -55,9 +59,9 @@ impl BlisketServletUtil {
 
     pub fn init(&mut self, mut request: Option<Rc<RefCell<HttpServletRequest>>>) {
         let mut urlGlobals: Option<Rc<RefCell<AppUrlGlobals>>> = AppUrlGlobals::new();
-        jcall!(urlGlobals).setWebappPath(jcall!(jcall!(request).getServletContext()).getRealPath(jcall!(AbPathData::getInstance()).SEPARATOR.clone()));
-        URLGLOBALS::init(urlGlobals.clone());
-        WebappClassLoaderInfo::setLoader(jcall!(self.getClass()).getClassLoader());
+        jcall!(urlGlobals).setWebappPath(jcall!(jcall!(request).getServletContext()).getRealPath({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone()));
+        URLGLOBALS::init(urlGlobals.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::globals::UrlGlobalsInterface::UrlGlobalsInterfaceDyn>>));
+        WebappClassLoaderInfo::setLoader({ let java_argument = jcall!(self.getClass()).getClassLoader(); java_argument });
     }
 }
 

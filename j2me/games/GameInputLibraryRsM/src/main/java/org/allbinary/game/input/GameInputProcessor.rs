@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +34,10 @@ pub struct GameInputProcessor {
 thread_local! { pub static GameInputProcessor_instance: Option<Rc<RefCell<dyn GameInputProcessorDyn>>> = GameInputProcessor::new().map(|reference| reference as Rc<RefCell<dyn GameInputProcessorDyn>>); }
 
 impl GameInputProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn GameInputProcessorDyn>>> {
@@ -75,7 +80,7 @@ impl GameInputProcessor {
     pub fn processReleased(&mut self, mut allbinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut keyAsInteger: Option<i32>) {
     }
 }
-pub trait GameInputProcessorDyn {
+pub trait GameInputProcessorDyn: std::any::Any {
     fn as_GameInputProcessor(&self) -> &GameInputProcessor;
     fn as_GameInputProcessor_mut(&mut self) -> &mut GameInputProcessor;
     fn processEvent(&mut self, mut allbinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) { GameInputProcessor::processEvent(self.as_GameInputProcessor_mut(), allbinaryLayerManager, gameKeyEvent) }

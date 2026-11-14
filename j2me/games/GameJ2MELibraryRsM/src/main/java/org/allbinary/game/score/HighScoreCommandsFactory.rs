@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Command::Command;
 use super::HighScoreCommandsBaseFactory::HighScoreCommandsBaseFactory;
 
 // Borrows the object of a Java reference
@@ -43,7 +43,7 @@ impl HighScoreCommandsFactory {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: HighScoreCommandsBaseFactory::new_struct(vec![jcall!(HighScoreCommands::HighScoreCommands::getInstance()).PERSONAL.clone(), jcall!(HighScoreCommands::HighScoreCommands::getInstance()).WORLD.clone()]),
+            base: HighScoreCommandsBaseFactory::new_struct(vec![{ let java_field = jcall!(HighScoreCommands::HighScoreCommands::getInstance()).PERSONAL.clone(); java_field }.clone(), { let java_field = jcall!(HighScoreCommands::HighScoreCommands::getInstance()).WORLD.clone(); java_field }.clone()]),
         };
         // super(...) is in the struct literal above
         this

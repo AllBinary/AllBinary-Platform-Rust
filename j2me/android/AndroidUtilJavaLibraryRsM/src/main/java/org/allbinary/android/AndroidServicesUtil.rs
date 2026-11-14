@@ -44,6 +44,10 @@ thread_local! { pub static AndroidServicesUtil_instance: Option<Rc<RefCell<Andro
 
 impl AndroidServicesUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,
@@ -78,9 +82,9 @@ impl AndroidServicesUtil {
         let mut serviceName: String = String::new();
         let mut size: i32 = jcall!(runningServicesList).size();
         for index in (0..size) {
-            runningServiceInfo = jcall!(runningServicesList).get(index.clone());
-            serviceComponent = jcall!(runningServiceInfo).service.clone();
-            serviceName = jcall!(serviceComponent).toString();
+            runningServiceInfo = { let java_value = (jcall!(runningServicesList).get(index.clone())).clone(); java_value };
+            serviceComponent = { let java_value = ({ let java_field = jcall!(runningServiceInfo).service.clone(); java_field }).clone(); java_value }.clone();
+            serviceName = { let java_value = (jcall!(serviceComponent).toString()).clone(); java_value };
             if serviceName.find(&name.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
                 return true;
             }

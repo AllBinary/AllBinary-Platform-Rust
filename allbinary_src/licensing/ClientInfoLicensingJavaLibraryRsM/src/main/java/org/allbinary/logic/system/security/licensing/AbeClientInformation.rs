@@ -25,6 +25,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
 use crate::org::allbinary::logic::system::os::OperatingSystemFactory::OperatingSystemFactory;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::ClientInformation::ClientInformation;
 
 // Borrows the object of a Java reference
@@ -71,15 +72,15 @@ impl AbeClientInformation {
                 self.setLicenseId(NONE.clone());
             }
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            PreLogUtil::put(jcall!(StringMaker::new()).append(String::from("Special Name: ")).append(self.getSpecialName()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone());
+            PreLogUtil::put({ let java_argument = jcall!(StringMaker::new()).append(String::from("Special Name: ")).append(self.getSpecialName()).toString(); java_argument }, crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(e.clone()));
+            jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

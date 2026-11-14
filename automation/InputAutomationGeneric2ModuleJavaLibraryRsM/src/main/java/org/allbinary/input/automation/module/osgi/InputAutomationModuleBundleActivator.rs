@@ -29,6 +29,8 @@ use crate::org::allbinary::input::automation::module::InputAutomationModuleFacto
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::osgi::OSGIActivatorUtil::OSGIActivatorUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,7 +42,7 @@ macro_rules! jcall {
 pub struct InputAutomationModuleBundleActivator {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
-    pub inputAutomationModuleInterface: Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>>,
+    pub inputAutomationModuleInterface: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>>,
     pub serviceFactory: Option<Rc<RefCell<dyn ServiceFactory>>>,
 }
 
@@ -48,6 +50,10 @@ impl BundleActivator for InputAutomationModuleBundleActivator {
 }
 
 impl InputAutomationModuleBundleActivator {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -78,7 +84,7 @@ impl InputAutomationModuleBundleActivator {
     pub fn getInputAutomationConfigurationModuleChangeListener(&mut self, mut context: Option<Rc<RefCell<dyn BundleContext>>>) -> Option<Rc<RefCell<dyn InputAutomationConfigurationModuleChangeListener>>> {
         let mut serviceReference: Option<Rc<RefCell<dyn ServiceReference>>> = jcall!(context).getServiceReference(jcall!(std::any::type_name::<InputAutomationConfigurationModuleChangeListener>()).getName());
         if serviceReference.is_some() {
-            let mut inputAutomationConfigurationModuleChangeListener: Option<Rc<RefCell<dyn InputAutomationConfigurationModuleChangeListener>>> = { let java_object = jcall!(context).getService(serviceReference.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn InputAutomationConfigurationModuleChangeListener>>>>().expect("ClassCastException").clone()) };
+            let mut inputAutomationConfigurationModuleChangeListener: Option<Rc<RefCell<dyn InputAutomationConfigurationModuleChangeListener>>> = { let java_object = (jcall!(context).getService(serviceReference.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn InputAutomationConfigurationModuleChangeListener>>>>().expect("ClassCastException").clone()) };
             if inputAutomationConfigurationModuleChangeListener.is_none() {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("No Service For ServiceReference"))));
             }
@@ -92,7 +98,7 @@ impl InputAutomationModuleBundleActivator {
 
     pub fn addModules(&mut self, mut context: Option<Rc<RefCell<dyn BundleContext>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addModules"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addModules"));
             let mut inputAutomationConfigurationModuleChangeListener: Option<Rc<RefCell<dyn InputAutomationConfigurationModuleChangeListener>>> = self.getInputAutomationConfigurationModuleChangeListener(context.clone());
             if inputAutomationConfigurationModuleChangeListener.is_some() {
                 for index in (0..(self.getInputAutomationModuleInterface().len() as i32)) {
@@ -103,9 +109,9 @@ impl InputAutomationModuleBundleActivator {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addModules"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addModules"));
             }
         }
     }
@@ -113,13 +119,13 @@ impl InputAutomationModuleBundleActivator {
 
     // throws Exception
     pub fn registerAsService(&mut self, mut bundleContext: Option<Rc<RefCell<dyn BundleContext>>>) {
-        OSGIActivatorUtil::registerAsService(bundleContext.clone(), self.getServiceFactory(), jcall!(std::any::type_name::<InputAutomationModuleServiceInterface>()).getName());
+        OSGIActivatorUtil::registerAsService(bundleContext.clone(), crate::java_into_object(self.getServiceFactory()), { let java_argument = jcall!(std::any::type_name::<InputAutomationModuleServiceInterface>()).getName(); java_argument });
     }
     
 
     pub fn removeModules(&mut self, mut context: Option<Rc<RefCell<dyn BundleContext>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeModules"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeModules"));
             let mut inputAutomationConfigurationModuleChangeListener: Option<Rc<RefCell<dyn InputAutomationConfigurationModuleChangeListener>>> = self.getInputAutomationConfigurationModuleChangeListener(context.clone());
             if inputAutomationConfigurationModuleChangeListener.is_some() {
                 for index in (0..(self.getInputAutomationModuleInterface().len() as i32)) {
@@ -130,9 +136,9 @@ impl InputAutomationModuleBundleActivator {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeModules"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeModules"));
             }
         }
     }
@@ -140,7 +146,7 @@ impl InputAutomationModuleBundleActivator {
 
     // throws Exception
     pub fn start(&mut self, mut context: Option<Rc<RefCell<dyn BundleContext>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).START.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone());
         self.addModules(context.clone());
         self.registerAsService(context.clone());
     }
@@ -148,23 +154,23 @@ impl InputAutomationModuleBundleActivator {
 
     // throws Exception
     pub fn stop(&mut self, mut context: Option<Rc<RefCell<dyn BundleContext>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("stop"));
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("stop"));
         self.removeModules(context.clone());
     }
     
 
-    pub fn getInputAutomationModuleInterface(&mut self) -> Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>> {
+    pub fn getInputAutomationModuleInterface(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>> {
         return self.inputAutomationModuleInterface.clone();
     }
     
 
-    pub fn setInputAutomationModuleInterface(&mut self, mut inputAutomationModuleInterface: Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>>) {
+    pub fn setInputAutomationModuleInterface(&mut self, mut inputAutomationModuleInterface: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>>) {
         self.inputAutomationModuleInterface = inputAutomationModuleInterface.clone();
     }
     
 
     pub fn getServiceFactory(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return self.serviceFactory.clone();
+        return (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(self.serviceFactory.clone());
     }
     
 
@@ -172,7 +178,7 @@ impl InputAutomationModuleBundleActivator {
         self.serviceFactory = serviceObject.clone();
     }
 }
-pub trait InputAutomationModuleBundleActivatorDyn: crate::org::osgi::framework::BundleActivator::BundleActivator {
+pub trait InputAutomationModuleBundleActivatorDyn: std::any::Any + crate::org::osgi::framework::BundleActivator::BundleActivator {
     fn as_InputAutomationModuleBundleActivator(&self) -> &InputAutomationModuleBundleActivator;
     fn as_InputAutomationModuleBundleActivator_mut(&mut self) -> &mut InputAutomationModuleBundleActivator;
     fn init(&mut self) { InputAutomationModuleBundleActivator::init(self.as_InputAutomationModuleBundleActivator_mut()) }
@@ -182,8 +188,8 @@ pub trait InputAutomationModuleBundleActivatorDyn: crate::org::osgi::framework::
     fn removeModules(&mut self, mut context: Option<Rc<RefCell<dyn BundleContext>>>) { InputAutomationModuleBundleActivator::removeModules(self.as_InputAutomationModuleBundleActivator_mut(), context) }
     fn start(&mut self, mut context: Option<Rc<RefCell<dyn BundleContext>>>) { InputAutomationModuleBundleActivator::start(self.as_InputAutomationModuleBundleActivator_mut(), context) }
     fn stop(&mut self, mut context: Option<Rc<RefCell<dyn BundleContext>>>) { InputAutomationModuleBundleActivator::stop(self.as_InputAutomationModuleBundleActivator_mut(), context) }
-    fn getInputAutomationModuleInterface(&mut self) -> Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>> { InputAutomationModuleBundleActivator::getInputAutomationModuleInterface(self.as_InputAutomationModuleBundleActivator_mut()) }
-    fn setInputAutomationModuleInterface(&mut self, mut inputAutomationModuleInterface: Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>>) { InputAutomationModuleBundleActivator::setInputAutomationModuleInterface(self.as_InputAutomationModuleBundleActivator_mut(), inputAutomationModuleInterface) }
+    fn getInputAutomationModuleInterface(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>> { InputAutomationModuleBundleActivator::getInputAutomationModuleInterface(self.as_InputAutomationModuleBundleActivator_mut()) }
+    fn setInputAutomationModuleInterface(&mut self, mut inputAutomationModuleInterface: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>>) { InputAutomationModuleBundleActivator::setInputAutomationModuleInterface(self.as_InputAutomationModuleBundleActivator_mut(), inputAutomationModuleInterface) }
     fn getServiceFactory(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { InputAutomationModuleBundleActivator::getServiceFactory(self.as_InputAutomationModuleBundleActivator_mut()) }
     fn setServiceFactory(&mut self, mut serviceObject: Option<Rc<RefCell<dyn ServiceFactory>>>) { InputAutomationModuleBundleActivator::setServiceFactory(self.as_InputAutomationModuleBundleActivator_mut(), serviceObject) }
 }

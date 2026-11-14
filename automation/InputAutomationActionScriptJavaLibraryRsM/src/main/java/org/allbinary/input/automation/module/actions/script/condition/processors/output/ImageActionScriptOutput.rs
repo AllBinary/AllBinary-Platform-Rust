@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::data::tree::dom::DomNodeHelper::DomNodeHelper;
 use crate::org::allbinary::data::tree::dom::DomSearchHelper::DomSearchHelper;
 use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
@@ -28,6 +27,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::BasicProfileActionScriptOutput::BasicProfileActionScriptOutput;
 use super::ImageActionScriptOutputInterface::ImageActionScriptOutputInterface;
 use super::ImageTypes::ImageTypes;
@@ -51,8 +51,6 @@ pub struct ImageActionScriptOutput {
 
 thread_local! { pub static ImageActionScriptOutput_NAME: String = String::from("Captures"); }
 // impl ImageActionScriptOutputInterface for ImageActionScriptOutput with the methods of the trait
-impl crate::org::allbinary::input::automation::actions::script::condition::processors::ProfileActionScriptProcessorInterface::ProfileActionScriptProcessorInterface for ImageActionScriptOutput {
-}
 impl crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface for ImageActionScriptOutput {
     fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { Self::toXmlNode(self, document) }
 }
@@ -76,11 +74,11 @@ impl ImageActionScriptOutput {
         this.saved = false;
         this.display = false;
         // super(...) is in the struct literal above
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         let mut actionNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(unsafe { ImageActionScriptOutputData_NAME.clone() }.clone(), jcall!(node).getChildNodes());
         if actionNode.is_some() {
             let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(actionNode).getChildNodes();
-            for index in (0..jcall!(nodeList).getLength()) {
+            for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
                 let mut childNode: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
                 if jcall!(jcall!(childNode).getNodeName()).compareTo(unsafe { ImageActionScriptOutputData_SAVE.clone() }.clone()) == 0 {
                     let mut booleanString: String = DomNodeHelper::getTextNodeValue(childNode.clone());
@@ -102,8 +100,9 @@ impl ImageActionScriptOutput {
     }
 
     pub fn new1(mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct1(node))));
-            this.actionScriptOutputJPanel = ImageActionScriptOutputJPanel::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct1(node.clone()))));
+            let mut actionNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(unsafe { ImageActionScriptOutputData_NAME.clone() }.clone(), jcall!(node).getChildNodes());
+            jcall!(this).actionScriptOutputJPanel = ImageActionScriptOutputJPanel::new(this.clone().map(|reference| reference as Rc<RefCell<dyn ImageActionScriptOutputInterface>>));
         this
     }
     
@@ -128,7 +127,7 @@ impl ImageActionScriptOutput {
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
         let this = Some(Rc::new(RefCell::new(Self::new_struct())));
-            this.actionScriptOutputJPanel = ImageActionScriptOutputJPanel::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+            jcall!(this).actionScriptOutputJPanel = ImageActionScriptOutputJPanel::new(this.clone().map(|reference| reference as Rc<RefCell<dyn ImageActionScriptOutputInterface>>));
         this
     }
     
@@ -138,10 +137,10 @@ impl ImageActionScriptOutput {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(unsafe { ImageActionScriptOutputData_DISPLAY.clone() }.clone(), (self.isDisplay()).to_string());
-        jcall!(hashMap).put(unsafe { ImageActionScriptOutputData_SAVE.clone() }.clone(), (self.isSaved()).to_string());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object(unsafe { ImageActionScriptOutputData_DISPLAY.clone() }.clone()), { let java_argument = crate::java_into_object((self.isDisplay()).to_string()); java_argument });
+        jcall!(hashMap).put(crate::java_into_object(unsafe { ImageActionScriptOutputData_SAVE.clone() }.clone()), { let java_argument = crate::java_into_object((self.isSaved()).to_string()); java_argument });
         { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("HashMap: "), jcall!(hashMap).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toHashMap()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         return hashMap.clone();
     }
@@ -149,9 +148,9 @@ impl ImageActionScriptOutput {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut node: Option<Rc<RefCell<Node>>> = self.base.toXmlNode(document.clone());
-        let mut newNode: Option<Rc<RefCell<Node>>> = ModDomHelper::createNodeWithValueNodes(document.clone(), unsafe { ImageActionScriptOutputData_NAME.clone() }.clone(), self.toHashMap());
-        jcall!(newNode).appendChild(jcall!(self.getImageTypes()).toXmlNode(document.clone()));
+        let mut node: Option<Rc<RefCell<Node>>> = { let java_arguments = (document.clone(),); self.base.toXmlNode(java_arguments.0) };
+        let mut newNode: Option<Rc<RefCell<Node>>> = ModDomHelper::createNodeWithValueNodes_Document_Node_HashMap(document.clone(), unsafe { ImageActionScriptOutputData_NAME.clone() }.clone(), self.toHashMap());
+        jcall!(newNode).appendChild({ let java_argument = jcall!(self.getImageTypes()).toXmlNode(document.clone()); java_argument });
         jcall!(node).appendChild(newNode.clone());
         return node.clone();
     }
@@ -195,7 +194,7 @@ impl ImageActionScriptOutput {
         jcall!(stringBuffer).append(String::from(" Is Display: "));
         jcall!(stringBuffer).appendboolean(self.isDisplay());
         jcall!(stringBuffer).append(String::from(" "));
-        jcall!(stringBuffer).append(jcall!(self.getImageTypes()).toString());
+        jcall!(stringBuffer).append({ let java_argument = jcall!(self.getImageTypes()).toString(); java_argument });
         return jcall!(stringBuffer).toString();
     }
     

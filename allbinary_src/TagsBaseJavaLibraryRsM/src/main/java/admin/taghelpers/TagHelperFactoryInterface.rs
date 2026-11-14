@@ -16,11 +16,11 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -29,13 +29,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait TagHelperFactoryInterface {
+pub trait TagHelperFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception, LicensingException
-    fn getInstance(&mut self, hashMap: Option<Rc<RefCell<HashMap>>>, pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn getInstance(&mut self, hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>>;
 }
 
 

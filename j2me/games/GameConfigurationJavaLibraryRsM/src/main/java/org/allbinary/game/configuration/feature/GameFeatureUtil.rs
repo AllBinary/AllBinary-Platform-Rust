@@ -19,7 +19,7 @@ use std::rc::Rc;
 use crate::Enumeration;
 use super::*;
 // use crate::java::util::Enumeration::Enumeration;
-// use crate::javax::microedition::lcdui::ChoiceGroup::ChoiceGroup;
+use crate::javax::microedition::lcdui::ChoiceGroup::ChoiceGroup;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
@@ -28,6 +28,7 @@ use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::EnumerationUtil::EnumerationUtil;
 use crate::org::allbinary::util::HashtableUtil::HashtableUtil;
+use crate::java::lang::Exception::*;
 use super::Features::Features;
 use super::Feature::Feature;
 
@@ -49,6 +50,10 @@ pub struct GameFeatureUtil {
 thread_local! { pub static GameFeatureUtil_instance: Option<Rc<RefCell<GameFeatureUtil>>> = GameFeatureUtil::new(); }
 
 impl GameFeatureUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -77,13 +82,13 @@ impl GameFeatureUtil {
     
 
     // throws Exception
-    pub fn setDefault(&mut self, mut choiceGroup: Option<Rc<RefCell<ChoiceGroup>>>) {
+    pub fn setDefault(&mut self, mut choiceGroup: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::ChoiceGroup::ChoiceGroupDyn>>>) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut METHOD_NAME: String = String::from("setDefault");
         let mut SELECTED_ARRAY_RETURN: String = String::from("selectedArray_return[");
         let mut SELECTED_SEP: String = String::from("] = ");
-        let mut selectedArray_return: Vec<bool> = vec![false; (jcall!(choiceGroup).size()) as usize];
-        let mut total: i32 = jcall!(choiceGroup).getSelectedFlags(selectedArray_return.clone());
+        let mut selectedArray_return: Vec<bool> = vec![false; (jcall!(choiceGroup).as_ChoiceGroup_mut().size()) as usize];
+        let mut total: i32 = jcall!(choiceGroup).as_ChoiceGroup_mut().getSelectedFlags(selectedArray_return.clone());
         jcall!(stringBuffer).append(String::from("Multiple Total Choices: "));
         jcall!(stringBuffer).appendint(total.clone());
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
@@ -96,27 +101,27 @@ impl GameFeatureUtil {
             jcall!(stringBuffer).append(SELECTED_SEP.clone());
             jcall!(stringBuffer).appendboolean(isSelected.clone());
             { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            let mut selectedChoiceLabel: String = jcall!(choiceGroup).getString(index.clone());
+            let mut selectedChoiceLabel: String = jcall!(choiceGroup).as_ChoiceGroup_mut().getString(index.clone());
             let mut gameFeature: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>> = Feature::getInstance(selectedChoiceLabel.clone());
             if jcall!(features).isDefault(gameFeature.clone()) {
                 jcall!(features).add(gameFeature.clone());
-                jcall!(choiceGroup).setSelectedIndex(index.clone(), true);
+                jcall!(choiceGroup).as_ChoiceGroup_mut().setSelectedIndex(index.clone(), true);
             } else {
                 jcall!(features).remove(gameFeature.clone());
-                jcall!(choiceGroup).setSelectedIndex(index.clone(), false);
+                jcall!(choiceGroup).as_ChoiceGroup_mut().setSelectedIndex(index.clone(), false);
             }
         }
     }
     
 
     // throws Exception
-    pub fn updateMultiple(&mut self, mut choiceGroup: Option<Rc<RefCell<ChoiceGroup>>>) {
+    pub fn updateMultiple(&mut self, mut choiceGroup: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::ChoiceGroup::ChoiceGroupDyn>>>) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut METHOD_NAME: String = String::from("updateMultiple");
         let mut SELECTED_ARRAY_RETURN: String = String::from("selectedArray_return[");
         let mut SELECTED_SEP: String = String::from("] = ");
-        let mut selectedArray_return: Vec<bool> = vec![false; (jcall!(choiceGroup).size()) as usize];
-        let mut total: i32 = jcall!(choiceGroup).getSelectedFlags(selectedArray_return.clone());
+        let mut selectedArray_return: Vec<bool> = vec![false; (jcall!(choiceGroup).as_ChoiceGroup_mut().size()) as usize];
+        let mut total: i32 = jcall!(choiceGroup).as_ChoiceGroup_mut().getSelectedFlags(selectedArray_return.clone());
         jcall!(stringBuffer).append(String::from("Multiple Total Choices: "));
         jcall!(stringBuffer).appendint(total.clone());
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
@@ -129,7 +134,7 @@ impl GameFeatureUtil {
             jcall!(stringBuffer).append(SELECTED_SEP.clone());
             jcall!(stringBuffer).appendboolean(isSelected.clone());
             { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            let mut selectedChoiceLabel: String = jcall!(choiceGroup).getString(index.clone());
+            let mut selectedChoiceLabel: String = jcall!(choiceGroup).as_ChoiceGroup_mut().getString(index.clone());
             let mut gameFeature: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>> = Feature::getInstance(selectedChoiceLabel.clone());
             if !isSelected && jcall!(features).isFeature(gameFeature.clone()) {
                 jcall!(features).remove(gameFeature.clone());
@@ -141,13 +146,13 @@ impl GameFeatureUtil {
     
 
     // throws Exception
-    pub fn updateExclusiveForChoiceGroup(&mut self, mut choiceGroup: Option<Rc<RefCell<ChoiceGroup>>>) {
+    pub fn updateExclusiveForChoiceGroup(&mut self, mut choiceGroup: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::ChoiceGroup::ChoiceGroupDyn>>>) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut METHOD_NAME: String = String::from("updateExclusive");
         let mut SELECTED_ARRAY_RETURN: String = String::from("selectedArray_return[");
         let mut SELECTED_SEP: String = String::from("] = ");
-        let mut selectedArray_return: Vec<bool> = vec![false; (jcall!(choiceGroup).size()) as usize];
-        let mut total: i32 = jcall!(choiceGroup).getSelectedFlags(selectedArray_return.clone());
+        let mut selectedArray_return: Vec<bool> = vec![false; (jcall!(choiceGroup).as_ChoiceGroup_mut().size()) as usize];
+        let mut total: i32 = jcall!(choiceGroup).as_ChoiceGroup_mut().getSelectedFlags(selectedArray_return.clone());
         jcall!(stringBuffer).append(String::from("Exclusive Total Choices: 1=="));
         jcall!(stringBuffer).appendint(total.clone());
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
@@ -160,7 +165,7 @@ impl GameFeatureUtil {
             jcall!(stringBuffer).appendboolean(isSelected.clone());
             { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             if isSelected {
-                let mut selectedChoiceLabel: String = jcall!(choiceGroup).getString(index.clone());
+                let mut selectedChoiceLabel: String = jcall!(choiceGroup).as_ChoiceGroup_mut().getString(index.clone());
                 self.updateExclusive(selectedChoiceLabel.clone());
             }
         }
@@ -171,8 +176,8 @@ impl GameFeatureUtil {
         let mut enumeration: Option<Rc<RefCell<dyn Enumeration>>> = jcall!(jcall!(GameFeatureChoiceGroups::GameFeatureChoiceGroups::getExclusiveInstance()).get()).keys();
         let mut name: String = String::new();
         while jcall!(self.enumerationUtil).hasMoreElements(enumeration.clone()) {
-            name = (jcall!(self.enumerationUtil).nextElement(enumeration.clone())).clone() /* as String */;
-            if { let left = &(itemLabel); let right = &(name); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 {
+            name = { let java_value = ({ let java_object = (jcall!(self.enumerationUtil).nextElement(enumeration.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            if { let left = (itemLabel).clone(); let right = (name).clone(); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 {
                 return true;
             }
         }
@@ -182,16 +187,16 @@ impl GameFeatureUtil {
 
     // throws Exception
     pub fn updateExclusive(&mut self, mut selectedChoiceLabel: String) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).ITEM_LABEL.clone()).append(selectedChoiceLabel.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateExclusive"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).ITEM_LABEL.clone(); java_field }.clone()).append(selectedChoiceLabel.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateExclusive"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut gameFeature: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>> = Feature::getInstance(selectedChoiceLabel.clone());
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(GameFeatureChoiceGroups::GameFeatureChoiceGroups::getExclusiveInstance()).get();
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(GameFeatureChoiceGroups::GameFeatureChoiceGroups::getExclusiveInstance()).get();
         let mut objectArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(HashtableUtil::getInstance()).getKeysAsArray(hashtable.clone());
         let mut basicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
         let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = None;
         let mut size: i32 = (objectArray.len() as i32).clone();
         for index in (0..size) {
-            anyType = (objectArray[(index) as usize]).clone() /* as Any */;
-            basicArrayList = { let java_object = (jcall!(hashtable).get(anyType.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
+            anyType = (objectArray[(index) as usize]).clone();
+            basicArrayList = { let java_value = ({ let java_object = (jcall!(hashtable).get(anyType.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             self.updateExclusiveList(gameFeature.clone(), basicArrayList.clone());
         }
     }

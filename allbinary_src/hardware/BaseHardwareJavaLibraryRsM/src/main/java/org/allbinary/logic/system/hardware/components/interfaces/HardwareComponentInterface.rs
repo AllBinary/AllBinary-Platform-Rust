@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait HardwareComponentInterface {
+pub trait HardwareComponentInterface: std::any::Any {
     
 
     fn compareTo(&mut self, componentInterface: Option<Rc<RefCell<dyn HardwareComponentInterface>>>) -> bool;

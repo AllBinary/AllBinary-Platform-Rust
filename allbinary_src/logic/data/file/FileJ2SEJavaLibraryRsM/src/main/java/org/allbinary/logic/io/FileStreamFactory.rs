@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
+use crate::java::lang::Exception::*;
 use super::AbFileInputStream::AbFileInputStream;
 use super::AbFileOutputStream::AbFileOutputStream;
 
@@ -33,16 +34,20 @@ macro_rules! jcall {
 pub struct FileStreamFactory {
 }
 
-pub static mut FileStreamFactory_SINGLETON: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut FileStreamFactory_SINGLETON: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl FileStreamFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<FileStreamFactory>>> {
-        if match (&unsafe { FileStreamFactory_SINGLETON.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *FileStreamFactory_SINGLETON = FileStreamFactory::new() };
+        if match (&unsafe { FileStreamFactory_SINGLETON.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *FileStreamFactory_SINGLETON = crate::java_into_object(FileStreamFactory::new()) };
         }
-        return (unsafe { FileStreamFactory_SINGLETON.clone() }).clone() /* as FileStreamFactory */;
+        return { let java_object = (unsafe { FileStreamFactory_SINGLETON.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<FileStreamFactory>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -61,7 +66,7 @@ impl FileStreamFactory {
     pub fn getFileInputStreamInstance(&mut self, mut path: String, mut fileName: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStreamDyn>>> {
         let mut FILEABPATH: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(path.clone(), fileName.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
         let mut file: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFileFromAbPath(FILEABPATH.clone());
-        return AbFileInputStream::new1(file.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStreamDyn>>);
+        return AbFileInputStream::createFromAbFile(file.clone());
     }
     
 

@@ -78,6 +78,10 @@ impl crate::org::allbinary::android::api5::ActivityFractureUtilAPI5::ActivityFra
 impl crate::org::allbinary::android::api1::ActivityFractureUtilAPI1::ActivityFractureUtilAPI1Dyn for ActivityFractureUtilAPI30 {
     fn as_ActivityFractureUtilAPI1(&self) -> &crate::org::allbinary::android::api1::ActivityFractureUtilAPI1::ActivityFractureUtilAPI1 { &self.base.base }
     fn as_ActivityFractureUtilAPI1_mut(&mut self) -> &mut crate::org::allbinary::android::api1::ActivityFractureUtilAPI1::ActivityFractureUtilAPI1 { &mut self.base.base }
+}
+impl crate::org::allbinary::android::ActivityFractureUtil::ActivityFractureUtilDyn for ActivityFractureUtilAPI30 {
+    fn as_ActivityFractureUtil(&self) -> &crate::org::allbinary::android::ActivityFractureUtil::ActivityFractureUtil { &self.base.base.base }
+    fn as_ActivityFractureUtil_mut(&mut self) -> &mut crate::org::allbinary::android::ActivityFractureUtil::ActivityFractureUtil { &mut self.base.base.base }
     fn setFullScreen(&mut self, mut activity: Option<Rc<RefCell<Activity>>>) { Self::setFullScreen(self, activity) }
 }
 

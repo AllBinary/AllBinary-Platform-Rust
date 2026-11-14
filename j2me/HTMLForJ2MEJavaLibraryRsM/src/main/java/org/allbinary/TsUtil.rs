@@ -17,13 +17,14 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Displayable::Displayable;
-// use crate::javax::microedition::lcdui::Form::Form;
-// use crate::javax::microedition::rms::InvalidRecordIDException::InvalidRecordIDException;
-// use crate::javax::microedition::rms::RecordStore::RecordStore;
-// use crate::javax::microedition::rms::RecordStoreException::RecordStoreException;
-// use crate::javax::microedition::rms::RecordStoreNotOpenException::RecordStoreNotOpenException;
+use crate::javax::microedition::lcdui::Displayable::Displayable;
+use crate::javax::microedition::lcdui::Form::Form;
+use crate::javax::microedition::rms::InvalidRecordIDException::InvalidRecordIDException;
+use crate::javax::microedition::rms::RecordStore::RecordStore;
+use crate::javax::microedition::rms::RecordStoreException::RecordStoreException;
+use crate::javax::microedition::rms::RecordStoreNotOpenException::RecordStoreNotOpenException;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -43,6 +44,10 @@ pub struct TsUtil {
 thread_local! { pub static TsUtil_instance: Option<Rc<RefCell<TsUtil>>> = TsUtil::new(); }
 
 impl TsUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -73,13 +78,13 @@ impl TsUtil {
 
     // throws RecordStoreNotOpenException, InvalidRecordIDException, RecordStoreException
     pub fn getRecord(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut recordId: i32) -> Vec<i8> {
-        let mut recordStore: Option<Rc<RefCell<RecordStore>>> = (anyType).clone() /* as RecordStore */;
+        let mut recordStore: Option<Rc<RefCell<dyn crate::javax::microedition::rms::RecordStore::RecordStoreDyn>>> = { let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::javax::microedition::rms::RecordStore::RecordStoreDyn>>>>().expect("ClassCastException").clone()) };
         let mut data: Vec<i8> = Vec::new();
         { // synchronized (self)
-            data = vec![0; (jcall!(recordStore).getRecordSize(recordId.clone())) as usize];
+            data = { let java_value = (vec![0; (jcall!(recordStore).getRecordSize(recordId.clone())) as usize]).clone(); java_value };
             jcall!(recordStore).getRecord(recordId.clone(), data.clone(), 0);
         }
-        return (if (data.len() as i32) < 1 { jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY } else { data });
+        return (if (data.len() as i32) < 1 { { let java_field = jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone(); java_field }.clone() } else { data.clone() });
     }
     
 
@@ -113,7 +118,7 @@ impl TsUtil {
     }
     
 
-    pub fn isItemListener(&mut self, mut owner: Option<Rc<RefCell<Displayable>>>) -> bool {
+    pub fn isItemListener(&mut self, mut owner: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) -> bool {
         if (owner).is_some() /* instanceof Form */ {
             return true;
         } else {

@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayer;
+use crate::java::lang::Exception::*;
 use super::GeographicMapCellPosition::GeographicMapCellPosition;
 
 // Borrows the object of a Java reference
@@ -27,13 +28,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait GeographicMapCellPositionFactoryInitVisitorInterface {
+pub trait GeographicMapCellPositionFactoryInitVisitorInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn visit(&mut self, tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>>, cellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

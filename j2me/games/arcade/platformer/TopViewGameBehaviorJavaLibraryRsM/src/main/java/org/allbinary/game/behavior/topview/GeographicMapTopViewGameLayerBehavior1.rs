@@ -27,6 +27,7 @@ use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellType;
 use crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory;
+use crate::java::lang::Exception::*;
 use super::GeographicMapTopViewLayerBehavior::GeographicMapTopViewLayerBehavior;
 use super::TopViewCharacterInterface::TopViewCharacterInterface;
 
@@ -44,7 +45,7 @@ pub struct GeographicMapTopViewGameLayerBehavior1 {
     pub geographicMapBehavior: Option<Rc<RefCell<MultiGeographicMapBehavior>>>,
     pub autoStepBlocks: bool,
     pub offsetY: i32,
-    pub previousGeographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>>,
+    pub previousGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>,
 }
 
 
@@ -64,7 +65,7 @@ impl GeographicMapTopViewGameLayerBehavior1 {
         this.logUtil = LogUtil::getInstance();
         this.gravityUtil = GravityUtil::getInstance();
         this.geographicMapBehavior = MultiGeographicMapBehavior::new();
-        this.previousGeographicMapCellPosition = unsafe { crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.clone() }.clone();
+        this.previousGeographicMapCellPosition = crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone).clone();
         // super(...) is in the struct literal above
         this.autoStepBlocks = autoStepBlocks.clone();
         this.offsetY = offsetY.clone();
@@ -77,12 +78,12 @@ impl GeographicMapTopViewGameLayerBehavior1 {
     
 
     // throws Exception
-    pub fn gravity(&mut self, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>, mut geographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>>) {
-        if !match (&geographicMapCellPosition, &unsafe { crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+    pub fn gravity(&mut self, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) {
+        if !match (&geographicMapCellPosition, &crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             jcall!(self.geographicMapBehavior).getCellTypeAt(geographicMapInterfaceArray.clone(), geographicMapCellTypeArray.clone(), geographicMapCellPosition.clone());
             let mut hasSolidBlock: bool = self.hasSolidBlock(geographicMapInterfaceArray.clone(), geographicMapCellTypeArray.clone());
             if !hasSolidBlock {
-                jcall!(self.gravityUtil).process(velocityProperties.clone(), jcall!(self.gravityUtil).GAME_GRAVITY_VELOCITY.clone());
+                jcall!(self.gravityUtil).process(velocityProperties.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn>>), { let java_field = jcall!(self.gravityUtil).GAME_GRAVITY_VELOCITY.clone(); java_field }.clone());
                 jcall!(velocityProperties).limitXYToForwardAndReverseMaxVelocity();
                 self.gravity();
             } else {
@@ -92,7 +93,7 @@ impl GeographicMapTopViewGameLayerBehavior1 {
     
 
     // throws Exception
-    pub fn getPosition(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>, mut x: i32, mut y: i32) -> Option<Rc<RefCell<GeographicMapCellPosition>>> {
+    pub fn getPosition(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut x: i32, mut y: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> {
         let mut xCellPosition: i32 = jcall!(layer).getXP() + -x + jcall!(layer).getWidth();
         let mut yCellPosition: i32 = jcall!(layer).getYP() + -y + jcall!(layer).getHeight();
         return jcall!(geographicMapInterfaceArray[(0) as usize]).getCellPositionAtXYNoThrow(xCellPosition.clone(), yCellPosition.clone());
@@ -100,7 +101,7 @@ impl GeographicMapTopViewGameLayerBehavior1 {
     
 
     // throws Exception
-    pub fn getLeftPosition(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>) -> Option<Rc<RefCell<GeographicMapCellPosition>>> {
+    pub fn getLeftPosition(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> {
         let mut xCellPosition: i32 = jcall!(layer).getXP();
         let mut yCellPosition: i32 = jcall!(layer).getYP() + jcall!(layer).getHeight();
         return jcall!(geographicMapInterfaceArray[(0) as usize]).getCellPositionAtXYNoThrow(xCellPosition.clone(), yCellPosition.clone());
@@ -108,7 +109,7 @@ impl GeographicMapTopViewGameLayerBehavior1 {
     
 
     // throws Exception
-    pub fn getRightPosition(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>) -> Option<Rc<RefCell<GeographicMapCellPosition>>> {
+    pub fn getRightPosition(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> {
         let mut xCellPosition: i32 = jcall!(layer).getXP() + jcall!(layer).getWidth();
         let mut yCellPosition: i32 = jcall!(layer).getYP() + jcall!(layer).getHeight();
         return jcall!(geographicMapInterfaceArray[(0) as usize]).getCellPositionAtXYNoThrow(xCellPosition.clone(), yCellPosition.clone());
@@ -116,33 +117,33 @@ impl GeographicMapTopViewGameLayerBehavior1 {
     
 
     // throws Exception
-    pub fn getGeographicMapCellPositionIfNotSolidBlockOrOffMapLocation(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>, mut x: i32, mut y: i32) -> Option<Rc<RefCell<GeographicMapCellPosition>>> {
-        let mut geographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>> = self.getPosition(geographicMapInterfaceArray.clone(), layer.clone(), x.clone(), y.clone());
-        if !match (&self.previousGeographicMapCellPosition, &geographicMapCellPosition) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } && !match (&geographicMapCellPosition, &unsafe { crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            let mut possibleStepGeographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>> = geographicMapCellPosition.clone();
-            let mut tiledLayer: Option<Rc<RefCell<AllBinaryTiledLayer>>> = jcall!(geographicMapInterfaceArray[(0) as usize]).getAllBinaryTiledLayer();
+    pub fn getGeographicMapCellPositionIfNotSolidBlockOrOffMapLocation(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut x: i32, mut y: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> {
+        let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = self.getPosition(geographicMapInterfaceArray.clone(), layer.clone(), x.clone(), y.clone());
+        if !match (&self.previousGeographicMapCellPosition, &geographicMapCellPosition) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } && !match (&geographicMapCellPosition, &crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            let mut possibleStepGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = geographicMapCellPosition.clone();
+            let mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(geographicMapInterfaceArray[(0) as usize]).getAllBinaryTiledLayer();
             if jcall!(possibleStepGeographicMapCellPosition).getColumn() > 0 && jcall!(possibleStepGeographicMapCellPosition).getRow() > 0 && jcall!(possibleStepGeographicMapCellPosition).getColumn() < jcall!(tiledLayer).getColumns() && jcall!(possibleStepGeographicMapCellPosition).getRow() < jcall!(tiledLayer).getRows() {
                 jcall!(self.geographicMapBehavior).getCellTypeAt(geographicMapInterfaceArray.clone(), geographicMapCellTypeArray.clone(), possibleStepGeographicMapCellPosition.clone());
                 let mut hasSolidBlock: bool = self.hasSolidBlock(geographicMapInterfaceArray.clone(), geographicMapCellTypeArray.clone());
                 if hasSolidBlock {
                     jcall!(jcall!(velocityProperties).getVelocityXBasicDecimalP()).setint(0);
-                    self.previousGeographicMapCellPosition = unsafe { crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.clone() }.clone();
-                    return unsafe { crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.clone() }.clone();
+                    self.previousGeographicMapCellPosition = { let java_value = (crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone)).clone(); java_value }.clone();
+                    return crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone).clone();
                 } else {
                     self.previousGeographicMapCellPosition = possibleStepGeographicMapCellPosition.clone();
                     return possibleStepGeographicMapCellPosition.clone();
                 }
             }
         }
-        self.previousGeographicMapCellPosition = unsafe { crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.clone() }.clone();
-        return unsafe { crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.clone() }.clone();
+        self.previousGeographicMapCellPosition = { let java_value = (crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone)).clone(); java_value }.clone();
+        return crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone).clone();
     }
     
 
     // throws Exception
-    pub fn moveAndLand(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>, mut geographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>, mut x: i32, mut y: i32) {
-        if !match (&geographicMapCellPosition, &unsafe { crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            let mut topViewCharacterInterface: Option<Rc<RefCell<dyn TopViewCharacterInterface>>> = ((layer).clone() /* as TopViewCharacterInterface */);
+    pub fn moveAndLand(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut x: i32, mut y: i32) {
+        if !match (&geographicMapCellPosition, &crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            let mut topViewCharacterInterface: Option<Rc<RefCell<dyn TopViewCharacterInterface>>> = ((|| -> Option<Rc<RefCell<dyn TopViewCharacterInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to TopViewCharacterInterface") })());
             jcall!(topViewCharacterInterface).terrainMove(geographicMapInterfaceArray.clone(), geographicMapCellTypeArray.clone(), x.clone(), y.clone());
         } else {
         }
@@ -150,10 +151,10 @@ impl GeographicMapTopViewGameLayerBehavior1 {
     
 
     // throws Exception
-    pub fn r#move(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>, mut x: i32, mut y: i32) -> bool {
-        let mut geographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>> = self.getGeographicMapCellPositionIfNotSolidBlockOrOffMapLocation(geographicMapInterfaceArray.clone(), geographicMapCellTypeArray.clone(), velocityProperties.clone(), layer.clone(), x.clone(), y.clone());
+    pub fn r#move(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut x: i32, mut y: i32) -> bool {
+        let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = self.getGeographicMapCellPositionIfNotSolidBlockOrOffMapLocation(geographicMapInterfaceArray.clone(), geographicMapCellTypeArray.clone(), velocityProperties.clone(), layer.clone(), x.clone(), y.clone());
         self.moveAndLand(geographicMapInterfaceArray.clone(), geographicMapCellTypeArray.clone(), geographicMapCellPosition.clone(), velocityProperties.clone(), layer.clone(), x.clone(), y.clone());
-        if match (&geographicMapCellPosition, &unsafe { crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&geographicMapCellPosition, &crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return false;
         } else {
             return true;
@@ -162,21 +163,21 @@ impl GeographicMapTopViewGameLayerBehavior1 {
     
 
     // throws Exception
-    pub fn left(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>) {
-        let mut geographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>> = self.getLeftPosition(geographicMapInterfaceArray.clone(), layer.clone());
-        if !match (&geographicMapCellPosition, &unsafe { crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            let mut possibleStepGeographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>> = jcall!(jcall!(geographicMapInterfaceArray[(0) as usize]).getGeographicMapCellPositionFactory()).getAt(jcall!(geographicMapCellPosition).getColumn(), jcall!(geographicMapCellPosition).getRow() - 1);
+    pub fn left(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) {
+        let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = self.getLeftPosition(geographicMapInterfaceArray.clone(), layer.clone());
+        if !match (&geographicMapCellPosition, &crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            let mut possibleStepGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = jcall!(jcall!(geographicMapInterfaceArray[(0) as usize]).getGeographicMapCellPositionFactory()).getAt(jcall!(geographicMapCellPosition).getColumn(), jcall!(geographicMapCellPosition).getRow() - 1);
             jcall!(self.geographicMapBehavior).getCellTypeAt(geographicMapInterfaceArray.clone(), geographicMapCellTypeArray.clone(), possibleStepGeographicMapCellPosition.clone());
             let mut hasSolidBlock: bool = self.hasSolidBlock(geographicMapInterfaceArray.clone(), geographicMapCellTypeArray.clone());
             if hasSolidBlock {
                 if self.autoStepBlocks {
-                    let mut topViewCharacterInterface: Option<Rc<RefCell<dyn TopViewCharacterInterface>>> = ((layer).clone() /* as TopViewCharacterInterface */);
+                    let mut topViewCharacterInterface: Option<Rc<RefCell<dyn TopViewCharacterInterface>>> = ((|| -> Option<Rc<RefCell<dyn TopViewCharacterInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to TopViewCharacterInterface") })());
                     jcall!(topViewCharacterInterface).leftp();
                 } else {
                     jcall!(jcall!(velocityProperties).getVelocityXBasicDecimalP()).setint(0);
                 }
             } else {
-                let mut topViewCharacterInterface: Option<Rc<RefCell<dyn TopViewCharacterInterface>>> = ((layer).clone() /* as TopViewCharacterInterface */);
+                let mut topViewCharacterInterface: Option<Rc<RefCell<dyn TopViewCharacterInterface>>> = ((|| -> Option<Rc<RefCell<dyn TopViewCharacterInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to TopViewCharacterInterface") })());
                 jcall!(topViewCharacterInterface).leftp();
             }
         }
@@ -184,21 +185,21 @@ impl GeographicMapTopViewGameLayerBehavior1 {
     
 
     // throws Exception
-    pub fn right(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>) {
-        let mut geographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>> = self.getRightPosition(geographicMapInterfaceArray.clone(), layer.clone());
-        if !match (&geographicMapCellPosition, &unsafe { crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            let mut possibleStepGeographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>> = jcall!(jcall!(geographicMapInterfaceArray[(0) as usize]).getGeographicMapCellPositionFactory()).getAt(jcall!(geographicMapCellPosition).getColumn(), jcall!(geographicMapCellPosition).getRow() - 1);
+    pub fn right(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) {
+        let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = self.getRightPosition(geographicMapInterfaceArray.clone(), layer.clone());
+        if !match (&geographicMapCellPosition, &crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            let mut possibleStepGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = jcall!(jcall!(geographicMapInterfaceArray[(0) as usize]).getGeographicMapCellPositionFactory()).getAt(jcall!(geographicMapCellPosition).getColumn(), jcall!(geographicMapCellPosition).getRow() - 1);
             jcall!(self.geographicMapBehavior).getCellTypeAt(geographicMapInterfaceArray.clone(), geographicMapCellTypeArray.clone(), possibleStepGeographicMapCellPosition.clone());
             let mut hasSolidBlock: bool = self.hasSolidBlock(geographicMapInterfaceArray.clone(), geographicMapCellTypeArray.clone());
             if hasSolidBlock {
                 if self.autoStepBlocks {
-                    let mut topViewCharacterInterface: Option<Rc<RefCell<dyn TopViewCharacterInterface>>> = ((layer).clone() /* as TopViewCharacterInterface */);
+                    let mut topViewCharacterInterface: Option<Rc<RefCell<dyn TopViewCharacterInterface>>> = ((|| -> Option<Rc<RefCell<dyn TopViewCharacterInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to TopViewCharacterInterface") })());
                     jcall!(topViewCharacterInterface).rightp();
                 } else {
                     jcall!(jcall!(velocityProperties).getVelocityXBasicDecimalP()).setint(0);
                 }
             } else {
-                let mut topViewCharacterInterface: Option<Rc<RefCell<dyn TopViewCharacterInterface>>> = ((layer).clone() /* as TopViewCharacterInterface */);
+                let mut topViewCharacterInterface: Option<Rc<RefCell<dyn TopViewCharacterInterface>>> = ((|| -> Option<Rc<RefCell<dyn TopViewCharacterInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to TopViewCharacterInterface") })());
                 jcall!(topViewCharacterInterface).rightp();
             }
         }
@@ -215,16 +216,20 @@ impl std::ops::DerefMut for GeographicMapTopViewGameLayerBehavior1 {
 impl crate::org::allbinary::game::behavior::topview::GeographicMapTopViewLayerBehavior::GeographicMapTopViewLayerBehaviorDyn for GeographicMapTopViewGameLayerBehavior1 {
     fn as_GeographicMapTopViewLayerBehavior(&self) -> &crate::org::allbinary::game::behavior::topview::GeographicMapTopViewLayerBehavior::GeographicMapTopViewLayerBehavior { &self.base }
     fn as_GeographicMapTopViewLayerBehavior_mut(&mut self) -> &mut crate::org::allbinary::game::behavior::topview::GeographicMapTopViewLayerBehavior::GeographicMapTopViewLayerBehavior { &mut self.base }
-    fn getGeographicMapCellPositionIfNotSolidBlockOrOffMapLocation(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>, mut x: i32, mut y: i32) -> Option<Rc<RefCell<GeographicMapCellPosition>>> { Self::getGeographicMapCellPositionIfNotSolidBlockOrOffMapLocation(self, geographicMapInterfaceArray, geographicMapCellTypeArray, velocityProperties, layer, x, y) }
-    fn gravity(&mut self, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>, mut geographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>>) { Self::gravity(self, velocityProperties, geographicMapInterfaceArray, geographicMapCellTypeArray, geographicMapCellPosition) }
-    fn left(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>) { Self::left(self, geographicMapInterfaceArray, geographicMapCellTypeArray, velocityProperties, layer) }
-    fn r#move(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>, mut x: i32, mut y: i32) -> bool { Self::r#move(self, geographicMapInterfaceArray, geographicMapCellTypeArray, velocityProperties, layer, x, y) }
-    fn moveAndLand(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>, mut geographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>, mut x: i32, mut y: i32) { Self::moveAndLand(self, geographicMapInterfaceArray, geographicMapCellTypeArray, geographicMapCellPosition, velocityProperties, layer, x, y) }
-    fn right(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>) { Self::right(self, geographicMapInterfaceArray, geographicMapCellTypeArray, velocityProperties, layer) }
+    fn getGeographicMapCellPositionIfNotSolidBlockOrOffMapLocation(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut x: i32, mut y: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> { Self::getGeographicMapCellPositionIfNotSolidBlockOrOffMapLocation(self, geographicMapInterfaceArray, geographicMapCellTypeArray, velocityProperties, layer, x, y) }
+    fn gravity(&mut self, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) { Self::gravity(self, velocityProperties, geographicMapInterfaceArray, geographicMapCellTypeArray, geographicMapCellPosition) }
+    fn left(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) { Self::left(self, geographicMapInterfaceArray, geographicMapCellTypeArray, velocityProperties, layer) }
+    fn r#move(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut x: i32, mut y: i32) -> bool { Self::r#move(self, geographicMapInterfaceArray, geographicMapCellTypeArray, velocityProperties, layer, x, y) }
+    fn moveAndLand(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut x: i32, mut y: i32) { Self::moveAndLand(self, geographicMapInterfaceArray, geographicMapCellTypeArray, geographicMapCellPosition, velocityProperties, layer, x, y) }
+    fn right(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) { Self::right(self, geographicMapInterfaceArray, geographicMapCellTypeArray, velocityProperties, layer) }
 }
 impl crate::org::allbinary::game::behavior::topview::TopViewGameLayerBehavior::TopViewGameLayerBehaviorDyn for GeographicMapTopViewGameLayerBehavior1 {
     fn as_TopViewGameLayerBehavior(&self) -> &crate::org::allbinary::game::behavior::topview::TopViewGameLayerBehavior::TopViewGameLayerBehavior { &self.base.base }
     fn as_TopViewGameLayerBehavior_mut(&mut self) -> &mut crate::org::allbinary::game::behavior::topview::TopViewGameLayerBehavior::TopViewGameLayerBehavior { &mut self.base.base }
+}
+impl crate::org::allbinary::game::layer::behavior::GameLayerBehavior::GameLayerBehaviorDyn for GeographicMapTopViewGameLayerBehavior1 {
+    fn as_GameLayerBehavior(&self) -> &crate::org::allbinary::game::layer::behavior::GameLayerBehavior::GameLayerBehavior { &self.base.base.base }
+    fn as_GameLayerBehavior_mut(&mut self) -> &mut crate::org::allbinary::game::layer::behavior::GameLayerBehavior::GameLayerBehavior { &mut self.base.base.base }
 }
 
 

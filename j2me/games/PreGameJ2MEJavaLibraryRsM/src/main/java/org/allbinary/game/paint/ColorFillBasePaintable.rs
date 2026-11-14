@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
 use crate::org::allbinary::graphics::color::ColorCompositeInterface::ColorCompositeInterface;
@@ -52,7 +52,7 @@ impl ColorFillBasePaintable {
             basicColor: None,
             colorP: 0,
         };
-        this.basicColor = jcall!(BasicColorFactory::getInstance()).WHITE.clone();
+        this.basicColor = { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone();
         this.setBasicColorP(basicColor.clone());
         this
     }
@@ -64,7 +64,7 @@ impl ColorFillBasePaintable {
 
     pub fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
         self.basicColor = basicColor.clone();
-        { let java_arguments = (((self.getBasicColorP()).unwrap() as i32),); self.setColor(java_arguments.0) };
+        { let java_arguments = ({ let java_argument = jcall!(self.getBasicColorP()).intValue(); java_argument },); self.setColor(java_arguments.0) };
     }
     
 
@@ -83,7 +83,7 @@ impl ColorFillBasePaintable {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
 }
 impl std::ops::Deref for ColorFillBasePaintable {
@@ -110,7 +110,10 @@ impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for ColorFi
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base }
     fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::setBasicColorP(self, basicColor) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for ColorFillBasePaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

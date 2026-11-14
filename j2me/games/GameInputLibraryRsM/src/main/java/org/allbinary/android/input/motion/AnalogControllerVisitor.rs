@@ -33,6 +33,10 @@ pub struct AnalogControllerVisitor {
 
 impl AnalogControllerVisitor {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -47,7 +51,7 @@ impl AnalogControllerVisitor {
     pub fn process(&mut self, mut allbinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut analogLocationInputProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::android::input::motion::AnalogLocationInputProcessor::AnalogLocationInputProcessorDyn>>>) {
     }
 }
-pub trait AnalogControllerVisitorDyn {
+pub trait AnalogControllerVisitorDyn: std::any::Any {
     fn as_AnalogControllerVisitor(&self) -> &AnalogControllerVisitor;
     fn as_AnalogControllerVisitor_mut(&mut self) -> &mut AnalogControllerVisitor;
     fn process(&mut self, mut allbinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut analogLocationInputProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::android::input::motion::AnalogLocationInputProcessor::AnalogLocationInputProcessorDyn>>>) { AnalogControllerVisitor::process(self.as_AnalogControllerVisitor_mut(), allbinaryLayerManager, analogLocationInputProcessor) }

@@ -56,6 +56,10 @@ thread_local! { pub static SqlStrings_instance: Option<Rc<RefCell<SqlStrings>>> 
 
 impl SqlStrings {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             CREATE_DATABASE: String::new(),
@@ -117,7 +121,7 @@ impl SqlStrings {
         this.PRIMARY_KEY = String::from("PRIMARY KEY(");
         this.END = String::from(") )");
         this.EQUAL_QUOTE = String::from(" = \"");
-        this.CLOSE_QUOTE = jcall!(CommonSeps::getInstance()).QUOTE.clone();
+        this.CLOSE_QUOTE = { let java_field = jcall!(CommonSeps::getInstance()).QUOTE.clone(); java_field }.clone();
         this.EQUAL_QUOTE_NO_SPACE = String::from("=\"");
         this.ESCAPE = String::from("\\");
         this.DOUBLE_ESCAPE = String::from("\\\\");

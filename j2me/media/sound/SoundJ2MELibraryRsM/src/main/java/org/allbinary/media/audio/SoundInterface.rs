@@ -17,9 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::media::Player::Player;
-use super::lang::lang;
-use super::java::java;
+use crate::javax::microedition::media::Player::Player;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -28,19 +27,17 @@ macro_rules! jcall {
     };
 }
 
-pub trait SoundInterface {
+pub trait SoundInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getResource(&mut self) -> String;
     
 
-    fn getPlayerP(&mut self) -> Option<Rc<RefCell<Player>>>;
+    fn getPlayerP(&mut self) -> Option<Rc<RefCell<dyn Player>>>;
     
 
     // throws Exception
     fn init(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -33,6 +33,10 @@ pub struct RaceTrackFrictionProperties {
 
 
 impl RaceTrackFrictionProperties {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut roadFriction: i32, mut groundFriction: i32) -> Self {
@@ -40,8 +44,8 @@ impl RaceTrackFrictionProperties {
             ROAD_FRICTION_NOMINATOR: 0,
             GROUND_FRICTION_NOMINATOR: 0,
         };
-        this.ROAD_FRICTION_NOMINATOR = FrictionData::getFrictionDenominator() - roadFriction;
-        this.GROUND_FRICTION_NOMINATOR = FrictionData::getFrictionDenominator() - groundFriction;
+        this.ROAD_FRICTION_NOMINATOR = { let java_value = (FrictionData::getFrictionDenominator() - roadFriction).clone(); java_value };
+        this.GROUND_FRICTION_NOMINATOR = { let java_value = (FrictionData::getFrictionDenominator() - groundFriction).clone(); java_value };
         this
     }
 

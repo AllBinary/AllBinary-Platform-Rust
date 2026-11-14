@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::thread::ABRunnable::ABRunnable;
+use crate::java::lang::Exception::*;
 use super::DemoCanvas::DemoCanvas;
 
 // Borrows the object of a Java reference
@@ -36,6 +37,11 @@ pub struct DemoGameStartupRunnable {
 }
 
 thread_local! { pub static DemoGameStartupRunnable_TYPE: i32 = 4; }
+impl crate::org::allbinary::thread::RunnableInterface::RunnableInterface for DemoGameStartupRunnable {
+    fn isRunning(&mut self) -> bool { crate::org::allbinary::thread::ABRunnable::ABRunnable::isRunning(crate::org::allbinary::thread::ABRunnable::ABRunnableDyn::as_ABRunnable_mut(self)) }
+    fn setRunning(&mut self, p1: bool) { crate::org::allbinary::thread::ABRunnable::ABRunnable::setRunning(crate::org::allbinary::thread::ABRunnable::ABRunnableDyn::as_ABRunnable_mut(self), p1) }
+    fn setThread(&mut self, p1: Option<Rc<RefCell<crate::java::lang::Thread::Thread>>>) { crate::org::allbinary::thread::ABRunnable::ABRunnable::setThread(crate::org::allbinary::thread::ABRunnable::ABRunnableDyn::as_ABRunnable_mut(self), p1) }
+}
 impl crate::Runnable for DemoGameStartupRunnable {
     fn run(&mut self) { Self::run(self) }
 }
@@ -69,11 +75,11 @@ impl DemoGameStartupRunnable {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             self.setRunning(false);
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

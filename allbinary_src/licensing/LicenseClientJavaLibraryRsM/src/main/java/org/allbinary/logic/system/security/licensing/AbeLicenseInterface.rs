@@ -27,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AbeLicenseInterface {
+pub trait AbeLicenseInterface: std::any::Any {
     
 
     fn hasKey(&mut self) -> bool;

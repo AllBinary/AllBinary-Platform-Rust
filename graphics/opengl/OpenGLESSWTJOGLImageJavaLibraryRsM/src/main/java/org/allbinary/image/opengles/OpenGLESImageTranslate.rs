@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use super::OpenGLESImage::OpenGLESImage;
 
 // Borrows the object of a Java reference
@@ -33,6 +33,10 @@ pub struct OpenGLESImageTranslate {
 thread_local! { pub static OpenGLESImageTranslate_instance: Option<Rc<RefCell<dyn OpenGLESImageTranslateDyn>>> = OpenGLESImageTranslate::new().map(|reference| reference as Rc<RefCell<dyn OpenGLESImageTranslateDyn>>); }
 
 impl OpenGLESImageTranslate {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -51,18 +55,16 @@ impl OpenGLESImageTranslate {
     
 
     pub fn translate(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>>, mut x: f32, mut y: f32) {
-        jcall!(jcall!(openGLESImage).as_OpenGLESImage_mut().imageProcessor).translate(gl.clone(), x.clone(), y.clone());
+        jcall!({ let java_field = jcall!(openGLESImage).as_OpenGLESImage_mut().imageProcessor.clone(); java_field }).translate(gl.clone(), x.clone(), y.clone());
     }
     
 
     pub fn translate2(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>>) {
     }
 }
-pub trait OpenGLESImageTranslateDyn {
+pub trait OpenGLESImageTranslateDyn: std::any::Any {
     fn as_OpenGLESImageTranslate(&self) -> &OpenGLESImageTranslate;
     fn as_OpenGLESImageTranslate_mut(&mut self) -> &mut OpenGLESImageTranslate;
-    fn translate(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>>, mut x: f32, mut y: f32) { OpenGLESImageTranslate::translate(self.as_OpenGLESImageTranslate_mut(), gl, openGLESImage, x, y) }
-    fn translate2(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>>) { OpenGLESImageTranslate::translate2(self.as_OpenGLESImageTranslate_mut(), gl, openGLESImage) }
     fn translate(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>>, mut x: f32, mut y: f32) { OpenGLESImageTranslate::translate(self.as_OpenGLESImageTranslate_mut(), gl, openGLESImage, x, y) }
     fn translate2(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>>) { OpenGLESImageTranslate::translate2(self.as_OpenGLESImageTranslate_mut(), gl, openGLESImage) }
 }

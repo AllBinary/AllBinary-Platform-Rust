@@ -39,10 +39,10 @@ impl GPointCircularPool {
         let mut this = Self {
             base: BaseCircularPool::new_struct(),
         };
-        this.circularIndexUtil = CircularIndexUtil::createInstance(size.clone());
+        this.circularIndexUtil = { let java_value = (CircularIndexUtil::createInstance(size.clone())).clone(); java_value };
         this.OBJECT_ARRAY = vec![None; (size) as usize];
         for index in (0..=size - 1).rev() {
-            this.OBJECT_ARRAY[(index) as usize] = crate::java_into_object(CustomGPoint::CustomGPoint::getInstance3(0, 0));
+            { let java_index = (index) as usize; this.OBJECT_ARRAY[java_index] = crate::java_into_object(CustomGPoint::CustomGPoint::getInstance3(0, 0)); };
         }
         this
     }

@@ -26,6 +26,7 @@ use crate::org::allbinary::game::combat::damage::DamageableInterface::Damageable
 use crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayer;
 use crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableBehavior::CollidableDestroyableDamageableBehavior;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,8 +41,14 @@ pub struct CollidableDamageWeaponBehavior {
     pub collisionHelper: Option<Rc<RefCell<dyn crate::org::allbinary::game::collision::CollisionHelper::CollisionHelperDyn>>>,
 }
 
+impl crate::org::allbinary::game::collision::CollidableInterface::CollidableInterface for CollidableDamageWeaponBehavior {
+    fn isCollidable(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) -> bool { crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehavior::isCollidable(crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn::as_CollidableBaseBehavior_mut(self), p1) }
+    fn isCollision(&mut self, mut ownerLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, mut collisionLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) -> bool { Self::isCollision(self, ownerLayer, collisionLayer) }
+    fn collide(&mut self, mut ownerLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, mut collisionLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) { Self::collide(self, ownerLayer, collisionLayer) }
+    fn getCollisionTypeWith(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> Option<Rc<RefCell<CollisionType>>> { Self::getCollisionTypeWith(self, layerInterface) }
+}
 impl crate::org::allbinary::layer::NamedInterface::NamedInterface for CollidableDamageWeaponBehavior {
-    fn getName(&mut self) -> String { self.base.getName() }
+    fn getName(&mut self) -> String { crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehavior::getName(crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn::as_CollidableBaseBehavior_mut(self)) }
 }
 
 impl CollidableDamageWeaponBehavior {
@@ -56,7 +63,7 @@ impl CollidableDamageWeaponBehavior {
         // super(...) is in the struct literal above
         this.setCollided(false);
         this.setCollidable(true);
-        this.collisionHelper = CollidableHelperFactory::getInstance();
+        this.collisionHelper = { let java_value = (CollidableHelperFactory::getInstance()).clone(); java_value };
         this
     }
 
@@ -74,7 +81,7 @@ impl CollidableDamageWeaponBehavior {
     pub fn isCollision(&mut self, mut ownerLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, mut collisionLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) -> bool {
         if jcall!(self.collisionHelper).isCollidable(collisionLayer.clone()) {
             if !match (&jcall!(ownerLayer).getGroupInterface()[(0) as usize], &jcall!(collisionLayer).getGroupInterface()[(0) as usize]) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                return self.base.isCollision(ownerLayer.clone(), collisionLayer.clone());
+                return { let java_arguments = (ownerLayer.clone(), collisionLayer.clone(),); self.base.isCollision(java_arguments.0, java_arguments.1) };
             }
         }
         return false;
@@ -83,14 +90,14 @@ impl CollidableDamageWeaponBehavior {
 
     // throws Exception
     pub fn collide(&mut self, mut ownerLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, mut collisionLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) {
-        self.base.collide(ownerLayer.clone(), collisionLayer.clone());
+        { let java_arguments = (ownerLayer.clone(), collisionLayer.clone(),); self.base.collide(java_arguments.0, java_arguments.1) };
         self.collided = true;
     }
     
 
     pub fn isCollisionInterface(&mut self, mut ownerLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, mut collidableInterfaceCompositeInterface: Option<Rc<RefCell<dyn CollidableInterfaceCompositeInterface>>>) -> bool {
-        if jcall!(self.collisionHelper).isCollidable((collidableInterfaceCompositeInterface).clone() /* as CollidableCompositeLayer */) {
-            let mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = (collidableInterfaceCompositeInterface).clone() /* as AllBinaryLayer */;
+        if jcall!(self.collisionHelper).isCollidable((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableInterfaceCompositeInterface cannot be cast to CollidableCompositeLayer") })()) {
+            let mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableInterfaceCompositeInterface cannot be cast to AllBinaryLayer") })();
             if !match (&jcall!(ownerLayer).getGroupInterface()[(0) as usize], &jcall!(layerInterface).getGroupInterface()[(0) as usize]) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 if jcall!(self.layerCollisionUtil).isCollision(ownerLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>), layerInterface.clone()) {
                     return true;
@@ -103,13 +110,13 @@ impl CollidableDamageWeaponBehavior {
 
     // throws Exception
     pub fn collideInterface(&mut self, mut ownerLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, mut collidableInterfaceCompositeInterface: Option<Rc<RefCell<dyn CollidableInterfaceCompositeInterface>>>) {
-        jcall!(self.damageUtil).process((ownerLayer).clone() /* as DamageableInterface */, panic!("ClassCastException: a Rust dyn CollidableInterfaceCompositeInterface cannot be cast to dyn DamageableInterface"));
+        jcall!(self.damageUtil).process((|| -> Option<Rc<RefCell<dyn DamageableInterface>>> { panic!("ClassCastException: a Rust dyn CollidableCompositeLayer cannot be cast to DamageableInterface") })(), (|| -> Option<Rc<RefCell<dyn DamageableInterface>>> { panic!("ClassCastException: a Rust dyn CollidableInterfaceCompositeInterface cannot be cast to dyn DamageableInterface") })());
         self.collided = true;
     }
     
 
     pub fn getCollisionTypeWith(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> Option<Rc<RefCell<CollisionType>>> {
-        return jcall!(CollisionTypeFactory::getInstance()).COLLISION.clone();
+        return { let java_field = jcall!(CollisionTypeFactory::getInstance()).COLLISION.clone(); java_field }.clone();
     }
     
 

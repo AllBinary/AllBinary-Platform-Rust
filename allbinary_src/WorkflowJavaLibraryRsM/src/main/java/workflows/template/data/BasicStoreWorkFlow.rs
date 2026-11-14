@@ -16,12 +16,12 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontData::StoreFrontData;
 use crate::org::allbinary::logic::control::workflow::StoreWorkFlowInterface::StoreWorkFlowInterface;
+use crate::java::lang::Exception::*;
 use super::BasicWorkFlow::BasicWorkFlow;
 
 // Borrows the object of a Java reference
@@ -40,7 +40,7 @@ pub struct BasicStoreWorkFlow {
 impl BasicStoreWorkFlow {
     
 
-    pub fn new_struct(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
+    pub fn new_struct(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
         let mut this = Self {
             base: BasicWorkFlow::new_struct(propertiesHashMap.clone(), pageContext.clone()),
         };
@@ -48,14 +48,14 @@ impl BasicStoreWorkFlow {
         this
     }
 
-    pub fn new(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(propertiesHashMap, pageContext))))
     }
     
 
     // throws Exception
     pub fn getStoreName(&mut self) -> String {
-        return (jcall!(self.getPropertiesHashMap()).get(jcall!(StoreFrontData::getInstance()).NAME.clone())).clone() /* as String */;
+        return { let java_object = (jcall!(self.getPropertiesHashMap()).get(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
     }
 }
 impl std::ops::Deref for BasicStoreWorkFlow {

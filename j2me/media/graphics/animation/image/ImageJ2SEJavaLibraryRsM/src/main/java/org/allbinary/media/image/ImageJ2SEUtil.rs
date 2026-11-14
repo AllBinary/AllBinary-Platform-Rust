@@ -34,6 +34,10 @@ thread_local! { pub static ImageJ2SEUtil_instance: Option<Rc<RefCell<ImageJ2SEUt
 
 impl ImageJ2SEUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             TRANSPARENT_COLOR: None,

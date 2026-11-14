@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait InputAutomationRobotChangeListener {
+pub trait InputAutomationRobotChangeListener: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn onAdd(&mut self, inputAutomationRobotChangeEvent: Option<Rc<RefCell<InputAutomationRobotChangeEvent>>>);
     
 
     fn onRemove(&mut self, inputAutomationRobotChangeEvent: Option<Rc<RefCell<InputAutomationRobotChangeEvent>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

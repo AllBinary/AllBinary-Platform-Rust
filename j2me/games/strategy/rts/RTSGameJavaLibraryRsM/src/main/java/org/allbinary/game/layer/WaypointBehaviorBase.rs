@@ -26,6 +26,8 @@ use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellHistory::GeographicMapCellHistory;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::util::BasicArrayListS::BasicArrayListS;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::PathFindingLayerInterface::PathFindingLayerInterface;
 
 // Borrows the object of a Java reference
@@ -50,6 +52,10 @@ impl crate::org::allbinary::layer::NamedInterface::NamedInterface for WaypointBe
 }
 
 impl WaypointBehaviorBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -61,7 +67,7 @@ impl WaypointBehaviorBase {
         };
         this.waypointOverridesAttacking = true;
         this.waypoint = unsafe { crate::org::allbinary::game::layer::waypoint::WaypointBase::WaypointBase_NULL_WAYPOINT_BASE.clone() }.clone();
-        this.steeringVisitorList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.steeringVisitorList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.ownedWaypointList = BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
@@ -193,7 +199,7 @@ impl WaypointBehaviorBase {
     pub fn updatePathOnTargetMove(&mut self, mut reason: String) {
     }
 }
-pub trait WaypointBehaviorBaseDyn {
+pub trait WaypointBehaviorBaseDyn: std::any::Any {
     fn as_WaypointBehaviorBase(&self) -> &WaypointBehaviorBase;
     fn as_WaypointBehaviorBase_mut(&mut self) -> &mut WaypointBehaviorBase;
     fn getName(&mut self) -> String { WaypointBehaviorBase::getName(self.as_WaypointBehaviorBase_mut()) }

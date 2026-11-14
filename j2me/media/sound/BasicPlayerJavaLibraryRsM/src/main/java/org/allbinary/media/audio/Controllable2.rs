@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait Controllable2 {
+pub trait Controllable2: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn setVolume(&mut self, leftVolume: i32, rightVolume: i32);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

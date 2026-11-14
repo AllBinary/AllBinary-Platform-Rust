@@ -38,6 +38,10 @@ pub struct AudioContentTypeDataFactory {
 thread_local! { pub static AudioContentTypeDataFactory_instance: Option<Rc<RefCell<AudioContentTypeDataFactory>>> = AudioContentTypeDataFactory::new(); }
 
 impl AudioContentTypeDataFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AudioContentTypeDataFactory>>> {

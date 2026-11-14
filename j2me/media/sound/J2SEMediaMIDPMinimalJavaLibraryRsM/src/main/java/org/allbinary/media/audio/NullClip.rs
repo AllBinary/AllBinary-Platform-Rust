@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::IOException::IOException;
+use crate::java::io::IOException::IOException;
 // use crate::javax::sound::sampled::AudioFormat::AudioFormat;
 // use crate::javax::sound::sampled::AudioInputStream::AudioInputStream;
 // use crate::javax::sound::sampled::BooleanControl::BooleanControl;
@@ -39,10 +39,14 @@ macro_rules! jcall {
 pub struct NullClip {
 }
 
-thread_local! { pub static NullClip_NULL_CONTROL: Option<Rc<RefCell<NullJ2SEControl>>> = NullJ2SEControl::new(jcall!(unsafe { crate::javax::sound::sampled::BooleanControl::BooleanControl_Type.clone() }).MUTE.clone()); }
+thread_local! { pub static NullClip_NULL_CONTROL: Option<Rc<RefCell<NullJ2SEControl>>> = NullJ2SEControl::new({ let java_field = jcall!(unsafe { crate::javax::sound::sampled::BooleanControl::BooleanControl_Type.clone() }).MUTE.clone(); java_field }.clone()); }
 // impl Clip for NullClip with the methods of the trait
 
 impl NullClip {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -173,7 +177,7 @@ impl NullClip {
     }
     
 
-    pub fn getControls(&mut self) -> Vec<Option<Rc<RefCell<Control>>>> {
+    pub fn getControls(&mut self) -> Vec<Option<Rc<RefCell<dyn Control>>>> {
         return vec![None; (0) as usize];
     }
     
@@ -183,8 +187,8 @@ impl NullClip {
     }
     
 
-    pub fn getControl(&mut self, mut control: Option<Rc<RefCell<Type>>>) -> Option<Rc<RefCell<Control>>> {
-        return NullClip_NULL_CONTROL.with(Clone::clone).clone();
+    pub fn getControl(&mut self, mut control: Option<Rc<RefCell<Type>>>) -> Option<Rc<RefCell<dyn Control>>> {
+        return NullClip_NULL_CONTROL.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn Control>>);
     }
     
 

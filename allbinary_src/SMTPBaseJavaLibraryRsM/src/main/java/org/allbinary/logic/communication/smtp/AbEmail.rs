@@ -16,12 +16,12 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::mail::internet::MimeMessage::MimeMessage;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::EmailInterface::EmailInterface;
 use super::Email::Email;
 
@@ -49,13 +49,17 @@ impl crate::org::allbinary::data::tree::dom::document::mapping::DomDocumentMappi
 }
 
 impl AbEmail {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut server: String, mut from: String, mut to: String, mut subject: String, mut textBody: String, mut htmlAttachment: String, mut contentBase: String) -> Self {
         let mut this = Self {
             email: None,
         };
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).EMAILLOGGINGERROR.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).EMAILLOGGINGERROR.clone(); java_field }.clone()) {
             this.email = Email::new8(from.clone(), to.clone(), subject.clone(), server.clone(), textBody.clone(), htmlAttachment.clone(), contentBase.clone(), true);
         } else {
             this.email = Email::new7(from.clone(), to.clone(), subject.clone(), server.clone(), textBody.clone(), htmlAttachment.clone(), contentBase.clone());
@@ -85,7 +89,7 @@ impl AbEmail {
     
 
     // throws Exception
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return jcall!(self.email).toHashMap();
     }
     
@@ -97,7 +101,7 @@ impl AbEmail {
     
 
     pub fn getEmail(&mut self) -> Option<Rc<RefCell<Email>>> {
-        return (self.email).clone() /* as Email */;
+        return (self.email).clone();
     }
     
 

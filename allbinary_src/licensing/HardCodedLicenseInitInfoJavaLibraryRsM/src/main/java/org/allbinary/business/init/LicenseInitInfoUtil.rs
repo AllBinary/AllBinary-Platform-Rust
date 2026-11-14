@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::LicenseInitInfo::LicenseInitInfo;
 
 // Borrows the object of a Java reference
@@ -36,6 +37,10 @@ pub struct LicenseInitInfoUtil {
 thread_local! { pub static LicenseInitInfoUtil_instance: Option<Rc<RefCell<LicenseInitInfoUtil>>> = LicenseInitInfoUtil::new(); }
 
 impl LicenseInitInfoUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LicenseInitInfoUtil>>> {

@@ -35,6 +35,10 @@ thread_local! { pub static PropertyInitUtil_instance: Option<Rc<RefCell<Property
 
 impl PropertyInitUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -49,7 +53,7 @@ impl PropertyInitUtil {
     pub fn getInstance(mut value: i32) -> Option<Rc<RefCell<PropertyInitUtil>>> {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-        jcall!(logUtil).putF(jcall!(StringMaker::new()).append(String::from("PropertyInitUtil: ")).appendint(value.clone()).toString(), crate::java_into_object(logUtil.clone()), jcall!(commonStrings).CONSTRUCTOR.clone());
+        jcall!(logUtil).putF(jcall!(StringMaker::new()).append(String::from("PropertyInitUtil: ")).appendint(value.clone()).toString(), crate::java_into_object(logUtil.clone()), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         return PropertyInitUtil_instance.with(Clone::clone).clone();
     }
 }

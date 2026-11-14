@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait HealthInterface {
+pub trait HealthInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn isAlive(&mut self) -> bool;
@@ -51,8 +51,6 @@ pub trait HealthInterface {
     
 
     fn addListener(&mut self, healthListenerInterface: Option<Rc<RefCell<dyn HealthListenerInterface>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

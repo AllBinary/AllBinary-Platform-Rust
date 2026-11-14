@@ -33,6 +33,10 @@ thread_local! { pub static AbIOSystem_instance: Option<Rc<RefCell<AbIOSystem>>> 
 
 impl AbIOSystem {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             r#type: String::new(),

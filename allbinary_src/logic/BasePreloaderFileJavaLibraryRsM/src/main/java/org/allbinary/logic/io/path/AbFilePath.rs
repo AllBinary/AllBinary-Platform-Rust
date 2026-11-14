@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 use super::AbPath::AbPath;
 use super::AbPathData::AbPathData;
 use super::PathUtil::PathUtil;
@@ -39,14 +40,14 @@ impl AbFilePath {
 
     pub fn new_struct(mut aPath: String) -> Self {
         let mut this = Self {
-            base: AbPath::new_struct(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()),
+            base: AbPath::new_struct({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()),
         };
         // super(...) is in the struct literal above
         let mut pathData: Option<Rc<RefCell<AbPathData>>> = AbPathData::getInstance();
         let mut abPathUtil: Option<Rc<RefCell<PathUtil>>> = PathUtil::getInstance();
         this.schema = this.getSchema(aPath.clone());
         { let java_arguments = (jcall!(pathData).getNameFromPath(aPath.clone()),); this.setName(java_arguments.0) };
-        { let java_arguments = (jcall!(abPathUtil).adjust({ let java_arguments = (jcall!(jcall!(abPathUtil).removeNameFromPath(aPath.clone())).toString(),); this.getPathFromPath(java_arguments.0) }),); this.setPath(java_arguments.0) };
+        { let java_arguments = ({ let java_argument = jcall!(abPathUtil).adjust({ let java_arguments = (jcall!(jcall!(abPathUtil).removeNameFromPath(aPath.clone())).toString(),); this.getPathFromPath(java_arguments.0) }); java_argument },); this.setPath(java_arguments.0) };
         this
     }
 

@@ -31,6 +31,10 @@ pub struct DynamicObjectData {
 thread_local! { pub static DynamicObjectData_NAME: String = String::from("DYNAMICCOMPONENT_NAME"); }
 
 impl DynamicObjectData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

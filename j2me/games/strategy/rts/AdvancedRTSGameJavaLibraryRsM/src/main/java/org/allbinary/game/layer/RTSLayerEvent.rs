@@ -38,10 +38,10 @@ impl RTSLayerEvent {
 
     pub fn new_struct(mut rtsLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(rtsLayer.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(rtsLayer.clone())),
             rtsLayer: None,
         };
-        this.rtsLayer = NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone();
+        this.rtsLayer = NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of NullPathFindingLayer does not have PathFindingLayerInterface as a base trait") });
         // super(...) is in the struct literal above
         this
     }
@@ -55,7 +55,7 @@ impl RTSLayerEvent {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(String::from("RTSLayerEvent: \n"));
         jcall!(stringBuffer).append(String::from("RTSLayer: "));
-        jcall!(stringBuffer).append(jcall!(self.getRtsLayer()).toString());
+        jcall!(stringBuffer).append({ let java_argument = jcall!(self.getRtsLayer()).toString(); java_argument });
         return jcall!(stringBuffer).toString();
     }
     

@@ -37,6 +37,10 @@ thread_local! { pub static PostGameCommandFactory_instance: Option<Rc<RefCell<Po
 
 impl PostGameCommandFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -56,8 +60,8 @@ impl PostGameCommandFactory {
     pub fn addCommands(&mut self, mut canvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn>>>) {
         let mut operatingSystemInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>> = jcall!(OperatingSystemFactory::getInstance()).getOperatingSystemInstance();
         let mut gameCommandsFactory: Option<Rc<RefCell<GameCommandsFactory>>> = GameCommandsFactory::getInstance();
-        if !jcall!(operatingSystemInterface).isOverScan() {
-            jcall!(canvas).addCommand(jcall!(gameCommandsFactory).TOGGLE_KEYBOARD.clone());
+        if !jcall!(operatingSystemInterface).as_GenericOperatingSystem_mut().isOverScan() {
+            jcall!(canvas).as_MyCanvas_mut().addCommand({ let java_field = jcall!(gameCommandsFactory).TOGGLE_KEYBOARD.clone(); java_field }.clone());
         }
         jcall!(MultiPlayerGameFeatureFactory::getInstance()).addCommands(crate::java_into_object(canvas.clone()));
     }

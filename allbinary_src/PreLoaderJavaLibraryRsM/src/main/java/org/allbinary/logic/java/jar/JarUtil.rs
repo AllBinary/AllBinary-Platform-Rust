@@ -17,11 +17,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::IOException::IOException;
-// use crate::java::net::URL::URL;
+use crate::java::io::IOException::IOException;
+use crate::java::net::URL::URL;
 // use crate::java::net::URLConnection::URLConnection;
 // use crate::java::util::jar::JarEntry::JarEntry;
 // use crate::java::util::jar::JarInputStream::JarInputStream;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,6 +37,10 @@ pub struct JarUtil {
 
 
 impl JarUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut jarURL: Option<Rc<RefCell<URL>>>) -> Self {
@@ -62,7 +67,7 @@ impl JarUtil {
                     if !jcall!(entry).isDirectory() {
                         let mut offset: i32 = 0;
                         let mut i: i32 = 0;
-                        while ({ i = jcall!(jis).read(cache.clone(), offset.clone(), (cache.len() as i32) - offset); i.clone() }) != -1 {
+                        while ({ i = { let java_value = (jcall!(jis).read(cache.clone(), offset.clone(), (cache.len() as i32) - offset)).clone(); java_value }; i.clone() }) != -1 {
                             offset += i.clone();
                             if offset >= (cache.len() as i32) {
                                 let mut newcache: Vec<i8> = vec![0; ((cache.len() as i32) + 1024) as usize];
@@ -83,7 +88,7 @@ impl JarUtil {
         })) {
             Ok(_) => {}
             Err(ex) => {
-            let ex: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(ex as Box<dyn std::any::Any>)));
+            let ex: String = crate::java::lang::Exception::java_panic_message(&ex);
 
             eprintln!("{}", ex.clone());
             eprintln!("{:?}", ex);

@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::math::SmallIntegerSingletonFactory::SmallIntegerSingletonFactory;
+use crate::java::lang::RuntimeException::*;
 use super::GeographicMapCellTypeFactory::GeographicMapCellTypeFactory;
 
 // Borrows the object of a Java reference
@@ -46,11 +47,16 @@ impl GeographicMapCellType {
         };
         this.logUtil = LogUtil::getInstance();
         this.r#type = r#type.clone();
-        if r#type != i32::MIN {
+        this
+    }
+
+    pub fn new(mut r#type: i32, mut reset: i32) -> Option<Rc<RefCell<Self>>> {
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(r#type.clone(), reset.clone()))));
+            if r#type != i32::MIN {
             let mut geographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellTypeFactory::GeographicMapCellTypeFactoryDyn>>> = GeographicMapCellTypeFactory::getInstance();
             let mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn GeographicMapCellTypeDyn>>>> = jcall!(geographicMapCellTypeFactory).getGeographicMapCellTypeArray();
             if geographicMapCellTypeArray[(r#type) as usize].is_none() || reset == 1 {
-                geographicMapCellTypeArray[(r#type) as usize] = this;
+                geographicMapCellTypeArray[(r#type) as usize] = this.clone().map(|reference| reference as Rc<RefCell<dyn GeographicMapCellTypeDyn>>);
             } else {
                 if reset != -1 {
                     panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
@@ -58,10 +64,6 @@ impl GeographicMapCellType {
             }
         }
         this
-    }
-
-    pub fn new(mut r#type: i32, mut reset: i32) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(r#type, reset))))
     }
     
 
@@ -71,10 +73,10 @@ impl GeographicMapCellType {
     
 
     pub fn toString(&mut self) -> String {
-        return jcall!(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(self.r#type.clone())).toString();
+        return (jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(self.r#type.clone())).expect("NullPointerException").to_string();
     }
 }
-pub trait GeographicMapCellTypeDyn {
+pub trait GeographicMapCellTypeDyn: std::any::Any {
     fn as_GeographicMapCellType(&self) -> &GeographicMapCellType;
     fn as_GeographicMapCellType_mut(&mut self) -> &mut GeographicMapCellType;
     fn getType(&mut self) -> i32 { GeographicMapCellType::getType(self.as_GeographicMapCellType_mut()) }

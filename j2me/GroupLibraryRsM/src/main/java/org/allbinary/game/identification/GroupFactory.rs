@@ -9,7 +9,7 @@
 // AllBinary or the root directory of AllBinary's AllBinary Platform repository.
 // 
 // Created By: Travis Berthelot
-//  
+//   
 // Generated Code Do Not Modify
 // package org.allbinary.game.identification
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals, unused, unused_mut, static_mut_refs)]
@@ -38,9 +38,13 @@ pub struct GroupFactory {
     pub index: i32,
 }
 
-pub static mut GroupFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<GroupFactory>>>> = std::cell::LazyCell::new(|| GroupFactory::new());
+thread_local! { pub static GroupFactory_instance: Option<Rc<RefCell<GroupFactory>>> = GroupFactory::new(); }
 
 impl GroupFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -51,7 +55,7 @@ impl GroupFactory {
         };
         this.logUtil = LogUtil::getInstance();
         this.NULL_GROUP_ARRAY = vec![None; (0) as usize];
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.index = 0;
         this
     }
@@ -62,7 +66,7 @@ impl GroupFactory {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GroupFactory>>> {
-        return unsafe { GroupFactory_instance.clone() }.clone();
+        return GroupFactory_instance.with(Clone::clone).clone();
     }
     
 
@@ -87,13 +91,14 @@ impl GroupFactory {
         jcall!(self.list).clear();
         self.index = 0;
         let mut size: i32 = jcall!(self.list).size();
+        let mut name: String = String::new();
         while size < ((groups) as i32) {
-            let mut name: String = jcall!(stringUtil).EMPTY_STRING.clone();
+            name = { let java_value = ({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }).clone(); java_value }.clone();
             if size < (nameArray.len() as i32) {
-                name = nameArray[(size) as usize].clone();
+                name = { let java_value = (nameArray[(size) as usize]).clone(); java_value }.clone();
             } else {
                 jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                name = jcall!(stringMaker).append(TEAM.clone()).appendint(size.clone()).toString();
+                name = { let java_value = (jcall!(stringMaker).append(TEAM.clone()).appendint(size.clone()).toString()).clone(); java_value };
             }
             jcall!(self.list).add(crate::java_into_object(Group::new(name.clone(), (((size + 3)) as i16))));
             size += 1;

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use super::OpenGLObject3dProcessor::OpenGLObject3dProcessor;
 use super::ShaderComposite::ShaderComposite;
 

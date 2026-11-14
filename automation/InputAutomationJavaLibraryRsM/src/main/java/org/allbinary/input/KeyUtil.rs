@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::awt::event::KeyEvent::KeyEvent;
+use crate::java::awt::event::KeyEvent::KeyEvent;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,6 +31,10 @@ pub struct KeyUtil {
 
 
 impl KeyUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

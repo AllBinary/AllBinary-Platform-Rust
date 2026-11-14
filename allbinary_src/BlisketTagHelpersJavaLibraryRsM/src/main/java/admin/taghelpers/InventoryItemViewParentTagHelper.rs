@@ -24,6 +24,7 @@ use crate::taghelpers::ValidationViewHelper::ValidationViewHelper;
 use crate::tags::HelperTag::HelperTag;
 use crate::views::admin::inventory::InventoryItemView::InventoryItemView;
 use crate::views::admin::inventory::download::DownloadableInventoryItemView::DownloadableInventoryItemView;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,6 +39,10 @@ pub struct InventoryItemViewParentTagHelper {
 thread_local! { pub static InventoryItemViewParentTagHelper_instance: Option<Rc<RefCell<InventoryItemViewParentTagHelper>>> = InventoryItemViewParentTagHelper::new(); }
 
 impl InventoryItemViewParentTagHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -68,7 +73,7 @@ impl InventoryItemViewParentTagHelper {
                 jcall!(stringBuffer).append(std::any::type_name_of_val(&jcall!(inventoryTag).getHelper()).to_string());
                 panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(stringBuffer).toString())));
             }
-            return (viewObject).clone() /* as InventoryItemView */;
+            return (|| -> Option<Rc<RefCell<dyn crate::views::admin::inventory::InventoryItemView::InventoryItemViewDyn>>> { panic!("ClassCastException: a Rust dyn TransformInterface cannot be cast to InventoryItemView") })();
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Must have parent tag."))));
         }
@@ -88,7 +93,7 @@ impl InventoryItemViewParentTagHelper {
                 jcall!(stringBuffer).append(std::any::type_name_of_val(&jcall!(inventoryTag).getHelper()).to_string());
                 panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(stringBuffer).toString())));
             }
-            return (viewObject).clone() /* as DownloadableInventoryItemView */;
+            return (|| -> Option<Rc<RefCell<dyn crate::views::admin::inventory::download::DownloadableInventoryItemView::DownloadableInventoryItemViewDyn>>> { panic!("ClassCastException: a Rust dyn TransformInterface cannot be cast to DownloadableInventoryItemView") })();
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Must have parent tag."))));
         }
@@ -108,7 +113,7 @@ impl InventoryItemViewParentTagHelper {
                 jcall!(stringBuffer).append(std::any::type_name_of_val(&jcall!(inventoryTag).getHelper()).to_string());
                 panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(stringBuffer).toString())));
             }
-            return panic!("ClassCastException: a Rust dyn TransformInterface cannot be cast to dyn RequestMapInterface");
+            return (|| -> Option<Rc<RefCell<dyn RequestMapInterface>>> { panic!("ClassCastException: a Rust dyn TransformInterface cannot be cast to dyn RequestMapInterface") })();
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Must have parent tag."))));
         }

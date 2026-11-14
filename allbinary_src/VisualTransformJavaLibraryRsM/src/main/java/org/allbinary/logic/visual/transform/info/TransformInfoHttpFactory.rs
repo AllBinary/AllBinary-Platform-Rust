@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontFactory::StoreFrontFactory;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontInterface::StoreFrontInterface;
@@ -26,6 +25,7 @@ use crate::org::allbinary::logic::communication::http::request::session::Weblisk
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::TransformInfoHttpContext::TransformInfoHttpContext;
 use super::TransformInfoInterface::TransformInfoInterface;
 use super::TransformInfoHttpStore::TransformInfoHttpStore;
@@ -42,6 +42,10 @@ pub struct TransformInfoHttpFactory {
 
 
 impl TransformInfoHttpFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -56,32 +60,33 @@ impl TransformInfoHttpFactory {
     
 
     // throws Exception
-    pub fn getInstance(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<dyn TransformInfoInterface>>> {
+    pub fn getInstance(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<dyn TransformInfoInterface>>> {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut weblisketSession: Option<Rc<RefCell<WeblisketSession>>> = WeblisketSession::new2(propertiesHashMap.clone(), pageContext.clone());
             if !jcall!(StringValidationUtil::getInstance()).isEmpty(jcall!(weblisketSession).getStoreName()) {
-                let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(weblisketSession).getStoreName());
+                let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(weblisketSession).getStoreName()).map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
                 if storeFrontInterface.is_some() {
-                    return (TransformInfoHttpStore::new3(storeFrontInterface.clone(), propertiesHashMap.clone(), pageContext.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpStore::TransformInfoHttpStoreDyn>>)).clone() /* as TransformInfoInterface */;
+                    return Some((TransformInfoHttpStore::new3_StoreFrontInterface_HashMap_PageContext(storeFrontInterface.clone(), propertiesHashMap.clone(), pageContext.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpStore::TransformInfoHttpStoreDyn>>)).clone() /* as TransformInfoInterface */);
                 } else {
                     panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("No StoreFront with: "), jcall!(weblisketSession).getStoreName()))));
                 }
             } else {
-                return (TransformInfoHttpContext::new2(propertiesHashMap.clone(), pageContext.clone())).clone() /* as TransformInfoInterface */;
-            }
+                return Some((TransformInfoHttpContext::new2(propertiesHashMap.clone(), pageContext.clone())).clone() /* as TransformInfoInterface */);
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).TAGHELPERFACTORYERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).TAGHELPERFACTORYERROR.clone(); java_field }.clone()) {
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from("TransformInfoFactory")), jcall!(commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
+                jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from("TransformInfoFactory")), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

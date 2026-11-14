@@ -50,7 +50,7 @@ impl HtmlMetaAttributeData {
     
 
     pub fn equals(&mut self, mut htmlMetaAttributeData: Option<Rc<RefCell<HtmlMetaAttributeData>>>) -> bool {
-        if jcall!(htmlMetaAttributeData).id == self.id {
+        if { let java_field = jcall!(htmlMetaAttributeData).id.clone(); java_field } == self.id {
             return true;
         } else {
             return false;

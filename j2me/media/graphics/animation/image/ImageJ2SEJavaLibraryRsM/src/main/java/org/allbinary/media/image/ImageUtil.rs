@@ -24,15 +24,14 @@ use super::*;
 // use crate::java::awt::Transparency::Transparency;
 // use crate::java::awt::geom::AffineTransform::AffineTransform;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::microemu::device::j2se::J2SEImmutableImage::J2SEImmutableImage;
 use crate::org::microemu::device::j2se::J2SEMutableImage::J2SEMutableImage;
-use super::awt::awt;
-use super::java::java;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -96,7 +95,7 @@ impl ImageUtil {
         let mut scaledBufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>> = vec![None; (size) as usize];
         let mut bufferedImage: Option<Rc<RefCell<BufferedImage>>> = None;
         for index in (0..size) {
-            bufferedImage = bufferedImageArray[(index) as usize].clone();
+            bufferedImage = { let java_value = (bufferedImageArray[(index) as usize]).clone(); java_value }.clone();
             let mut newWidth: i32 = (((jcall!(bufferedImage).getWidth() * percent / 100)) as i32);
             let mut newHeight: i32 = (((jcall!(bufferedImage).getHeight() * percent / 100)) as i32);
             scaledBufferedImageArray[(index) as usize] = self.createBufferedImage(bufferedImage.clone(), newWidth.clone(), newHeight.clone(), scale.clone());
@@ -111,7 +110,7 @@ impl ImageUtil {
         let mut scaledBufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>> = vec![None; (size) as usize];
         let mut bufferedImage: Option<Rc<RefCell<BufferedImage>>> = None;
         for index in (0..size) {
-            bufferedImage = bufferedImageArray[(index) as usize].clone();
+            bufferedImage = { let java_value = (bufferedImageArray[(index) as usize]).clone(); java_value }.clone();
             let mut newWidth: i32 = (((jcall!(bufferedImage).getWidth() * percent)) as i32);
             let mut newHeight: i32 = (((jcall!(bufferedImage).getHeight() * percent)) as i32);
             scaledBufferedImageArray[(index) as usize] = self.createBufferedImage(bufferedImage.clone(), newWidth.clone(), newHeight.clone(), scale.clone());
@@ -191,11 +190,11 @@ impl ImageUtil {
     }
     
 
-    pub fn convertToBufferedImage(&mut self, mut toolkitImage: Option<Rc<RefCell<Image>>>) -> Option<Rc<RefCell<BufferedImage>>> {
+    pub fn convertToBufferedImage(&mut self, mut toolkitImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) -> Option<Rc<RefCell<BufferedImage>>> {
         if toolkitImage.is_none() {
             return None;
         }
-        let mut bufferedImage: Option<Rc<RefCell<BufferedImage>>> = BufferedImage::new(jcall!(toolkitImage).getWidth(None), jcall!(toolkitImage).getHeight(None), unsafe { crate::java::awt::image::BufferedImage::BufferedImage_TYPE_INT_ARGB.clone() }.clone());
+        let mut bufferedImage: Option<Rc<RefCell<BufferedImage>>> = BufferedImage::new(jcall!(toolkitImage).as_Image_mut().getWidth(None), jcall!(toolkitImage).as_Image_mut().getHeight(None), unsafe { crate::java::awt::image::BufferedImage::BufferedImage_TYPE_INT_ARGB.clone() }.clone());
         let mut g2d: Option<Rc<RefCell<Graphics2D>>> = jcall!(bufferedImage).createGraphics();
         jcall!(g2d).drawImage(toolkitImage.clone(), 0, 0, None);
         jcall!(g2d).dispose();
@@ -203,14 +202,14 @@ impl ImageUtil {
     }
     
 
-    pub fn getBufferedImage(&mut self, mut image: Option<Rc<RefCell<Image>>>) -> Option<Rc<RefCell<BufferedImage>>> {
+    pub fn getBufferedImage(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) -> Option<Rc<RefCell<BufferedImage>>> {
         let mut bufferedImage: Option<Rc<RefCell<BufferedImage>>> = None;
         if jcall!(image).isMutable() {
-            let mut j2seImage: Option<Rc<RefCell<J2SEMutableImage>>> = (image).clone() /* as J2SEMutableImage */;
-            bufferedImage = (jcall!(j2seImage).getImage()).clone() /* as BufferedImage */;
+            let mut j2seImage: Option<Rc<RefCell<J2SEMutableImage>>> = (image).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<J2SEMutableImage>() }, "ClassCastException: not a J2SEMutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<J2SEMutableImage>) } });
+            bufferedImage = { let java_value = ((jcall!(j2seImage).getImage()).clone() /* as BufferedImage */).clone(); java_value };
         } else {
-            let mut j2seImage: Option<Rc<RefCell<J2SEImmutableImage>>> = (image).clone() /* as J2SEImmutableImage */;
-            bufferedImage = (jcall!(j2seImage).getImage()).clone() /* as BufferedImage */;
+            let mut j2seImage: Option<Rc<RefCell<J2SEImmutableImage>>> = (image).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<J2SEImmutableImage>() }, "ClassCastException: not a J2SEImmutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<J2SEImmutableImage>) } });
+            bufferedImage = { let java_value = ((jcall!(j2seImage).getImage()).clone() /* as BufferedImage */).clone(); java_value };
         }
         return bufferedImage.clone();
     }
@@ -220,9 +219,9 @@ impl ImageUtil {
         let mut commonLabels: Option<Rc<RefCell<CommonLabels>>> = CommonLabels::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(String::from(" BufferedImage -"));
-        jcall!(stringBuffer).append(jcall!(commonLabels).WIDTH_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonLabels).WIDTH_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(((jcall!(bufferedImage).getWidth()) as i32));
-        jcall!(stringBuffer).append(jcall!(commonLabels).HEIGHT_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonLabels).HEIGHT_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(((jcall!(bufferedImage).getHeight()) as i32));
         jcall!(stringBuffer).append(String::from(" Type: "));
         jcall!(stringBuffer).appendint(((jcall!(bufferedImage).getType()) as i32));

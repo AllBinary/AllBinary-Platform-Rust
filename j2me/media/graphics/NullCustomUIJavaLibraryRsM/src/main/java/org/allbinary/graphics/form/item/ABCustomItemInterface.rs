@@ -5,7 +5,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -14,7 +14,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait ABCustomItemInterface {
+pub trait ABCustomItemInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getMinimumWidth(&mut self) -> i32;
@@ -26,12 +26,10 @@ pub trait ABCustomItemInterface {
     fn getLabel(&mut self) -> String;
     
 
-    fn paintXY(&mut self, graphics: Option<Rc<RefCell<Graphics>>>, x: i32, y: i32);
+    fn paintXY(&mut self, graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, x: i32, y: i32);
     
 
-    fn paintUnselected(&mut self, graphics: Option<Rc<RefCell<Graphics>>>, x: i32, y: i32);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn paintUnselected(&mut self, graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, x: i32, y: i32);
 }
 
 

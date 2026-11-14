@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::data::tree::dom::DomNodeHelper::DomNodeHelper;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::data::tree::dom::DomSearchHelper::DomSearchHelper;
@@ -28,6 +27,7 @@ use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::GenericProfileActionJPanel::GenericProfileActionJPanel;
 
 // Borrows the object of a Java reference
@@ -49,6 +49,10 @@ impl DomNodeInterface for GenericProfileAction {
 }
 
 impl GenericProfileAction {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct2(mut genericProfileActionJPanel: Option<Rc<RefCell<GenericProfileActionJPanel>>>, mut node: Option<Rc<RefCell<Node>>>) -> Self {
@@ -61,11 +65,11 @@ impl GenericProfileAction {
         this.logUtil = LogUtil::getInstance();
         let mut actionNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(unsafe { GenericProfileActionData_NAME.clone() }.clone(), jcall!(node).getChildNodes());
         if actionNameNode.is_some() {
-            this.name = DomNodeHelper::getTextNodeValue(actionNameNode.clone());
+            this.name = { let java_value = (DomNodeHelper::getTextNodeValue(actionNameNode.clone())).clone(); java_value };
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Profile Action Name Node Null"))));
         }
-        this.setGenericProfileActionScript(GenericProfileActionScript::new2(this.genericProfileActionJPanel.clone(), node.clone()));
+        { let java_arguments = (GenericProfileActionScript::new2(this.genericProfileActionJPanel.clone(), node.clone()),); this.setGenericProfileActionScript(java_arguments.0) };
         this
     }
 
@@ -83,7 +87,7 @@ impl GenericProfileAction {
         };
         this.logUtil = LogUtil::getInstance();
         this.name = name.clone();
-        this.setGenericProfileActionScript(GenericProfileActionScript::new1(this.genericProfileActionJPanel.clone()));
+        { let java_arguments = (GenericProfileActionScript::new1(this.genericProfileActionJPanel.clone()),); this.setGenericProfileActionScript(java_arguments.0) };
         this
     }
 
@@ -102,9 +106,9 @@ impl GenericProfileAction {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(unsafe { GenericProfileActionData_NAME.clone() }.clone(), self.name.clone());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object(unsafe { GenericProfileActionData_NAME.clone() }.clone()), crate::java_into_object(self.name.clone()));
         { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("HashMap: "), jcall!(hashMap).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toHashMap()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         return hashMap.clone();
     }
@@ -112,8 +116,8 @@ impl GenericProfileAction {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNodeWithValueNodes(document.clone(), unsafe { GenericProfileActionData_NAME.clone() }.clone(), self.toHashMap());
-        jcall!(node).appendChild(jcall!(self.getGenericProfileActionScript()).toXmlNode(document.clone()));
+        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNodeWithValueNodes_Document_Node_HashMap(document.clone(), unsafe { GenericProfileActionData_NAME.clone() }.clone(), self.toHashMap());
+        jcall!(node).appendChild({ let java_argument = jcall!(self.getGenericProfileActionScript()).toXmlNode(document.clone()); java_argument });
         return node.clone();
     }
     

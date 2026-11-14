@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntelligenceInterface;
 use crate::org::allbinary::direction::Direction::Direction;
 use crate::org::allbinary::direction::DirectionFactory::DirectionFactory;
@@ -27,6 +27,7 @@ use crate::org::allbinary::game::ai::BasicAI::BasicAI;
 use crate::org::allbinary::game::combat::destroy::event::DestroyedEvent::DestroyedEvent;
 use crate::org::allbinary::game::combat::destroy::event::DestroyedEventHandler::DestroyedEventHandler;
 use crate::org::allbinary::game::combat::destroy::event::DestroyedEventListenerInterface::DestroyedEventListenerInterface;
+use crate::org::allbinary::game::identification::Group::Group;
 use crate::org::allbinary::game::input::GameInput::GameInput;
 use crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties;
 use crate::org::allbinary::game::physics::velocity::VelocityInterfaceCompositeInterface::VelocityInterfaceCompositeInterface;
@@ -47,6 +48,7 @@ use crate::org::allbinary::time::GameTickTimeDelayHelperFactory::GameTickTimeDel
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -84,14 +86,11 @@ impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventLis
 impl DestroyedEventListenerInterface for DiveAndDirectionalTrackingAI {
     fn onDestroyed(&mut self, mut destroyedEvent: Option<Rc<RefCell<DestroyedEvent>>>) { Self::onDestroyed(self, destroyedEvent) }
 }
-impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for DiveAndDirectionalTrackingAI {
-    fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, eventObject) }
-}
 impl ArtificialIntelligenceInterface for DiveAndDirectionalTrackingAI {
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for DiveAndDirectionalTrackingAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl DiveAndDirectionalTrackingAI {
@@ -121,26 +120,28 @@ impl DiveAndDirectionalTrackingAI {
         this.directionFactory = DirectionFactory::getInstance();
         this.gameTickTimeDelayHelper = GameTickTimeDelayHelperFactory::getInstance();
         this.timeDelayHelper = TimeDelayHelper::new(500).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.directionToKeyMap = vec![unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone(), unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.clone() }.clone(), unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() }.clone(), unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone()];
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.directionToKeyMap = vec![crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone).clone(), crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.with(Clone::clone).clone(), crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone).clone(), crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone).clone()];
         this.directionOfTarget = Direction::getInstance(0);
         this.MIN_DISTANCE = 40;
         this.lastTrackingLayerInterface = crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone).clone();
-        this.lastDirection = jcall!(DirectionFactory::getInstance()).NO_DIRECTION.clone();
+        this.lastDirection = { let java_field = jcall!(DirectionFactory::getInstance()).NO_DIRECTION.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this.aiVistor = visitor.clone();
         this.artificialIntelligenceInterface = artificialIntelligenceInterface.clone();
-        let mut directionalCompositeInterface: Option<Rc<RefCell<dyn DirectionalCompositeInterface>>> = (this.getOwnerLayerInterface()).clone() /* as DirectionalCompositeInterface */;
-        this.directionalInterface = jcall!(directionalCompositeInterface).getDirectionalInterface();
-        let mut velocityInterfaceCompositeInterface: Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> = (this.getOwnerLayerInterface()).clone() /* as VelocityInterfaceCompositeInterface */;
-        this.velocityInterface = jcall!(velocityInterfaceCompositeInterface).getVelocityProperties();
-        this.init();
+        let mut directionalCompositeInterface: Option<Rc<RefCell<dyn DirectionalCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn DirectionalCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to DirectionalCompositeInterface") })();
+        this.directionalInterface = { let java_value = (jcall!(directionalCompositeInterface).getDirectionalInterface()).clone(); java_value };
+        let mut velocityInterfaceCompositeInterface: Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to VelocityInterfaceCompositeInterface") })();
+        this.velocityInterface = { let java_value = (jcall!(velocityInterfaceCompositeInterface).getVelocityProperties()).clone(); java_value };
         this
     }
 
     pub fn new(mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut artificialIntelligenceInterface: Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>, mut visitor: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(ownerLayerInterface, artificialIntelligenceInterface, gameInput, visitor))));
-            jcall!(DestroyedEventHandler::getInstance()).addListenerInterface((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(ownerLayerInterface.clone(), artificialIntelligenceInterface.clone(), gameInput.clone(), visitor.clone()))));
+            let mut directionalCompositeInterface: Option<Rc<RefCell<dyn DirectionalCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn DirectionalCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to DirectionalCompositeInterface") })();
+            let mut velocityInterfaceCompositeInterface: Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to VelocityInterfaceCompositeInterface") })();
+            jcall!(DestroyedEventHandler::getInstance()).addListenerInterface(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+            jcall!(this).init();
         this
     }
     
@@ -149,7 +150,7 @@ impl DiveAndDirectionalTrackingAI {
     pub fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) {
         if self.isBeyondTarget() {
             self.init();
-            jcall!(self.velocityInterface).zero();
+            jcall!(self.velocityInterface).as_BasicVelocityProperties_mut().zero();
         }
         if !self.diveP {
             self.target(allBinaryLayerManager.clone());
@@ -163,7 +164,7 @@ impl DiveAndDirectionalTrackingAI {
 
     pub fn init(&mut self) {
         self.diveP = false;
-        self.directionOfTarget = jcall!(DirectionFactory::getInstance()).NOT_BORDERED_WITH.clone();
+        self.directionOfTarget = { let java_value = ({ let java_field = jcall!(DirectionFactory::getInstance()).NOT_BORDERED_WITH.clone(); java_field }).clone(); java_value }.clone();
         jcall!(TrackingEventHandler::getInstance()).addListenerInterface(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
@@ -174,10 +175,12 @@ impl DiveAndDirectionalTrackingAI {
             return;
         }
         let mut lastTrackingEvent: Option<Rc<RefCell<TrackingEvent>>> = { let java_object = (jcall!(self.list).removeAt(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<TrackingEvent>>>>().expect("ClassCastException").clone()) };
-        self.lastTrackingLayerInterface = jcall!(lastTrackingEvent).getLayerInterface();
+        self.lastTrackingLayerInterface = { let java_value = (jcall!(lastTrackingEvent).getLayerInterface()).clone(); java_value };
         let mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = self.lastTrackingLayerInterface.clone();
         let mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = self.getOwnerLayerInterface();
-        if match (&jcall!(layerInterface).getGroupInterface(), &jcall!(ownerLayerInterface).getGroupInterface()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        let mut groupArray: Vec<Option<Rc<RefCell<Group>>>> = jcall!(layerInterface).getGroupInterface();
+        let mut ownerGroupArray: Vec<Option<Rc<RefCell<Group>>>> = jcall!(ownerLayerInterface).getGroupInterface();
+        if crate::java::lang::Object::java_array_same(&groupArray, &ownerGroupArray) {
             return;
         }
         let mut x: i32 = jcall!(self.lastTrackingLayerInterface).getXP();
@@ -187,24 +190,24 @@ impl DiveAndDirectionalTrackingAI {
         let mut directionFactory: Option<Rc<RefCell<DirectionFactory>>> = DirectionFactory::getInstance();
         if jcall!(self.mathUtil).abs(yDistance.clone()) > jcall!(self.mathUtil).abs(xDistance.clone()) {
             if yDistance > self.MIN_DISTANCE {
-                self.directionOfTarget = jcall!(directionFactory).UP.clone();
+                self.directionOfTarget = { let java_value = ({ let java_field = jcall!(directionFactory).UP.clone(); java_field }).clone(); java_value }.clone();
             } else if yDistance < -self.MIN_DISTANCE {
-                self.directionOfTarget = jcall!(directionFactory).DOWN.clone();
+                self.directionOfTarget = { let java_value = ({ let java_field = jcall!(directionFactory).DOWN.clone(); java_field }).clone(); java_value }.clone();
             }
         } else {
             if xDistance > self.MIN_DISTANCE {
-                self.directionOfTarget = jcall!(directionFactory).LEFT.clone();
+                self.directionOfTarget = { let java_value = ({ let java_field = jcall!(directionFactory).LEFT.clone(); java_field }).clone(); java_value }.clone();
             } else if xDistance < -self.MIN_DISTANCE {
-                self.directionOfTarget = jcall!(directionFactory).RIGHT.clone();
+                self.directionOfTarget = { let java_value = ({ let java_field = jcall!(directionFactory).RIGHT.clone(); java_field }).clone(); java_value }.clone();
             }
         }
-        if !self.initialDropped && !match (&self.directionOfTarget, &jcall!(directionFactory).NOT_BORDERED_WITH) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if !self.initialDropped && !match (&self.directionOfTarget, &{ let java_field = jcall!(directionFactory).NOT_BORDERED_WITH.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             self.drop();
         }
         if self.initialDropped {
-            if match (&self.directionOfTarget, &jcall!(directionFactory).UP) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&self.directionOfTarget, &jcall!(directionFactory).DOWN) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if match (&self.directionOfTarget, &{ let java_field = jcall!(directionFactory).UP.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&self.directionOfTarget, &{ let java_field = jcall!(directionFactory).DOWN.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 self.verticalTargeting(x.clone());
-            } else if match (&self.directionOfTarget, &jcall!(directionFactory).LEFT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&self.directionOfTarget, &jcall!(directionFactory).RIGHT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            } else if match (&self.directionOfTarget, &{ let java_field = jcall!(directionFactory).LEFT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&self.directionOfTarget, &{ let java_field = jcall!(directionFactory).RIGHT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 self.horizontalTargeting(y.clone());
             } else {
                 jcall!(self.artificialIntelligenceInterface).processAI(allBinaryLayerManager.clone());
@@ -245,86 +248,86 @@ impl DiveAndDirectionalTrackingAI {
 
     pub fn setDive(&mut self) {
         self.diveP = true;
-        jcall!(self.velocityInterface).zero();
+        jcall!(self.velocityInterface).as_BasicVelocityProperties_mut().zero();
         jcall!(TrackingEventHandler::getInstance()).removeListener(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
 
     // throws Exception
     pub fn moveRight(&mut self) {
-        self.setLastDirection(jcall!(self.directionFactory).RIGHT.clone());
+        { let java_arguments = ({ let java_field = jcall!(self.directionFactory).RIGHT.clone(); java_field }.clone(),); self.setLastDirection(java_arguments.0) };
         jcall!(self.directionalInterface).setFrameByDirection(self.lastDirection.clone());
-        jcall!(self.aiVistor).visit(None /* Java this: a &mut self method has no Rc of itself */);
+        jcall!(self.aiVistor).as_Visitor_mut().visit(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
 
     // throws Exception
     pub fn moveLeft(&mut self) {
-        self.setLastDirection(jcall!(self.directionFactory).LEFT.clone());
+        { let java_arguments = ({ let java_field = jcall!(self.directionFactory).LEFT.clone(); java_field }.clone(),); self.setLastDirection(java_arguments.0) };
         jcall!(self.directionalInterface).setFrameByDirection(self.lastDirection.clone());
-        jcall!(self.aiVistor).visit(None /* Java this: a &mut self method has no Rc of itself */);
+        jcall!(self.aiVistor).as_Visitor_mut().visit(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
 
     // throws Exception
     pub fn moveDown(&mut self) {
-        self.setLastDirection(jcall!(self.directionFactory).DOWN.clone());
+        { let java_arguments = ({ let java_field = jcall!(self.directionFactory).DOWN.clone(); java_field }.clone(),); self.setLastDirection(java_arguments.0) };
         jcall!(self.directionalInterface).setFrameByDirection(self.lastDirection.clone());
-        jcall!(self.aiVistor).visit(None /* Java this: a &mut self method has no Rc of itself */);
+        jcall!(self.aiVistor).as_Visitor_mut().visit(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
 
     // throws Exception
     pub fn moveUp(&mut self) {
-        self.setLastDirection(jcall!(self.directionFactory).UP.clone());
+        { let java_arguments = ({ let java_field = jcall!(self.directionFactory).UP.clone(); java_field }.clone(),); self.setLastDirection(java_arguments.0) };
         jcall!(self.directionalInterface).setFrameByDirection(self.lastDirection.clone());
-        jcall!(self.aiVistor).visit(None /* Java this: a &mut self method has no Rc of itself */);
+        jcall!(self.aiVistor).as_Visitor_mut().visit(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
 
     // throws Exception
     pub fn dive(&mut self) {
         jcall!(self.directionalInterface).setFrameByDirection(self.directionOfTarget.clone());
-        jcall!(self.aiVistor).visit(None /* Java this: a &mut self method has no Rc of itself */);
+        jcall!(self.aiVistor).as_Visitor_mut().visit(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
 
     // throws Exception
     pub fn attack(&mut self) {
-        self.base.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }.clone());
+        { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone).clone(),); self.base.processKeyAI(java_arguments.0) };
     }
     
 
     // throws Exception
     pub fn drop(&mut self) {
-        if jcall!(self.timeDelayHelper).isTime(jcall!(self.gameTickTimeDelayHelper).startTime.clone()) {
+        if jcall!(self.timeDelayHelper).isTime({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone()) {
             self.initialDropped = true;
-            jcall!(self.aiVistor).visit(None /* Java this: a &mut self method has no Rc of itself */);
+            jcall!(self.aiVistor).as_Visitor_mut().visit(None /* Java this: a &mut self method has no Rc of itself */);
         }
     }
     
 
     pub fn isBeyondTarget(&mut self) -> bool {
-        if match (&self.directionOfTarget, &jcall!(self.directionFactory).DOWN) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            if jcall!(self.getOwnerLayerInterface()).getYP() > jcall!(self.lastTrackingLayerInterface).getYP() + self.MIN_DISTANCE {
+        if match (&self.directionOfTarget, &{ let java_field = jcall!(self.directionFactory).DOWN.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if { let java_value = jcall!(self.getOwnerLayerInterface()).getYP(); java_value } > jcall!(self.lastTrackingLayerInterface).getYP() + self.MIN_DISTANCE {
                 return true;
             } else {
                 return false;
             }
-        } else if match (&self.directionOfTarget, &jcall!(self.directionFactory).UP) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            if jcall!(self.getOwnerLayerInterface()).getYP() < jcall!(self.lastTrackingLayerInterface).getYP() + self.MIN_DISTANCE {
+        } else if match (&self.directionOfTarget, &{ let java_field = jcall!(self.directionFactory).UP.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if { let java_value = jcall!(self.getOwnerLayerInterface()).getYP(); java_value } < jcall!(self.lastTrackingLayerInterface).getYP() + self.MIN_DISTANCE {
                 return true;
             } else {
                 return false;
             }
-        } else if match (&self.directionOfTarget, &jcall!(self.directionFactory).RIGHT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            if jcall!(self.getOwnerLayerInterface()).getXP() > jcall!(self.lastTrackingLayerInterface).getXP() + self.MIN_DISTANCE {
+        } else if match (&self.directionOfTarget, &{ let java_field = jcall!(self.directionFactory).RIGHT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if { let java_value = jcall!(self.getOwnerLayerInterface()).getXP(); java_value } > jcall!(self.lastTrackingLayerInterface).getXP() + self.MIN_DISTANCE {
                 return true;
             } else {
                 return false;
             }
-        } else if match (&self.directionOfTarget, &jcall!(self.directionFactory).LEFT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            if jcall!(self.getOwnerLayerInterface()).getXP() < jcall!(self.lastTrackingLayerInterface).getXP() + self.MIN_DISTANCE {
+        } else if match (&self.directionOfTarget, &{ let java_field = jcall!(self.directionFactory).LEFT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if { let java_value = jcall!(self.getOwnerLayerInterface()).getXP(); java_value } < jcall!(self.lastTrackingLayerInterface).getXP() + self.MIN_DISTANCE {
                 return true;
             } else {
                 return false;
@@ -336,7 +339,7 @@ impl DiveAndDirectionalTrackingAI {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
@@ -346,7 +349,7 @@ impl DiveAndDirectionalTrackingAI {
     
 
     pub fn onDestroyed(&mut self, mut destroyedEvent: Option<Rc<RefCell<DestroyedEvent>>>) {
-        if match (&self.getOwnerLayerInterface(), &jcall!(destroyedEvent).getLayerInterface()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&self.getOwnerLayerInterface(), &{ let java_value = jcall!(destroyedEvent).getLayerInterface(); java_value }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             jcall!(TrackingEventHandler::getInstance()).removeListener(None /* Java this: a &mut self method has no Rc of itself */);
             jcall!(DestroyedEventHandler::getInstance()).removeListener(None /* Java this: a &mut self method has no Rc of itself */);
         }
@@ -357,21 +360,21 @@ impl DiveAndDirectionalTrackingAI {
         self.lastDirection = lastDirection.clone();
         let mut value: i32 = jcall!(self.getLastDirection()).getValue();
         if value < 4 {
-            self.base.setLastKey(self.directionToKeyMap[(value) as usize].clone());
+            { let java_arguments = (self.directionToKeyMap[(value) as usize].clone(),); self.base.setLastKey(java_arguments.0) };
         }
     }
     
 
     pub fn setLastKey(&mut self, mut lastKey: i32) {
-        self.base.setLastKey(lastKey.clone());
-        if match (&self.getLastKey(), &unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            self.lastDirection = jcall!(DirectionFactory::getInstance()).LEFT.clone();
-        } else if match (&self.getLastKey(), &unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            self.lastDirection = jcall!(DirectionFactory::getInstance()).DOWN.clone();
-        } else if match (&self.getLastKey(), &unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            self.lastDirection = jcall!(DirectionFactory::getInstance()).UP.clone();
-        } else if match (&self.getLastKey(), &unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            self.lastDirection = jcall!(DirectionFactory::getInstance()).RIGHT.clone();
+        { let java_arguments = (lastKey.clone(),); self.base.setLastKey(java_arguments.0) };
+        if self.getLastKey() == crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone) {
+            self.lastDirection = { let java_value = ({ let java_field = jcall!(DirectionFactory::getInstance()).LEFT.clone(); java_field }).clone(); java_value }.clone();
+        } else if self.getLastKey() == crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.with(Clone::clone) {
+            self.lastDirection = { let java_value = ({ let java_field = jcall!(DirectionFactory::getInstance()).DOWN.clone(); java_field }).clone(); java_value }.clone();
+        } else if self.getLastKey() == crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone) {
+            self.lastDirection = { let java_value = ({ let java_field = jcall!(DirectionFactory::getInstance()).UP.clone(); java_field }).clone(); java_value }.clone();
+        } else if self.getLastKey() == crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone) {
+            self.lastDirection = { let java_value = ({ let java_field = jcall!(DirectionFactory::getInstance()).RIGHT.clone(); java_field }).clone(); java_value }.clone();
         }
     }
     
@@ -385,7 +388,7 @@ impl DiveAndDirectionalTrackingAI {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(self.base.toString());
         jcall!(stringBuffer).append(String::from(" LastDirection: "));
-        jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getLastDirection())));
+        jcall!(stringBuffer).append({ let java_argument = jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getLastDirection())); java_argument });
         return jcall!(stringBuffer).toString();
     }
 }

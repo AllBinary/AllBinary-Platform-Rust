@@ -56,7 +56,7 @@ impl ScaleProperties {
     
 
     pub fn toString(&mut self) -> String {
-        return jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).COLON_SEP.clone()).appendboolean(self.shouldScale.clone()).append(String::from("scaleX: ")).appendfloat(self.scaleX.clone()).append(String::from("scaleY: ")).appendfloat(self.scaleY.clone()).append(String::from("scaleWidth: ")).appendint(self.scaleWidth.clone()).append(String::from("scaleHeight: ")).appendint(self.scaleHeight.clone()).toString();
+        return jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).COLON_SEP.clone(); java_field }.clone()).appendboolean(self.shouldScale.clone()).append(String::from("scaleX: ")).appendfloat(self.scaleX.clone()).append(String::from("scaleY: ")).appendfloat(self.scaleY.clone()).append(String::from("scaleWidth: ")).appendint(self.scaleWidth.clone()).append(String::from("scaleHeight: ")).appendint(self.scaleHeight.clone()).toString();
     }
 }
 

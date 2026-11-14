@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
-// use crate::javax::microedition::lcdui::NullCanvas::NullCanvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::NullCanvas::NullCanvas;
 use crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManager;
 
 // Borrows the object of a Java reference
@@ -29,7 +29,7 @@ macro_rules! jcall {
 }
 
 pub struct ABToGBUtil {
-    pub abCanvas: Option<Rc<RefCell<Canvas>>>,
+    pub abCanvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>,
     pub allBinaryGameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>,
 }
 
@@ -37,12 +37,16 @@ thread_local! { pub static ABToGBUtil_instance: Option<Rc<RefCell<ABToGBUtil>>> 
 
 impl ABToGBUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             abCanvas: None,
             allBinaryGameLayerManager: None,
         };
-        this.abCanvas = crate::javax::microedition::lcdui::NullCanvas::NullCanvas_NULL_CANVAS.with(Clone::clone).clone();
+        this.abCanvas = crate::javax::microedition::lcdui::NullCanvas::NullCanvas_NULL_CANVAS.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>);
         this.allBinaryGameLayerManager = AllBinaryGameLayerManager::getNullInstance();
         this
     }

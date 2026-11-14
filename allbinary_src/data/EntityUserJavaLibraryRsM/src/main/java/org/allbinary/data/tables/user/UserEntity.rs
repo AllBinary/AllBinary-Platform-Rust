@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontData::StoreFrontData;
@@ -39,6 +38,7 @@ use crate::org::allbinary::logic::communication::sql::AbSqlBean::AbSqlBean;
 use crate::org::allbinary::logic::control::crypt::SuperCrypt::SuperCrypt;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
+use crate::java::lang::Exception::*;
 use super::UserEntityInterface::UserEntityInterface;
 
 // Borrows the object of a Java reference
@@ -68,7 +68,7 @@ impl UserEntity {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: AbSqlBean::new_struct(UserDbInitInfo::new()),
+            base: AbSqlBean::new_struct(UserDbInitInfo::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfoDyn>>)),
             logUtil: None,
             tableName: String::new(),
             COMMAND_SUCCESS_FOR_USER: String::new(),
@@ -87,9 +87,9 @@ impl UserEntity {
         this.COMMAND_SUCCESS_BUT_LOGIN_FAILED = String::from("Command Success but login failed for user: ");
         this.INVALID_PASSWORD_LABEL = String::from(" Password: \n\"");
         this.NOT_EQUAL = String::from("\"!=\"");
-        this.END_QUOTES = jcall!(CommonSeps::getInstance()).QUOTE.clone();
+        this.END_QUOTES = { let java_field = jcall!(CommonSeps::getInstance()).QUOTE.clone(); java_field }.clone();
         // super(...) is in the struct literal above
-        this.setTableName(this.tableName.clone());
+        { let java_arguments = (this.tableName.clone(),); this.setTableName(java_arguments.0) };
         this
     }
 
@@ -100,17 +100,17 @@ impl UserEntity {
 
     pub fn insert(&mut self, mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            self.base.insert(values.clone());
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).putF(jcall!(self.commonStrings).SUCCESS.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone());
+            { let java_arguments = (values.clone(),); self.base.insert(java_arguments.0) };
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).SUCCESS.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone());
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).FAILURE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).FAILURE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone(), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -119,22 +119,22 @@ impl UserEntity {
 
     // throws Exception
     pub fn getAdministrators(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        return { let java_arguments = (jcall!(UserRoleFactory::getInstance()).ADMINISTRATOR.clone(),); self.getUsersWithRole(java_arguments.0) };
+        return { let java_arguments = ({ let java_field = jcall!(UserRoleFactory::getInstance()).ADMINISTRATOR.clone(); java_field }.clone(),); self.getUsersWithRole(java_arguments.0) };
     }
     
 
     // throws Exception
     pub fn getStoreManagers(&mut self, mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut keysAndValues: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        let mut usersVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        jcall!(keysAndValues).put(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone(), jcall!(jcall!(UserRoleFactory::getInstance()).STOREMANAGER).toString());
-        jcall!(keysAndValues).put(crate::org::allbinary::business::user::UserData::UserData_PERMISSIONS.with(Clone::clone).clone(), jcall!(storeFrontInterface).getName());
-        let mut usersHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.base.getRows(keysAndValues.clone());
+        let mut keysAndValues: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        let mut usersVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        jcall!(keysAndValues).put(crate::java_into_object(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone()), crate::java_into_object(jcall!({ let java_field = jcall!(UserRoleFactory::getInstance()).STOREMANAGER.clone(); java_field }).toString()));
+        jcall!(keysAndValues).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_PERMISSIONS.with(Clone::clone).clone()), crate::java_into_object(jcall!(storeFrontInterface).getName()));
+        let mut usersHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_arguments = (keysAndValues.clone(),); self.base.getRows(java_arguments.0) };
         let mut size: i32 = jcall!(usersHashMapVector).size();
         for i in (0..size) {
-            let mut userHashMap: Option<Rc<RefCell<HashMap>>> = (jcall!(usersHashMapVector).get(i.clone())).clone() /* as HashMap */;
+            let mut userHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = { let java_object = (jcall!(usersHashMapVector).get(i.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>>().expect("ClassCastException").clone()) };
             if userHashMap.is_some() {
-                jcall!(usersVector).add(crate::java_into_object(User::new1(userHashMap.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::user::modules::User::UserDyn>>)));
+                jcall!(usersVector).add(crate::java_into_object(User::new1_HashMap(userHashMap.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::user::modules::User::UserDyn>>)));
             }
         }
         return usersVector.clone();
@@ -143,21 +143,21 @@ impl UserEntity {
 
     // throws Exception
     pub fn getCustomers(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        return { let java_arguments = (jcall!(UserRoleFactory::getInstance()).CUSTOMER.clone(),); self.getUsersWithRole(java_arguments.0) };
+        return { let java_arguments = ({ let java_field = jcall!(UserRoleFactory::getInstance()).CUSTOMER.clone(); java_field }.clone(),); self.getUsersWithRole(java_arguments.0) };
     }
     
 
     // throws Exception
     pub fn getUsersWithRole(&mut self, mut userRole: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::role::UserRole::UserRoleDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut keysAndValues: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        let mut usersVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        jcall!(keysAndValues).put(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone(), jcall!(userRole).toString());
-        let mut usersHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.base.getRows(keysAndValues.clone());
+        let mut keysAndValues: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        let mut usersVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        jcall!(keysAndValues).put(crate::java_into_object(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone()), crate::java_into_object(jcall!(userRole).toString()));
+        let mut usersHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_arguments = (keysAndValues.clone(),); self.base.getRows(java_arguments.0) };
         let mut size: i32 = jcall!(usersHashMapVector).size();
         for index in (0..size) {
-            let mut userHashMap: Option<Rc<RefCell<HashMap>>> = (jcall!(usersHashMapVector).get(index.clone())).clone() /* as HashMap */;
+            let mut userHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = { let java_object = (jcall!(usersHashMapVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>>().expect("ClassCastException").clone()) };
             if userHashMap.is_some() {
-                jcall!(usersVector).add(crate::java_into_object(User::new1(userHashMap.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::user::modules::User::UserDyn>>)));
+                jcall!(usersVector).add(crate::java_into_object(User::new1_HashMap(userHashMap.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::user::modules::User::UserDyn>>)));
             }
         }
         return usersVector.clone();
@@ -166,15 +166,15 @@ impl UserEntity {
 
     // throws Exception
     pub fn getUsers(&mut self, mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut keysAndValues: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        let mut usersVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        jcall!(keysAndValues).put(jcall!(StoreFrontData::getInstance()).NAME.clone(), jcall!(storeFrontInterface).getName());
-        let mut usersHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.base.getRows(keysAndValues.clone());
+        let mut keysAndValues: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        let mut usersVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        jcall!(keysAndValues).put(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(jcall!(storeFrontInterface).getName()));
+        let mut usersHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_arguments = (keysAndValues.clone(),); self.base.getRows(java_arguments.0) };
         let mut size: i32 = jcall!(usersHashMapVector).size();
         for index in (0..size) {
-            let mut userHashMap: Option<Rc<RefCell<HashMap>>> = (jcall!(usersHashMapVector).get(index.clone())).clone() /* as HashMap */;
+            let mut userHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = { let java_object = (jcall!(usersHashMapVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>>().expect("ClassCastException").clone()) };
             if userHashMap.is_some() {
-                jcall!(usersVector).add(crate::java_into_object(User::new1(userHashMap.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::user::modules::User::UserDyn>>)));
+                jcall!(usersVector).add(crate::java_into_object(User::new1_HashMap(userHashMap.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::user::modules::User::UserDyn>>)));
             }
         }
         return usersVector.clone();
@@ -183,9 +183,9 @@ impl UserEntity {
 
     // throws Exception
     pub fn getUser(&mut self, mut userName: String) -> Option<Rc<RefCell<dyn UserInterface>>> {
-        let mut row: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(row).put(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), userName.clone());
-        let mut userHashMap: Option<Rc<RefCell<HashMap>>> = self.base.getRow(row.clone());
+        let mut row: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(row).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()), crate::java_into_object(userName.clone()));
+        let mut userHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = { let java_arguments = (row.clone(),); self.base.getRow(java_arguments.0) };
         if userHashMap.is_some() {
             return CreateUserFactory::getInstance(userHashMap.clone());
         } else {
@@ -196,17 +196,17 @@ impl UserEntity {
 
     pub fn deleteWhere2(&mut self, mut key: String, mut value: String) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            self.base.deleteWhere2(key.clone(), value.clone());
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).putF(jcall!(self.commonStrings).SUCCESS.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("deleteWhere"));
+            { let java_arguments = (key.clone(), value.clone(),); self.base.deleteWhere2(java_arguments.0, java_arguments.1) };
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).SUCCESS.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("deleteWhere"));
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).FAILURE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("deleteWhere"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).FAILURE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("deleteWhere"), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -214,20 +214,20 @@ impl UserEntity {
     
 
     pub fn login(&mut self, mut userName: String, mut password: String) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut isUserNameAndPasswordCorrect: i32 = 0;
-            let mut result: String = self.base.getField3(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), userName.clone(), crate::org::allbinary::business::user::UserData::UserData_PASSWORD.with(Clone::clone).clone());
-            let mut encryption: String = self.base.getField3(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), userName.clone(), jcall!(EntryData::getInstance()).ENCRYPTION.clone());
-            if true && (encryption.cmp(&jcall!(self.stringUtil).EMPTY_STRING.clone()) as i32) != 0 {
-                isUserNameAndPasswordCorrect = (result.cmp(&jcall!(SuperCrypt::new(((Some((encryption.clone()) as i32)).unwrap() as i32))).encrypt(password.clone())) as i32);
+            let mut result: String = { let java_arguments = (crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), userName.clone(), crate::org::allbinary::business::user::UserData::UserData_PASSWORD.with(Clone::clone).clone(),); self.base.getField3(java_arguments.0, java_arguments.1, java_arguments.2) };
+            let mut encryption: String = { let java_arguments = (crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), userName.clone(), { let java_field = jcall!(EntryData::getInstance()).ENCRYPTION.clone(); java_field }.clone(),); self.base.getField3(java_arguments.0, java_arguments.1, java_arguments.2) };
+            if true && (encryption.cmp(&{ let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }.clone()) as i32) != 0 {
+                isUserNameAndPasswordCorrect = { let java_value = ((result.cmp(&jcall!(SuperCrypt::new(((Some((encryption.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32))).encrypt(password.clone())) as i32)).clone(); java_value };
             } else {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
                     jcall!(self.logUtil).putF(format!("{}{}", format!("{}{}", String::from("Command Success but login failed for user: "), userName), String::from(" because user did not exist")), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("login"));
                 }
-                return crate::org::allbinary::globals::GLOBALS2::GLOBALS2_LOGINFAILED.with(Clone::clone).clone();
+                return Some(crate::org::allbinary::globals::GLOBALS2::GLOBALS2_LOGINFAILED.with(Clone::clone).clone());
             }
             if isUserNameAndPasswordCorrect == 0 {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
                     let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                     jcall!(stringBuffer).append(self.COMMAND_SUCCESS_FOR_USER.clone());
                     jcall!(stringBuffer).append(userName.clone());
@@ -237,37 +237,38 @@ impl UserEntity {
                     jcall!(stringBuffer).append(result.clone());
                     { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("login"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
-                return crate::org::allbinary::globals::GLOBALS2::GLOBALS2_LOGINSUCCESS.with(Clone::clone).clone();
+                return Some(crate::org::allbinary::globals::GLOBALS2::GLOBALS2_LOGINSUCCESS.with(Clone::clone).clone());
             } else {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
                     let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                     jcall!(stringBuffer).append(self.COMMAND_SUCCESS_BUT_LOGIN_FAILED.clone());
                     jcall!(stringBuffer).append(userName.clone());
                     jcall!(stringBuffer).append(self.INVALID_PASSWORD_LABEL.clone());
-                    jcall!(stringBuffer).append(jcall!(SuperCrypt::new(((Some((encryption.clone()) as i32)).unwrap() as i32))).encrypt(password.clone()));
+                    jcall!(stringBuffer).append(jcall!(SuperCrypt::new(((Some((encryption.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32))).encrypt(password.clone()));
                     jcall!(stringBuffer).append(self.NOT_EQUAL.clone());
                     jcall!(stringBuffer).append(result.clone());
                     jcall!(stringBuffer).append(self.END_QUOTES.clone());
                     { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("login"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
-                return crate::org::allbinary::globals::GLOBALS2::GLOBALS2_LOGINFAILED.with(Clone::clone).clone();
-            }
+                return Some(crate::org::allbinary::globals::GLOBALS2::GLOBALS2_LOGINFAILED.with(Clone::clone).clone());
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).FAILURE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("login"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).FAILURE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("login"), crate::java_into_object(e.clone()));
             }
             return String::from("Error");
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
-    pub fn update(&mut self, mut userName: String, mut updatedValues: Option<Rc<RefCell<HashMap>>>) {
-        self.base.updateWhere3(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), userName.clone(), updatedValues.clone());
+    pub fn update(&mut self, mut userName: String, mut updatedValues: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
+        { let java_arguments = (crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), userName.clone(), updatedValues.clone(),); self.base.updateWhere3(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
     
 
@@ -279,13 +280,13 @@ impl UserEntity {
     pub fn createTableStatement(&mut self) -> String {
         let mut entryData: Option<Rc<RefCell<EntryData>>> = EntryData::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(jcall!(self.sqlStrings).CREATE_TABLE.clone()).append(self.tableName.clone()).append(jcall!(self.sqlStrings).START.clone()).append(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone()).append(crate::org::allbinary::business::user::UserData::UserData_PREFIXNAME.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::UserData::UserData_FIRSTNAME.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::UserData::UserData_LASTNAME.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::UserData::UserData_MIDDLENAME.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::UserData::UserData_SUFFIXNAME.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::UserData::UserData_COMPANY.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::UserData::UserData_POSITIONATCOMPANY.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::UserData::UserData_MAINEMAIL.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone()).append(crate::org::allbinary::business::user::UserData::UserData_SECONDARYEMAIL.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::UserData::UserData_HOMEPHONE.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::UserData::UserData_CELLPHONE.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::UserData::UserData_WORKPHONE.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::UserData::UserData_OTHERCONTACT.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::UserData::UserData_ELECTRONICDEVICE.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::UserData::UserData_FAX.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone()).append(crate::org::allbinary::business::user::UserData::UserData_CONFIGURATION.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone()).append(crate::org::allbinary::business::user::UserData::UserData_PERMISSIONS.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(jcall!(entryData).ENCRYPTION.clone()).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone()).append(crate::org::allbinary::business::user::UserData::UserData_SECRET.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(crate::org::allbinary::business::user::UserData::UserData_PASSWORD.with(Clone::clone).clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone()).append(jcall!(entryData).ENABLE.clone()).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone()).append(jcall!(entryData).TIMECREATED.clone()).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone()).append(jcall!(entryData).LASTMODIFIED.clone()).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone()).append(jcall!(self.sqlStrings).PRIMARY_KEY.clone()).append(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()).append(jcall!(self.sqlStrings).END.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlStrings).CREATE_TABLE.clone(); java_field }.clone()).append(self.tableName.clone()).append({ let java_field = jcall!(self.sqlStrings).START.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_PREFIXNAME.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_FIRSTNAME.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_LASTNAME.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_MIDDLENAME.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_SUFFIXNAME.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_COMPANY.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_POSITIONATCOMPANY.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_MAINEMAIL.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_SECONDARYEMAIL.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_HOMEPHONE.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_CELLPHONE.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_WORKPHONE.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_OTHERCONTACT.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_ELECTRONICDEVICE.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_FAX.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_CONFIGURATION.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_PERMISSIONS.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append({ let java_field = jcall!(entryData).ENCRYPTION.clone(); java_field }.clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_SECRET.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_PASSWORD.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone()).append({ let java_field = jcall!(entryData).ENABLE.clone(); java_field }.clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN.clone(); java_field }.clone()).append({ let java_field = jcall!(entryData).TIMECREATED.clone(); java_field }.clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone()).append({ let java_field = jcall!(entryData).LASTMODIFIED.clone(); java_field }.clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone()).append({ let java_field = jcall!(self.sqlStrings).PRIMARY_KEY.clone(); java_field }.clone()).append(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()).append({ let java_field = jcall!(self.sqlStrings).END.clone(); java_field }.clone());
         return jcall!(stringBuffer).toString();
     }
     
 
     pub fn createTable(&mut self) -> String {
-        return self.base.createTable(self.createTableStatement());
+        return { let java_arguments = (self.createTableStatement(),); self.base.createTable(java_arguments.0) };
     }
 }
 impl std::ops::Deref for UserEntity {

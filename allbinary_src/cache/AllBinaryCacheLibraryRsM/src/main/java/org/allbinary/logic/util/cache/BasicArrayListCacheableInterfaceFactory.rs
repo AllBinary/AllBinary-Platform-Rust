@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::CacheableInterfaceFactoryInterface::CacheableInterfaceFactoryInterface;
 use super::BasicArrayListCacheable::BasicArrayListCacheable;
 use super::CacheableInterface::CacheableInterface;
@@ -37,6 +38,10 @@ impl CacheableInterfaceFactoryInterface for BasicArrayListCacheableInterfaceFact
 
 impl BasicArrayListCacheableInterfaceFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -50,7 +55,7 @@ impl BasicArrayListCacheableInterfaceFactory {
 
     // throws Exception
     pub fn getInstance(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn CacheableInterface>>> {
-        return BasicArrayListCacheable::new().map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>);
+        return BasicArrayListCacheable::new().map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>).map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>);
     }
 }
 

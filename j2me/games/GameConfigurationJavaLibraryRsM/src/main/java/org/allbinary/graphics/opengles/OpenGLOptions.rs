@@ -36,6 +36,10 @@ pub struct OpenGLOptions {
 
 impl OpenGLOptions {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -49,17 +53,17 @@ impl OpenGLOptions {
 
     pub fn init(&mut self) {
         let mut openGLFeatureFactory: Option<Rc<RefCell<OpenGLFeatureFactory>>> = OpenGLFeatureFactory::getInstance();
-        if jcall!(Features::getInstance()).isFeature(jcall!(openGLFeatureFactory).OPENGL_OPTIONS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            let mut openGLMultipleList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-            jcall!(openGLMultipleList).add(crate::java_into_object(jcall!(openGLFeatureFactory).OPENGL.clone()));
+        if jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(openGLFeatureFactory).OPENGL_OPTIONS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            let mut openGLMultipleList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            jcall!(openGLMultipleList).add(crate::java_into_object({ let java_field = jcall!(openGLFeatureFactory).OPENGL.clone(); java_field }.clone()));
             jcall!(GameFeatureChoiceGroups::getMultipleInstance()).add(String::from("OpenGL (Complete Restart)"), openGLMultipleList.clone());
-            let mut openGLVersionSelectorMultipleList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-            jcall!(openGLVersionSelectorMultipleList).add(crate::java_into_object(jcall!(openGLFeatureFactory).OPENGL_AUTO_SELECT.clone()));
-            jcall!(openGLVersionSelectorMultipleList).add(crate::java_into_object(jcall!(openGLFeatureFactory).OPENGL_MINIMUM.clone()));
+            let mut openGLVersionSelectorMultipleList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            jcall!(openGLVersionSelectorMultipleList).add(crate::java_into_object({ let java_field = jcall!(openGLFeatureFactory).OPENGL_AUTO_SELECT.clone(); java_field }.clone()));
+            jcall!(openGLVersionSelectorMultipleList).add(crate::java_into_object({ let java_field = jcall!(openGLFeatureFactory).OPENGL_MINIMUM.clone(); java_field }.clone()));
             jcall!(GameFeatureChoiceGroups::getExclusiveInstance()).add(String::from("OpenGL Version Selector"), openGLVersionSelectorMultipleList.clone());
-            let mut openGLImageColorMultipleList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-            jcall!(openGLImageColorMultipleList).add(crate::java_into_object(jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_4444.clone()));
-            jcall!(openGLImageColorMultipleList).add(crate::java_into_object(jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_8888.clone()));
+            let mut openGLImageColorMultipleList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            jcall!(openGLImageColorMultipleList).add(crate::java_into_object({ let java_field = jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_4444.clone(); java_field }.clone()));
+            jcall!(openGLImageColorMultipleList).add(crate::java_into_object({ let java_field = jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_8888.clone(); java_field }.clone()));
             jcall!(GameFeatureChoiceGroups::getExclusiveInstance()).add(String::from("OpenGL Image Color RGBA"), openGLImageColorMultipleList.clone());
         }
     }

@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 // use crate::javax::servlet::jsp::tagext::TagSupport::TagSupport;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
@@ -29,6 +28,7 @@ use crate::org::allbinary::logic::system::security::licensing::AbeClientInformat
 use crate::org::allbinary::logic::system::security::licensing::ServiceClientInformationInterfaceFactory::ServiceClientInformationInterfaceFactory;
 use crate::org::allbinary::logic::visual::transform::TransformFactory::TransformFactory;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -42,7 +42,7 @@ pub struct BasicWorkFlow {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
     pub abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>,
     pub validationDomNodeInterface: Option<Rc<RefCell<dyn ValidationComponentInterface>>>,
-    pub propertiesHashMap: Option<Rc<RefCell<HashMap>>>,
+    pub propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
     pub pageContext: Option<Rc<RefCell<PageContext>>>,
 }
 
@@ -52,9 +52,13 @@ impl WorkFlowInterface for BasicWorkFlow {
 }
 
 impl BasicWorkFlow {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
+    pub fn new_struct(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -66,27 +70,27 @@ impl BasicWorkFlow {
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
         this.abeClientInformation = ServiceClientInformationInterfaceFactory::getInstance();
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).WORKFLOW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).WORKFLOW.clone(); java_field }.clone()) {
             { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Properties: "), jcall!(propertiesHashMap).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("BasicWorkFlow()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         this.propertiesHashMap = propertiesHashMap.clone();
         this.pageContext = pageContext.clone();
-        this.validationDomNodeInterface = (jcall!(TransformFactory::getInstance()).getInstance3(this.abeClientInformation.clone(), propertiesHashMap.clone(), pageContext.clone())).clone() /* as ValidationComponentInterface */;
+        this.validationDomNodeInterface = { let java_value = ((|| -> Option<Rc<RefCell<dyn ValidationComponentInterface>>> { panic!("ClassCastException: a Rust dyn TransformInterface cannot be cast to dyn ValidationComponentInterface") })()).clone(); java_value };
         this
     }
 
-    pub fn new(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(propertiesHashMap, pageContext))))
     }
     
 
     // throws Exception
     pub fn getName(&mut self) -> String {
-        return (jcall!(self.getPropertiesHashMap()).get(jcall!(WorkFlowData::getInstance()).NAME.clone())).clone() /* as String */;
+        return { let java_object = (jcall!(self.getPropertiesHashMap()).get(crate::java_into_object({ let java_field = jcall!(WorkFlowData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
     }
     
 
-    pub fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return self.propertiesHashMap.clone();
     }
     
@@ -98,23 +102,23 @@ impl BasicWorkFlow {
 
     // throws Exception
     pub fn process(&mut self) -> Option<i32> {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).WORKFLOW.clone()) {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).WORKFLOW.clone(); java_field }.clone()) {
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
         }
         if jcall!(self.validationDomNodeInterface).isValid().unwrap() {
             jcall!(jcall!(self.pageContext).getOut()).print(jcall!(self.validationDomNodeInterface).view());
-            return (unsafe { crate::javax::servlet::jsp::tagext::TagSupport::TagSupport_EVAL_BODY_INCLUDE.clone() }.clone()).to_string();
+            return Some((unsafe { crate::javax::servlet::jsp::tagext::TagSupport::TagSupport_EVAL_BODY_INCLUDE.clone() }.clone()) as i32);
         } else {
             jcall!(jcall!(self.pageContext).getOut()).print(jcall!(self.validationDomNodeInterface).validationInfo());
-            return (unsafe { crate::javax::servlet::jsp::tagext::TagSupport::TagSupport_SKIP_BODY.clone() }.clone()).to_string();
+            return Some((unsafe { crate::javax::servlet::jsp::tagext::TagSupport::TagSupport_SKIP_BODY.clone() }.clone()) as i32);
         }
     }
 }
-pub trait BasicWorkFlowDyn {
+pub trait BasicWorkFlowDyn: std::any::Any {
     fn as_BasicWorkFlow(&self) -> &BasicWorkFlow;
     fn as_BasicWorkFlow_mut(&mut self) -> &mut BasicWorkFlow;
     fn getName(&mut self) -> String { BasicWorkFlow::getName(self.as_BasicWorkFlow_mut()) }
-    fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { BasicWorkFlow::getPropertiesHashMap(self.as_BasicWorkFlow_mut()) }
+    fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { BasicWorkFlow::getPropertiesHashMap(self.as_BasicWorkFlow_mut()) }
     fn getPageContext(&mut self) -> Option<Rc<RefCell<PageContext>>> { BasicWorkFlow::getPageContext(self.as_BasicWorkFlow_mut()) }
     fn process(&mut self) -> Option<i32> { BasicWorkFlow::process(self.as_BasicWorkFlow_mut()) }
 }

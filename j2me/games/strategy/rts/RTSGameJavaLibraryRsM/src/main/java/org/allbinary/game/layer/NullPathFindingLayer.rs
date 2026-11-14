@@ -27,6 +27,8 @@ use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellHistory::GeographicMapCellHistory;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::PathFindingLayerInterface::PathFindingLayerInterface;
 use super::GeographicMapCellPositionAreaBase::GeographicMapCellPositionAreaBase;
 use super::SelectionHudPaintable::SelectionHudPaintable;
@@ -44,9 +46,58 @@ pub struct NullPathFindingLayer {
 }
 
 thread_local! { pub static NullPathFindingLayer_NULL_PATH_FINDING_LAYER: Option<Rc<RefCell<dyn NullPathFindingLayerDyn>>> = NullPathFindingLayer::new().map(|reference| reference as Rc<RefCell<dyn NullPathFindingLayerDyn>>); }
-// impl PathFindingLayerInterface for NullPathFindingLayer with the methods of the trait
+impl PathFindingLayerInterface for NullPathFindingLayer {
+    fn getEndGeographicMapCellPositionList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::getEndGeographicMapCellPositionList(self) }
+    fn shouldHandleStartSameAsEnd(&mut self) -> bool { Self::shouldHandleStartSameAsEnd(self) }
+    fn getGeographicMapCellPositionArea(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::GeographicMapCellPositionAreaBase::GeographicMapCellPositionAreaBaseDyn>>> { Self::getGeographicMapCellPositionArea(self) }
+    fn getHudPaintable(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn>>> { Self::getHudPaintable(self) }
+    fn handleCost(&mut self, mut ownerLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>) { Self::handleCost(self, ownerLayer) }
+    fn getParentLayer(&mut self) -> Option<Rc<RefCell<dyn PathFindingLayerInterface>>> { Self::getParentLayer(self) }
+    fn getRTSLayer2LogHelper(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer2LogHelper::RTSLayer2LogHelperDyn>>> { Self::getRTSLayer2LogHelper(self) }
+    fn setTarget(&mut self, mut targetGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>) { Self::setTarget(self, targetGameLayer) }
+}
+impl crate::org::allbinary::layer::NamedInterface::NamedInterface for NullPathFindingLayer {
+    fn getName(&mut self) -> String { Self::getName(self) }
+}
+impl crate::org::allbinary::game::identification::GroupInterfaceCompositeInterface::GroupInterfaceCompositeInterface for NullPathFindingLayer {
+    fn getGroupInterface(&mut self) -> Vec<Option<Rc<RefCell<Group>>>> { Self::getGroupInterface(self) }
+}
+impl crate::org::allbinary::game::layer::waypoint::WaypointLayerInterface::WaypointLayerInterface for NullPathFindingLayer {
+    fn init(&mut self, mut geographicMapCellHistory: Option<Rc<RefCell<GeographicMapCellHistory>>>, mut geographicMapCellPositionBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) { Self::init(self, geographicMapCellHistory, geographicMapCellPositionBasicArrayList) }
+    fn getMoveOutOfBuildAreaPath(&mut self, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::getMoveOutOfBuildAreaPath(self, geographicMapCellPosition) }
+    fn setClosestGeographicMapCellHistory(&mut self, mut pathsList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) { Self::setClosestGeographicMapCellHistory(self, pathsList) }
+    fn teleportTo(&mut self, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) { Self::teleportTo(self, geographicMapCellPosition) }
+    fn setLoad(&mut self, mut resource: i32) { Self::setLoad(self, resource) }
+    fn getSurroundingGeographicMapCellPositionList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::getSurroundingGeographicMapCellPositionList(self) }
+    fn isSelected(&mut self) -> bool { Self::isSelected(self) }
+    fn shouldAddWaypointFromBuilding(&mut self) -> bool { Self::shouldAddWaypointFromBuilding(self) }
+    fn isShowMoreCaptionStates(&mut self) -> bool { Self::isShowMoreCaptionStates(self) }
+    fn trackTo(&mut self, mut reason: String) { Self::trackTo(self, reason) }
+    fn trackToDXY(&mut self, mut dx: i32, mut dy: i32) { Self::trackToDXY(self, dx, dy) }
+    fn buildingChase(&mut self, mut allbinaryLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut cellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> bool { Self::buildingChase(self, allbinaryLayer, cellPosition) }
+    fn getTrackingEvent(&mut self) -> Option<Rc<RefCell<TrackingEvent>>> { Self::getTrackingEvent(self) }
+    fn allStop(&mut self) { Self::allStop(self) }
+    fn isWaypointListEmptyOrOnlyTargets(&mut self) -> bool { Self::isWaypointListEmptyOrOnlyTargets(self) }
+    fn getCurrentGeographicMapCellPosition(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> { Self::getCurrentGeographicMapCellPosition(self) }
+    fn getTopLeftGeographicMapCellPosition(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> { Self::getTopLeftGeographicMapCellPosition(self) }
+    fn getCaptionAnimationHelper(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::caption::CaptionAnimationHelperBase::CaptionAnimationHelperBaseDyn>>> { Self::getCaptionAnimationHelper(self) }
+    fn getWaypointBehavior(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>> { Self::getWaypointBehavior(self) }
+    fn getWaypointLogHelper(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointLogHelper::WaypointLogHelperDyn>>> { Self::getWaypointLogHelper(self) }
+    fn getWaypoint2LogHelper(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::Waypoint2LogHelper::Waypoint2LogHelperDyn>>> { Self::getWaypoint2LogHelper(self) }
+    fn getWaypointRunnableLogHelper(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointRunnableLogHelper::WaypointRunnableLogHelperDyn>>> { Self::getWaypointRunnableLogHelper(self) }
+}
+impl crate::org::allbinary::game::input::GameKeyEventSourceInterface::GameKeyEventSourceInterface for NullPathFindingLayer {
+    fn getSourceId(&mut self) -> i32 { Self::getSourceId(self) }
+}
+impl crate::org::allbinary::game::combat::destroy::DestroyableInterface::DestroyableInterface for NullPathFindingLayer {
+    fn isDestroyed(&mut self) -> bool { Self::isDestroyed(self) }
+}
 
 impl NullPathFindingLayer {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -241,7 +292,7 @@ impl NullPathFindingLayer {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait NullPathFindingLayerDyn {
+pub trait NullPathFindingLayerDyn: std::any::Any {
     fn as_NullPathFindingLayer(&self) -> &NullPathFindingLayer;
     fn as_NullPathFindingLayer_mut(&mut self) -> &mut NullPathFindingLayer;
     fn getName(&mut self) -> String { NullPathFindingLayer::getName(self.as_NullPathFindingLayer_mut()) }

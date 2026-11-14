@@ -25,6 +25,7 @@ use crate::org::allbinary::logic::java::bool::BooleanFactory::BooleanFactory;
 use crate::org::allbinary::logic::math::SmallIntegerSingletonFactory::SmallIntegerSingletonFactory;
 use crate::org::allbinary::media::audio::ErrorSound::ErrorSound;
 use crate::org::allbinary::media::audio::PrimaryPlayerQueueFactory::PrimaryPlayerQueueFactory;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -41,11 +42,14 @@ thread_local! { pub static LockedFeatureNotificationUtil_instance: Option<Rc<Ref
 
 impl LockedFeatureNotificationUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             gameNotificationEvent: None,
         };
-        this.gameNotificationEvent = GameNotificationEvent::new(this, jcall!(LicenseStrings::LicenseStrings::getInstance()).LOCKED.clone(), jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(3), jcall!(BasicColorFactory::getInstance()).RED.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
         this
     }
 
@@ -62,7 +66,7 @@ impl LockedFeatureNotificationUtil {
     // throws Exception
     pub fn fire(&mut self) {
         jcall!(PrimaryPlayerQueueFactory::getInstance()).add(ErrorSound::getInstance());
-        jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.gameNotificationEvent.clone());
+        jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.gameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
     }
     
 
@@ -70,7 +74,7 @@ impl LockedFeatureNotificationUtil {
     pub fn fireWithColor(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
         jcall!(PrimaryPlayerQueueFactory::getInstance()).add(ErrorSound::getInstance());
         jcall!(self.gameNotificationEvent).setBasicColorP(basicColor.clone());
-        jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.gameNotificationEvent.clone());
+        jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.gameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
     }
 }
 

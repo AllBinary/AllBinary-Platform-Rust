@@ -18,12 +18,13 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::io::ByteArrayInputStream::ByteArrayInputStream;
-// use crate::java::io::DataInputStream::DataInputStream;
+use crate::java::io::DataInputStream::DataInputStream;
 // use crate::java::io::EOFException::EOFException;
-// use crate::java::io::IOException::IOException;
-// use crate::javax::microedition::rms::RecordComparator::RecordComparator;
+use crate::java::io::IOException::IOException;
+use crate::javax::microedition::rms::RecordComparator::RecordComparator;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,9 +38,15 @@ pub struct ScoreComparator {
     pub isHighestBest: bool,
 }
 
-// impl RecordComparator for ScoreComparator with the methods of the trait
+impl RecordComparator for ScoreComparator {
+    fn compare(&mut self, mut recordOne: Vec<i8>, mut recordTwo: Vec<i8>) -> i32 { Self::compare(self, recordOne, recordTwo) }
+}
 
 impl ScoreComparator {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut isHighestBest: bool) -> Self {
@@ -58,29 +65,29 @@ impl ScoreComparator {
     
 
     pub fn getBestScore(&mut self) -> i64 {
-        return (if self.isHighestBest { i64::MAX } else { 0 });
+        return (if self.isHighestBest { i64::MAX.clone() } else { 0 });
     }
     
 
     pub fn compare(&mut self, mut recordOne: Vec<i8>, mut recordTwo: Vec<i8>) -> i32 {
-        let mut byteArrayInputStreamOne: Option<Rc<RefCell<ByteArrayInputStream>>> = ByteArrayInputStream::new(recordOne.clone());
+        let mut byteArrayInputStreamOne: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = crate::java::io::InputStream::InputStream::new1(recordOne.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>);
         let mut inputStreamOne: Option<Rc<RefCell<DataInputStream>>> = DataInputStream::new(byteArrayInputStreamOne.clone());
-        let mut byteArrayInputStreamTwo: Option<Rc<RefCell<ByteArrayInputStream>>> = ByteArrayInputStream::new(recordTwo.clone());
+        let mut byteArrayInputStreamTwo: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = crate::java::io::InputStream::InputStream::new1(recordTwo.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>);
         let mut inputStreamTwo: Option<Rc<RefCell<DataInputStream>>> = DataInputStream::new(byteArrayInputStreamTwo.clone());
         let mut scoreOne: i64 = 0_i64;
         let mut scoreTwo: i64 = 0_i64;
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(inputStreamOne).readUTF();
             jcall!(inputStreamTwo).readUTF();
-            scoreOne = jcall!(inputStreamOne).readLong();
-            scoreTwo = jcall!(inputStreamTwo).readLong();
+            scoreOne = { let java_value = (jcall!(inputStreamOne).readLong()).clone(); java_value };
+            scoreTwo = { let java_value = (jcall!(inputStreamTwo).readLong()).clone(); java_value };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("compare"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("compare"), crate::java_into_object(e.clone()));
             }
         }
         if self.isHighestBest {
@@ -93,22 +100,22 @@ impl ScoreComparator {
 
     pub fn getHighTooLow(&mut self, mut scoreOne: i64, mut scoreTwo: i64) -> i32 {
         if scoreOne > scoreTwo {
-            return unsafe { crate::javax::microedition::rms::RecordComparator::RecordComparator_PRECEDES.clone() }.clone();
+            return crate::javax::microedition::rms::RecordComparator::RecordComparator_PRECEDES.with(Clone::clone).clone();
         } else if scoreOne < scoreTwo {
-            return unsafe { crate::javax::microedition::rms::RecordComparator::RecordComparator_FOLLOWS.clone() }.clone();
+            return crate::javax::microedition::rms::RecordComparator::RecordComparator_FOLLOWS.with(Clone::clone).clone();
         } else {
-            return unsafe { crate::javax::microedition::rms::RecordComparator::RecordComparator_EQUIVALENT.clone() }.clone();
+            return crate::javax::microedition::rms::RecordComparator::RecordComparator_EQUIVALENT.with(Clone::clone).clone();
         }
     }
     
 
     pub fn getLowTooHigh(&mut self, mut scoreOne: i64, mut scoreTwo: i64) -> i32 {
         if scoreOne < scoreTwo {
-            return unsafe { crate::javax::microedition::rms::RecordComparator::RecordComparator_PRECEDES.clone() }.clone();
+            return crate::javax::microedition::rms::RecordComparator::RecordComparator_PRECEDES.with(Clone::clone).clone();
         } else if scoreOne > scoreTwo {
-            return unsafe { crate::javax::microedition::rms::RecordComparator::RecordComparator_FOLLOWS.clone() }.clone();
+            return crate::javax::microedition::rms::RecordComparator::RecordComparator_FOLLOWS.with(Clone::clone).clone();
         } else {
-            return unsafe { crate::javax::microedition::rms::RecordComparator::RecordComparator_EQUIVALENT.clone() }.clone();
+            return crate::javax::microedition::rms::RecordComparator::RecordComparator_EQUIVALENT.with(Clone::clone).clone();
         }
     }
 }

@@ -31,6 +31,10 @@ pub struct BaseMusicService {
 
 impl BaseMusicService {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -41,7 +45,7 @@ impl BaseMusicService {
         Some(Rc::new(RefCell::new(Self::new_struct())))
     }
 }
-pub trait BaseMusicServiceDyn {
+pub trait BaseMusicServiceDyn: std::any::Any {
     fn as_BaseMusicService(&self) -> &BaseMusicService;
     fn as_BaseMusicService_mut(&mut self) -> &mut BaseMusicService;
 }

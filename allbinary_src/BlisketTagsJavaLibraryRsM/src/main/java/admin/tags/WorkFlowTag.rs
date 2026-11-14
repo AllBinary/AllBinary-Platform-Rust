@@ -39,8 +39,8 @@ impl WorkFlowTag {
         let mut this = Self {
             base: TableTag::new_struct(),
         };
-        this.setTagHelperFactory(WorkFlowHelperFactory::new());
-        this.setTagRequestHelperFactory(WorkFlowHelperFactory::new());
+        this.setTagHelperFactory(WorkFlowHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(WorkFlowHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 

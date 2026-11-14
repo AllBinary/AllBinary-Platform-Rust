@@ -32,6 +32,10 @@ thread_local! { pub static AnimationBehavior_instance: Option<Rc<RefCell<dyn Ani
 
 impl AnimationBehavior {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -51,7 +55,7 @@ impl AnimationBehavior {
     pub fn reset(&mut self) {
     }
 }
-pub trait AnimationBehaviorDyn {
+pub trait AnimationBehaviorDyn: std::any::Any {
     fn as_AnimationBehavior(&self) -> &AnimationBehavior;
     fn as_AnimationBehavior_mut(&mut self) -> &mut AnimationBehavior;
     fn reset(&mut self) { AnimationBehavior::reset(self.as_AnimationBehavior_mut()) }

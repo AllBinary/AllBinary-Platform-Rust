@@ -17,9 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL::GL;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::khronos::opengles::GL::GL;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation;
 use crate::org::allbinary::animation::NullRotationAnimationFactory::NullRotationAnimationFactory;
@@ -34,8 +34,8 @@ use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
 use crate::org::allbinary::util::CircularIndexUtil::CircularIndexUtil;
+use crate::java::lang::Exception::*;
 use super::BaseImageAnimationFactory::BaseImageAnimationFactory;
-use super::ActualRotationAnimation::ActualRotationAnimation;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -58,19 +58,16 @@ pub struct LazyImageRotationAnimation {
 thread_local! { pub static LazyImageRotationAnimation_SET_REAL_ANIMATION: String = String::from("setRealAnimation"); }
 impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for LazyImageRotationAnimation {
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
-}
-impl crate::org::allbinary::animation::IndexedAnimationInterface::IndexedAnimationInterface for LazyImageRotationAnimation {
-    fn reset(&mut self) { Self::reset(self) }
-    fn setFrame(&mut self, mut index: i32) { Self::setFrame(self, index) }
-    fn getFrame(&mut self) -> i32 { Self::getFrame(self) }
-}
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for LazyImageRotationAnimation {
-    fn getSize(&mut self) -> i32 { Self::getSize(self) }
-    fn previousFrame(&mut self) { Self::previousFrame(self) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for LazyImageRotationAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+}
+impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterface for LazyImageRotationAnimation {
+    fn setFrameByDirection(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameByDirection(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn setFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrame(&mut self, p1: i16) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrame(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
 }
 
 impl LazyImageRotationAnimation {
@@ -78,7 +75,7 @@ impl LazyImageRotationAnimation {
 
     pub fn new_struct(mut layoutIndex: i32, mut instanceId: i32, mut scaleProperties: Option<Rc<RefCell<ScaleProperties>>>, mut animationInterfaceFactoryInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::image::BaseImageAnimationFactory::BaseImageAnimationFactoryDyn>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
         let mut this = Self {
-            base: RotationAnimation::new_struct(AngleInfo::getInstance(jcall!(AngleFactory::getInstance()).QUARTER_TOTAL_ANGLE.clone()), CircularIndexUtil::createInstance(4), animationBehavior.clone()),
+            base: RotationAnimation::new_struct(AngleInfo::getInstance({ let java_field = jcall!(AngleFactory::getInstance()).QUARTER_TOTAL_ANGLE.clone(); java_field }.clone()), CircularIndexUtil::createInstance(4), animationBehavior.clone()),
             logUtil: None,
             layoutIndex: 0,
             instanceId: 0,
@@ -94,14 +91,15 @@ impl LazyImageRotationAnimation {
         this.instanceId = instanceId.clone();
         this.animationInterfaceFactoryInterface = animationInterfaceFactoryInterface.clone();
         let mut imageCache: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>> = ImageCacheFactory::getInstance();
-        this.scaleProperties = scaleProperties.clone();
-        this.NULL_INDEX_ANIMATION = (jcall!(NullRotationAnimationFactory::getFactoryInstance()).getInstance(0)).clone() /* as IndexedAnimation */;
         this
     }
 
     pub fn new(mut layoutIndex: i32, mut instanceId: i32, mut scaleProperties: Option<Rc<RefCell<ScaleProperties>>>, mut animationInterfaceFactoryInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::image::BaseImageAnimationFactory::BaseImageAnimationFactoryDyn>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(layoutIndex, instanceId, scaleProperties, animationInterfaceFactoryInterface, animationBehavior))));
-            jcall!(imageCache).add((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(layoutIndex.clone(), instanceId.clone(), scaleProperties.clone(), animationInterfaceFactoryInterface.clone(), animationBehavior.clone()))));
+            let mut imageCache: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>> = ImageCacheFactory::getInstance();
+            jcall!(imageCache).add(this.clone());
+            jcall!(this).scaleProperties = scaleProperties.clone();
+            jcall!(this).NULL_INDEX_ANIMATION = { let java_value = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> { panic!("ClassCastException: a Rust dyn Animation cannot be cast to IndexedAnimation") })()).clone(); java_value };
             /* Java local class: move it out of the function
 pub struct ActualRotationAnimation {
     pub base: RotationAnimation,
@@ -110,20 +108,17 @@ pub struct ActualRotationAnimation {
 }
 
 impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for ActualRotationAnimation {
-    fn nextFrame(&mut self) { self.base.nextFrame() }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
-}
-impl crate::org::allbinary::animation::IndexedAnimationInterface::IndexedAnimationInterface for ActualRotationAnimation {
-    fn reset(&mut self) { self.base.reset() }
-    fn setFrame(&mut self, mut index: i32) { Self::setFrame(self, index) }
-    fn getFrame(&mut self) -> i32 { Self::getFrame(self) }
-}
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for ActualRotationAnimation {
-    fn getSize(&mut self) -> i32 { self.base.getSize() }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::Animation::Animation::nextFrame(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self)) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for ActualRotationAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+}
+impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterface for ActualRotationAnimation {
+    fn setFrameByDirection(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameByDirection(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn setFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrame(&mut self, p1: i16) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrame(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
 }
 
 impl ActualRotationAnimation {
@@ -131,12 +126,12 @@ impl ActualRotationAnimation {
 
             pub fn new_struct(mut lazyImageRotationAnimation: Option<Rc<RefCell<LazyImageRotationAnimation>>>) -> Self {
                 let mut this = Self {
-            base: RotationAnimation::new_struct(AngleInfo::getInstance(jcall!(AngleFactory::getInstance()).QUARTER_TOTAL_ANGLE.clone()), CircularIndexUtil::createInstance(4), this.base.animationBehavior.clone()),
+            base: RotationAnimation::new_struct(AngleInfo::getInstance({ let java_field = jcall!(AngleFactory::getInstance()).QUARTER_TOTAL_ANGLE.clone(); java_field }.clone()), CircularIndexUtil::createInstance(4), jcall!(this).base.animationBehavior.clone()),
             lazyImageRotationAnimation: None,
             index: 0,
                 };
                 // super(...) is in the struct literal above
-                this.lazyImageRotationAnimation = lazyImageRotationAnimation.clone();
+                jcall!(this).lazyImageRotationAnimation = lazyImageRotationAnimation.clone();
                 this
             }
 
@@ -155,33 +150,33 @@ impl ActualRotationAnimation {
             }
             
 
-            pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+            pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
                 match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                     jcall!(ImageCacheFactory::getInstance()).insertFirst(self);
-                    jcall!(self.lazyImageRotationAnimation).animation = jcall!(self.lazyImageRotationAnimation).NULL_INDEX_ANIMATION.clone();
+                    jcall!(self.lazyImageRotationAnimation).animation = { let java_field = jcall!(self.lazyImageRotationAnimation).NULL_INDEX_ANIMATION.clone(); java_field }.clone();
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                     let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-                    jcall!(logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone(), crate::java_into_object(e.clone()));
+                    jcall!(logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }
             
 
-            pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) {
+            pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) {
                 match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                     jcall!(ImageCacheFactory::getInstance()).insertFirst(self);
-                    jcall!(self.lazyImageRotationAnimation).animation = jcall!(self.lazyImageRotationAnimation).NULL_INDEX_ANIMATION.clone();
+                    jcall!(self.lazyImageRotationAnimation).animation = { let java_field = jcall!(self.lazyImageRotationAnimation).NULL_INDEX_ANIMATION.clone(); java_field }.clone();
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                     let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-                    jcall!(logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone(), crate::java_into_object(e.clone()));
+                    jcall!(logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }
@@ -195,28 +190,28 @@ impl std::ops::DerefMut for ActualRotationAnimation {
 }
 
 impl crate::org::allbinary::animation::Animation::AnimationDyn for ActualRotationAnimation {
-    fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self }
-    fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
+    fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base.base }
+    fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base.base }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
 }
 impl crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn for ActualRotationAnimation {
-    fn as_IndexedAnimation(&self) -> &crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &self }
-    fn as_IndexedAnimation_mut(&mut self) -> &mut crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &mut self }
+    fn as_IndexedAnimation(&self) -> &crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &self.base.base }
+    fn as_IndexedAnimation_mut(&mut self) -> &mut crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &mut self.base.base }
     fn setFrame(&mut self, mut index: i32) { Self::setFrame(self, index) }
     fn getFrame(&mut self) -> i32 { Self::getFrame(self) }
     fn getSize(&mut self) -> i32 { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::getSize(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self)) }
 }
 impl crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn for ActualRotationAnimation {
-    fn as_RotationAnimation(&self) -> &crate::org::allbinary::animation::RotationAnimation::RotationAnimation { &self }
-    fn as_RotationAnimation_mut(&mut self) -> &mut crate::org::allbinary::animation::RotationAnimation::RotationAnimation { &mut self }
+    fn as_RotationAnimation(&self) -> &crate::org::allbinary::animation::RotationAnimation::RotationAnimation { &self.base }
+    fn as_RotationAnimation_mut(&mut self) -> &mut crate::org::allbinary::animation::RotationAnimation::RotationAnimation { &mut self.base }
 }
 impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface for ActualRotationAnimation {
     fn set(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::khronos::opengles::GL::GL>>>) { crate::org::allbinary::animation::Animation::Animation::set(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1) }
 }
 
 */
-            this.animation = ActualRotationAnimation::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+            jcall!(this).animation = ActualRotationAnimation::new(this.clone());
         this
     }
     
@@ -225,14 +220,14 @@ impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::Open
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut animation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> = self.animation.clone();
             jcall!(self.animationInterfaceFactoryInterface).setInitialScale(self.scaleProperties.clone());
-            self.animation = (jcall!(self.animationInterfaceFactoryInterface).getInstance(self.instanceId.clone())).clone() /* as IndexedAnimation */;
+            self.animation = { let java_value = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> { panic!("ClassCastException: a Rust dyn Animation cannot be cast to IndexedAnimation") })()).clone(); java_value };
             jcall!(self.animation).setState(animation.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), LazyImageRotationAnimation_SET_REAL_ANIMATION.with(Clone::clone).clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), LazyImageRotationAnimation_SET_REAL_ANIMATION.with(Clone::clone).clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -250,7 +245,7 @@ impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::Open
 
     // throws Exception
     pub fn set(&mut self, mut gl: Option<Rc<RefCell<dyn GL>>>) {
-        jcall!(self.animation).set(gl.clone());
+        jcall!(self.animation).as_IndexedAnimation_mut().set(gl.clone());
     }
     
 
@@ -275,37 +270,37 @@ impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::Open
     
 
     pub fn nextRotation(&mut self) {
-        let mut rotationAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> = ((self.animation).clone() /* as RotationAnimation */);
+        let mut rotationAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> { panic!("ClassCastException: a Rust dyn IndexedAnimation cannot be cast to RotationAnimation") })());
         jcall!(rotationAnimation).nextRotation();
     }
     
 
     pub fn previousRotation(&mut self) {
-        let mut rotationAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> = ((self.animation).clone() /* as RotationAnimation */);
+        let mut rotationAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> { panic!("ClassCastException: a Rust dyn IndexedAnimation cannot be cast to RotationAnimation") })());
         jcall!(rotationAnimation).previousRotation();
     }
     
 
     pub fn nextRotationX(&mut self) {
-        let mut rotationAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> = ((self.animation).clone() /* as RotationAnimation */);
+        let mut rotationAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> { panic!("ClassCastException: a Rust dyn IndexedAnimation cannot be cast to RotationAnimation") })());
         jcall!(rotationAnimation).nextRotationX();
     }
     
 
     pub fn previousRotationX(&mut self) {
-        let mut rotationAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> = ((self.animation).clone() /* as RotationAnimation */);
+        let mut rotationAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> { panic!("ClassCastException: a Rust dyn IndexedAnimation cannot be cast to RotationAnimation") })());
         jcall!(rotationAnimation).previousRotationX();
     }
     
 
     pub fn nextRotationZ(&mut self) {
-        let mut rotationAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> = ((self.animation).clone() /* as RotationAnimation */);
+        let mut rotationAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> { panic!("ClassCastException: a Rust dyn IndexedAnimation cannot be cast to RotationAnimation") })());
         jcall!(rotationAnimation).nextRotationZ();
     }
     
 
     pub fn previousRotationZ(&mut self) {
-        let mut rotationAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> = ((self.animation).clone() /* as RotationAnimation */);
+        let mut rotationAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>>> { panic!("ClassCastException: a Rust dyn IndexedAnimation cannot be cast to RotationAnimation") })());
         jcall!(rotationAnimation).previousRotationZ();
     }
     
@@ -407,29 +402,29 @@ impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::Open
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(self.animation).paintXY(graphics.clone(), x.clone(), y.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
-    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) {
+    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(self.animation).paintThreedXYZ(graphics.clone(), x.clone(), y.clone(), z.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -437,8 +432,8 @@ impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::Open
 
     pub fn toString(&mut self) -> String {
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
-        let mut image: Option<Rc<RefCell<Image>>> = jcall!(self.animationInterfaceFactoryInterface).getImage();
-        return jcall!(StringMaker::new()).append(self.base.toString()).append(jcall!(commonSeps).SPACE.clone()).append(jcall!(image).getName()).append(jcall!(commonSeps).SPACE.clone()).appendint(((jcall!(image).getWidth()) as i32)).append(jcall!(commonSeps).SPACE.clone()).appendint(((jcall!(image).getHeight()) as i32)).toString();
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(self.animationInterfaceFactoryInterface).getImage();
+        return jcall!(StringMaker::new()).append(self.base.toString()).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone()).append(jcall!(image).getName()).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone()).appendint(jcall!(image).getWidth()).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone()).appendint(jcall!(image).getHeight()).toString();
     }
 }
 impl std::ops::Deref for LazyImageRotationAnimation {
@@ -454,8 +449,8 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for LazyImageRota
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base.base }
     fn setAlpha(&mut self, mut alpha: i32) { Self::setAlpha(self, alpha) }
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
     fn isThreed(&mut self) -> bool { Self::isThreed(self) }
     fn getBasicColorP(&mut self) -> Option<Rc<RefCell<BasicColor>>> { Self::getBasicColorP(self) }
     fn getChangeBasicColor(&mut self) -> Option<Rc<RefCell<BasicColor>>> { Self::getChangeBasicColor(self) }

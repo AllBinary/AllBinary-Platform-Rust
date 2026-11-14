@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::visual::dhtml::style::css::property::CssPropertyView::CssPropertyView;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,7 +38,7 @@ impl FontFamilyView {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: CssPropertyView::new_struct1(jcall!(FontFamilyData::FontFamilyData::getInstance()).VALUE.clone()),
+            base: CssPropertyView::new_struct1({ let java_field = jcall!(FontFamilyData::FontFamilyData::getInstance()).VALUE.clone(); java_field }.clone()),
         };
         // super(...) is in the struct literal above
         this
@@ -50,7 +51,7 @@ impl FontFamilyView {
 
     pub fn new_struct1(mut node: Option<Rc<RefCell<Node>>>) -> Self {
         let mut this = Self {
-            base: CssPropertyView::new_struct1(node.clone()),
+            base: CssPropertyView::new_struct1_Node(node.clone()),
         };
         // super(...) is in the struct literal above
         this

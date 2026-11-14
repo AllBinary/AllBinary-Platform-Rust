@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::data::generator::OrderIdGenerator::OrderIdGenerator;
 use crate::org::allbinary::data::tables::user::commerce::inventory::order::OrderHistoryEntity::OrderHistoryEntity;
 use crate::org::allbinary::data::tables::user::commerce::inventory::order::OrderItemsEntity::OrderItemsEntity;
+use crate::java::lang::Exception::*;
 use super::Order::Order;
 
 // Borrows the object of a Java reference
@@ -36,6 +37,10 @@ pub struct OrderProcessorUtil {
 thread_local! { pub static OrderProcessorUtil_instance: Option<Rc<RefCell<OrderProcessorUtil>>> = OrderProcessorUtil::new(); }
 
 impl OrderProcessorUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

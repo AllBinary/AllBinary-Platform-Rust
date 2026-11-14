@@ -17,9 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::crypto::Cipher::Cipher;
-// use crate::javax::crypto::SecretKey::SecretKey;
+use crate::javax::crypto::Cipher::Cipher;
+use crate::javax::crypto::SecretKey::SecretKey;
 use crate::org::allbinary::logic::java::byteutil::ByteUtil::ByteUtil;
+use crate::java::lang::Exception::*;
 use super::BaseSecretComposite::BaseSecretComposite;
 
 // Borrows the object of a Java reference
@@ -33,7 +34,7 @@ pub struct SecretComposite {
     pub base: BaseSecretComposite,
     pub byteUtil: Option<Rc<RefCell<ByteUtil>>>,
     pub cipher: Option<Rc<RefCell<Cipher>>>,
-    pub secretKey: Option<Rc<RefCell<SecretKey>>>,
+    pub secretKey: Option<Rc<RefCell<dyn SecretKey>>>,
     pub key: Vec<i8>,
 }
 
@@ -41,7 +42,7 @@ pub struct SecretComposite {
 impl SecretComposite {
     
 
-    pub fn new_struct(mut secretKey: Option<Rc<RefCell<SecretKey>>>, mut cipher: Option<Rc<RefCell<Cipher>>>, mut key: Vec<i8>) -> Self {
+    pub fn new_struct(mut secretKey: Option<Rc<RefCell<dyn SecretKey>>>, mut cipher: Option<Rc<RefCell<Cipher>>>, mut key: Vec<i8>) -> Self {
         let mut this = Self {
             base: BaseSecretComposite::new_struct(),
             byteUtil: None,
@@ -56,7 +57,7 @@ impl SecretComposite {
         this
     }
 
-    pub fn new(mut secretKey: Option<Rc<RefCell<SecretKey>>>, mut cipher: Option<Rc<RefCell<Cipher>>>, mut key: Vec<i8>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut secretKey: Option<Rc<RefCell<dyn SecretKey>>>, mut cipher: Option<Rc<RefCell<Cipher>>>, mut key: Vec<i8>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(secretKey, cipher, key))))
     }
     
@@ -80,7 +81,7 @@ impl SecretComposite {
         for index in (0..(self.key.len() as i32)) {
             let mut value: i8 = self.key[(index) as usize].clone();
             if ((value) as i32) < 8 && ((value) as i32) > 0 {
-                array = jcall!(self.byteUtil).xorByte(array.clone(), ((value) as i32));
+                array = { let java_value = (jcall!(self.byteUtil).xorByte(array.clone(), ((value) as i32))).clone(); java_value };
             }
         }
         return array.clone();

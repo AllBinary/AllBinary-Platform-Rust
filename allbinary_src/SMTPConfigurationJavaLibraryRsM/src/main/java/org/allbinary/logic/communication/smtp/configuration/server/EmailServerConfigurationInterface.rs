@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait EmailServerConfigurationInterface {
+pub trait EmailServerConfigurationInterface: std::any::Any {
     
 
     fn setSmtpServer(&mut self, value: String);

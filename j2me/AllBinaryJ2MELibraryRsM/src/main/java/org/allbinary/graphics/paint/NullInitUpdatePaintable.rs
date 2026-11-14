@@ -34,10 +34,10 @@ thread_local! { pub static NullInitUpdatePaintable_SINGLETON: Option<Rc<RefCell<
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintableInterface::InitUpdatePaintableInterface for NullInitUpdatePaintable {
 }
 impl crate::org::allbinary::init::InitInterface::InitInterface for NullInitUpdatePaintable {
-    fn init(&mut self) { self.base.init() }
+    fn init(&mut self) { crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintable::init(crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn::as_InitUpdatePaintable_mut(self)) }
 }
 impl crate::org::allbinary::init::UpdateInterface::UpdateInterface for NullInitUpdatePaintable {
-    fn update(&mut self) { self.base.update() }
+    fn update(&mut self) { crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintable::update(crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn::as_InitUpdatePaintable_mut(self)) }
 }
 
 impl NullInitUpdatePaintable {
@@ -56,7 +56,7 @@ impl NullInitUpdatePaintable {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn>>> {
-        return NullInitUpdatePaintable_SINGLETON.with(Clone::clone).clone();
+        return NullInitUpdatePaintable_SINGLETON.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn>>);
     }
 }
 impl std::ops::Deref for NullInitUpdatePaintable {
@@ -74,6 +74,10 @@ impl crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePain
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for NullInitUpdatePaintable {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for NullInitUpdatePaintable {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paint(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

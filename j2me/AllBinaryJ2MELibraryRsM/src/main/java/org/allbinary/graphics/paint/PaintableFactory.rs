@@ -32,6 +32,10 @@ pub struct PaintableFactory {
 
 impl PaintableFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -44,7 +48,7 @@ impl PaintableFactory {
     
 
     pub fn getInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>> {
-        return NullPaintable::NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>);
+        return NullPaintable::NullPaintable::getInstance();
     }
 }
 

@@ -43,6 +43,10 @@ impl crate::Runnable for ABRunnable {
 
 impl ABRunnable {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             running: false,
@@ -80,7 +84,7 @@ impl ABRunnable {
         return -1;
     }
 }
-pub trait ABRunnableDyn {
+pub trait ABRunnableDyn: std::any::Any {
     fn as_ABRunnable(&self) -> &ABRunnable;
     fn as_ABRunnable_mut(&mut self) -> &mut ABRunnable;
     fn setThread(&mut self, mut thread: Option<Rc<RefCell<Thread>>>) { ABRunnable::setThread(self.as_ABRunnable_mut(), thread) }

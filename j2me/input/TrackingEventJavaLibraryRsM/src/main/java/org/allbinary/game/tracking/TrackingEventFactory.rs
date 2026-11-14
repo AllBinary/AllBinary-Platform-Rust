@@ -36,6 +36,10 @@ impl AllBinaryEventObjectFactoryInterface for TrackingEventFactory {
 }
 
 impl TrackingEventFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -50,7 +54,7 @@ impl TrackingEventFactory {
     
 
     pub fn getInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>> {
-        return TrackingEvent::new(TrackingEventHandler::TrackingEventHandler::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>);
+        return TrackingEvent::new(crate::java_into_object(TrackingEventHandler::TrackingEventHandler::getInstance())).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>);
     }
 }
 

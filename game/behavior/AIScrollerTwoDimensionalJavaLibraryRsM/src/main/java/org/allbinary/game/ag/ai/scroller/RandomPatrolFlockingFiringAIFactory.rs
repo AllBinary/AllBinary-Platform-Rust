@@ -23,6 +23,7 @@ use crate::org::allbinary::game::ai::ArtificialIntelligenceInterfaceFactoryInter
 use crate::org::allbinary::game::input::GameInput::GameInput;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::RandomPatrolAI::RandomPatrolAI;
 use super::TimedFireAI::TimedFireAI;
 
@@ -37,10 +38,14 @@ pub struct RandomPatrolFlockingFiringAIFactory {
 }
 
 impl ArtificialIntelligenceInterfaceFactoryInterface for RandomPatrolFlockingFiringAIFactory {
-    fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> { Self::getInstance(self, hashtable, ownerLayerInterface, gameInput) }
+    fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> { Self::getInstance(self, hashtable, ownerLayerInterface, gameInput) }
 }
 
 impl RandomPatrolFlockingFiringAIFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -54,11 +59,11 @@ impl RandomPatrolFlockingFiringAIFactory {
     
 
     // throws Exception
-    pub fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> {
+    pub fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> {
         let mut artificialIntelligenceInterface: Vec<Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>>> = vec![None; (2) as usize];
-        artificialIntelligenceInterface[(0) as usize] = RandomPatrolAI::new(hashtable.clone(), ownerLayerInterface.clone(), gameInput.clone());
-        artificialIntelligenceInterface[(1) as usize] = TimedFireAI::new(1800, ownerLayerInterface.clone(), gameInput.clone());
-        return ArrayAI::new(artificialIntelligenceInterface.clone(), ownerLayerInterface.clone(), gameInput.clone()).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>);
+        artificialIntelligenceInterface[(0) as usize] = RandomPatrolAI::new(hashtable.clone(), ownerLayerInterface.clone(), gameInput.clone()).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>);
+        artificialIntelligenceInterface[(1) as usize] = TimedFireAI::new(1800, ownerLayerInterface.clone(), gameInput.clone()).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>);
+        return ArrayAI::new(artificialIntelligenceInterface.clone(), ownerLayerInterface.clone(), gameInput.clone()).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>).map(|_java_reference| -> Rc<RefCell<dyn ArtificialIntelligenceInterface>> { panic!("ClassCastException: the Rust trait of ArrayAI does not have ArtificialIntelligenceInterface as a base trait") });
     }
 }
 

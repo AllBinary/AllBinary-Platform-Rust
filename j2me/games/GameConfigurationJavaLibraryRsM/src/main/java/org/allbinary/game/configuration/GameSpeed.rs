@@ -33,6 +33,10 @@ thread_local! { pub static GameSpeed_instance: Option<Rc<RefCell<GameSpeed>>> = 
 
 impl GameSpeed {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -45,13 +49,13 @@ impl GameSpeed {
     
 
     pub fn getSpeed(&mut self) -> i32 {
-        let mut speedGameConfiguration: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::GameConfiguration::GameConfigurationDyn>>> = jcall!(GameConfigurationCentral::GameConfigurationCentral::getInstance()).SPEED.clone();
+        let mut speedGameConfiguration: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::GameConfiguration::GameConfigurationDyn>>> = { let java_field = jcall!(GameConfigurationCentral::GameConfigurationCentral::getInstance()).SPEED.clone(); java_field }.clone();
         return (((jcall!(speedGameConfiguration).getMaxValue()).unwrap() as i32) - ((jcall!(speedGameConfiguration).getValue()).unwrap() as i32) + 1);
     }
     
 
     pub fn getDelay(&mut self) -> i32 {
-        let mut speedGameConfiguration: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::GameConfiguration::GameConfigurationDyn>>> = jcall!(GameConfigurationCentral::GameConfigurationCentral::getInstance()).SPEED.clone();
+        let mut speedGameConfiguration: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::GameConfiguration::GameConfigurationDyn>>> = { let java_field = jcall!(GameConfigurationCentral::GameConfigurationCentral::getInstance()).SPEED.clone(); java_field }.clone();
         return 19 * (((jcall!(speedGameConfiguration).getMaxValue()).unwrap() as i32) - ((jcall!(speedGameConfiguration).getValue()).unwrap() as i32));
     }
     

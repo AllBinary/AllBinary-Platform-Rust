@@ -30,7 +30,7 @@ pub struct NoShakeAnimationListener {
     pub base: ShakeAnimationListener,
 }
 
-thread_local! { pub static NoShakeAnimationListener_NO_SHAKE_ANIMATION_LISTENER: Option<Rc<RefCell<dyn crate::org::allbinary::animation::transition::shake::ShakeAnimationListener::ShakeAnimationListenerDyn>>> = NoShakeAnimationListener::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::transition::shake::ShakeAnimationListener::ShakeAnimationListenerDyn>>); }
+thread_local! { pub static NoShakeAnimationListener_NO_SHAKE_ANIMATION_LISTENER: Option<Rc<RefCell<dyn crate::org::allbinary::animation::transition::shake::ShakeAnimationListener::ShakeAnimationListenerDyn>>> = NoShakeAnimationListener::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::transition::shake::ShakeAnimationListener::ShakeAnimationListenerDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::transition::shake::ShakeAnimationListener::ShakeAnimationListenerDyn>>); }
 
 impl NoShakeAnimationListener {
 

@@ -39,6 +39,10 @@ thread_local! { pub static LayerPlacementTypeFactory_instance: Option<Rc<RefCell
 
 impl LayerPlacementTypeFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             MAP: None,
@@ -48,10 +52,10 @@ impl LayerPlacementTypeFactory {
             RIGHT: None,
         };
         this.MAP = LayerPlacementType::new(i32::MAX.clone());
-        this.LEFT = LayerPlacementType::new(jcall!(jcall!(DirectionFactory::getInstance()).LEFT).getValue());
-        this.DOWN = LayerPlacementType::new(jcall!(jcall!(DirectionFactory::getInstance()).DOWN).getValue());
-        this.UP = LayerPlacementType::new(jcall!(jcall!(DirectionFactory::getInstance()).UP).getValue());
-        this.RIGHT = LayerPlacementType::new(jcall!(jcall!(DirectionFactory::getInstance()).RIGHT).getValue());
+        this.LEFT = LayerPlacementType::new(jcall!({ let java_field = jcall!(DirectionFactory::getInstance()).LEFT.clone(); java_field }).getValue());
+        this.DOWN = LayerPlacementType::new(jcall!({ let java_field = jcall!(DirectionFactory::getInstance()).DOWN.clone(); java_field }).getValue());
+        this.UP = LayerPlacementType::new(jcall!({ let java_field = jcall!(DirectionFactory::getInstance()).UP.clone(); java_field }).getValue());
+        this.RIGHT = LayerPlacementType::new(jcall!({ let java_field = jcall!(DirectionFactory::getInstance()).RIGHT.clone(); java_field }).getValue());
         this
     }
 

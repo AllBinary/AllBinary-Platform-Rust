@@ -36,6 +36,10 @@ pub struct UnitTechnologySingletonFactory {
 thread_local! { pub static UnitTechnologySingletonFactory_instance: Option<Rc<RefCell<UnitTechnologySingletonFactory>>> = UnitTechnologySingletonFactory::new(); }
 
 impl UnitTechnologySingletonFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<UnitTechnologySingletonFactory>>> {

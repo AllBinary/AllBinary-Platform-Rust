@@ -48,6 +48,10 @@ thread_local! { pub static ThreadFactoryUtil_instance: Option<Rc<RefCell<ThreadF
 
 impl ThreadFactoryUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,
@@ -67,12 +71,12 @@ impl ThreadFactoryUtil {
     
 
     pub fn getInstanceGameCanvasRunnable(&mut self, mut runnable: Option<Rc<RefCell<dyn GameCanvasRunnableInterface>>>) -> Option<Rc<RefCell<Thread>>> {
-        return { let java_arguments = (runnable.clone(), jcall!(runnable).getType(),); self.getInstanceType(java_arguments.0, java_arguments.1) };
+        return { let java_arguments = (runnable.clone().map(|reference| reference as Rc<RefCell<dyn Runnable>>), jcall!(runnable).getType(),); self.getInstanceType(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn getInstanceForRunnable(&mut self, mut runnable: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ABRunnable::ABRunnableDyn>>>) -> Option<Rc<RefCell<Thread>>> {
-        return { let java_arguments = (runnable.clone(), jcall!(runnable).getType(),); self.getInstanceType(java_arguments.0, java_arguments.1) };
+        return { let java_arguments = (runnable.clone().map(|_java_reference| -> Rc<RefCell<dyn Runnable>> { panic!("ClassCastException: the Rust trait of ABRunnable does not have Runnable as a base trait") }), jcall!(runnable).getType(),); self.getInstanceType(java_arguments.0, java_arguments.1) };
     }
     
 
@@ -80,18 +84,18 @@ impl ThreadFactoryUtil {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
         if J2MEUtil::isHTML() {
             if r#type == crate::org::allbinary::game::displayable::canvas::DemoCanvas::DemoCanvas_TYPE.with(Clone::clone) || r#type == crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvas_TYPE.with(Clone::clone) {
-                let mut demoGameSingleThreadStartRunnable: Option<Rc<RefCell<RunnableCanvasSingleThreadStartRunnable>>> = RunnableCanvasSingleThreadStartRunnable::new((runnable).clone() /* as RunnableCanvas */);
-                PreLogUtil::put(jcall!(StringMaker::new()).append(String::from("Using Pseudo Thread for DemoCanvas/AllBinaryGameCanvas under PlayN/HTML5: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(runnable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone());
-                let mut primaryThreadPool: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>> = PrimaryThreadPool::PrimaryThreadPool::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>);
+                let mut demoGameSingleThreadStartRunnable: Option<Rc<RefCell<RunnableCanvasSingleThreadStartRunnable>>> = RunnableCanvasSingleThreadStartRunnable::new((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn>>> { panic!("ClassCastException: a Rust dyn Runnable cannot be cast to RunnableCanvas") })());
+                PreLogUtil::put(jcall!(StringMaker::new()).append(String::from("Using Pseudo Thread for DemoCanvas/AllBinaryGameCanvas under PlayN/HTML5: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(runnable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
+                let mut primaryThreadPool: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>> = PrimaryThreadPool::PrimaryThreadPool::getInstance();
                 jcall!(primaryThreadPool).runTask(demoGameSingleThreadStartRunnable.clone().map(|reference| reference as Rc<RefCell<dyn Runnable>>));
             } else {
-                PreLogUtil::put(jcall!(StringMaker::new()).append(String::from("Using Pseudo Thread for Runnable under PlayN/HTML5: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(runnable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone());
-                let mut primaryThreadPool: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>> = PrimaryThreadPool::PrimaryThreadPool::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>);
+                PreLogUtil::put(jcall!(StringMaker::new()).append(String::from("Using Pseudo Thread for Runnable under PlayN/HTML5: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(runnable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
+                let mut primaryThreadPool: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>> = PrimaryThreadPool::PrimaryThreadPool::getInstance();
                 jcall!(primaryThreadPool).runTask(runnable.clone());
             }
         }
-        let mut thread: Option<Rc<RefCell<Thread>>> = Thread::new2(runnable.clone(), jcall!(runnable).toString());
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(thread).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        let mut thread: Option<Rc<RefCell<Thread>>> = Thread::new2(runnable.clone(), String::from("Runnable"));
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(thread).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         return thread.clone();
     }
     

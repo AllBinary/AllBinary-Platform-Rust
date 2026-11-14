@@ -8,6 +8,7 @@ use super::*;
 use crate::org::allbinary::math::AngleFactory::AngleFactory;
 use crate::org::allbinary::math::AngleInfo::AngleInfo;
 use crate::org::allbinary::util::CircularIndexUtil::CircularIndexUtil;
+use crate::java::lang::Exception::*;
 use super::RotationAnimation::RotationAnimation;
 use super::AnimationBehavior::AnimationBehavior;
 
@@ -22,21 +23,30 @@ pub struct NullRotationAnimation {
     pub base: RotationAnimation,
 }
 
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for NullRotationAnimation {
-    fn getSize(&mut self) -> i32 { self.base.getSize() }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for NullRotationAnimation {
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::Animation::Animation::nextFrame(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self)) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
+}
+impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterface for NullRotationAnimation {
+    fn setFrameByDirection(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameByDirection(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn setFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrame(&mut self, p1: i16) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrame(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for NullRotationAnimation {
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::animation::Animation::Animation::paintXY(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3) }
 }
 
 impl NullRotationAnimation {
     
 
     pub fn createTotalAngle(mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut totalAngle: i16, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<dyn NullRotationAnimationDyn>>> {
-        return NullRotationAnimation::new(angleInfo.clone(), CircularIndexUtil::createInstance(totalAngle / jcall!(jcall!(angleInfo).getAngleIncrementInfo()).getAngleIncrement()), animationBehavior.clone()).map(|reference| reference as Rc<RefCell<dyn NullRotationAnimationDyn>>);
+        return NullRotationAnimation::new(angleInfo.clone(), CircularIndexUtil::createInstance(((totalAngle) as i32) / ((jcall!(jcall!(angleInfo).getAngleIncrementInfo()).getAngleIncrement()) as i32)), animationBehavior.clone()).map(|reference| reference as Rc<RefCell<dyn NullRotationAnimationDyn>>);
     }
     
 
     pub fn createQuarter(mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<dyn NullRotationAnimationDyn>>> {
-        return NullRotationAnimation::new(AngleInfo::getInstance(jcall!(AngleFactory::getInstance()).QUARTER_TOTAL_ANGLE.clone()), CircularIndexUtil::createInstance(4), animationBehavior.clone()).map(|reference| reference as Rc<RefCell<dyn NullRotationAnimationDyn>>);
+        return NullRotationAnimation::new(AngleInfo::getInstance({ let java_field = jcall!(AngleFactory::getInstance()).QUARTER_TOTAL_ANGLE.clone(); java_field }.clone()), CircularIndexUtil::createInstance(4), animationBehavior.clone()).map(|reference| reference as Rc<RefCell<dyn NullRotationAnimationDyn>>);
     }
     
 

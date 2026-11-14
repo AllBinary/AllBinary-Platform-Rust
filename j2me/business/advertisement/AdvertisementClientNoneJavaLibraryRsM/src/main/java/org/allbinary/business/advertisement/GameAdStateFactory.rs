@@ -7,6 +7,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::GameAdState::GameAdState;
 use crate::org::allbinary::logic::system::SoftwareInformation::SoftwareInformation;
+use crate::java::lang::Exception::*;
 use super::GameAdStateFactoryInterface::GameAdStateFactoryInterface;
 use super::AppNameLicensingAdConfiguration::AppNameLicensingAdConfiguration;
 use super::GameAdStateBase::GameAdStateBase;
@@ -30,13 +31,17 @@ impl GameAdStateFactoryInterface for GameAdStateFactory {
 
 impl GameAdStateFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             gameAdStateArray: Vec::new(),
             gameAdState: None,
         };
-        this.gameAdStateArray = vec![GameAdState::new(AppNameLicensingAdConfiguration::new())];
-        this.gameAdState = this.gameAdStateArray[(0) as usize];
+        this.gameAdStateArray = vec![GameAdState::new(AppNameLicensingAdConfiguration::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdConfiguration::AdConfigurationDyn>>))];
+        this.gameAdState = this.gameAdStateArray[(0) as usize].clone();
         this
     }
 
@@ -57,8 +62,8 @@ impl GameAdStateFactory {
 
     // throws Exception
     pub fn getInstanceForApp(&mut self, mut softwareInformation: Option<Rc<RefCell<SoftwareInformation>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::GameAdStateBase::GameAdStateBaseDyn>>> {
-        self.gameAdState = self.gameAdStateArray[(0) as usize].clone();
-        return self.gameAdStateArray[(0) as usize].clone();
+        self.gameAdState = { let java_value = (self.gameAdStateArray[(0) as usize]).clone(); java_value }.clone();
+        return self.gameAdStateArray[(0) as usize].clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::advertisement::GameAdStateBase::GameAdStateBaseDyn>>);
     }
     
 

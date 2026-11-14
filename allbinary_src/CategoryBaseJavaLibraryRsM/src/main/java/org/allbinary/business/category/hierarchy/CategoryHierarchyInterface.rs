@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait CategoryHierarchyInterface {
+pub trait CategoryHierarchyInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getLevel(&mut self) -> i32;
@@ -48,8 +48,6 @@ pub trait CategoryHierarchyInterface {
     
 
     fn setParent(&mut self, categoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

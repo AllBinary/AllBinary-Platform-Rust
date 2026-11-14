@@ -65,7 +65,7 @@ impl GenericProfileActionScriptJPanel {
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
         this.defaultMutableTreeNode = DefaultMutableTreeNode::new(String::from("Root"));
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this.initComponents();
         this
     }
@@ -121,7 +121,7 @@ impl GenericProfileActionScriptJPanel {
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
         jcall!(self.jScrollPane1).setViewportView(self.actionScriptJTree.clone());
-        self.add(self.jScrollPane1.clone());
+        { let java_arguments = (self.jScrollPane1.clone(),); self.add(java_arguments.0) };
     }
     
 
@@ -130,9 +130,9 @@ impl GenericProfileActionScriptJPanel {
         if button == unsafe { crate::java::awt::event::MouseEvent::MouseEvent_BUTTON3.clone() } {
             let mut treePath: Option<Rc<RefCell<TreePath>>> = jcall!(self.getActionScriptJTree()).getSelectionPath();
             if treePath.is_some() {
-                let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(treePath).getLastPathComponent();
+                let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = crate::java_into_object(jcall!(treePath).getLastPathComponent());
                 if (anyType).is_some() /* instanceof CustomTreeNodeInterface */ {
-                    let mut customTreeNodeInterface: Option<Rc<RefCell<dyn CustomTreeNodeInterface>>> = (anyType).clone() /* as CustomTreeNodeInterface */;
+                    let mut customTreeNodeInterface: Option<Rc<RefCell<dyn CustomTreeNodeInterface>>> = { let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn CustomTreeNodeInterface>>>>().expect("ClassCastException").clone()) };
                     let mut jPopupMenu: Option<Rc<RefCell<JPopupMenu>>> = jcall!(customTreeNodeInterface).getJPopupMenu();
                     jcall!(jPopupMenu).show((jcall!(evt).getSource()).clone() /* as JComponent */, jcall!(evt).getX(), jcall!(evt).getY());
                 }

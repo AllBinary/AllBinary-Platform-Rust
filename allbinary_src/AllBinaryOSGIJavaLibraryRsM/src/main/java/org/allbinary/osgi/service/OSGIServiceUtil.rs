@@ -24,6 +24,7 @@ use crate::org::osgi::framework::BundleContext::BundleContext;
 use crate::org::osgi::framework::ServiceReference::ServiceReference;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::osgi::OSGIServiceInterface::OSGIServiceInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,6 +40,10 @@ pub struct OSGIServiceUtil {
 thread_local! { pub static OSGIServiceUtil_instance: Option<Rc<RefCell<OSGIServiceUtil>>> = OSGIServiceUtil::new(); }
 
 impl OSGIServiceUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<OSGIServiceUtil>>> {
@@ -61,14 +66,14 @@ impl OSGIServiceUtil {
 
     // throws Exception
     pub fn getServicesObjectVector(&mut self, mut bundleContext: Option<Rc<RefCell<dyn BundleContext>>>, mut serviceReferences: Vec<Option<Rc<RefCell<dyn ServiceReference>>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        if serviceReferences.is_some() {
+        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        if !serviceReferences.is_empty() {
             let mut size: i32 = (serviceReferences.len() as i32).clone();
             jcall!(self.logUtil).putF(format!("{}{}", String::from("Service References: "), size), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getServicesObjectVector"));
             for index in (0..size) {
                 let mut serviceReference: Option<Rc<RefCell<dyn ServiceReference>>> = serviceReferences[(index) as usize].clone();
                 if serviceReference.is_some() {
-                    let mut osgiServiceInterface: Option<Rc<RefCell<dyn OSGIServiceInterface>>> = { let java_object = jcall!(bundleContext).getService(serviceReference.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn OSGIServiceInterface>>>>().expect("ClassCastException").clone()) };
+                    let mut osgiServiceInterface: Option<Rc<RefCell<dyn OSGIServiceInterface>>> = { let java_object = (jcall!(bundleContext).getService(serviceReference.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn OSGIServiceInterface>>>>().expect("ClassCastException").clone()) };
                     if osgiServiceInterface.is_none() {
                         panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("No Service For Reference"))));
                     }

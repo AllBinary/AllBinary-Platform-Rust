@@ -29,6 +29,7 @@ use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::json::me::JSONArray::JSONArray;
 use crate::org::json::me::JSONException::JSONException;
 use crate::org::json::me::JSONObject::JSONObject;
+use crate::java::lang::Exception::*;
 use super::ShapeTypeFactory::ShapeTypeFactory;
 use super::ShapeType::ShapeType;
 use super::Number::Number;
@@ -66,6 +67,10 @@ thread_local! { pub static SVGAsJSONSimpleLoader_instance: Option<Rc<RefCell<SVG
 
 impl SVGAsJSONSimpleLoader {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             graphicsStrings: None,
@@ -98,8 +103,8 @@ impl SVGAsJSONSimpleLoader {
         this.KEY_CX = String::from("cx");
         this.KEY_CY = String::from("cy");
         this.KEY_R = String::from("r");
-        this.KEY_X = jcall!(PositionStrings::getInstance()).X.clone();
-        this.KEY_Y = jcall!(PositionStrings::getInstance()).Y.clone();
+        this.KEY_X = { let java_field = jcall!(PositionStrings::getInstance()).X.clone(); java_field }.clone();
+        this.KEY_Y = { let java_field = jcall!(PositionStrings::getInstance()).Y.clone(); java_field }.clone();
         this.ERROR_PARSE_SVG_JSON = String::from("Unable to parse SVG JSON");
         this.ERROR_MISSING_KEY_PREFIX = String::from("Missing key: ");
         this.ERROR_INVALID_NUMBER_PREFIX = String::from("Invalid number for key: ");
@@ -125,32 +130,33 @@ impl SVGAsJSONSimpleLoader {
         if false {
             return self.EMPTY_POINTS.clone();
         }
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut root: Option<Rc<RefCell<JSONObject>>> = JSONObject::new(svgAsJson.clone());
-            let mut svgValue: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(root).opt(self.KEY_SVG.clone());
-            let mut svg: Option<Rc<RefCell<JSONObject>>> = (if svgValue.is_none() { root } else { self.asObject(svgValue.clone(), self.KEY_SVG.clone()) });
-            let mut pointVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            let mut svgValue: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = crate::java_into_object(jcall!(root).opt(self.KEY_SVG.clone()));
+            let mut svg: Option<Rc<RefCell<JSONObject>>> = (if svgValue.is_none() { root.clone() } else { self.asObject(svgValue.clone(), self.KEY_SVG.clone()) });
+            let mut pointVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
             let mut keys: Option<Rc<RefCell<dyn Enumeration>>> = jcall!(svg).keys();
             while jcall!(keys).hasMoreElements() {
-                let mut key: String = (jcall!(keys).nextElement()).clone() /* as String */;
-                let mut value: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(svg).opt(key.clone());
-                if (jcall!(self.shapeTypeFactory).KEY_LINE == key.clone()) {
-                    self.addShapes(pointVector.clone(), value.clone(), jcall!(self.shapeTypeFactory).LINE.clone());
+                let mut key: String = { let java_object = (jcall!(keys).nextElement()).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+                let mut value: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = crate::java_into_object(jcall!(svg).opt(key.clone()));
+                if ({ let java_field = jcall!(self.shapeTypeFactory).KEY_LINE.clone(); java_field } == key.clone()) {
+                    { let java_arguments = (pointVector.clone(), value.clone(), { let java_field = jcall!(self.shapeTypeFactory).LINE.clone(); java_field }.clone(),); self.addShapes(java_arguments.0, java_arguments.1, java_arguments.2) };
                 } else if jcall!(self.shapeTypeFactory).equals(key.clone()) {
-                    self.addShapes(pointVector.clone(), value.clone(), jcall!(self.shapeTypeFactory).CIRCLE.clone());
-                } else if (jcall!(self.shapeTypeFactory).KEY_RECT == key.clone()) || (jcall!(self.shapeTypeFactory).KEY_RECTANGLE == key.clone()) {
-                    self.addShapes(pointVector.clone(), value.clone(), jcall!(self.shapeTypeFactory).RECTANGLE.clone());
+                    { let java_arguments = (pointVector.clone(), value.clone(), { let java_field = jcall!(self.shapeTypeFactory).CIRCLE.clone(); java_field }.clone(),); self.addShapes(java_arguments.0, java_arguments.1, java_arguments.2) };
+                } else if ({ let java_field = jcall!(self.shapeTypeFactory).KEY_RECT.clone(); java_field } == key.clone()) || ({ let java_field = jcall!(self.shapeTypeFactory).KEY_RECTANGLE.clone(); java_field } == key.clone()) {
+                    { let java_arguments = (pointVector.clone(), value.clone(), { let java_field = jcall!(self.shapeTypeFactory).RECTANGLE.clone(); java_field }.clone(),); self.addShapes(java_arguments.0, java_arguments.1, java_arguments.2) };
                 }
             }
-            return self.toPoints(pointVector.clone());
+            return Some(self.toPoints(pointVector.clone()));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", format!("{}: {:?}", "IllegalArgumentException", (self.ERROR_PARSE_SVG_JSON.clone(), e.clone())));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -171,9 +177,9 @@ impl SVGAsJSONSimpleLoader {
     // throws Exception
     pub fn addShape(&mut self, mut pointVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut value: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut shapeType: Option<Rc<RefCell<ShapeType>>>) {
         let mut shape: Option<Rc<RefCell<JSONObject>>> = { let java_arguments = (value.clone(), jcall!(shapeType).getName(),); self.asObject(java_arguments.0, java_arguments.1) };
-        if match (&shapeType, &jcall!(self.shapeTypeFactory).LINE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&shapeType, &{ let java_field = jcall!(self.shapeTypeFactory).LINE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             self.addLine(pointVector.clone(), shape.clone());
-        } else if match (&shapeType, &jcall!(self.shapeTypeFactory).CIRCLE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        } else if match (&shapeType, &{ let java_field = jcall!(self.shapeTypeFactory).CIRCLE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             self.addCircle(pointVector.clone(), shape.clone());
         } else {
             self.addRectangle(pointVector.clone(), shape.clone());
@@ -208,8 +214,8 @@ impl SVGAsJSONSimpleLoader {
     pub fn addRectangle(&mut self, mut pointVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut rectangle: Option<Rc<RefCell<JSONObject>>>) {
         let mut x: i32 = self.readInt3(rectangle.clone(), self.KEY_X.clone(), 0);
         let mut y: i32 = self.readInt3(rectangle.clone(), self.KEY_Y.clone(), 0);
-        let mut width: i32 = self.readInt(rectangle.clone(), jcall!(self.graphicsStrings).WIDTH.clone());
-        let mut height: i32 = self.readInt(rectangle.clone(), jcall!(self.graphicsStrings).HEIGHT.clone());
+        let mut width: i32 = { let java_arguments = (rectangle.clone(), { let java_field = jcall!(self.graphicsStrings).WIDTH.clone(); java_field }.clone(),); self.readInt(java_arguments.0, java_arguments.1) };
+        let mut height: i32 = { let java_arguments = (rectangle.clone(), { let java_field = jcall!(self.graphicsStrings).HEIGHT.clone(); java_field }.clone(),); self.readInt(java_arguments.0, java_arguments.1) };
         self.addPoint(pointVector.clone(), x.clone(), y.clone());
         self.addPoint(pointVector.clone(), x + width, y.clone());
         self.addPoint(pointVector.clone(), x + width, y + height);
@@ -231,7 +237,7 @@ impl SVGAsJSONSimpleLoader {
 
     // throws Exception
     pub fn readInt(&mut self, mut anyType: Option<Rc<RefCell<JSONObject>>>, mut key: String) -> i32 {
-        let mut value: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(anyType).get(key.clone());
+        let mut value: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = crate::java_into_object(jcall!(anyType).get(key.clone()));
         if value.is_none() {
             panic!("{:?}", format!("{}: {:?}", "IllegalArgumentException", (format!("{}{}", self.ERROR_MISSING_KEY_PREFIX, key))));
         }
@@ -241,19 +247,20 @@ impl SVGAsJSONSimpleLoader {
 
     // Java overloaded method: Rust needs a different name
     pub fn readInt3(&mut self, mut anyType: Option<Rc<RefCell<JSONObject>>>, mut key: String, mut defaultValue: i32) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if jcall!(anyType).has(key.clone()) {
-                let mut value: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(anyType).get(key.clone());
-                return self.toInt(value.clone(), key.clone());
-            }
+                let mut value: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = crate::java_into_object(jcall!(anyType).get(key.clone()));
+                return Some(self.toInt(value.clone(), key.clone()));
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             eprintln!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }
         return defaultValue.clone();
     }
     
@@ -263,7 +270,7 @@ impl SVGAsJSONSimpleLoader {
             return ((((((((value).clone() /* as Number */)).unwrap() as f64)) as f64).round() as i64) as i32);
         }
         if (value).is_some() /* instanceof String */ {
-            return (((((value).clone() /* as String */.parse::<f64>().unwrap()) as f64).round() as i64) as i32);
+            return (((({ let java_object = (value).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }.parse::<f64>().unwrap()) as f64).round() as i64) as i32);
         }
         panic!("{:?}", format!("{}: {:?}", "IllegalArgumentException", (format!("{}{}", self.ERROR_INVALID_NUMBER_PREFIX, key))));
     }
@@ -282,8 +289,8 @@ impl SVGAsJSONSimpleLoader {
             return self.EMPTY_POINTS.clone();
         }
         let mut points: Vec<Vec<i32>> = vec![vec![0; (2) as usize]; (jcall!(pointVector).size()) as usize];
-        for index in (0..jcall!(pointVector).size()) {
-            let mut point: Vec<i32> = (jcall!(pointVector).get(index.clone())).clone() /* as  */;
+        for index in (0..{ let java_bound = jcall!(pointVector).size(); java_bound }) {
+            let mut point: Vec<i32> = { let java_object = (jcall!(pointVector).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<Vec<i32>>().cloned().expect("ClassCastException")).unwrap_or_default() };
             points[(index) as usize] = point.clone();
         }
         return points.clone();
@@ -300,7 +307,7 @@ impl SVGAsJSONSimpleLoader {
             let mut size2: i32 = (points[(index) as usize].len() as i32).clone();
             for index2 in (0..size2) {
                 jcall!(stringBuilder).appendint(((points[(index) as usize][(index2) as usize]) as i32).clone());
-                jcall!(stringBuilder).append(jcall!(CommonSeps::getInstance()).COMMA.clone());
+                jcall!(stringBuilder).append({ let java_field = jcall!(CommonSeps::getInstance()).COMMA.clone(); java_field }.clone());
             }
         }
         println!("{}", jcall!(stringBuilder).toString());

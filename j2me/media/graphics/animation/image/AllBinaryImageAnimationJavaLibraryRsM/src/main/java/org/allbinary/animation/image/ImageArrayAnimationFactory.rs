@@ -17,13 +17,14 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactory;
 use crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
 use crate::org::allbinary::logic::communication::log::ForcedLogUtil::ForcedLogUtil;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::ImageArrayAnimation::ImageArrayAnimation;
 use super::AdjustedImageArrayAnimation::AdjustedImageArrayAnimation;
 
@@ -37,7 +38,7 @@ macro_rules! jcall {
 pub struct ImageArrayAnimationFactory {
     pub dx: i32,
     pub dy: i32,
-    pub imageArray: Vec<Option<Rc<RefCell<Image>>>>,
+    pub imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>,
     pub animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>,
 }
 
@@ -49,9 +50,13 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 }
 
 impl ImageArrayAnimationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct(mut imageArray: Vec<Option<Rc<RefCell<Image>>>>, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
+    pub fn new_struct(mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
         let mut this = Self {
             dx: 0,
             dy: 0,
@@ -67,7 +72,7 @@ impl ImageArrayAnimationFactory {
         this
     }
 
-    pub fn new(mut imageArray: Vec<Option<Rc<RefCell<Image>>>>, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(imageArray, dx, dy, animationBehaviorFactory))))
     }
     
@@ -75,9 +80,9 @@ impl ImageArrayAnimationFactory {
     // throws Exception
     pub fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
         if self.dx != 0 || self.dy != 0 {
-            return AdjustedImageArrayAnimation::new(self.imageArray.clone(), self.dx.clone(), self.dy.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+            return AdjustedImageArrayAnimation::new(self.imageArray.clone(), self.dx.clone(), self.dy.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
         } else {
-            return ImageArrayAnimation::new(self.imageArray.clone(), AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+            return ImageArrayAnimation::new(self.imageArray.clone(), AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
         }
     }
     

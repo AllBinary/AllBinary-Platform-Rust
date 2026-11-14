@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItem;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,6 +33,10 @@ pub struct ItemIndexDx {
 thread_local! { pub static ItemIndexDx_instance: Option<Rc<RefCell<dyn ItemIndexDxDyn>>> = ItemIndexDx::new().map(|reference| reference as Rc<RefCell<dyn ItemIndexDxDyn>>); }
 
 impl ItemIndexDx {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -54,7 +59,7 @@ impl ItemIndexDx {
         return 0;
     }
 }
-pub trait ItemIndexDxDyn {
+pub trait ItemIndexDxDyn: std::any::Any {
     fn as_ItemIndexDx(&self) -> &ItemIndexDx;
     fn as_ItemIndexDx_mut(&mut self) -> &mut ItemIndexDx;
     fn getDx(&mut self, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 { ItemIndexDx::getDx(self.as_ItemIndexDx_mut(), index, item, dx, dy) }

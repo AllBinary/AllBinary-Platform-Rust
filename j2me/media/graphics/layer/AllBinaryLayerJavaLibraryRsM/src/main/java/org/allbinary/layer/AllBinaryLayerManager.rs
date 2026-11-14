@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::layer::event::LayerManagerEvent::LayerManagerEvent;
 use crate::org::allbinary::layer::event::LayerManagerEventHandler::LayerManagerEventHandler;
+use crate::java::lang::Exception::*;
 use super::LayerManager::LayerManager;
 use super::LayerProcessor::LayerProcessor;
 use super::AllBinaryLayer::AllBinaryLayer;
@@ -44,22 +45,23 @@ impl AllBinaryLayerManager {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: LayerManager::new_struct(LayerManagerNoDebug::LayerManagerNoDebug::getInstance()),
+            base: LayerManager::new_struct(LayerManagerNoDebug::LayerManagerNoDebug::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::LayerManagerLoggingBase::LayerManagerLoggingBaseDyn>>)),
             layerManagerEventHandler: None,
             createLayerManagerEvent: None,
             deleteLayerManagerEvent: None,
             basicLayerProcessorArray: Vec::new(),
         };
         this.layerManagerEventHandler = LayerManagerEventHandler::getInstance();
-        this.createLayerManagerEvent = LayerManagerEvent::new(this, jcall!(this.layerManagerEventHandler).CREATE.clone());
-        this.deleteLayerManagerEvent = LayerManagerEvent::new(this, jcall!(this.layerManagerEventHandler).DELETE.clone());
         this.basicLayerProcessorArray = vec![None; (0) as usize];
         // super(...) is in the struct literal above
         this
     }
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct())))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct())));
+        jcall!(this).createLayerManagerEvent = LayerManagerEvent::new(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>), { let java_field = jcall!(jcall!(this).layerManagerEventHandler).CREATE.clone(); java_field }.clone());
+        jcall!(this).deleteLayerManagerEvent = LayerManagerEvent::new(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>), { let java_field = jcall!(jcall!(this).layerManagerEventHandler).DELETE.clone(); java_field }.clone());
+        this
     }
     
 
@@ -85,7 +87,7 @@ impl AllBinaryLayerManager {
     pub fn append(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) {
         if !self.contains(layerInterface.clone()) {
             self.appendProcessors(layerInterface.clone());
-            self.base.append(layerInterface.clone());
+            { let java_arguments = (layerInterface.clone(),); self.base.append(java_arguments.0) };
         }
     }
     
@@ -94,7 +96,7 @@ impl AllBinaryLayerManager {
     pub fn appendAt(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut index: i32) {
         if !self.contains(layerInterface.clone()) {
             self.appendProcessors(layerInterface.clone());
-            self.base.appendAt(layerInterface.clone(), index.clone());
+            { let java_arguments = (layerInterface.clone(), index.clone(),); self.base.appendAt(java_arguments.0, java_arguments.1) };
         }
     }
     
@@ -107,7 +109,7 @@ impl AllBinaryLayerManager {
         {
             let mut index: i32 = (self.basicLayerProcessorArray.len() as i32).clone();
             while { index -= 1; index } >= 0 {
-            layerProcessorInterface = self.basicLayerProcessorArray[(index) as usize].clone();
+            layerProcessorInterface = { let java_value = (self.basicLayerProcessorArray[(index) as usize]).clone(); java_value }.clone();
             if jcall!(layerProcessorInterface).isProcessorLayer(layerInterface.clone()) {
                 jcall!(jcall!(layerProcessorInterface).getLayerManager()).append(layerInterface.clone());
             }
@@ -125,11 +127,11 @@ impl AllBinaryLayerManager {
         {
             let mut index: i32 = (self.basicLayerProcessorArray.len() as i32).clone();
             while { index -= 1; index } >= 0 {
-            layerProcessorInterface = self.basicLayerProcessorArray[(index) as usize].clone();
+            layerProcessorInterface = { let java_value = (self.basicLayerProcessorArray[(index) as usize]).clone(); java_value }.clone();
             jcall!(jcall!(layerProcessorInterface).getLayerManager()).remove(layerInterface.clone());
             }
         }
-        self.base.remove(layerInterface.clone());
+        { let java_arguments = (layerInterface.clone(),); self.base.remove(java_arguments.0) };
     }
     
 
@@ -138,7 +140,7 @@ impl AllBinaryLayerManager {
         let mut layerProcessorInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerProcessor::LayerProcessorDyn>>> = None;
         let mut size: i32 = (self.basicLayerProcessorArray.len() as i32).clone();
         for index in (0..size) {
-            layerProcessorInterface = self.basicLayerProcessorArray[(index) as usize].clone();
+            layerProcessorInterface = { let java_value = (self.basicLayerProcessorArray[(index) as usize]).clone(); java_value }.clone();
             jcall!(layerProcessorInterface).process(None /* Java this: a &mut self method has no Rc of itself */);
         }
     }
@@ -149,7 +151,7 @@ impl AllBinaryLayerManager {
         let mut layerProcessorInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerProcessor::LayerProcessorDyn>>> = None;
         let mut size: i32 = (self.basicLayerProcessorArray.len() as i32).clone();
         for index in (0..size) {
-            layerProcessorInterface = self.basicLayerProcessorArray[(index) as usize].clone();
+            layerProcessorInterface = { let java_value = (self.basicLayerProcessorArray[(index) as usize]).clone(); java_value }.clone();
             jcall!(jcall!(layerProcessorInterface).getLayerManager()).cleanup();
         }
         self.base.cleanup();

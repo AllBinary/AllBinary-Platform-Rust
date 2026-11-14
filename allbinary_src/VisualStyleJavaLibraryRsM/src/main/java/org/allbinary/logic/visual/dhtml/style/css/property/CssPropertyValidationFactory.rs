@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::control::validate::ValidationInterface::ValidationInterface;
 use crate::org::allbinary::logic::visual::dhtml::style::css::property::font::FontFamilyValidation::FontFamilyValidation;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +34,10 @@ pub struct CssPropertyValidationFactory {
 
 
 impl CssPropertyValidationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

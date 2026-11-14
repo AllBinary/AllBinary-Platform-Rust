@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
-// use crate::javax::microedition::khronos::opengles::GL11::GL11;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL11::GL11;
 use crate::org::allbinary::AndroidUtil::AndroidUtil;
 use crate::org::allbinary::image::opengles::OpenGLESGL10ImageFactory::OpenGLESGL10ImageFactory;
 use crate::org::allbinary::image::opengles::OpenGLESGL11VBOImageFactory::OpenGLESGL11VBOImageFactory;
@@ -33,6 +33,7 @@ use crate::org::allbinary::logic::string::tokens::Tokenizer::Tokenizer;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 use super::OpenGLFeatureFactory::OpenGLFeatureFactory;
 use super::OpenGLFeature::OpenGLFeature;
 
@@ -123,13 +124,13 @@ impl OpenGLCapabilities {
         this.CUSTOM_GL_SURFACE_VIEW = true;
         this.stringUtil = StringUtil::getInstance();
         this.initialized = false;
-        this.glVersionString = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.glShaderVersionString = jcall!(this.stringUtil).EMPTY_STRING.clone();
+        this.glVersionString = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.glShaderVersionString = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
         this.shaderVersion = 0;
-        this.glRenderer = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.glVendor = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.glExtensions = jcall!(this.stringUtil).EMPTY_STRING.clone();
-        this.acceleratedString = jcall!(this.stringUtil).EMPTY_STRING.clone();
+        this.glRenderer = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.glVendor = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.glExtensions = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        this.acceleratedString = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
         this.maxTextureSize = 64;
         this.VERSION_1_0 = String::from("1.0");
         this.VERSION_1_1 = String::from("1.1");
@@ -167,32 +168,32 @@ impl OpenGLCapabilities {
             let mut openGLFeatureFactory: Option<Rc<RefCell<OpenGLFeatureFactory>>> = OpenGLFeatureFactory::getInstance();
             let mut openGLImageSpecificFactory: Option<Rc<RefCell<OpenGLImageSpecificFactory>>> = OpenGLImageSpecificFactory::getInstance();
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-            self.glVersionString = jcall!(gl).glGetString(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_VERSION.clone() }.clone());
-            let mut GL_SHADING_LANGUAGE_VERSION: i32 = 0x8b8c_u32 as i32;
-            self.glShaderVersionString = jcall!(gl).glGetString(GL_SHADING_LANGUAGE_VERSION.clone());
+            self.glVersionString = { let java_value = (jcall!(gl).glGetString(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_VERSION.with(Clone::clone).clone())).clone(); java_value };
+            let mut GL_SHADING_LANGUAGE_VERSION: i32 = 0x8b8c;
+            self.glShaderVersionString = { let java_value = (jcall!(gl).glGetString(GL_SHADING_LANGUAGE_VERSION.clone())).clone(); java_value };
             if false {
-                self.glShaderVersionString = jcall!(self.stringUtil).EMPTY_STRING.clone();
+                self.glShaderVersionString = { let java_value = ({ let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }).clone(); java_value }.clone();
             }
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                 if true && self.glShaderVersionString.find('.').map(|index| index as i32).unwrap_or(-1) >= 0 {
                     let mut startIndex: i32 = self.glShaderVersionString.rfind(' ').map(|index| index as i32).unwrap_or(-1);
                     if startIndex >= 0 {
-                        self.glShaderVersionString = self.glShaderVersionString[(startIndex + 1) as usize..].to_string();
+                        self.glShaderVersionString = { let java_value = (self.glShaderVersionString[(startIndex + 1) as usize..].to_string()).clone(); java_value };
                     }
-                    self.shaderVersion = self.glShaderVersionString.replace(&jcall!(CommonSeps::getInstance()).PERIOD, &jcall!(StringUtil::getInstance()).EMPTY_STRING).parse::<i32>().unwrap();
+                    self.shaderVersion = { let java_value = (self.glShaderVersionString.replace(&({ let java_field = jcall!(CommonSeps::getInstance()).PERIOD.clone(); java_field }).to_string(), &({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }).to_string()).parse::<i32>().unwrap()).clone(); java_value };
                 }
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone(), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone(), crate::java_into_object(e.clone()));
                 }
             }
-            self.glRenderer = jcall!(gl).glGetString(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_RENDERER.clone() }.clone());
-            self.glVendor = jcall!(gl).glGetString(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_VENDOR.clone() }.clone());
-            self.glExtensions = jcall!(gl).glGetString(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_EXTENSIONS.clone() }.clone());
+            self.glRenderer = { let java_value = (jcall!(gl).glGetString(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_RENDERER.with(Clone::clone).clone())).clone(); java_value };
+            self.glVendor = { let java_value = (jcall!(gl).glGetString(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_VENDOR.with(Clone::clone).clone())).clone(); java_value };
+            self.glExtensions = { let java_value = (jcall!(gl).glGetString(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_EXTENSIONS.with(Clone::clone).clone())).clone(); java_value };
             if self.glExtensions.find(&self.GL_EXT_GPU_SHADER_100.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
                 self.glExtensionGPUShader100 = true;
             } else {
@@ -204,7 +205,7 @@ impl OpenGLCapabilities {
                 self.glExtensionGPUShader4 = false;
             }
             if false {
-                self.glRenderer = jcall!(self.stringUtil).EMPTY_STRING.clone();
+                self.glRenderer = { let java_value = ({ let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }).clone(); java_value }.clone();
             }
             if self.glRenderer.to_lowercase().find(&String::from("pixelflinger")).map(|index| index as i32).unwrap_or(-1) >= 0 {
                 self.acceleratedString = format!("{}{}", String::from("Probably Not for "), self.glRenderer);
@@ -215,7 +216,7 @@ impl OpenGLCapabilities {
             }
             self.glExtensionDrawTexture = false;
             if false {
-                self.glVersionString = jcall!(self.stringUtil).EMPTY_STRING.clone();
+                self.glVersionString = { let java_value = ({ let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }).clone(); java_value }.clone();
                 self.glVersion = self.VERSION_UNK.clone();
             } else if self.glVersionString.find(&String::from(" 1.0")).map(|index| index as i32).unwrap_or(-1) >= 0 {
                 self.glVersion = self.VERSION_1_0.clone();
@@ -230,14 +231,14 @@ impl OpenGLCapabilities {
                 self.glInstanceVersion = self.VERSION_1_0.clone();
             }
             if false {
-                self.glVendor = jcall!(self.stringUtil).EMPTY_STRING.clone();
+                self.glVendor = { let java_value = ({ let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }).clone(); java_value }.clone();
             }
             if false {
-                self.glExtensions = jcall!(self.stringUtil).EMPTY_STRING.clone();
+                self.glExtensions = { let java_value = ({ let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }).clone(); java_value }.clone();
             }
             if self.possiblyAccelerated {
-                PreLogUtil::put(jcall!(StringMaker::new()).append(String::from("VBO:?")).appendboolean((self.glInstanceVersion == self.VERSION_1_1).clone()).append(String::from("||")).appendboolean(self.isExtension(jcall!(openGLFeatureFactory).OPENGL_VERTEX_BUFFER_OBJECT.clone())).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone());
-                if (self.glInstanceVersion == self.VERSION_1_1 || self.isExtension(jcall!(openGLFeatureFactory).OPENGL_VERTEX_BUFFER_OBJECT.clone())) {
+                PreLogUtil::put({ let java_argument = jcall!(StringMaker::new()).append(String::from("VBO:?")).appendboolean((self.glInstanceVersion == self.VERSION_1_1).clone()).append(String::from("||")).appendboolean({ let java_arguments = ({ let java_field = jcall!(openGLFeatureFactory).OPENGL_VERTEX_BUFFER_OBJECT.clone(); java_field }.clone(),); self.isExtension(java_arguments.0) }).toString(); java_argument }, crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone());
+                if (self.glInstanceVersion == self.VERSION_1_1 || { let java_arguments = ({ let java_field = jcall!(openGLFeatureFactory).OPENGL_VERTEX_BUFFER_OBJECT.clone(); java_field }.clone(),); self.isExtension(java_arguments.0) }) {
                     if AndroidUtil::isAndroid() {
                         PreLogUtil::put(String::from("VBO implementation was detected, but disabled by default for Android"), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone());
                     } else {
@@ -246,33 +247,33 @@ impl OpenGLCapabilities {
                 }
             }
             let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-            if jcall!(features).isDefault(jcall!(openGLFeatureFactory).OPENGL_AUTO_SELECT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            if jcall!(features).isDefault({ let java_field = jcall!(openGLFeatureFactory).OPENGL_AUTO_SELECT.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
                 if self.vertexBufferObjectSupport {
                     jcall!(openGLImageSpecificFactory).setImageFactory(OpenGLESGL11VBOImageFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLImageFactory::OpenGLImageFactoryDyn>>));
                 } else {
                     jcall!(stringBuffer).append(String::from("OpenGL is on but "));
-                    jcall!(stringBuffer).append(jcall!(stringUtil).toString(crate::java_into_object(jcall!(openGLFeatureFactory).OPENGL_DRAW_TEXTURE.clone())));
+                    jcall!(stringBuffer).append(jcall!(stringUtil).toString(crate::java_into_object({ let java_field = jcall!(openGLFeatureFactory).OPENGL_DRAW_TEXTURE.clone(); java_field }.clone())));
                     jcall!(stringBuffer).append(String::from(" was not available"));
                     PreLogUtil::put(jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone());
                     jcall!(openGLImageSpecificFactory).setImageFactory(OpenGLESGL10ImageFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLImageFactory::OpenGLImageFactoryDyn>>));
                 }
             } else {
-                jcall!(stringBuffer).append(jcall!(stringUtil).toString(crate::java_into_object(jcall!(openGLFeatureFactory).OPENGL_AUTO_SELECT.clone())));
+                jcall!(stringBuffer).append(jcall!(stringUtil).toString(crate::java_into_object({ let java_field = jcall!(openGLFeatureFactory).OPENGL_AUTO_SELECT.clone(); java_field }.clone())));
                 jcall!(stringBuffer).append(String::from(" is not on"));
                 PreLogUtil::put(jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone());
                 jcall!(openGLImageSpecificFactory).setImageFactory(OpenGLESGL10ImageFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLImageFactory::OpenGLImageFactoryDyn>>));
             }
             let mut maxTextureSizeArray: Vec<i32> = vec![0; (1) as usize];
-            jcall!(gl).glGetIntegerv(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_MAX_TEXTURE_SIZE.clone() }.clone(), maxTextureSizeArray.clone(), 0);
-            self.maxTextureSize = maxTextureSizeArray[(0) as usize].clone();
+            jcall!(gl).glGetIntegerv3(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_MAX_TEXTURE_SIZE.with(Clone::clone).clone(), maxTextureSizeArray.clone(), 0);
+            self.maxTextureSize = { let java_value = (maxTextureSizeArray[(0) as usize]).clone(); java_value }.clone();
             self.initialized = true;
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -361,32 +362,32 @@ impl OpenGLCapabilities {
         jcall!(stringBuffer).append(self.glRenderer.clone());
         jcall!(stringBuffer).append(String::from(" GL_VENDOR: "));
         jcall!(stringBuffer).append(self.glVendor.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from(" Is Accelerated: "));
         jcall!(stringBuffer).append(self.acceleratedString.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from(" VBO Support: "));
         jcall!(stringBuffer).appendboolean(self.isVertexBufferObjectSupport());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from(" Max Texture Size: "));
         jcall!(stringBuffer).appendint(self.maxTextureSize.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from(" GL_EXTENSIONS: "));
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut tokenizer: Option<Rc<RefCell<Tokenizer>>> = Tokenizer::new(jcall!(commonSeps).SPACE.clone());
+            let mut tokenizer: Option<Rc<RefCell<Tokenizer>>> = Tokenizer::new({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
             let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(tokenizer).getTokensFromString(self.glExtensions.clone(), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
             let mut size: i32 = jcall!(list).size();
             for index in (0..size) {
-                jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
                 jcall!(stringBuffer).append(jcall!(self.stringUtil).toString(crate::java_into_object(jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize].clone())));
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            PreLogUtil::putOE(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).TOSTRING.clone(), e.clone());
+            PreLogUtil::putOE({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).TOSTRING.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         return jcall!(stringBuffer).toString();

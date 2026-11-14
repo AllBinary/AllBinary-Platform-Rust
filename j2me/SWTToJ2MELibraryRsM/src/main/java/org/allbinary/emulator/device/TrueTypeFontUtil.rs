@@ -17,9 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::eclipse::swt::SWT::SWT;
 use crate::org::eclipse::swt::graphics::ImageData::ImageData;
 use crate::org::eclipse::swt::graphics::ImageLoader::ImageLoader;
@@ -37,6 +37,8 @@ use crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImage;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::TrueTypeFontUtilBase::TrueTypeFontUtilBase;
 
 // Borrows the object of a Java reference
@@ -90,63 +92,64 @@ impl TrueTypeFontUtil {
     }
     
 
-    pub fn getFontBitmapGL(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut filename: String, mut cellSize: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Image>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+    pub fn getFontBitmapGL(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut filename: String, mut cellSize: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if match (&self.fontImage, &crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImage_NULL_OPENGL_IMAGE.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 let mut canvasStrings: Option<Rc<RefCell<CanvasStrings>>> = CanvasStrings::getInstance();
                 let mut openGLCapabilities: Option<Rc<RefCell<OpenGLCapabilities>>> = OpenGLCapabilities::getInstance();
                 if jcall!(openGLCapabilities).isTextureSizeValid(1024) && self.scale == 2 {
                     let mut FONT_ATLAS_1024: String = String::from("/font_1024.png");
-                    let mut image: Option<Rc<RefCell<Image>>> = Image::createImage(jcall!(ResourceUtil::getInstance()).getResourceAsStream(FONT_ATLAS_1024.clone()));
-                    jcall!(image).setName(jcall!(canvasStrings).FONT_ATLAS.clone());
-                    self.fontImage = (jcall!(self.preResourceImageUtil).encapsulate(image.clone())).clone() /* as OpenGLESImage */;
+                    let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = Image::createImage(jcall!(ResourceUtil::getInstance()).getResourceAsStream(FONT_ATLAS_1024.clone()));
+                    jcall!(image).setName({ let java_field = jcall!(canvasStrings).FONT_ATLAS.clone(); java_field }.clone());
+                    self.fontImage = { let java_value = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> { panic!("ClassCastException: a Rust dyn Image cannot be cast to OpenGLESImage") })()).clone(); java_value };
                 } else if jcall!(openGLCapabilities).isTextureSizeValid(512) {
                     let mut FONT_ATLAS_512: String = String::from("/font_512.png");
-                    let mut image: Option<Rc<RefCell<Image>>> = Image::createImage(jcall!(ResourceUtil::getInstance()).getResourceAsStream(FONT_ATLAS_512.clone()));
-                    jcall!(image).setName(jcall!(canvasStrings).FONT_ATLAS.clone());
-                    self.fontImage = (jcall!(self.preResourceImageUtil).encapsulate(image.clone())).clone() /* as OpenGLESImage */;
+                    let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = Image::createImage(jcall!(ResourceUtil::getInstance()).getResourceAsStream(FONT_ATLAS_512.clone()));
+                    jcall!(image).setName({ let java_field = jcall!(canvasStrings).FONT_ATLAS.clone(); java_field }.clone());
+                    self.fontImage = { let java_value = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> { panic!("ClassCastException: a Rust dyn Image cannot be cast to OpenGLESImage") })()).clone(); java_value };
                 } else {
                     let mut FONT_ATLAS_512: String = String::from("/font_512.png");
-                    let mut image: Option<Rc<RefCell<Image>>> = Image::createImage(jcall!(ResourceUtil::getInstance()).getResourceAsStream(FONT_ATLAS_512.clone()));
-                    jcall!(image).setName(jcall!(canvasStrings).FONT_ATLAS.clone());
-                    self.fontImage = (jcall!(self.preResourceImageUtil).encapsulate(image.clone())).clone() /* as OpenGLESImage */;
+                    let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = Image::createImage(jcall!(ResourceUtil::getInstance()).getResourceAsStream(FONT_ATLAS_512.clone()));
+                    jcall!(image).setName({ let java_field = jcall!(canvasStrings).FONT_ATLAS.clone(); java_field }.clone());
+                    self.fontImage = { let java_value = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> { panic!("ClassCastException: a Rust dyn Image cannot be cast to OpenGLESImage") })()).clone(); java_value };
                 }
-                return self.fontImage.clone();
+                return Some(self.fontImage.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>));
             } else {
-                return self.fontImage.clone();
-            }
+                return Some(self.fontImage.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>));
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            PreLogUtil::putOE(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).EXCEPTION.clone(), e.clone());
+            PreLogUtil::putOE({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn saveFontAtlasAsFile(&mut self) {
-        let mut image: Option<Rc<RefCell<Image>>> = { let java_arguments = (None, self.base.cellSize.clone(), jcall!(BasicColorFactory::getInstance()).WHITE.clone(),); self.getFontBitmap(java_arguments.0, java_arguments.1, java_arguments.2) };
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = { let java_arguments = (None, self.base.cellSize.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone(),); self.getFontBitmap(java_arguments.0, java_arguments.1, java_arguments.2) };
         let mut imageLoader: Option<Rc<RefCell<ImageLoader>>> = ImageLoader::new();
-        let mut imageData: Option<Rc<RefCell<ImageData>>> = jcall!(jcall!(((image).clone() /* as SwtMutableImage */)).image).getImageData();
+        let mut imageData: Option<Rc<RefCell<ImageData>>> = jcall!({ let java_field = jcall!(((image).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<SwtMutableImage>() }, "ClassCastException: not a SwtMutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<SwtMutableImage>) } }))).image.clone(); java_field }).as_Image_mut().getImageData();
         jcall!(imageData).transparentPixel = jcall!(imageData).getPixel(0, 0);
         jcall!(imageLoader).data = vec![imageData.clone()];
-        jcall!(imageLoader).save(format!("{}{}", jcall!(CommonSeps::getInstance()).PERIOD, jcall!(CanvasStrings::getInstance()).FONT_ATLAS), unsafe { crate::org::eclipse::swt::SWT::SWT_IMAGE_PNG.clone() }.clone());
+        jcall!(imageLoader).save(format!("{}{}", { let java_field = jcall!(CommonSeps::getInstance()).PERIOD.clone(); java_field }, { let java_field = jcall!(CanvasStrings::getInstance()).FONT_ATLAS.clone(); java_field }), unsafe { crate::org::eclipse::swt::SWT::SWT_IMAGE_PNG.clone() }.clone());
     }
     
 
-    pub fn getFontBitmap(&mut self, mut filename: String, mut cellSize: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Image>>> {
+    pub fn getFontBitmap(&mut self, mut filename: String, mut cellSize: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         let mut cellsPerRow2: i32 = self.CELLS_PER_ROW * 2;
         let mut cellsPerRow3: i32 = self.CELLS_PER_ROW * 3;
         let mut cellsPerRow4: i32 = self.CELLS_PER_ROW * 4;
         let mut cellsPerRow5: i32 = self.CELLS_PER_ROW * 5;
         let mut cellsPerRow6: i32 = self.CELLS_PER_ROW * 6;
         let mut cellsPerRow7: i32 = self.CELLS_PER_ROW * 7;
-        let mut image: Option<Rc<RefCell<Image>>> = Image::createImage(self.base.textureSize.clone(), self.base.textureSize.clone());
-        let mut graphics: Option<Rc<RefCell<Graphics>>> = jcall!(image).getGraphics();
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = Image::createImageWH(self.base.textureSize.clone(), self.base.textureSize.clone());
+        let mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>> = jcall!(image).getGraphics();
         jcall!(graphics).setColor(jcall!(basicColor).intValue());
         let mut biggestHeight: i32 = 0;
         let mut bounds: Option<Rc<RefCell<Rectangle>>> = Rectangle::new(jcall!(PointFactory::getInstance()).createXY(0, 0), cellSize.clone(), cellSize.clone());
@@ -154,9 +157,9 @@ impl TrueTypeFontUtil {
         let mut y: i32 = 0;
         for index in (0..self.base.size) {
             self.characterArray[(0) as usize] = self.base.pattern.chars().nth((index.clone()) as usize).unwrap();
-            self.base._characterWidth[(index) as usize] = jcall!(bounds).getMaxX();
+            { let java_index = (index) as usize; self.base._characterWidth[java_index] = jcall!(bounds).getMaxX(); };
             if jcall!(bounds).getMaxY() - jcall!(jcall!(bounds).getPoint()).getX() > biggestHeight {
-                biggestHeight = jcall!(bounds).getMaxY() - jcall!(jcall!(bounds).getPoint()).getX();
+                biggestHeight = { let java_value = (jcall!(bounds).getMaxY() - jcall!(jcall!(bounds).getPoint()).getX()).clone(); java_value };
             }
             x = (index % self.CELLS_PER_ROW) * cellSize;
             x += (cellSize >> 1);
@@ -196,31 +199,31 @@ impl TrueTypeFontUtil {
         for index in (0..self.base.size) {
             self.characterArray[(0) as usize] = self.base.pattern.chars().nth((index.clone()) as usize).unwrap();
             if self.characterArray[(0) as usize] == ' ' {
-                self.base._characterWidth[(index) as usize] = (fontSize / 4);
+                { let java_index = (index) as usize; self.base._characterWidth[java_index] = (fontSize / 4); };
             } else {
                 let mut shortPatternIndex: i32 = self.shortPattern.find(self.characterArray[(0) as usize].clone()).map(|index| index as i32).unwrap_or(-1);
                 let mut w: i32 = (((self.widthFloatArray[(shortPatternIndex) as usize] / 75.0_f32)) as i32) + 19;
-                self.base._characterWidth[(index) as usize] = w;
+                { let java_index = (index) as usize; self.base._characterWidth[java_index] = w; };
                 if self.characterArray[(0) as usize] == '.' || self.characterArray[(0) as usize] == '1' {
-                    self.base._characterWidth[(index) as usize] += 4;
+                    { let java_index = (index) as usize; self.base._characterWidth[java_index] += 4; };
                 }
                 if self.characterArray[(0) as usize] >= 'a' && self.characterArray[(0) as usize] < 'k' {
-                    self.base._characterWidth[(index) as usize] -= 2;
+                    { let java_index = (index) as usize; self.base._characterWidth[java_index] -= 2; };
                 }
                 if self.characterArray[(0) as usize] >= 'k' && self.characterArray[(0) as usize] < 'v' {
-                    self.base._characterWidth[(index) as usize] -= 4;
+                    { let java_index = (index) as usize; self.base._characterWidth[java_index] -= 4; };
                 }
                 if self.characterArray[(0) as usize] >= 'v' && self.characterArray[(0) as usize] < 'z' {
-                    self.base._characterWidth[(index) as usize] -= 8;
+                    { let java_index = (index) as usize; self.base._characterWidth[java_index] -= 8; };
                 }
                 if self.characterArray[(0) as usize] == 'D' {
-                    self.base._characterWidth[(index) as usize] -= 4;
+                    { let java_index = (index) as usize; self.base._characterWidth[java_index] -= 4; };
                 }
                 if self.characterArray[(0) as usize] >= 'A' && self.characterArray[(0) as usize] <= 'Z' {
-                    self.base._characterWidth[(index) as usize] -= 2;
+                    { let java_index = (index) as usize; self.base._characterWidth[java_index] -= 2; };
                 }
             }
-            self.base._characterWidth[(index) as usize] *= self.widthScale.clone();
+            { let java_index = (index) as usize; self.base._characterWidth[java_index] *= self.widthScale.clone(); };
         }
         return self.base._characterWidth.clone();
     }

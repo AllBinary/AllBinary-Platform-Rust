@@ -21,6 +21,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
+use crate::java::lang::Exception::*;
 use super::IndexedBasicArrayListCache::IndexedBasicArrayListCache;
 
 // Borrows the object of a Java reference
@@ -57,29 +58,30 @@ impl KeylessBasicArrayListCache {
     
 
     pub fn get(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if self.index >= jcall!(self.list).size() {
                 self.addDefault();
             }
             let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_object = ({ let java_arguments = ({ let value = self.index; self.index += 1; value },); self.getAt(java_arguments.0) }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
-            return list.clone();
+            return Some(list.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             return jcall!(self.basicArrayListUtil).getImmutableInstance();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn clear(&mut self) {
         self.base.clear();
         let mut basicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
-        for index in (0..=jcall!(self.list).size() - 1).rev() {
-            basicArrayList = ({ let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) });
+        for index in (0..={ let java_bound = jcall!(self.list).size() - 1; java_bound }).rev() {
+            basicArrayList = { let java_value = (({ let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) })).clone(); java_value };
             jcall!(basicArrayList).clear();
         }
     }
@@ -91,9 +93,9 @@ impl KeylessBasicArrayListCache {
         jcall!(stringBuffer).appendint(jcall!(self.list).size());
         let mut S_LABEL: String = String::from(" s: ");
         let mut basicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
-        for index in (0..=jcall!(self.list).size() - 1).rev() {
+        for index in (0..={ let java_bound = jcall!(self.list).size() - 1; java_bound }).rev() {
             jcall!(stringBuffer).append(S_LABEL.clone());
-            basicArrayList = ({ let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) });
+            basicArrayList = { let java_value = (({ let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) })).clone(); java_value };
             jcall!(stringBuffer).appendint(jcall!(basicArrayList).size());
         }
         return jcall!(stringBuffer).toString();
@@ -125,6 +127,10 @@ impl crate::org::allbinary::logic::util::cache::BaseBasicArrayListCache::BaseBas
 impl crate::org::allbinary::logic::util::cache::IndexedBasicArrayListCache::IndexedBasicArrayListCacheDyn for KeylessBasicArrayListCache {
     fn as_IndexedBasicArrayListCache(&self) -> &crate::org::allbinary::logic::util::cache::IndexedBasicArrayListCache::IndexedBasicArrayListCache { &self.base }
     fn as_IndexedBasicArrayListCache_mut(&mut self) -> &mut crate::org::allbinary::logic::util::cache::IndexedBasicArrayListCache::IndexedBasicArrayListCache { &mut self.base }
+}
+impl crate::org::allbinary::logic::util::cache::CacheInterface::CacheInterface for KeylessBasicArrayListCache {
+    fn add(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::cache::CacheableInterface::CacheableInterface>>>) { crate::org::allbinary::logic::util::cache::IndexedBasicArrayListCache::IndexedBasicArrayListCache::add(crate::org::allbinary::logic::util::cache::IndexedBasicArrayListCache::IndexedBasicArrayListCacheDyn::as_IndexedBasicArrayListCache_mut(self), p1) }
+    fn addArray(&mut self, p1: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::cache::CacheableInterface::CacheableInterface>>>>) { crate::org::allbinary::logic::util::cache::IndexedBasicArrayListCache::IndexedBasicArrayListCache::addArray(crate::org::allbinary::logic::util::cache::IndexedBasicArrayListCache::IndexedBasicArrayListCacheDyn::as_IndexedBasicArrayListCache_mut(self), p1) }
     fn clear(&mut self) { Self::clear(self) }
 }
 

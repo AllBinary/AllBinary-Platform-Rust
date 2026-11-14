@@ -22,6 +22,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,6 +40,10 @@ pub struct BasicGameResources {
 thread_local! { pub static BasicGameResources_stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new(); }
 
 impl BasicGameResources {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -48,8 +53,8 @@ impl BasicGameResources {
             RESOURCE_DESTROY: String::new(),
         };
         this.logUtil = LogUtil::getInstance();
-        this.RESOURCE = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.RESOURCE_DESTROY = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.RESOURCE = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.RESOURCE_DESTROY = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this
     }
 
@@ -60,7 +65,7 @@ impl BasicGameResources {
 
     pub fn init(&mut self, mut ROOT: String, mut SIZE: Vec<String>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut scale: i32 = ((jcall!(jcall!(GameConfigurationCentral::getInstance()).SCALE).getValue()).unwrap() as i32);
+            let mut scale: i32 = ((jcall!({ let java_field = jcall!(GameConfigurationCentral::getInstance()).SCALE.clone(); java_field }).getValue()).unwrap() as i32);
             if scale > 1 && scale - 1 < (SIZE.len() as i32) {
                 self.append(ROOT.clone(), SIZE[(scale - 1) as usize].clone());
             } else {
@@ -69,10 +74,10 @@ impl BasicGameResources {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -86,13 +91,13 @@ impl BasicGameResources {
         jcall!(BasicGameResources_stringBuffer.with(Clone::clone)).append(ROOT.clone());
         jcall!(BasicGameResources_stringBuffer.with(Clone::clone)).append(string.clone());
         jcall!(BasicGameResources_stringBuffer.with(Clone::clone)).append(sizeString.clone());
-        self.RESOURCE = jcall!(BasicGameResources_stringBuffer.with(Clone::clone)).toString();
+        self.RESOURCE = { let java_value = (jcall!(BasicGameResources_stringBuffer.with(Clone::clone)).toString()).clone(); java_value };
         jcall!(BasicGameResources_stringBuffer.with(Clone::clone)).delete(0, jcall!(BasicGameResources_stringBuffer.with(Clone::clone)).length());
         jcall!(BasicGameResources_stringBuffer.with(Clone::clone)).append(ROOT.clone());
         jcall!(BasicGameResources_stringBuffer.with(Clone::clone)).append(DESTROY.clone());
         jcall!(BasicGameResources_stringBuffer.with(Clone::clone)).append(string.clone());
         jcall!(BasicGameResources_stringBuffer.with(Clone::clone)).append(sizeString.clone());
-        self.RESOURCE_DESTROY = jcall!(BasicGameResources_stringBuffer.with(Clone::clone)).toString();
+        self.RESOURCE_DESTROY = { let java_value = (jcall!(BasicGameResources_stringBuffer.with(Clone::clone)).toString()).clone(); java_value };
     }
     
 
@@ -101,7 +106,7 @@ impl BasicGameResources {
         return jcall!(GameGraphicsResourceUtil::GameGraphicsResourceUtil::getInstance()).getName();
     }
 }
-pub trait BasicGameResourcesDyn {
+pub trait BasicGameResourcesDyn: std::any::Any {
     fn as_BasicGameResources(&self) -> &BasicGameResources;
     fn as_BasicGameResources_mut(&mut self) -> &mut BasicGameResources;
     fn init(&mut self, mut ROOT: String, mut SIZE: Vec<String>) { BasicGameResources::init(self.as_BasicGameResources_mut(), ROOT, SIZE) }

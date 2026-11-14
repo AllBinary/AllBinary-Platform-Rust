@@ -38,6 +38,10 @@ impl GraphicsItemInterfaceFactoryInterface for LinesGraphicItemFactory {
 
 impl LinesGraphicItemFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -50,7 +54,7 @@ impl LinesGraphicItemFactory {
     
 
     pub fn getInstance(&mut self, mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>>) -> Option<Rc<RefCell<dyn GraphicItemInterface>>> {
-        return LinesGraphicItem::new().map(|reference| reference as Rc<RefCell<dyn GraphicItemInterface>>);
+        return LinesGraphicItem::new().map(|reference| reference as Rc<RefCell<dyn GraphicItemInterface>>).map(|reference| reference as Rc<RefCell<dyn GraphicItemInterface>>);
     }
 }
 

@@ -16,11 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::awt::*;
 // use crate::java::awt::event::InputEvent::InputEvent;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::data::tree::dom::DomNodeHelper::DomNodeHelper;
 use crate::org::allbinary::data::tree::dom::DomSearchHelper::DomSearchHelper;
 use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
@@ -31,6 +30,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -52,8 +52,6 @@ thread_local! { pub static MouseActionScriptInput_NAME: String = String::from("M
 impl crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface for MouseActionScriptInput {
     fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { Self::toXmlNode(self, document) }
 }
-impl crate::org::allbinary::input::automation::actions::script::condition::processors::ProfileActionScriptProcessorInterface::ProfileActionScriptProcessorInterface for MouseActionScriptInput {
-}
 impl crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItemInterface::ProfileActionScriptItemInterface for MouseActionScriptInput {
     fn process(&mut self, mut frame: Option<i64>) { Self::process(self, frame) }
 }
@@ -71,23 +69,23 @@ impl MouseActionScriptInput {
         };
         this.logUtil = LogUtil::getInstance();
         // super(...) is in the struct literal above
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this.point = Point::new();
         let mut actionNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(unsafe { MouseActionScriptInputData_NAME.clone() }.clone(), jcall!(node).getChildNodes());
         if actionNode.is_some() {
             let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(actionNode).getChildNodes();
-            for index in (0..jcall!(nodeList).getLength()) {
+            for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
                 let mut childNode: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
                 if jcall!(jcall!(childNode).getNodeName()).compareTo(unsafe { MouseActionScriptInputData_BUTTONS.clone() }.clone()) == 0 {
                     let mut buttons: String = DomNodeHelper::getTextNodeValue(childNode.clone());
-                    { let java_arguments = ((((buttons.clone()).to_string()).unwrap() as i32),); this.setButtonClicks(java_arguments.0) };
+                    { let java_arguments = (((Some((buttons.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32),); this.setButtonClicks(java_arguments.0) };
                 } else if jcall!(jcall!(childNode).getNodeName()).compareTo(unsafe { MouseActionScriptInputData_MOVE.clone() }.clone()) == 0 {
                     let mut mouseXNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(unsafe { MouseActionScriptInputData_MOVE_X.clone() }.clone(), jcall!(childNode).getChildNodes());
                     let mut mouseXString: String = DomNodeHelper::getTextNodeValue(mouseXNode.clone());
-                    let mut mouseXInteger: Option<i32> = (mouseXString.clone()).to_string();
+                    let mut mouseXInteger: Option<i32> = Some((mouseXString.clone()).trim().parse::<i32>().expect("NumberFormatException"));
                     let mut mouseYNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(unsafe { MouseActionScriptInputData_MOVE_Y.clone() }.clone(), jcall!(childNode).getChildNodes());
                     let mut mouseYString: String = DomNodeHelper::getTextNodeValue(mouseYNode.clone());
-                    let mut mouseYInteger: Option<i32> = (mouseYString.clone()).to_string();
+                    let mut mouseYInteger: Option<i32> = Some((mouseYString.clone()).trim().parse::<i32>().expect("NumberFormatException"));
                     let mut newPoint: Option<Rc<RefCell<Point>>> = Point::new(((mouseXInteger).unwrap() as i32), ((mouseYInteger).unwrap() as i32));
                     this.setPoint(newPoint.clone());
                 } else {
@@ -102,8 +100,9 @@ impl MouseActionScriptInput {
     }
 
     pub fn new1(mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct1(node))));
-            this.mouseActionScriptInputJPanel = MouseActionScriptInputJPanel::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct1(node.clone()))));
+            let mut actionNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(unsafe { MouseActionScriptInputData_NAME.clone() }.clone(), jcall!(node).getChildNodes());
+            jcall!(this).mouseActionScriptInputJPanel = MouseActionScriptInputJPanel::new(this.clone().map(|reference| reference as Rc<RefCell<dyn MouseActionScriptInputInterface>>));
         this
     }
     
@@ -125,7 +124,7 @@ impl MouseActionScriptInput {
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
         let this = Some(Rc::new(RefCell::new(Self::new_struct())));
-            this.mouseActionScriptInputJPanel = MouseActionScriptInputJPanel::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+            jcall!(this).mouseActionScriptInputJPanel = MouseActionScriptInputJPanel::new(this.clone().map(|reference| reference as Rc<RefCell<dyn MouseActionScriptInputInterface>>));
         this
     }
     
@@ -155,9 +154,9 @@ impl MouseActionScriptInput {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(unsafe { MouseActionScriptInputData_BUTTONS.clone() }.clone(), (self.getButtonClicks()).to_string());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object(unsafe { MouseActionScriptInputData_BUTTONS.clone() }.clone()), { let java_argument = crate::java_into_object((self.getButtonClicks()).to_string()); java_argument });
         { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("HashMap: "), jcall!(hashMap).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toHashMap()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         return hashMap.clone();
     }
@@ -165,13 +164,13 @@ impl MouseActionScriptInput {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut node: Option<Rc<RefCell<Node>>> = self.base.toXmlNode(document.clone());
-        let mut mouseNode: Option<Rc<RefCell<Node>>> = ModDomHelper::createNodeWithValueNodes(document.clone(), unsafe { MouseActionScriptInputData_NAME.clone() }.clone(), self.toHashMap());
+        let mut node: Option<Rc<RefCell<Node>>> = { let java_arguments = (document.clone(),); self.base.toXmlNode(java_arguments.0) };
+        let mut mouseNode: Option<Rc<RefCell<Node>>> = ModDomHelper::createNodeWithValueNodes_Document_Node_HashMap(document.clone(), unsafe { MouseActionScriptInputData_NAME.clone() }.clone(), self.toHashMap());
         jcall!(node).appendChild(mouseNode.clone());
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(unsafe { MouseActionScriptInputData_MOVE_X.clone() }.clone(), (jcall!(self.getPoint()).x.clone()).to_string());
-        jcall!(hashMap).put(unsafe { MouseActionScriptInputData_MOVE_Y.clone() }.clone(), (jcall!(self.getPoint()).y.clone()).to_string());
-        jcall!(mouseNode).appendChild(ModDomHelper::createNodeWithValueNodes(document.clone(), unsafe { MouseActionScriptInputData_MOVE.clone() }.clone(), hashMap.clone()));
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object(unsafe { MouseActionScriptInputData_MOVE_X.clone() }.clone()), { let java_argument = crate::java_into_object(({ let java_field = jcall!(self.getPoint()).x.clone(); java_field }.clone()).to_string()); java_argument });
+        jcall!(hashMap).put(crate::java_into_object(unsafe { MouseActionScriptInputData_MOVE_Y.clone() }.clone()), { let java_argument = crate::java_into_object(({ let java_field = jcall!(self.getPoint()).y.clone(); java_field }.clone()).to_string()); java_argument });
+        jcall!(mouseNode).appendChild(ModDomHelper::createNodeWithValueNodes_Document_Node_HashMap(document.clone(), unsafe { MouseActionScriptInputData_MOVE.clone() }.clone(), hashMap.clone()));
         return node.clone();
     }
     
@@ -187,23 +186,23 @@ impl MouseActionScriptInput {
         jcall!(buttonStringBuffer).append(String::from("1: "));
         let mut booleanFactory: Option<Rc<RefCell<BooleanFactory>>> = BooleanFactory::getInstance();
         if (self.getButtonClicks() & unsafe { crate::java::awt::event::InputEvent::InputEvent_BUTTON1_MASK.clone() }) != 0 {
-            jcall!(buttonStringBuffer).append(jcall!(booleanFactory).TRUE_STRING.clone());
+            jcall!(buttonStringBuffer).append({ let java_field = jcall!(booleanFactory).TRUE_STRING.clone(); java_field }.clone());
         } else {
-            jcall!(buttonStringBuffer).append(jcall!(booleanFactory).FALSE_STRING.clone());
+            jcall!(buttonStringBuffer).append({ let java_field = jcall!(booleanFactory).FALSE_STRING.clone(); java_field }.clone());
         }
         jcall!(buttonStringBuffer).append(String::from(" 2: "));
         if (self.getButtonClicks() & unsafe { crate::java::awt::event::InputEvent::InputEvent_BUTTON2_MASK.clone() }) != 0 {
-            jcall!(buttonStringBuffer).append(jcall!(booleanFactory).TRUE_STRING.clone());
+            jcall!(buttonStringBuffer).append({ let java_field = jcall!(booleanFactory).TRUE_STRING.clone(); java_field }.clone());
         } else {
-            jcall!(buttonStringBuffer).append(jcall!(booleanFactory).FALSE_STRING.clone());
+            jcall!(buttonStringBuffer).append({ let java_field = jcall!(booleanFactory).FALSE_STRING.clone(); java_field }.clone());
         }
         jcall!(buttonStringBuffer).append(String::from(" 3: "));
         if (self.getButtonClicks() & unsafe { crate::java::awt::event::InputEvent::InputEvent_BUTTON3_MASK.clone() }) != 0 {
-            jcall!(buttonStringBuffer).append(jcall!(booleanFactory).TRUE_STRING.clone());
+            jcall!(buttonStringBuffer).append({ let java_field = jcall!(booleanFactory).TRUE_STRING.clone(); java_field }.clone());
         } else {
-            jcall!(buttonStringBuffer).append(jcall!(booleanFactory).FALSE_STRING.clone());
+            jcall!(buttonStringBuffer).append({ let java_field = jcall!(booleanFactory).FALSE_STRING.clone(); java_field }.clone());
         }
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Input Type: "), jcall!(self.getInputRobotInterface()).getName()), String::from(" Point: ")), self.getPoint()), String::from(" Buttons Clicked: ")), jcall!(buttonStringBuffer).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("log"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Input Type: "), { let java_value = jcall!(self.getInputRobotInterface()).getName(); java_value }), String::from(" Point: ")), self.getPoint()), String::from(" Buttons Clicked: ")), { let java_value = jcall!(buttonStringBuffer).toString(); java_value }), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("log"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
 }
 impl std::ops::Deref for MouseActionScriptInput {

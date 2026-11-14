@@ -40,6 +40,10 @@ pub struct LogConfigTypeFactory {
 thread_local! { pub static LogConfigTypeFactory_instance: Option<Rc<RefCell<LogConfigTypeFactory>>> = LogConfigTypeFactory::new(); }
 
 impl LogConfigTypeFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogConfigTypeFactory>>> {

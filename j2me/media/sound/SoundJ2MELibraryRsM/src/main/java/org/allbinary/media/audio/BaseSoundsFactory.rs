@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::SoundsFactoryInterface::SoundsFactoryInterface;
 use super::Sound::Sound;
 
@@ -39,6 +40,10 @@ impl SoundsFactoryInterface for BaseSoundsFactory {
 }
 
 impl BaseSoundsFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -71,13 +76,9 @@ impl BaseSoundsFactory {
         return self.initialized.clone();
     }
 }
-pub trait BaseSoundsFactoryDyn {
+pub trait BaseSoundsFactoryDyn: std::any::Any + crate::org::allbinary::media::audio::SoundsFactoryInterface::SoundsFactoryInterface {
     fn as_BaseSoundsFactory(&self) -> &BaseSoundsFactory;
     fn as_BaseSoundsFactory_mut(&mut self) -> &mut BaseSoundsFactory;
-    fn init(&mut self) { BaseSoundsFactory::init(self.as_BaseSoundsFactory_mut()) }
-    fn getSoundInterfaceArray(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>> { BaseSoundsFactory::getSoundInterfaceArray(self.as_BaseSoundsFactory_mut()) }
-    fn setInitialized(&mut self, mut initialized: bool) { BaseSoundsFactory::setInitialized(self.as_BaseSoundsFactory_mut(), initialized) }
-    fn isInitialized(&mut self) -> bool { BaseSoundsFactory::isInitialized(self.as_BaseSoundsFactory_mut()) }
 }
 impl BaseSoundsFactoryDyn for BaseSoundsFactory {
     fn as_BaseSoundsFactory(&self) -> &BaseSoundsFactory { self }

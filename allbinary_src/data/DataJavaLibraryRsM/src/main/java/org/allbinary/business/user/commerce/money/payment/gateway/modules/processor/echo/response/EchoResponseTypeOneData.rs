@@ -31,6 +31,10 @@ pub struct EchoResponseTypeOneData {
 pub static mut EchoResponseTypeOneData_NAME: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("ECHOTYPE1"));
 
 impl EchoResponseTypeOneData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

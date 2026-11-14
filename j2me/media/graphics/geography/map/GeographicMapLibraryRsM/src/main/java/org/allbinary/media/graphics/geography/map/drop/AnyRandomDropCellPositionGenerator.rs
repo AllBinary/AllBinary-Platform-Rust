@@ -27,6 +27,7 @@ use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactory;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
+use crate::java::lang::Exception::*;
 use super::BaseDropCellPositionGenerator::BaseDropCellPositionGenerator;
 
 // Borrows the object of a Java reference
@@ -51,8 +52,8 @@ impl AnyRandomDropCellPositionGenerator {
             list: None,
             geographicMapInterface: None,
         };
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.geographicMapInterface = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone();
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.geographicMapInterface = { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone();
         this
     }
 
@@ -63,7 +64,7 @@ impl AnyRandomDropCellPositionGenerator {
 
     // throws Exception
     pub fn update(&mut self, mut allBinaryGameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>) {
-        self.geographicMapInterface = geographicMapInterface.clone();
+        self.geographicMapInterface = crate::java_into_object(geographicMapInterface.clone());
         let mut basicGeographicMapCellPositionFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactoryDyn>>> = jcall!(geographicMapInterface).getGeographicMapCellPositionFactory();
         let mut randomFactory: Option<Rc<RefCell<MyRandomFactory>>> = MyRandomFactory::getInstance();
         let mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(geographicMapInterface).getAllBinaryTiledLayer();
@@ -74,9 +75,9 @@ impl AnyRandomDropCellPositionGenerator {
         {
             let mut index: i32 = total.clone();
             while { index -= 1; index } >= 0 {
-            randomColumn = jcall!(randomFactory).getAbsoluteNextInt(jcall!(tiledLayer).getColumns());
-            randomRow = jcall!(randomFactory).getAbsoluteNextInt(jcall!(tiledLayer).getRows());
-            geographicMapCellPosition = jcall!(basicGeographicMapCellPositionFactory).getAt(randomColumn.clone(), randomRow.clone());
+            randomColumn = { let java_value = (jcall!(randomFactory).getAbsoluteNextInt(jcall!(tiledLayer).getColumns())).clone(); java_value };
+            randomRow = { let java_value = (jcall!(randomFactory).getAbsoluteNextInt(jcall!(tiledLayer).getRows())).clone(); java_value };
+            geographicMapCellPosition = { let java_value = (jcall!(basicGeographicMapCellPositionFactory).getAt(randomColumn.clone(), randomRow.clone())).clone(); java_value };
             if self.isDropAllowedAt(geographicMapCellPosition.clone()) {
                 jcall!(self.list).add(crate::java_into_object(geographicMapCellPosition.clone()));
             }

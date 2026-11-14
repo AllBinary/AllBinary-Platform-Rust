@@ -23,6 +23,7 @@ use crate::org::allbinary::graphics::GPoint::GPoint;
 use crate::org::allbinary::graphics::j2me::workarea::canvas::CanvasDom::CanvasDom;
 use crate::org::allbinary::graphics::j2me::workarea::canvas::IntegerDimension::IntegerDimension;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,7 +32,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait GraphicItemInterface {
+pub trait GraphicItemInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getName(&mut self) -> String;
@@ -83,7 +84,7 @@ pub trait GraphicItemInterface {
     fn getAngle(&mut self) -> f64;
     
 
-    fn paint(&mut self, g: Option<Rc<RefCell<Graphics>>>, canvasAngle: Option<f64>, dimension: Option<Rc<RefCell<IntegerDimension>>>, x: i32, y: i32);
+    fn paint(&mut self, g: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, canvasAngle: Option<f64>, dimension: Option<Rc<RefCell<IntegerDimension>>>, x: i32, y: i32);
     
 
     // throws Exception
@@ -128,8 +129,6 @@ pub trait GraphicItemInterface {
 
     // throws Exception
     fn duplicate(&mut self) -> Option<Rc<RefCell<dyn GraphicItemInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -37,6 +37,10 @@ pub struct AbPathData {
 thread_local! { pub static AbPathData_instance: Option<Rc<RefCell<AbPathData>>> = AbPathData::new(); }
 
 impl AbPathData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AbPathData>>> {
@@ -50,9 +54,9 @@ impl AbPathData {
             SEPARATORCHAR: '\0',
             SEPARATOR: String::new(),
         };
-        this.EXTENSION_SEP = jcall!(CommonSeps::getInstance()).PERIOD.clone();
+        this.EXTENSION_SEP = { let java_field = jcall!(CommonSeps::getInstance()).PERIOD.clone(); java_field }.clone();
         this.SEPARATORCHAR = '/';
-        this.SEPARATOR = jcall!(CommonSeps::getInstance()).FORWARD_SLASH.clone();
+        this.SEPARATOR = { let java_field = jcall!(CommonSeps::getInstance()).FORWARD_SLASH.clone(); java_field }.clone();
         this
     }
 

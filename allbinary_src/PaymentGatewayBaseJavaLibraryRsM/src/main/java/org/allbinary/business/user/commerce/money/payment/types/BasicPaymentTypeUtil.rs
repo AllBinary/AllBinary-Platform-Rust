@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
+use crate::java::lang::Exception::*;
 use super::BasicPaymentType::BasicPaymentType;
 
 // Borrows the object of a Java reference
@@ -36,6 +37,10 @@ pub struct BasicPaymentTypeUtil {
 thread_local! { pub static BasicPaymentTypeUtil_instance: Option<Rc<RefCell<BasicPaymentTypeUtil>>> = BasicPaymentTypeUtil::new(); }
 
 impl BasicPaymentTypeUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     // Java static initializer: call this once at startup
@@ -52,7 +57,7 @@ impl BasicPaymentTypeUtil {
         let mut this = Self {
             paymentTypeVector: None,
         };
-        this.paymentTypeVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.paymentTypeVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -71,7 +76,7 @@ impl BasicPaymentTypeUtil {
         let mut size: i32 = jcall!(self.paymentTypeVector).size();
         for i in (0..size) {
             let mut paymentType: Option<Rc<RefCell<BasicPaymentType>>> = { let java_object = (jcall!(self.paymentTypeVector).get(i.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<BasicPaymentType>>>>().expect("ClassCastException").clone()) };
-            if jcall!(jcall!(paymentType).getName()).compareTo(paymentTypeString.clone()) == 0 {
+            if (jcall!(paymentType).getName().cmp(&paymentTypeString.clone()) as i32) == 0 {
                 return paymentType.clone();
             }
         }
@@ -85,7 +90,7 @@ impl BasicPaymentTypeUtil {
     
 
     pub fn difference(&mut self, mut a_PaymentTypeVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut diff: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut diff: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut size: i32 = jcall!(self.paymentTypeVector).size();
         for i in (0..size) {
             let mut paymentType: Option<Rc<RefCell<BasicPaymentType>>> = { let java_object = (jcall!(self.paymentTypeVector).get(i.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<BasicPaymentType>>>>().expect("ClassCastException").clone()) };

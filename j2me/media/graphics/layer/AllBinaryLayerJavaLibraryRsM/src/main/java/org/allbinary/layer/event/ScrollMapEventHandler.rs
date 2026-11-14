@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
+use crate::java::lang::Exception::*;
 use super::ScrollMapEventListenerInterface::ScrollMapEventListenerInterface;
 use super::ScrollMapEvent::ScrollMapEvent;
 
@@ -58,8 +59,8 @@ impl ScrollMapEventHandler {
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut scrollMapEventListenerInterface: Option<Rc<RefCell<dyn ScrollMapEventListenerInterface>>> = (panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn ScrollMapEventListenerInterface"));
-        jcall!(scrollMapEventListenerInterface).onMoveEvent((eventObject).clone() /* as ScrollMapEvent */);
+        let mut scrollMapEventListenerInterface: Option<Rc<RefCell<dyn ScrollMapEventListenerInterface>>> = ((|| -> Option<Rc<RefCell<dyn ScrollMapEventListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn ScrollMapEventListenerInterface") })());
+        jcall!(scrollMapEventListenerInterface).onMoveEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<ScrollMapEvent>() }, "ClassCastException: not a ScrollMapEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<ScrollMapEvent>) } }));
     }
 }
 impl std::ops::Deref for ScrollMapEventHandler {

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use super::PaintableInterface::PaintableInterface;
 
@@ -32,11 +32,15 @@ pub struct Paintable {
 }
 
 impl PaintableInterface for Paintable {
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paintThreed(self, graphics) }
 }
 
 impl Paintable {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -53,19 +57,17 @@ impl Paintable {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
 }
-pub trait PaintableDyn {
+pub trait PaintableDyn: std::any::Any + crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface {
     fn as_Paintable(&self) -> &Paintable;
     fn as_Paintable_mut(&mut self) -> &mut Paintable;
     fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Paintable::setBasicColorP(self.as_Paintable_mut(), basicColor) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Paintable::paint(self.as_Paintable_mut(), graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Paintable::paintThreed(self.as_Paintable_mut(), graphics) }
 }
 impl PaintableDyn for Paintable {
     fn as_Paintable(&self) -> &Paintable { self }

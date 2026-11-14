@@ -16,15 +16,15 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::control::validate::ValidationInterface::ValidationInterface;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,6 +38,10 @@ pub struct CssPropertiesValidationFactory {
 
 
 impl CssPropertiesValidationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -53,11 +57,11 @@ impl CssPropertiesValidationFactory {
 
     // throws Exception
     pub fn getInstance(mut nodeList: Option<Rc<RefCell<NodeList>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut propertiesVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        for index in (0..jcall!(nodeList).getLength()) {
+        let mut propertiesVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
             let mut node: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
-            if jcall!(jcall!(node).getNodeName()).compareTo(jcall!(CssPropertyData::CssPropertyData::getInstance()).NAME.clone()) == 0 {
-                let mut cssPropertyValidationInterface: Option<Rc<RefCell<dyn ValidationInterface>>> = (CssPropertyValidationFactory::CssPropertyValidationFactory::getInstance(node.clone())).clone() /* as ValidationInterface */;
+            if jcall!(jcall!(node).getNodeName()).compareTo({ let java_field = jcall!(CssPropertyData::CssPropertyData::getInstance()).NAME.clone(); java_field }.clone()) == 0 {
+                let mut cssPropertyValidationInterface: Option<Rc<RefCell<dyn ValidationInterface>>> = (CssPropertyValidationFactory::CssPropertyValidationFactory::getInstance(node.clone())).clone();
                 jcall!(propertiesVector).add(crate::java_into_object(cssPropertyValidationInterface.clone()));
             }
         }
@@ -66,8 +70,8 @@ impl CssPropertiesValidationFactory {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn getInstance(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut styles: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+    pub fn getInstance_HashMap(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+        let mut styles: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         return styles.clone();
     }
 }

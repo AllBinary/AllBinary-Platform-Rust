@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::FileReader::FileReader;
+use crate::java::io::FileReader::FileReader;
 // use crate::java::io::LineNumberReader::LineNumberReader;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
@@ -46,6 +46,7 @@ use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -78,7 +79,7 @@ impl HardwareInterface for LinuxHardware {
     fn getComponent(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn HardwareComponentInterface>>> { Self::getComponent(self, index) }
     fn toString(&mut self) -> String { Self::toString(self) }
     fn compareTo(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> bool { Self::compareTo(self, hardwareInterface) }
-    fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { Self::difference(self, hardwareInterface) }
+    fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { Self::difference(self, hardwareInterface) }
 }
 
 impl LinuxHardware {
@@ -148,8 +149,8 @@ impl LinuxHardware {
             jcall!(this.cpuInterfaceVector).add(crate::java_into_object(cpu.clone()));
             jcall!(this.componentInterfaceVector).add(crate::java_into_object(cpu.clone()));
         }
-        if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).OS.clone())) {
-            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Hardware Data: "), this.toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).OS.clone(); java_field }.clone())) {
+            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Hardware Data: "), this.toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         this
     }
@@ -167,10 +168,10 @@ impl LinuxHardware {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).OS.clone())) {
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Hardware Data: "), self.toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).OS.clone(); java_field }.clone())) {
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Hardware Data: "), self.toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
             }
             panic!("{:?}", e);
             }
@@ -197,39 +198,39 @@ impl LinuxHardware {
             let mut pciFile: Option<Rc<RefCell<FileReader>>> = FileReader::new(filePath.clone());
             lineNumberReader = LineNumberReader::new(pciFile.clone());
             if lineNumberReader.is_none() {
-                let mut fileVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(SubDirectory::getInstance()).search2(filePath.clone(), AbFile::createAbFile(jcall!(FilePathData::getInstance()).PATH_START.clone()));
+                let mut fileVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(SubDirectory::getInstance()).search2_String_AbFile(filePath.clone(), AbFile::createAbFile({ let java_field = jcall!(FilePathData::getInstance()).PATH_START.clone(); java_field }.clone()));
                 if !jcall!(fileVector).isEmpty() {
                     let mut file: Option<Rc<RefCell<AbFile>>> = { let java_object = (jcall!(fileVector).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AbFile>>>>().expect("ClassCastException").clone()) };
-                    lineNumberReader = LineNumberReader::new(FileReader::new(jcall!(file).getPath()));
+                    lineNumberReader = { let java_value = (LineNumberReader::new(FileReader::new(jcall!(file).getPath()))).clone(); java_value };
                 }
                 if lineNumberReader.is_none() {
                     panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("No Linux File Data"))));
                 }
             }
             if lineNumberReader.is_some() {
-                if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).OS.clone())) {
-                    jcall!(self.logUtil).putF(String::from("PCI File Found"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone());
+                if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).OS.clone(); java_field }.clone())) {
+                    jcall!(self.logUtil).putF(String::from("PCI File Found"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
                 }
                 let mut nextLine: String = jcall!(lineNumberReader).readLine();
                 while lineNumberReader.is_some() && true {
                     if self.isNextHardware(nextLine.clone()) {
                         break;
                     }
-                    nextLine = jcall!(lineNumberReader).readLine();
+                    nextLine = { let java_value = (jcall!(lineNumberReader).readLine()).clone(); java_value };
                 }
                 while self.isNextHardware(nextLine.clone()) {
                     let mut componentData: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-                    if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).OS.clone())) {
-                        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Found Hardware Device: "), jcall!(self.componentInterfaceVector).size()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                    if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).OS.clone(); java_field }.clone())) {
+                        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Found Hardware Device: "), jcall!(self.componentInterfaceVector).size()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                     }
                     jcall!(componentData).append(nextLine.clone());
-                    jcall!(componentData).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
-                    nextLine = jcall!(lineNumberReader).readLine();
+                    jcall!(componentData).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
+                    nextLine = { let java_value = (jcall!(lineNumberReader).readLine()).clone(); java_value };
                     let mut componentType: String = jcall!(PCComponentFactory::PCComponentFactory::getInstance()).getComponentType(nextLine.clone());
                     while lineNumberReader.is_some() {
                         jcall!(componentData).append(nextLine.clone());
-                        jcall!(componentData).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
-                        nextLine = jcall!(lineNumberReader).readLine();
+                        jcall!(componentData).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
+                        nextLine = { let java_value = (jcall!(lineNumberReader).readLine()).clone(); java_value };
                         if false || self.isNextHardware(nextLine.clone()) {
                             break;
                         }
@@ -240,8 +241,8 @@ impl LinuxHardware {
                     }
                 }
             } else {
-                if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).OS.clone())) {
-                    jcall!(self.logUtil).putF(String::from("Could not load PCI File"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone());
+                if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).OS.clone(); java_field }.clone())) {
+                    jcall!(self.logUtil).putF(String::from("Could not load PCI File"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
                 }
             }
             jcall!(lineNumberReader).close();
@@ -258,62 +259,62 @@ impl LinuxHardware {
     
 
     pub fn getMultimedia(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn MediaInterface>>> {
-        return { let java_object = jcall!(self.multimediaInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MediaInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.multimediaInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MediaInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getBridge(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn BridgeInterface>>> {
-        return { let java_object = jcall!(self.bridgeInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn BridgeInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.bridgeInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn BridgeInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getCpu(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn CpuInterface>>> {
-        return { let java_object = jcall!(self.cpuInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn CpuInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.cpuInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn CpuInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getEthernet(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn EthernetInterface>>> {
-        return { let java_object = jcall!(self.ethernetInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EthernetInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.ethernetInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EthernetInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getFireWire(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn FireWireInterface>>> {
-        return { let java_object = jcall!(self.fireWireInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn FireWireInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.fireWireInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn FireWireInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getHardDriveController(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn HardDriveControllerInterface>>> {
-        return { let java_object = jcall!(self.hardDriveControllerInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardDriveControllerInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.hardDriveControllerInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardDriveControllerInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getHardDrive(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn HardDriveInterface>>> {
-        return { let java_object = jcall!(self.hardDriveInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardDriveInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.hardDriveInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardDriveInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getMachineAccessControlAddress(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn MachineAccessControlAddressInterface>>> {
-        return { let java_object = jcall!(self.macInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MachineAccessControlAddressInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.macInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MachineAccessControlAddressInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getMonitor(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn MonitorInterface>>> {
-        return { let java_object = jcall!(self.monitorInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MonitorInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.monitorInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MonitorInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getUsb(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn UsbInterface>>> {
-        return { let java_object = jcall!(self.usbInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn UsbInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.usbInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn UsbInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getVideo(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn VideoInterface>>> {
-        return { let java_object = jcall!(self.videoInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn VideoInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.videoInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn VideoInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getComponent(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn HardwareComponentInterface>>> {
-        return { let java_object = jcall!(self.componentInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardwareComponentInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.componentInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardwareComponentInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -321,12 +322,12 @@ impl LinuxHardware {
         let mut hardwareBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut size: i32 = jcall!(self.componentInterfaceVector).size();
         for index in (0..size) {
-            let mut componentInterface: Option<Rc<RefCell<dyn HardwareComponentInterface>>> = { let java_object = jcall!(self.componentInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardwareComponentInterface>>>>().expect("ClassCastException").clone()) };
+            let mut componentInterface: Option<Rc<RefCell<dyn HardwareComponentInterface>>> = { let java_object = (jcall!(self.componentInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardwareComponentInterface>>>>().expect("ClassCastException").clone()) };
             jcall!(hardwareBuffer).append(String::from("Component "));
             jcall!(hardwareBuffer).appendint(index.clone());
             jcall!(hardwareBuffer).append(String::from(": \n"));
             jcall!(hardwareBuffer).append(jcall!(componentInterface).toString());
-            jcall!(hardwareBuffer).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
+            jcall!(hardwareBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
         }
         return jcall!(hardwareBuffer).toString();
     }
@@ -337,8 +338,8 @@ impl LinuxHardware {
     }
     
 
-    pub fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        return jcall!(StdUtil::getInstance()).NULL_TABLE.clone();
+    pub fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        return { let java_field = jcall!(StdUtil::getInstance()).NULL_TABLE.clone(); java_field }.clone();
     }
     
 

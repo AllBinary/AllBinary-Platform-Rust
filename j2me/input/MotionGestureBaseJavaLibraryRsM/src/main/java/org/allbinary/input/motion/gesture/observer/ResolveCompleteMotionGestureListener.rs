@@ -26,6 +26,7 @@ use crate::org::allbinary::input::motion::gesture::configuration::MotionGestureC
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::CompleteMotionGestureListenerInterface::CompleteMotionGestureListenerInterface;
 
 // Borrows the object of a Java reference
@@ -44,6 +45,10 @@ impl CompleteMotionGestureListenerInterface for ResolveCompleteMotionGestureList
 }
 
 impl ResolveCompleteMotionGestureListener {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -52,7 +57,7 @@ impl ResolveCompleteMotionGestureListener {
         };
         this.logUtil = LogUtil::getInstance();
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(this.logUtil).putF(String::from("MotionGesture to CompleteMotionGesture Reciever"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF(String::from("MotionGesture to CompleteMotionGesture Reciever"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         jcall!(CompleteMotionGestureInputEventHandler::getInstance()).addListener(GameKeyFromMotionGestureEventListener::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEventListener::CompleteMotionGestureInputEventListenerDyn>>));
         this
     }
@@ -70,7 +75,7 @@ impl ResolveCompleteMotionGestureListener {
         for index in (0..=size - 1).rev() {
             let mut association: Option<Rc<RefCell<MotionGestureToMotionGestureActionAssociation>>> = { let java_object = (jcall!(commandActionsList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<MotionGestureToMotionGestureActionAssociation>>>>().expect("ClassCastException").clone()) };
             if jcall!(association).isMotionGestureArrayEquals(list.clone()) == true {
-                let mut completeMotionGestureInputEvent: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::motion::action::GameKeyCompleteMotionGestureInputEvent::GameKeyCompleteMotionGestureInputEventDyn>>> = (jcall!(association).getCommandAction()).clone() /* as GameKeyCompleteMotionGestureInputEvent */;
+                let mut completeMotionGestureInputEvent: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::motion::action::GameKeyCompleteMotionGestureInputEvent::GameKeyCompleteMotionGestureInputEventDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::input::motion::action::GameKeyCompleteMotionGestureInputEvent::GameKeyCompleteMotionGestureInputEventDyn>>> { panic!("ClassCastException: a Rust dyn CompleteMotionGestureInputEvent cannot be cast to GameKeyCompleteMotionGestureInputEvent") })();
                 jcall!(CompleteMotionGestureInputEventHandler::getInstance()).fireEvent(completeMotionGestureInputEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
                 break;
             }

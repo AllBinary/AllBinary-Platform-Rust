@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::health::Health::Health;
 use crate::org::allbinary::game::health::HealthBarAnimation::HealthBarAnimation;
 use crate::org::allbinary::game::health::HealthBarTwodAnimation::HealthBarTwodAnimation;
@@ -25,6 +25,7 @@ use crate::org::allbinary::game::health::HealthInterface::HealthInterface;
 use crate::org::allbinary::game::health::HealthListenerInterface::HealthListenerInterface;
 use crate::org::allbinary::graphics::paint::Paintable::Paintable;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
+use crate::java::lang::Exception::*;
 use super::Life::Life;
 
 // Borrows the object of a Java reference
@@ -45,17 +46,13 @@ pub struct HealthIncludingLifeBar {
 impl HealthListenerInterface for HealthIncludingLifeBar {
     fn onHealthChange(&mut self) { Self::onHealthChange(self) }
 }
-impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for HealthIncludingLifeBar {
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
-}
 
 impl HealthIncludingLifeBar {
     
 
     // throws Exception
     pub fn createHealthIncludingLifeBar(mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut life: Option<Rc<RefCell<Life>>>, mut healthInterface: Option<Rc<RefCell<Health>>>, mut location: i32, mut direction: i32) -> Option<Rc<RefCell<HealthIncludingLifeBar>>> {
-        return HealthIncludingLifeBar::new(layerInterface.clone(), life.clone(), healthInterface.clone(), HealthBarTwodAnimation::new(layerInterface.clone(), location.clone()), direction.clone());
+        return HealthIncludingLifeBar::new(layerInterface.clone(), life.clone(), healthInterface.clone(), HealthBarTwodAnimation::new(layerInterface.clone(), location.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::health::HealthBarAnimation::HealthBarAnimationDyn>>), direction.clone());
     }
     
 
@@ -70,14 +67,14 @@ impl HealthIncludingLifeBar {
         this.allbinaryLayer = layerInterface.clone();
         this.animationInterface = animationInterface.clone();
         this.life = life.clone();
-        this.healthInterface = healthInterface.clone();
-        this.onHealthChange();
+        this.healthInterface = healthInterface.clone().map(|reference| reference as Rc<RefCell<dyn HealthInterface>>);
         this
     }
 
     pub fn new(mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut life: Option<Rc<RefCell<Life>>>, mut healthInterface: Option<Rc<RefCell<Health>>>, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::health::HealthBarAnimation::HealthBarAnimationDyn>>>, mut direction: i32) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(layerInterface, life, healthInterface, animationInterface, direction))));
-            jcall!(this.healthInterface).addListener((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(layerInterface.clone(), life.clone(), healthInterface.clone(), animationInterface.clone(), direction.clone()))));
+            jcall!(jcall!(this).healthInterface).addListener(this.clone().map(|reference| reference as Rc<RefCell<dyn HealthListenerInterface>>));
+            jcall!(this).onHealthChange();
         this
     }
     
@@ -87,12 +84,12 @@ impl HealthIncludingLifeBar {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.animationInterface).paintXY(graphics.clone(), 0, 0);
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.animationInterface).paintThreedXYZ(graphics.clone(), 0, 0, 0);
     }
 }
@@ -107,8 +104,10 @@ impl std::ops::DerefMut for HealthIncludingLifeBar {
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for HealthIncludingLifeBar {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for HealthIncludingLifeBar {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paintThreed(self, graphics) }
 }
 
 

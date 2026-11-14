@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 use super::PlayerGameInputCompositeInterface::PlayerGameInputCompositeInterface;
 use super::PlayerGameInput::PlayerGameInput;
 
@@ -33,9 +34,22 @@ pub struct NullPlayerGameInputComposite {
 }
 
 thread_local! { pub static NullPlayerGameInputComposite_NULL_PLAYER_GAME_INPUT_COMPOSITE: Option<Rc<RefCell<NullPlayerGameInputComposite>>> = NullPlayerGameInputComposite::new(); }
-// impl PlayerGameInputCompositeInterface for NullPlayerGameInputComposite with the methods of the trait
+impl PlayerGameInputCompositeInterface for NullPlayerGameInputComposite {
+    fn getPlayerGameInput(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>> { Self::getPlayerGameInput(self) }
+}
+impl crate::org::allbinary::game::input::GameInputInterface::GameInputInterface for NullPlayerGameInputComposite {
+    fn processInput(&mut self, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processInput(self, layerManager) }
+    fn initInputProcessors(&mut self) { Self::initInputProcessors(self) }
+}
+impl crate::org::allbinary::layer::NamedInterface::NamedInterface for NullPlayerGameInputComposite {
+    fn getName(&mut self) -> String { Self::getName(self) }
+}
 
 impl NullPlayerGameInputComposite {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -49,7 +63,7 @@ impl NullPlayerGameInputComposite {
     
 
     pub fn getName(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 

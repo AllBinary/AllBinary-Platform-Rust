@@ -26,6 +26,7 @@ use crate::org::allbinary::game::score::ScoreableInterface::ScoreableInterface;
 use crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationship;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
+use crate::java::lang::Exception::*;
 use super::BasicWeaponPart::BasicWeaponPart;
 
 // Borrows the object of a Java reference
@@ -40,14 +41,21 @@ pub struct BasicProjectileWeaponPart {
     pub weaponLayerCircularStaticPool: Option<Rc<RefCell<WeaponLayerCircularPool>>>,
 }
 
+impl crate::org::allbinary::animation::AnimationInterfaceCompositeInterface::AnimationInterfaceCompositeInterface for BasicProjectileWeaponPart {
+    fn getAnimationInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPart::getAnimationInterface(crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn::as_BasicWeaponPart_mut(self)) }
+}
 impl crate::org::allbinary::game::part::PartInterface::PartInterface for BasicProjectileWeaponPart {
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for BasicProjectileWeaponPart {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPart::paint(crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn::as_BasicWeaponPart_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPart::paintThreed(crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn::as_BasicWeaponPart_mut(self), p1) }
 }
 
 impl BasicProjectileWeaponPart {
     
 
     pub fn createBasicProjectileWeaponPart(mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>, mut weaponLayerCircularStaticPool: Option<Rc<RefCell<WeaponLayerCircularPool>>>) -> Option<Rc<RefCell<BasicProjectileWeaponPart>>> {
-        return BasicProjectileWeaponPart::new(animationInterface.clone(), crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone).clone(), weaponLayerCircularStaticPool.clone(), crate::org::allbinary::game::combat::weapon::WeaponProperties::WeaponProperties_NULL_WEAPON_PROPERTIES.with(Clone::clone).clone(), NoScoreable::getInstance(), crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationship_NULL_RELATIVE_RELATIONSHIP.with(Clone::clone).clone());
+        return BasicProjectileWeaponPart::new(animationInterface.clone(), crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone).clone(), weaponLayerCircularStaticPool.clone(), crate::org::allbinary::game::combat::weapon::WeaponProperties::WeaponProperties_NULL_WEAPON_PROPERTIES.with(Clone::clone).clone(), NoScoreable::getInstance().map(|reference| reference as Rc<RefCell<dyn ScoreableInterface>>), crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationship_NULL_RELATIVE_RELATIONSHIP.with(Clone::clone).clone());
     }
     
 
@@ -68,8 +76,8 @@ impl BasicProjectileWeaponPart {
 
     // throws Exception
     pub fn processScore(&mut self, mut allbinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut angle: i16, mut otherAngle: i16, mut weaponProperties: Option<Rc<RefCell<WeaponProperties>>>, mut scoreableInterface: Option<Rc<RefCell<dyn ScoreableInterface>>>) {
-        let mut weaponLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::weapon::WeaponLayer::WeaponLayerDyn>>> = { let java_receiver = self.weaponLayerCircularStaticPool.clone(); let java_arguments = (self.getOwnerLayerInterface(), jcall!(self.relativeRelationship).getX(), jcall!(self.relativeRelationship).getY(), jcall!(self.relativeRelationship).getZ(), ((angle) as i32), ((otherAngle) as i32), weaponProperties.clone(), scoreableInterface.clone(),); let java_result = jcall!(java_receiver).getInstanceWeaponLayer(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5, java_arguments.6, java_arguments.7); java_result };
-        jcall!(allbinaryLayerManager).append(weaponLayer.clone());
+        let mut weaponLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::weapon::WeaponLayer::WeaponLayerDyn>>> = { let java_receiver = self.weaponLayerCircularStaticPool.clone(); let java_arguments = (self.getOwnerLayerInterface(), { let java_argument = jcall!(self.relativeRelationship).getX(); java_argument }, { let java_argument = jcall!(self.relativeRelationship).getY(); java_argument }, { let java_argument = jcall!(self.relativeRelationship).getZ(); java_argument }, ((angle) as i32), ((otherAngle) as i32), weaponProperties.clone(), scoreableInterface.clone(),); let java_result = jcall!(java_receiver).getInstanceWeaponLayer(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5, java_arguments.6, java_arguments.7); java_result };
+        jcall!(allbinaryLayerManager).append(weaponLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>));
     }
 }
 impl std::ops::Deref for BasicProjectileWeaponPart {

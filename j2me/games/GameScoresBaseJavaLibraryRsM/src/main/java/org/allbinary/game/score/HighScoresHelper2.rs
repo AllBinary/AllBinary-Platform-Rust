@@ -34,6 +34,11 @@ pub struct HighScoresHelper2 {
     pub selectedHighScores: Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>>,
 }
 
+impl crate::org::allbinary::game::score::HighScoresHelperBaseInterface::HighScoresHelperBaseInterface for HighScoresHelper2 {
+    fn setSelectedHighScores(&mut self, mut selectedHighScores: Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>>) { Self::setSelectedHighScores(self, selectedHighScores) }
+    fn getHighScoresArray(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>>> { crate::org::allbinary::game::score::HighScoresHelperBase::HighScoresHelperBase::getHighScoresArray(crate::org::allbinary::game::score::HighScoresHelperBase::HighScoresHelperBaseDyn::as_HighScoresHelperBase_mut(self)) }
+    fn getSelectedHighScores(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>> { Self::getSelectedHighScores(self) }
+}
 impl crate::org::allbinary::game::score::HighScoresResultsListener::HighScoresResultsListener for HighScoresHelper2 {
     fn setHighScoresArray(&mut self, mut highScoresArrayP: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>>>) { Self::setHighScoresArray(self, highScoresArrayP) }
 }
@@ -67,7 +72,7 @@ impl HighScoresHelper2 {
     
 
     pub fn setHighScoresArray(&mut self, mut highScoresArrayP: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>>>) {
-        self.base.setHighScoresArray(highScoresArrayP.clone());
+        { let java_arguments = (highScoresArrayP.clone(),); self.base.setHighScoresArray(java_arguments.0) };
         jcall!(self.circularIndexUtil).setSize((self.highScoresArrayP.len() as i32).clone());
         self.selectHighScores();
     }
@@ -81,8 +86,8 @@ impl HighScoresHelper2 {
         jcall!(self.circularIndexUtil).next();
         let mut highScores: Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>> = self.highScoresArrayP[(jcall!(self.circularIndexUtil).getIndex()) as usize].clone();
         let mut index: i32 = 0;
-        while jcall!(highScores).getTotal() < 1 && index < (self.highScoresArrayP.len() as i32) {
-            highScores = self.highScoresArrayP[(jcall!(self.circularIndexUtil).next()) as usize].clone();
+        while jcall!(highScores).as_HighScores_mut().getTotal() < 1 && index < (self.highScoresArrayP.len() as i32) {
+            highScores = { let java_value = (self.highScoresArrayP[(jcall!(self.circularIndexUtil).next()) as usize]).clone(); java_value }.clone();
             index += 1;
         }
         self.setSelectedHighScores(highScores.clone());

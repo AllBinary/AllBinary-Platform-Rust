@@ -28,6 +28,7 @@ use crate::org::allbinary::math::Angle::Angle;
 use crate::org::allbinary::math::AngleFactory::AngleFactory;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::PacePatrolAI::PacePatrolAI;
 
 // Borrows the object of a Java reference
@@ -44,14 +45,23 @@ pub struct TerrainPatrolAI {
     pub CLIFF: Option<Rc<RefCell<BasicTerrainInfo>>>,
 }
 
+impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntelligenceInterface for TerrainPatrolAI {
+    fn processAI(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { crate::org::allbinary::game::ag::ai::scroller::PacePatrolAI::PacePatrolAI::processAI(crate::org::allbinary::game::ag::ai::scroller::PacePatrolAI::PacePatrolAIDyn::as_PacePatrolAI_mut(self), p1) }
+}
+impl crate::org::allbinary::game::tracking::TrackingEventListenerInterface::TrackingEventListenerInterface for TerrainPatrolAI {
+    fn onMovement(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::tracking::TrackingEvent::TrackingEvent>>>) { crate::org::allbinary::game::ag::ai::scroller::PacePatrolAI::PacePatrolAI::onMovement(crate::org::allbinary::game::ag::ai::scroller::PacePatrolAI::PacePatrolAIDyn::as_PacePatrolAI_mut(self), p1) }
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for TerrainPatrolAI {
+    fn onEvent(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { crate::org::allbinary::game::ag::ai::scroller::PacePatrolAI::PacePatrolAI::onEvent(crate::org::allbinary::game::ag::ai::scroller::PacePatrolAI::PacePatrolAIDyn::as_PacePatrolAI_mut(self), p1) }
+}
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for TerrainPatrolAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl TerrainPatrolAI {
     
 
-    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
+    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
         let mut this = Self {
             base: PacePatrolAI::new_struct(hashtable.clone(), ownerLayerInterface.clone(), gameInput.clone()),
             terrainEventListener: None,
@@ -59,15 +69,15 @@ impl TerrainPatrolAI {
             CLIFF: None,
         };
         this.terrainEventListener = TerrainEventListener::new();
-        this.DOWN = jcall!(AngleFactory::getInstance()).DOWN.clone();
+        this.DOWN = { let java_field = jcall!(AngleFactory::getInstance()).DOWN.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>);
         this.CLIFF = BasicTerrainInfo::new(this.DOWN.clone());
         // super(...) is in the struct literal above
-        jcall!(TerrainEventHandler::getInstance(ownerLayerInterface.clone())).addListener(this.terrainEventListener.clone());
+        jcall!(TerrainEventHandler::getInstance(crate::java_into_object(ownerLayerInterface.clone()))).addListener(this.terrainEventListener.clone());
         { let java_receiver = this.terrainEventListener.clone(); let java_arguments = (jcall!(TerrainEventCircularStaticPool::getInstance()).getNext(this.CLIFF.clone()),); jcall!(java_receiver).onTerrainEvent(java_arguments.0); };
         this
     }
 
-    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(hashtable, ownerLayerInterface, gameInput))))
     }
     

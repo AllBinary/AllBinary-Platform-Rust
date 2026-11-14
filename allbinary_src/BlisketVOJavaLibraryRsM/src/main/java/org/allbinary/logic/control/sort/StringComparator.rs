@@ -32,6 +32,10 @@ pub struct StringComparator {
 // impl Comparator for StringComparator with the methods of the trait
 
 impl StringComparator {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -46,8 +50,8 @@ impl StringComparator {
     
 
     pub fn compare(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut object2: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> i32 {
-        let mut string: String = (anyType).clone() /* as String */;
-        let mut string2: String = (object2).clone() /* as String */;
+        let mut string: String = { let java_object = (anyType).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+        let mut string2: String = { let java_object = (object2).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         return (string.cmp(&string2.clone()) as i32);
     }
 }

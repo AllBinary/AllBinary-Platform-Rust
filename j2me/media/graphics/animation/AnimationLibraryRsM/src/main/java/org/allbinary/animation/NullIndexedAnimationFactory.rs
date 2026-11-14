@@ -17,13 +17,11 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
 use super::ProceduralAnimationInterfaceFactoryInterface::ProceduralAnimationInterfaceFactoryInterface;
 use super::IndexedAnimation::IndexedAnimation;
-use super::NullIndexedAnimation::NullIndexedAnimation;
-use super::IndexedAnimationBehavior::IndexedAnimationBehavior;
 use super::NullIndexedAnimationInner::NullIndexedAnimationInner;
 use super::Animation::Animation;
 
@@ -49,17 +47,19 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 impl ProceduralAnimationInterfaceFactoryInterface for NullIndexedAnimationFactory {
     fn getInstanceAnimation(&mut self, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { Self::getInstanceAnimation(self, animationInterface) }
 }
-impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface for NullIndexedAnimationFactory {
-}
 
 impl NullIndexedAnimationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
         let mut this = Self {
             NULL_ANIMATION: None,
         };
-        this.NULL_ANIMATION = NullIndexedAnimationInner::new();
+        this.NULL_ANIMATION = NullIndexedAnimationInner::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
         this
     }
 
@@ -88,62 +88,4 @@ impl NullIndexedAnimationFactory {
     pub fn setInitialScale(&mut self, mut scaleProperties: Option<Rc<RefCell<ScaleProperties>>>) {
     }
 }
-
-pub struct NullIndexedAnimationInner {
-    pub base: NullIndexedAnimation,
-}
-
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for NullIndexedAnimationInner {
-    fn getSize(&mut self) -> i32 { self.base.getSize() }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
-}
-impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for NullIndexedAnimationInner {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
-}
-
-impl NullIndexedAnimationInner {
-        
-
-        pub fn new_struct() -> Self {
-            let mut this = Self {
-            base: NullIndexedAnimation::new_struct(IndexedAnimationBehavior::new(1, 250)),
-            };
-            // super(...) is in the struct literal above
-            this
-        }
-
-        pub fn new() -> Option<Rc<RefCell<Self>>> {
-            Some(Rc::new(RefCell::new(Self::new_struct())))
-        }
-        
-
-        pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
-        }
-}
-impl std::ops::Deref for NullIndexedAnimationInner {
-    type Target = NullIndexedAnimation;
-    fn deref(&self) -> &Self::Target { &self.base }
-}
-impl std::ops::DerefMut for NullIndexedAnimationInner {
-    fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
-}
-
-impl crate::org::allbinary::animation::Animation::AnimationDyn for NullIndexedAnimationInner {
-    fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self }
-    fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
-}
-impl crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn for NullIndexedAnimationInner {
-    fn as_IndexedAnimation(&self) -> &crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &self }
-    fn as_IndexedAnimation_mut(&mut self) -> &mut crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &mut self }
-    fn getAnimationSize(&mut self) -> i32 { crate::org::allbinary::animation::NullIndexedAnimation::NullIndexedAnimation::getAnimationSize(crate::org::allbinary::animation::NullIndexedAnimation::NullIndexedAnimationDyn::as_NullIndexedAnimation_mut(self)) }
-}
-impl crate::org::allbinary::animation::NullIndexedAnimation::NullIndexedAnimationDyn for NullIndexedAnimationInner {
-    fn as_NullIndexedAnimation(&self) -> &crate::org::allbinary::animation::NullIndexedAnimation::NullIndexedAnimation { &self }
-    fn as_NullIndexedAnimation_mut(&mut self) -> &mut crate::org::allbinary::animation::NullIndexedAnimation::NullIndexedAnimation { &mut self }
-}
-impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface for NullIndexedAnimationInner {
-    fn set(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::khronos::opengles::GL::GL>>>) { crate::org::allbinary::animation::Animation::Animation::set(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1) }
-}
-
 

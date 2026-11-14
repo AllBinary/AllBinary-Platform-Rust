@@ -32,9 +32,13 @@ pub struct HudGraphicsPosition {
     pub point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>,
 }
 
-thread_local! { pub static HudGraphicsPosition_NULL_HUD_GRAPHICS_POSITION: Option<Rc<RefCell<HudGraphicsPosition>>> = HudGraphicsPosition::new(jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(), 9); }
+thread_local! { pub static HudGraphicsPosition_NULL_HUD_GRAPHICS_POSITION: Option<Rc<RefCell<HudGraphicsPosition>>> = HudGraphicsPosition::new({ let java_field = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone(), 9); }
 
 impl HudGraphicsPosition {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut anchor: i32) -> Self {
@@ -42,7 +46,7 @@ impl HudGraphicsPosition {
             anchor: 0,
             point: None,
         };
-        this.point = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone();
+        this.point = { let java_field = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone();
         this.setAnchor(anchor.clone());
         this.setPoint(point.clone());
         this

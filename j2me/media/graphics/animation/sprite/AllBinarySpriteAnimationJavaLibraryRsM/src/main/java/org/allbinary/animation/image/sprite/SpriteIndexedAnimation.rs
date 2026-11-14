@@ -17,9 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::game::Sprite::Sprite;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::game::Sprite::Sprite;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
@@ -28,6 +28,7 @@ use crate::org::allbinary::graphics::color::ColorCompositeInterface::ColorCompos
 use crate::org::allbinary::logic::math::PrimitiveIntUtil::PrimitiveIntUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,7 +40,7 @@ macro_rules! jcall {
 pub struct SpriteIndexedAnimation {
     pub base: IndexedAnimation,
     pub sprite: Option<Rc<RefCell<Sprite>>>,
-    pub image: Option<Rc<RefCell<Image>>>,
+    pub image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
     pub basicColorArray: Vec<Option<Rc<RefCell<BasicColor>>>>,
 }
 
@@ -49,23 +50,18 @@ impl ColorCompositeInterface for SpriteIndexedAnimation {
 impl crate::org::allbinary::graphics::color::BasicColorCompositeSetterInterface::BasicColorCompositeSetterInterface for SpriteIndexedAnimation {
     fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::setBasicColorP(self, basicColor) }
 }
-impl crate::org::allbinary::animation::IndexedAnimationInterface::IndexedAnimationInterface for SpriteIndexedAnimation {
-    fn reset(&mut self) { self.base.reset() }
-    fn setFrame(&mut self, mut frame: i32) { Self::setFrame(self, frame) }
-    fn getFrame(&mut self) -> i32 { Self::getFrame(self) }
-}
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for SpriteIndexedAnimation {
-    fn getSize(&mut self) -> i32 { Self::getSize(self) }
-    fn previousFrame(&mut self) { Self::previousFrame(self) }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for SpriteIndexedAnimation {
+    fn nextFrame(&mut self) { Self::nextFrame(self) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for SpriteIndexedAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 impl SpriteIndexedAnimation {
     
 
-    pub fn new_struct(mut sprite: Option<Rc<RefCell<Sprite>>>, mut image: Option<Rc<RefCell<Image>>>, mut basicColorArray: Vec<Option<Rc<RefCell<BasicColor>>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
+    pub fn new_struct(mut sprite: Option<Rc<RefCell<Sprite>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut basicColorArray: Vec<Option<Rc<RefCell<BasicColor>>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
         let mut this = Self {
             base: IndexedAnimation::new_struct(animationBehavior.clone()),
             sprite: None,
@@ -77,12 +73,12 @@ impl SpriteIndexedAnimation {
         this.image = image.clone();
         this.basicColorArray = basicColorArray.clone();
         if (this.basicColorArray.len() as i32) != 0 && this.getSize() != (this.basicColorArray.len() as i32) {
-            panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).TOTAL_LABEL.clone()).appendint(this.getSize()).append(String::from("!=")).appendint((this.basicColorArray.len() as i32).clone()).toString())));
+            panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_argument = jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).TOTAL_LABEL.clone(); java_field }.clone()).appendint(this.getSize()).append(String::from("!=")).appendint((this.basicColorArray.len() as i32).clone()).toString(); java_argument })));
         }
         this
     }
 
-    pub fn new(mut sprite: Option<Rc<RefCell<Sprite>>>, mut image: Option<Rc<RefCell<Image>>>, mut basicColorArray: Vec<Option<Rc<RefCell<BasicColor>>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut sprite: Option<Rc<RefCell<Sprite>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut basicColorArray: Vec<Option<Rc<RefCell<BasicColor>>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(sprite, image, basicColorArray, animationBehavior))))
     }
     
@@ -105,27 +101,27 @@ impl SpriteIndexedAnimation {
 
     pub fn getBasicColorP(&mut self) -> Option<Rc<RefCell<BasicColor>>> {
         if (self.basicColorArray.len() as i32) < self.getFrame() {
-            return self.basicColorArray[(self.getFrame()) as usize].clone();
+            return { let java_index = self.getFrame(); self.basicColorArray[(java_index) as usize].clone() }.clone();
         } else {
-            return jcall!(BasicColorFactory::getInstance()).WHITE.clone();
+            return { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone();
         }
     }
     
 
-    pub fn paintFrame(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut frame: i32, mut x: i32, mut y: i32) {
+    pub fn paintFrame(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut frame: i32, mut x: i32, mut y: i32) {
         self.setFrame(frame.clone());
         jcall!(self.sprite).setPosition(x.clone(), y.clone());
         jcall!(self.sprite).paint(graphics.clone());
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         jcall!(self.sprite).setPosition(x.clone(), y.clone());
         jcall!(self.sprite).paint(graphics.clone());
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.sprite).paint(graphics.clone());
     }
     
@@ -156,7 +152,7 @@ impl SpriteIndexedAnimation {
     
 
     pub fn isLastFrame(&mut self) -> bool {
-        if jcall!(self.sprite).getFrame() == self.getSize() - 1 {
+        if { let java_value = jcall!(self.sprite).getFrame(); java_value } == self.getSize() - 1 {
             return true;
         } else {
             return false;
@@ -198,8 +194,8 @@ impl std::ops::DerefMut for SpriteIndexedAnimation {
 pub trait SpriteIndexedAnimationDyn: crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn {
     fn as_SpriteIndexedAnimation(&self) -> &SpriteIndexedAnimation;
     fn as_SpriteIndexedAnimation_mut(&mut self) -> &mut SpriteIndexedAnimation;
-    fn paintFrame(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut frame: i32, mut x: i32, mut y: i32) { SpriteIndexedAnimation::paintFrame(self.as_SpriteIndexedAnimation_mut(), graphics, frame, x, y) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { SpriteIndexedAnimation::paint(self.as_SpriteIndexedAnimation_mut(), graphics) }
+    fn paintFrame(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut frame: i32, mut x: i32, mut y: i32) { SpriteIndexedAnimation::paintFrame(self.as_SpriteIndexedAnimation_mut(), graphics, frame, x, y) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { SpriteIndexedAnimation::paint(self.as_SpriteIndexedAnimation_mut(), graphics) }
     fn getLastFrame(&mut self) -> i32 { SpriteIndexedAnimation::getLastFrame(self.as_SpriteIndexedAnimation_mut()) }
     fn close(&mut self) { SpriteIndexedAnimation::close(self.as_SpriteIndexedAnimation_mut()) }
     fn finalize(&mut self) { SpriteIndexedAnimation::finalize(self.as_SpriteIndexedAnimation_mut()) }
@@ -213,7 +209,7 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for SpriteIndexed
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base }
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
     fn getBasicColorP(&mut self) -> Option<Rc<RefCell<BasicColor>>> { Self::getBasicColorP(self) }
     fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::setBasicColorP(self, basicColor) }
 }

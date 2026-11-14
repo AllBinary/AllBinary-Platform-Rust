@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::util::event::EventStrings::EventStrings;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::LayerManagerEventListener::LayerManagerEventListener;
 use super::LayerManagerEvent::LayerManagerEvent;
 use super::LayerManagerEventListenerInterface::LayerManagerEventListenerInterface;
@@ -58,7 +59,7 @@ impl LayerManagerEventHandler {
             CREATE: String::new(),
             DELETE: String::new(),
         };
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.CREATE = String::from("Create");
         this.DELETE = String::from("Delete");
         this
@@ -84,7 +85,7 @@ impl LayerManagerEventHandler {
 
     pub fn removeListener(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
         jcall!(self.list).remove(crate::java_into_object(eventListenerInterface.clone()));
-        self.base.removeListener(eventListenerInterface.clone());
+        { let java_arguments = (eventListenerInterface.clone(),); self.base.removeListener(java_arguments.0) };
     }
     
 
@@ -95,18 +96,18 @@ impl LayerManagerEventHandler {
             while { index -= 1; index } >= 0 {
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                 let mut layerManagerEventListener: Option<Rc<RefCell<dyn crate::org::allbinary::layer::event::LayerManagerEventListener::LayerManagerEventListenerDyn>>> = { let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::event::LayerManagerEventListener::LayerManagerEventListenerDyn>>>>().expect("ClassCastException").clone()) };
-                jcall!(layerManagerEventListener).onCreateLayerManagerEvent((eventObject).clone() /* as LayerManagerEvent */);
+                jcall!(layerManagerEventListener).onCreateLayerManagerEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<LayerManagerEvent>() }, "ClassCastException: not a LayerManagerEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<LayerManagerEvent>) } }));
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
                 }
             }
             }
         }
-        self.base.fireEvent(eventObject.clone());
+        { let java_arguments = (eventObject.clone(),); self.base.fireEvent(java_arguments.0) };
     }
     
 
@@ -118,13 +119,13 @@ impl LayerManagerEventHandler {
             while { index -= 1; index } >= 0 {
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                 let mut layerManagerEventListener: Option<Rc<RefCell<dyn crate::org::allbinary::layer::event::LayerManagerEventListener::LayerManagerEventListenerDyn>>> = { let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::event::LayerManagerEventListener::LayerManagerEventListenerDyn>>>>().expect("ClassCastException").clone()) };
-                jcall!(layerManagerEventListener).onDeleteLayerManagerEvent((eventObject).clone() /* as LayerManagerEvent */);
+                jcall!(layerManagerEventListener).onDeleteLayerManagerEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<LayerManagerEvent>() }, "ClassCastException: not a LayerManagerEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<LayerManagerEvent>) } }));
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
                 }
             }
             }
@@ -132,29 +133,29 @@ impl LayerManagerEventHandler {
         let mut eventListenerInterfaceList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.eventListenerInterfaceList.clone();
         let mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>> = None;
         let mut layerManagerEventListenerInterface: Option<Rc<RefCell<dyn LayerManagerEventListenerInterface>>> = None;
-        let mut index: i32 = 0;
-        while index < jcall!(eventListenerInterfaceList).size() {
+        let mut listenerIndex: i32 = 0;
+        while listenerIndex < jcall!(eventListenerInterfaceList).size() {
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                eventListenerInterface = { let java_object = (jcall!(eventListenerInterfaceList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EventListenerInterface>>>>().expect("ClassCastException").clone()) };
-                layerManagerEventListenerInterface = (panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn LayerManagerEventListenerInterface"));
-                jcall!(layerManagerEventListenerInterface).onDeleteLayerManagerEvent((eventObject).clone() /* as LayerManagerEvent */);
+                eventListenerInterface = { let java_value = ({ let java_object = (jcall!(eventListenerInterfaceList).as_BasicArrayList_mut().objectArray[(listenerIndex) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EventListenerInterface>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+                layerManagerEventListenerInterface = ((|| -> Option<Rc<RefCell<dyn LayerManagerEventListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn LayerManagerEventListenerInterface") })());
+                jcall!(layerManagerEventListenerInterface).onDeleteLayerManagerEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<LayerManagerEvent>() }, "ClassCastException: not a LayerManagerEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<LayerManagerEvent>) } }));
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
                 }
             }
-            index += 1;
+            listenerIndex += 1;
         }
     }
     
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut layerManagerEventListenerInterface: Option<Rc<RefCell<dyn LayerManagerEventListenerInterface>>> = (panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn LayerManagerEventListenerInterface"));
-        jcall!(layerManagerEventListenerInterface).onCreateLayerManagerEvent((eventObject).clone() /* as LayerManagerEvent */);
+        let mut layerManagerEventListenerInterface: Option<Rc<RefCell<dyn LayerManagerEventListenerInterface>>> = ((|| -> Option<Rc<RefCell<dyn LayerManagerEventListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn LayerManagerEventListenerInterface") })());
+        jcall!(layerManagerEventListenerInterface).onCreateLayerManagerEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<LayerManagerEvent>() }, "ClassCastException: not a LayerManagerEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<LayerManagerEvent>) } }));
     }
 }
 impl std::ops::Deref for LayerManagerEventHandler {

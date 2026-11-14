@@ -17,9 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::input::event::GameKeyEventHandler::GameKeyEventHandler;
 use crate::org::allbinary::game::input::event::GameKeyEventUtil::GameKeyEventUtil;
 use crate::org::allbinary::game::score::displayable::HighScoresCanvas::HighScoresCanvas;
@@ -48,9 +48,7 @@ pub struct HighScoresCanvasLevelChangeInputProcessor {
 }
 
 impl UpdateMyFontInterface for HighScoresCanvasLevelChangeInputProcessor {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
-}
-impl crate::org::allbinary::game::input::event::GameKeyEventListenerInterface::GameKeyEventListenerInterface for HighScoresCanvasLevelChangeInputProcessor {
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 impl HighScoresCanvasLevelChangeInputProcessor {
@@ -67,7 +65,6 @@ impl HighScoresCanvasLevelChangeInputProcessor {
         };
         this.displayInfoSingleton = DisplayInfoSingleton::getInstance();
         this.INSTRUCTIONS = String::from("(Right = Next Track, Left = Previous Track)");
-        this.myFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
         this.anchor = unsafe { crate::org::allbinary::graphics::Anchor::Anchor_TOP_LEFT.clone() }.clone();
         this.fontHeight = 0;
         // super(...) is in the struct literal above
@@ -75,14 +72,16 @@ impl HighScoresCanvasLevelChangeInputProcessor {
     }
 
     pub fn new(mut highScoresCanvas: Option<Rc<RefCell<HighScoresCanvas>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(highScoresCanvas))))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(highScoresCanvas.clone()))));
+        jcall!(this).myFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.fontHeight = jcall!(font).getHeight();
-        self.myFontProcessor = MyFontProcessor::getInstance();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.fontHeight = { let java_value = (jcall!(font).getHeight()).clone(); java_value };
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
@@ -102,10 +101,10 @@ impl HighScoresCanvasLevelChangeInputProcessor {
         let mut size: i32 = jcall!(list).size();
         for index in (0..size) {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize].clone();
-            let mut key: i32 = GameKeyEventUtil::getKey(anyType.clone());
-            if key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() } {
+            let mut key: i32 = GameKeyEventUtil::getKey(crate::java_into_object(anyType.clone()));
+            if key == crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone) {
                 jcall!(jcall!(self.getHighScoresCanvas()).getGameInfo()).nextGameLevel();
-            } else if key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() } {
+            } else if key == crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone) {
                 jcall!(jcall!(self.getHighScoresCanvas()).getGameInfo()).previousGameLevel();
             }
             jcall!(self.getHighScoresCanvas()).executeUpdate();
@@ -114,7 +113,7 @@ impl HighScoresCanvasLevelChangeInputProcessor {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         let mut width: i32 = jcall!(self.displayInfoSingleton).getLastWidth();
         let mut topScoresWidth: i32 = (jcall!(jcall!(graphics).getFont()).stringWidth(self.INSTRUCTIONS.clone()) >> 1);
@@ -134,7 +133,7 @@ impl crate::org::allbinary::game::score::HighScoresCanvasInputProcessor::HighSco
     fn as_HighScoresCanvasInputProcessor_mut(&mut self) -> &mut crate::org::allbinary::game::score::HighScoresCanvasInputProcessor::HighScoresCanvasInputProcessor { &mut self.base }
     fn open(&mut self) { Self::open(self) }
     fn close(&mut self) { Self::close(self) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
 }
 impl crate::org::allbinary::game::input::GameInput::GameInputDyn for HighScoresCanvasLevelChangeInputProcessor {
     fn as_GameInput(&self) -> &crate::org::allbinary::game::input::GameInput::GameInput { &self.base.base.base }

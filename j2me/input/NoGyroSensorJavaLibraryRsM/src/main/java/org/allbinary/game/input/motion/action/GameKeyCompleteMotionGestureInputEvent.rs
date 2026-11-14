@@ -43,7 +43,7 @@ impl GameKeyEventSourceInterface for GameKeyCompleteMotionGestureInputEvent {
 impl crate::org::allbinary::game::input::CompleteMotionGestureInputInterface::CompleteMotionGestureInputInterface for GameKeyCompleteMotionGestureInputEvent {
 }
 impl crate::org::allbinary::layer::NamedInterface::NamedInterface for GameKeyCompleteMotionGestureInputEvent {
-    fn getName(&mut self) -> String { self.base.getName() }
+    fn getName(&mut self) -> String { crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEvent::getName(crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn::as_CompleteMotionGestureInputEvent_mut(self)) }
 }
 
 impl GameKeyCompleteMotionGestureInputEvent {

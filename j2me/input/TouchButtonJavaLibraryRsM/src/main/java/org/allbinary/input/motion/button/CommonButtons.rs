@@ -37,6 +37,10 @@ pub struct CommonButtons {
 thread_local! { pub static CommonButtons_instance: Option<Rc<RefCell<CommonButtons>>> = CommonButtons::new(); }
 
 impl CommonButtons {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<CommonButtons>>> {
@@ -65,8 +69,8 @@ impl CommonButtons {
             commonButtonSize = commonButtonSize >> 1;
         }
         this.STANDARD_BUTTON_SIZE = commonButtonSize.clone();
-        this.NORMAL_BUTTON = Rectangle::new(jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(), this.STANDARD_BUTTON_SIZE.clone(), this.STANDARD_BUTTON_SIZE.clone());
-        this.LARGE_BUTTON = Rectangle::new(jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(), this.STANDARD_BUTTON_SIZE << 1, this.STANDARD_BUTTON_SIZE << 1);
+        this.NORMAL_BUTTON = { let java_value = (Rectangle::new({ let java_field = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone(), this.STANDARD_BUTTON_SIZE.clone(), this.STANDARD_BUTTON_SIZE.clone())).clone(); java_value };
+        this.LARGE_BUTTON = { let java_value = (Rectangle::new({ let java_field = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone(), this.STANDARD_BUTTON_SIZE << 1, this.STANDARD_BUTTON_SIZE << 1)).clone(); java_value };
         this
     }
 

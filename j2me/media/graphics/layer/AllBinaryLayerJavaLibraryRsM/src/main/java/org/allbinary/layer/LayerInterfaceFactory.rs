@@ -25,6 +25,7 @@ use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
+use crate::java::lang::Exception::*;
 use super::LayerInterfaceFactoryInterface::LayerInterfaceFactoryInterface;
 use super::AllBinaryLayer::AllBinaryLayer;
 
@@ -44,6 +45,10 @@ pub struct LayerInterfaceFactory {
 thread_local! { pub static LayerInterfaceFactory_SINGLETON: Option<Rc<RefCell<LayerInterfaceFactory>>> = LayerInterfaceFactory::new(); }
 
 impl LayerInterfaceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -73,10 +78,10 @@ impl LayerInterfaceFactory {
     
 
     // throws Exception
-    pub fn getNexInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut x: i32, mut y: i32, mut z: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> {
+    pub fn getNexInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut x: i32, mut y: i32, mut z: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(self.HASHTABLE_LABEL.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(hashtable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        let mut typeInteger: Option<i32> = { let java_object = jcall!(hashtable).get(crate::java_into_object((Layer_ID.with(Clone::clone)).clone() /* as Any */)); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(self.HASHTABLE_LABEL.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(hashtable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        let mut typeInteger: Option<i32> = { let java_object = (jcall!(hashtable).get(crate::java_into_object(crate::java_into_object((Layer_ID.with(Clone::clone)).clone())))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
         let mut layerInterfaceFactoryInterface: Option<Rc<RefCell<dyn LayerInterfaceFactoryInterface>>> = { let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(((typeInteger).unwrap() as i32) - 1) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn LayerInterfaceFactoryInterface>>>>().expect("ClassCastException").clone()) };
         return jcall!(layerInterfaceFactoryInterface).getNextInstance(hashtable.clone(), x.clone(), y.clone(), z.clone());
     }

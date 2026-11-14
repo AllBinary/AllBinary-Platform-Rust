@@ -17,12 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::animation::AnimationInterface::AnimationInterface;
 use crate::org::allbinary::game::health::HealthInterface::HealthInterface;
 use crate::org::allbinary::graphics::Anchor::Anchor;
 use crate::org::allbinary::image::ImageCacheFactory::ImageCacheFactory;
+use crate::java::lang::Exception::*;
 use super::HealthGraphic::HealthGraphic;
 
 // Borrows the object of a Java reference
@@ -34,7 +35,7 @@ macro_rules! jcall {
 
 pub struct ImageHealthGraphic {
     pub base: HealthGraphic,
-    pub image: Vec<Option<Rc<RefCell<Image>>>>,
+    pub image: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>,
 }
 
 
@@ -47,26 +48,27 @@ impl ImageHealthGraphic {
             image: Vec::new(),
         };
         // super(...) is in the struct literal above
-        this.image = vec![None; (jcall!(this.healthInterface).getMaxHealth()) as usize];
+        this.image = { let java_value = (vec![None; (jcall!(this.healthInterface).getMaxHealth()) as usize]).clone(); java_value };
         let mut imageCacheFactory: Option<Rc<RefCell<ImageCacheFactory>>> = ImageCacheFactory::getInstance();
-        for numOfHealth in (0..=this.base.max) {
-            for index in (0..numOfHealth) {
-                { let java_receiver = this.animationInterface.clone(); let java_arguments = (jcall!(this.image[(numOfHealth) as usize]).getGraphics(), numOfHealth * 10, 0,); jcall!(java_receiver).paint(java_arguments.0, java_arguments.1, java_arguments.2); };
-            }
-        }
         this
     }
 
     pub fn new(mut animationInterface: Option<Rc<RefCell<dyn AnimationInterface>>>, mut healthInterface: Option<Rc<RefCell<dyn HealthInterface>>>, mut location: i32, mut direction: i32) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(animationInterface, healthInterface, location, direction))));
-            for numOfHealth in (0..=this.base.max) {
-            this.image[(numOfHealth) as usize] = jcall!(imageCacheFactory).get((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), numOfHealth + 1 * 10, 10);
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(animationInterface.clone(), healthInterface.clone(), location.clone(), direction.clone()))));
+            let mut imageCacheFactory: Option<Rc<RefCell<ImageCacheFactory>>> = ImageCacheFactory::getInstance();
+            for numOfHealth in (0..=jcall!(this).base.max) {
+            { let java_index = (numOfHealth) as usize; jcall!(this).image[java_index] = jcall!(imageCacheFactory).get((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), numOfHealth + 1 * 10, 10); };
+        }
+            for numOfHealth in (0..=jcall!(this).base.max) {
+            for index in (0..numOfHealth) {
+                { let java_receiver = jcall!(this).animationInterface.clone(); let java_arguments = (jcall!(jcall!(this).image[(numOfHealth) as usize]).getGraphics(), numOfHealth * 10, 0,); jcall!(java_receiver).paint(java_arguments.0, java_arguments.1, java_arguments.2); };
+            }
         }
         this
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(graphics).drawImage(self.image[(self.base.max) as usize].clone(), self.base.x.clone(), self.base.y.clone(), unsafe { crate::org::allbinary::graphics::Anchor::Anchor_TOP_LEFT.clone() }.clone());
     }
 }

@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait GroupInterfaceCompositeInterface {
+pub trait GroupInterfaceCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getGroupInterface(&mut self) -> Vec<Option<Rc<RefCell<Group>>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

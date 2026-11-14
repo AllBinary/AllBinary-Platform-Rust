@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,6 +36,10 @@ impl crate::javax::microedition::khronos::opengles::GL::GL for NullGL10 {
 }
 
 impl NullGL10 {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

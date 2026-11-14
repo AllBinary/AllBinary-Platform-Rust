@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait DebugInterface {
+pub trait DebugInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn start(&mut self);
@@ -41,8 +41,6 @@ pub trait DebugInterface {
     
 
     fn isRunning(&mut self) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

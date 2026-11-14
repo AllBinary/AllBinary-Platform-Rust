@@ -32,6 +32,10 @@ pub struct ProcessPaintableSingletonFactory {
 thread_local! { pub static ProcessPaintableSingletonFactory_SINGLETON: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintableDyn>>> = ProcessPaintable::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintableDyn>>); }
 
 impl ProcessPaintableSingletonFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

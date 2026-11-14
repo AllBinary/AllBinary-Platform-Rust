@@ -17,9 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
-// use crate::javax::microedition::lcdui::Item::Item;
-// use crate::javax::microedition::lcdui::ItemCommandListener::ItemCommandListener;
+use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Item::Item;
+use crate::javax::microedition::lcdui::ItemCommandListener::ItemCommandListener;
 use crate::org::allbinary::game::configuration::GameConfigurationGauge::GameConfigurationGauge;
 use crate::org::allbinary::game::configuration::GameConfigurationUtil::GameConfigurationUtil;
 use crate::org::allbinary::game::configuration::GameOptionsForm::GameOptionsForm;
@@ -28,6 +28,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::midlet::MidletStrings::MidletStrings;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -41,9 +42,15 @@ pub struct GameFeatureItemCommandListener {
     pub gameOptionsForm: Option<Rc<RefCell<GameOptionsForm>>>,
 }
 
-// impl ItemCommandListener for GameFeatureItemCommandListener with the methods of the trait
+impl ItemCommandListener for GameFeatureItemCommandListener {
+    fn commandAction(&mut self, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut item: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Item::ItemDyn>>>) { Self::commandAction(self, command, item) }
+}
 
 impl GameFeatureItemCommandListener {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut gameOptionsForm: Option<Rc<RefCell<GameOptionsForm>>>) -> Self {
@@ -61,20 +68,20 @@ impl GameFeatureItemCommandListener {
     }
     
 
-    pub fn commandAction(&mut self, mut command: Option<Rc<RefCell<Command>>>, mut item: Option<Rc<RefCell<Item>>>) {
+    pub fn commandAction(&mut self, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut item: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Item::ItemDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut itemLabel: String = jcall!(item).getLabel();
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).ITEM_LABEL.clone()).append(itemLabel.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(MidletStrings::getInstance()).COMMAND_ACTION.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).ITEM_LABEL.clone(); java_field }.clone()).append(itemLabel.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(MidletStrings::getInstance()).COMMAND_ACTION.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             if (item).is_some() /* instanceof GameConfigurationGauge */ {
-                jcall!(GameConfigurationUtil::getInstance()).change(self.gameOptionsForm.clone(), (item).clone() /* as GameConfigurationGauge */);
+                jcall!(GameConfigurationUtil::getInstance()).change(self.gameOptionsForm.clone(), (item).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<GameConfigurationGauge>() }, "ClassCastException: not a GameConfigurationGauge"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<GameConfigurationGauge>) } }));
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(MidletStrings::getInstance()).COMMAND_ACTION.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(MidletStrings::getInstance()).COMMAND_ACTION.clone(); java_field }.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
             }
         }
     }

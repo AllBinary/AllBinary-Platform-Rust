@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::animation::resource::BaseResourceAnimationInterfaceFactoryInterfaceFactory::BaseResourceAnimationInterfaceFactoryInterfaceFactory;
 use crate::org::allbinary::image::ImageCache::ImageCache;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -35,6 +36,10 @@ pub struct OnDemandResources {
 thread_local! { pub static OnDemandResources_NULL_ON_DEMAND_RESOURCES: Option<Rc<RefCell<OnDemandResources>>> = OnDemandResources::new(); }
 
 impl OnDemandResources {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

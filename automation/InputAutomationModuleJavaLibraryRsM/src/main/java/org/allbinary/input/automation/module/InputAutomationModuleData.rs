@@ -32,6 +32,10 @@ pub static mut InputAutomationModuleData_NAME: std::cell::LazyCell<String> = std
 pub static mut InputAutomationModuleData_MODULE_NAME_END: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from(" Module"));
 
 impl InputAutomationModuleData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

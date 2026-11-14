@@ -21,6 +21,7 @@ use crate::org::allbinary::game::combat::weapon::WeaponProperties::WeaponPropert
 use crate::org::allbinary::game::score::ScoreableInterface::ScoreableInterface;
 use crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationship;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
+use crate::java::lang::Exception::*;
 use super::BasicWeaponPart::BasicWeaponPart;
 use super::BasicWeaponPartFactoryInterface::BasicWeaponPartFactoryInterface;
 
@@ -39,6 +40,10 @@ thread_local! { pub static BasicWeaponPartCircularPool_NULL_BASIC_WEAPON_PART_CI
 
 impl BasicWeaponPartCircularPool {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             basicWeaponPart: None,
@@ -54,7 +59,7 @@ impl BasicWeaponPartCircularPool {
 
     // throws Exception
     pub fn init(&mut self, mut basicWeaponPartFactoryInterface: Option<Rc<RefCell<dyn BasicWeaponPartFactoryInterface>>>) {
-        self.basicWeaponPart = jcall!(basicWeaponPartFactoryInterface).getInstance();
+        self.basicWeaponPart = { let java_value = (jcall!(basicWeaponPartFactoryInterface).getInstance()).clone(); java_value };
     }
     
 

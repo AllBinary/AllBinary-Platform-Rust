@@ -17,10 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::File::File;
-// use crate::java::io::IOException::IOException;
-// use crate::java::io::InputStream::InputStream;
-// use crate::java::io::OutputStream::OutputStream;
+use crate::java::io::File::File;
+use crate::java::io::IOException::IOException;
+use crate::java::io::InputStream::InputStream;
+use crate::java::io::OutputStream::OutputStream;
 // use crate::java::io::UnsupportedEncodingException::UnsupportedEncodingException;
 use crate::org::allbinary::logic::communication::log::ForcedLogUtil::ForcedLogUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
@@ -31,6 +31,8 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::apache::commons::fileupload::FileItem::FileItem;
 use crate::org::apache::commons::fileupload::FileItemHeaders::FileItemHeaders;
 use crate::org::apache::commons::fileupload::FileItemUtil::FileItemUtil;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -50,6 +52,10 @@ pub struct AbFileItem {
 // impl FileItem for AbFileItem with the methods of the trait
 
 impl AbFileItem {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut name: String, mut fieldName: String, mut byteArray: Vec<i8>) -> Self {
@@ -74,8 +80,8 @@ impl AbFileItem {
     
 
     // throws IOException
-    pub fn getInputStream(&mut self) -> Option<Rc<RefCell<InputStream>>> {
-        panic!("{:?}", format!("{}: {:?}", "IOException", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+    pub fn getInputStream(&mut self) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
+        panic!("{:?}", format!("{}: {:?}", "IOException", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
@@ -112,37 +118,38 @@ impl AbFileItem {
 
     // Java overloaded method: Rust needs a different name
     pub fn getString(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            return jcall!(FileItemUtil::getInstance()).getString(self.byteArray.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            return Some(jcall!(FileItemUtil::getInstance()).getString(self.byteArray.clone()));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).HTTPERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getString"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).HTTPERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getString"), crate::java_into_object(e.clone()));
             }
-            return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws Exception
     pub fn write(&mut self, mut file: Option<Rc<RefCell<File>>>) {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn write(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+    pub fn write_AbFile(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) {
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
     pub fn delete(&mut self) {
-        ForcedLogUtil::log(jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(), String::from("delete()"));
+        ForcedLogUtil::log({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone(), crate::java_into_object(String::from("delete()")));
     }
     
 
@@ -170,18 +177,18 @@ impl AbFileItem {
     
 
     // throws IOException
-    pub fn getOutputStream(&mut self) -> Option<Rc<RefCell<OutputStream>>> {
-        panic!("{:?}", format!("{}: {:?}", "IOException", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+    pub fn getOutputStream(&mut self) -> Option<Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>> {
+        panic!("{:?}", format!("{}: {:?}", "IOException", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
     pub fn getHeaders(&mut self) -> Option<Rc<RefCell<FileItemHeaders>>> {
-        panic!("{:?}", format!("{}: {:?}", "RuntimeException", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "RuntimeException", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
     pub fn setHeaders(&mut self, mut fih: Option<Rc<RefCell<FileItemHeaders>>>) {
-        panic!("{:?}", format!("{}: {:?}", "RuntimeException", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "RuntimeException", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
 }
 

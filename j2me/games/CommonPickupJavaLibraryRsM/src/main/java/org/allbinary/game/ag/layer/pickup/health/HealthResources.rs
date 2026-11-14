@@ -32,6 +32,10 @@ pub struct HealthResources {
 thread_local! { pub static HealthResources_SINGLETON: Option<Rc<RefCell<HealthResources>>> = HealthResources::new(); }
 
 impl HealthResources {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

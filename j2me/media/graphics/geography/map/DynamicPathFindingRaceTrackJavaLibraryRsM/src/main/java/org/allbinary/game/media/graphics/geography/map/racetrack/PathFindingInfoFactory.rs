@@ -36,6 +36,7 @@ use crate::org::allbinary::media::graphics::geography::pathfinding::PathFinderGr
 use crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingInfo::PathFindingInfo;
 use crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNodeCostInfoFactory::PathFindingNodeCostInfoFactory;
 use crate::org::allbinary::util::BasicArrayListS::BasicArrayListS;
+use crate::java::lang::Exception::*;
 use super::SimplePathFinderGraphVisitorFactory::SimplePathFinderGraphVisitorFactory;
 
 // Borrows the object of a Java reference
@@ -65,7 +66,7 @@ impl PathFindingInfoFactory {
     
 
     pub fn initMax(mut max: i32) {
-        unsafe { *PathFindingInfoFactory_instance = PathFindingInfoFactory::new(SimplePathFinderGraphVisitorFactory::new(1, 1, i32::MAX.clone()), max.clone()) };
+        unsafe { *PathFindingInfoFactory_instance = PathFindingInfoFactory::new(SimplePathFinderGraphVisitorFactory::new(1, 1, i32::MAX.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFinderGraphVisitorFactoryBase::PathFinderGraphVisitorFactoryBaseDyn>>), max.clone()) };
     }
     
 
@@ -80,10 +81,10 @@ impl PathFindingInfoFactory {
         };
         this.MAX_DIRECTIONS = 4;
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        PreLogUtil::put(String::from("Using Dynamic Path Finding"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone());
+        PreLogUtil::put(String::from("Using Dynamic Path Finding"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone());
         this.basicGeographicMapPathFinder = BasicGeographicMapPathFinder::new(max.clone());
-        this.pathFindingInfo = PathFindingInfo::new(PathFindingNodeCostInfoFactory::new(max.clone()), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>));
-        this.basicGeographicMapGraph = BasicGeographicMapGraph::new((jcall!(this.pathFindingInfo).getPathFindingNodeCostInfoFactoryInterface()).clone() /* as PathFindingNodeCostInfoFactory */);
+        this.pathFindingInfo = PathFindingInfo::new(PathFindingNodeCostInfoFactory::new(max.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNodeCostInfoFactoryBase::PathFindingNodeCostInfoFactoryBaseDyn>>), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
+        this.basicGeographicMapGraph = { let java_value = (BasicGeographicMapGraph::new((jcall!(this.pathFindingInfo).getPathFindingNodeCostInfoFactoryInterface()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<PathFindingNodeCostInfoFactory>() }, "ClassCastException: not a PathFindingNodeCostInfoFactory"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<PathFindingNodeCostInfoFactory>) } }))).clone(); java_value };
         this.pathFinderGraphVisitorFactoryInterface = pathFinderGraphVisitorFactoryInterface.clone();
         this
     }
@@ -95,7 +96,7 @@ impl PathFindingInfoFactory {
 
     // throws Exception
     pub fn getInstancePathFindingInfo(&mut self, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, mut mapArray: Vec<Vec<i32>>) -> Option<Rc<RefCell<PathFindingInfo>>> {
-        let mut pathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>> = PathFindingInfo::new(jcall!(self.pathFindingInfo).getPathFindingNodeCostInfoFactoryInterface(), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>));
+        let mut pathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>> = PathFindingInfo::new(jcall!(self.pathFindingInfo).getPathFindingNodeCostInfoFactoryInterface(), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>), BasicArrayListS::new(1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListS::BasicArrayListSDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
         jcall!(RaceTrackRoadsGeographicMapCellHistoryFactory::getInstance()).init();
         self.init(geographicMapInterface.clone(), pathFindingInfo.clone(), mapArray.clone());
         { let java_receiver = self.basicGeographicMapPathFinder.clone(); let java_arguments = (geographicMapInterface.clone(), self.basicGeographicMapGraph.clone(), jcall!(self.pathFinderGraphVisitorFactoryInterface).getInstance(geographicMapInterface.clone()),); jcall!(java_receiver).init(java_arguments.0, java_arguments.1, java_arguments.2); };
@@ -106,7 +107,7 @@ impl PathFindingInfoFactory {
 
     // throws Exception
     pub fn init(&mut self, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, mut pathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>>, mut mapArray: Vec<Vec<i32>>) {
-        self.base.init(geographicMapInterface.clone(), pathFindingInfo.clone(), mapArray.clone());
+        { let java_arguments = (geographicMapInterface.clone(), pathFindingInfo.clone(), mapArray.clone(),); self.base.init(java_arguments.0, java_arguments.1, java_arguments.2) };
         self.buildPathFindingNodes(geographicMapInterface.clone(), pathFindingInfo.clone(), mapArray.clone());
     }
     
@@ -116,7 +117,7 @@ impl PathFindingInfoFactory {
         let mut geographicMapCellPositionFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactoryDyn>>> = jcall!(geographicMapInterface).getGeographicMapCellPositionFactory();
         let mut cellTypeId: i32 = mapArray[(jcall!(cellPosition).getRow()) as usize][(jcall!(cellPosition).getColumn()) as usize].clone();
         let mut geographicMapCellType: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>> = jcall!(GeographicMapCellTypeFactory::getInstance()).get(jcall!(geographicMapInterface).getCellTypeFromMapCellTypeInt(cellTypeId.clone()));
-        let mut raceTrackGeographicMapCellType: Option<Rc<RefCell<RaceTrackGeographicMapCellType>>> = (geographicMapCellType).clone() /* as RaceTrackGeographicMapCellType */;
+        let mut raceTrackGeographicMapCellType: Option<Rc<RefCell<RaceTrackGeographicMapCellType>>> = (geographicMapCellType).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<RaceTrackGeographicMapCellType>() }, "ClassCastException: not a RaceTrackGeographicMapCellType"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<RaceTrackGeographicMapCellType>) } });
         let mut allBinaryTiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(geographicMapInterface).getAllBinaryTiledLayer();
         let mut pathFindingNodeCostInfoFactoryInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNodeCostInfoFactoryBase::PathFindingNodeCostInfoFactoryBaseDyn>>> = jcall!(pathFindingInfo).getPathFindingNodeCostInfoFactoryInterface();
         let mut basicGeographicMapUtil: Option<Rc<RefCell<BasicGeographicMapUtil>>> = BasicGeographicMapUtil::getInstance();
@@ -126,13 +127,13 @@ impl PathFindingInfoFactory {
         let mut costFromStart: i32 = 0;
         let mut costToEnd: i32 = 0;
         for index in (0..self.MAX_DIRECTIONS) {
-            row = jcall!(basicGeographicMapUtil).getBorderingRow(index.clone(), cellPosition.clone());
-            column = jcall!(basicGeographicMapUtil).getBorderingColumn(index.clone(), cellPosition.clone());
+            row = { let java_value = (jcall!(basicGeographicMapUtil).getBorderingRow(index.clone(), cellPosition.clone())).clone(); java_value };
+            column = { let java_value = (jcall!(basicGeographicMapUtil).getBorderingColumn(index.clone(), cellPosition.clone())).clone(); java_value };
             if row < jcall!(allBinaryTiledLayer).getRows() && column < jcall!(allBinaryTiledLayer).getColumns() && row >= 0 && column >= 0 {
-                goingToGeographicMapCellPosition = jcall!(geographicMapCellPositionFactory).getAt(column.clone(), row.clone());
-                costFromStart = jcall!(raceTrackGeographicMapCellType).getTravelCost();
+                goingToGeographicMapCellPosition = { let java_value = (jcall!(geographicMapCellPositionFactory).getAt(column.clone(), row.clone())).clone(); java_value };
+                costFromStart = { let java_value = (jcall!(raceTrackGeographicMapCellType).getTravelCost()).clone(); java_value };
                 costToEnd = costFromStart.clone();
-                jcall!(pathFindingNodeCostInfoFactoryInterface).create(geographicMapInterface.clone(), goingToGeographicMapCellPosition.clone(), cellPosition.clone(), costFromStart.clone(), costToEnd.clone());
+                jcall!(pathFindingNodeCostInfoFactoryInterface).as_PathFindingNodeCostInfoFactoryBase_mut().create(geographicMapInterface.clone(), goingToGeographicMapCellPosition.clone(), cellPosition.clone(), costFromStart.clone(), costToEnd.clone());
             }
         }
     }

@@ -32,6 +32,7 @@ use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellHis
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::media::graphics::geography::map::PathData::PathData;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
+use crate::java::lang::Exception::*;
 use super::PathGeneratorInterface::PathGeneratorInterface;
 use super::PathCacheFactory::PathCacheFactory;
 use super::PathFindingInfo::PathFindingInfo;
@@ -53,6 +54,10 @@ impl PathGeneratorInterface for StaticPathGenerator {
 }
 
 impl StaticPathGenerator {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -62,7 +67,7 @@ impl StaticPathGenerator {
         };
         this.logUtil = LogUtil::getInstance();
         this.basicArrayListUtil = BasicArrayListUtil::getInstance();
-        PreLogUtil::put(String::from("Using Static Path Finding"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(CommonStrings::getInstance()).CONSTRUCTOR.clone());
+        PreLogUtil::put(String::from("Using Static Path Finding"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(CommonStrings::getInstance()).CONSTRUCTOR.clone(); java_field }.clone());
         this
     }
 
@@ -78,13 +83,13 @@ impl StaticPathGenerator {
 
     // throws Exception
     pub fn getGeographicMapCellPositionListFromBasicGeographicMapCellPositionList(&mut self, mut geographicMapCellPositionFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactoryDyn>>>, mut pathList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut size: i32 = jcall!(pathList).size();
         let mut basicGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>> = None;
         let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = None;
         for index in (0..size) {
-            basicGeographicMapCellPosition = { let java_object = (jcall!(pathList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>>().expect("ClassCastException").clone()) };
-            geographicMapCellPosition = jcall!(geographicMapCellPositionFactory).getAt(jcall!(basicGeographicMapCellPosition).getColumn(), jcall!(basicGeographicMapCellPosition).getRow());
+            basicGeographicMapCellPosition = { let java_value = ({ let java_object = (jcall!(pathList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            geographicMapCellPosition = { let java_value = (jcall!(geographicMapCellPositionFactory).getAt(jcall!(basicGeographicMapCellPosition).getColumn(), jcall!(basicGeographicMapCellPosition).getRow())).clone(); java_value };
             jcall!(list).add(crate::java_into_object(geographicMapCellPosition.clone()));
         }
         return list.clone();
@@ -94,7 +99,7 @@ impl StaticPathGenerator {
     // throws Exception
     pub fn createList(&mut self, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, mut geographicMapCellHistory: Option<Rc<RefCell<GeographicMapCellHistory>>>, mut pathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>>, mut totalPaths: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut pathCacheFactory: Option<Rc<RefCell<PathCacheFactory>>> = PathCacheFactory::getInstance();
             let mut mapIdInteger: Option<i32> = jcall!(jcall!(geographicMapInterface).getAllBinaryTiledLayer()).getDataId();
             let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(pathCacheFactory).getOrCreate(mapIdInteger.clone());
@@ -102,28 +107,29 @@ impl StaticPathGenerator {
                 list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
                 let mut smallIntegerSingletonFactory: Option<Rc<RefCell<SmallIntegerSingletonFactory>>> = SmallIntegerSingletonFactory::getInstance();
                 let mut geographicMapCellPositionFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactoryDyn>>> = jcall!(geographicMapInterface).getGeographicMapCellPositionFactory();
-                let mut id: i32 = jcall!(PathData::getInstance()).OFFSET + ((mapIdInteger).unwrap() as i32);
+                let mut id: i32 = { let java_field = jcall!(PathData::getInstance()).OFFSET.clone(); java_field } + ((mapIdInteger).unwrap() as i32);
                 let mut basicList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(pathCacheFactory).getOrCreate(jcall!(smallIntegerSingletonFactory).getAt(id.clone()));
                 let mut size: i32 = jcall!(basicList).size();
                 let mut pathList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
                 for index in (0..size) {
-                    pathList = { let java_arguments = (geographicMapCellPositionFactory.clone(), { let java_object = (jcall!(basicList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) },); self.getGeographicMapCellPositionListFromBasicGeographicMapCellPositionList(java_arguments.0, java_arguments.1) };
+                    pathList = { let java_value = ({ let java_arguments = (geographicMapCellPositionFactory.clone(), { let java_object = (jcall!(basicList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) },); self.getGeographicMapCellPositionListFromBasicGeographicMapCellPositionList(java_arguments.0, java_arguments.1) }).clone(); java_value };
                     jcall!(list).add(crate::java_into_object(pathList.clone()));
                 }
                 jcall!(pathCacheFactory).add(mapIdInteger.clone(), list.clone());
                 jcall!(pathCacheFactory).remove(jcall!(smallIntegerSingletonFactory).getAt(id.clone()));
             }
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Using Cached Path(s): ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(list.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            return list.clone();
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Using Cached Path(s): ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(list.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            return Some(list.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
-            return BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
+            return BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

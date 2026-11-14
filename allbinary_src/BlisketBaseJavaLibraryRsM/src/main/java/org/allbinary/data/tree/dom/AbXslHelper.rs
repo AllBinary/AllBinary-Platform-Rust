@@ -22,6 +22,7 @@ use super::*;
 // use crate::javax::xml::transform::stream::StreamSource::StreamSource;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,6 +37,10 @@ pub struct AbXslHelper {
 thread_local! { pub static AbXslHelper_instance: Option<Rc<RefCell<AbXslHelper>>> = AbXslHelper::new(); }
 
 impl AbXslHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -61,25 +66,26 @@ impl AbXslHelper {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn translate(&mut self, mut xslPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>, mut xmlPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>) -> String {
+    pub fn translate_AbPath_AbPath(&mut self, mut xslPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>, mut xmlPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>) -> String {
         return { let java_arguments = (jcall!(xslPath).getPath(), jcall!(xmlPath).getPath(),); self.translate(java_arguments.0, java_arguments.1) };
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn translate(&mut self, mut xsltFilePath: String, mut xmlFilePath: String) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut outputStream: Vec<u8> = Vec::new();
-            return jcall!(jcall!(XslHelper::XslHelper::getInstance()).translate3(StreamSource::new(xsltFilePath.clone()), StreamSource::new(xmlFilePath.clone()), StreamResult::new(outputStream.clone()))).toString();
+    pub fn translate_String_String(&mut self, mut xsltFilePath: String, mut xmlFilePath: String) -> String {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut outputStream: Option<Rc<RefCell<crate::java::io::OutputStream::OutputStream>>> = crate::java::io::OutputStream::OutputStream::new();
+            return Some(jcall!(jcall!(XslHelper::XslHelper::getInstance()).translate3(StreamSource::new(xsltFilePath.clone()), StreamSource::new(xmlFilePath.clone()), StreamResult::new(outputStream.clone()))).toString());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

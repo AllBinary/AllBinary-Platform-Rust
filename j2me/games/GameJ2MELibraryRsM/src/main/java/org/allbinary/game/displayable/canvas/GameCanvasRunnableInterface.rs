@@ -17,12 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
-// use crate::javax::microedition::lcdui::ItemStateListener::ItemStateListener;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::ItemStateListener::ItemStateListener;
 use crate::org::allbinary::game::state::GameStateCompositeInterface::GameStateCompositeInterface;
 use crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface;
 use crate::org::allbinary::thread::RunnableInterface::RunnableInterface;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -63,19 +64,19 @@ pub trait GameCanvasRunnableInterface: RunnableInterface + PaintableInterface + 
     fn isGameOver(&mut self) -> bool;
     
 
-    fn initCommands(&mut self, cmdListener: Option<Rc<RefCell<CommandListener>>>);
+    fn initCommands(&mut self, cmdListener: Option<Rc<RefCell<dyn CommandListener>>>);
     
 
     // throws Exception
-    fn getCurrentStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>;
+    fn getCurrentStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>;
     
 
     // throws Exception
-    fn getLoadStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>;
+    fn getLoadStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>;
     
 
     // throws Exception
-    fn setLoadStateHashtable(&mut self, hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>);
+    fn setLoadStateHashtable(&mut self, hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>);
     
 
     fn getType(&mut self) -> i32;

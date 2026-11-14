@@ -20,6 +20,8 @@ use super::*;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellHistory::GeographicMapCellHistory;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::PathGeneratorInterface::PathGeneratorInterface;
 use super::PathFindingInfo::PathFindingInfo;
 use super::GeographicPathFinderBase::GeographicPathFinderBase;
@@ -41,6 +43,10 @@ impl PathGeneratorInterface for PathGenerator {
 }
 
 impl PathGenerator {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<PathGenerator>>> {

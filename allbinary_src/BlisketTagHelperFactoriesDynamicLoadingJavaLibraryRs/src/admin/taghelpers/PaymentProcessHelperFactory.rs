@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
 use super::TagHelperFactoryInterface::TagHelperFactoryInterface;
@@ -38,6 +37,10 @@ thread_local! { pub static PaymentProcessHelperFactory_FACTORYNAME: String = Str
 // impl TagHelperFactoryInterface for PaymentProcessHelperFactory with the methods of the trait
 
 impl PaymentProcessHelperFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -52,8 +55,8 @@ impl PaymentProcessHelperFactory {
     
 
     // throws LicensingException
-    pub fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return HelperFactory::HelperFactory::getInstance(PaymentProcessHelperFactory_FACTORYNAME.with(Clone::clone).clone(), PaymentProcessHelperFactory_CLASSNAME.with(Clone::clone).clone(), hashMap.clone(), pageContext.clone());
+    pub fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
+        return crate::java_into_object(HelperFactory::HelperFactory::getInstance(PaymentProcessHelperFactory_FACTORYNAME.with(Clone::clone).clone(), PaymentProcessHelperFactory_CLASSNAME.with(Clone::clone).clone(), hashMap.clone(), pageContext.clone()));
     }
 }
 

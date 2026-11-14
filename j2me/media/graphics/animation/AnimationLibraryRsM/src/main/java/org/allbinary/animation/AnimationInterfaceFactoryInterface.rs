@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface;
 use super::Animation::Animation;
 

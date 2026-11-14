@@ -40,12 +40,16 @@ pub struct PaymentGatewayPageData {
 }
 
 thread_local! { pub static PaymentGatewayPageData_EXTENSION: String = String::from(".jsp"); }
-thread_local! { pub static PaymentGatewayPageData_NAME: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); }
+thread_local! { pub static PaymentGatewayPageData_NAME: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(); }
 thread_local! { pub static PaymentGatewayPageData_FORWARDMAKEPAYMENT: String = String::from("MakePayment.jsp"); }
 thread_local! { pub static PaymentGatewayPageData_PAYMENTOPTIONS: String = format!("{}{}", String::from("PaymentOptions"), PaymentGatewayPageData_EXTENSION.with(Clone::clone)); }
 thread_local! { pub static PaymentGatewayPageData_STARTCHECKOUT: String = format!("{}{}", String::from("StartCheckout"), PaymentGatewayPageData_EXTENSION.with(Clone::clone)); }
 
 impl PaymentGatewayPageData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut location: String, mut paymentMethod: String) -> Self {
@@ -65,47 +69,47 @@ impl PaymentGatewayPageData {
         jcall!(stringBuffer).append(location.clone());
         jcall!(stringBuffer).append(String::from("MakePayment"));
         jcall!(stringBuffer).append(PaymentGatewayPageData_EXTENSION.with(Clone::clone).clone());
-        this.MAKEPAYMENT = jcall!(stringBuffer).toString();
+        this.MAKEPAYMENT = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(paymentMethodString.clone());
         jcall!(stringBuffer).append(String::from("Checkout"));
         jcall!(stringBuffer).append(PaymentGatewayPageData_EXTENSION.with(Clone::clone).clone());
-        this.CHECKOUT = jcall!(stringBuffer).toString();
+        this.CHECKOUT = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(paymentMethodString.clone());
         jcall!(stringBuffer).append(String::from("Shipping"));
         jcall!(stringBuffer).append(PaymentGatewayPageData_EXTENSION.with(Clone::clone).clone());
-        this.SHIPPING = jcall!(stringBuffer).toString();
+        this.SHIPPING = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(paymentMethodString.clone());
         jcall!(stringBuffer).append(String::from("ShippingAddress"));
         jcall!(stringBuffer).append(PaymentGatewayPageData_EXTENSION.with(Clone::clone).clone());
-        this.SHIPPINGADDRESS = jcall!(stringBuffer).toString();
+        this.SHIPPINGADDRESS = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(paymentMethodString.clone());
         jcall!(stringBuffer).append(String::from("ShippingAddressAction"));
         jcall!(stringBuffer).append(PaymentGatewayPageData_EXTENSION.with(Clone::clone).clone());
-        this.SHIPPINGADDRESSACTION = jcall!(stringBuffer).toString();
+        this.SHIPPINGADDRESSACTION = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(paymentMethodString.clone());
         jcall!(stringBuffer).append(String::from("BillingAddress"));
         jcall!(stringBuffer).append(PaymentGatewayPageData_EXTENSION.with(Clone::clone).clone());
-        this.BILLINGADDRESS = jcall!(stringBuffer).toString();
+        this.BILLINGADDRESS = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(paymentMethodString.clone());
         jcall!(stringBuffer).append(String::from("Payment"));
         jcall!(stringBuffer).append(PaymentGatewayPageData_EXTENSION.with(Clone::clone).clone());
-        this.PAYMENT = jcall!(stringBuffer).toString();
+        this.PAYMENT = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(paymentMethodString.clone());
         jcall!(stringBuffer).append(String::from("Authorize"));
         jcall!(stringBuffer).append(PaymentGatewayPageData_EXTENSION.with(Clone::clone).clone());
-        this.AUTHORIZE = jcall!(stringBuffer).toString();
+        this.AUTHORIZE = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(paymentMethodString.clone());
         jcall!(stringBuffer).append(String::from("PaymentFinish"));
         jcall!(stringBuffer).append(PaymentGatewayPageData_EXTENSION.with(Clone::clone).clone());
-        this.FINISH = jcall!(stringBuffer).toString();
+        this.FINISH = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         this
     }
 

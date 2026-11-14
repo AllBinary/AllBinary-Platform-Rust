@@ -22,6 +22,7 @@ use crate::org::w3c::dom::Attr::Attr;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::NamedNodeMap::NamedNodeMap;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::TransformInfoDomNode::TransformInfoDomNode;
 use super::TransformInfoInterface::TransformInfoInterface;
 use super::TransformInfoData::TransformInfoData;
@@ -59,7 +60,7 @@ impl TransformInfoDomNodeView {
 
     pub fn new_struct1(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Self {
         let mut this = Self {
-            base: TransformInfoDomNode::new_struct1(transformInfoInterface.clone()),
+            base: TransformInfoDomNode::new_struct1_TransformInfoInterface(transformInfoInterface.clone()),
         };
         // super(...) is in the struct literal above
         this
@@ -70,42 +71,42 @@ impl TransformInfoDomNodeView {
     }
     
 
-    pub fn new_struct2(mut name: String, mut mappedName: String) -> Self {
+    pub fn new_struct2_String_String(mut name: String, mut mappedName: String) -> Self {
         let mut this = Self {
-            base: TransformInfoDomNode::new_struct2(name.clone(), mappedName.clone()),
+            base: TransformInfoDomNode::new_struct2_String_String(name.clone(), mappedName.clone()),
         };
         // super(...) is in the struct literal above
         this
     }
 
-    pub fn new2(mut name: String, mut mappedName: String) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct2(name, mappedName))))
+    pub fn new2_String_String(mut name: String, mut mappedName: String) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct2_String_String(name, mappedName))))
     }
     
 
-    pub fn new_struct1(mut name: String) -> Self {
+    pub fn new_struct1_String(mut name: String) -> Self {
         let mut this = Self {
-            base: TransformInfoDomNode::new_struct2(name.clone(), None),
+            base: TransformInfoDomNode::new_struct2_String_String(name.clone(), None),
         };
         // super(...) is in the struct literal above
         this
     }
 
-    pub fn new1(mut name: String) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(name))))
+    pub fn new1_String(mut name: String) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_String(name))))
     }
     
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
         let mut transformInfoData: Option<Rc<RefCell<TransformInfoData>>> = TransformInfoData::getInstance();
-        let mut subViewNode: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(jcall!(transformInfoData).NAME.clone());
-        let mut viewNameAttr: Option<Rc<RefCell<Attr>>> = jcall!(document).createAttribute(jcall!(transformInfoData).NAME.clone());
-        jcall!(viewNameAttr).setValue(jcall!(self.getTransformInfoInterface()).getName());
+        let mut subViewNode: Option<Rc<RefCell<Node>>> = jcall!(document).createElement({ let java_field = jcall!(transformInfoData).NAME.clone(); java_field }.clone());
+        let mut viewNameAttr: Option<Rc<RefCell<Attr>>> = jcall!(document).createAttribute({ let java_field = jcall!(transformInfoData).NAME.clone(); java_field }.clone());
+        jcall!(viewNameAttr).setValue({ let java_argument = jcall!(self.getTransformInfoInterface()).getName(); java_argument });
         let mut componentNodeAttributes: Option<Rc<RefCell<NamedNodeMap>>> = jcall!(subViewNode).getAttributes();
         jcall!(componentNodeAttributes).setNamedItem(viewNameAttr.clone());
-        if self.getMappedName().is_some() {
-            let mut mappedNameAttr: Option<Rc<RefCell<Attr>>> = jcall!(document).createAttribute(jcall!(transformInfoData).MAPPED.clone());
+        if true {
+            let mut mappedNameAttr: Option<Rc<RefCell<Attr>>> = jcall!(document).createAttribute({ let java_field = jcall!(transformInfoData).MAPPED.clone(); java_field }.clone());
             jcall!(mappedNameAttr).setValue(self.getMappedName());
             jcall!(componentNodeAttributes).setNamedItem(mappedNameAttr.clone());
         }

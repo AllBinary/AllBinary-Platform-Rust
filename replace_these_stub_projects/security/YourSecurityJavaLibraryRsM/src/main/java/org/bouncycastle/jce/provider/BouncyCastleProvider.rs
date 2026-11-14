@@ -5,7 +5,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::security::Provider::Provider;
+use crate::java::security::Provider::Provider;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

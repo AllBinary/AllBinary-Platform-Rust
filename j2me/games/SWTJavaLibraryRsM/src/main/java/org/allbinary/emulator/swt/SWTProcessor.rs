@@ -35,6 +35,10 @@ pub struct SWTProcessor {
 thread_local! { pub static SWTProcessor_instance: Option<Rc<RefCell<dyn SWTProcessorDyn>>> = SWTProcessor::new().map(|reference| reference as Rc<RefCell<dyn SWTProcessorDyn>>); }
 
 impl SWTProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn SWTProcessorDyn>>> {
@@ -46,7 +50,7 @@ impl SWTProcessor {
         let mut this = Self {
             runnable: None,
         };
-        this.runnable = NullRunnable::getInstance();
+        this.runnable = NullRunnable::getInstance().map(|reference| reference as Rc<RefCell<dyn Runnable>>);
         this
     }
 
@@ -59,7 +63,7 @@ impl SWTProcessor {
         jcall!(display).sleep();
     }
 }
-pub trait SWTProcessorDyn {
+pub trait SWTProcessorDyn: std::any::Any {
     fn as_SWTProcessor(&self) -> &SWTProcessor;
     fn as_SWTProcessor_mut(&mut self) -> &mut SWTProcessor;
     fn process(&mut self, mut display: Option<Rc<RefCell<Display>>>) { SWTProcessor::process(self.as_SWTProcessor_mut(), display) }

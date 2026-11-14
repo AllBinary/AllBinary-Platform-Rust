@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::egl::EGLConfig::EGLConfig;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::egl::EGLConfig::EGLConfig;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use crate::org::allbinary::graphics::opengles::renderer::RendererStrings::RendererStrings;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 
@@ -37,6 +37,10 @@ pub struct ShaderUpdater {
 thread_local! { pub static ShaderUpdater_instance: Option<Rc<RefCell<dyn ShaderUpdaterDyn>>> = ShaderUpdater::new().map(|reference| reference as Rc<RefCell<dyn ShaderUpdaterDyn>>); }
 
 impl ShaderUpdater {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -61,10 +65,9 @@ impl ShaderUpdater {
     pub fn onSurfaceCreated(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut eglConfig: Option<Rc<RefCell<EGLConfig>>>) {
     }
 }
-pub trait ShaderUpdaterDyn {
+pub trait ShaderUpdaterDyn: std::any::Any {
     fn as_ShaderUpdater(&self) -> &ShaderUpdater;
     fn as_ShaderUpdater_mut(&mut self) -> &mut ShaderUpdater;
-    fn onSurfaceCreated(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut eglConfig: Option<Rc<RefCell<EGLConfig>>>) { ShaderUpdater::onSurfaceCreated(self.as_ShaderUpdater_mut(), gl, eglConfig) }
     fn onSurfaceCreated(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut eglConfig: Option<Rc<RefCell<EGLConfig>>>) { ShaderUpdater::onSurfaceCreated(self.as_ShaderUpdater_mut(), gl, eglConfig) }
 }
 impl ShaderUpdaterDyn for ShaderUpdater {

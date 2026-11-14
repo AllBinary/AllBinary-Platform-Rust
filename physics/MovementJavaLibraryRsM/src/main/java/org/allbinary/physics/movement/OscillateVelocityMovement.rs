@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayer;
 use crate::org::allbinary::game::physics::velocity::VelocityProperties::VelocityProperties;
 use crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal;
+use crate::java::lang::Exception::*;
 use super::BasicConstantVelocityMovement::BasicConstantVelocityMovement;
 
 // Borrows the object of a Java reference
@@ -43,7 +44,7 @@ impl OscillateVelocityMovement {
 
     pub fn new_struct(mut speedBasicDecimal: Option<Rc<RefCell<BasicDecimal>>>, mut oscillateMin: i32, mut oscillateMax: i32) -> Self {
         let mut this = Self {
-            base: BasicConstantVelocityMovement::new_struct(speedBasicDecimal.clone(), VelocityProperties::new(((jcall!(speedBasicDecimal).getUnscaled()) as i32), ((jcall!(speedBasicDecimal).getUnscaled()) as i32))),
+            base: BasicConstantVelocityMovement::new_struct(speedBasicDecimal.clone(), VelocityProperties::new(((jcall!(speedBasicDecimal).getUnscaled()) as i32), ((jcall!(speedBasicDecimal).getUnscaled()) as i32)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn>>)),
             oscillateMin: 0,
             oscillateMax: 0,
             oscillate: 0,
@@ -62,7 +63,7 @@ impl OscillateVelocityMovement {
 
     // throws Exception
     pub fn process(&mut self, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayerDyn>>>) {
-        self.base.process(layer.clone());
+        { let java_arguments = (layer.clone(),); self.base.process(java_arguments.0) };
         if self.oscillate < self.oscillateMin {
             self.oscillatePositive = true;
         } else if self.oscillate > self.oscillateMax {
@@ -70,10 +71,10 @@ impl OscillateVelocityMovement {
         }
         if self.oscillatePositive {
             self.oscillate += 1;
-            jcall!(jcall!(self.getVelocityProperties()).getVelocityXBasicDecimalP()).addint(2000);
+            jcall!(jcall!(self.getVelocityProperties()).as_BasicVelocityProperties_mut().getVelocityXBasicDecimalP()).addint(2000);
         } else {
             self.oscillate -= 1;
-            jcall!(jcall!(self.getVelocityProperties()).getVelocityXBasicDecimalP()).subtractint(2000);
+            jcall!(jcall!(self.getVelocityProperties()).as_BasicVelocityProperties_mut().getVelocityXBasicDecimalP()).subtractint(2000);
         }
     }
 }

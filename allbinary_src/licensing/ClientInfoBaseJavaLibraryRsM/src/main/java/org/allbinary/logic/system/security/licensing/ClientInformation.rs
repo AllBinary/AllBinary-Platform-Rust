@@ -62,7 +62,7 @@ impl AbeClientInformationInterface for ClientInformation {
     fn getLicenseServers(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::getLicenseServers(self) }
     fn getLicenseServer(&mut self, mut index: i32) -> String { Self::getLicenseServer(self, index) }
     fn getNumberOfLicenseServers(&mut self) -> i32 { Self::getNumberOfLicenseServers(self) }
-    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { Self::toHashtable(self) }
+    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { Self::toHashtable(self) }
     fn isSameId(&mut self, mut alicenseId: String) -> bool { Self::isSameId(self, alicenseId) }
     fn isLargerOrDifferentServerList(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> bool { Self::isLargerOrDifferentServerList(self, list) }
     fn isHardSale(&mut self) -> bool { Self::isHardSale(self) }
@@ -70,6 +70,10 @@ impl AbeClientInformationInterface for ClientInformation {
 }
 
 impl ClientInformation {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut name: String, mut version: String, mut specialName: String, mut shortName: String) -> Self {
@@ -87,12 +91,12 @@ impl ClientInformation {
         this.operatingSystemInterface = crate::org::allbinary::logic::system::os::NoOperatingSystem::NoOperatingSystem_NO_OPERATING_SYSTEM.with(Clone::clone).clone();
         this.tsUtil = TsUtil::getInstance();
         this.hardSale = true;
-        this.licenseId = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.licenseId = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.licenseServers = jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance();
         this.name = name.clone();
         this.version = version.clone();
         this.specialName = specialName.clone();
-        this.shortName = jcall!(StringMaker::new()).append(shortName.clone()).append(jcall!(CommonSeps::getInstance()).UNDERSCORE.clone()).append(version.clone()).toString();
+        this.shortName = { let java_value = (jcall!(StringMaker::new()).append(shortName.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).UNDERSCORE.clone(); java_field }.clone()).append(version.clone()).toString()).clone(); java_value };
         this.init();
         this
     }
@@ -137,7 +141,7 @@ impl ClientInformation {
     
 
     pub fn getLicenseServer(&mut self, mut index: i32) -> String {
-        return (jcall!(self.licenseServers).as_BasicArrayList_mut().objectArray[(index) as usize]).clone() /* as String */;
+        return { let java_object = (jcall!(self.licenseServers).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
     }
     
 
@@ -146,27 +150,27 @@ impl ClientInformation {
     }
     
 
-    pub fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
         let mut abeClientInformationData: Option<Rc<RefCell<AbeClientInformationData>>> = AbeClientInformationData::getInstance();
         let mut genericOperatingSystem: Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>> = self.getOperatingSystemInterface();
-        let mut clientInfoHashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(StdUtil::getInstance()).createHashtable();
-        jcall!(clientInfoHashtable).put(crate::java_into_object(jcall!(abeClientInformationData).NAME.clone()), crate::java_into_object(self.name.clone()));
-        jcall!(clientInfoHashtable).put(crate::java_into_object(jcall!(abeClientInformationData).VERSION.clone()), crate::java_into_object(self.version.clone()));
-        jcall!(clientInfoHashtable).put(crate::java_into_object(jcall!(abeClientInformationData).SPECIALNAME.clone()), crate::java_into_object(self.specialName.clone()));
-        jcall!(clientInfoHashtable).put(crate::java_into_object(jcall!(abeClientInformationData).LICENSEID.clone()), crate::java_into_object(self.getLicenseId()));
-        jcall!(clientInfoHashtable).put(crate::java_into_object(jcall!(abeClientInformationData).OSNAME.clone()), crate::java_into_object(jcall!(genericOperatingSystem).getName()));
-        jcall!(clientInfoHashtable).put(crate::java_into_object(jcall!(abeClientInformationData).OSARCH.clone()), crate::java_into_object(jcall!(genericOperatingSystem).getArch()));
-        jcall!(clientInfoHashtable).put(crate::java_into_object(jcall!(abeClientInformationData).OSVERSION.clone()), crate::java_into_object(jcall!(genericOperatingSystem).getVersion()));
-        jcall!(clientInfoHashtable).put(crate::java_into_object(jcall!(abeClientInformationData).OS.clone()), crate::java_into_object(jcall!(genericOperatingSystem).toString()));
+        let mut clientInfoHashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashtable();
+        jcall!(clientInfoHashtable).put(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).NAME.clone(); java_field }.clone()), crate::java_into_object(self.name.clone()));
+        jcall!(clientInfoHashtable).put(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).VERSION.clone(); java_field }.clone()), crate::java_into_object(self.version.clone()));
+        jcall!(clientInfoHashtable).put(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).SPECIALNAME.clone(); java_field }.clone()), crate::java_into_object(self.specialName.clone()));
+        jcall!(clientInfoHashtable).put(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).LICENSEID.clone(); java_field }.clone()), crate::java_into_object(self.getLicenseId()));
+        jcall!(clientInfoHashtable).put(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).OSNAME.clone(); java_field }.clone()), crate::java_into_object(jcall!(genericOperatingSystem).as_GenericOperatingSystem_mut().getName()));
+        jcall!(clientInfoHashtable).put(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).OSARCH.clone(); java_field }.clone()), crate::java_into_object(jcall!(genericOperatingSystem).as_GenericOperatingSystem_mut().getArch()));
+        jcall!(clientInfoHashtable).put(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).OSVERSION.clone(); java_field }.clone()), crate::java_into_object(jcall!(genericOperatingSystem).as_GenericOperatingSystem_mut().getVersion()));
+        jcall!(clientInfoHashtable).put(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).OS.clone(); java_field }.clone()), crate::java_into_object(jcall!(genericOperatingSystem).as_GenericOperatingSystem_mut().toString()));
         let mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>> = jcall!(SystemHardwareFactory::getInstance()).getInstance1(genericOperatingSystem.clone());
         let mut hardwareString: String = jcall!(hardwareInterface).toString();
-        jcall!(clientInfoHashtable).put(crate::java_into_object(jcall!(abeClientInformationData).HARDWARE.clone()), crate::java_into_object(hardwareString.clone()));
+        jcall!(clientInfoHashtable).put(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).HARDWARE.clone(); java_field }.clone()), crate::java_into_object(hardwareString.clone()));
         return clientInfoHashtable.clone();
     }
     
 
     pub fn isSameId(&mut self, mut alicenseId: String) -> bool {
-        if { let left = &(self.getLicenseId()); let right = &(alicenseId); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 {
+        if { let java_value = { let left = (self.getLicenseId()).clone(); let right = (alicenseId).clone(); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } }; java_value } == 0 {
             return true;
         } else {
             return false;
@@ -181,10 +185,10 @@ impl ClientInformation {
             return true;
         }
         for index in (0..=size).rev() {
-            let mut newServerName: String = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone() /* as String */;
+            let mut newServerName: String = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             for index2 in (0..=currentSize).rev() {
-                let mut nextOldServerName: String = (jcall!(self.licenseServers).as_BasicArrayList_mut().objectArray[(index) as usize]).clone() /* as String */;
-                if { let left = &(newServerName); let right = &(nextOldServerName); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } != 0 {
+                let mut nextOldServerName: String = { let java_object = (jcall!(self.licenseServers).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+                if { let left = (newServerName).clone(); let right = (nextOldServerName).clone(); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } != 0 {
                     return true;
                 }
             }
@@ -222,7 +226,7 @@ impl ClientInformation {
         return self.shortName.clone();
     }
 }
-pub trait ClientInformationDyn {
+pub trait ClientInformationDyn: std::any::Any {
     fn as_ClientInformation(&self) -> &ClientInformation;
     fn as_ClientInformation_mut(&mut self) -> &mut ClientInformation;
     fn init(&mut self) { ClientInformation::init(self.as_ClientInformation_mut()) }
@@ -234,7 +238,7 @@ pub trait ClientInformationDyn {
     fn getLicenseServers(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { ClientInformation::getLicenseServers(self.as_ClientInformation_mut()) }
     fn getLicenseServer(&mut self, mut index: i32) -> String { ClientInformation::getLicenseServer(self.as_ClientInformation_mut(), index) }
     fn getNumberOfLicenseServers(&mut self) -> i32 { ClientInformation::getNumberOfLicenseServers(self.as_ClientInformation_mut()) }
-    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { ClientInformation::toHashtable(self.as_ClientInformation_mut()) }
+    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { ClientInformation::toHashtable(self.as_ClientInformation_mut()) }
     fn isSameId(&mut self, mut alicenseId: String) -> bool { ClientInformation::isSameId(self.as_ClientInformation_mut(), alicenseId) }
     fn isLargerOrDifferentServerList(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> bool { ClientInformation::isLargerOrDifferentServerList(self.as_ClientInformation_mut(), list) }
     fn setHardSale(&mut self, mut hardSale: bool) { ClientInformation::setHardSale(self.as_ClientInformation_mut(), hardSale) }

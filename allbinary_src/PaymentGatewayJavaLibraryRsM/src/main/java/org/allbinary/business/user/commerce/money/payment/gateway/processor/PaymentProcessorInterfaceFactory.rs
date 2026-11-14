@@ -25,6 +25,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::PaymentProcessorInterfaceFactoryInterface::PaymentProcessorInterfaceFactoryInterface;
 use super::PaymentProcessorInterface::PaymentProcessorInterface;
 
@@ -42,6 +43,10 @@ pub struct PaymentProcessorInterfaceFactory {
 thread_local! { pub static PaymentProcessorInterfaceFactory_instance: Option<Rc<RefCell<PaymentProcessorInterfaceFactory>>> = PaymentProcessorInterfaceFactory::new(); }
 
 impl PaymentProcessorInterfaceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<PaymentProcessorInterfaceFactory>>> {
@@ -66,27 +71,28 @@ impl PaymentProcessorInterfaceFactory {
     // Java overloaded method: Rust needs a different name
     // synchronized
     pub fn getInstance1(&mut self, mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Option<Rc<RefCell<dyn PaymentProcessorInterface>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut paymentTransactionInterface: Option<Rc<RefCell<dyn PaymentTransactionInterface>>> = jcall!(PaymentTransactionInterfaceRequestFactory::getInstance()).getInstance1(transformInfoInterface.clone());
             let mut gatewayName: String = jcall!(jcall!(paymentTransactionInterface).getOrderHistory()).getPaymentMethod();
             if !jcall!(StringValidationUtil::getInstance()).isEmpty(gatewayName.clone()) {
                 let mut paymentType: Option<Rc<RefCell<PaymentType>>> = jcall!(PaymentTypeUtil::getInstance()).get(gatewayName.clone());
                 let mut paymentProcessorInterfaceFactoryInterface: Option<Rc<RefCell<dyn PaymentProcessorInterfaceFactoryInterface>>> = jcall!(paymentType).getPaymentProcessorInterfaceFactoryInterface();
-                return (jcall!(paymentProcessorInterfaceFactoryInterface).getInstance(transformInfoInterface.clone(), paymentTransactionInterface.clone())).clone() /* as PaymentProcessorInterface */;
+                return Some((jcall!(paymentProcessorInterfaceFactoryInterface).getInstance(transformInfoInterface.clone(), paymentTransactionInterface.clone())).clone());
             }
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Error Getting PaymentProcessorInterface"))));
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PAYMENTERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PAYMENTERROR.clone(); java_field }.clone()) {
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

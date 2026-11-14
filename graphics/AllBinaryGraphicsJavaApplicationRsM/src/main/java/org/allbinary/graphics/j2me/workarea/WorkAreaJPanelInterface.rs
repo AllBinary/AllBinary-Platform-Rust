@@ -18,10 +18,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 use super::KeyListener::KeyListener;
-use super::event::event;
-use super::awt::awt;
-use super::java::java;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

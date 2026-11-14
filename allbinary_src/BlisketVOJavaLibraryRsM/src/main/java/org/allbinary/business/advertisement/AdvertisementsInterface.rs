@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AdvertisementsInterface {
+pub trait AdvertisementsInterface: std::any::Any {
     
 
     fn add(&mut self, advertisementInterface: Option<Rc<RefCell<dyn AdvertisementInterface>>>);

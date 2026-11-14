@@ -16,11 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::Calendar;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::Calendar::Calendar;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::Calendar::Calendar;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::entry::EntryData::EntryData;
@@ -30,6 +28,7 @@ use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
 use crate::org::allbinary::time::TimeUtil::TimeUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -56,6 +55,10 @@ pub struct DownloadableItem {
 
 
 impl DownloadableItem {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut id: String) -> Self {
@@ -74,10 +77,10 @@ impl DownloadableItem {
             validTime: None,
             retries: String::new(),
         };
-        let mut EMPTY_STRING: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.id = jcall!(ProductIdGenerator::new()).getNext();
+        let mut EMPTY_STRING: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.id = { let java_value = (jcall!(ProductIdGenerator::new()).getNext()).clone(); java_value };
         this.basicItemId = id.clone();
-        this.enabled = jcall!(EntryData::getInstance()).YES.clone();
+        this.enabled = { let java_value = ({ let java_field = jcall!(EntryData::getInstance()).YES.clone(); java_field }).clone(); java_value }.clone();
         this.system = String::from("Java");
         this.platform = String::from("Android");
         this.specialName = EMPTY_STRING.clone();
@@ -85,8 +88,8 @@ impl DownloadableItem {
         this.changes = EMPTY_STRING.clone();
         this.licenseFile = EMPTY_STRING.clone();
         this.file = EMPTY_STRING.clone();
-        this.size = (0).to_string();
-        this.validTime = (0).to_string();
+        this.size = { let java_value = (Some((0) as i64)).clone(); java_value };
+        this.validTime = { let java_value = (Some((0) as i64)).clone(); java_value };
         this.retries = EMPTY_STRING.clone();
         this
     }
@@ -96,7 +99,7 @@ impl DownloadableItem {
     }
     
 
-    pub fn new_struct1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1_HashMap(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             id: String::new(),
             basicItemId: String::new(),
@@ -112,48 +115,48 @@ impl DownloadableItem {
             validTime: None,
             retries: String::new(),
         };
-        this.id = (jcall!(hashMap).get(DownloadItemData_ID.with(Clone::clone).clone())).clone() /* as String */;
-        this.basicItemId = (jcall!(hashMap).get(jcall!(BasicItemData::getInstance()).ID.clone())).clone() /* as String */;
-        this.enabled = (jcall!(hashMap).get(jcall!(EntryData::getInstance()).ENABLE.clone())).clone() /* as String */;
-        this.system = (jcall!(hashMap).get(DownloadItemData_SYSTEM.with(Clone::clone).clone())).clone() /* as String */;
-        this.platform = (jcall!(hashMap).get(DownloadItemData_PLATFORM.with(Clone::clone).clone())).clone() /* as String */;
-        this.specialName = (jcall!(hashMap).get(DownloadItemData_SPECIAL_NAME.with(Clone::clone).clone())).clone() /* as String */;
-        this.version = (jcall!(hashMap).get(DownloadItemData_VERSION.with(Clone::clone).clone())).clone() /* as String */;
-        this.changes = (jcall!(hashMap).get(DownloadItemData_CHANGES.with(Clone::clone).clone())).clone() /* as String */;
-        this.licenseFile = (jcall!(hashMap).get(DownloadItemData_LICENSE_FILE.with(Clone::clone).clone())).clone() /* as String */;
-        this.file = (jcall!(hashMap).get(DownloadItemData_FILE.with(Clone::clone).clone())).clone() /* as String */;
-        let mut value: String = (jcall!(hashMap).get(DownloadItemData_SIZE.with(Clone::clone).clone())).clone() /* as String */;
+        this.id = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_ID.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.basicItemId = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(BasicItemData::getInstance()).ID.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.enabled = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).ENABLE.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.system = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_SYSTEM.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.platform = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_PLATFORM.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.specialName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_SPECIAL_NAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.version = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_VERSION.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.changes = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_CHANGES.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.licenseFile = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_LICENSE_FILE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.file = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_FILE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        let mut value: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_SIZE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if !jcall!(StringValidationUtil::getInstance()).isEmpty(value.clone()) {
-            this.size = (value.clone()).to_string();
+            this.size = { let java_value = (Some((value.clone()).trim().parse::<i64>().expect("NumberFormatException"))).clone(); java_value };
         } else {
             this.size = Some((0) as i64);
         }
-        let mut validTime: String = (jcall!(hashMap).get(DownloadItemData_VALID_TIME.with(Clone::clone).clone())).clone() /* as String */;
+        let mut validTime: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_VALID_TIME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if !jcall!(StringValidationUtil::getInstance()).isEmpty(validTime.clone()) {
-            this.validTime = (validTime.clone()).to_string();
+            this.validTime = { let java_value = (Some((validTime.clone()).trim().parse::<i64>().expect("NumberFormatException"))).clone(); java_value };
         } else {
-            let mut totalYears: String = (jcall!(hashMap).get(DownloadItemData_VALID_TIME_YEARS.with(Clone::clone).clone())).clone() /* as String */;
-            let mut totalMonths: String = (jcall!(hashMap).get(DownloadItemData_VALID_TIME_MONTHS.with(Clone::clone).clone())).clone() /* as String */;
-            let mut totalDays: String = (jcall!(hashMap).get(DownloadItemData_VALID_TIME_DAYS.with(Clone::clone).clone())).clone() /* as String */;
-            let mut totalHours: String = (jcall!(hashMap).get(DownloadItemData_VALID_TIME_HOURS.with(Clone::clone).clone())).clone() /* as String */;
-            let mut totalMinutes: String = (jcall!(hashMap).get(DownloadItemData_VALID_TIME_MINUTES.with(Clone::clone).clone())).clone() /* as String */;
-            let mut totalSeconds: String = (jcall!(hashMap).get(DownloadItemData_VALID_TIME_SECONDS.with(Clone::clone).clone())).clone() /* as String */;
+            let mut totalYears: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_VALID_TIME_YEARS.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut totalMonths: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_VALID_TIME_MONTHS.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut totalDays: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_VALID_TIME_DAYS.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut totalHours: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_VALID_TIME_HOURS.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut totalMinutes: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_VALID_TIME_MINUTES.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut totalSeconds: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_VALID_TIME_SECONDS.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             let mut totalTime: i64 = jcall!(TimeUtil::getInstance()).getTotalTime(totalYears.clone(), totalMonths.clone(), totalDays.clone(), totalHours.clone(), totalMinutes.clone(), totalSeconds.clone());
             this.validTime = Some((totalTime.clone()) as i64);
         }
-        this.retries = (jcall!(hashMap).get(DownloadItemData_RETRIES.with(Clone::clone).clone())).clone() /* as String */;
+        this.retries = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(DownloadItemData_RETRIES.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         this
     }
 
-    pub fn new1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(hashMap))))
+    pub fn new1_HashMap(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_HashMap(hashMap))))
     }
     
 
     pub fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
         let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-        let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString();
-        let mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string();
+        let mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         jcall!(values).add(crate::java_into_object(self.getId()));
         jcall!(values).add(crate::java_into_object(self.basicItemId.clone()));
         jcall!(values).add(crate::java_into_object(self.enabled.clone()));
@@ -164,8 +167,8 @@ impl DownloadableItem {
         jcall!(values).add(crate::java_into_object(self.getPlatform()));
         jcall!(values).add(crate::java_into_object(self.getLicenseFile()));
         jcall!(values).add(crate::java_into_object(self.getFile()));
-        jcall!(values).add(crate::java_into_object(jcall!(self.getSize()).toString()));
-        jcall!(values).add(crate::java_into_object(jcall!(self.getValidTime()).toString()));
+        jcall!(values).add({ let java_argument = crate::java_into_object((self.getSize()).expect("NullPointerException").to_string()); java_argument });
+        jcall!(values).add({ let java_argument = crate::java_into_object((self.getValidTime()).expect("NullPointerException").to_string()); java_argument });
         jcall!(values).add(crate::java_into_object(self.getRetries()));
         jcall!(values).add(crate::java_into_object(time.clone()));
         jcall!(values).add(crate::java_into_object(time.clone()));
@@ -173,24 +176,24 @@ impl DownloadableItem {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut values: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(values).as_BasicArrayList_mut().put(DownloadItemData_ID.with(Clone::clone).clone(), self.getId());
-        jcall!(values).as_BasicArrayList_mut().put(jcall!(BasicItemData::getInstance()).ID.clone(), self.basicItemId.clone());
-        jcall!(values).as_BasicArrayList_mut().put(jcall!(EntryData::getInstance()).ENABLE.clone(), self.enabled.clone());
-        jcall!(values).as_BasicArrayList_mut().put(DownloadItemData_SYSTEM.with(Clone::clone).clone(), self.getSystem());
-        jcall!(values).as_BasicArrayList_mut().put(DownloadItemData_PLATFORM.with(Clone::clone).clone(), self.getPlatform());
-        jcall!(values).as_BasicArrayList_mut().put(DownloadItemData_SPECIAL_NAME.with(Clone::clone).clone(), self.getSpecialName());
-        jcall!(values).as_BasicArrayList_mut().put(DownloadItemData_VERSION.with(Clone::clone).clone(), self.getVersion());
-        jcall!(values).as_BasicArrayList_mut().put(DownloadItemData_CHANGES.with(Clone::clone).clone(), self.getChanges());
-        jcall!(values).as_BasicArrayList_mut().put(DownloadItemData_LICENSE_FILE.with(Clone::clone).clone(), self.getLicenseFile());
-        jcall!(values).as_BasicArrayList_mut().put(DownloadItemData_FILE.with(Clone::clone).clone(), self.getFile());
-        jcall!(values).as_BasicArrayList_mut().put(DownloadItemData_SIZE.with(Clone::clone).clone(), jcall!(self.getSize()).toString());
-        jcall!(values).as_BasicArrayList_mut().put(DownloadItemData_VALID_TIME.with(Clone::clone).clone(), jcall!(self.getValidTime()).toString());
-        jcall!(values).as_BasicArrayList_mut().put(DownloadItemData_RETRIES.with(Clone::clone).clone(), self.getRetries());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut values: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(values).put(crate::java_into_object(DownloadItemData_ID.with(Clone::clone).clone()), crate::java_into_object(self.getId()));
+        jcall!(values).put(crate::java_into_object({ let java_field = jcall!(BasicItemData::getInstance()).ID.clone(); java_field }.clone()), crate::java_into_object(self.basicItemId.clone()));
+        jcall!(values).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).ENABLE.clone(); java_field }.clone()), crate::java_into_object(self.enabled.clone()));
+        jcall!(values).put(crate::java_into_object(DownloadItemData_SYSTEM.with(Clone::clone).clone()), crate::java_into_object(self.getSystem()));
+        jcall!(values).put(crate::java_into_object(DownloadItemData_PLATFORM.with(Clone::clone).clone()), crate::java_into_object(self.getPlatform()));
+        jcall!(values).put(crate::java_into_object(DownloadItemData_SPECIAL_NAME.with(Clone::clone).clone()), crate::java_into_object(self.getSpecialName()));
+        jcall!(values).put(crate::java_into_object(DownloadItemData_VERSION.with(Clone::clone).clone()), crate::java_into_object(self.getVersion()));
+        jcall!(values).put(crate::java_into_object(DownloadItemData_CHANGES.with(Clone::clone).clone()), crate::java_into_object(self.getChanges()));
+        jcall!(values).put(crate::java_into_object(DownloadItemData_LICENSE_FILE.with(Clone::clone).clone()), crate::java_into_object(self.getLicenseFile()));
+        jcall!(values).put(crate::java_into_object(DownloadItemData_FILE.with(Clone::clone).clone()), crate::java_into_object(self.getFile()));
+        jcall!(values).put(crate::java_into_object(DownloadItemData_SIZE.with(Clone::clone).clone()), { let java_argument = crate::java_into_object((self.getSize()).expect("NullPointerException").to_string()); java_argument });
+        jcall!(values).put(crate::java_into_object(DownloadItemData_VALID_TIME.with(Clone::clone).clone()), { let java_argument = crate::java_into_object((self.getValidTime()).expect("NullPointerException").to_string()); java_argument });
+        jcall!(values).put(crate::java_into_object(DownloadItemData_RETRIES.with(Clone::clone).clone()), crate::java_into_object(self.getRetries()));
         let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-        let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString().clone();
-        jcall!(values).as_BasicArrayList_mut().put(jcall!(EntryData::getInstance()).LASTMODIFIED.clone(), time.clone());
+        let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string().clone();
+        jcall!(values).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone()), crate::java_into_object(time.clone()));
         return values.clone();
     }
     

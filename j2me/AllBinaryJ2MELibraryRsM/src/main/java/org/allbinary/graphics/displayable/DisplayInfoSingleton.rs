@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Displayable::Displayable;
+use crate::javax::microedition::lcdui::Displayable::Displayable;
 use crate::org::allbinary::AndroidUtil::AndroidUtil;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::graphics::displayable::event::DisplayChangeEvent::DisplayChangeEvent;
@@ -35,6 +35,7 @@ use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::BaseScalable::BaseScalable;
 use super::ScalableListener::ScalableListener;
 
@@ -160,20 +161,19 @@ impl DisplayInfoSingleton {
         this.LAST_HEIGHT = String::from(" LastHeight: ");
         this.PORTRAIT = String::from("Portrait");
         this.LANDSCAPE = String::from("Landscape");
-        this.displayChangeEvent = DisplayChangeEvent::new(this);
         this.FIRE_METHOD_NAME = String::from("fire");
         this.REASON = String::from("reason: ");
         this.UPDATE_FROM_ORIENTATION_CHANGE = String::from("Updating from Orientation Change ");
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.DISPLAY_INFO = String::from("Display Info: ");
         this.FULL = String::from("full");
         this.LAST = String::from("last");
         this.LAST_HALF = String::from("lastHalf");
         let mut size: i32 = (this.last.len() as i32).clone();
         for index in (0..size) {
-            this.last[(index) as usize] = 0;
-            this.lastHalf[(index) as usize] = 0;
-            this.full[(index) as usize] = 0;
+            { let java_index = (index) as usize; this.last[java_index] = 0; };
+            { let java_index = (index) as usize; this.lastHalf[java_index] = 0; };
+            { let java_index = (index) as usize; this.full[java_index] = 0; };
         }
         if AndroidUtil::isAndroid() {
             this.scaleLargestTo = 640.0_f32;
@@ -184,7 +184,10 @@ impl DisplayInfoSingleton {
     }
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct())))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct())));
+        jcall!(this).displayChangeEvent = DisplayChangeEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+            let mut size: i32 = (jcall!(this).last.len() as i32).clone();
+        this
     }
     
 
@@ -222,17 +225,17 @@ impl DisplayInfoSingleton {
 
     pub fn setLastSizeForce(&mut self, mut aLastWidth: i32, mut aLastHeight: i32, mut reason: String) {
         let mut stringMaker: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append(jcall!(CommonLabels::getInstance()).START_LABEL.clone()).append(reason.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_LAST_SIZE_METHOD_NAME.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append({ let java_field = jcall!(CommonLabels::getInstance()).START_LABEL.clone(); java_field }.clone()).append(reason.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_LAST_SIZE_METHOD_NAME.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut aFullWidth: i32 = aLastWidth.clone();
         let mut aFullHeight: i32 = aLastHeight.clone();
         jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append(self.FULL_WIDTH.clone()).appendint(aFullWidth.clone()).append(self.FULL_HEIGHT.clone()).appendint(aFullHeight.clone()).append(self.toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_LAST_SIZE_METHOD_NAME.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_argument = jcall!(stringMaker).append(self.FULL_WIDTH.clone()).appendint(aFullWidth.clone()).append(self.FULL_HEIGHT.clone()).appendint(aFullHeight.clone()).append(self.toString()).toString(); java_argument }, crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_LAST_SIZE_METHOD_NAME.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut operatingSystemInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>> = jcall!(OperatingSystemFactory::getInstance()).getOperatingSystemInstance();
-        if jcall!(operatingSystemInterface).isOverScan() {
-            aLastWidth = aLastWidth * jcall!(operatingSystemInterface).getOverScanXPercent() / 100;
-            aLastHeight = aLastHeight * jcall!(operatingSystemInterface).getOverScanYPercent() / 100;
+        if jcall!(operatingSystemInterface).as_GenericOperatingSystem_mut().isOverScan() {
+            aLastWidth = { let java_value = (aLastWidth * jcall!(operatingSystemInterface).as_GenericOperatingSystem_mut().getOverScanXPercent() / 100).clone(); java_value };
+            aLastHeight = { let java_value = (aLastHeight * jcall!(operatingSystemInterface).as_GenericOperatingSystem_mut().getOverScanYPercent() / 100).clone(); java_value };
         }
-        if jcall!(operatingSystemInterface).isScalable() {
+        if jcall!(operatingSystemInterface).as_GenericOperatingSystem_mut().isScalable() {
             if self.isPortraitWH(aLastWidth.clone(), aLastHeight.clone()) {
                 if ((aLastHeight) as f32) > self.scaleLargestTo {
                     self.displayRatio = self.scaleLargestTo / ((aLastHeight) as f32);
@@ -241,10 +244,10 @@ impl DisplayInfoSingleton {
                     { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append(self.ADJUSTING_FOR_SCALING_IN_PORTRAIT.clone()).appendfloat(self.displayRatio.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_LAST_SIZE_METHOD_NAME.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                     aLastWidth = (((((aLastWidth) as f32) * self.displayRatio)) as i32);
                     aLastHeight = (((((aLastHeight) as f32) * self.displayRatio)) as i32);
-                    jcall!(self.scalableListener).scale(self.ratio);
+                    jcall!(self.scalableListener).as_BaseScalable_mut().scale(self.ratio);
                 } else {
                     self.ratio = 1.0_f32;
-                    jcall!(self.scalableListener).scale(self.ratio);
+                    jcall!(self.scalableListener).as_BaseScalable_mut().scale(self.ratio);
                 }
             } else {
                 if ((aLastWidth) as f32) > self.scaleLargestTo {
@@ -254,10 +257,10 @@ impl DisplayInfoSingleton {
                     { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append(self.ADJUSTING_FOR_SCALING_IN_LANDSCAPE.clone()).appendfloat(self.displayRatio.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_LAST_SIZE_METHOD_NAME.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                     aLastWidth = (((((aLastWidth) as f32) * self.displayRatio)) as i32);
                     aLastHeight = (((((aLastHeight) as f32) * self.displayRatio)) as i32);
-                    jcall!(self.scalableListener).scale(self.ratio);
+                    jcall!(self.scalableListener).as_BaseScalable_mut().scale(self.ratio);
                 } else {
                     self.ratio = 1.0_f32;
-                    jcall!(self.scalableListener).scale(self.ratio);
+                    jcall!(self.scalableListener).as_BaseScalable_mut().scale(self.ratio);
                 }
             }
         }
@@ -265,16 +268,16 @@ impl DisplayInfoSingleton {
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append(self.LAST_WIDTH.clone()).appendint(aLastWidth.clone()).append(self.LAST_HEIGHT.clone()).appendint(aLastHeight.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_LAST_SIZE_METHOD_NAME.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         self.xOffset = aFullWidth - aLastWidth;
         self.yOffset = aFullHeight - aLastHeight;
-        self.left = jcall!(self.scalableListener).getLeft(self.xOffset.clone());
-        self.top = jcall!(self.scalableListener).getTop(self.yOffset.clone());
-        self.full[(self.WIDTH) as usize] = aFullWidth.clone();
-        self.full[(self.HEIGHT) as usize] = aFullHeight.clone();
-        self.last[(self.WIDTH) as usize] = aLastWidth.clone();
-        self.lastHalf[(self.WIDTH) as usize] = (self.last[(self.WIDTH) as usize] >> 1);
-        self.last[(self.HEIGHT) as usize] = aLastHeight.clone();
-        self.lastHalf[(self.HEIGHT) as usize] = (self.last[(self.HEIGHT) as usize] >> 1);
+        self.left = { let java_value = (jcall!(self.scalableListener).as_BaseScalable_mut().getLeft(self.xOffset.clone())).clone(); java_value };
+        self.top = { let java_value = (jcall!(self.scalableListener).as_BaseScalable_mut().getTop(self.yOffset.clone())).clone(); java_value };
+        { let java_index = (self.WIDTH) as usize; self.full[java_index] = aFullWidth.clone(); };
+        { let java_index = (self.HEIGHT) as usize; self.full[java_index] = aFullHeight.clone(); };
+        { let java_index = (self.WIDTH) as usize; self.last[java_index] = aLastWidth.clone(); };
+        { let java_index = (self.WIDTH) as usize; self.lastHalf[java_index] = (self.last[(self.WIDTH) as usize] >> 1); };
+        { let java_index = (self.HEIGHT) as usize; self.last[java_index] = aLastHeight.clone(); };
+        { let java_index = (self.HEIGHT) as usize; self.lastHalf[java_index] = (self.last[(self.HEIGHT) as usize] >> 1); };
         jcall!(SWTJOGLProcessor::getInstance()).setCustom(aLastWidth.clone(), aLastHeight.clone(), self.ratio.clone());
-        self.add(self.SET_LAST_SIZE_METHOD_NAME.clone());
+        { let java_arguments = (self.SET_LAST_SIZE_METHOD_NAME.clone(),); self.add(java_arguments.0) };
     }
     
 
@@ -288,7 +291,7 @@ impl DisplayInfoSingleton {
     
 
     pub fn isPortrait(&mut self) -> bool {
-        return self.isPortraitWH(self.last[(self.WIDTH) as usize].clone(), self.last[(self.HEIGHT) as usize].clone());
+        return { let java_arguments = (self.last[(self.WIDTH) as usize].clone(), self.last[(self.HEIGHT) as usize].clone(),); self.isPortraitWH(java_arguments.0, java_arguments.1) };
     }
     
 
@@ -310,9 +313,9 @@ impl DisplayInfoSingleton {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putOE(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.FIRE_METHOD_NAME.clone(), e.clone());
+            PreLogUtil::putOE({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.FIRE_METHOD_NAME.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -322,81 +325,81 @@ impl DisplayInfoSingleton {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut swtJOGLProcessor: Option<Rc<RefCell<SWTJOGLProcessor>>> = SWTJOGLProcessor::getInstance();
             jcall!(swtJOGLProcessor).clear();
-            jcall!(DisplayChangeEventHandler::getInstance()).fireEvent(self.displayChangeEvent.clone());
-            jcall!(LastDisplayChangeEventHandler::getInstance()).fireEvent(self.displayChangeEvent.clone());
+            jcall!(DisplayChangeEventHandler::getInstance()).fireEvent(self.displayChangeEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
+            jcall!(LastDisplayChangeEventHandler::getInstance()).fireEvent(self.displayChangeEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
             jcall!(swtJOGLProcessor).onSurfaceChanged();
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putOE(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.FIRE_METHOD_NAME.clone(), e.clone());
+            PreLogUtil::putOE({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.FIRE_METHOD_NAME.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
-    pub fn update(&mut self, mut displayable: Option<Rc<RefCell<Displayable>>>, mut reason: String) {
+    pub fn update(&mut self, mut displayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>, mut reason: String) {
         let mut aLastWidth: i32 = jcall!(displayable).getWidth();
         let mut aLastHeight: i32 = jcall!(displayable).getHeight();
         let mut aFullWidth: i32 = aLastWidth.clone();
         let mut aFullHeight: i32 = aLastHeight.clone();
         let mut stringMaker: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append(jcall!(CommonLabels::getInstance()).START_LABEL.clone()).append(reason.clone()).append(self.LAST_WIDTH.clone()).appendint(aLastWidth.clone()).append(self.LAST_HEIGHT.clone()).appendint(aLastHeight.clone()).append(jcall!(self.commonSeps).SPACE.clone()).append(self.toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).UPDATE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_argument = jcall!(stringMaker).append({ let java_field = jcall!(CommonLabels::getInstance()).START_LABEL.clone(); java_field }.clone()).append(reason.clone()).append(self.LAST_WIDTH.clone()).appendint(aLastWidth.clone()).append(self.LAST_HEIGHT.clone()).appendint(aLastHeight.clone()).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone()).append(self.toString()).toString(); java_argument }, crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         if aLastWidth > 0 && aLastHeight > 0 {
             let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
             let mut openGLFeatureFactory: Option<Rc<RefCell<OpenGLFeatureFactory>>> = OpenGLFeatureFactory::getInstance();
-            if !jcall!(features).isDefault(jcall!(openGLFeatureFactory).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || self.last[(self.WIDTH) as usize] != aLastWidth || self.last[(self.HEIGHT) as usize] != aLastHeight {
+            if !jcall!(features).isDefault({ let java_field = jcall!(openGLFeatureFactory).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || self.last[(self.WIDTH) as usize] != aLastWidth || self.last[(self.HEIGHT) as usize] != aLastHeight {
                 jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append(self.UPDATE_FROM_ORIENTATION_CHANGE.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).UPDATE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append(self.UPDATE_FROM_ORIENTATION_CHANGE.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 let mut operatingSystemInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>> = jcall!(OperatingSystemFactory::getInstance()).getOperatingSystemInstance();
-                if jcall!(operatingSystemInterface).isOverScan() {
-                    aLastWidth = aLastWidth * jcall!(operatingSystemInterface).getOverScanXPercent() / 100;
-                    aLastHeight = aLastHeight * jcall!(operatingSystemInterface).getOverScanYPercent() / 100;
+                if jcall!(operatingSystemInterface).as_GenericOperatingSystem_mut().isOverScan() {
+                    aLastWidth = { let java_value = (aLastWidth * jcall!(operatingSystemInterface).as_GenericOperatingSystem_mut().getOverScanXPercent() / 100).clone(); java_value };
+                    aLastHeight = { let java_value = (aLastHeight * jcall!(operatingSystemInterface).as_GenericOperatingSystem_mut().getOverScanYPercent() / 100).clone(); java_value };
                 }
-                if jcall!(operatingSystemInterface).isScalable() {
+                if jcall!(operatingSystemInterface).as_GenericOperatingSystem_mut().isScalable() {
                     if self.isPortraitWH(aLastWidth.clone(), aLastHeight.clone()) {
                         if ((aLastHeight) as f32) > self.scaleLargestTo {
                             self.displayRatio = self.scaleLargestTo / ((aLastHeight) as f32);
                             self.ratio = ((aLastHeight) as f32) / self.scaleLargestTo;
                             jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append(self.ADJUSTING_FOR_SCALING_IN_PORTRAIT.clone()).appendfloat(self.displayRatio.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).UPDATE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append(self.ADJUSTING_FOR_SCALING_IN_PORTRAIT.clone()).appendfloat(self.displayRatio.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                             aLastWidth = (((((aLastWidth) as f32) * self.displayRatio)) as i32);
                             aLastHeight = (((((aLastHeight) as f32) * self.displayRatio)) as i32);
-                            jcall!(self.scalableListener).scale(self.ratio);
+                            jcall!(self.scalableListener).as_BaseScalable_mut().scale(self.ratio);
                         } else {
                             self.ratio = 1.0_f32;
-                            jcall!(self.scalableListener).scale(self.ratio);
+                            jcall!(self.scalableListener).as_BaseScalable_mut().scale(self.ratio);
                         }
                     } else {
                         if ((aLastWidth) as f32) > self.scaleLargestTo {
                             self.displayRatio = self.scaleLargestTo / ((aLastWidth) as f32);
                             self.ratio = ((aLastWidth) as f32) / self.scaleLargestTo;
                             jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append(self.ADJUSTING_FOR_SCALING_IN_LANDSCAPE.clone()).appendfloat(self.displayRatio.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).UPDATE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append(self.ADJUSTING_FOR_SCALING_IN_LANDSCAPE.clone()).appendfloat(self.displayRatio.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                             aLastWidth = (((((aLastWidth) as f32) * self.displayRatio)) as i32);
                             aLastHeight = (((((aLastHeight) as f32) * self.displayRatio)) as i32);
-                            jcall!(self.scalableListener).scale(self.ratio);
+                            jcall!(self.scalableListener).as_BaseScalable_mut().scale(self.ratio);
                         } else {
                             self.ratio = 1.0_f32;
-                            jcall!(self.scalableListener).scale(self.ratio);
+                            jcall!(self.scalableListener).as_BaseScalable_mut().scale(self.ratio);
                         }
                     }
                 }
                 jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append(self.UPDATE_FROM_ORIENTATION_CHANGE.clone()).append(self.LAST_WIDTH.clone()).appendint(aLastWidth.clone()).append(self.LAST_HEIGHT.clone()).appendint(aLastHeight.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).UPDATE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringMaker).append(self.UPDATE_FROM_ORIENTATION_CHANGE.clone()).append(self.LAST_WIDTH.clone()).appendint(aLastWidth.clone()).append(self.LAST_HEIGHT.clone()).appendint(aLastHeight.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 self.xOffset = aFullWidth - aLastWidth;
                 self.yOffset = aFullHeight - aLastHeight;
-                self.left = jcall!(self.scalableListener).getLeft(self.xOffset.clone());
-                self.top = jcall!(self.scalableListener).getTop(self.yOffset.clone());
-                self.full[(self.WIDTH) as usize] = aFullWidth.clone();
-                self.full[(self.HEIGHT) as usize] = aFullHeight.clone();
-                self.last[(self.WIDTH) as usize] = aLastWidth.clone();
-                self.lastHalf[(self.WIDTH) as usize] = (self.last[(self.WIDTH) as usize] >> 1);
-                self.last[(self.HEIGHT) as usize] = aLastHeight.clone();
-                self.lastHalf[(self.HEIGHT) as usize] = (self.last[(self.HEIGHT) as usize] >> 1);
+                self.left = { let java_value = (jcall!(self.scalableListener).as_BaseScalable_mut().getLeft(self.xOffset.clone())).clone(); java_value };
+                self.top = { let java_value = (jcall!(self.scalableListener).as_BaseScalable_mut().getTop(self.yOffset.clone())).clone(); java_value };
+                { let java_index = (self.WIDTH) as usize; self.full[java_index] = aFullWidth.clone(); };
+                { let java_index = (self.HEIGHT) as usize; self.full[java_index] = aFullHeight.clone(); };
+                { let java_index = (self.WIDTH) as usize; self.last[java_index] = aLastWidth.clone(); };
+                { let java_index = (self.WIDTH) as usize; self.lastHalf[java_index] = (self.last[(self.WIDTH) as usize] >> 1); };
+                { let java_index = (self.HEIGHT) as usize; self.last[java_index] = aLastHeight.clone(); };
+                { let java_index = (self.HEIGHT) as usize; self.lastHalf[java_index] = (self.last[(self.HEIGHT) as usize] >> 1); };
                 jcall!(SWTJOGLProcessor::getInstance()).setCustom(aLastWidth.clone(), aLastHeight.clone(), self.ratio.clone());
-                self.add(jcall!(self.commonStrings).UPDATE.clone());
+                { let java_arguments = ({ let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone(),); self.add(java_arguments.0) };
             }
         }
     }
@@ -411,30 +414,30 @@ impl DisplayInfoSingleton {
     pub fn toStringAppend(&mut self, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) -> String {
         jcall!(stringBuffer).append(self.DISPLAY_INFO.clone());
         jcall!(stringBuffer).append(self.FULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonLabels).WIDTH_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonLabels).WIDTH_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.full[(self.WIDTH) as usize].clone());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.FULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonLabels).HEIGHT_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonLabels).HEIGHT_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.full[(self.HEIGHT) as usize].clone());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.LAST.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonLabels).WIDTH_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonLabels).WIDTH_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.last[(self.WIDTH) as usize].clone());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.LAST.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonLabels).HEIGHT_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonLabels).HEIGHT_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.last[(self.HEIGHT) as usize].clone());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.LAST_HALF.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonLabels).WIDTH_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonLabels).WIDTH_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.lastHalf[(self.WIDTH) as usize].clone());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.LAST_HALF.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonLabels).HEIGHT_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonLabels).HEIGHT_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.lastHalf[(self.HEIGHT) as usize].clone());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append((if self.isPortrait() { self.PORTRAIT } else { self.LANDSCAPE }));
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append((if self.isPortrait() { self.PORTRAIT.clone() } else { self.LANDSCAPE.clone() }));
         return jcall!(stringBuffer).toString();
     }
     
@@ -490,10 +493,10 @@ impl DisplayInfoSingleton {
     
 
     pub fn setCustom(&mut self, mut width: i32, mut height: i32) {
-        self.last[(self.CUSTOM_WIDTH) as usize] = width.clone();
-        self.lastHalf[(self.CUSTOM_WIDTH) as usize] = (self.last[(self.CUSTOM_WIDTH) as usize] >> 1);
-        self.last[(self.CUSTOM_HEIGHT) as usize] = height.clone();
-        self.lastHalf[(self.CUSTOM_HEIGHT) as usize] = (self.last[(self.CUSTOM_HEIGHT) as usize] >> 1);
+        { let java_index = (self.CUSTOM_WIDTH) as usize; self.last[java_index] = width.clone(); };
+        { let java_index = (self.CUSTOM_WIDTH) as usize; self.lastHalf[java_index] = (self.last[(self.CUSTOM_WIDTH) as usize] >> 1); };
+        { let java_index = (self.CUSTOM_HEIGHT) as usize; self.last[java_index] = height.clone(); };
+        { let java_index = (self.CUSTOM_HEIGHT) as usize; self.lastHalf[java_index] = (self.last[(self.CUSTOM_HEIGHT) as usize] >> 1); };
     }
     
 

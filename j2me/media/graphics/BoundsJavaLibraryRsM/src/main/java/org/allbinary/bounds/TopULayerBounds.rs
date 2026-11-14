@@ -32,6 +32,12 @@ pub struct TopULayerBounds {
     pub base: LayerBounds,
 }
 
+impl crate::org::allbinary::bounds::event::BoundsChangeEventListener::BoundsChangeEventListener for TopULayerBounds {
+    fn onBoundsChangeEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::bounds::event::BoundsChangeEvent::BoundsChangeEvent>>>) { crate::org::allbinary::bounds::LayerBounds::LayerBounds::onBoundsChangeEvent(crate::org::allbinary::bounds::LayerBounds::LayerBoundsDyn::as_LayerBounds_mut(self), p1) }
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for TopULayerBounds {
+    fn onEvent(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { crate::org::allbinary::bounds::LayerBounds::LayerBounds::onEvent(crate::org::allbinary::bounds::LayerBounds::LayerBoundsDyn::as_LayerBounds_mut(self), p1) }
+}
 
 impl TopULayerBounds {
     

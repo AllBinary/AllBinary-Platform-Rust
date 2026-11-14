@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use super::BufferedImageInfo::BufferedImageInfo;
@@ -33,9 +32,13 @@ macro_rules! jcall {
 pub struct BufferedImageInfoFactory {
 }
 
-pub static mut BufferedImageInfoFactory_hashMap: std::cell::LazyCell<Option<Rc<RefCell<HashMap>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashMap());
+pub static mut BufferedImageInfoFactory_hashMap: std::cell::LazyCell<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashMap());
 
 impl BufferedImageInfoFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -55,10 +58,10 @@ impl BufferedImageInfoFactory {
         jcall!(stringbuffer).appendint(height.clone());
         jcall!(stringbuffer).appendint(r#type.clone());
         let mut key: String = jcall!(stringbuffer).toString();
-        let mut bufferedImageInfo: Option<Rc<RefCell<BufferedImageInfo>>> = (jcall!(unsafe { BufferedImageInfoFactory_hashMap.clone() }).get(key.clone())).clone() /* as BufferedImageInfo */;
+        let mut bufferedImageInfo: Option<Rc<RefCell<BufferedImageInfo>>> = { let java_object = (jcall!(unsafe { BufferedImageInfoFactory_hashMap.clone() }).get(crate::java_into_object(key.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<BufferedImageInfo>>>>().expect("ClassCastException").clone()) };
         if bufferedImageInfo.is_none() {
             bufferedImageInfo = BufferedImageInfo::new(width.clone(), height.clone(), r#type.clone());
-            jcall!(unsafe { BufferedImageInfoFactory_hashMap.clone() }).put(key.clone(), bufferedImageInfo.clone());
+            jcall!(unsafe { BufferedImageInfoFactory_hashMap.clone() }).put(crate::java_into_object(key.clone()), crate::java_into_object(bufferedImageInfo.clone()));
         }
         return bufferedImageInfo.clone();
     }

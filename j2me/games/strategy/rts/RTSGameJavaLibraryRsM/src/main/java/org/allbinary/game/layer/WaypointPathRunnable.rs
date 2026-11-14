@@ -21,6 +21,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::WaypointPathRunnableBase::WaypointPathRunnableBase;
 use super::WaypointBehaviorBase::WaypointBehaviorBase;
 
@@ -37,9 +38,14 @@ pub struct WaypointPathRunnable {
 }
 
 impl crate::org::allbinary::thread::PriorityRunnable::PriorityRunnable for WaypointPathRunnable {
-    fn getPriority(&mut self) -> i32 { self.base.getPriority() }
+    fn getPriority(&mut self) -> i32 { crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBase::getPriority(crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBaseDyn::as_WaypointPathRunnableBase_mut(self)) }
     fn isDone(&mut self) -> bool { Self::isDone(self) }
-    fn reset(&mut self) { self.base.reset() }
+    fn reset(&mut self) { crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBase::reset(crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBaseDyn::as_WaypointPathRunnableBase_mut(self)) }
+}
+impl crate::org::allbinary::thread::RunnableInterface::RunnableInterface for WaypointPathRunnable {
+    fn isRunning(&mut self) -> bool { crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBase::isRunning(crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBaseDyn::as_WaypointPathRunnableBase_mut(self)) }
+    fn setRunning(&mut self, p1: bool) { crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBase::setRunning(crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBaseDyn::as_WaypointPathRunnableBase_mut(self), p1) }
+    fn setThread(&mut self, p1: Option<Rc<RefCell<crate::java::lang::Thread::Thread>>>) { crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBase::setThread(crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBaseDyn::as_WaypointPathRunnableBase_mut(self), p1) }
 }
 impl crate::Runnable for WaypointPathRunnable {
     fn run(&mut self) { Self::run(self) }
@@ -72,14 +78,14 @@ impl WaypointPathRunnable {
             }
             jcall!(waypointBehavior).setWaypointPathsList(jcall!(jcall!(jcall!(self.targetPathFindingLayer).getWaypointBehavior()).getWaypoint()).getPathsListRunnable(geographicMapCellPosition.clone()));
             jcall!(jcall!(self.pathFindingLayer).getWaypointRunnableLogHelper()).end(self.pathFindingLayer.clone());
-            std::thread::sleep(std::time::Duration::from_millis((15_i64 + (self.priorityP * 2)) as u64));
+            std::thread::sleep(std::time::Duration::from_millis((15_i64 + (((self.priorityP * 2)) as i64)) as u64));
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             self.setRunning(false);
             }
         }

@@ -35,6 +35,10 @@ pub struct SimultaneousCompoundIndexedAnimationInterfaceFactory {
     pub base: CompoundAnimationInterfaceFactory,
 }
 
+impl AnimationInterfaceFactoryInterface for SimultaneousCompoundIndexedAnimationInterfaceFactory {
+    fn getInstance(&mut self, p1: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { crate::org::allbinary::animation::compound::CompoundAnimationInterfaceFactory::CompoundAnimationInterfaceFactory::getInstance(crate::org::allbinary::animation::compound::CompoundAnimationInterfaceFactory::CompoundAnimationInterfaceFactoryDyn::as_CompoundAnimationInterfaceFactory_mut(self), p1) }
+    fn setInitialScale(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::media::ScaleProperties::ScaleProperties>>>) { crate::org::allbinary::animation::compound::CompoundAnimationInterfaceFactory::CompoundAnimationInterfaceFactory::setInitialScale(crate::org::allbinary::animation::compound::CompoundAnimationInterfaceFactory::CompoundAnimationInterfaceFactoryDyn::as_CompoundAnimationInterfaceFactory_mut(self), p1) }
+}
 impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface for SimultaneousCompoundIndexedAnimationInterfaceFactory {
 }
 
@@ -60,7 +64,7 @@ impl SimultaneousCompoundIndexedAnimationInterfaceFactory {
     
 
     pub fn createAnimation(&mut self, mut animationArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
-        return SimultaneousCompoundIndexedAnimation::new(animationArray.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+        return SimultaneousCompoundIndexedAnimation::new(animationArray.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
     }
 }
 impl std::ops::Deref for SimultaneousCompoundIndexedAnimationInterfaceFactory {

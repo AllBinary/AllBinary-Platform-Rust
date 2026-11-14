@@ -17,9 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -35,6 +36,10 @@ thread_local! { pub static PaintableToImageUtil_instance: Option<Rc<RefCell<Pain
 
 impl PaintableToImageUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -47,9 +52,9 @@ impl PaintableToImageUtil {
     
 
     // throws Exception
-    pub fn getImage(mut paintableInterface: Option<Rc<RefCell<dyn PaintableInterface>>>, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> {
-        let mut image: Option<Rc<RefCell<Image>>> = jcall!(GameFeatureImageCacheFactory::GameFeatureImageCacheFactory::getInstance()).get(std::any::type_name_of_val(&PaintableToImageUtil_instance.with(Clone::clone)).to_string(), width.clone(), height.clone());
-        let mut graphics: Option<Rc<RefCell<Graphics>>> = jcall!(image).getGraphics();
+    pub fn getImage(mut paintableInterface: Option<Rc<RefCell<dyn PaintableInterface>>>, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(GameFeatureImageCacheFactory::GameFeatureImageCacheFactory::getInstance()).get(std::any::type_name_of_val(&PaintableToImageUtil_instance.with(Clone::clone)).to_string(), width.clone(), height.clone());
+        let mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>> = jcall!(image).getGraphics();
         jcall!(paintableInterface).paint(graphics.clone());
         return image.clone();
     }

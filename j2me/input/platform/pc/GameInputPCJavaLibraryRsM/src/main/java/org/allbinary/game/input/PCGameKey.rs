@@ -37,7 +37,7 @@ impl PCGameKey {
 
     pub fn new_struct(mut keyCode: i32, mut name: String) -> Self {
         let mut this = Self {
-            base: Input::new_struct2(keyCode.clone(), name.clone()),
+            base: Input::new_struct(keyCode.clone(), name.clone()),
         };
         // super(...) is in the struct literal above
         let mut id: i32 = this.getId();
@@ -45,9 +45,10 @@ impl PCGameKey {
     }
 
     pub fn new(mut keyCode: i32, mut name: String) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(keyCode, name))));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(keyCode.clone(), name.clone()))));
+            let mut id: i32 = jcall!(this).getId();
             if id >= 0 {
-            jcall!(InputFactory::InputFactory::getInstance()).add(id.clone(), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+            jcall!(InputFactory::InputFactory::getInstance()).add(id.clone(), this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
         }
         this
     }
@@ -59,11 +60,11 @@ impl PCGameKey {
     
 
     pub fn getString(mut keyCode: i32) -> String {
-        let mut input: Option<Rc<RefCell<Input>>> = jcall!(InputFactory::InputFactory::getInstance()).getInstanceById(keyCode.clone());
+        let mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>> = jcall!(InputFactory::InputFactory::getInstance()).getInstanceById(keyCode.clone());
         if input.is_some() {
             return jcall!(input).getName();
         } else {
-            return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         }
     }
 }
@@ -75,5 +76,10 @@ impl std::ops::DerefMut for PCGameKey {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::org::allbinary::game::input::Input::InputDyn for PCGameKey {
+    fn as_Input(&self) -> &crate::org::allbinary::game::input::Input::Input { &self.base }
+    fn as_Input_mut(&mut self) -> &mut crate::org::allbinary::game::input::Input::Input { &mut self.base }
+    fn toString(&mut self) -> String { Self::toString(self) }
+}
 
 

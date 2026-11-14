@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::user::commerce::inventory::item::BasicItemData::BasicItemData;
@@ -42,6 +41,10 @@ thread_local! { pub static InventoryColumnUtil_instance: Option<Rc<RefCell<Inven
 
 impl InventoryColumnUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,
@@ -64,14 +67,14 @@ impl InventoryColumnUtil {
 
     pub fn getColumnWhereLike(&mut self, mut inventoryEntity: Option<Rc<RefCell<InventoryEntity>>>, mut category: String, mut column: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
         jcall!(self.logUtil).putF(format!("{}{}", String::from("Start Category: "), category), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getKeywords"));
-        let mut keywords: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut keywords: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut vectorOfHashMaps: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(inventoryEntity).getAllRows();
         let mut size: i32 = jcall!(vectorOfHashMaps).size();
         for index in (0..size) {
-            let mut hashMap: Option<Rc<RefCell<HashMap>>> = (jcall!(vectorOfHashMaps).get(index.clone())).clone() /* as HashMap */;
-            let mut categoryName: String = (jcall!(hashMap).get(jcall!(self.basicItemData).CATEGORY.clone())).clone() /* as String */;
+            let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = { let java_object = (jcall!(vectorOfHashMaps).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>>().expect("ClassCastException").clone()) };
+            let mut categoryName: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(self.basicItemData).CATEGORY.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             if !jcall!(StringValidationUtil::getInstance()).isEmpty(categoryName.clone()) && categoryName.starts_with(&category.clone()) {
-                jcall!(keywords).add(crate::java_into_object(jcall!(hashMap).get(column.clone())));
+                jcall!(keywords).add(crate::java_into_object(jcall!(hashMap).get(crate::java_into_object(column.clone()))));
             }
         }
         return keywords.clone();

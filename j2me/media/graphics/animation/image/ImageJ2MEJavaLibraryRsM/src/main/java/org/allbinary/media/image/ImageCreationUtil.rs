@@ -17,8 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::image::GameFeatureImageCacheFactory::GameFeatureImageCacheFactory;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +34,10 @@ pub struct ImageCreationUtil {
 thread_local! { pub static ImageCreationUtil_instance: Option<Rc<RefCell<ImageCreationUtil>>> = ImageCreationUtil::new(); }
 
 impl ImageCreationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ImageCreationUtil>>> {
@@ -52,15 +57,15 @@ impl ImageCreationUtil {
     
 
     // throws Exception
-    pub fn createImageWH(&mut self, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> {
-        let mut image: Option<Rc<RefCell<Image>>> = jcall!(GameFeatureImageCacheFactory::getInstance()).get(std::any::type_name_of_val(&self).to_string(), width.clone(), height.clone());
+    pub fn createImageWH(&mut self, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(GameFeatureImageCacheFactory::getInstance()).get({ let java_argument = std::any::type_name_of_val(&self).to_string(); java_argument }, width.clone(), height.clone());
         return image.clone();
     }
     
 
     // throws Exception
-    pub fn createImage(&mut self, mut width: i32, mut height: i32, mut maxScaleX: f32, mut maxScaleY: f32) -> Option<Rc<RefCell<Image>>> {
-        let mut image: Option<Rc<RefCell<Image>>> = jcall!(GameFeatureImageCacheFactory::getInstance()).get(std::any::type_name_of_val(&self).to_string(), (((((width) as f32) * maxScaleX)) as i32) + 1, (((((height) as f32) * maxScaleY)) as i32) + 1);
+    pub fn createImage(&mut self, mut width: i32, mut height: i32, mut maxScaleX: f32, mut maxScaleY: f32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(GameFeatureImageCacheFactory::getInstance()).get({ let java_argument = std::any::type_name_of_val(&self).to_string(); java_argument }, (((((width) as f32) * maxScaleX)) as i32) + 1, (((((height) as f32) * maxScaleY)) as i32) + 1);
         return image.clone();
     }
 }

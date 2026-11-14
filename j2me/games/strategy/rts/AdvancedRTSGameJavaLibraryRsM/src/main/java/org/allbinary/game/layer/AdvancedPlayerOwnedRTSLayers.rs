@@ -58,14 +58,14 @@ impl AdvancedPlayerOwnedRTSLayers {
             labList: None,
             factoryList: None,
         };
-        this.unitsList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.waypointsList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.buildingList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.baseList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.garrisonList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.houseList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.labList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.factoryList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.unitsList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.waypointsList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.buildingList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.baseList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.garrisonList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.houseList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.labList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.factoryList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -175,15 +175,15 @@ impl AdvancedPlayerOwnedRTSLayers {
 
     pub fn removeBuilding(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayerDyn>>>) {
         jcall!(self.buildingList).add(crate::java_into_object(layerInterface.clone()));
-        if jcall!(self.getBaseList()).remove(layerInterface.clone()) {
+        if jcall!(self.getBaseList()).remove(crate::java_into_object(layerInterface.clone())) {
             jcall!(self.rtsLayerList).remove(crate::java_into_object(layerInterface.clone()));
-        } else if jcall!(self.getFactoryList()).remove(layerInterface.clone()) {
+        } else if jcall!(self.getFactoryList()).remove(crate::java_into_object(layerInterface.clone())) {
             jcall!(self.rtsLayerList).remove(crate::java_into_object(layerInterface.clone()));
-        } else if jcall!(self.getGarrisonList()).remove(layerInterface.clone()) {
+        } else if jcall!(self.getGarrisonList()).remove(crate::java_into_object(layerInterface.clone())) {
             jcall!(self.rtsLayerList).remove(crate::java_into_object(layerInterface.clone()));
-        } else if jcall!(self.getLabList()).remove(layerInterface.clone()) {
+        } else if jcall!(self.getLabList()).remove(crate::java_into_object(layerInterface.clone())) {
             jcall!(self.rtsLayerList).remove(crate::java_into_object(layerInterface.clone()));
-        } else if jcall!(self.getHouseList()).remove(layerInterface.clone()) {
+        } else if jcall!(self.getHouseList()).remove(crate::java_into_object(layerInterface.clone())) {
             jcall!(self.rtsLayerList).remove(crate::java_into_object(layerInterface.clone()));
         }
     }
@@ -193,19 +193,19 @@ impl AdvancedPlayerOwnedRTSLayers {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(self.base.toString());
         jcall!(stringBuffer).append(String::from(" Bases: "));
-        jcall!(stringBuffer).appendint(jcall!(self.getBaseList()).size());
+        jcall!(stringBuffer).appendint({ let java_argument = jcall!(self.getBaseList()).size(); java_argument });
         jcall!(stringBuffer).append(String::from(" Factory: "));
-        jcall!(stringBuffer).appendint(jcall!(self.getFactoryList()).size());
+        jcall!(stringBuffer).appendint({ let java_argument = jcall!(self.getFactoryList()).size(); java_argument });
         jcall!(stringBuffer).append(String::from(" Garrison: "));
-        jcall!(stringBuffer).appendint(jcall!(self.getGarrisonList()).size());
+        jcall!(stringBuffer).appendint({ let java_argument = jcall!(self.getGarrisonList()).size(); java_argument });
         jcall!(stringBuffer).append(String::from(" Labs: "));
-        jcall!(stringBuffer).appendint(jcall!(self.getLabList()).size());
+        jcall!(stringBuffer).appendint({ let java_argument = jcall!(self.getLabList()).size(); java_argument });
         jcall!(stringBuffer).append(String::from(" Houses: "));
-        jcall!(stringBuffer).appendint(jcall!(self.getHouseList()).size());
+        jcall!(stringBuffer).appendint({ let java_argument = jcall!(self.getHouseList()).size(); java_argument });
         jcall!(stringBuffer).append(String::from(" Waypoints: "));
-        jcall!(stringBuffer).appendint(jcall!(self.getWaypointsList()).size());
+        jcall!(stringBuffer).appendint({ let java_argument = jcall!(self.getWaypointsList()).size(); java_argument });
         jcall!(stringBuffer).append(String::from(" Units: "));
-        jcall!(stringBuffer).appendint(jcall!(self.getUnitsList()).size());
+        jcall!(stringBuffer).appendint({ let java_argument = jcall!(self.getUnitsList()).size(); java_argument });
         return jcall!(stringBuffer).toString();
     }
     

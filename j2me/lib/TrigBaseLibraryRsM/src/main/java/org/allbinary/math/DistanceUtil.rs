@@ -34,6 +34,10 @@ thread_local! { pub static DistanceUtil_instance: Option<Rc<RefCell<DistanceUtil
 
 impl DistanceUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             mathUtil: None,

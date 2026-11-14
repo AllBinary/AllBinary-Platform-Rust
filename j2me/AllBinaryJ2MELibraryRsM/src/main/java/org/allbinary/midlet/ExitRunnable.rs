@@ -18,10 +18,11 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use crate::Runnable;
 use super::*;
-// use crate::javax::microedition::lcdui::NullCanvas::NullCanvas;
+use crate::javax::microedition::lcdui::NullCanvas::NullCanvas;
 use crate::org::allbinary::canvas::Processor::Processor;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::AllBinaryMidlet::AllBinaryMidlet;
 
 // Borrows the object of a Java reference
@@ -44,6 +45,10 @@ impl Runnable for ExitRunnable {
 }
 
 impl ExitRunnable {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut midlet: Option<Rc<RefCell<dyn crate::org::allbinary::midlet::AllBinaryMidlet::AllBinaryMidletDyn>>>, mut processor: Option<Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>>, mut isProgress: bool) -> Self {
@@ -69,26 +74,26 @@ impl ExitRunnable {
 
     pub fn run(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START_RUNNABLE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START_RUNNABLE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
             jcall!(self.midlet).destroyAppInRunnable(false, self.isProgress.clone());
-            jcall!(self.midlet).setDisplay(crate::javax::microedition::lcdui::NullCanvas::NullCanvas_NULL_CANVAS.with(Clone::clone).clone());
-            jcall!(self.midlet).as_AllBinaryMidlet_mut().notifyDestroyed();
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).END_RUNNABLE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.midlet).setDisplay(crate::javax::microedition::lcdui::NullCanvas::NullCanvas_NULL_CANVAS.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>));
+            jcall!(self.midlet).notifyDestroyed();
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).END_RUNNABLE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
             jcall!(self.processor).process();
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                 jcall!(self.processor).process();
             })) {
                 Ok(_) => {}
                 Err(e2) => {
-            let e2: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e2 as Box<dyn std::any::Any>)));
+            let e2: String = crate::java::lang::Exception::java_panic_message(&e2);
 
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                 }
             }
             }

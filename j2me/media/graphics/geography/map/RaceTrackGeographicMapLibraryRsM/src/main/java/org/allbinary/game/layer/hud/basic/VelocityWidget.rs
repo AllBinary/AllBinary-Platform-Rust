@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::opengles::OpenGLFeatureUtil::OpenGLFeatureUtil;
 use crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
@@ -26,6 +26,7 @@ use crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessor;
 use crate::org::allbinary::logic::math::MathUtil::MathUtil;
 use crate::org::allbinary::logic::math::PrimitiveLongSingleton::PrimitiveLongSingleton;
 use crate::org::allbinary::logic::math::PrimitiveLongUtil::PrimitiveLongUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -48,9 +49,6 @@ pub struct VelocityWidget {
     pub offset2: i32,
 }
 
-impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for VelocityWidget {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
-}
 
 impl VelocityWidget {
     
@@ -71,7 +69,7 @@ impl VelocityWidget {
         };
         this.KILOMETERS_PER_HOUR_STR = vec![' ', 'k', 'm', '/', 'h'];
         this.totalChars = (this.KILOMETERS_PER_HOUR_STR.len() as i32).clone();
-        this.string = jcall!(PrimitiveLongSingleton::getInstance()).ZERO.clone();
+        this.string = { let java_field = jcall!(PrimitiveLongSingleton::getInstance()).ZERO.clone(); java_field }.clone();
         this.totalDigits = 1;
         this.offset = 0;
         this.offset2 = 0;
@@ -79,7 +77,7 @@ impl VelocityWidget {
         this.powerOfTenVelocity = powerOfTenVelocity.clone();
         this.maxVelocity = powerOfTenVelocity.clone();
         this.velocity = 0;
-        this.primitiveLongUtil = PrimitiveLongUtil::createPowerOfTen(powerOfTenVelocity.clone());
+        this.primitiveLongUtil = { let java_value = (PrimitiveLongUtil::createPowerOfTen(powerOfTenVelocity.clone())).clone(); java_value };
         this.updateMaxHeight = 14;
         this
     }
@@ -89,12 +87,12 @@ impl VelocityWidget {
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.updateMaxWidth = jcall!(font).getSize() * (5 + jcall!(MathUtil::getInstance()).getTotalDigits(self.powerOfTenVelocity.clone()) + 1);
-        self.base.updateMeasurement(graphics.clone());
-        self.offset = MyFontProcessor::defaultStringWidth(font.clone(), jcall!(self.primitiveLongUtil).getMaxDigits()) + MyFontProcessor::defaultStringWidth(font.clone(), 2);
-        self.offset2 = self.offset - MyFontProcessor::defaultStringWidth(font.clone(), self.totalDigits.clone()) - MyFontProcessor::defaultStringWidth(font.clone(), 2);
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.updateMaxWidth = { let java_value = (jcall!(font).getSize() * (5 + jcall!(MathUtil::getInstance()).getTotalDigits(self.powerOfTenVelocity.clone()) + 1)).clone(); java_value };
+        { let java_arguments = (graphics.clone(),); self.base.updateMeasurement(java_arguments.0) };
+        self.offset = { let java_value = (MyFontProcessor::defaultStringWidth(font.clone(), jcall!(self.primitiveLongUtil).getMaxDigits()) + MyFontProcessor::defaultStringWidth(font.clone(), 2)).clone(); java_value };
+        self.offset2 = { let java_value = (self.offset - MyFontProcessor::defaultStringWidth(font.clone(), self.totalDigits.clone()) - MyFontProcessor::defaultStringWidth(font.clone(), 2)).clone(); java_value };
     }
     
 
@@ -104,7 +102,7 @@ impl VelocityWidget {
     
 
     pub fn add(&mut self, mut value: i32) {
-        self.set(self.velocity + value);
+        { let java_arguments = (self.velocity + value,); self.set(java_arguments.0) };
     }
     
 
@@ -115,11 +113,11 @@ impl VelocityWidget {
             self.velocity = 0;
         }
         if lastVelocity != self.velocity {
-            self.string = jcall!(self.primitiveLongUtil).getCharArray(self.velocity * 18);
+            self.string = { let java_value = (jcall!(self.primitiveLongUtil).getCharArray(self.velocity * 18)).clone(); java_value };
             if jcall!(OpenGLFeatureUtil::getInstance()).isAnyThreed() {
-                self.totalDigits = jcall!(self.primitiveLongUtil).getCurrentTotalDigits() + 1;
+                self.totalDigits = { let java_value = (jcall!(self.primitiveLongUtil).getCurrentTotalDigits() + 1).clone(); java_value };
             } else {
-                self.totalDigits = jcall!(self.primitiveLongUtil).getCurrentTotalDigits();
+                self.totalDigits = { let java_value = (jcall!(self.primitiveLongUtil).getCurrentTotalDigits()).clone(); java_value };
             }
             self.myFontProcessor = self.updateMyFontProcessor.clone();
         }
@@ -127,12 +125,12 @@ impl VelocityWidget {
     
 
     pub fn reduce(&mut self, mut value: i32) {
-        self.set(self.velocity - value);
+        { let java_arguments = (self.velocity - value,); self.set(java_arguments.0) };
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.paintDXY(graphics.clone(), self.string.clone(), 0, self.totalDigits.clone(), self.KILOMETERS_PER_HOUR_STR.clone(), 0, self.totalChars.clone(), self.offset2.clone(), self.offset.clone());
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(), self.string.clone(), 0, self.totalDigits.clone(), self.KILOMETERS_PER_HOUR_STR.clone(), 0, self.totalChars.clone(), self.offset2.clone(), self.offset.clone(),); self.base.paintDXY(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5, java_arguments.6, java_arguments.7, java_arguments.8) };
     }
 }
 impl std::ops::Deref for VelocityWidget {
@@ -146,7 +144,9 @@ impl std::ops::DerefMut for VelocityWidget {
 impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for VelocityWidget {
     fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self.base }
     fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self.base }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for VelocityWidget {
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 

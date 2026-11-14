@@ -17,10 +17,11 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
-// use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::Font::Font;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBox;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,17 +35,23 @@ pub struct CustomTextBox2 {
 }
 
 impl crate::org::allbinary::game::displayable::canvas::MenuListener::MenuListener for CustomTextBox2 {
-    fn open(&mut self) { self.base.open() }
-    fn close(&mut self) { self.base.close() }
+    fn open(&mut self) { crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvas::open(crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvasDyn::as_GameCommandCanvas_mut(self)) }
+    fn close(&mut self) { crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvas::close(crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvasDyn::as_GameCommandCanvas_mut(self)) }
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for CustomTextBox2 {
+    fn onEvent(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvas::onEvent(crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvasDyn::as_GameCommandCanvas_mut(self), p1) }
 }
 impl crate::org::allbinary::game::input::GameKeyEventSourceInterface::GameKeyEventSourceInterface for CustomTextBox2 {
-    fn getSourceId(&mut self) -> i32 { self.base.getSourceId() }
+    fn getSourceId(&mut self) -> i32 { crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvas::getSourceId(crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvasDyn::as_GameCommandCanvas_mut(self)) }
+}
+impl crate::org::allbinary::graphics::displayable::event::DisplayChangeEventListener::DisplayChangeEventListener for CustomTextBox2 {
+    fn onDisplayChangeEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::displayable::event::DisplayChangeEvent::DisplayChangeEvent>>>) { crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvas::onDisplayChangeEvent(crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvasDyn::as_GameCommandCanvas_mut(self), p1) }
 }
 
 impl CustomTextBox2 {
     
 
-    pub fn new_struct(mut cmdListener: Option<Rc<RefCell<CommandListener>>>, mut label: String, mut text: String, mut maxSize: i32, mut constraints: i32, mut font: Option<Rc<RefCell<Font>>>, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Self {
+    pub fn new_struct(mut cmdListener: Option<Rc<RefCell<dyn CommandListener>>>, mut label: String, mut text: String, mut maxSize: i32, mut constraints: i32, mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Self {
         let mut this = Self {
             base: CustomTextBox::new_struct(cmdListener.clone(), label.clone(), text.clone(), maxSize.clone(), constraints.clone(), font.clone(), backgroundBasicColor.clone(), foregroundBasicColor.clone()),
         };
@@ -53,7 +60,7 @@ impl CustomTextBox2 {
         this
     }
 
-    pub fn new(mut cmdListener: Option<Rc<RefCell<CommandListener>>>, mut label: String, mut text: String, mut maxSize: i32, mut constraints: i32, mut font: Option<Rc<RefCell<Font>>>, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut cmdListener: Option<Rc<RefCell<dyn CommandListener>>>, mut label: String, mut text: String, mut maxSize: i32, mut constraints: i32, mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(cmdListener, label, text, maxSize, constraints, font, backgroundBasicColor, foregroundBasicColor))))
     }
 }
@@ -65,6 +72,32 @@ impl std::ops::DerefMut for CustomTextBox2 {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::javax::microedition::lcdui::Canvas::CanvasDyn for CustomTextBox2 {
+    fn as_Canvas(&self) -> &crate::javax::microedition::lcdui::Canvas::Canvas { &self.base.base.base.base }
+    fn as_Canvas_mut(&mut self) -> &mut crate::javax::microedition::lcdui::Canvas::Canvas { &mut self.base.base.base.base }
+}
+impl crate::javax::microedition::lcdui::Displayable::DisplayableDyn for CustomTextBox2 {
+    fn as_Displayable(&self) -> &crate::javax::microedition::lcdui::Displayable::Displayable { &self.base.base.base.base.base }
+    fn as_Displayable_mut(&mut self) -> &mut crate::javax::microedition::lcdui::Displayable::Displayable { &mut self.base.base.base.base.base }
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn removeCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getWidth(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getHeight(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn setCommandListener(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::CommandListener::CommandListener>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setCommandListener(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn setFullScreenMode(&mut self, p1: bool) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setFullScreenMode(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn hideNotify(&mut self) { crate::javax::microedition::lcdui::Canvas::Canvas::hideNotify(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+    fn keyPressed(&mut self, p1: i32) { crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBox::keyPressed(crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDyn::as_CustomTextBox_mut(self), p1) }
+    fn keyRepeated(&mut self, p1: i32) { crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBox::keyRepeated(crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDyn::as_CustomTextBox_mut(self), p1) }
+    fn keyReleased(&mut self, p1: i32) { crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBox::keyReleased(crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDyn::as_CustomTextBox_mut(self), p1) }
+    fn pointerPressed(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerPressed(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn pointerReleased(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerReleased(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn pointerDragged(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerDragged(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBox::paint(crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDyn::as_CustomTextBox_mut(self), p1) }
+    fn repaint(&mut self) { crate::javax::microedition::lcdui::Canvas::Canvas::repaint(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+    fn repaintXYWH(&mut self, p1: i32, p2: i32, p3: i32, p4: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::repaintXYWH(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1, p2, p3, p4) }
+    fn sizeChanged(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::sizeChanged(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn showNotify(&mut self) { crate::javax::microedition::lcdui::Canvas::Canvas::showNotify(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+}
 impl crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDyn for CustomTextBox2 {
     fn as_CustomTextBox(&self) -> &crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBox { &self.base }
     fn as_CustomTextBox_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBox { &mut self.base }
@@ -72,9 +105,6 @@ impl crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDy
 impl crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvasDyn for CustomTextBox2 {
     fn as_GameCommandCanvas(&self) -> &crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvas { &self.base.base }
     fn as_GameCommandCanvas_mut(&mut self) -> &mut crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvas { &mut self.base.base }
-    fn keyPressed(&mut self, p1: i32) { crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBox::keyPressed(crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDyn::as_CustomTextBox_mut(self), p1) }
-    fn keyReleased(&mut self, p1: i32) { crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBox::keyReleased(crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDyn::as_CustomTextBox_mut(self), p1) }
-    fn keyRepeated(&mut self, p1: i32) { crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBox::keyRepeated(crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDyn::as_CustomTextBox_mut(self), p1) }
 }
 impl crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn for CustomTextBox2 {
     fn as_MyCanvas(&self) -> &crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas { &self.base.base.base }
@@ -85,6 +115,20 @@ impl crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn for Cus
 }
 impl crate::org::allbinary::game::input::event::RawKeyEventListener::RawKeyEventListener for CustomTextBox2 {
     fn onEventRaw(&mut self, p1: i32, p2: i32, p3: bool) { crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBox::onEventRaw(crate::org::allbinary::graphics::form::item::CustomTextBox::CustomTextBoxDyn::as_CustomTextBox_mut(self), p1, p2, p3) }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for CustomTextBox2 {
+    fn updateMeasurement(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvas::updateMeasurement(crate::org::allbinary::game::displayable::canvas::GameCommandCanvas::GameCommandCanvasDyn::as_GameCommandCanvas_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::displayable::DisplayableInterface::DisplayableInterface for CustomTextBox2 {
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getHeight(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getWidth(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn removeCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn setCommandListener(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::CommandListener::CommandListener>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setCommandListener(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::displayable::command::MyCommandInterface::MyCommandInterface for CustomTextBox2 {
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn removeAllCommands(&mut self) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeAllCommands(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
 }
 
 

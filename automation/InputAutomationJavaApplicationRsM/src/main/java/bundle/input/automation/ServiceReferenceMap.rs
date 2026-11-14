@@ -18,8 +18,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::util::Collection::Collection;
-// use crate::java::util::Map::Map;
-// use crate::java::util::Set::Set;
+use crate::java::util::Map::Map;
+use crate::java::util::Set::Set;
 use crate::org::osgi::framework::ServiceReference::ServiceReference;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 
@@ -73,7 +73,7 @@ impl ServiceReferenceMap {
     
 
     pub fn get(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return jcall!(self.serviceReference).getProperty((key).clone() /* as String */);
+        return jcall!(self.serviceReference).getProperty({ let java_object = (key).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() });
     }
     
 
@@ -87,7 +87,7 @@ impl ServiceReferenceMap {
     }
     
 
-    pub fn putAll(&mut self, mut m: Option<Rc<RefCell<dyn Map>>>) {
+    pub fn putAll(&mut self, mut m: Option<Rc<RefCell<dyn Map<crate::JavaObject, crate::JavaObject>>>>) {
     }
     
 
@@ -111,7 +111,7 @@ impl ServiceReferenceMap {
     }
     
 
-    pub fn toString(mut map: Option<Rc<RefCell<dyn Map>>>) -> String {
+    pub fn toString(mut map: Option<Rc<RefCell<dyn Map<crate::JavaObject, crate::JavaObject>>>>) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         return jcall!(stringBuffer).toString();
     }

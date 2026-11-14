@@ -31,6 +31,10 @@ pub struct TransformTemplateCustomizersData {
 pub static mut TransformTemplateCustomizersData_NAME: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("TEMPLATE_CUSTOMIZERS_NAME"));
 
 impl TransformTemplateCustomizersData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

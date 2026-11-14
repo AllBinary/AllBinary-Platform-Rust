@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontInterface::StoreFrontInterface;
@@ -27,6 +26,7 @@ use crate::org::allbinary::business::user::commerce::money::Money::Money;
 use crate::org::allbinary::data::tables::user::commerce::inventory::item::InventoryEntityFactory::InventoryEntityFactory;
 use crate::org::allbinary::data::tables::user::commerce::inventory::item::InventoryEntityInterface::InventoryEntityInterface;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
+use crate::java::lang::Exception::*;
 use super::StoreFrontInventoryStatisticsInterface::StoreFrontInventoryStatisticsInterface;
 
 // Borrows the object of a Java reference
@@ -48,10 +48,14 @@ impl StoreFrontInventoryStatisticsInterface for StoreFrontInventoryStatistics {
 impl crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface for StoreFrontInventoryStatistics {
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getKey(self) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::toVector(self) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::toHashMap(self) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toHashMap(self) }
 }
 
 impl StoreFrontInventoryStatistics {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>) -> Self {
@@ -60,15 +64,15 @@ impl StoreFrontInventoryStatistics {
             totalInventorySaleValueMoney: None,
         };
         this.totalInventorySaleValueMoney = Money::new();
-        let mut inventoryEntityInterface: Option<Rc<RefCell<dyn InventoryEntityInterface>>> = jcall!(InventoryEntityFactory::getInstance()).getInventoryEntityInstance();
+        let mut inventoryEntityInterface: Option<Rc<RefCell<dyn InventoryEntityInterface>>> = jcall!(InventoryEntityFactory::getInstance()).getInventoryEntityInstance().map(|reference| reference as Rc<RefCell<dyn InventoryEntityInterface>>);
         let mut itemVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(inventoryEntityInterface).getItems(storeFrontInterface.clone());
         let mut size: i32 = jcall!(itemVector).size();
         for index in (0..size) {
-            let mut itemInterface: Option<Rc<RefCell<dyn ItemInterface>>> = { let java_object = jcall!(itemVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ItemInterface>>>>().expect("ClassCastException").clone()) };
-            let mut numberInStock: i32 = (((jcall!(itemInterface).getNumber()).to_string()).unwrap() as i32);
+            let mut itemInterface: Option<Rc<RefCell<dyn ItemInterface>>> = { let java_object = (jcall!(itemVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ItemInterface>>>>().expect("ClassCastException").clone()) };
+            let mut numberInStock: i32 = ((Some((jcall!(itemInterface).getNumber()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
             this.totalNumberOfItems = this.totalNumberOfItems + ((numberInStock) as i64);
             let mut itemPriceMoney: Option<Rc<RefCell<Money>>> = jcall!(itemInterface).getPrice();
-            jcall!(itemPriceMoney).multiply(numberInStock.clone());
+            jcall!(itemPriceMoney).multiply_int(numberInStock.clone());
             { let java_receiver = this.totalInventorySaleValueMoney.clone(); let java_arguments = (jcall!(itemPriceMoney).toString(),); jcall!(java_receiver).add(java_arguments.0); };
         }
         this
@@ -89,10 +93,10 @@ impl StoreFrontInventoryStatistics {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(jcall!(StoreFrontInventoryStatisticsData::StoreFrontInventoryStatisticsData::getInstance()).NUMBEROFITEMS.clone(), jcall!(self.getNumber()).toString());
-        jcall!(hashMap).put(jcall!(StoreFrontInventoryStatisticsData::StoreFrontInventoryStatisticsData::getInstance()).TOTALVALUE.clone(), jcall!(self.getTotal()).toString());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(StoreFrontInventoryStatisticsData::StoreFrontInventoryStatisticsData::getInstance()).NUMBEROFITEMS.clone(); java_field }.clone()), { let java_argument = crate::java_into_object((self.getNumber()).expect("NullPointerException").to_string()); java_argument });
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(StoreFrontInventoryStatisticsData::StoreFrontInventoryStatisticsData::getInstance()).TOTALVALUE.clone(); java_field }.clone()), { let java_argument = crate::java_into_object(jcall!(self.getTotal()).toString()); java_argument });
         return hashMap.clone();
     }
     

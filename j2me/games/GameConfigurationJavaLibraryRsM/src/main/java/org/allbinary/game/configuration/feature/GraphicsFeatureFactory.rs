@@ -42,6 +42,10 @@ pub struct GraphicsFeatureFactory {
 thread_local! { pub static GraphicsFeatureFactory_instance: Option<Rc<RefCell<GraphicsFeatureFactory>>> = GraphicsFeatureFactory::new(); }
 
 impl GraphicsFeatureFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GraphicsFeatureFactory>>> {
@@ -61,7 +65,7 @@ impl GraphicsFeatureFactory {
             VECTOR_GRAPHICS: None,
             VECTOR_TO_IMAGE_GRAPHICS: None,
         };
-        this.NONE = GraphicsFeature::new(jcall!(StringUtil::getInstance()).NULL_STRING.clone());
+        this.NONE = GraphicsFeature::new({ let java_field = jcall!(StringUtil::getInstance()).NULL_STRING.clone(); java_field }.clone());
         this.TRANSPARENT_IMAGE_CREATION = GraphicsFeature::new(String::from("Transparent Image Creation"));
         this.IMAGE_GRAPHICS = GraphicsFeature::new(String::from("Image Graphics"));
         this.IMAGE_ROTATION_ON_THE_FLY = GraphicsFeature::new(String::from("Image Rotated On The Fly"));

@@ -31,6 +31,10 @@ pub struct GenericProfileDataWorkerData {
 pub static mut GenericProfileDataWorkerData_NAME: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("GENERIC_PROFILE_DATA_WORKER_NAME"));
 
 impl GenericProfileDataWorkerData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

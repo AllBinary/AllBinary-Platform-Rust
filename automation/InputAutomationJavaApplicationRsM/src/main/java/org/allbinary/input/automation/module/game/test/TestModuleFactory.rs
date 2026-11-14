@@ -22,6 +22,7 @@ use crate::org::allbinary::input::automation::module::AbstractInputAutomationFac
 use crate::org::allbinary::input::automation::module::InputAutomationModuleData::InputAutomationModuleData;
 use crate::org::allbinary::input::automation::module::configuration::BlankModuleConfigurationJPanel::BlankModuleConfigurationJPanel;
 use crate::org::allbinary::thread::RunnableInterface::RunnableInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

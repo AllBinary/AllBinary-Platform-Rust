@@ -21,6 +21,7 @@ use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::ThemeInterface::ThemeInterface;
 
 // Borrows the object of a Java reference
@@ -39,6 +40,10 @@ impl DomNodeInterface for ThemePropertiesView {
 }
 
 impl ThemePropertiesView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut themeInterface: Option<Rc<RefCell<dyn ThemeInterface>>>) -> Self {
@@ -56,7 +61,7 @@ impl ThemePropertiesView {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes(document.clone(), jcall!(ThemeData::ThemeData::getInstance()).NAME.clone(), jcall!(self.themeInterface).toHashMap());
+        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), { let java_field = jcall!(ThemeData::ThemeData::getInstance()).NAME.clone(); java_field }.clone(), jcall!(self.themeInterface).toHashMap());
         return node.clone();
     }
 }

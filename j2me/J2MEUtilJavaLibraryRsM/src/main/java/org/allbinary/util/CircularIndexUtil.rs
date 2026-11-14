@@ -117,7 +117,7 @@ impl CircularIndexUtil {
     
 
     pub fn toString(&mut self) -> String {
-        return jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).INDEX_LABEL.clone()).appendint(self.index.clone()).append(String::from("lastIndex: ")).appendint(self.lastIndex.clone()).append(String::from("size: ")).appendint(self.size.clone()).toString();
+        return jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).INDEX_LABEL.clone(); java_field }.clone()).appendint(self.index.clone()).append(String::from("lastIndex: ")).appendint(self.lastIndex.clone()).append(String::from("size: ")).appendint(self.size.clone()).toString();
     }
 }
 

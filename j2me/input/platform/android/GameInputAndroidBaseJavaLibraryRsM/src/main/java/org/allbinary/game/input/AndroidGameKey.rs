@@ -26,16 +26,18 @@ impl AndroidGameKey {
 
     pub fn new_struct(mut keyCode: i32, mut name: String) -> Self {
         let mut this = Self {
-            base: Input::new_struct2(keyCode.clone(), name.clone()),
+            base: Input::new_struct(keyCode.clone(), name.clone()),
         };
         // super(...) is in the struct literal above
         let mut inputFactory: Option<Rc<RefCell<InputFactory>>> = InputFactory::getInstance();
-        jcall!(inputFactory).inputIntegerArray[(this.getId()) as usize] = this;
         this
     }
 
     pub fn new(mut keyCode: i32, mut name: String) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(keyCode, name))))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(keyCode.clone(), name.clone()))));
+            let mut inputFactory: Option<Rc<RefCell<InputFactory>>> = InputFactory::getInstance();
+            { let java_index = jcall!(this).getId(); jcall!(inputFactory).inputIntegerArray[(java_index) as usize].clone() } = (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone());
+        this
     }
     
 
@@ -45,11 +47,11 @@ impl AndroidGameKey {
     
 
     pub fn getString(mut keyCode: i32) -> String {
-        let mut input: Option<Rc<RefCell<Input>>> = jcall!(InputFactory::getInstance()).getInstanceById(keyCode.clone());
+        let mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>> = jcall!(InputFactory::getInstance()).getInstanceById(keyCode.clone());
         if input.is_some() {
             return jcall!(input).getName();
         } else {
-            return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         }
     }
 }
@@ -61,5 +63,10 @@ impl std::ops::DerefMut for AndroidGameKey {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::org::allbinary::game::input::Input::InputDyn for AndroidGameKey {
+    fn as_Input(&self) -> &crate::org::allbinary::game::input::Input::Input { &self.base }
+    fn as_Input_mut(&mut self) -> &mut crate::org::allbinary::game::input::Input::Input { &mut self.base }
+    fn toString(&mut self) -> String { Self::toString(self) }
+}
 
 

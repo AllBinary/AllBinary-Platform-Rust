@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::time::TimeStampUtil::TimeStampUtil;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,6 +40,10 @@ pub struct LogFormatUtil {
 thread_local! { pub static LogFormatUtil_instance: Option<Rc<RefCell<LogFormatUtil>>> = LogFormatUtil::new(); }
 
 impl LogFormatUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogFormatUtil>>> {

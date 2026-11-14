@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,6 +37,10 @@ pub struct TransformInfoProperties {
 
 
 impl TransformInfoProperties {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut name: String, mut label: String, mut description: String, mut objectFileName: String, mut objectConfigFileName: String, mut templateFileName: String) -> Self {

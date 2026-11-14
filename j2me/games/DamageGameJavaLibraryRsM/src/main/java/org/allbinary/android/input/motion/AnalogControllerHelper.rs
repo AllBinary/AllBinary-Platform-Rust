@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,6 +39,10 @@ pub struct AnalogControllerHelper {
 
 
 impl AnalogControllerHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut reduceTimeFactor: i32) -> Self {
@@ -49,7 +54,7 @@ impl AnalogControllerHelper {
             downTimeElapsedHelper: None,
             upTimeElapsedHelper: None,
         };
-        this.SCALE_VALUE = jcall!(AnalogControllerConfigurationFactory::AnalogControllerConfigurationFactory::getInstance()).SCALE_VALUE.clone();
+        this.SCALE_VALUE = { let java_field = jcall!(AnalogControllerConfigurationFactory::AnalogControllerConfigurationFactory::getInstance()).SCALE_VALUE.clone(); java_field }.clone();
         this.rightTimeElapsedHelper = TimeDelayHelper::new(0).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
         this.leftTimeElapsedHelper = TimeDelayHelper::new(0).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
         this.downTimeElapsedHelper = TimeDelayHelper::new(0).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);

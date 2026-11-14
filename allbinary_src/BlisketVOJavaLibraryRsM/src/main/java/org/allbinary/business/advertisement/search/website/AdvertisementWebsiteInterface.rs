@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AdvertisementWebsiteInterface {
+pub trait AdvertisementWebsiteInterface: std::any::Any {
     
 
     fn toString(&mut self) -> String;

@@ -38,6 +38,10 @@ impl VectorAnimationFactoryInterface for TimedVectorAnimationFactory {
 
 impl TimedVectorAnimationFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -50,7 +54,7 @@ impl TimedVectorAnimationFactory {
     
 
     pub fn getInstance(&mut self, mut points: Vec<Vec<Vec<i32>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn>>> {
-        return TimedVectorAnimation::new(points.clone(), basicColor.clone(), AnimationBehavior::AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn>>);
+        return TimedVectorAnimation::new(points.clone(), basicColor.clone(), AnimationBehavior::AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn>>);
     }
 }
 

@@ -25,6 +25,7 @@ use crate::org::allbinary::logic::io::AbFileLocalInputStream::AbFileLocalInputSt
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,6 +41,10 @@ pub struct SimpleTransform {
 
 
 impl SimpleTransform {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut xsltFilePath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>, mut dataFilePath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>) -> Self {
@@ -61,7 +66,7 @@ impl SimpleTransform {
     pub fn transform(&mut self) -> String {
         let mut inputStream: Option<Rc<RefCell<AbFileLocalInputStream>>> = AbFileLocalInputStream::new(AbFile::createAbFileFromAbPath(self.xsltFilePath.clone()));
         let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1(AbFileLocalInputStream::new(AbFile::createAbFileFromAbPath(self.dataFilePath.clone())));
-        let mut result: String = jcall!(XslHelper::XslHelper::getInstance()).translate(StreamSource::new(inputStream.clone()), StreamSource::new(StringBufferInputStream::new(XmlDocumentHelper::toString(document.clone()))));
+        let mut result: String = jcall!(XslHelper::XslHelper::getInstance()).translate_StreamSource_StreamSource(StreamSource::new(inputStream.clone()), StreamSource::new(StringBufferInputStream::new(XmlDocumentHelper::toString(document.clone()))));
         return result.clone();
     }
 }

@@ -34,6 +34,10 @@ pub struct SimpleWeaponProperties {
 
 impl SimpleWeaponProperties {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             damage: 0,
@@ -84,7 +88,7 @@ impl SimpleWeaponProperties {
         self.range = range.clone();
     }
 }
-pub trait SimpleWeaponPropertiesDyn {
+pub trait SimpleWeaponPropertiesDyn: std::any::Any {
     fn as_SimpleWeaponProperties(&self) -> &SimpleWeaponProperties;
     fn as_SimpleWeaponProperties_mut(&mut self) -> &mut SimpleWeaponProperties;
     fn set(&mut self, mut simpleWeaponProperties: Option<Rc<RefCell<dyn SimpleWeaponPropertiesDyn>>>) { SimpleWeaponProperties::set(self.as_SimpleWeaponProperties_mut(), simpleWeaponProperties) }

@@ -23,6 +23,7 @@ use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
+use crate::java::lang::Exception::*;
 use super::ResourceRelativeRelationshipFactoryInterface::ResourceRelativeRelationshipFactoryInterface;
 
 // Borrows the object of a Java reference
@@ -34,7 +35,7 @@ macro_rules! jcall {
 
 pub struct ResourceRelativeRelationshipFactory {
     pub basicArrayListUtil: Option<Rc<RefCell<BasicArrayListUtil>>>,
-    pub hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
     pub initialized: bool,
 }
 
@@ -49,6 +50,10 @@ impl crate::org::allbinary::game::configuration::feature::GameFeatureControlledI
 }
 
 impl ResourceRelativeRelationshipFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -78,7 +83,7 @@ impl ResourceRelativeRelationshipFactory {
         if listCanBeNull.is_none() {
             return jcall!(self.basicArrayListUtil).getImmutableInstance();
         }
-        return (listCanBeNull).clone() /* as BasicArrayList */;
+        return { let java_object = (listCanBeNull).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 

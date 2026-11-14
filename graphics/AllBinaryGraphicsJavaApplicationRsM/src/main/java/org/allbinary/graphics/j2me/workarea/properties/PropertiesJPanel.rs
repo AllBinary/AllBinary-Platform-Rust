@@ -95,7 +95,7 @@ impl PropertiesJPanel {
         self.rightJButton = JButton::new();
         self.setLayout(GridLayout::new(2, 1));
         jcall!(self.workAreaPropertiesJPanel).setLayout(GridLayout::new());
-        self.add(self.workAreaPropertiesJPanel.clone());
+        { let java_arguments = (self.workAreaPropertiesJPanel.clone(),); self.add(java_arguments.0) };
         jcall!(self.modifierJPanel).setLayout(GridLayout::new(6, 0));
         jcall!(self.copyVerticalJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
         jcall!(self.copyVerticalJButton).setText(String::from("Copy Vertical"));
@@ -126,7 +126,7 @@ impl PropertiesJPanel {
         jcall!(self.rightJButton).setText(String::from("Right"));
         jcall!(self.jPanel8).add(self.rightJButton.clone());
         jcall!(self.modifierJPanel).add(self.jPanel8.clone());
-        self.add(self.modifierJPanel.clone());
+        { let java_arguments = (self.modifierJPanel.clone(),); self.add(java_arguments.0) };
     }
 }
 impl std::ops::Deref for PropertiesJPanel {

@@ -25,6 +25,10 @@ pub struct AnalogLocationInput {
 thread_local! { pub static AnalogLocationInput_NULL_ANALOG_LOCATION_INPUT: Option<Rc<RefCell<AnalogLocationInput>>> = AnalogLocationInput::new(-1); }
 
 impl AnalogLocationInput {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut playerId: i32) -> Self {

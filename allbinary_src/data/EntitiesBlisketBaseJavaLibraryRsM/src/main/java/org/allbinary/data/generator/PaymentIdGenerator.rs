@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::globals::PATH_GLOBALS::PATH_GLOBALS;
 use crate::org::allbinary::globals::URLGLOBALS::URLGLOBALS;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
+use crate::java::lang::Exception::*;
 use super::UniqueIdGenerator::UniqueIdGenerator;
 
 // Borrows the object of a Java reference
@@ -46,10 +47,10 @@ impl PaymentIdGenerator {
         this.IDFILE = String::from("paymentId");
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(URLGLOBALS::getMainPath());
-        jcall!(stringBuffer).append(jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field }.clone());
         jcall!(stringBuffer).append(this.IDFILE.clone());
         jcall!(stringBuffer).append(UniqueIdGenerator_EXT.with(Clone::clone).clone());
-        this.base.setFile(jcall!(stringBuffer).toString(), this.IDFILE.clone());
+        { let java_arguments = (jcall!(stringBuffer).toString(), this.IDFILE.clone(),); this.base.setFile(java_arguments.0, java_arguments.1) };
         this
     }
 

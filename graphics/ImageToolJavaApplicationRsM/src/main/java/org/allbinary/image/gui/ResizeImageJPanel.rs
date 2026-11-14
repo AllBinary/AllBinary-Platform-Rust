@@ -19,7 +19,7 @@ use std::rc::Rc;
 use super::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
 // use crate::java::awt::image::Raster::Raster;
-// use crate::java::io::File::File;
+use crate::java::io::File::File;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::io::file::FileWrapperUtil::FileWrapperUtil;
 use crate::org::allbinary::media::image::ImagePersistanceUtil::ImagePersistanceUtil;
@@ -28,18 +28,14 @@ use crate::org::allbinary::media::image::ImageProcessorInputCompositeInterface::
 use crate::org::allbinary::media::image::ImageUtil::ImageUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::JPanel::JPanel;
-use super::swing::swing;
-use super::javax::javax;
 use super::DefaultComboBoxModel::DefaultComboBoxModel;
 use super::JLabel::JLabel;
 use super::JComboBox::JComboBox;
 use super::JButton::JButton;
 use super::JTextField::JTextField;
 use super::ActionListener::ActionListener;
-use super::event::event;
-use super::awt::awt;
-use super::java::java;
 use super::ActionEvent::ActionEvent;
 use super::Dimension::Dimension;
 use super::GroupLayout::GroupLayout;
@@ -128,19 +124,19 @@ impl ResizeImageJPanel {
                 let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
                 match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                     let mut imageUtil: Option<Rc<RefCell<ImageUtil>>> = ImageUtil::getInstance();
-                    let mut percent: Option<i32> = ((jcall!(self.jComboBox1).getSelectedItem()).clone() /* as String * /).to_string();
+                    let mut percent: Option<i32> = Some(((jcall!(self.jComboBox1).getSelectedItem()).clone() / * as String * /) as i32);
                     let mut percentAsFloat: Option<f32> = jcall!(self.floatPercentJTextField).getText().parse::<f32>().unwrap();
                     let mut imageProcessorInput: Option<Rc<RefCell<ImageProcessorInput>>> = self.getImageProcessorInput();
                     let mut files: Vec<Option<Rc<RefCell<File>>>> = jcall!(imageProcessorInput).getFiles();
                     let mut generatedBufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>> = None;
                     if ((percentAsFloat).unwrap() as i32) != -1 {
-                        generatedBufferedImageArray = jcall!(imageUtil).createBufferedImage2(jcall!(imageProcessorInput).getBufferedImageArray(), percentAsFloat.clone(), true);
+                        generatedBufferedImageArray = { let java_value = (jcall!(imageUtil).createBufferedImage2(jcall!(imageProcessorInput).getBufferedImageArray(), percentAsFloat.clone(), true)).clone(); java_value };
                     } else if ((percent).unwrap() as i32) != -1 {
-                        generatedBufferedImageArray = jcall!(imageUtil).createBufferedImageForResize(jcall!(imageProcessorInput).getBufferedImageArray(), percent.clone(), true);
+                        generatedBufferedImageArray = { let java_value = (jcall!(imageUtil).createBufferedImageForResize(jcall!(imageProcessorInput).getBufferedImageArray(), percent.clone(), true)).clone(); java_value };
                     } else {
-                        let mut width: Option<i32> = ((jcall!(self.jTextField1).getText()).clone() /* as String * /).to_string();
-                        let mut height: Option<i32> = ((jcall!(self.jTextField2).getText()).clone() /* as String * /).to_string();
-                        generatedBufferedImageArray = jcall!(imageUtil).createBufferedImage3(jcall!(imageProcessorInput).getBufferedImageArray(), width.clone(), height.clone(), true);
+                        let mut width: Option<i32> = Some(((jcall!(self.jTextField1).getText()).clone() / * as String * /) as i32);
+                        let mut height: Option<i32> = Some(((jcall!(self.jTextField2).getText()).clone() / * as String * /) as i32);
+                        generatedBufferedImageArray = { let java_value = (jcall!(imageUtil).createBufferedImage3(jcall!(imageProcessorInput).getBufferedImageArray(), width.clone(), height.clone(), true)).clone(); java_value };
                     }
                     let mut araster: Option<Rc<RefCell<Raster>>> = jcall!(generatedBufferedImageArray[(0) as usize]).getAlphaRaster();
                     if araster.is_none() {
@@ -156,9 +152,9 @@ impl ResizeImageJPanel {
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                    jcall!(logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+                    jcall!(logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }
@@ -178,7 +174,7 @@ impl ResizeImageJPanel {
                     let mut bufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>> = jcall!(imageProcessorInput).getBufferedImageArray();
                     let mut bufferedImage: Option<Rc<RefCell<BufferedImage>>> = None;
                     for index in (0..size) {
-                        bufferedImage = bufferedImageArray[(0) as usize].clone();
+                        bufferedImage = { let java_value = (bufferedImageArray[(0) as usize]).clone(); java_value }.clone();
                         { let java_receiver = self.jTextField1.clone(); let java_arguments = ((jcall!(bufferedImage).getWidth()).to_string(),); jcall!(java_receiver).setText(java_arguments.0); };
                         { let java_receiver = self.jTextField2.clone(); let java_arguments = ((jcall!(bufferedImage).getHeight()).to_string(),); jcall!(java_receiver).setText(java_arguments.0); };
                     }
@@ -186,9 +182,9 @@ impl ResizeImageJPanel {
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                    jcall!(logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+                    jcall!(logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }
@@ -208,7 +204,7 @@ impl ResizeImageJPanel {
                     let mut bufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>> = jcall!(imageProcessorInput).getBufferedImageArray();
                     let mut bufferedImage: Option<Rc<RefCell<BufferedImage>>> = None;
                     for index in (0..size) {
-                        bufferedImage = bufferedImageArray[(0) as usize].clone();
+                        bufferedImage = { let java_value = (bufferedImageArray[(0) as usize]).clone(); java_value }.clone();
                         { let java_receiver = self.jTextField1.clone(); let java_arguments = ((jcall!(bufferedImage).getWidth() / 16 * 16).to_string(),); jcall!(java_receiver).setText(java_arguments.0); };
                         { let java_receiver = self.jTextField2.clone(); let java_arguments = ((jcall!(bufferedImage).getHeight() / 16 * 16).to_string(),); jcall!(java_receiver).setText(java_arguments.0); };
                     }
@@ -216,9 +212,9 @@ impl ResizeImageJPanel {
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                    jcall!(logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+                    jcall!(logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }
@@ -238,7 +234,7 @@ impl ResizeImageJPanel {
                     let mut bufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>> = jcall!(imageProcessorInput).getBufferedImageArray();
                     let mut bufferedImage: Option<Rc<RefCell<BufferedImage>>> = None;
                     for index in (0..size) {
-                        bufferedImage = bufferedImageArray[(0) as usize].clone();
+                        bufferedImage = { let java_value = (bufferedImageArray[(0) as usize]).clone(); java_value }.clone();
                         { let java_receiver = self.jTextField1.clone(); let java_arguments = ((((jcall!(bufferedImage).getWidth() / 16) + 1) * 16).to_string(),); jcall!(java_receiver).setText(java_arguments.0); };
                         { let java_receiver = self.jTextField2.clone(); let java_arguments = ((((jcall!(bufferedImage).getHeight() / 16) + 1) * 16).to_string(),); jcall!(java_receiver).setText(java_arguments.0); };
                     }
@@ -246,9 +242,9 @@ impl ResizeImageJPanel {
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                    jcall!(logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+                    jcall!(logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }
@@ -318,8 +314,8 @@ impl ResizeImageJPanel {
 */,); jcall!(java_receiver).addActionListener(java_arguments.0); };
         let mut layout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(None /* Java this: a &mut self method has no Rc of itself */);
         self.setLayout(layout.clone());
-        jcall!(layout).setHorizontalGroup(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addContainerGap()).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addComponent(self.jLabel1.clone())).addComponent(self.jLabel2.clone())).addComponent(self.jLabel3.clone()))).addPreferredGap(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).LayoutStyle).ComponentPlacement).RELATED.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone(), false)).addComponent(self.jComboBox1.clone(), 0, jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), i16::MAX.clone())).addComponent(self.jTextField1.clone())).addComponent(self.jTextField2.clone()))).addPreferredGap(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).LayoutStyle).ComponentPlacement).UNRELATED.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addComponent(self.floatPercentJTextField.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone())).addComponent(self.adjustFor16AboveJButton.clone())).addComponent(self.adjustFor16BelowJButton.clone()))).addContainerGap(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), i16::MAX.clone()))).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addComponent(self.updateJButton.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).LayoutStyle).ComponentPlacement).RELATED.clone())).addComponent(self.aboveJButton.clone())).addGap(0, 250, i16::MAX.clone())));
-        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addContainerGap()).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).BASELINE.clone())).addComponent(self.jLabel1.clone())).addComponent(self.jComboBox1.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone())).addComponent(self.floatPercentJTextField.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone()))).addPreferredGap(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).LayoutStyle).ComponentPlacement).RELATED.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).BASELINE.clone())).addComponent(self.jTextField1.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone())).addComponent(self.jLabel2.clone())).addComponent(self.adjustFor16AboveJButton.clone()))).addPreferredGap(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).LayoutStyle).ComponentPlacement).RELATED.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).BASELINE.clone())).addComponent(self.jLabel3.clone())).addComponent(self.jTextField2.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone())).addComponent(self.adjustFor16BelowJButton.clone()))).addGap(18, 18, 18)).addGroup(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).BASELINE.clone())).addComponent(self.aboveJButton.clone())).addComponent(self.updateJButton.clone()))).addContainerGap(175, i16::MAX.clone())));
+        jcall!(layout).setHorizontalGroup(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addContainerGap()).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addComponent(self.jLabel1.clone())).addComponent(self.jLabel2.clone())).addComponent(self.jLabel3.clone()))).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).LayoutStyle.clone(); java_field }).ComponentPlacement.clone(); java_field }).RELATED.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone(), false)).addComponent(self.jComboBox1.clone(), 0, { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), i16::MAX.clone())).addComponent(self.jTextField1.clone())).addComponent(self.jTextField2.clone()))).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).LayoutStyle.clone(); java_field }).ComponentPlacement.clone(); java_field }).UNRELATED.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addComponent(self.floatPercentJTextField.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).addComponent(self.adjustFor16AboveJButton.clone())).addComponent(self.adjustFor16BelowJButton.clone()))).addContainerGap({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), i16::MAX.clone()))).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addComponent(self.updateJButton.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).LayoutStyle.clone(); java_field }).ComponentPlacement.clone(); java_field }).RELATED.clone(); java_field }.clone())).addComponent(self.aboveJButton.clone())).addGap(0, 250, i16::MAX.clone())));
+        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addContainerGap()).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).BASELINE.clone(); java_field }.clone())).addComponent(self.jLabel1.clone())).addComponent(self.jComboBox1.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).addComponent(self.floatPercentJTextField.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone()))).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).LayoutStyle.clone(); java_field }).ComponentPlacement.clone(); java_field }).RELATED.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).BASELINE.clone(); java_field }.clone())).addComponent(self.jTextField1.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).addComponent(self.jLabel2.clone())).addComponent(self.adjustFor16AboveJButton.clone()))).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).LayoutStyle.clone(); java_field }).ComponentPlacement.clone(); java_field }).RELATED.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).BASELINE.clone(); java_field }.clone())).addComponent(self.jLabel3.clone())).addComponent(self.jTextField2.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).addComponent(self.adjustFor16BelowJButton.clone()))).addGap(18, 18, 18)).addGroup(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).BASELINE.clone(); java_field }.clone())).addComponent(self.aboveJButton.clone())).addComponent(self.updateJButton.clone()))).addContainerGap(175, i16::MAX.clone())));
     }
     
 

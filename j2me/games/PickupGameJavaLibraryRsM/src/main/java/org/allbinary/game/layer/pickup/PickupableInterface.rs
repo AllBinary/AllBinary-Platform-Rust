@@ -25,9 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait PickupableInterface {
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+pub trait PickupableInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
 }
 
 

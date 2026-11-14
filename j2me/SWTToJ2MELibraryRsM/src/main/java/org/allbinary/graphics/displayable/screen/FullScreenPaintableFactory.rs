@@ -35,11 +35,15 @@ thread_local! { pub static FullScreenPaintableFactory_instance: Option<Rc<RefCel
 
 impl FullScreenPaintableFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             paintable: None,
         };
-        this.paintable = FullScreenPaintable::getInstance();
+        this.paintable = FullScreenPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>);
         this
     }
 

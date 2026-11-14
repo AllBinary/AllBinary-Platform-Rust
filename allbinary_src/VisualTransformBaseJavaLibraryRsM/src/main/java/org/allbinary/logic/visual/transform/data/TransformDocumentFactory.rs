@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::TransformDocument::TransformDocument;
 use super::TransformDocumentInterface::TransformDocumentInterface;
 
@@ -32,6 +33,10 @@ pub struct TransformDocumentFactory {
 
 
 impl TransformDocumentFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

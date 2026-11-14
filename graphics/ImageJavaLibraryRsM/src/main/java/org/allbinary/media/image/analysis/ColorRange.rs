@@ -140,7 +140,7 @@ impl ColorRange {
     
 
     pub fn isInRange(&mut self, mut color: Option<Rc<RefCell<Color>>>) -> bool {
-        if jcall!(color).getRed() >= self.getMinRed() && jcall!(color).getRed() <= self.getMaxRed() && jcall!(color).getGreen() >= self.getMinGreen() && jcall!(color).getGreen() <= self.getMaxGreen() && jcall!(color).getBlue() >= self.getMinBlue() && jcall!(color).getBlue() <= self.getMaxBlue() {
+        if { let java_value = jcall!(color).getRed(); java_value } >= self.getMinRed() && { let java_value = jcall!(color).getRed(); java_value } <= self.getMaxRed() && { let java_value = jcall!(color).getGreen(); java_value } >= self.getMinGreen() && { let java_value = jcall!(color).getGreen(); java_value } <= self.getMaxGreen() && { let java_value = jcall!(color).getBlue(); java_value } >= self.getMinBlue() && { let java_value = jcall!(color).getBlue(); java_value } <= self.getMaxBlue() {
             return true;
         } else {
             return false;
@@ -152,19 +152,19 @@ impl ColorRange {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(String::from("getMinRed(): "));
         jcall!(stringBuffer).appendint(self.getMinRed());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("getMaxRed(): "));
         jcall!(stringBuffer).appendint(self.getMaxRed());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("getMinGreen(): "));
         jcall!(stringBuffer).appendint(self.getMinGreen());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("getMaxGreen(): "));
         jcall!(stringBuffer).appendint(self.getMaxGreen());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("getMinBlue(): "));
         jcall!(stringBuffer).appendint(self.getMinGreen());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("getMaxBlue(): "));
         jcall!(stringBuffer).appendint(self.getMaxBlue());
         return jcall!(stringBuffer).toString();

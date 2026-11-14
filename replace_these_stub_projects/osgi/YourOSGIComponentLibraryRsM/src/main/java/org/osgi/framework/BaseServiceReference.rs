@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::RuntimeException::*;
 use super::ServiceReference::ServiceReference;
 
 // Borrows the object of a Java reference
@@ -32,6 +33,10 @@ pub struct BaseServiceReference {
 // impl ServiceReference for BaseServiceReference with the methods of the trait
 
 impl BaseServiceReference {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

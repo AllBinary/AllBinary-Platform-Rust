@@ -21,6 +21,10 @@ thread_local! { pub static PolygonRasterizer_instance: Option<Rc<RefCell<Polygon
 
 impl PolygonRasterizer {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -60,10 +64,10 @@ impl PolygonRasterizer {
             x[(i) as usize] = jcall!(fixedPoint).toInt(polyX[(i) as usize].clone());
             y[(i) as usize] = jcall!(fixedPoint).toInt(polyY[(i) as usize].clone());
             if y[(i) as usize] < minY {
-                minY = y[(i) as usize].clone();
+                minY = { let java_value = (y[(i) as usize]).clone(); java_value }.clone();
             }
             if y[(i) as usize] > maxY {
-                maxY = y[(i) as usize].clone();
+                maxY = { let java_value = (y[(i) as usize]).clone(); java_value }.clone();
             }
         }
         if minY < 0 {
@@ -92,7 +96,7 @@ impl PolygonRasterizer {
                 for j in (i + 1..intersectCount) {
                     if scanlineX[(i) as usize] > scanlineX[(j) as usize] {
                         let mut temp: i32 = scanlineX[(i) as usize].clone();
-                        scanlineX[(i) as usize] = scanlineX[(j) as usize].clone();
+                        scanlineX[(i) as usize] = { let java_value = (scanlineX[(j) as usize]).clone(); java_value }.clone();
                         scanlineX[(j) as usize] = temp.clone();
                     }
                 }

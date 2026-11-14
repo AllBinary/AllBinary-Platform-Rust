@@ -23,6 +23,7 @@ use crate::org::allbinary::media::image::comparison::SaveImageComparisonWorker::
 use crate::org::allbinary::media::image::comparison::motion::MotionRectanglesWorker::MotionRectanglesWorker;
 use crate::org::allbinary::media::image::comparison::motion::SaveMotionRectanglesResultsWorker::SaveMotionRectanglesResultsWorker;
 use crate::org::allbinary::media::image::comparison::motion::TestInputForMotionRectanglesResultsWorker::TestInputForMotionRectanglesResultsWorker;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -42,6 +43,10 @@ pub struct TestInputAutomationWorker {
 
 
 impl TestInputAutomationWorker {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -57,11 +62,11 @@ impl TestInputAutomationWorker {
         this.changedPixelsImageComparisonResultsWorker = SaveImageComparisonWorker::new();
         this.saveMotionRectanglesAsImagesWorker = SaveMotionRectanglesResultsWorker::new();
         this.moveMouseToFirstMotionRectanglesResultsWorker = TestInputForMotionRectanglesResultsWorker::new();
-        jcall!(this.motionRectanglesWorker).addListenerInterface(this.saveMotionRectanglesAsImagesWorker.clone());
-        jcall!(this.motionRectanglesWorker).addListenerInterface(this.moveMouseToFirstMotionRectanglesResultsWorker.clone());
-        jcall!(this.imageComparisonWorker).addListenerInterface(this.changedPixelsImageComparisonResultsWorker.clone());
-        jcall!(this.imageComparisonWorker).addListenerInterface(this.motionRectanglesWorker.clone());
-        jcall!(this.captureWorker).addListenerInterface(this.imageComparisonWorker.clone());
+        jcall!(this.motionRectanglesWorker).addListenerInterface(this.saveMotionRectanglesAsImagesWorker.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+        jcall!(this.motionRectanglesWorker).addListenerInterface(this.moveMouseToFirstMotionRectanglesResultsWorker.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+        jcall!(this.imageComparisonWorker).as_ImageComparisonWorker_mut().addListenerInterface(this.changedPixelsImageComparisonResultsWorker.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+        jcall!(this.imageComparisonWorker).as_ImageComparisonWorker_mut().addListenerInterface(this.motionRectanglesWorker.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+        jcall!(this.captureWorker).addListenerInterface(this.imageComparisonWorker.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of ImageComparisonWorker does not have EventListenerInterface as a base trait") }));
         this
     }
 

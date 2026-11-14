@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
@@ -38,10 +37,14 @@ pub struct CustomLoaderHelperFactory {
 thread_local! { pub static CustomLoaderHelperFactory_CLASSNAME: String = String::from("admin.taghelpers.CustomLoaderHelper"); }
 thread_local! { pub static CustomLoaderHelperFactory_FACTORYNAME: String = String::from("CustomLoaderHelperFactory"); }
 impl TagHelperFactoryInterface for CustomLoaderHelperFactory {
-    fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getInstance2(self, hashMap, pageContext) }
+    fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getInstance2(self, hashMap, pageContext) }
 }
 
 impl CustomLoaderHelperFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -56,9 +59,9 @@ impl CustomLoaderHelperFactory {
     
 
     // throws LicensingException
-    pub fn getInstance2(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        let mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>> = ServiceClientInformationInterfaceFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn AbeClientInformationInterface>>);
-        return HelperFactory::HelperFactory::getInstance5(abeClientInformation.clone(), CustomLoaderHelperFactory_FACTORYNAME.with(Clone::clone).clone(), CustomLoaderHelperFactory_CLASSNAME.with(Clone::clone).clone(), hashMap.clone(), pageContext.clone());
+    pub fn getInstance2(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
+        let mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>> = ServiceClientInformationInterfaceFactory::getInstance();
+        return HelperFactory::HelperFactory::getInstance5_AbeClientInformationInterface_String_String_HashMap_PageContext(abeClientInformation.clone(), CustomLoaderHelperFactory_FACTORYNAME.with(Clone::clone).clone(), CustomLoaderHelperFactory_CLASSNAME.with(Clone::clone).clone(), hashMap.clone(), pageContext.clone());
     }
     
 

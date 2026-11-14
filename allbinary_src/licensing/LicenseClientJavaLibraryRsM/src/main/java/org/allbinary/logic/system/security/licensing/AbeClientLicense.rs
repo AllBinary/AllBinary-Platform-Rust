@@ -36,7 +36,7 @@ macro_rules! jcall {
 }
 
 pub struct AbeClientLicense {
-    pub hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
     pub id: String,
     pub servers: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
     pub special: String,
@@ -57,7 +57,7 @@ impl AbeLicenseInterface for AbeClientLicense {
 impl AbeClientLicense {
     
 
-    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) -> Self {
+    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             hashtable: None,
             id: String::new(),
@@ -65,36 +65,36 @@ impl AbeClientLicense {
             special: String::new(),
             licenseType: None,
         };
-        this.hashtable = jcall!(StdUtil::getInstance()).createHashtable();
+        this.hashtable = { let java_value = (jcall!(StdUtil::getInstance()).createHashtable()).clone(); java_value };
         let mut abeClientInformationData: Option<Rc<RefCell<AbeClientInformationData>>> = AbeClientInformationData::getInstance();
-        let mut keyValue: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(hashtable).get(crate::java_into_object(jcall!(abeClientInformationData).KEY.clone()));
+        let mut keyValue: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(hashtable).get(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).KEY.clone(); java_field }.clone()));
         if keyValue.is_some() {
             if (keyValue).is_some() /* instanceof String */ {
-                jcall!(this.hashtable).put(crate::java_into_object(jcall!(abeClientInformationData).KEY.clone()), keyValue.clone());
+                jcall!(this.hashtable).put(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).KEY.clone(); java_field }.clone()), keyValue.clone());
             }
         }
-        this.id = (jcall!(hashtable).get(crate::java_into_object(jcall!(abeClientInformationData).LICENSEID.clone()))).clone() /* as String */;
-        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_object = (jcall!(hashtable).get(crate::java_into_object(jcall!(abeClientInformationData).LICENSESERVERS.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
+        this.id = { let java_value = ({ let java_object = (jcall!(hashtable).get(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).LICENSEID.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_object = (jcall!(hashtable).get(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).LICENSESERVERS.clone(); java_field }.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
         this.servers = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut size: i32 = jcall!(vector).size();
         for index in (0..size) {
             { let java_receiver = this.servers.clone(); let java_arguments = (crate::java_into_object(jcall!(vector).get(index.clone())),); jcall!(java_receiver).add(java_arguments.0); };
         }
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        { let java_arguments = (jcall!(stringUtil).getNonNull((jcall!(hashtable).get(crate::java_into_object(jcall!(abeClientInformationData).SPECIAL.clone()))).clone() /* as String */),); this.setSpecial(java_arguments.0) };
-        let mut licenseTypeString: String = jcall!(stringUtil).getNonNull((jcall!(hashtable).get(crate::java_into_object(jcall!(abeClientInformationData).LICENSE_TYPE.clone()))).clone() /* as String */);
-        this.licenseType = jcall!(LicenseTypeFactory::LicenseTypeFactory::getInstance()).getInstance1(licenseTypeString.clone());
+        { let java_arguments = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(hashtable).get(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).SPECIAL.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }),); this.setSpecial(java_arguments.0) };
+        let mut licenseTypeString: String = jcall!(stringUtil).getNonNull({ let java_object = (jcall!(hashtable).get(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).LICENSE_TYPE.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() });
+        this.licenseType = { let java_value = (jcall!(LicenseTypeFactory::LicenseTypeFactory::getInstance()).getInstance1(licenseTypeString.clone())).clone(); java_value };
         this
     }
 
-    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(hashtable))))
     }
     
 
-    pub fn hasRequiredKeys(mut resultHashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) -> bool {
+    pub fn hasRequiredKeys(mut resultHashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) -> bool {
         let mut abeClientInformationData: Option<Rc<RefCell<AbeClientInformationData>>> = AbeClientInformationData::getInstance();
-        if jcall!(resultHashtable).containsKey(crate::java_into_object(jcall!(abeClientInformationData).LICENSEID.clone())) && jcall!(resultHashtable).containsKey(crate::java_into_object(jcall!(abeClientInformationData).LICENSESERVERS.clone())) && jcall!(resultHashtable).containsKey(crate::java_into_object(jcall!(abeClientInformationData).KEY.clone())) && jcall!(resultHashtable).containsKey(crate::java_into_object(jcall!(abeClientInformationData).LICENSE_TYPE.clone())) {
+        if jcall!(resultHashtable).containsKey(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).LICENSEID.clone(); java_field }.clone())) && jcall!(resultHashtable).containsKey(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).LICENSESERVERS.clone(); java_field }.clone())) && jcall!(resultHashtable).containsKey(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).KEY.clone(); java_field }.clone())) && jcall!(resultHashtable).containsKey(crate::java_into_object({ let java_field = jcall!(abeClientInformationData).LICENSE_TYPE.clone(); java_field }.clone())) {
             return true;
         } else {
             return false;
@@ -108,7 +108,7 @@ impl AbeClientLicense {
     
 
     pub fn getKey(&mut self, mut keyName: String) -> String {
-        return (jcall!(self.hashtable).get(crate::java_into_object(keyName.clone()))).clone() /* as String */;
+        return { let java_object = (jcall!(self.hashtable).get(crate::java_into_object(keyName.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
     }
     
 
@@ -124,7 +124,7 @@ impl AbeClientLicense {
 
     pub fn isValid(&mut self) -> bool {
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
-        if !jcall!(stringValidationUtil).isEmpty({ let java_arguments = (jcall!(AbeClientInformationData::getInstance()).KEY.clone(),); self.getKey(java_arguments.0) }) {
+        if !jcall!(stringValidationUtil).isEmpty({ let java_arguments = ({ let java_field = jcall!(AbeClientInformationData::getInstance()).KEY.clone(); java_field }.clone(),); self.getKey(java_arguments.0) }) {
             return true;
         }
         return false;
@@ -146,7 +146,7 @@ impl AbeClientLicense {
         let mut serverVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getServers();
         let mut size: i32 = jcall!(serverVector).size();
         for index in (0..size) {
-            let mut nextServerString: String = (jcall!(serverVector).get(index.clone())).clone() /* as String */;
+            let mut nextServerString: String = { let java_object = (jcall!(serverVector).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             jcall!(stringBuffer).append(String::from("Server: "));
             jcall!(stringBuffer).append(nextServerString.clone());
             jcall!(stringBuffer).append(BREAK.clone());

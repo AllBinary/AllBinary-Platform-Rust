@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Command::Command;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,6 +32,10 @@ pub struct NotificationUtil {
 thread_local! { pub static NotificationUtil_SINGLETON: Option<Rc<RefCell<NotificationUtil>>> = NotificationUtil::new(); }
 
 impl NotificationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -49,7 +53,7 @@ impl NotificationUtil {
     }
     
 
-    pub fn notify(&mut self, mut command: Option<Rc<RefCell<Command>>>, mut resource: String, mut message: String) {
+    pub fn notify(&mut self, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut resource: String, mut message: String) {
     }
 }
 

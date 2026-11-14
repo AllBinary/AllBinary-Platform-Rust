@@ -24,6 +24,8 @@ use super::*;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -70,7 +72,7 @@ impl ProfileActionScriptItem {
         this.commonStrings = CommonStrings::getInstance();
         // super(...) is in the struct literal above
         this.init();
-        jcall!(this.logUtil).putF(format!("{}{}", String::from("Label: "), label), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF(format!("{}{}", String::from("Label: "), label), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this
     }
 
@@ -90,7 +92,7 @@ impl ProfileActionScriptItem {
         this.commonStrings = CommonStrings::getInstance();
         // super(...) is in the struct literal above
         this.init();
-        jcall!(this.logUtil).putF(format!("{}{}", String::from("Label: "), label), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF(format!("{}{}", String::from("Label: "), label), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this
     }
 
@@ -145,7 +147,7 @@ impl std::ops::DerefMut for ProfileActionScriptItem {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait ProfileActionScriptItemDyn {
+pub trait ProfileActionScriptItemDyn: std::any::Any {
     fn as_ProfileActionScriptItem(&self) -> &ProfileActionScriptItem;
     fn as_ProfileActionScriptItem_mut(&mut self) -> &mut ProfileActionScriptItem;
     fn init(&mut self) { ProfileActionScriptItem::init(self.as_ProfileActionScriptItem_mut()) }

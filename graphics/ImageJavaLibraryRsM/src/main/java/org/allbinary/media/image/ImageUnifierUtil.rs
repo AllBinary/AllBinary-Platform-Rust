@@ -37,6 +37,10 @@ pub struct ImageUnifierUtil {
 thread_local! { pub static ImageUnifierUtil_instance: Option<Rc<RefCell<ImageUnifierUtil>>> = ImageUnifierUtil::new(); }
 
 impl ImageUnifierUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ImageUnifierUtil>>> {
@@ -69,7 +73,7 @@ impl ImageUnifierUtil {
     pub fn getImage(&mut self, mut bufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>>, mut imageUnifierProperties: Option<Rc<RefCell<ImageUnifierProperties>>>) -> Option<Rc<RefCell<BufferedImage>>> {
         let mut newBufferedImage: Option<Rc<RefCell<BufferedImage>>> = { let java_receiver = self.imageUtil.clone(); let java_arguments = (jcall!(imageUnifierProperties).getWidth(), jcall!(imageUnifierProperties).getHeight(),); let java_result = jcall!(java_receiver).create(java_arguments.0, java_arguments.1); java_result };
         let mut commonLabels: Option<Rc<RefCell<CommonLabels>>> = CommonLabels::getInstance();
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Setting Image - "), jcall!(commonLabels).WIDTH_LABEL), jcall!(newBufferedImage).getWidth()), jcall!(commonLabels).HEIGHT_LABEL), jcall!(newBufferedImage).getHeight()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getImage"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Setting Image - "), { let java_field = jcall!(commonLabels).WIDTH_LABEL.clone(); java_field }), jcall!(newBufferedImage).getWidth()), { let java_field = jcall!(commonLabels).HEIGHT_LABEL.clone(); java_field }), jcall!(newBufferedImage).getHeight()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getImage"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut g: Option<Rc<RefCell<Graphics2D>>> = jcall!(newBufferedImage).createGraphics();
         let mut columnIndex: i32 = 0;
         let mut rowIndex: i32 = 0;

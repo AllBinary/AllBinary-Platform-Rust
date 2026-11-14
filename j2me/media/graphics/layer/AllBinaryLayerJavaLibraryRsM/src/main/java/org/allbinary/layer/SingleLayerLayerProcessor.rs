@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::LayerProcessor::LayerProcessor;
 use super::SingleLayerLayerManager::SingleLayerLayerManager;
 use super::LayerManager::LayerManager;
@@ -37,13 +38,18 @@ pub struct SingleLayerLayerProcessor {
 impl crate::org::allbinary::layer::BasicLayerProcessorInterface::BasicLayerProcessorInterface for SingleLayerLayerProcessor {
     fn process(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::process(self, allBinaryLayerManager) }
 }
+impl crate::org::allbinary::layer::LayerProcessorInterface::LayerProcessorInterface for SingleLayerLayerProcessor {
+    fn getLayerManager(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>> { crate::org::allbinary::layer::LayerProcessor::LayerProcessor::getLayerManager(crate::org::allbinary::layer::LayerProcessor::LayerProcessorDyn::as_LayerProcessor_mut(self)) }
+    fn processAt(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, p2: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, p3: i32) { crate::org::allbinary::layer::LayerProcessor::LayerProcessor::processAt(crate::org::allbinary::layer::LayerProcessor::LayerProcessorDyn::as_LayerProcessor_mut(self), p1, p2, p3) }
+    fn isProcessorLayer(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> bool { crate::org::allbinary::layer::LayerProcessor::LayerProcessor::isProcessorLayer(crate::org::allbinary::layer::LayerProcessor::LayerProcessorDyn::as_LayerProcessor_mut(self), p1) }
+}
 
 impl SingleLayerLayerProcessor {
     
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: LayerProcessor::new_struct(SingleLayerLayerManager::new()),
+            base: LayerProcessor::new_struct(SingleLayerLayerManager::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>)),
         };
         // super(...) is in the struct literal above
         this
@@ -57,7 +63,7 @@ impl SingleLayerLayerProcessor {
     // throws Exception
     pub fn process(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) {
         let mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>> = self.getLayerManager();
-        { let java_arguments = (allBinaryLayerManager.clone(), (jcall!(layerManager).getLayerAt(0)).clone() /* as AllBinaryLayer */, 0,); self.processAt(java_arguments.0, java_arguments.1, java_arguments.2) };
+        { let java_arguments = (allBinaryLayerManager.clone(), (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> { panic!("ClassCastException: a Rust dyn Layer cannot be cast to AllBinaryLayer") })(), 0,); self.processAt(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
 }
 impl std::ops::Deref for SingleLayerLayerProcessor {

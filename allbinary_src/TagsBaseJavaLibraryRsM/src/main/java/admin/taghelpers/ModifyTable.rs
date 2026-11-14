@@ -19,6 +19,8 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::tags::TagStrings::TagStrings;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::ModifyTableInterface::ModifyTableInterface;
 
 // Borrows the object of a Java reference
@@ -40,6 +42,10 @@ impl ModifyTableInterface for ModifyTable {
 }
 
 impl ModifyTable {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -73,7 +79,7 @@ impl ModifyTable {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait ModifyTableDyn: crate::admin::taghelpers::ModifyTableInterface::ModifyTableInterface {
+pub trait ModifyTableDyn: std::any::Any + crate::admin::taghelpers::ModifyTableInterface::ModifyTableInterface {
     fn as_ModifyTable(&self) -> &ModifyTable;
     fn as_ModifyTable_mut(&mut self) -> &mut ModifyTable;
 }

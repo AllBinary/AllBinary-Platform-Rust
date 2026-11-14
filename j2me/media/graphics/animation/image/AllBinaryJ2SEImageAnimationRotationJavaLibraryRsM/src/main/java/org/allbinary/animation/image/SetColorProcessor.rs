@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::media::image::ImageModifierUtil::ImageModifierUtil;
 use super::ModifierBaseProcessor::ModifierBaseProcessor;
@@ -54,7 +54,7 @@ impl SetColorProcessor {
     }
     
 
-    pub fn updateColor(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut imageToShow: Option<Rc<RefCell<Image>>>, mut index: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
+    pub fn updateColor(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageToShow: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut index: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
         jcall!(imageModifierUtil).setColor(originalImage.clone(), imageToShow.clone(), index.clone(), basicColor.clone());
     }
 }
@@ -69,7 +69,7 @@ impl std::ops::DerefMut for SetColorProcessor {
 impl crate::org::allbinary::animation::image::ModifierBaseProcessor::ModifierBaseProcessorDyn for SetColorProcessor {
     fn as_ModifierBaseProcessor(&self) -> &crate::org::allbinary::animation::image::ModifierBaseProcessor::ModifierBaseProcessor { &self.base }
     fn as_ModifierBaseProcessor_mut(&mut self) -> &mut crate::org::allbinary::animation::image::ModifierBaseProcessor::ModifierBaseProcessor { &mut self.base }
-    fn updateColor(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut imageToShow: Option<Rc<RefCell<Image>>>, mut index: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::updateColor(self, imageModifierUtil, originalImage, imageToShow, index, basicColor) }
+    fn updateColor(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageToShow: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut index: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::updateColor(self, imageModifierUtil, originalImage, imageToShow, index, basicColor) }
 }
 
 

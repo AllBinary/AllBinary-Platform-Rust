@@ -20,6 +20,10 @@ thread_local! { pub static E_e: Option<Rc<RefCell<dyn EDyn>>> = E::new().map(|re
 
 impl E {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -35,7 +39,7 @@ impl E {
         return E_e.with(Clone::clone).clone();
     }
 }
-pub trait EDyn {
+pub trait EDyn: std::any::Any {
     fn as_E(&self) -> &E;
     fn as_E_mut(&mut self) -> &mut E;
     fn newInstance(&mut self) -> Option<Rc<RefCell<dyn EDyn>>> { E::newInstance(self.as_E_mut()) }

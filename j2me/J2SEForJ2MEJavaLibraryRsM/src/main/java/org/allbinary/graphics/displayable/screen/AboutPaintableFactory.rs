@@ -36,6 +36,10 @@ pub struct AboutPaintableFactory {
 thread_local! { pub static AboutPaintableFactory_instance: Option<Rc<RefCell<AboutPaintableFactory>>> = AboutPaintableFactory::new(); }
 
 impl AboutPaintableFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AboutPaintableFactory>>> {
@@ -48,9 +52,9 @@ impl AboutPaintableFactory {
             paintableArray: Vec::new(),
         };
         this.paintableArray = vec![NullPaintable::getInstance()];
-        let mut INFO: Vec<String> = vec![String::from("Built with the"), String::from("AllBinary Platform"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), String::from("Comments or Questions:"), String::from("support@allbinary.com")];
+        let mut INFO: Vec<String> = vec![String::from("Built with the"), String::from("AllBinary Platform"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), String::from("Comments or Questions:"), String::from("support@allbinary.com")];
         let mut DEVELOPERS: Vec<String> = vec![String::from("Developed By:"), String::from("Travis Berthelot")];
-        this.paintableArray = jcall!(AboutPaintable::getInstance(INFO.clone(), DEVELOPERS.clone())).getPaintableArrayInstance();
+        this.paintableArray = { let java_value = (jcall!(AboutPaintable::getInstance(INFO.clone(), DEVELOPERS.clone())).getPaintableArrayInstance()).clone(); java_value };
         this
     }
 

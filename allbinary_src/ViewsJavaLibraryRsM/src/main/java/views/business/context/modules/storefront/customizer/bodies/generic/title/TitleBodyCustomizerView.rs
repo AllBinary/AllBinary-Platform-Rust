@@ -31,6 +31,7 @@ use crate::org::apache::commons::lang3::StringEscapeUtils::StringEscapeUtils;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -48,6 +49,9 @@ pub struct TitleBodyCustomizerView {
 thread_local! { pub static TitleBodyCustomizerView_NAME: String = String::from("None"); }
 impl DomNodeInterface for TitleBodyCustomizerView {
     fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { Self::toXmlNode(self, document) }
+}
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for TitleBodyCustomizerView {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }
 }
 
 impl TitleBodyCustomizerView {
@@ -71,38 +75,39 @@ impl TitleBodyCustomizerView {
 
     // throws Exception
     pub fn addDomNodeInterfaces(&mut self) {
-        self.addDomNodeInterface((self.titleBody).clone() /* as DomNodeInterface */);
-        self.addDomNodeInterface((self).clone() /* as DomNodeInterface */);
+        { let java_arguments = ((self.titleBody).clone().map(|reference| reference as Rc<RefCell<dyn DomNodeInterface>>),); self.addDomNodeInterface(java_arguments.0) };
+        self.addDomNodeInterface(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut pageName: String = jcall!(TransformTemplateCustomizerUtil::getInstance()).getPageNameHack(jcall!(self.getTransformInfoInterface()).getName(), jcall!(self.getWeblisketSession()).getStoreName());
+        let mut pageName: String = jcall!(TransformTemplateCustomizerUtil::getInstance()).getPageNameHack({ let java_argument = jcall!(self.getTransformInfoInterface()).getName(); java_argument }, { let java_argument = jcall!(self.getWeblisketSession()).getStoreName(); java_argument });
         if jcall!(StringValidationUtil::getInstance()).isEmpty(pageName.clone()) {
-            pageName = TitleBodyCustomizerView_NAME.with(Clone::clone).clone();
+            pageName = { let java_value = (TitleBodyCustomizerView_NAME.with(Clone::clone)).clone(); java_value }.clone();
         }
-        return ModDomHelper::createNameValueNodes(document.clone(), jcall!(PageData::getInstance()).NAME.clone(), pageName.clone());
+        return ModDomHelper::createNameValueNodes(document.clone(), { let java_field = jcall!(PageData::getInstance()).NAME.clone(); java_field }.clone(), pageName.clone());
     }
     
 
     // throws Exception
     pub fn view(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut success: String = XmlDocumentHelper::toString(self.getDoc());
             let mut result: String = jcall!(StoreTransformer::new(self.abeClientInformation.clone(), self.getTransformInfoInterface())).translate(success.clone());
-            return StringEscapeUtils::unescapeHtml3(result.clone());
+            return Some(StringEscapeUtils::unescapeHtml3(result.clone()));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).TAGHELPERERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("view()"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).TAGHELPERERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("view()"), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for TitleBodyCustomizerView {
@@ -124,13 +129,13 @@ impl TitleBodyCustomizerViewDyn for TitleBodyCustomizerView {
     fn as_TitleBodyCustomizerView_mut(&mut self) -> &mut TitleBodyCustomizerView { self }
 }
 
-impl crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentViewDyn for TitleBodyCustomizerView {
-    fn as_HttpStoreComponentView(&self) -> &crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &self.base }
-    fn as_HttpStoreComponentView_mut(&mut self) -> &mut crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &mut self.base }
-}
 impl crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn for TitleBodyCustomizerView {
     fn as_TransformInfoHttpComposite(&self) -> &crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &self.base.base.base }
     fn as_TransformInfoHttpComposite_mut(&mut self) -> &mut crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &mut self.base.base.base }
+}
+impl crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentViewDyn for TitleBodyCustomizerView {
+    fn as_HttpStoreComponentView(&self) -> &crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &self.base }
+    fn as_HttpStoreComponentView_mut(&mut self) -> &mut crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &mut self.base }
 }
 impl crate::views::HttpComponentView::HttpComponentViewDyn for TitleBodyCustomizerView {
     fn as_HttpComponentView(&self) -> &crate::views::HttpComponentView::HttpComponentView { &self.base.base }

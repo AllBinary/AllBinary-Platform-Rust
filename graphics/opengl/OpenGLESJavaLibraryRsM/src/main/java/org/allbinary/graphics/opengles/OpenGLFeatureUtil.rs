@@ -35,6 +35,10 @@ pub struct OpenGLFeatureUtil {
 thread_local! { pub static OpenGLFeatureUtil_instance: Option<Rc<RefCell<OpenGLFeatureUtil>>> = OpenGLFeatureUtil::new(); }
 
 impl OpenGLFeatureUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<OpenGLFeatureUtil>>> {
@@ -49,7 +53,7 @@ impl OpenGLFeatureUtil {
         let mut openGLConfiguration: Option<Rc<RefCell<OpenGLConfiguration>>> = OpenGLConfiguration::getInstance();
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
         let mut openGLFeatureFactory: Option<Rc<RefCell<OpenGLFeatureFactory>>> = OpenGLFeatureFactory::getInstance();
-        this.anyThreed = jcall!(openGLConfiguration).isOpenGL() && (jcall!(features).isFeature(jcall!(openGLFeatureFactory).OPENGL_2D_AND_3D.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(features).isFeature(jcall!(openGLFeatureFactory).OPENGL_3D.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)));
+        this.anyThreed = { let java_value = (jcall!(openGLConfiguration).isOpenGL() && (jcall!(features).isFeature({ let java_field = jcall!(openGLFeatureFactory).OPENGL_2D_AND_3D.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(features).isFeature({ let java_field = jcall!(openGLFeatureFactory).OPENGL_3D.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)))).clone(); java_value };
         this
     }
 

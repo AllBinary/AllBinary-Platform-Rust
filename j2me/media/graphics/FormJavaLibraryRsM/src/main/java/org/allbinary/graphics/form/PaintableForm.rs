@@ -14,6 +14,7 @@ use crate::org::allbinary::graphics::displayable::CanvasStrings::CanvasStrings;
 use crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItem;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 use super::ABCustomForm::ABCustomForm;
 use super::FormType::FormType;
 
@@ -33,16 +34,16 @@ pub struct PaintableForm {
     pub formType: Option<Rc<RefCell<FormType>>>,
 }
 
-pub static mut PaintableForm_NULL_PAINTABLE_FORM: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut PaintableForm_NULL_PAINTABLE_FORM: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl PaintableForm {
     
 
     pub fn getNullPaintableForm() -> Option<Rc<RefCell<dyn PaintableFormDyn>>> {
-        if match (&unsafe { PaintableForm_NULL_PAINTABLE_FORM.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *PaintableForm_NULL_PAINTABLE_FORM = PaintableForm::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), vec![None; (0) as usize], jcall!(BasicColorFactory::getInstance()).BLACK.clone(), jcall!(BasicColorFactory::getInstance()).WHITE.clone()).map(|reference| reference as Rc<RefCell<dyn PaintableFormDyn>>) };
+        if match (&unsafe { PaintableForm_NULL_PAINTABLE_FORM.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *PaintableForm_NULL_PAINTABLE_FORM = crate::java_into_object(PaintableForm::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), vec![None; (0) as usize], { let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone())) };
         }
-        return (unsafe { PaintableForm_NULL_PAINTABLE_FORM.clone() }).clone() /* as PaintableForm */;
+        return { let java_object = (unsafe { PaintableForm_NULL_PAINTABLE_FORM.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn PaintableFormDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -57,7 +58,7 @@ impl PaintableForm {
         };
         this.canvasStrings = CanvasStrings::getInstance();
         this.rectangle = crate::org::allbinary::graphics::RectangleFactory::RectangleFactory_SINGLETON.with(Clone::clone).clone();
-        this.formType = jcall!(FormTypeFactory::FormTypeFactory::getInstance()).NULL_FORM_TYPE.clone();
+        this.formType = { let java_field = jcall!(FormTypeFactory::FormTypeFactory::getInstance()).NULL_FORM_TYPE.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this.setSelectedIndex(0);
         this
@@ -72,8 +73,8 @@ impl PaintableForm {
     pub fn init(&mut self, mut rectangle: Option<Rc<RefCell<Rectangle>>>, mut formType: Option<Rc<RefCell<FormType>>>) {
         self.rectangle = rectangle.clone();
         let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(self.rectangle).getPoint();
-        self.x = jcall!(point).getX();
-        self.y = jcall!(point).getY();
+        self.x = { let java_value = (jcall!(point).getX()).clone(); java_value };
+        self.y = { let java_value = (jcall!(point).getY()).clone(); java_value };
         self.formType = formType.clone();
     }
     

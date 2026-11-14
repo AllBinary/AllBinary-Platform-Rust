@@ -28,6 +28,10 @@ impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventLis
 
 impl CompleteMotionGestureInputEventListener {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -46,7 +50,7 @@ impl CompleteMotionGestureInputEventListener {
     pub fn onCompleteMotionGestureInputEvent(&mut self, mut completeMotionGestureInputEvent: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn>>>) {
     }
 }
-pub trait CompleteMotionGestureInputEventListenerDyn {
+pub trait CompleteMotionGestureInputEventListenerDyn: std::any::Any {
     fn as_CompleteMotionGestureInputEventListener(&self) -> &CompleteMotionGestureInputEventListener;
     fn as_CompleteMotionGestureInputEventListener_mut(&mut self) -> &mut CompleteMotionGestureInputEventListener;
     fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { CompleteMotionGestureInputEventListener::onEvent(self.as_CompleteMotionGestureInputEventListener_mut(), eventObject) }

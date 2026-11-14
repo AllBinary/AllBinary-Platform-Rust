@@ -49,13 +49,13 @@ impl DragVelocityBehavior {
     
 
     pub fn reduce(&mut self, mut velocityProperties: Option<Rc<RefCell<dyn crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn>>>, mut nominator: i32, mut denominator: i32) {
-        if jcall!(jcall!(velocityProperties).getVelocityXBasicDecimalP()).getUnscaled() != 0_i64 {
-            let mut basicDecimal: Option<Rc<RefCell<BasicDecimal>>> = jcall!(velocityProperties).getVelocityXBasicDecimalP();
+        if jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityXBasicDecimalP()).getUnscaled() != 0_i64 {
+            let mut basicDecimal: Option<Rc<RefCell<BasicDecimal>>> = jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityXBasicDecimalP();
             jcall!(basicDecimal).multiplyint(nominator.clone());
             jcall!(basicDecimal).divideint(denominator.clone());
         }
-        if jcall!(jcall!(velocityProperties).getVelocityYBasicDecimalP()).getUnscaled() != 0_i64 {
-            let mut basicDecimal: Option<Rc<RefCell<BasicDecimal>>> = jcall!(velocityProperties).getVelocityYBasicDecimalP();
+        if jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP()).getUnscaled() != 0_i64 {
+            let mut basicDecimal: Option<Rc<RefCell<BasicDecimal>>> = jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP();
             jcall!(basicDecimal).multiplyint(nominator.clone());
             jcall!(basicDecimal).divideint(denominator.clone());
         }
@@ -63,7 +63,7 @@ impl DragVelocityBehavior {
     
 
     pub fn reduceX(&mut self, mut velocityProperties: Option<Rc<RefCell<dyn crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn>>>, mut nominator: i32, mut denominator: i32) {
-        let mut basicDecimal: Option<Rc<RefCell<BasicDecimal>>> = jcall!(velocityProperties).getVelocityXBasicDecimalP();
+        let mut basicDecimal: Option<Rc<RefCell<BasicDecimal>>> = jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityXBasicDecimalP();
         if jcall!(basicDecimal).getUnscaled() != 0_i64 {
             jcall!(basicDecimal).multiplyint(nominator.clone());
             jcall!(basicDecimal).divideint(denominator.clone());
@@ -72,8 +72,8 @@ impl DragVelocityBehavior {
     
 
     pub fn reduceY(&mut self, mut velocityProperties: Option<Rc<RefCell<dyn crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn>>>, mut nominator: i32, mut denominator: i32) {
-        if jcall!(jcall!(velocityProperties).getVelocityYBasicDecimalP()).getUnscaled() != 0_i64 {
-            let mut basicDecimal: Option<Rc<RefCell<BasicDecimal>>> = jcall!(velocityProperties).getVelocityYBasicDecimalP();
+        if jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP()).getUnscaled() != 0_i64 {
+            let mut basicDecimal: Option<Rc<RefCell<BasicDecimal>>> = jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP();
             jcall!(basicDecimal).multiplyint(nominator.clone());
             jcall!(basicDecimal).divideint(denominator.clone());
         }

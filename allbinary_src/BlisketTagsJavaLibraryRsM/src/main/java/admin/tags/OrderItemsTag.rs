@@ -25,6 +25,7 @@ use crate::org::allbinary::business::user::commerce::inventory::order::OrderHist
 use crate::org::allbinary::logic::communication::http::request::AbResponseHandler::AbResponseHandler;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
+use crate::java::lang::Exception::*;
 use super::TableTag::TableTag;
 
 // Borrows the object of a Java reference
@@ -51,8 +52,8 @@ impl OrderItemsTag {
             status: String::new(),
         };
         this.logUtil = LogUtil::getInstance();
-        this.setTagHelperFactory(OrderItemsHelperFactory::new());
-        this.setTagRequestHelperFactory(OrderItemsRequestHelperFactory::new());
+        this.setTagHelperFactory(OrderItemsHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(OrderItemsRequestHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 
@@ -68,55 +69,57 @@ impl OrderItemsTag {
 
     // throws LicensingException
     pub fn setOrderStatus(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(OrderItemsRequestHelperFactory::new()).getInstance(self.getPropertiesHashMap(), self.pageContext.clone());
             if false {
                 let mut helperClass: &'static str = std::any::type_name_of_val(&anyType);
                 let mut method: Option<Rc<RefCell<Method>>> = jcall!(helperClass).getMethod(String::from("setOrderStatus"), None);
                 let mut result: String = (jcall!(method).invoke(anyType.clone(), None)).clone() /* as String */;
-                return result.clone();
+                return Some(result.clone());
             } else {
                 let mut helperClass: &'static str = std::any::type_name_of_val(&anyType);
                 let mut methodParams: Vec<&'static str> = vec![std::any::type_name_of_val(&self.status)];
                 let mut method: Option<Rc<RefCell<Method>>> = jcall!(helperClass).getMethod(String::from("setOrderStatus"), methodParams.clone());
-                let mut methodArgs: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = vec![self.status.clone()];
+                let mut methodArgs: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = vec![crate::java_into_object(self.status.clone())];
                 let mut result: String = (jcall!(method).invoke(anyType.clone(), methodArgs.clone())).clone() /* as String */;
-                return result.clone();
-            }
+                return Some(result.clone());
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws JspTagException
     pub fn doStartTag(&mut self) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if self.isEnabled() {
-                if self.getCommand().is_some() {
-                    jcall!(self.getPropertiesHashMap()).put(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_STATUS.with(Clone::clone).clone(), self.status.clone());
-                    if jcall!(self.getCommand()).compareTo(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SETSTATUS.with(Clone::clone).clone()) == 0 {
+                if true {
+                    jcall!(self.getPropertiesHashMap()).put(crate::java_into_object(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_STATUS.with(Clone::clone).clone()), crate::java_into_object(self.status.clone()));
+                    if { let java_value = (self.getCommand().cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SETSTATUS.with(Clone::clone).clone()) as i32); java_value } == 0 {
                         jcall!(jcall!(self.pageContext).getOut()).print(self.setOrderStatus());
                     } else {
-                        return self.base.doStartTag();
+                        return Some(self.base.doStartTag());
                     }
                 }
             }
-            return SKIP_BODY.clone();
+            return Some(SKIP_BODY.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             AbResponseHandler::sendJspTagLicensingRedirect(self.pageContext.clone(), e.clone());
             return SKIP_BODY.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for OrderItemsTag {

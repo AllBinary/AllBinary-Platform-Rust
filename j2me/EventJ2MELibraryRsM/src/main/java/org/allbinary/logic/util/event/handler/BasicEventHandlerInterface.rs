@@ -22,6 +22,7 @@ use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEv
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::jsinterop::annotations::JsMethod;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -30,7 +31,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait BasicEventHandlerInterface {
+pub trait BasicEventHandlerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn addListenerInterface(&mut self, eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>);
@@ -47,8 +48,6 @@ pub trait BasicEventHandlerInterface {
     
 
     fn removeListener(&mut self, eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

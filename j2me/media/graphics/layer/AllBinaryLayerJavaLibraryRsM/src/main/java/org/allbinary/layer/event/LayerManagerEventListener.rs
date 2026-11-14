@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
+use crate::java::lang::Exception::*;
 use super::LayerManagerEventListenerInterface::LayerManagerEventListenerInterface;
 use super::LayerManagerEvent::LayerManagerEvent;
 
@@ -40,6 +41,10 @@ impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventLis
 }
 
 impl LayerManagerEventListener {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -65,7 +70,7 @@ impl LayerManagerEventListener {
     pub fn onDeleteLayerManagerEvent(&mut self, mut layerManagerEvent: Option<Rc<RefCell<LayerManagerEvent>>>) {
     }
 }
-pub trait LayerManagerEventListenerDyn {
+pub trait LayerManagerEventListenerDyn: std::any::Any {
     fn as_LayerManagerEventListener(&self) -> &LayerManagerEventListener;
     fn as_LayerManagerEventListener_mut(&mut self) -> &mut LayerManagerEventListener;
     fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { LayerManagerEventListener::onEvent(self.as_LayerManagerEventListener_mut(), eventObject) }

@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::io::LineReader::LineReader;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::visual::dhtml::html::HtmlTag::HtmlTag;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -113,7 +114,7 @@ impl HtmlSelect {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             self.addOption(String::from("Error"));
             }
@@ -138,12 +139,12 @@ impl HtmlSelect {
 
     pub fn getOptions(&mut self) -> String {
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        let mut result: String = jcall!(stringUtil).EMPTY_STRING.clone();
+        let mut result: String = { let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone();
         let mut optionsArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(self.options).toArray();
         let mut optionsSize: i32 = (optionsArray.len() as i32).clone();
         for i in (0..optionsSize) {
-            let mut value: String = (optionsArray[(i) as usize]).clone() /* as String */;
-            if value.is_some() && jcall!(value).compareTo(jcall!(stringUtil).EMPTY_STRING.clone()) != 0 {
+            let mut value: String = { let java_object = (optionsArray[(i) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            if true && (value.cmp(&{ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()) as i32) != 0 {
                 result += &self.STARTOPTION.clone();
                 result += &self.END.clone();
                 result += &value.clone();
@@ -156,7 +157,7 @@ impl HtmlSelect {
 
     pub fn toString(&mut self) -> String {
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        let mut result: String = jcall!(stringUtil).EMPTY_STRING.clone();
+        let mut result: String = { let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone();
         let mut attributeKeys: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(self.otherAttributes).keySet()).toArray();
         let mut attributeSize: i32 = (attributeKeys.len() as i32).clone();
         result = self.before.clone();
@@ -168,9 +169,9 @@ impl HtmlSelect {
         result += &self.size.clone();
         result += &String::from("\" ");
         for i in (0..attributeSize) {
-            let mut key: String = (attributeKeys[(i) as usize]).clone() /* as String */;
-            let mut value: String = (jcall!(self.base.otherAttributes).get(key.clone())).clone() /* as String */;
-            if value.is_some() && jcall!(value).compareTo(jcall!(stringUtil).EMPTY_STRING.clone()) != 0 {
+            let mut key: String = { let java_object = (attributeKeys[(i) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut value: String = { let java_object = (jcall!(self.base.otherAttributes).get(crate::java_into_object(key.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            if true && (value.cmp(&{ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()) as i32) != 0 {
                 result += &key.clone();
                 result += &String::from("=\"");
                 result += &value.clone();

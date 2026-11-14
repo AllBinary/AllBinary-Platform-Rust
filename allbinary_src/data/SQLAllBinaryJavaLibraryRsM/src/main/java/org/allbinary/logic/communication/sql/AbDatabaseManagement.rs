@@ -15,6 +15,7 @@ use crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInf
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::AbSqlBean::AbSqlBean;
 
 // Borrows the object of a Java reference
@@ -54,7 +55,7 @@ impl AbDatabaseManagement {
 
     pub fn new_struct1(mut databaseConnectionInfoInterface: Option<Rc<RefCell<dyn DatabaseConnectionInfoInterface>>>) -> Self {
         let mut this = Self {
-            base: AbSqlBean::new_struct((databaseConnectionInfoInterface).clone() /* as DbConnectionInfo */),
+            base: AbSqlBean::new_struct((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfoDyn>>> { panic!("ClassCastException: a Rust dyn DatabaseConnectionInfoInterface cannot be cast to DbConnectionInfo") })()),
             logUtil: None,
             commonStrings: None,
             sqlCommandLog: None,
@@ -105,7 +106,7 @@ impl AbDatabaseManagement {
     }
     
 
-    pub fn new_struct1(mut connectionInfo: Option<Rc<RefCell<dyn crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfoDyn>>>) -> Self {
+    pub fn new_struct1_DbConnectionInfo(mut connectionInfo: Option<Rc<RefCell<dyn crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfoDyn>>>) -> Self {
         let mut this = Self {
             base: AbSqlBean::new_struct(connectionInfo.clone()),
             logUtil: None,
@@ -153,24 +154,25 @@ impl AbDatabaseManagement {
         this
     }
 
-    pub fn new1(mut connectionInfo: Option<Rc<RefCell<dyn crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfoDyn>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(connectionInfo))))
+    pub fn new1_DbConnectionInfo(mut connectionInfo: Option<Rc<RefCell<dyn crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfoDyn>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_DbConnectionInfo(connectionInfo))))
     }
     
 
     pub fn getHostName(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut addr: Option<Rc<RefCell<InetAddress>>> = InetAddress::getLocalHost();
-            return jcall!(addr).getHostName();
+            return Some(jcall!(addr).getHostName());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             jcall!(self.logUtil).put(self.FAILED.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.GET_HOST_NAME.clone(), crate::java_into_object(e.clone()));
             return None;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -188,49 +190,51 @@ impl AbDatabaseManagement {
         jcall!(stringBuffer).append(self.WITH_GRANT_OPTION.clone());
         let mut sqlStatement: String = jcall!(stringBuffer).toString();
         jcall!(self.sqlCommandLog).append(sqlStatement.clone());
-        jcall!(self.sqlCommandLog).append(jcall!(self.commonSeps).NEW_LINE.clone());
-        self.base.executeSQLStatement(sqlStatement.clone());
+        jcall!(self.sqlCommandLog).append({ let java_field = jcall!(self.commonSeps).NEW_LINE.clone(); java_field }.clone());
+        { let java_arguments = (sqlStatement.clone(),); self.base.executeSQLStatement(java_arguments.0) };
         return true;
     }
     
 
     // Java overloaded method: Rust needs a different name
     pub fn addDbUser(&mut self, mut db: String, mut userName: String, mut password: String) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            self.addDbUser4(self.AT_LOCALHOST.clone(), db.clone(), userName.clone(), password.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            { let java_arguments = (self.AT_LOCALHOST.clone(), db.clone(), userName.clone(), password.clone(),); self.addDbUser4(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3) };
             let mut hostName: String = self.getHostName();
             if true {
                 self.addDbUser4(hostName.clone(), db.clone(), userName.clone(), password.clone());
             }
-            return true;
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             jcall!(self.logUtil).put(format!("{}{}", self.UNABLE_TO_CREATE_USER, userName), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_USER.clone(), crate::java_into_object(e.clone()));
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn addDb(&mut self, mut db: String) -> Option<bool> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut sqlStatement: String = format!("{}{}", jcall!(self.sqlStrings).CREATE_DATABASE, db);
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut sqlStatement: String = format!("{}{}", { let java_field = jcall!(self.sqlStrings).CREATE_DATABASE.clone(); java_field }, db);
             jcall!(self.sqlCommandLog).append(sqlStatement.clone());
-            jcall!(self.sqlCommandLog).append(jcall!(self.commonSeps).NEW_LINE.clone());
-            self.base.executeSQLStatement(sqlStatement.clone());
-            return true;
+            jcall!(self.sqlCommandLog).append({ let java_field = jcall!(self.commonSeps).NEW_LINE.clone(); java_field }.clone());
+            { let java_arguments = (sqlStatement.clone(),); self.base.executeSQLStatement(java_arguments.0) };
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             jcall!(self.logUtil).put(format!("{}{}", self.UNABLE_TO_CREATE_DATABASE, db), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_ADD_DB.clone(), crate::java_into_object(e.clone()));
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for AbDatabaseManagement {

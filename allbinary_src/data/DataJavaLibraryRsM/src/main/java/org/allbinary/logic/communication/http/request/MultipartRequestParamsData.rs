@@ -31,6 +31,10 @@ pub struct MultipartRequestParamsData {
 thread_local! { pub static MultipartRequestParamsData_HASHMAP: String = String::from("MULTIPART_REQUEST_HASHMAP"); }
 
 impl MultipartRequestParamsData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

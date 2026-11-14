@@ -36,6 +36,10 @@ thread_local! { pub static ShaderStrings_instance: Option<Rc<RefCell<ShaderStrin
 
 impl ShaderStrings {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             NO_PROGRAM_HANDLE: String::new(),

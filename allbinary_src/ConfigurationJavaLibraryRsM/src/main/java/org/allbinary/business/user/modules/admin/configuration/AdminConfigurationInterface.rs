@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::business::context::configuration::ContextConfigurationInterface::ContextConfigurationInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -26,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AdminConfigurationInterface {
+pub trait AdminConfigurationInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
@@ -37,8 +38,6 @@ pub trait AdminConfigurationInterface {
     
 
     fn setContextConfigurationInterface(&mut self, contextConfigurationInterface: Option<Rc<RefCell<dyn ContextConfigurationInterface>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

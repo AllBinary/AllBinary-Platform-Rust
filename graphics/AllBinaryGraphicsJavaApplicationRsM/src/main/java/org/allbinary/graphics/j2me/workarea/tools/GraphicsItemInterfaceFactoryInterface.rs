@@ -27,12 +27,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait GraphicsItemInterfaceFactoryInterface {
+pub trait GraphicsItemInterfaceFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getInstance(&mut self, canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>>) -> Option<Rc<RefCell<dyn GraphicItemInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

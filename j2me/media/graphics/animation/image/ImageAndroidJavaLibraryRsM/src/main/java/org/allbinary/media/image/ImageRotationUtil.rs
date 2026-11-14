@@ -17,12 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::graphics::Anchor::Anchor;
 use crate::android::graphics::Bitmap::Bitmap;
 use crate::android::graphics::Canvas::Canvas;
 use crate::android::graphics::Matrix::Matrix;
 use crate::org::microemu::android::device::AndroidImageInterface::AndroidImageInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,6 +40,10 @@ pub struct ImageRotationUtil {
 thread_local! { pub static ImageRotationUtil_instance: Option<Rc<RefCell<ImageRotationUtil>>> = ImageRotationUtil::new(); }
 
 impl ImageRotationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ImageRotationUtil>>> {
@@ -62,15 +67,15 @@ impl ImageRotationUtil {
     
 
     // throws Exception
-    pub fn createRotatedImage(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut rotationInDegrees: i32) -> Option<Rc<RefCell<Image>>> {
-        let mut image: Option<Rc<RefCell<Image>>> = jcall!(ImageCreationUtil::ImageCreationUtil::getInstance()).createImageWH(jcall!(originalImage).getWidth(), jcall!(originalImage).getHeight());
+    pub fn createRotatedImage(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut rotationInDegrees: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(ImageCreationUtil::ImageCreationUtil::getInstance()).createImageWH(jcall!(originalImage).getWidth(), jcall!(originalImage).getHeight());
         if jcall!(image).isMutable() {
-            let mut bitmap: Option<Rc<RefCell<Bitmap>>> = jcall!(((image).clone() /* as AndroidImageInterface */)).getBitmap();
+            let mut bitmap: Option<Rc<RefCell<Bitmap>>> = jcall!(((|| -> Option<Rc<RefCell<dyn AndroidImageInterface>>> { panic!("ClassCastException: a Rust dyn Image cannot be cast to AndroidImageInterface") })())).getBitmap();
             let mut width: i32 = jcall!(bitmap).getWidth();
             let mut height: i32 = jcall!(bitmap).getHeight();
             jcall!(self.matrix).setRotate(((rotationInDegrees) as f32), (((width >> 1)) as f32), (((height >> 1)) as f32));
-            let mut canvas: Option<Rc<RefCell<Canvas>>> = jcall!(((image).clone() /* as AndroidImageInterface */)).getCanvas();
-            jcall!(canvas).concat(self.matrix.clone());
+            let mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>> = jcall!(((|| -> Option<Rc<RefCell<dyn AndroidImageInterface>>> { panic!("ClassCastException: a Rust dyn Image cannot be cast to AndroidImageInterface") })())).getCanvas();
+            jcall!(canvas).as_Canvas_mut().concat(self.matrix.clone());
             jcall!(jcall!(image).getGraphics()).drawImage(originalImage.clone(), 0, 0, self.anchor.clone());
             return image.clone();
         } else {

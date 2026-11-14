@@ -120,7 +120,7 @@
 
         <module>../../media/motion/AllBinaryVibrationJavaLibraryRsM</module>
         <module>../../media/motion/NoVibrateJavaLibraryRsM</module>
-        <module>../../media/motion/VibrateAndroidJavaLibraryRsM</module>
+        <!--<module>../../media/motion/VibrateAndroidJavaLibraryRsM</module>-->
 
         <module>../../media/graphics/NullCustomUIJavaLibraryRsM</module>
         <module>../../media/graphics/NullCustomUIBaseJavaLibraryRsM</module>
@@ -144,13 +144,13 @@
         <module>../../games/GameResourceJavaLibraryRsM</module>
         <module>../../games/GameSoundsJavaLibraryRsM</module>
 
-        <module>../../input/TouchInputLibraryP</module>
+        <module>../../input/TouchInputLibraryRsP</module>
 
         <module>../../media/MediaDataRsM</module>
         <module>../../media/sound/NotDeviceSpecificNoMediaMIDP1LibraryRsM</module>
 
         <module>../../../allbinary_src/content/ContentNoneJavaLibraryRsM</module>
-        <module>../../../allbinary_src/content/ContentAndroidJavaLibraryRsM</module>
+        <!--<module>../../../allbinary_src/content/ContentAndroidJavaLibraryRsM</module>-->
 
         <module>../../games/GameConfigurationFormJavaLibraryRsM</module>
 

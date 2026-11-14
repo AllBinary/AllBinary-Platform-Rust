@@ -18,8 +18,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
-// use crate::java::io::File::File;
-// use crate::java::util::Arrays::Arrays;
+use crate::java::io::File::File;
+use crate::java::util::Arrays::Arrays;
 // use crate::java::util::Comparator::Comparator;
 // use crate::javax::imageio::ImageIO::ImageIO;
 use crate::org::allbinary::gui::dialog::FileJDialog::FileJDialog;
@@ -33,9 +33,8 @@ use crate::org::allbinary::media::image::analysis::ImageAnalysis::ImageAnalysis;
 use crate::org::allbinary::media::image::analysis::ImageAnalysisResults::ImageAnalysisResults;
 use crate::org::allbinary::string::CommonPhoneStrings::CommonPhoneStrings;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::JFrame::JFrame;
-use super::swing::swing;
-use super::javax::javax;
 use super::JDialog::JDialog;
 use super::JLabel::JLabel;
 use super::JTextField::JTextField;
@@ -45,15 +44,9 @@ use super::JMenuBar::JMenuBar;
 use super::JMenu::JMenu;
 use super::JMenuItem::JMenuItem;
 use super::Dimension::Dimension;
-use super::awt::awt;
-use super::java::java;
 use super::ActionListener::ActionListener;
-use super::event::event;
 use super::ActionEvent::ActionEvent;
 use super::GroupLayout::GroupLayout;
-use super::layout::layout;
-use super::jdesktop::jdesktop;
-use super::org::org;
 use super::GridLayout::GridLayout;
 use super::ImageUnifierJPanel::ImageUnifierJPanel;
 use super::ImageAnalysisResultsJPanel::ImageAnalysisResultsJPanel;
@@ -165,11 +158,11 @@ impl ImageToolJFrame {
         jcall!(this.getMaxRedJTextField()).setText(String::from("255"));
         jcall!(this.getMaxGreenJTextField()).setText(String::from("255"));
         jcall!(this.getMaxBlueJTextField()).setText(String::from("255"));
-        jcall!(this.getMinRedJTextField()).setText(jcall!(commonPhoneStrings).ZERO.clone());
-        jcall!(this.getMinGreenJTextField()).setText(jcall!(commonPhoneStrings).ZERO.clone());
-        jcall!(this.getMinBlueJTextField()).setText(jcall!(commonPhoneStrings).ZERO.clone());
+        jcall!(this.getMinRedJTextField()).setText({ let java_field = jcall!(commonPhoneStrings).ZERO.clone(); java_field }.clone());
+        jcall!(this.getMinGreenJTextField()).setText({ let java_field = jcall!(commonPhoneStrings).ZERO.clone(); java_field }.clone());
+        jcall!(this.getMinBlueJTextField()).setText({ let java_field = jcall!(commonPhoneStrings).ZERO.clone(); java_field }.clone());
         this.fileJDialog = FileJDialog::new();
-        jcall!(this.fileJDialog).addFinishedListener((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        jcall!(this.fileJDialog).addFinishedListener(this.clone().map(|reference| reference as Rc<RefCell<dyn FileJDialogListenerInterface>>));
         this
     }
 
@@ -227,9 +220,9 @@ impl ImageToolJFrame {
 */,); jcall!(java_receiver).addActionListener(java_arguments.0); };
         let mut analysisActionJDialogLayout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(jcall!(self.analysisActionJDialog).getContentPane());
         jcall!(jcall!(self.analysisActionJDialog).getContentPane()).setLayout(analysisActionJDialogLayout.clone());
-        jcall!(analysisActionJDialogLayout).setHorizontalGroup(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createSequentialGroup()).addContainerGap()).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createSequentialGroup()).add(jcall!(jcall!(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(self.blueJLabel.clone())).add(self.greenJLabel.clone())).add(self.redJLabel.clone())).add(self.colorRangeJLabel.clone()))).add(29, 29, 29)).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).TRAILING.clone(), self.minJLabel.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), 58, i16::MAX.clone())).add(jcall!(jcall!(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).TRAILING.clone(), false)).add(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone(), self.minBlueJTextField.clone())).add(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone(), self.minGreenJTextField.clone())).add(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone(), self.minRedJTextField.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), 42, i16::MAX.clone())).add(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone(), self.okJButton.clone())))).addPreferredGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).LayoutStyle).RELATED.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).TRAILING.clone())).add(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone(), jcall!(jcall!(jcall!(analysisActionJDialogLayout).createSequentialGroup()).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).TRAILING.clone(), false)).add(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone(), self.maxRedJTextField.clone())).add(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone(), jcall!(jcall!(jcall!(analysisActionJDialogLayout).createSequentialGroup()).add(1, 1, 1)).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(self.maxBlueJTextField.clone())).add(self.maxGreenJTextField.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone(), 43, jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone()))))).addPreferredGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).LayoutStyle).RELATED.clone(), 17, i16::MAX.clone()))).add(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone(), self.maxJLabel.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), 61, i16::MAX.clone()))).addContainerGap())).add(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).TRAILING.clone(), jcall!(jcall!(jcall!(analysisActionJDialogLayout).createSequentialGroup()).add(self.titleJLabel.clone())).add(25, 25, 25)))));
-        jcall!(analysisActionJDialogLayout).setVerticalGroup(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createSequentialGroup()).add(self.titleJLabel.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).LayoutStyle).RELATED.clone())).add(jcall!(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).BASELINE.clone())).add(self.minJLabel.clone())).add(self.colorRangeJLabel.clone())).add(self.maxJLabel.clone()))).addPreferredGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).LayoutStyle).RELATED.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).TRAILING.clone())).add(self.redJLabel.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).BASELINE.clone())).add(self.minRedJTextField.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone())).add(self.maxRedJTextField.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone())))).addPreferredGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).LayoutStyle).RELATED.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).TRAILING.clone())).add(self.greenJLabel.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).BASELINE.clone())).add(self.minGreenJTextField.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone())).add(self.maxGreenJTextField.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone())))).addPreferredGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).LayoutStyle).RELATED.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).TRAILING.clone())).add(self.blueJLabel.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).BASELINE.clone())).add(self.minBlueJTextField.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone())).add(self.maxBlueJTextField.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone())))).add(16, 16, 16)).add(self.okJButton.clone())).addContainerGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), i16::MAX.clone())));
-        self.setDefaultCloseOperation(jcall!(jcall!(unsafe { javax_swing.clone() }).WindowConstants).EXIT_ON_CLOSE.clone());
+        jcall!(analysisActionJDialogLayout).setHorizontalGroup(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createSequentialGroup()).addContainerGap()).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createSequentialGroup()).add(jcall!(jcall!(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add(self.blueJLabel.clone())).add(self.greenJLabel.clone())).add(self.redJLabel.clone())).add(self.colorRangeJLabel.clone()))).add(29, 29, 29)).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).TRAILING.clone(); java_field }.clone(), self.minJLabel.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), 58, i16::MAX.clone())).add(jcall!(jcall!(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).TRAILING.clone(); java_field }.clone(), false)).add({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone(), self.minBlueJTextField.clone())).add({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone(), self.minGreenJTextField.clone())).add({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone(), self.minRedJTextField.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), 42, i16::MAX.clone())).add({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone(), self.okJButton.clone())))).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).LayoutStyle.clone(); java_field }).RELATED.clone(); java_field }.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).TRAILING.clone(); java_field }.clone())).add({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone(), jcall!(jcall!(jcall!(analysisActionJDialogLayout).createSequentialGroup()).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).TRAILING.clone(); java_field }.clone(), false)).add({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone(), self.maxRedJTextField.clone())).add({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone(), jcall!(jcall!(jcall!(analysisActionJDialogLayout).createSequentialGroup()).add(1, 1, 1)).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add(self.maxBlueJTextField.clone())).add(self.maxGreenJTextField.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), 43, { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone()))))).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).LayoutStyle.clone(); java_field }).RELATED.clone(); java_field }.clone(), 17, i16::MAX.clone()))).add({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone(), self.maxJLabel.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), 61, i16::MAX.clone()))).addContainerGap())).add({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).TRAILING.clone(); java_field }.clone(), jcall!(jcall!(jcall!(analysisActionJDialogLayout).createSequentialGroup()).add(self.titleJLabel.clone())).add(25, 25, 25)))));
+        jcall!(analysisActionJDialogLayout).setVerticalGroup(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createSequentialGroup()).add(self.titleJLabel.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).LayoutStyle.clone(); java_field }).RELATED.clone(); java_field }.clone())).add(jcall!(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).BASELINE.clone(); java_field }.clone())).add(self.minJLabel.clone())).add(self.colorRangeJLabel.clone())).add(self.maxJLabel.clone()))).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).LayoutStyle.clone(); java_field }).RELATED.clone(); java_field }.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).TRAILING.clone(); java_field }.clone())).add(self.redJLabel.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).BASELINE.clone(); java_field }.clone())).add(self.minRedJTextField.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).add(self.maxRedJTextField.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())))).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).LayoutStyle.clone(); java_field }).RELATED.clone(); java_field }.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).TRAILING.clone(); java_field }.clone())).add(self.greenJLabel.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).BASELINE.clone(); java_field }.clone())).add(self.minGreenJTextField.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).add(self.maxGreenJTextField.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())))).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).LayoutStyle.clone(); java_field }).RELATED.clone(); java_field }.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).TRAILING.clone(); java_field }.clone())).add(self.blueJLabel.clone())).add(jcall!(jcall!(jcall!(analysisActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).BASELINE.clone(); java_field }.clone())).add(self.minBlueJTextField.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).add(self.maxBlueJTextField.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())))).add(16, 16, 16)).add(self.okJButton.clone())).addContainerGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), i16::MAX.clone())));
+        { let java_arguments = ({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).WindowConstants.clone(); java_field }).EXIT_ON_CLOSE.clone(); java_field }.clone(),); self.setDefaultCloseOperation(java_arguments.0) };
         jcall!(self.getContentPane()).setLayout(GridLayout::new(1, 0));
         jcall!(self.jPanel1).setLayout(GridLayout::new(1, 0));
         jcall!(self.getContentPane()).add(self.jPanel1.clone());
@@ -350,7 +343,7 @@ impl ImageToolJFrame {
 */,); jcall!(java_receiver).addActionListener(java_arguments.0); };
         jcall!(self.processingJMenu).add(self.createIconImagesJMenuItem.clone());
         jcall!(self.mainJMenuBar).add(self.processingJMenu.clone());
-        self.setJMenuBar(self.mainJMenuBar.clone());
+        { let java_arguments = (self.mainJMenuBar.clone(),); self.setJMenuBar(java_arguments.0) };
         self.pack();
     }
     
@@ -361,13 +354,13 @@ impl ImageToolJFrame {
             jcall!(self.jPanel1).removeAll();
             jcall!(self.jPanel1).add(imageUnifierJPanel.clone());
             jcall!(self.jPanel1).updateUI();
-            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = imageUnifierJPanel.clone() };
+            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = imageUnifierJPanel.clone().map(|reference| reference as Rc<RefCell<dyn ImageProcessorInputCompositeInterface>>) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("createStripImageJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("createStripImageJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -376,7 +369,7 @@ impl ImageToolJFrame {
     pub fn okJButtonActionPerformed(&mut self, mut evt: Option<Rc<RefCell<ActionEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(self.logUtil).putF(String::from("Starting"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("okJButtonActionPerformed"));
-            let mut imageAnalysisResultsArray: Vec<Option<Rc<RefCell<ImageAnalysisResults>>>> = jcall!(ImageAnalysis::getInstance()).process(jcall!(self.imageProcessorInput).getBufferedImageArray(), self.getColorRangeInterface());
+            let mut imageAnalysisResultsArray: Vec<Option<Rc<RefCell<ImageAnalysisResults>>>> = jcall!(ImageAnalysis::getInstance()).process({ let java_argument = jcall!(self.imageProcessorInput).getBufferedImageArray(); java_argument }, self.getColorRangeInterface());
             jcall!(self.jPanel1).removeAll();
             jcall!(self.jPanel1).add(ImageAnalysisResultsJPanel::new(imageAnalysisResultsArray.clone()));
             jcall!(self.jPanel1).updateUI();
@@ -385,9 +378,9 @@ impl ImageToolJFrame {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("okJButtonActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("okJButtonActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -404,9 +397,9 @@ impl ImageToolJFrame {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("openImageJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("openImageJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -421,7 +414,7 @@ impl ImageToolJFrame {
                 pub fn compare(&mut self, mut file1: Option<Rc<RefCell<File>>>, mut file2: Option<Rc<RefCell<File>>>) -> i32 {
                     let mut fileNameIndexValue1: i32 = { let java_arguments = (jcall!(file1).getName(),); self.extractIndexNumberIfAnyFromFileName(java_arguments.0) };
                     let mut fileNameIndexValue2: i32 = { let java_arguments = (jcall!(file2).getName(),); self.extractIndexNumberIfAnyFromFileName(java_arguments.0) };
-                    return fileNameIndexValue1 - fileNameIndexValue2;
+                    return Some(fileNameIndexValue1 - fileNameIndexValue2);
                 }
                 
 
@@ -431,16 +424,16 @@ impl ImageToolJFrame {
                         let mut start: i32 = name.rfind('_').map(|index| index as i32).unwrap_or(-1) + 1;
                         let mut end: i32 = name.rfind('.').map(|index| index as i32).unwrap_or(-1);
                         let mut number: String = name[(start) as usize..(end) as usize].to_string();
-                        i = number.clone().parse::<i32>().unwrap();
+                        i = { let java_value = (number.clone().parse::<i32>().unwrap()).clone(); java_value };
                     })) {
                         Ok(_) => {}
                         Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                         i = 0;
                         }
                     }
-                    return i.clone();
+                    return Some(i.clone());
                 }
 */);
             let mut bufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>> = vec![None; ((files.len() as i32)) as usize];
@@ -458,9 +451,9 @@ impl ImageToolJFrame {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onFiles"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onFiles"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -477,9 +470,9 @@ impl ImageToolJFrame {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("analyzeJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("analyzeJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -492,13 +485,13 @@ impl ImageToolJFrame {
             jcall!(self.jPanel1).removeAll();
             jcall!(self.jPanel1).add(spriteImageJPanel.clone());
             jcall!(self.jPanel1).updateUI();
-            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = spriteImageJPanel.clone() };
+            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = spriteImageJPanel.clone().map(|reference| reference as Rc<RefCell<dyn ImageProcessorInputCompositeInterface>>) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generateRotationSpriteJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generateRotationSpriteJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -511,13 +504,13 @@ impl ImageToolJFrame {
             jcall!(self.jPanel1).removeAll();
             jcall!(self.jPanel1).add(imageJPanel.clone());
             jcall!(self.jPanel1).updateUI();
-            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = imageJPanel.clone() };
+            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = imageJPanel.clone().map(|reference| reference as Rc<RefCell<dyn ImageProcessorInputCompositeInterface>>) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generateRotationMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generateRotationMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -530,13 +523,13 @@ impl ImageToolJFrame {
             jcall!(self.jPanel1).removeAll();
             jcall!(self.jPanel1).add(rotationImageJPanel.clone());
             jcall!(self.jPanel1).updateUI();
-            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = rotationImageJPanel.clone() };
+            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = rotationImageJPanel.clone().map(|reference| reference as Rc<RefCell<dyn ImageProcessorInputCompositeInterface>>) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generateRotationMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generateRotationMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -544,18 +537,18 @@ impl ImageToolJFrame {
 
     pub fn scaleImagesJMenuItemActionPerformed(&mut self, mut evt: Option<Rc<RefCell<ActionEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("scaleImagesJMenuItemActionPerformed"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("scaleImagesJMenuItemActionPerformed"));
             let mut resizeImageJPanel: Option<Rc<RefCell<ResizeImageJPanel>>> = ResizeImageJPanel::new(self.imageProcessorInput.clone());
             jcall!(self.jPanel1).removeAll();
             jcall!(self.jPanel1).add(resizeImageJPanel.clone());
             jcall!(self.jPanel1).updateUI();
-            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = resizeImageJPanel.clone() };
+            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = resizeImageJPanel.clone().map(|reference| reference as Rc<RefCell<dyn ImageProcessorInputCompositeInterface>>) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("scaleImagesJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("scaleImagesJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -563,18 +556,18 @@ impl ImageToolJFrame {
 
     pub fn createIconsJMenuItemActionPerformed(&mut self, mut evt: Option<Rc<RefCell<ActionEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("createIconsJMenuItemActionPerformed"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("createIconsJMenuItemActionPerformed"));
             let mut createIconImagesJPanel: Option<Rc<RefCell<CreateIconImagesJPanel>>> = CreateIconImagesJPanel::new(self.imageProcessorInput.clone());
             jcall!(self.jPanel1).removeAll();
             jcall!(self.jPanel1).add(createIconImagesJPanel.clone());
             jcall!(self.jPanel1).updateUI();
-            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = createIconImagesJPanel.clone() };
+            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = createIconImagesJPanel.clone().map(|reference| reference as Rc<RefCell<dyn ImageProcessorInputCompositeInterface>>) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("scaleImagesJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("scaleImagesJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -582,18 +575,18 @@ impl ImageToolJFrame {
 
     pub fn canvasImagesJMenuItemActionPerformed(&mut self, mut evt: Option<Rc<RefCell<ActionEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("canvasImagesJMenuItemActionPerformed"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("canvasImagesJMenuItemActionPerformed"));
             let mut resizeImageJPanel: Option<Rc<RefCell<CanvasImageJPanel>>> = CanvasImageJPanel::new(self.imageProcessorInput.clone());
             jcall!(self.jPanel1).removeAll();
             jcall!(self.jPanel1).add(resizeImageJPanel.clone());
             jcall!(self.jPanel1).updateUI();
-            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = resizeImageJPanel.clone() };
+            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = resizeImageJPanel.clone().map(|reference| reference as Rc<RefCell<dyn ImageProcessorInputCompositeInterface>>) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("scaleImagesJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("scaleImagesJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -606,13 +599,13 @@ impl ImageToolJFrame {
             jcall!(self.jPanel1).removeAll();
             jcall!(self.jPanel1).add(spriteImageJPanel.clone());
             jcall!(self.jPanel1).updateUI();
-            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = spriteImageJPanel.clone() };
+            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = spriteImageJPanel.clone().map(|reference| reference as Rc<RefCell<dyn ImageProcessorInputCompositeInterface>>) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generateMirrorSpriteJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generateMirrorSpriteJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -625,13 +618,13 @@ impl ImageToolJFrame {
             jcall!(self.jPanel1).removeAll();
             jcall!(self.jPanel1).add(mirrorImageJPanel.clone());
             jcall!(self.jPanel1).updateUI();
-            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = mirrorImageJPanel.clone() };
+            unsafe { *ImageToolJFrame_imageProcessorInputCompositeInterface = mirrorImageJPanel.clone().map(|reference| reference as Rc<RefCell<dyn ImageProcessorInputCompositeInterface>>) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generateMirrorJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generateMirrorJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -639,12 +632,12 @@ impl ImageToolJFrame {
 
     pub fn getColorRangeInterface(&mut self) -> Option<Rc<RefCell<dyn ColorRangeInterface>>> {
         let mut colorRangeInterface: Option<Rc<RefCell<dyn ColorRangeInterface>>> = (ColorRange::new()).clone() /* as ColorRangeInterface */;
-        jcall!(colorRangeInterface).setMinRed(((Some((jcall!(self.getMinRedJTextField()).getText()) as i32)).unwrap() as i32));
-        jcall!(colorRangeInterface).setMaxRed(((Some((jcall!(self.getMaxRedJTextField()).getText()) as i32)).unwrap() as i32));
-        jcall!(colorRangeInterface).setMinGreen(((Some((jcall!(self.getMinGreenJTextField()).getText()) as i32)).unwrap() as i32));
-        jcall!(colorRangeInterface).setMaxGreen(((Some((jcall!(self.getMaxGreenJTextField()).getText()) as i32)).unwrap() as i32));
-        jcall!(colorRangeInterface).setMinBlue(((Some((jcall!(self.getMinBlueJTextField()).getText()) as i32)).unwrap() as i32));
-        jcall!(colorRangeInterface).setMaxBlue(((Some((jcall!(self.getMaxBlueJTextField()).getText()) as i32)).unwrap() as i32));
+        jcall!(colorRangeInterface).setMinRed({ let java_argument = ((Some(({ let java_argument = jcall!(self.getMinRedJTextField()).getText(); java_argument }) as i32)).unwrap() as i32); java_argument });
+        jcall!(colorRangeInterface).setMaxRed({ let java_argument = ((Some(({ let java_argument = jcall!(self.getMaxRedJTextField()).getText(); java_argument }) as i32)).unwrap() as i32); java_argument });
+        jcall!(colorRangeInterface).setMinGreen({ let java_argument = ((Some(({ let java_argument = jcall!(self.getMinGreenJTextField()).getText(); java_argument }) as i32)).unwrap() as i32); java_argument });
+        jcall!(colorRangeInterface).setMaxGreen({ let java_argument = ((Some(({ let java_argument = jcall!(self.getMaxGreenJTextField()).getText(); java_argument }) as i32)).unwrap() as i32); java_argument });
+        jcall!(colorRangeInterface).setMinBlue({ let java_argument = ((Some(({ let java_argument = jcall!(self.getMinBlueJTextField()).getText(); java_argument }) as i32)).unwrap() as i32); java_argument });
+        jcall!(colorRangeInterface).setMaxBlue({ let java_argument = ((Some(({ let java_argument = jcall!(self.getMaxBlueJTextField()).getText(); java_argument }) as i32)).unwrap() as i32); java_argument });
         return colorRangeInterface.clone();
     }
     

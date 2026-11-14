@@ -27,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait ValidatorBaseInterface {
+pub trait ValidatorBaseInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn isValid(&mut self) -> Option<bool>;
@@ -36,12 +36,10 @@ pub trait ValidatorBaseInterface {
     fn validationInfo(&mut self) -> String;
     
 
-    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>;
+    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>;
     
 
     fn toList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

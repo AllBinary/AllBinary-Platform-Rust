@@ -33,6 +33,10 @@ pub struct FilePathData {
 thread_local! { pub static FilePathData_instance: Option<Rc<RefCell<FilePathData>>> = FilePathData::new(); }
 
 impl FilePathData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<FilePathData>>> {

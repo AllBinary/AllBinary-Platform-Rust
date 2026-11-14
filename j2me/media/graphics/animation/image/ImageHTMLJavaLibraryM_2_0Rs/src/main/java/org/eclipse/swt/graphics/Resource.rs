@@ -19,6 +19,10 @@ pub struct Resource {
 
 impl Resource {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -38,7 +42,7 @@ impl Resource {
         return false;
     }
 }
-pub trait ResourceDyn {
+pub trait ResourceDyn: std::any::Any {
     fn as_Resource(&self) -> &Resource;
     fn as_Resource_mut(&mut self) -> &mut Resource;
     fn dispose(&mut self) { Resource::dispose(self.as_Resource_mut()) }

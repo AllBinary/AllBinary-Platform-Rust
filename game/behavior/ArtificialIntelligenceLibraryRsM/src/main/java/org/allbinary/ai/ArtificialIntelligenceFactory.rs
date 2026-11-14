@@ -17,6 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::ArtificialIntelligenceFactoryInterface::ArtificialIntelligenceFactoryInterface;
 use super::ArtificialIntelligence::ArtificialIntelligence;
 
@@ -35,6 +37,10 @@ impl ArtificialIntelligenceFactoryInterface for ArtificialIntelligenceFactory {
 }
 
 impl ArtificialIntelligenceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

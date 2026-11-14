@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::graphics::PointFactory::PointFactory;
 use crate::org::allbinary::graphics::Rectangle::Rectangle;
@@ -47,6 +47,10 @@ thread_local! { pub static MyFormUtil_instance: Option<Rc<RefCell<MyFormUtil>>> 
 
 impl MyFormUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,
@@ -69,18 +73,18 @@ impl MyFormUtil {
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
         let mut displayInfo: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
-        let mut isOpenGL: bool = jcall!(features).isDefault(jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
+        let mut isOpenGL: bool = jcall!(features).isDefault({ let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
         let mut TOTAL_CHAR_WIDTH: i32 = (if jcall!(SWTJOGLProcessor::getInstance()).isJOGL() && isOpenGL { 2 } else { 3 });
         let mut width: i32 = MyFontProcessor::defaultStringWidth(font.clone(), TOTAL_CHAR_WIDTH.clone());
         let mut pointFactory: Option<Rc<RefCell<PointFactory>>> = PointFactory::getInstance();
         if jcall!(displayInfo).getLastHeight() < 320 {
-            self.popupMenuRectangle = Rectangle::new(jcall!(pointFactory).createXY(0, 25), width.clone(), (jcall!(font).getHeight() * 4) + 2);
+            self.popupMenuRectangle = { let java_value = (Rectangle::new(jcall!(pointFactory).createXY(0, 25), width.clone(), (jcall!(font).getHeight() * 4) + 2)).clone(); java_value };
         } else {
-            self.popupMenuRectangle = Rectangle::new(jcall!(pointFactory).createXY(0, jcall!(displayInfo).getLastHalfHeight() - 70), width.clone(), (jcall!(font).getHeight() * 5).clone());
+            self.popupMenuRectangle = { let java_value = (Rectangle::new(jcall!(pointFactory).createXY(0, jcall!(displayInfo).getLastHalfHeight() - 70), width.clone(), (jcall!(font).getHeight() * 5).clone())).clone(); java_value };
         }
     }
     

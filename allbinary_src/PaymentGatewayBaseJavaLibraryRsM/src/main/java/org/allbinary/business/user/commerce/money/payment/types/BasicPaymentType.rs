@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::user::commerce::money::payment::gateway::PaymentGatewayData::PaymentGatewayData;
@@ -28,6 +27,7 @@ use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::io::path::AbPathData::AbPathData;
 use crate::org::allbinary::logic::string::regex::replace::Replace::Replace;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -82,13 +82,13 @@ impl BasicPaymentType {
     
 
     pub fn init(&mut self, mut paymentMethod: String) {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
         let mut UNDERSCORE: String = String::from("_");
-        jcall!(hashMap).put(jcall!(CommonSeps::getInstance()).SPACE.clone(), UNDERSCORE.clone());
-        jcall!(hashMap).put(jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(), UNDERSCORE.clone());
-        jcall!(hashMap).put(String::from("-"), UNDERSCORE.clone());
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()), crate::java_into_object(UNDERSCORE.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(); java_field }.clone()), crate::java_into_object(UNDERSCORE.clone()));
+        jcall!(hashMap).put(crate::java_into_object(String::from("-")), crate::java_into_object(UNDERSCORE.clone()));
         let mut replace: Option<Rc<RefCell<Replace>>> = Replace::new1(hashMap.clone());
-        self.name = jcall!(replace).all(paymentMethod.clone());
+        self.name = { let java_value = (jcall!(replace).all(paymentMethod.clone())).clone(); java_value };
         self.value = paymentMethod.clone();
         jcall!(BasicPaymentTypeUtil::BasicPaymentTypeUtil::getInstance()).add(None /* Java this: a &mut self method has no Rc of itself */);
     }
@@ -123,22 +123,22 @@ impl BasicPaymentType {
     
 
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return self.getName();
+        return crate::java_into_object(self.getName());
     }
     
 
     pub fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         jcall!(vector).add(crate::java_into_object(self.name.clone()));
         jcall!(vector).add(crate::java_into_object(self.value.clone()));
         return vector.clone();
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(jcall!(crate::org::allbinary::business::user::commerce::money::payment::gateway::PaymentGatewayData::PaymentGatewayData_NAME.with(Clone::clone)).toString(), self.name.clone());
-        jcall!(hashMap).put(jcall!(crate::org::allbinary::business::user::commerce::money::payment::gateway::PaymentGatewayData::PaymentGatewayData_VALUE.with(Clone::clone)).toString(), self.value.clone());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object(jcall!(crate::org::allbinary::business::user::commerce::money::payment::gateway::PaymentGatewayData::PaymentGatewayData_NAME.with(Clone::clone)).toString()), crate::java_into_object(self.name.clone()));
+        jcall!(hashMap).put(crate::java_into_object(jcall!(crate::org::allbinary::business::user::commerce::money::payment::gateway::PaymentGatewayData::PaymentGatewayData_VALUE.with(Clone::clone)).toString()), crate::java_into_object(self.value.clone()));
         return hashMap.clone();
     }
     

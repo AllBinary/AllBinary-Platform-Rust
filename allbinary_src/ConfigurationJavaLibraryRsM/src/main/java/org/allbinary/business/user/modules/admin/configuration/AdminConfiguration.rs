@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
 use crate::org::allbinary::business::context::configuration::ContextConfiguration::ContextConfiguration;
 use crate::org::allbinary::business::context::configuration::ContextConfigurationData::ContextConfigurationData;
@@ -30,6 +29,7 @@ use crate::org::allbinary::logic::communication::http::request::RequestParams::R
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::control::crypt::file::CryptFileWriter::CryptFileWriter;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::AdminConfigurationInterface::AdminConfigurationInterface;
 
 // Borrows the object of a Java reference
@@ -52,6 +52,10 @@ impl AdminConfigurationInterface for AdminConfiguration {
 }
 
 impl AdminConfiguration {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -62,8 +66,8 @@ impl AdminConfiguration {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
-        this.contextConfigurationInterface = jcall!(ContextConfigurationInterfaceFactory::getInstance()).getInstance1(AdminConfigurationData_CONTEXTNAME.with(Clone::clone).clone());
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
+        this.contextConfigurationInterface = { let java_value = (jcall!(ContextConfigurationInterfaceFactory::getInstance()).getInstance1(AdminConfigurationData_CONTEXTNAME.with(Clone::clone).clone())).clone(); java_value };
         this
     }
 
@@ -80,7 +84,7 @@ impl AdminConfiguration {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         { let java_arguments = (jcall!(RequestParams::new1(request.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParamsDyn>>)).toHashMap(),); this.getFormData(java_arguments.0) };
         this
     }
@@ -90,7 +94,7 @@ impl AdminConfiguration {
     }
     
 
-    pub fn new_struct1(mut storeHashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1_HashMap(mut storeHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -98,19 +102,19 @@ impl AdminConfiguration {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this.getFormData(storeHashMap.clone());
         this
     }
 
-    pub fn new1(mut storeHashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(storeHashMap))))
+    pub fn new1_HashMap(mut storeHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_HashMap(storeHashMap))))
     }
     
 
     // throws Exception
-    pub fn getFormData(&mut self, mut storeHashMap: Option<Rc<RefCell<HashMap>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getFormData"));
+    pub fn getFormData(&mut self, mut storeHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getFormData"));
         self.setContextConfigurationInterface((ContextConfiguration::new1(storeHashMap.clone())).clone() /* as ContextConfigurationInterface */);
     }
     
@@ -119,7 +123,7 @@ impl AdminConfiguration {
     // synchronized
     pub fn write(&mut self) {
         let mut contextConfigurationDomDocumentMapping: Option<Rc<RefCell<ContextConfigurationDomDocumentMapping>>> = ContextConfigurationDomDocumentMapping::new(self.getContextConfigurationInterface());
-        let mut cryptFileWriter: Option<Rc<RefCell<CryptFileWriter>>> = CryptFileWriter::new(jcall!(ContextConfigurationData::getInstance()).UNCRYPTED_EXTENSION.clone(), jcall!(ContextConfigurationData::getInstance()).ENCRYPTED_EXTENSION.clone());
+        let mut cryptFileWriter: Option<Rc<RefCell<CryptFileWriter>>> = CryptFileWriter::new({ let java_field = jcall!(ContextConfigurationData::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field }.clone(), { let java_field = jcall!(ContextConfigurationData::getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone());
         jcall!(cryptFileWriter).write(ContextConfigurationPathUtil::getAbPath(AdminConfigurationData_CONTEXTNAME.with(Clone::clone).clone()), jcall!(contextConfigurationDomDocumentMapping).toXmlDoc());
     }
     

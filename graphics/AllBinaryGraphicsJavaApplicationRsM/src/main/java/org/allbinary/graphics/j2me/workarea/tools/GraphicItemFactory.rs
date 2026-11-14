@@ -16,13 +16,13 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::log::LOGGING::LOGGING;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::SelectionToolFactory::SelectionToolFactory;
 use super::GraphicsItemInterfaceFactoryInterface::GraphicsItemInterfaceFactoryInterface;
 use super::LinesGraphicItemFactory::LinesGraphicItemFactory;
@@ -36,13 +36,17 @@ macro_rules! jcall {
 }
 
 pub struct GraphicItemFactory {
-    pub graphicItems: Option<Rc<RefCell<HashMap>>>,
+    pub graphicItems: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
     pub DEFAULT: Option<Rc<RefCell<dyn GraphicsItemInterfaceFactoryInterface>>>,
 }
 
 thread_local! { pub static GraphicItemFactory_instance: Option<Rc<RefCell<GraphicItemFactory>>> = GraphicItemFactory::new(); }
 
 impl GraphicItemFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GraphicItemFactory>>> {
@@ -55,9 +59,9 @@ impl GraphicItemFactory {
             graphicItems: None,
             DEFAULT: None,
         };
-        this.DEFAULT = SelectionToolFactory::new().map(|reference| reference as Rc<RefCell<dyn GraphicsItemInterfaceFactoryInterface>>);
-        this.graphicItems = jcall!(StdUtil::getInstance()).createHashMap();
-        { let java_receiver = this.graphicItems.clone(); let java_arguments = (LinesGraphicItem::LinesGraphicItem::getStaticName(), LinesGraphicItemFactory::new(),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
+        this.DEFAULT = SelectionToolFactory::new().map(|reference| reference as Rc<RefCell<dyn GraphicsItemInterfaceFactoryInterface>>).map(|reference| reference as Rc<RefCell<dyn GraphicsItemInterfaceFactoryInterface>>);
+        this.graphicItems = { let java_value = (jcall!(StdUtil::getInstance()).createHashMap()).clone(); java_value };
+        { let java_receiver = this.graphicItems.clone(); let java_arguments = (crate::java_into_object(LinesGraphicItem::LinesGraphicItem::getStaticName()), crate::java_into_object(LinesGraphicItemFactory::new()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
         this
     }
 
@@ -68,7 +72,7 @@ impl GraphicItemFactory {
 
     // Java overloaded method: Rust needs a different name
     pub fn getInstance1(&mut self, mut itemName: String) -> Option<Rc<RefCell<dyn GraphicsItemInterfaceFactoryInterface>>> {
-        let mut graphicsItemInterfaceFactoryInterface: Option<Rc<RefCell<dyn GraphicsItemInterfaceFactoryInterface>>> = (jcall!(self.graphicItems).get(itemName.clone())).clone() /* as GraphicsItemInterfaceFactoryInterface */;
+        let mut graphicsItemInterfaceFactoryInterface: Option<Rc<RefCell<dyn GraphicsItemInterfaceFactoryInterface>>> = { let java_object = (jcall!(self.graphicItems).get(crate::java_into_object(itemName.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicsItemInterfaceFactoryInterface>>>>().expect("ClassCastException").clone()) };
         if graphicsItemInterfaceFactoryInterface.is_none() {
             graphicsItemInterfaceFactoryInterface = self.DEFAULT.clone();
         }
@@ -78,14 +82,14 @@ impl GraphicItemFactory {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn getInstance1(&mut self, mut graphicItemNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn getInstance1_BasicArrayList(&mut self, mut graphicItemNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         let mut numberOfItems: i32 = jcall!(graphicItemNodeList).size();
-        let mut graphicItemHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        let mut graphicItemHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
         if LOGGING::contains(crate::org::allbinary::log::LOGGING::LOGGING_MENUEVENT.with(Clone::clone).clone()) {
         }
         for index in (0..numberOfItems) {
             let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = GraphicItemBuilder::GraphicItemBuilder::getInstance((jcall!(graphicItemNodeList).get(index.clone())).clone() /* as Node */);
-            jcall!(graphicItemHashMap).put(jcall!(graphicItem).getTreeNode(), graphicItem.clone());
+            jcall!(graphicItemHashMap).put(crate::java_into_object(jcall!(graphicItem).getTreeNode()), crate::java_into_object(graphicItem.clone()));
         }
         return graphicItemHashMap.clone();
     }

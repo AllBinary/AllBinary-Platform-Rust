@@ -35,6 +35,7 @@ use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::system::security::crypt::DatabaseEncoder::DatabaseEncoder;
 use crate::org::allbinary::logic::system::security::crypt::WeakCrypt::WeakCrypt;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::DbConnectionInfo::DbConnectionInfo;
 
 // Borrows the object of a Java reference
@@ -74,7 +75,7 @@ impl DbInitInfo {
         this.directory = Directory::getInstance();
         this.httpData = HttpData::getInstance();
         this.GET_URL = String::from("getUrl");
-        this.PACKAGE = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).DBINITPATH.clone();
+        this.PACKAGE = { let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).DBINITPATH.clone(); java_field }.clone();
         this.hasRead = false;
         // super(...) is in the struct literal above
         this.initFileName = initFileName.clone();
@@ -93,8 +94,8 @@ impl DbInitInfo {
 
     pub fn getUrl(&mut self) -> String {
         let mut url: String = self.base.getUrl();
-        if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone())) {
-            PreLogUtil::put(format!("{}{}", jcall!(self.httpData).URL_LABEL, url), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.GET_URL.clone());
+        if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone(); java_field }.clone())) {
+            PreLogUtil::put(format!("{}{}", { let java_field = jcall!(self.httpData).URL_LABEL.clone(); java_field }, url), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.GET_URL.clone());
         }
         return url.clone();
     }
@@ -102,7 +103,7 @@ impl DbInitInfo {
 
     // throws Exception
     pub fn write(&mut self) {
-        let mut PATH: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(format!("{}{}", URLGLOBALS::getWebappPath(), self.PACKAGE), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        let mut PATH: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(format!("{}{}", URLGLOBALS::getWebappPath(), self.PACKAGE), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
         jcall!(self.directory).create(PATH.clone());
         let mut FILEABPATH: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(format!("{}{}", URLGLOBALS::getWebappPath(), self.PACKAGE), self.initFileName.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
@@ -110,13 +111,13 @@ impl DbInitInfo {
             jcall!(newFile).createNewFile();
             let mut dataOutputStream: Option<Rc<RefCell<AbDataOutputStream>>> = jcall!(DataOutputStreamFactory::getInstance()).getInstanceForAbFile(newFile.clone());
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                let mut cryptedJdbcDriver: Vec<i8> = jcall!(jcall!(WeakCrypt::new(1)).encrypt(self.getJdbcDriver())).getBytes();
-                let mut cryptedName: Vec<i8> = jcall!(jcall!(WeakCrypt::new(2)).encrypt(self.getName())).getBytes();
-                let mut cryptedUserName: Vec<i8> = jcall!(jcall!(WeakCrypt::new(3)).encrypt(self.getUserName())).getBytes();
-                let mut cryptedPassword: Vec<i8> = jcall!(jcall!(WeakCrypt::new(4)).encrypt(self.getPassword())).getBytes();
-                let mut cryptedSchema: Vec<i8> = jcall!(jcall!(WeakCrypt::new(5)).encrypt(self.getSchema())).getBytes();
-                let mut cryptedServer: Vec<i8> = jcall!(jcall!(WeakCrypt::new(6)).encrypt(self.getServer())).getBytes();
-                let mut cryptedPort: Vec<i8> = jcall!(jcall!(WeakCrypt::new(7)).encrypt(self.getPort())).getBytes();
+                let mut cryptedJdbcDriver: Vec<i8> = jcall!(WeakCrypt::new(1)).encrypt(self.getJdbcDriver()).bytes().map(|value| value as i8).collect::<Vec<i8>>();
+                let mut cryptedName: Vec<i8> = jcall!(WeakCrypt::new(2)).encrypt(self.getName()).bytes().map(|value| value as i8).collect::<Vec<i8>>();
+                let mut cryptedUserName: Vec<i8> = jcall!(WeakCrypt::new(3)).encrypt(self.getUserName()).bytes().map(|value| value as i8).collect::<Vec<i8>>();
+                let mut cryptedPassword: Vec<i8> = jcall!(WeakCrypt::new(4)).encrypt(self.getPassword()).bytes().map(|value| value as i8).collect::<Vec<i8>>();
+                let mut cryptedSchema: Vec<i8> = jcall!(WeakCrypt::new(5)).encrypt(self.getSchema()).bytes().map(|value| value as i8).collect::<Vec<i8>>();
+                let mut cryptedServer: Vec<i8> = jcall!(WeakCrypt::new(6)).encrypt(self.getServer()).bytes().map(|value| value as i8).collect::<Vec<i8>>();
+                let mut cryptedPort: Vec<i8> = jcall!(WeakCrypt::new(7)).encrypt(self.getPort()).bytes().map(|value| value as i8).collect::<Vec<i8>>();
                 jcall!(dataOutputStream).writeUTF(DatabaseEncoder::encode(cryptedJdbcDriver.clone()));
                 jcall!(dataOutputStream).writeUTF(DatabaseEncoder::encode(cryptedName.clone()));
                 jcall!(dataOutputStream).writeUTF(DatabaseEncoder::encode(cryptedUserName.clone()));
@@ -130,15 +131,15 @@ impl DbInitInfo {
                 Err(error) => std::panic::resume_unwind(error),
             }
             { // finally
-                jcall!(StreamUtil::getInstance()).close(dataOutputStream.clone());
+                jcall!(StreamUtil::getInstance()).close(dataOutputStream.clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::Closeable::Closeable>>));
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone())) {
-                PreLogUtil::putOE(format!("{}{}", String::from("Failed Write: "), jcall!(FILEABPATH).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("write"), e.clone());
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone(); java_field }.clone())) {
+                PreLogUtil::putOE(format!("{}{}", String::from("Failed Write: "), jcall!(FILEABPATH).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("write"), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -151,8 +152,8 @@ impl DbInitInfo {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut file: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFileFromAbPath(FILEABPATH.clone());
             if jcall!(file).isFile() {
-                let mut iFile: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStreamDyn>>> = AbFileInputStream::new1(file.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStreamDyn>>);
-                let mut iData: Option<Rc<RefCell<AbDataInputStream>>> = AbDataInputStream::new(iFile.clone());
+                let mut iFile: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStreamDyn>>> = AbFileInputStream::new(file.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStreamDyn>>);
+                let mut iData: Option<Rc<RefCell<AbDataInputStream>>> = AbDataInputStream::new(iFile.clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>));
                 match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                     let mut decryptedJdbcDriver: String = DatabaseEncoder::decode(jcall!(iData).readUTF()).clone();
                     let mut decryptedName: String = DatabaseEncoder::decode(jcall!(iData).readUTF()).clone();
@@ -174,21 +175,21 @@ impl DbInitInfo {
                     Err(error) => std::panic::resume_unwind(error),
                 }
                 { // finally
-                    jcall!(StreamUtil::getInstance()).close(iData.clone());
+                    jcall!(StreamUtil::getInstance()).close(iData.clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::Closeable::Closeable>>));
                 }
             } else {
                 self.hasRead = false;
-                if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone())) {
-                    PreLogUtil::put(format!("{}{}", String::from("Not a File - Failed Loading: "), jcall!(FILEABPATH).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).LOAD.clone());
+                if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone(); java_field }.clone())) {
+                    PreLogUtil::put(format!("{}{}", String::from("Not a File - Failed Loading: "), jcall!(FILEABPATH).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).LOAD.clone(); java_field }.clone());
                 }
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone())) {
-                PreLogUtil::putOE(format!("{}{}", String::from("Failed Loading: "), jcall!(FILEABPATH).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).LOAD.clone(), e.clone());
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone(); java_field }.clone())) {
+                PreLogUtil::putOE(format!("{}{}", String::from("Failed Loading: "), jcall!(FILEABPATH).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).LOAD.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -209,10 +210,10 @@ impl DbInitInfo {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone())) {
-                PreLogUtil::putOE(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateIfNeeded"), e.clone());
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone(); java_field }.clone())) {
+                PreLogUtil::putOE({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateIfNeeded"), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -221,7 +222,7 @@ impl DbInitInfo {
 
     pub fn getName(&mut self) -> String {
         self.updateIfNeeded();
-        if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone())) {
+        if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone(); java_field }.clone())) {
             PreLogUtil::put(format!("{}{}", String::from("Name: "), self.base.getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getName"));
         }
         return self.base.getName();
@@ -230,7 +231,7 @@ impl DbInitInfo {
 
     pub fn getUserName(&mut self) -> String {
         self.updateIfNeeded();
-        if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone())) {
+        if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone(); java_field }.clone())) {
             PreLogUtil::put(format!("{}{}", String::from("Name: "), self.base.getUserName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getUserName"));
         }
         return self.base.getUserName();
@@ -275,9 +276,6 @@ pub trait DbInitInfoDyn: crate::org::allbinary::business::init::db::DbConnection
     fn load(&mut self) { DbInitInfo::load(self.as_DbInitInfo_mut()) }
     fn setHasRead(&mut self, mut value: bool) { DbInitInfo::setHasRead(self.as_DbInitInfo_mut(), value) }
     fn updateIfNeeded(&mut self) { DbInitInfo::updateIfNeeded(self.as_DbInitInfo_mut()) }
-    fn write(&mut self) { DbInitInfo::write(self.as_DbInitInfo_mut()) }
-    fn load(&mut self) { DbInitInfo::load(self.as_DbInitInfo_mut()) }
-    fn setHasRead(&mut self, mut value: bool) { DbInitInfo::setHasRead(self.as_DbInitInfo_mut(), value) }
 }
 impl DbInitInfoDyn for DbInitInfo {
     fn as_DbInitInfo(&self) -> &DbInitInfo { self }

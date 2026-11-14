@@ -32,6 +32,10 @@ pub struct PointHelper {
 thread_local! { pub static PointHelper_two: f64 = 2.0; }
 
 impl PointHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

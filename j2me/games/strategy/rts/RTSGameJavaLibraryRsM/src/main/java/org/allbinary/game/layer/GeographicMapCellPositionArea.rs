@@ -26,6 +26,7 @@ use crate::org::allbinary::media::graphics::geography::map::CellPositionsUtil::C
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::util::BasicArrayListS::BasicArrayListS;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
+use crate::java::lang::Exception::*;
 use super::GeographicMapCellPositionAreaBase::GeographicMapCellPositionAreaBase;
 
 // Borrows the object of a Java reference
@@ -67,8 +68,8 @@ impl GeographicMapCellPositionArea {
         };
         this.cellPositionsUtil = CellPositionsUtil::getInstance();
         this.layerCoveringCellPositionsUtil = LayerCoveringCellPositionsUtil::getInstance();
-        this.reusableOccupyingGeographicMapCellPositionList = BasicArrayListS::new(4).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.reusableSurroundingGeographicMapCellPositionList = BasicArrayListS::new(12).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.reusableOccupyingGeographicMapCellPositionList = BasicArrayListS::new(4).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.reusableSurroundingGeographicMapCellPositionList = BasicArrayListS::new(12).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.surroundingCircularIndexUtil = CircularIndexUtil::createInstance(0);
         this.LIST = jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance();
         this.occupyingGeographicMapCellPositionList = this.LIST.clone();
@@ -84,8 +85,8 @@ impl GeographicMapCellPositionArea {
 
     // throws Exception
     pub fn update(&mut self, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>) {
-        self.occupyingGeographicMapCellPositionList = { let java_receiver = self.layerCoveringCellPositionsUtil.clone(); let java_arguments = (geographicMapInterface.clone(), self.layerInterface.clone(), jcall!(self.layerInterface).getXP(), jcall!(self.layerInterface).getYP(), self.reusableOccupyingGeographicMapCellPositionList.clone(),); let java_result = jcall!(java_receiver).getAllXY(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4); java_result };
-        self.surroundingGeographicMapCellPositionList = jcall!(self.cellPositionsUtil).getAllSurrounding(geographicMapInterface.clone(), self.occupyingGeographicMapCellPositionList.clone(), self.reusableSurroundingGeographicMapCellPositionList.clone());
+        self.occupyingGeographicMapCellPositionList = { let java_value = ({ let java_receiver = self.layerCoveringCellPositionsUtil.clone(); let java_arguments = (geographicMapInterface.clone(), self.layerInterface.clone(), jcall!(self.layerInterface).getXP(), jcall!(self.layerInterface).getYP(), self.reusableOccupyingGeographicMapCellPositionList.clone(),); let java_result = jcall!(java_receiver).getAllXY(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4); java_result }).clone(); java_value };
+        self.surroundingGeographicMapCellPositionList = { let java_value = (jcall!(self.cellPositionsUtil).getAllSurrounding(geographicMapInterface.clone(), self.occupyingGeographicMapCellPositionList.clone(), self.reusableSurroundingGeographicMapCellPositionList.clone())).clone(); java_value };
         { let java_receiver = self.surroundingCircularIndexUtil.clone(); let java_arguments = (jcall!(self.surroundingGeographicMapCellPositionList).size(),); jcall!(java_receiver).setSize(java_arguments.0); };
     }
     

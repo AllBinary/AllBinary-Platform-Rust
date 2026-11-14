@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
+use crate::java::lang::Exception::*;
 use super::InputMappingEventListenerInterface::InputMappingEventListenerInterface;
 use super::InputMappingEvent::InputMappingEvent;
 
@@ -40,6 +41,10 @@ impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventLis
 }
 
 impl NullInputMappingEventListener {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

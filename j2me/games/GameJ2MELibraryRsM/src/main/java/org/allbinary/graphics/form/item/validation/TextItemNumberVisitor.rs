@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::java::bool::BooleanFactory::BooleanFactory;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
 use crate::org::allbinary::logic::util::visitor::Visitor::Visitor;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -55,27 +56,27 @@ impl TextItemNumberVisitor {
     
 
     pub fn visit(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        let mut value: String = (anyType).clone() /* as String */;
+        let mut value: String = { let java_object = (anyType).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if (value.chars().count() as i32) < 2 {
             let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
             if jcall!(stringValidationUtil).isNumber(value.clone()) {
-                return jcall!(BooleanFactory::getInstance()).TRUE.clone();
+                return crate::java_into_object({ let java_field = jcall!(BooleanFactory::getInstance()).TRUE.clone(); java_field }.clone());
             } else {
                 match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                     jcall!(TextNotificationUtil::getInstance()).fireError(String::from("Numbers Only"));
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                     let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                    jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).VISIT.clone(), crate::java_into_object(e.clone()));
+                    jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).VISIT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
-                return jcall!(BooleanFactory::getInstance()).FALSE.clone();
+                return crate::java_into_object({ let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone());
             }
         } else {
-            return jcall!(BooleanFactory::getInstance()).FALSE.clone();
+            return crate::java_into_object({ let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone());
         }
     }
 }

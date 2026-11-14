@@ -26,6 +26,7 @@ use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -44,7 +45,7 @@ impl ArtificialIntelligenceInterface for SequenceAI {
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for SequenceAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl SequenceAI {
@@ -74,7 +75,7 @@ impl SequenceAI {
         self.index += 1;
         let mut artificialIntelligenceInterface: Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> = self.getSelectedArtificialIntelligenceInterface();
         if jcall!(artificialIntelligenceInterface).getId() == crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence_AI_ID.with(Clone::clone) {
-            let mut artificialIntelligenceTransitionInterface: Option<Rc<RefCell<dyn ArtificialIntelligenceTransitionInterface>>> = panic!("ClassCastException: a Rust dyn ArtificialIntelligenceInterface cannot be cast to dyn ArtificialIntelligenceTransitionInterface");
+            let mut artificialIntelligenceTransitionInterface: Option<Rc<RefCell<dyn ArtificialIntelligenceTransitionInterface>>> = (|| -> Option<Rc<RefCell<dyn ArtificialIntelligenceTransitionInterface>>> { panic!("ClassCastException: a Rust dyn ArtificialIntelligenceInterface cannot be cast to dyn ArtificialIntelligenceTransitionInterface") })();
             jcall!(artificialIntelligenceTransitionInterface).transition();
         }
     }
@@ -104,7 +105,7 @@ impl SequenceAI {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(self.base.toString());
         jcall!(stringBuffer).append(String::from(" Selected AI: "));
-        jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getSelectedArtificialIntelligenceInterface())));
+        jcall!(stringBuffer).append({ let java_argument = jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getSelectedArtificialIntelligenceInterface())); java_argument });
         return jcall!(stringBuffer).toString();
     }
 }

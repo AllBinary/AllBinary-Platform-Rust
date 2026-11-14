@@ -37,8 +37,11 @@ pub struct LurchRotationAI {
     pub rotationAnimationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>>,
 }
 
+impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntelligenceInterface for LurchRotationAI {
+    fn processAI(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { crate::org::allbinary::game::ag::ai::tactical::LurchAI::LurchAI::processAI(crate::org::allbinary::game::ag::ai::tactical::LurchAI::LurchAIDyn::as_LurchAI_mut(self), p1) }
+}
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for LurchRotationAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl LurchRotationAI {
@@ -50,8 +53,8 @@ impl LurchRotationAI {
             rotationAnimationInterface: None,
         };
         // super(...) is in the struct literal above
-        let mut rotationAnimationInterfaceCompositeInterface: Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> = (this.getOwnerLayerInterface()).clone() /* as RotationAnimationInterfaceCompositeInterface */;
-        this.rotationAnimationInterface = jcall!(rotationAnimationInterfaceCompositeInterface).getRotationAnimationInterface();
+        let mut rotationAnimationInterfaceCompositeInterface: Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to RotationAnimationInterfaceCompositeInterface") })();
+        this.rotationAnimationInterface = { let java_value = (jcall!(rotationAnimationInterfaceCompositeInterface).getRotationAnimationInterface()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>);
         this.update();
         this
     }
@@ -69,15 +72,15 @@ impl LurchRotationAI {
 
     pub fn update(&mut self) {
         if self.currentRelativeAngle == 0 {
-            let mut rotationAnimationInterface: Option<Rc<RefCell<dyn RotationAnimationInterface>>> = (self.rotationAnimationInterface).clone() /* as RotationAnimationInterface */;
-            let mut angleIncrementInfo: Option<Rc<RefCell<AngleIncrementInfo>>> = jcall!(jcall!(rotationAnimationInterface).as_IndexedAnimation_mut().getAngleInfoP()).getAngleIncrementInfo();
-            let mut rotationAnimationInterfaceCompositeInterface: Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> = (self.getOwnerLayerInterface()).clone() /* as RotationAnimationInterfaceCompositeInterface */;
-            jcall!(rotationAnimationInterfaceCompositeInterface).setFrame(((jcall!(angleIncrementInfo).RIGHT_FRAME).unwrap() as i32));
+            let mut rotationAnimationInterface: Option<Rc<RefCell<dyn RotationAnimationInterface>>> = (|| -> Option<Rc<RefCell<dyn RotationAnimationInterface>>> { panic!("ClassCastException: a Rust dyn IndexedAnimation cannot be cast to RotationAnimationInterface") })();
+            let mut angleIncrementInfo: Option<Rc<RefCell<AngleIncrementInfo>>> = jcall!(jcall!(rotationAnimationInterface).getAngleInfoP()).getAngleIncrementInfo();
+            let mut rotationAnimationInterfaceCompositeInterface: Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to RotationAnimationInterfaceCompositeInterface") })();
+            jcall!(rotationAnimationInterfaceCompositeInterface).setFrame((({ let java_field = jcall!(angleIncrementInfo).RIGHT_FRAME.clone(); java_field }).unwrap() as i32));
         } else if self.currentRelativeAngle == 180 {
-            let mut rotationAnimationInterface: Option<Rc<RefCell<dyn RotationAnimationInterface>>> = (self.rotationAnimationInterface).clone() /* as RotationAnimationInterface */;
-            let mut angleIncrementInfo: Option<Rc<RefCell<AngleIncrementInfo>>> = jcall!(jcall!(rotationAnimationInterface).as_IndexedAnimation_mut().getAngleInfoP()).getAngleIncrementInfo();
-            let mut rotationAnimationInterfaceCompositeInterface: Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> = (self.getOwnerLayerInterface()).clone() /* as RotationAnimationInterfaceCompositeInterface */;
-            jcall!(rotationAnimationInterfaceCompositeInterface).setFrame(((jcall!(angleIncrementInfo).LEFT_FRAME).unwrap() as i32));
+            let mut rotationAnimationInterface: Option<Rc<RefCell<dyn RotationAnimationInterface>>> = (|| -> Option<Rc<RefCell<dyn RotationAnimationInterface>>> { panic!("ClassCastException: a Rust dyn IndexedAnimation cannot be cast to RotationAnimationInterface") })();
+            let mut angleIncrementInfo: Option<Rc<RefCell<AngleIncrementInfo>>> = jcall!(jcall!(rotationAnimationInterface).getAngleInfoP()).getAngleIncrementInfo();
+            let mut rotationAnimationInterfaceCompositeInterface: Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to RotationAnimationInterfaceCompositeInterface") })();
+            jcall!(rotationAnimationInterfaceCompositeInterface).setFrame((({ let java_field = jcall!(angleIncrementInfo).LEFT_FRAME.clone(); java_field }).unwrap() as i32));
         }
     }
 }

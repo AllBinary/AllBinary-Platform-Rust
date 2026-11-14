@@ -42,6 +42,10 @@ thread_local! { pub static JvmStatisticsData_MAX_MEMORY_MEGABYTES: String = form
 thread_local! { pub static JvmStatisticsData_NUMBER_OF_THREADS: String = format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("NUMBER_OF_THREADS")); }
 
 impl JvmStatisticsData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

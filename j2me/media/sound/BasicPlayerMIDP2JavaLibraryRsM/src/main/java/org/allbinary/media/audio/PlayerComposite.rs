@@ -17,17 +17,19 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::media::Control::Control;
-// use crate::javax::microedition::media::Controllable::Controllable;
-// use crate::javax::microedition::media::MediaException::MediaException;
-// use crate::javax::microedition::media::Player::Player;
-// use crate::javax::microedition::media::PlayerListener::PlayerListener;
-// use crate::javax::microedition::media::TimeBase::TimeBase;
+use crate::javax::microedition::media::Control::Control;
+use crate::javax::microedition::media::Controllable::Controllable;
+use crate::javax::microedition::media::MediaException::MediaException;
+use crate::javax::microedition::media::Player::Player;
+use crate::javax::microedition::media::PlayerListener::PlayerListener;
+use crate::javax::microedition::media::TimeBase::TimeBase;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::time::GameTickTimeDelayHelper::GameTickTimeDelayHelper;
 use crate::org::allbinary::time::GameTickTimeDelayHelperFactory::GameTickTimeDelayHelperFactory;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::TimeBaseInterface::TimeBaseInterface;
 use super::Controllable2::Controllable2;
 
@@ -42,18 +44,40 @@ macro_rules! jcall {
 pub struct PlayerComposite {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
-    pub player: Option<Rc<RefCell<Player>>>,
+    pub player: Option<Rc<RefCell<dyn Player>>>,
     pub timeElapsedHelper: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>>,
     pub gameTickTimeDelayHelper: Option<Rc<RefCell<GameTickTimeDelayHelper>>>,
 }
 
-// impl Controllable for PlayerComposite with the methods of the trait
-// impl Player for PlayerComposite with the methods of the trait
+impl Controllable for PlayerComposite {
+    fn getControls(&mut self) -> Vec<Option<Rc<RefCell<dyn Control>>>> { Self::getControls(self) }
+    fn getControl(&mut self, mut controlType: String) -> Option<Rc<RefCell<dyn Control>>> { Self::getControl(self, controlType) }
+}
+impl Player for PlayerComposite {
+    fn realize(&mut self) { Self::realize(self) }
+    fn prefetch(&mut self) { Self::prefetch(self) }
+    fn start(&mut self) { Self::start(self) }
+    fn stop(&mut self) { Self::stop(self) }
+    fn deallocate(&mut self) { Self::deallocate(self) }
+    fn close(&mut self) { Self::close(self) }
+    fn setMediaTime(&mut self, mut now: i64) -> i64 { Self::setMediaTime(self, now) }
+    fn getMediaTime(&mut self) -> i64 { Self::getMediaTime(self) }
+    fn getState(&mut self) -> i32 { Self::getState(self) }
+    fn getDuration(&mut self) -> i64 { Self::getDuration(self) }
+    fn getContentType(&mut self) -> String { Self::getContentType(self) }
+    fn setLoopCount(&mut self, mut count: i32) { Self::setLoopCount(self, count) }
+    fn addPlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<dyn PlayerListener>>>) { Self::addPlayerListener(self, playerListener) }
+    fn removePlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<dyn PlayerListener>>>) { Self::removePlayerListener(self, playerListener) }
+}
 
 impl PlayerComposite {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct(mut player: Option<Rc<RefCell<Player>>>, mut repeatTime: i32) -> Self {
+    pub fn new_struct(mut player: Option<Rc<RefCell<dyn Player>>>, mut repeatTime: i32) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -70,18 +94,18 @@ impl PlayerComposite {
         this
     }
 
-    pub fn new(mut player: Option<Rc<RefCell<Player>>>, mut repeatTime: i32) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut player: Option<Rc<RefCell<dyn Player>>>, mut repeatTime: i32) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(player, repeatTime))))
     }
     
 
     // synchronized
-    pub fn addPlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<PlayerListener>>>) {
+    pub fn addPlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<dyn PlayerListener>>>) {
         jcall!(self.player).addPlayerListener(playerListener.clone());
     }
     
 
-    pub fn removePlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<PlayerListener>>>) {
+    pub fn removePlayerListener(&mut self, mut playerListener: Option<Rc<RefCell<dyn PlayerListener>>>) {
         jcall!(self.player).removePlayerListener(playerListener.clone());
     }
     
@@ -111,15 +135,15 @@ impl PlayerComposite {
     }
     
 
-    pub fn getTimeBase(&mut self) -> Option<Rc<RefCell<TimeBase>>> {
-        return jcall!(((self.player).clone() /* as TimeBaseInterface */)).getTimeBase();
+    pub fn getTimeBase(&mut self) -> Option<Rc<RefCell<dyn TimeBase>>> {
+        return jcall!(((|| -> Option<Rc<RefCell<dyn TimeBaseInterface>>> { panic!("ClassCastException: a Rust dyn Player cannot be cast to TimeBaseInterface") })())).getTimeBase();
     }
     
 
     // throws MediaException
     // synchronized
-    pub fn setTimeBase(&mut self, mut timeBase: Option<Rc<RefCell<TimeBase>>>) {
-        jcall!(((self.player).clone() /* as TimeBaseInterface */)).setTimeBase(timeBase.clone());
+    pub fn setTimeBase(&mut self, mut timeBase: Option<Rc<RefCell<dyn TimeBase>>>) {
+        jcall!(((|| -> Option<Rc<RefCell<dyn TimeBaseInterface>>> { panic!("ClassCastException: a Rust dyn Player cannot be cast to TimeBaseInterface") })())).setTimeBase(timeBase.clone());
     }
     
 
@@ -129,9 +153,9 @@ impl PlayerComposite {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("prefetch"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("prefetch"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -143,9 +167,9 @@ impl PlayerComposite {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("realize"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("realize"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -162,31 +186,32 @@ impl PlayerComposite {
     
 
     pub fn setMediaTime(&mut self, mut now: i64) -> i64 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            return jcall!(self.player).setMediaTime(now.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            return Some(jcall!(self.player).setMediaTime(now.clone()));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setMediaTime"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setMediaTime"), crate::java_into_object(e.clone()));
             return ((-1) as i64);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn start(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            if jcall!(self.timeElapsedHelper).isTime(jcall!(self.gameTickTimeDelayHelper).startTime.clone()) {
+            if jcall!(self.timeElapsedHelper).isTime({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone()) {
                 jcall!(self.player).start();
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).START_METHOD_NAME.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).START_METHOD_NAME.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -198,31 +223,31 @@ impl PlayerComposite {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("stop"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("stop"), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
-    pub fn getControl(&mut self, mut controlType: String) -> Option<Rc<RefCell<Control>>> {
+    pub fn getControl(&mut self, mut controlType: String) -> Option<Rc<RefCell<dyn Control>>> {
         return jcall!(self.player).getControl(controlType.clone());
     }
     
 
-    pub fn getControls(&mut self) -> Vec<Option<Rc<RefCell<Control>>>> {
+    pub fn getControls(&mut self) -> Vec<Option<Rc<RefCell<dyn Control>>>> {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     
 
     pub fn setVolume(&mut self, mut leftVolume: i32, mut rightVolume: i32) {
-        let mut controllable2: Option<Rc<RefCell<dyn Controllable2>>> = ((self.player).clone() /* as Controllable2 */);
+        let mut controllable2: Option<Rc<RefCell<dyn Controllable2>>> = ((|| -> Option<Rc<RefCell<dyn Controllable2>>> { panic!("ClassCastException: a Rust dyn Player cannot be cast to Controllable2") })());
         jcall!(controllable2).setVolume(leftVolume.clone(), rightVolume.clone());
     }
     
 
-    pub fn getPlayerP(&mut self) -> Option<Rc<RefCell<Player>>> {
+    pub fn getPlayerP(&mut self) -> Option<Rc<RefCell<dyn Player>>> {
         return self.player.clone();
     }
 }

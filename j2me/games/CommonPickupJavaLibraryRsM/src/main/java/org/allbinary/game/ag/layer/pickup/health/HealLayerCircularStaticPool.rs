@@ -22,6 +22,7 @@ use crate::org::allbinary::game::health::HealthInterfaceCompositeInterface::Heal
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerCircularPool::AllBinaryLayerCircularPool;
 use crate::org::allbinary::layer::AllBinaryLayerFactoryInterface::AllBinaryLayerFactoryInterface;
+use crate::java::lang::Exception::*;
 use super::HealLayer::HealLayer;
 
 // Borrows the object of a Java reference
@@ -43,7 +44,7 @@ impl HealLayerCircularStaticPool {
         let mut this = Self {
             base: AllBinaryLayerCircularPool::new_struct(),
         };
-        this.base.initAllBinaryLayerCircularPool(allbinaryLayerFactoryInterface.clone(), total.clone());
+        { let java_arguments = (allbinaryLayerFactoryInterface.clone(), total.clone(),); this.base.initAllBinaryLayerCircularPool(java_arguments.0, java_arguments.1) };
         this
     }
 
@@ -55,8 +56,8 @@ impl HealLayerCircularStaticPool {
     // throws Exception
     pub fn visit(&mut self, mut sourceLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) {
         let mut healLayer: Option<Rc<RefCell<HealLayer>>> = { let java_object = (self.getNextInstance()).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<HealLayer>>>>().expect("ClassCastException").clone()) };
-        let mut healthInterfaceCompositeInterface: Option<Rc<RefCell<dyn HealthInterfaceCompositeInterface>>> = (sourceLayerInterface).clone() /* as HealthInterfaceCompositeInterface */;
-        let mut healthInterface: Option<Rc<RefCell<dyn HealthInterface>>> = jcall!(healthInterfaceCompositeInterface).getHealthInterface();
+        let mut healthInterfaceCompositeInterface: Option<Rc<RefCell<dyn HealthInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn HealthInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to HealthInterfaceCompositeInterface") })();
+        let mut healthInterface: Option<Rc<RefCell<dyn HealthInterface>>> = jcall!(healthInterfaceCompositeInterface).getHealthInterface().map(|reference| reference as Rc<RefCell<dyn HealthInterface>>);
         jcall!(healLayer).visit(healthInterface.clone());
     }
 }

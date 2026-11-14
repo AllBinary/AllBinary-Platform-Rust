@@ -46,8 +46,8 @@ impl HtmlValueInput {
         this.VALUE = String::from("VALUE");
         // super(...) is in the struct literal above
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        this.value = jcall!(stringUtil).EMPTY_STRING.clone();
-        this.addAttribute(this.VALUE.clone(), value.clone());
+        this.value = { let java_value = ({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }).clone(); java_value }.clone();
+        { let java_arguments = (this.VALUE.clone(), value.clone(),); this.addAttribute(java_arguments.0, java_arguments.1) };
         this
     }
 

@@ -35,6 +35,10 @@ thread_local! { pub static UrlGlobalsData_TESTINGHTMLPATH: String = String::from
 thread_local! { pub static UrlGlobalsData_MAINPATH: String = String::from("URLGLOBALS_MAINPATH"); }
 
 impl UrlGlobalsData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

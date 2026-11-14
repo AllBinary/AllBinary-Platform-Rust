@@ -57,7 +57,7 @@ impl IntArrayUtil {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn toString(mut array: Vec<Vec<i32>>) -> String {
+    pub fn toString_intArrayArray(mut array: Vec<Vec<i32>>) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         for index in (0..(array.len() as i32)) {
             jcall!(stringBuffer).append(String::from("{"));
@@ -77,7 +77,7 @@ impl IntArrayUtil {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn toString(mut array: Vec<Vec<Vec<i32>>>) -> String {
+    pub fn toString_intArrayArrayArray(mut array: Vec<Vec<Vec<i32>>>) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         for index in (0..(array.len() as i32)) {
             jcall!(stringBuffer).append(String::from("{"));

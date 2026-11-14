@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::io::file::directory::SubDirectory::SubDirector
 use crate::org::allbinary::logic::io::file::filter::VisitorFileFilter::VisitorFileFilter;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,6 +40,10 @@ pub struct FileListFetcher {
 thread_local! { pub static FileListFetcher_instance: Option<Rc<RefCell<FileListFetcher>>> = FileListFetcher::new(); }
 
 impl FileListFetcher {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -59,146 +64,153 @@ impl FileListFetcher {
     
 
     pub fn getFiles(&mut self, mut path: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut files: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_receiver = self.subDirectory.clone(); let java_arguments = (AbFile::AbFile::createAbFile(path.clone()),); let java_result = jcall!(java_receiver).search(java_arguments.0); java_result };
-            return files.clone();
+            return Some(files.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             eprintln!("{:?}", e);
             println!("{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Error: "), e), String::from("\nMsg: ")), e.to_string()));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }
         return None;
     }
     
 
     // Java overloaded method: Rust needs a different name
     pub fn getFiles2(&mut self, mut path: String, mut includeExtensions: Vec<String>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut includeExtensionBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut includeExtensionBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
             let mut size: i32 = (includeExtensions.len() as i32).clone();
             for index in (0..size) {
                 jcall!(includeExtensionBasicArrayList).add(crate::java_into_object(includeExtensions[(index) as usize].clone()));
             }
-            let mut visitorFileFilter: Option<Rc<RefCell<VisitorFileFilter>>> = VisitorFileFilter::new(DirectoryOrIncludeFileExtensionBooleanFileVisitor::new1(includeExtensionBasicArrayList.clone()));
+            let mut visitorFileFilter: Option<Rc<RefCell<VisitorFileFilter>>> = VisitorFileFilter::new(DirectoryOrIncludeFileExtensionBooleanFileVisitor::new1(includeExtensionBasicArrayList.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::VisitorInterface::VisitorInterface>>));
             let mut files: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_receiver = self.subDirectory.clone(); let java_arguments = (visitorFileFilter.clone(), AbFile::AbFile::createAbFile(path.clone()),); let java_result = jcall!(java_receiver).search2(java_arguments.0, java_arguments.1); java_result };
-            return files.clone();
+            return Some(files.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             eprintln!("{:?}", e);
             println!("{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Error: "), e), String::from("\nMsg: ")), e.to_string()));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }
         return None;
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn getFiles2(&mut self, mut path: String, mut includeExtension: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut includeExtensionBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+    pub fn getFiles2_String_String(&mut self, mut path: String, mut includeExtension: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut includeExtensionBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
             jcall!(includeExtensionBasicArrayList).add(crate::java_into_object(includeExtension.clone()));
-            let mut visitorFileFilter: Option<Rc<RefCell<VisitorFileFilter>>> = VisitorFileFilter::new(DirectoryOrIncludeFileExtensionBooleanFileVisitor::new1(includeExtensionBasicArrayList.clone()));
+            let mut visitorFileFilter: Option<Rc<RefCell<VisitorFileFilter>>> = VisitorFileFilter::new(DirectoryOrIncludeFileExtensionBooleanFileVisitor::new1(includeExtensionBasicArrayList.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::VisitorInterface::VisitorInterface>>));
             let mut files: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_receiver = self.subDirectory.clone(); let java_arguments = (visitorFileFilter.clone(), AbFile::AbFile::createAbFile(path.clone()),); let java_result = jcall!(java_receiver).search2(java_arguments.0, java_arguments.1); java_result };
-            return files.clone();
+            return Some(files.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             eprintln!("{:?}", e);
             println!("{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Error: "), e), String::from("\nMsg: ")), e.to_string()));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }
         return None;
     }
     
 
     // Java overloaded method: Rust needs a different name
     pub fn getFiles3(&mut self, mut path: String, mut pathIncludes: String, mut includeExtension: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut includeExtensionBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut includeExtensionBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
             jcall!(includeExtensionBasicArrayList).add(crate::java_into_object(includeExtension.clone()));
-            let mut visitorFileFilter: Option<Rc<RefCell<VisitorFileFilter>>> = VisitorFileFilter::new(DirectoryOrIncludeFileExtensionBooleanFileVisitor::new2(includeExtensionBasicArrayList.clone(), pathIncludes.clone()));
+            let mut visitorFileFilter: Option<Rc<RefCell<VisitorFileFilter>>> = VisitorFileFilter::new(DirectoryOrIncludeFileExtensionBooleanFileVisitor::new2(includeExtensionBasicArrayList.clone(), pathIncludes.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::VisitorInterface::VisitorInterface>>));
             let mut files: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_receiver = self.subDirectory.clone(); let java_arguments = (visitorFileFilter.clone(), AbFile::AbFile::createAbFile(path.clone()),); let java_result = jcall!(java_receiver).search2(java_arguments.0, java_arguments.1); java_result };
-            return files.clone();
+            return Some(files.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             eprintln!("{:?}", e);
             println!("{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Error: "), e), String::from("\nMsg: ")), e.to_string()));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }
         return None;
     }
     
 
     pub fn getTrackedFiles(&mut self, mut path: String, mut includeExtensions: Vec<String>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut includeExtensionBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut includeExtensionBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
             let mut size: i32 = (includeExtensions.len() as i32).clone();
             for index in (0..size) {
                 jcall!(includeExtensionBasicArrayList).add(crate::java_into_object(includeExtensions[(index) as usize].clone()));
             }
-            let mut visitorFileFilter: Option<Rc<RefCell<VisitorFileFilter>>> = VisitorFileFilter::new(DirectoryOrIncludeFileExtensionAndTrackedBooleanFileVisitor::new1(includeExtensionBasicArrayList.clone()));
+            let mut visitorFileFilter: Option<Rc<RefCell<VisitorFileFilter>>> = VisitorFileFilter::new(DirectoryOrIncludeFileExtensionAndTrackedBooleanFileVisitor::new1(includeExtensionBasicArrayList.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::VisitorInterface::VisitorInterface>>));
             let mut files: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_receiver = self.subDirectory.clone(); let java_arguments = (visitorFileFilter.clone(), AbFile::AbFile::createAbFile(path.clone()),); let java_result = jcall!(java_receiver).search2(java_arguments.0, java_arguments.1); java_result };
-            return files.clone();
+            return Some(files.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             eprintln!("{:?}", e);
             println!("{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Error: "), e), String::from("\nMsg: ")), e.to_string()));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }
         return None;
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn getTrackedFiles(&mut self, mut path: String, mut includeExtension: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut includeExtensionBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+    pub fn getTrackedFiles_String_String(&mut self, mut path: String, mut includeExtension: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut includeExtensionBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
             jcall!(includeExtensionBasicArrayList).add(crate::java_into_object(includeExtension.clone()));
-            let mut visitorFileFilter: Option<Rc<RefCell<VisitorFileFilter>>> = VisitorFileFilter::new(DirectoryOrIncludeFileExtensionAndTrackedBooleanFileVisitor::new1(includeExtensionBasicArrayList.clone()));
+            let mut visitorFileFilter: Option<Rc<RefCell<VisitorFileFilter>>> = VisitorFileFilter::new(DirectoryOrIncludeFileExtensionAndTrackedBooleanFileVisitor::new1(includeExtensionBasicArrayList.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::VisitorInterface::VisitorInterface>>));
             let mut files: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_receiver = self.subDirectory.clone(); let java_arguments = (visitorFileFilter.clone(), AbFile::AbFile::createAbFile(path.clone()),); let java_result = jcall!(java_receiver).search2(java_arguments.0, java_arguments.1); java_result };
-            return files.clone();
+            return Some(files.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             eprintln!("{:?}", e);
             println!("{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Error: "), e), String::from("\nMsg: ")), e.to_string()));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }
         return None;
     }
     
 
     pub fn getDirectories(&mut self, mut path: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut visitorFileFilter: Option<Rc<RefCell<VisitorFileFilter>>> = VisitorFileFilter::new(DirectoryBooleanFileVisitor::new());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut visitorFileFilter: Option<Rc<RefCell<VisitorFileFilter>>> = VisitorFileFilter::new(DirectoryBooleanFileVisitor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::VisitorInterface::VisitorInterface>>));
             let mut files: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_receiver = self.subDirectory.clone(); let java_arguments = (visitorFileFilter.clone(), AbFile::AbFile::createAbFile(path.clone()),); let java_result = jcall!(java_receiver).search2(java_arguments.0, java_arguments.1); java_result };
-            return files.clone();
+            return Some(files.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             eprintln!("{:?}", e);
             println!("{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Error: "), e), String::from("\nMsg: ")), e.to_string()));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }
         return None;
     }
 }

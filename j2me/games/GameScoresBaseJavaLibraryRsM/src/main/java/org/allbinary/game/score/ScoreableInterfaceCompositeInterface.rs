@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait ScoreableInterfaceCompositeInterface {
+pub trait ScoreableInterfaceCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getScoreableInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::score::Scoreable::ScoreableDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

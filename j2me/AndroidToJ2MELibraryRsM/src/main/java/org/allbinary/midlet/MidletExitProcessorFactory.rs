@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::midlet::MIDlet::MIDlet;
+use crate::javax::microedition::midlet::MIDlet::MIDlet;
 use crate::org::allbinary::AppletUtil::AppletUtil;
 use crate::org::allbinary::J2MEUtil::J2MEUtil;
 use crate::org::allbinary::canvas::Processor::Processor;
@@ -37,6 +37,10 @@ thread_local! { pub static MidletExitProcessorFactory_instance: Option<Rc<RefCel
 
 impl MidletExitProcessorFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -53,11 +57,11 @@ impl MidletExitProcessorFactory {
     }
     
 
-    pub fn getExitInstance(&mut self, mut midlet: Option<Rc<RefCell<MIDlet>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>> {
-        if AppletUtil::isAppletLoader(midlet.clone()) || J2MEUtil::isJ2ME() {
+    pub fn getExitInstance(&mut self, mut midlet: Option<Rc<RefCell<dyn crate::javax::microedition::midlet::MIDlet::MIDletDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>> {
+        if AppletUtil::isAppletLoader(crate::java_into_object(midlet.clone())) || J2MEUtil::isJ2ME() {
             return Processor::getInstance();
         } else {
-            return MidletExitProcessor::new(midlet.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
+            return MidletExitProcessor::new(midlet.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
         }
     }
 }

@@ -32,6 +32,10 @@ pub struct IntegerDimension {
 
 
 impl IntegerDimension {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut width: i32, mut height: i32) -> Self {

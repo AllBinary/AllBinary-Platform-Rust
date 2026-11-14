@@ -25,6 +25,7 @@ use crate::org::allbinary::business::context::modules::storefront::StoreFrontDat
 use crate::org::allbinary::logic::communication::http::request::AbResponseHandler::AbResponseHandler;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
+use crate::java::lang::Exception::*;
 use super::TableTag::TableTag;
 
 // Borrows the object of a Java reference
@@ -51,8 +52,8 @@ impl QuoteRequestTag {
             storeName: String::new(),
         };
         this.logUtil = LogUtil::getInstance();
-        this.setTagHelperFactory(QuoteHelperFactory::new());
-        this.setTagRequestHelperFactory(QuoteRequestHelperFactory::new());
+        this.setTagHelperFactory(QuoteHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(QuoteRequestHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 
@@ -68,45 +69,47 @@ impl QuoteRequestTag {
 
     // throws LicensingException
     pub fn email(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(QuoteHelperFactory::new()).getInstance(self.getPropertiesHashMap(), self.base.pageContext.clone());
             let mut helperClass: &'static str = std::any::type_name_of_val(&anyType);
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(helperClass).getMethod(String::from("email"), None);
             let mut result: String = (jcall!(method).invoke(anyType.clone(), None)).clone() /* as String */;
-            return result.clone();
+            return Some(result.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws JspTagException
     pub fn doStartTag(&mut self) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            if self.getCommand().is_some() {
-                jcall!(self.getPropertiesHashMap()).put(jcall!(StoreFrontData::getInstance()).NAME.clone(), self.storeName.clone());
-                if jcall!(self.getCommand()).compareTo(String::from("EMAIL")) == 0 {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            if true {
+                jcall!(self.getPropertiesHashMap()).put(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(self.storeName.clone()));
+                if { let java_value = (self.getCommand().cmp(&String::from("EMAIL")) as i32); java_value } == 0 {
                     self.email();
-                    return self.EVAL_BODY_INCLUDE.clone();
+                    return Some(self.EVAL_BODY_INCLUDE.clone());
                 } else {
-                    return self.base.doStartTag();
+                    return Some(self.base.doStartTag());
                 }
             }
-            return SKIP_BODY.clone();
+            return Some(SKIP_BODY.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             AbResponseHandler::sendJspTagLicensingRedirect(self.pageContext.clone(), e.clone());
             return SKIP_BODY.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for QuoteRequestTag {

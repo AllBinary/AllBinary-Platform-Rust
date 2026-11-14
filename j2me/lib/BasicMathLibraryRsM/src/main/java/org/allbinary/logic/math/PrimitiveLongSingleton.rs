@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,6 +38,10 @@ pub struct PrimitiveLongSingleton {
 thread_local! { pub static PrimitiveLongSingleton_instance: Option<Rc<RefCell<PrimitiveLongSingleton>>> = PrimitiveLongSingleton::new(); }
 
 impl PrimitiveLongSingleton {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

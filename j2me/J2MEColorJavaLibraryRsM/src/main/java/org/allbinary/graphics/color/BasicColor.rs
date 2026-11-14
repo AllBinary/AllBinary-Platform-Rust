@@ -64,11 +64,11 @@ impl BasicColor {
         this.name = name.clone();
         let mut tempValue: i32 = 0;
         let mut basicColorUtil: Option<Rc<RefCell<BasicColorUtil>>> = BasicColorUtil::getInstance();
-        if jcall!(basicColorUtil).isAlpha {
-            if jcall!(basicColorUtil).ffOpaque {
+        if { let java_field = jcall!(basicColorUtil).isAlpha.clone(); java_field } {
+            if { let java_field = jcall!(basicColorUtil).ffOpaque.clone(); java_field } {
                 tempValue = alphaValue | value;
             } else {
-                tempValue = 0x00000000_u32 as i32 | value;
+                tempValue = 0x00000000 | value;
             }
         } else {
             tempValue = value.clone();

@@ -37,6 +37,10 @@ pub struct LicenseInitInfo {
 
 
 impl LicenseInitInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -44,8 +48,8 @@ impl LicenseInitInfo {
             id: String::new(),
             serverVector: None,
         };
-        this.id = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.serverVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.id = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.serverVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -60,7 +64,7 @@ impl LicenseInitInfo {
     
 
     pub fn getServer(&mut self, mut index: i32) -> String {
-        return (jcall!(self.serverVector).as_BasicArrayList_mut().objectArray[(index) as usize]).clone() /* as String */;
+        return { let java_object = (jcall!(self.serverVector).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
     }
     
 

@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::Sound::Sound;
 
 // Borrows the object of a Java reference
@@ -26,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait SoundsFactoryInterface {
+pub trait SoundsFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn init(&mut self);
@@ -40,8 +41,6 @@ pub trait SoundsFactoryInterface {
     
 
     fn isInitialized(&mut self) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

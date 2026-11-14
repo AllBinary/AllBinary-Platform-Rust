@@ -50,10 +50,10 @@ impl IncludeFileExtensionsBooleanFileVisitor {
     
 
     pub fn visit(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<bool> {
-        if jcall!(self.getFilterStringBasicArrayList()).size() == 0 {
+        if { let java_value = jcall!(self.getFilterStringBasicArrayList()).size(); java_value } == 0 {
             return false;
         }
-        return self.base.visit(file.clone());
+        return { let java_arguments = (file.clone(),); self.base.visit_AbFile(java_arguments.0) };
     }
     
 

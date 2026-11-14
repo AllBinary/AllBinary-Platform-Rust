@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayer;
+use crate::java::lang::Exception::*;
 use super::CollidableBaseBehavior::CollidableBaseBehavior;
 use super::CollidableInterfaceCompositeInterface::CollidableInterfaceCompositeInterface;
 
@@ -32,8 +33,14 @@ pub struct CollidableNeverCollideBehavior {
     pub base: CollidableBaseBehavior,
 }
 
+impl crate::org::allbinary::game::collision::CollidableInterface::CollidableInterface for CollidableNeverCollideBehavior {
+    fn isCollidable(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) -> bool { crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehavior::isCollidable(crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn::as_CollidableBaseBehavior_mut(self), p1) }
+    fn isCollision(&mut self, mut ownerLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, mut allbinaryCollidableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) -> bool { Self::isCollision(self, ownerLayer, allbinaryCollidableLayer) }
+    fn collide(&mut self, mut ownerLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, mut allbinaryCollidableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) { Self::collide(self, ownerLayer, allbinaryCollidableLayer) }
+    fn getCollisionTypeWith(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> Option<Rc<RefCell<crate::org::allbinary::game::collision::CollisionType::CollisionType>>> { crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehavior::getCollisionTypeWith(crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn::as_CollidableBaseBehavior_mut(self), p1) }
+}
 impl crate::org::allbinary::layer::NamedInterface::NamedInterface for CollidableNeverCollideBehavior {
-    fn getName(&mut self) -> String { self.base.getName() }
+    fn getName(&mut self) -> String { crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehavior::getName(crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn::as_CollidableBaseBehavior_mut(self)) }
 }
 
 impl CollidableNeverCollideBehavior {

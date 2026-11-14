@@ -74,12 +74,12 @@ impl ImageComparisonSearch {
         this.setBufferedImages(vec![None; (2) as usize]);
         this.getBufferedImages()[(0) as usize] = bufferedImage.clone();
         this.getBufferedImages()[(1) as usize] = bufferedImage2.clone();
-        this.imageHeight = jcall!(bufferedImage).getHeight();
-        this.imageWidth = jcall!(bufferedImage).getWidth();
+        this.imageHeight = { let java_value = (jcall!(bufferedImage).getHeight()).clone(); java_value };
+        this.imageWidth = { let java_value = (jcall!(bufferedImage).getWidth()).clone(); java_value };
         if !match (&jcall!(bufferedImage).getHeight(), &jcall!(bufferedImage2).getHeight()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             this.isSameHeight = false;
             if this.imageHeight > jcall!(bufferedImage2).getHeight() {
-                this.imageHeight = jcall!(bufferedImage2).getHeight();
+                this.imageHeight = { let java_value = (jcall!(bufferedImage2).getHeight()).clone(); java_value };
             }
         } else {
             this.isSameHeight = true;
@@ -87,16 +87,16 @@ impl ImageComparisonSearch {
         if !match (&jcall!(bufferedImage).getWidth(), &jcall!(bufferedImage2).getWidth()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             this.isSameWidth = false;
             if this.imageWidth > jcall!(bufferedImage2).getWidth() {
-                this.imageWidth = jcall!(bufferedImage2).getWidth();
+                this.imageWidth = { let java_value = (jcall!(bufferedImage2).getWidth()).clone(); java_value };
             }
         } else {
             this.isSameWidth = true;
         }
         if !this.isSameWidth || !this.isSameHeight {
             let mut imageUtil: Option<Rc<RefCell<ImageUtil>>> = ImageUtil::getInstance();
-            jcall!(this.logUtil).putF(String::from("Images were not the same size? Most likely a resolution change."), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
-            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("1: "), jcall!(imageUtil).toString(bufferedImage.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("2: "), jcall!(imageUtil).toString(bufferedImage2.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            jcall!(this.logUtil).putF(String::from("Images were not the same size? Most likely a resolution change."), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
+            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("1: "), jcall!(imageUtil).toString(bufferedImage.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("2: "), jcall!(imageUtil).toString(bufferedImage2.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         this
     }
@@ -125,7 +125,7 @@ impl ImageComparisonSearch {
     
 
     pub fn toString(&mut self) -> String {
-        return format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("ImageComparisonInfo: "), String::from(" Number Of Matching Pixels: ")), self.pixelsThatMatch), String::from("\nNumber Of Non-Matching Pixels: ")), jcall!(self.getNonMatchingPixelVector()).size()), String::from("\nNumber Of Pixels Ignored: ")), self.pixelsIgnored), String::from("\nMatching Percentage: ")), self.getMatchingPercent());
+        return format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("ImageComparisonInfo: "), String::from(" Number Of Matching Pixels: ")), self.pixelsThatMatch), String::from("\nNumber Of Non-Matching Pixels: ")), { let java_value = jcall!(self.getNonMatchingPixelVector()).size(); java_value }), String::from("\nNumber Of Pixels Ignored: ")), self.pixelsIgnored), String::from("\nMatching Percentage: ")), self.getMatchingPercent());
     }
     
 

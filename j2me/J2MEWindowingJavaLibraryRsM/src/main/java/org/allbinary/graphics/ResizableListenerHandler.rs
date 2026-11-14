@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::ResizableListenerInterface::ResizableListenerInterface;
 
 // Borrows the object of a Java reference
@@ -32,6 +33,10 @@ pub struct ResizableListenerHandler {
 thread_local! { pub static ResizableListenerHandler_instance: Option<Rc<RefCell<ResizableListenerHandler>>> = ResizableListenerHandler::new(); }
 
 impl ResizableListenerHandler {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

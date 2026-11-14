@@ -25,6 +25,10 @@ pub struct PlacedLayerFactory {
 thread_local! { pub static PlacedLayerFactory_instance: Option<Rc<RefCell<PlacedLayerFactory>>> = PlacedLayerFactory::new(); }
 
 impl PlacedLayerFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -32,7 +36,7 @@ impl PlacedLayerFactory {
             list: None,
             basicArrayListUtil: None,
         };
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.basicArrayListUtil = BasicArrayListUtil::getInstance();
         this
     }
@@ -58,7 +62,7 @@ impl PlacedLayerFactory {
     
 
     pub fn getRandomInstance(&mut self) -> Option<Rc<RefCell<dyn AllBinaryLayerFactoryInterface>>> {
-        return { let java_object = jcall!(self.basicArrayListUtil).getRandom(self.list.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn AllBinaryLayerFactoryInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.basicArrayListUtil).getRandom(self.list.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn AllBinaryLayerFactoryInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 

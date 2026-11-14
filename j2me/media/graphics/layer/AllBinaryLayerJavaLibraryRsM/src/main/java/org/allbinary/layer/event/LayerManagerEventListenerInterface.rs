@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
+use crate::java::lang::Exception::*;
 use super::LayerManagerEvent::LayerManagerEvent;
 
 // Borrows the object of a Java reference

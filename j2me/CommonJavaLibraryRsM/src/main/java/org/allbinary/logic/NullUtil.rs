@@ -44,6 +44,10 @@ thread_local! { pub static NullUtil_instance: Option<Rc<RefCell<NullUtil>>> = Nu
 
 impl NullUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             NULL_OBJECT: None,

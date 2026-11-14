@@ -27,6 +27,10 @@ pub struct ViewSwapper {
 thread_local! { pub static ViewSwapper_NULL_VIEW_ARRAY: Vec<Option<Rc<RefCell<View>>>> = vec![None; (0) as usize]; }
 
 impl ViewSwapper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut activity: Option<Rc<RefCell<Activity>>>, mut rootViewId: i32) -> Self {

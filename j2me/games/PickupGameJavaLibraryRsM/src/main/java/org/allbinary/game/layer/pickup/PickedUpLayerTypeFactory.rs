@@ -44,6 +44,10 @@ thread_local! { pub static PickedUpLayerTypeFactory_instance: Option<Rc<RefCell<
 
 impl PickedUpLayerTypeFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             NONE: None,
@@ -57,7 +61,7 @@ impl PickedUpLayerTypeFactory {
             LIFE: None,
             POINTS: None,
         };
-        this.NONE = PickedUpLayerType::new(jcall!(StringUtil::getInstance()).NULL_STRING.clone());
+        this.NONE = PickedUpLayerType::new({ let java_field = jcall!(StringUtil::getInstance()).NULL_STRING.clone(); java_field }.clone());
         this.BEAM = PickedUpLayerType::new(String::from("BEAM"));
         this.MINE = PickedUpLayerType::new(String::from("MINE"));
         this.PROJECTILE = PickedUpLayerType::new(String::from("PROJECTILE"));

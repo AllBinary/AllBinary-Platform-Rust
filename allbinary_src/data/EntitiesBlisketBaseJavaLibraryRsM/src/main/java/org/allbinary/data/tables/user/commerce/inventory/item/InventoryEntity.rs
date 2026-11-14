@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontInterface::StoreFrontInterface;
@@ -33,6 +32,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::communication::sql::AbSqlBean::AbSqlBean;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
+use crate::java::lang::Exception::*;
 use super::InventoryEntityInterface::InventoryEntityInterface;
 
 // Borrows the object of a Java reference
@@ -56,7 +56,7 @@ impl InventoryEntity {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: AbSqlBean::new_struct(InventoryDbInitInfo::new()),
+            base: AbSqlBean::new_struct(InventoryDbInitInfo::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfoDyn>>)),
             logUtil: None,
             basicItemData: None,
             tableName: String::new(),
@@ -65,7 +65,7 @@ impl InventoryEntity {
         this.basicItemData = BasicItemData::getInstance();
         this.tableName = String::from("basicinventory");
         // super(...) is in the struct literal above
-        this.setTableName(this.tableName.clone());
+        { let java_arguments = (this.tableName.clone(),); this.setTableName(java_arguments.0) };
         this
     }
 
@@ -76,17 +76,17 @@ impl InventoryEntity {
 
     pub fn insert(&mut self, mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            self.base.insert(values.clone());
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).putF(jcall!(self.commonStrings).SUCCESS.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone());
+            { let java_arguments = (values.clone(),); self.base.insert(java_arguments.0) };
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).SUCCESS.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.base.INSERT.clone());
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).FAILURE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).FAILURE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.base.INSERT.clone(), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -95,17 +95,17 @@ impl InventoryEntity {
 
     pub fn delete(&mut self, mut value: String) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            self.base.deleteWhere2(jcall!(self.basicItemData).ID.clone(), value.clone());
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).putF(jcall!(self.commonStrings).SUCCESS.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).delete.clone());
+            { let java_arguments = ({ let java_field = jcall!(self.basicItemData).ID.clone(); java_field }.clone(), value.clone(),); self.base.deleteWhere2(java_arguments.0, java_arguments.1) };
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).SUCCESS.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).delete.clone(); java_field }.clone());
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).FAILURE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).delete.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).FAILURE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).delete.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -114,17 +114,17 @@ impl InventoryEntity {
 
     // throws Exception
     pub fn getItems(&mut self, mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
             { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Getting Items For: "), jcall!(storeFrontInterface).getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getItems"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
-        let mut itemVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        let mut keysAndValues: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        let mut itemHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.base.getRows(keysAndValues.clone());
+        let mut itemVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut keysAndValues: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        let mut itemHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_arguments = (keysAndValues.clone(),); self.base.getRows(java_arguments.0) };
         let mut size: i32 = jcall!(itemHashMapVector).size();
         for i in (0..size) {
-            let mut itemHashMap: Option<Rc<RefCell<HashMap>>> = (jcall!(itemHashMapVector).get(i.clone())).clone() /* as HashMap */;
+            let mut itemHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = { let java_object = (jcall!(itemHashMapVector).get(i.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>>().expect("ClassCastException").clone()) };
             if itemHashMap.is_some() {
-                let mut category: String = (jcall!(itemHashMap).get(jcall!(self.basicItemData).CATEGORY.clone())).clone() /* as String */;
+                let mut category: String = { let java_object = (jcall!(itemHashMap).get(crate::java_into_object({ let java_field = jcall!(self.basicItemData).CATEGORY.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
                 if !jcall!(StringValidationUtil::getInstance()).isEmpty(category.clone()) && category.starts_with(&jcall!(storeFrontInterface).getCategoryPath()) {
                     jcall!(itemVector).add(crate::java_into_object(BasicItem::new1(itemHashMap.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::item::BasicItem::BasicItemDyn>>)));
                 }
@@ -136,11 +136,11 @@ impl InventoryEntity {
 
     // throws MoneyException
     pub fn getItem(&mut self, mut id: String) -> Option<Rc<RefCell<dyn ItemInterface>>> {
-        let mut keysAndValues: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(keysAndValues).put(jcall!(self.basicItemData).ID.clone(), id.clone());
-        let mut itemHashMap: Option<Rc<RefCell<HashMap>>> = self.base.getRow(keysAndValues.clone());
+        let mut keysAndValues: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(keysAndValues).put(crate::java_into_object({ let java_field = jcall!(self.basicItemData).ID.clone(); java_field }.clone()), crate::java_into_object(id.clone()));
+        let mut itemHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = { let java_arguments = (keysAndValues.clone(),); self.base.getRow(java_arguments.0) };
         if itemHashMap.is_some() {
-            return BasicItem::new1(itemHashMap.clone()).map(|reference| reference as Rc<RefCell<dyn ItemInterface>>);
+            return BasicItem::new1(itemHashMap.clone()).map(|reference| reference as Rc<RefCell<dyn ItemInterface>>).map(|_java_reference| -> Rc<RefCell<dyn ItemInterface>> { panic!("ClassCastException: the Rust trait of BasicItem does not have ItemInterface as a base trait") });
         } else {
             return None;
         }
@@ -148,87 +148,87 @@ impl InventoryEntity {
     
 
     pub fn getWeight(&mut self, mut id: String) -> String {
-        return self.base.getField3(jcall!(self.basicItemData).ID.clone(), id.clone(), jcall!(self.basicItemData).WEIGHT.clone());
+        return { let java_arguments = ({ let java_field = jcall!(self.basicItemData).ID.clone(); java_field }.clone(), id.clone(), { let java_field = jcall!(self.basicItemData).WEIGHT.clone(); java_field }.clone(),); self.base.getField3(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
     
 
     pub fn createTableStatement(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(jcall!(self.sqlStrings).CREATE_TABLE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlStrings).CREATE_TABLE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.tableName.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlStrings).START.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).ID.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).NUMBER.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).INBASKETS.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).WEIGHT.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlStrings).START.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).ID.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).NUMBER.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).INBASKETS.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).WEIGHT.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from(" VARCHAR(20) NOT NULL,"));
-        jcall!(stringBuffer).append(jcall!(EntryData::getInstance()).ENABLE.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).NEWORUSED.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).SUMMARY.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).DISTRIBUTOR.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).IDUSEDBYDISTRIBUTOR.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).PRODUCEDBY.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).PRODUCTIONDATE.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).STARTPRODUCTIONDATE.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).DESCRIPTION.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).KEYWORDS.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).CATEGORY.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).TYPE.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).SMALLIMAGE.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).MEDIUMIMAGE.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).LARGEIMAGE.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(EntryData::getInstance()).LASTMODIFIED.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(EntryData::getInstance()).TIMECREATED.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).PRICE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(EntryData::getInstance()).ENABLE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).NEWORUSED.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).SUMMARY.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).DISTRIBUTOR.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).IDUSEDBYDISTRIBUTOR.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).PRODUCEDBY.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).PRODUCTIONDATE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).STARTPRODUCTIONDATE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).DESCRIPTION.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).KEYWORDS.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).CATEGORY.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).TYPE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).SMALLIMAGE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).MEDIUMIMAGE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).LARGEIMAGE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(EntryData::getInstance()).TIMECREATED.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).PRICE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from(" VARCHAR(20) NOT NULL,"));
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).COMMENT.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).CUSTOMS.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).DOWNLOADS.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).GROUPS.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).OPTIONS.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).PERMISSIONS.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).SPECIALS.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlStrings).PRIMARY_KEY.clone());
-        jcall!(stringBuffer).append(jcall!(self.basicItemData).ID.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlStrings).END.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).COMMENT.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).CUSTOMS.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).DOWNLOADS.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).GROUPS.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).OPTIONS.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).PERMISSIONS.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).SPECIALS.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlStrings).PRIMARY_KEY.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.basicItemData).ID.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlStrings).END.clone(); java_field }.clone());
         return jcall!(stringBuffer).toString();
     }
     
 
     pub fn createTable(&mut self) -> String {
-        return self.base.createTable(self.createTableStatement());
+        return { let java_arguments = (self.createTableStatement(),); self.base.createTable(java_arguments.0) };
     }
     
 
-    pub fn update(&mut self, mut updatedValues: Option<Rc<RefCell<HashMap>>>) {
-        self.base.updateWhere3(jcall!(self.basicItemData).ID.clone(), (jcall!(updatedValues).get(jcall!(self.basicItemData).ID.clone())).clone() /* as String */, updatedValues.clone());
+    pub fn update(&mut self, mut updatedValues: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
+        { let java_arguments = ({ let java_field = jcall!(self.basicItemData).ID.clone(); java_field }.clone(), { let java_object = (jcall!(updatedValues).get(crate::java_into_object({ let java_field = jcall!(self.basicItemData).ID.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, updatedValues.clone(),); self.base.updateWhere3(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
     
 

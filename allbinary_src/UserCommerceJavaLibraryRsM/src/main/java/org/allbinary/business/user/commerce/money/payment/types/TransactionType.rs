@@ -47,7 +47,7 @@ impl TransactionType {
     
 
     pub fn isEqual(&mut self, mut transactionType: Option<Rc<RefCell<TransactionType>>>) -> bool {
-        if (self.toString().cmp(&jcall!(transactionType).toString()) as i32) == 0 {
+        if { let java_value = (self.toString().cmp(&jcall!(transactionType).toString()) as i32); java_value } == 0 {
             return true;
         } else {
             return false;

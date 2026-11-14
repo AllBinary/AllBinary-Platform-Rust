@@ -19,6 +19,10 @@ pub struct V {
 
 impl V {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -34,7 +38,7 @@ impl V {
         return 0;
     }
 }
-pub trait VDyn {
+pub trait VDyn: std::any::Any {
     fn as_V(&self) -> &V;
     fn as_V_mut(&mut self) -> &mut V;
     fn getId(&mut self) -> i32 { V::getId(self.as_V_mut()) }

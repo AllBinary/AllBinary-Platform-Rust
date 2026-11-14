@@ -41,6 +41,10 @@ pub struct CompositeGroup {
 
 
 impl CompositeGroup {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut groupInterface: Option<Rc<RefCell<Group>>>) -> Self {
@@ -50,7 +54,7 @@ impl CompositeGroup {
             list: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.groupInterface = groupInterface.clone();
         this
     }
@@ -69,11 +73,11 @@ impl CompositeGroup {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
         let mut groupCommonFactory: Option<Rc<RefCell<GroupCommonFactory>>> = GroupCommonFactory::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(jcall!(groupCommonFactory).ADDING_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(groupCommonFactory).ADDING_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(groupInterface).toString());
-        jcall!(stringBuffer).append(jcall!(groupCommonFactory).TO_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(groupCommonFactory).TO_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.groupInterface.clone())));
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).ADD.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).ADD.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         jcall!(self.list).add(crate::java_into_object(groupInterface.clone()));
     }
     

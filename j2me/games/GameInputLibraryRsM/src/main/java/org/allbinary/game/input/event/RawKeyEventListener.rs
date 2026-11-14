@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait RawKeyEventListener {
+pub trait RawKeyEventListener: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn onEventRaw(&mut self, keyCode: i32, deviceId: i32, repeated: bool);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::media::image::ImageModifierUtil::ImageModifierUtil;
 use super::ModifierBaseProcessor::ModifierBaseProcessor;
 
@@ -53,7 +53,7 @@ impl AlphaProcessor {
     }
     
 
-    pub fn updateAlpha(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut imageToShow: Option<Rc<RefCell<Image>>>, mut index: i32, mut alpha: i32) {
+    pub fn updateAlpha(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageToShow: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut index: i32, mut alpha: i32) {
         jcall!(imageModifierUtil).setAlpha(originalImage.clone(), imageToShow.clone(), index.clone(), alpha.clone());
     }
 }
@@ -68,7 +68,7 @@ impl std::ops::DerefMut for AlphaProcessor {
 impl crate::org::allbinary::animation::image::ModifierBaseProcessor::ModifierBaseProcessorDyn for AlphaProcessor {
     fn as_ModifierBaseProcessor(&self) -> &crate::org::allbinary::animation::image::ModifierBaseProcessor::ModifierBaseProcessor { &self.base }
     fn as_ModifierBaseProcessor_mut(&mut self) -> &mut crate::org::allbinary::animation::image::ModifierBaseProcessor::ModifierBaseProcessor { &mut self.base }
-    fn updateAlpha(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut imageToShow: Option<Rc<RefCell<Image>>>, mut index: i32, mut alpha: i32) { Self::updateAlpha(self, imageModifierUtil, originalImage, imageToShow, index, alpha) }
+    fn updateAlpha(&mut self, mut imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageToShow: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut index: i32, mut alpha: i32) { Self::updateAlpha(self, imageModifierUtil, originalImage, imageToShow, index, alpha) }
 }
 
 

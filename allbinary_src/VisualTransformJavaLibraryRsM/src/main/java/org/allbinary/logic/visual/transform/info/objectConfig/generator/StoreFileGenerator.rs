@@ -16,11 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::io::ByteArrayInputStream::ByteArrayInputStream;
-// use crate::java::io::InputStream::InputStream;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::io::InputStream::InputStream;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::globals::URLGLOBALS::URLGLOBALS;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::communication::http::request::session::WeblisketSession::WeblisketSession;
@@ -40,6 +39,7 @@ use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterfac
 use crate::org::allbinary::logic::visual::transform::info::TransformInfosData::TransformInfosData;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::TransformInfoObjectConfigGenerator::TransformInfoObjectConfigGenerator;
 
 // Borrows the object of a Java reference
@@ -73,31 +73,31 @@ impl StoreFileGenerator {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpInterface");
+        let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (|| -> Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> { panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpInterface") })();
         let mut weblisketSession: Option<Rc<RefCell<WeblisketSession>>> = WeblisketSession::new2(jcall!(httpTransformInfoInterface).getPropertiesHashMap(), jcall!(httpTransformInfoInterface).getPageContext());
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(URLGLOBALS::getWebappPath());
         jcall!(stringBuffer).append(jcall!(weblisketSession).getStoreName());
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-        let mut abPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-        let mut fileName: String = (jcall!(jcall!(httpTransformInfoInterface).getPropertiesHashMap()).get(jcall!(InputOutputTypeData::getInstance()).FILE.clone())).clone() /* as String */;
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+        let mut abPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        let mut fileName: String = { let java_object = (jcall!(jcall!(httpTransformInfoInterface).getPropertiesHashMap()).get(crate::java_into_object({ let java_field = jcall!(InputOutputTypeData::getInstance()).FILE.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
         if jcall!(stringValidationUtil).isEmpty(fileName.clone()) {
-            let mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn TransformInfoHttpStoreInterface>>> = panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpStoreInterface");
-            fileName = jcall!(jcall!(transformInfoInterface).getName()).substring(jcall!(jcall!(transformInfoHttpStoreInterface).getStoreName()).length() + 1);
-            let mut outputMappingHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-            jcall!(outputMappingHashMap).put(jcall!(TransformInfosData::getInstance()).PREVIEW.clone(), String::from("Preview"));
-            jcall!(outputMappingHashMap).put(jcall!(TransformInfosData::getInstance()).SMALL_PREVIEW.clone(), String::from("SmallPreview"));
-            jcall!(outputMappingHashMap).put(jcall!(CommonSeps::getInstance()).SPACE.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone());
+            let mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn TransformInfoHttpStoreInterface>>> = (|| -> Option<Rc<RefCell<dyn TransformInfoHttpStoreInterface>>> { panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpStoreInterface") })();
+            fileName = { let java_value = (jcall!(transformInfoInterface).getName()[((jcall!(transformInfoHttpStoreInterface).getStoreName().chars().count() as i32) + 1) as usize..].to_string()).clone(); java_value };
+            let mut outputMappingHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+            jcall!(outputMappingHashMap).put(crate::java_into_object({ let java_field = jcall!(TransformInfosData::getInstance()).PREVIEW.clone(); java_field }.clone()), crate::java_into_object(String::from("Preview")));
+            jcall!(outputMappingHashMap).put(crate::java_into_object({ let java_field = jcall!(TransformInfosData::getInstance()).SMALL_PREVIEW.clone(); java_field }.clone()), crate::java_into_object(String::from("SmallPreview")));
+            jcall!(outputMappingHashMap).put(crate::java_into_object({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()));
             let mut replace: Option<Rc<RefCell<Replace>>> = Replace::new1(outputMappingHashMap.clone());
-            fileName = jcall!(replace).all(fileName.clone());
+            fileName = { let java_value = (jcall!(replace).all(fileName.clone())).clone(); java_value };
         }
         if jcall!(stringValidationUtil).isEmpty(fileName.clone()) {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("TransformInfoObjectConfigGenerator FileName Not Specified"))));
         }
-        let mut tempOutput: String = (jcall!(jcall!(httpTransformInfoInterface).getPropertiesHashMap()).get(jcall!(InputOutputTypeData::getInstance()).NAME.clone())).clone() /* as String */;
+        let mut tempOutput: String = { let java_object = (jcall!(jcall!(httpTransformInfoInterface).getPropertiesHashMap()).get(crate::java_into_object({ let java_field = jcall!(InputOutputTypeData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if jcall!(stringValidationUtil).isEmpty(tempOutput.clone()) {
-            tempOutput = jcall!(InputOutputTypeData::getInstance()).DEFAULT.clone();
+            tempOutput = { let java_value = ({ let java_field = jcall!(InputOutputTypeData::getInstance()).DEFAULT.clone(); java_field }).clone(); java_value }.clone();
         }
         this.output = tempOutput.clone();
         if jcall!(stringValidationUtil).isEmpty(this.output.clone()) {
@@ -105,13 +105,13 @@ impl StoreFileGenerator {
         }
         stringBuffer = StringMaker::new();
         jcall!(stringBuffer).append(fileName.clone());
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(); java_field }.clone());
         jcall!(stringBuffer).append(this.output.clone());
-        abPath = AbPath::new(jcall!(abPath).toString(), jcall!(stringBuffer).toString()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        abPath = { let java_value = (AbPath::new(jcall!(abPath).toString(), jcall!(stringBuffer).toString()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
         this.fileAbPath = abPath.clone();
-        this.file = AbFile::createAbFileFromAbPath(this.fileAbPath.clone());
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
-            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("File: "), jcall!(this.fileAbPath).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        this.file = { let java_value = (AbFile::createAbFileFromAbPath(this.fileAbPath.clone())).clone(); java_value };
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
+            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("File: "), jcall!(this.fileAbPath).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         this
     }
@@ -123,22 +123,22 @@ impl StoreFileGenerator {
 
     // throws Exception
     pub fn process(&mut self, mut input: String) -> String {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
-            jcall!(self.logUtil).putF(String::from("Processing"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
+            jcall!(self.logUtil).putF(String::from("Processing"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
         }
         if !jcall!(self.file).exists() {
             jcall!(self.file).createNewFile();
         }
         if jcall!(self.file).exists() {
-            let mut inputStream: Option<Rc<RefCell<InputStream>>> = ByteArrayInputStream::new(input.bytes().map(|value| value as i8).collect::<Vec<i8>>());
+            let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = crate::java::io::InputStream::InputStream::new1(input.bytes().map(|value| value as i8).collect::<Vec<i8>>()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>);
             jcall!(FileUtil::getInstance()).write(inputStream.clone(), self.file.clone());
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Could Not Create: "), jcall!(self.fileAbPath).toString()))));
         }
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
-            jcall!(self.logUtil).putF(String::from("Processed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
+            jcall!(self.logUtil).putF(String::from("Processed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
         }
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
 }
 impl std::ops::Deref for StoreFileGenerator {

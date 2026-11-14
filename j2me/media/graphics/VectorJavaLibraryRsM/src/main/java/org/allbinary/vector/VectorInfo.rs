@@ -34,6 +34,10 @@ pub struct VectorInfo {
 
 
 impl VectorInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut width: i32, mut height: i32, mut points: Vec<Vec<i32>>, mut totalFrames: i32) -> Self {

@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 
 // Borrows the object of a Java reference
@@ -29,18 +28,22 @@ macro_rules! jcall {
 }
 
 pub struct HtmlTag {
-    pub otherAttributes: Option<Rc<RefCell<HashMap>>>,
+    pub otherAttributes: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 
 impl HtmlTag {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
         let mut this = Self {
             otherAttributes: None,
         };
-        this.otherAttributes = jcall!(StdUtil::getInstance()).createHashMap();
+        this.otherAttributes = { let java_value = (jcall!(StdUtil::getInstance()).createHashMap()).clone(); java_value };
         this
     }
 
@@ -50,10 +53,10 @@ impl HtmlTag {
     
 
     pub fn addAttribute(&mut self, mut key: String, mut value: String) {
-        jcall!(self.otherAttributes).put(key.clone(), value.clone());
+        jcall!(self.otherAttributes).put(crate::java_into_object(key.clone()), crate::java_into_object(value.clone()));
     }
 }
-pub trait HtmlTagDyn {
+pub trait HtmlTagDyn: std::any::Any {
     fn as_HtmlTag(&self) -> &HtmlTag;
     fn as_HtmlTag_mut(&mut self) -> &mut HtmlTag;
     fn addAttribute(&mut self, mut key: String, mut value: String) { HtmlTag::addAttribute(self.as_HtmlTag_mut(), key, value) }

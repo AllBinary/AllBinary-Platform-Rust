@@ -37,6 +37,10 @@ pub struct LogUtil {
 thread_local! { pub static LogUtil_instance: Option<Rc<RefCell<LogUtil>>> = LogUtil::new(); }
 
 impl LogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogUtil>>> {
@@ -82,9 +86,9 @@ impl LogUtil {
 
     pub fn put(&mut self, mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {
         let mut className: String = self.LABEL.clone();
-        className = std::any::type_name_of_val(&anyType).to_string();
+        className = { let java_value = (std::any::type_name_of_val(&anyType).to_string()).clone(); java_value };
         let mut message: String = jcall!(self.logFormatUtil).get(className.clone(), functionName.clone(), specialMessage.clone(), crate::java_into_object(exception.clone()));
-        jcall!(jcall!(unsafe { android_util.clone() }).Log).i(self.LABEL.clone(), format!("{}{}", self.LOG_SUCCESS, message));
+        jcall!({ let java_field = jcall!(unsafe { android_util.clone() }).Log.clone(); java_field }).i(self.LABEL.clone(), format!("{}{}", self.LOG_SUCCESS, message));
     }
 }
 

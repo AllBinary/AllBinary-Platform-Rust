@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::java::util::List::List;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
@@ -28,6 +27,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
 use crate::org::apache::commons::fileupload::FileItem::FileItem;
 use crate::org::apache::commons::fileupload::FileUploadBase::InvalidContentTypeException::InvalidContentTypeException;
+use crate::java::lang::Exception::*;
 use super::RequestParams::RequestParams;
 
 // Borrows the object of a Java reference
@@ -65,7 +65,7 @@ impl MultipartRequestParams {
     }
     
 
-    pub fn new_struct1(mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
+    pub fn new_struct1_PageContext(mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
         let mut this = Self {
             base: RequestParams::new_struct(),
             logUtil: None,
@@ -78,8 +78,8 @@ impl MultipartRequestParams {
         this
     }
 
-    pub fn new1(mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(pageContext))))
+    pub fn new1_PageContext(mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_PageContext(pageContext))))
     }
     
 
@@ -90,10 +90,10 @@ impl MultipartRequestParams {
 
     pub fn processMultipartRequest(&mut self, mut request: Option<Rc<RefCell<HttpServletRequest>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut specialRequest: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
+            let mut specialRequest: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
             let mut multipartRequestList: Option<Rc<RefCell<dyn List>>> = jcall!(AbFileUploadFactory::getInstance()).getFileItemStreamList(request.clone());
             if multipartRequestList.is_some() {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).HTTPREQUEST.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).HTTPREQUEST.clone(); java_field }.clone()) {
                     { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("FileItem List Size: "), jcall!(multipartRequestList).size()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("processMultipartRequest()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
                 let mut fileItemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(multipartRequestList).toArray();
@@ -102,35 +102,35 @@ impl MultipartRequestParams {
                     let mut fileItem: Option<Rc<RefCell<FileItem>>> = (fileItemArray[(index) as usize]).clone() /* as FileItem */;
                     let mut name: String = jcall!(fileItem).getName();
                     if jcall!(StringValidationUtil::getInstance()).isEmpty(name.clone()) {
-                        jcall!(specialRequest).put(jcall!(fileItem).getFieldName(), jcall!(fileItem).getString());
+                        jcall!(specialRequest).put(crate::java_into_object(jcall!(fileItem).getFieldName()), crate::java_into_object(jcall!(fileItem).getString()));
                     } else {
-                        jcall!(specialRequest).put(jcall!(fileItem).getFieldName(), fileItem.clone());
+                        jcall!(specialRequest).put(crate::java_into_object(jcall!(fileItem).getFieldName()), crate::java_into_object(fileItem.clone()));
                     }
                 }
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).HTTPREQUEST.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).HTTPREQUEST.clone(); java_field }.clone()) {
                     { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Special Request Data: "), jcall!(specialRequest).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("processMultipartRequest()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
                 self.setSpecial();
-                self.setMap(specialRequest.clone());
+                self.setMap(specialRequest.clone().map(|reference| reference as Rc<RefCell<dyn crate::java::util::Map::Map>>));
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).HTTPREQUEST.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).HTTPREQUEST.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).putF(String::from("Using Normal RequestParams"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("processMultipartRequest()"));
             }
-            self.base.setMap(jcall!(request).getParameterMap());
+            { let java_arguments = (jcall!(request).getParameterMap(),); self.base.setMap(java_arguments.0) };
             }
         }
     }
     
 
     // throws Exception
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         if self.special {
-            return (self.getMap()).clone() /* as HashMap */;
+            return (self.getMap()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<HashMap>() }, "ClassCastException: not a HashMap"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<HashMap>) } });
         } else {
             return self.base.toHashMap();
         }
@@ -147,7 +147,7 @@ impl std::ops::DerefMut for MultipartRequestParams {
 impl crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParamsDyn for MultipartRequestParams {
     fn as_RequestParams(&self) -> &crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParams { &self.base }
     fn as_RequestParams_mut(&mut self) -> &mut crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParams { &mut self.base }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::toHashMap(self) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toHashMap(self) }
 }
 
 

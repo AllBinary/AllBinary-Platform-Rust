@@ -28,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait UserConfigurationInterface {
+pub trait UserConfigurationInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getUserEmailConfigurationInterface(&mut self) -> Option<Rc<RefCell<dyn UserEmailConfigurationInterface>>>;
@@ -47,8 +47,6 @@ pub trait UserConfigurationInterface {
     
 
     fn setTimeLastModified(&mut self, timeLastModified: Option<Rc<RefCell<TimeLastModified>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

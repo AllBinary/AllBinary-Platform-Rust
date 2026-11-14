@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::image::GameFeatureImageCacheFactory::GameFeatureImageCacheFactory;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
@@ -25,9 +25,8 @@ use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::HashtableUtil::HashtableUtil;
 use crate::org::microemu::device::playn::PlaynImage::PlaynImage;
+use crate::java::lang::Exception::*;
 use super::ImageCompleteUtil::ImageCompleteUtil;
-use super::core::core;
-use super::playn::playn;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,8 +38,8 @@ macro_rules! jcall {
 pub struct ImageWaitCompleteUtil {
     pub base: ImageCompleteUtil,
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
-    pub timeDelayHelper: Option<Rc<RefCell<TimeDelayHelper>>>,
-    pub allTimeDelayHelper: Option<Rc<RefCell<TimeDelayHelper>>>,
+    pub timeDelayHelper: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>>,
+    pub allTimeDelayHelper: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>>,
 }
 
 
@@ -55,8 +54,8 @@ impl ImageWaitCompleteUtil {
             allTimeDelayHelper: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.timeDelayHelper = TimeDelayHelper::new(18000);
-        this.allTimeDelayHelper = TimeDelayHelper::new(120000);
+        this.timeDelayHelper = TimeDelayHelper::new(18000).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
+        this.allTimeDelayHelper = TimeDelayHelper::new(120000).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
         this
     }
 
@@ -66,9 +65,9 @@ impl ImageWaitCompleteUtil {
     
 
     // throws Exception
-    pub fn waitForImage(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut name: String) {
+    pub fn waitForImage(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut name: String) {
         jcall!(self.timeDelayHelper).setStartTimeTNT();
-        self.waitForATime(image.clone(), name.clone(), self.timeDelayHelper.clone());
+        { let java_arguments = (image.clone(), name.clone(), self.timeDelayHelper.clone(),); self.waitForATime(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
     
 
@@ -81,16 +80,16 @@ impl ImageWaitCompleteUtil {
     
 
     // throws Exception
-    pub fn waitForATime(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut name: String, mut timeDelayHelper: Option<Rc<RefCell<TimeDelayHelper>>>) {
+    pub fn waitForATime(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut name: String, mut timeDelayHelper: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>>) {
         let mut playnImage: Option<Rc<RefCell<PlaynImage>>> = (image).clone() /* as PlaynImage */;
-        let mut playnCoreImage: Option<Rc<RefCell<Image>>> = (jcall!(playnImage).getImage()).clone() /* as Image */;
-        while !jcall!(playnCoreImage).isReady() || jcall!(playnCoreImage).width() + jcall!(playnCoreImage).height() <= 0 {
+        let mut playnCoreImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = (jcall!(playnImage).getImage()).clone();
+        while !jcall!(playnCoreImage).as_Image_mut().isReady() || jcall!(playnCoreImage).as_Image_mut().width() + jcall!(playnCoreImage).as_Image_mut().height() <= 0 {
             if jcall!(timeDelayHelper).isTimeTNT() {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("waitFor: Timeout Waiting or GameHtmlHasLoadedResourcesProcessor does not have this Image: "), name))));
             }
         }
-        if !jcall!(image).isReady() {
-            jcall!(image).init(jcall!(image).getImage());
+        if !jcall!(image).as_Image_mut().isReady() {
+            jcall!(image).as_Image_mut().init(jcall!(image).getImage());
         }
     }
     
@@ -98,12 +97,12 @@ impl ImageWaitCompleteUtil {
     // throws Exception
     pub fn waitForAll(&mut self) {
         jcall!(self.allTimeDelayHelper).setStartTimeTNT();
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(GameFeatureImageCacheFactory::getInstance()).getHashtableP();
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(GameFeatureImageCacheFactory::getInstance()).getHashtableP();
         let mut objectArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(HashtableUtil::getInstance()).getKeysAsArray(hashtable.clone());
         let mut size: i32 = (objectArray.len() as i32).clone();
         PreLogUtil::put(format!("{}{}", String::from("Image Total: "), size), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("waitForAll"));
         for index in (0..size) {
-            { let java_arguments = ((jcall!(hashtable).get(objectArray[(index) as usize].clone())).clone() /* as Image */, (objectArray[(index) as usize]).clone() /* as String */, self.allTimeDelayHelper.clone(),); self.waitForATime(java_arguments.0, java_arguments.1, java_arguments.2) };
+            { let java_arguments = ({ let java_object = (jcall!(hashtable).get(objectArray[(index) as usize].clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>().expect("ClassCastException").clone()) }, { let java_object = (objectArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, self.allTimeDelayHelper.clone(),); self.waitForATime(java_arguments.0, java_arguments.1, java_arguments.2) };
         }
     }
 }
@@ -118,7 +117,7 @@ impl std::ops::DerefMut for ImageWaitCompleteUtil {
 impl crate::org::allbinary::media::image::ImageCompleteUtil::ImageCompleteUtilDyn for ImageWaitCompleteUtil {
     fn as_ImageCompleteUtil(&self) -> &crate::org::allbinary::media::image::ImageCompleteUtil::ImageCompleteUtil { &self.base }
     fn as_ImageCompleteUtil_mut(&mut self) -> &mut crate::org::allbinary::media::image::ImageCompleteUtil::ImageCompleteUtil { &mut self.base }
-    fn waitForImage(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut name: String) { Self::waitForImage(self, image, name) }
+    fn waitForImage(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut name: String) { Self::waitForImage(self, image, name) }
     fn handleTimeout(&mut self, mut name: String) { Self::handleTimeout(self, name) }
     fn waitForAll(&mut self) { Self::waitForAll(self) }
 }

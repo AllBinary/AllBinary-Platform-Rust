@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::input::AllBinarySensorListener::AllBinarySensorListener;
 use crate::org::allbinary::logic::math::Orientation::Orientation;
+use crate::java::lang::Exception::*;
 use super::AllBinaryMagneticFieldSensor::AllBinaryMagneticFieldSensor;
 
 // Borrows the object of a Java reference

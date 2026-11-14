@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::IOException::IOException;
+use crate::java::io::IOException::IOException;
 use crate::org::apache::xmlrpc::XmlRpcException::XmlRpcException;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
@@ -26,6 +26,7 @@ use crate::org::allbinary::canvas::SpecialMessageUtil::SpecialMessageUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::RuntimeException::*;
 use super::Log::Log;
 use super::XmlRpcRemoteLogClient::XmlRpcRemoteLogClient;
 
@@ -48,6 +49,10 @@ pub struct LogUtil {
 thread_local! { pub static LogUtil_instance: Option<Rc<RefCell<LogUtil>>> = LogUtil::new(); }
 
 impl LogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogUtil>>> {
@@ -94,17 +99,17 @@ impl LogUtil {
 
     pub fn put(&mut self, mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {
         if exception.is_some() {
-            if jcall!(std::any::type_name_of_val(&exception).to_string()).compareTo(jcall!(std::any::type_name::<XmlRpcException>()).getName()) == 0 {
+            if (std::any::type_name_of_val(&exception).to_string().cmp(&jcall!(std::any::type_name::<XmlRpcException>()).getName()) as i32) == 0 {
                 return;
             }
-            if jcall!(std::any::type_name_of_val(&exception).to_string()).compareTo(jcall!(std::any::type_name::<IOException>()).getName()) == 0 {
+            if (std::any::type_name_of_val(&exception).to_string().cmp(&jcall!(std::any::type_name::<IOException>()).getName()) as i32) == 0 {
                 return;
             }
             if self.isFirstException || jcall!(self.timeDelayHelper).isTimeTNT() {
-                let mut className: String = jcall!(CommonStrings::getInstance()).EMPTY.clone();
+                let mut className: String = { let java_field = jcall!(CommonStrings::getInstance()).EMPTY.clone(); java_field }.clone();
                 self.isFirstException = false;
                 if anyType.is_some() && true {
-                    className = std::any::type_name_of_val(&anyType).to_string().clone();
+                    className = { let java_value = (std::any::type_name_of_val(&anyType).to_string().clone()).clone(); java_value };
                 }
                 let mut message: String = jcall!(LogFormatUtil::LogFormatUtil::getInstance()).get(className.clone(), functionName.clone(), specialMessage.clone(), crate::java_into_object(exception.clone()));
                 match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
@@ -112,17 +117,17 @@ impl LogUtil {
                     if self.abeClientInformation.is_none() {
                         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
                     }
-                    let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(self.abeClientInformation).toHashtable();
+                    let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(self.abeClientInformation).toHashtable();
                     { let java_receiver = self.stringBuffer.clone(); let java_arguments = (0, jcall!(self.stringBuffer).length(),); jcall!(java_receiver).delete(java_arguments.0, java_arguments.1); };
                     jcall!(self.stringBuffer).append(message.clone());
-                    { let java_receiver = self.stringBuffer.clone(); let java_arguments = (jcall!(CommonSeps::getInstance()).SPACE.clone(),); jcall!(java_receiver).append(java_arguments.0); };
+                    { let java_receiver = self.stringBuffer.clone(); let java_arguments = ({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone(),); jcall!(java_receiver).append(java_arguments.0); };
                     { let java_receiver = self.stringBuffer.clone(); let java_arguments = (jcall!(SpecialMessageUtil::getInstance()).get(),); jcall!(java_receiver).append(java_arguments.0); };
                     jcall!(hashtable).put(crate::java_into_object(self.MESSAGE.clone()), crate::java_into_object(jcall!(self.stringBuffer).toString()));
-                    jcall!(XmlRpcRemoteLogClient::new(self.abeClientInformation.clone())).get(hashtable.clone());
+                    jcall!(XmlRpcRemoteLogClient::new(self.abeClientInformation.clone())).get(crate::java_into_object(hashtable.clone()));
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                     println!("{}", String::from("Exception"));
                     eprintln!("{:?}", e);

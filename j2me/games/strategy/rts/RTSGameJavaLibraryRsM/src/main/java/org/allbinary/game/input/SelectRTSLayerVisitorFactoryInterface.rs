@@ -27,12 +27,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait SelectRTSLayerVisitorFactoryInterface {
+pub trait SelectRTSLayerVisitorFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn create(&mut self, selectedRTSLayersPlayerGameInput: Option<Rc<RefCell<SelectedRTSLayersPlayerGameInput>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

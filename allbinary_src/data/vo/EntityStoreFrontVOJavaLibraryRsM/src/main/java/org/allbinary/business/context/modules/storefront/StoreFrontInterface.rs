@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::business::context::configuration::ContextConfigurationInterface::ContextConfigurationInterface;
 use crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

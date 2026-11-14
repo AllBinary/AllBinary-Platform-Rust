@@ -31,6 +31,10 @@ pub struct ToDomHelper {
 
 
 impl ToDomHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -46,7 +50,7 @@ impl ToDomHelper {
 
     pub fn convertNull(mut value: String) -> String {
         if false {
-            value = jcall!(StringUtil::getInstance()).NULL_STRING.clone();
+            value = { let java_value = ({ let java_field = jcall!(StringUtil::getInstance()).NULL_STRING.clone(); java_field }).clone(); java_value }.clone();
         }
         return value.clone();
     }

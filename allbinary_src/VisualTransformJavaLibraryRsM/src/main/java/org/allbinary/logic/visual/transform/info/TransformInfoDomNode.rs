@@ -25,6 +25,7 @@ use crate::org::w3c::dom::Attr::Attr;
 use crate::org::w3c::dom::NamedNodeMap::NamedNodeMap;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::TransformInfoInterface::TransformInfoInterface;
 use super::TransformInfoData::TransformInfoData;
 use super::TransformInfo::TransformInfo;
@@ -44,6 +45,10 @@ pub struct TransformInfoDomNode {
 
 
 impl TransformInfoDomNode {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut node: Option<Rc<RefCell<Node>>>) -> Self {
@@ -53,16 +58,16 @@ impl TransformInfoDomNode {
             mappedName: String::new(),
         };
         this.logUtil = LogUtil::getInstance();
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Constructing TransformInfo From TransformInfoDomNode: "), jcall!(node).getNodeName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("TransformInfoDomNode(Node node)"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         let mut transformInfoData: Option<Rc<RefCell<TransformInfoData>>> = TransformInfoData::getInstance();
         let mut attributes: Option<Rc<RefCell<NamedNodeMap>>> = jcall!(node).getAttributes();
-        let mut attrNode: Option<Rc<RefCell<Attr>>> = (jcall!(attributes).getNamedItem(jcall!(transformInfoData).NAME.clone())).clone() /* as Attr */;
+        let mut attrNode: Option<Rc<RefCell<Attr>>> = (jcall!(attributes).getNamedItem({ let java_field = jcall!(transformInfoData).NAME.clone(); java_field }.clone())).clone() /* as Attr */;
         let mut name: String = jcall!(attrNode).getValue();
         let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(node).getChildNodes();
         if jcall!(nodeList).getLength() > 1 {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                 jcall!(stringBuffer).append(String::from("Constructing Complete TransformInfo Node For: "));
                 jcall!(stringBuffer).append(name.clone());
@@ -71,17 +76,17 @@ impl TransformInfoDomNode {
                 jcall!(stringBuffer).append(String::from(" children"));
                 { let java_receiver = this.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("TransformInfoObjectConfigComponent(Node node)"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
-            let mut objectFileNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(transformInfoData).OBJECTFILENAME.clone(), nodeList.clone());
+            let mut objectFileNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(transformInfoData).OBJECTFILENAME.clone(); java_field }.clone(), nodeList.clone());
             let mut objectFileName: String = DomNodeHelper::getTextNodeValue(objectFileNameNode.clone());
-            let mut objectConfigFileNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(transformInfoData).OBJECTCONFIGFILENAME.clone(), nodeList.clone());
+            let mut objectConfigFileNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(transformInfoData).OBJECTCONFIGFILENAME.clone(); java_field }.clone(), nodeList.clone());
             let mut objectConfigFileName: String = DomNodeHelper::getTextNodeValue(objectConfigFileNameNode.clone());
-            let mut templateFileNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(transformInfoData).TEMPLATEFILENAME.clone(), nodeList.clone());
+            let mut templateFileNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(transformInfoData).TEMPLATEFILENAME.clone(); java_field }.clone(), nodeList.clone());
             let mut templateFileName: String = DomNodeHelper::getTextNodeValue(templateFileNameNode.clone());
-            let mut dataFileNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(transformInfoData).DATAFILENAME.clone(), nodeList.clone());
+            let mut dataFileNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(transformInfoData).DATAFILENAME.clone(); java_field }.clone(), nodeList.clone());
             let mut dataFileName: String = DomNodeHelper::getTextNodeValue(dataFileNameNode.clone());
             this.transformInfoInterface = (TransformInfo::new5(name.clone(), objectFileName.clone(), objectConfigFileName.clone(), templateFileName.clone(), dataFileName.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfo::TransformInfoDyn>>)).clone() /* as TransformInfoInterface */;
         } else {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                 jcall!(stringBuffer).append(String::from("Constructing Partial TransformInfo Node For: "));
                 jcall!(stringBuffer).append(name.clone());
@@ -92,11 +97,11 @@ impl TransformInfoDomNode {
             }
             this.transformInfoInterface = (TransformInfo::new1(name.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfo::TransformInfoDyn>>)).clone() /* as TransformInfoInterface */;
         }
-        let mut templateAttrNode: Option<Rc<RefCell<Attr>>> = (jcall!(attributes).getNamedItem(jcall!(transformInfoData).MAPPED.clone())).clone() /* as Attr */;
+        let mut templateAttrNode: Option<Rc<RefCell<Attr>>> = (jcall!(attributes).getNamedItem({ let java_field = jcall!(transformInfoData).MAPPED.clone(); java_field }.clone())).clone() /* as Attr */;
         if templateAttrNode.is_some() {
-            this.mappedName = jcall!(templateAttrNode).getValue();
+            this.mappedName = { let java_value = (jcall!(templateAttrNode).getValue()).clone(); java_value };
         } else {
-            this.mappedName = jcall!(this.getTransformInfoInterface()).getName();
+            this.mappedName = { let java_value = (jcall!(this.getTransformInfoInterface()).getName()).clone(); java_value };
         }
         this
     }
@@ -106,7 +111,7 @@ impl TransformInfoDomNode {
     }
     
 
-    pub fn new_struct1(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Self {
+    pub fn new_struct1_TransformInfoInterface(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             transformInfoInterface: None,
@@ -114,12 +119,12 @@ impl TransformInfoDomNode {
         };
         this.logUtil = LogUtil::getInstance();
         this.transformInfoInterface = transformInfoInterface.clone();
-        this.mappedName = jcall!(transformInfoInterface).getName();
+        this.mappedName = { let java_value = (jcall!(transformInfoInterface).getName()).clone(); java_value };
         this
     }
 
-    pub fn new1(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(transformInfoInterface))))
+    pub fn new1_TransformInfoInterface(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_TransformInfoInterface(transformInfoInterface))))
     }
     
 
@@ -140,7 +145,7 @@ impl TransformInfoDomNode {
     }
     
 
-    pub fn new_struct2(mut name: String, mut mappedName: String) -> Self {
+    pub fn new_struct2_String_String(mut name: String, mut mappedName: String) -> Self {
         let mut this = Self {
             logUtil: None,
             transformInfoInterface: None,
@@ -152,8 +157,8 @@ impl TransformInfoDomNode {
         this
     }
 
-    pub fn new2(mut name: String, mut mappedName: String) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct2(name, mappedName))))
+    pub fn new2_String_String(mut name: String, mut mappedName: String) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct2_String_String(name, mappedName))))
     }
     
 
@@ -173,13 +178,13 @@ impl TransformInfoDomNode {
         jcall!(stringBuffer).append(String::from("body"));
         jcall!(stringBuffer).append(String::from("\"/>"));
         let mut key: String = jcall!(stringBuffer).toString();
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             jcall!(self.logUtil).putF(format!("{}{}", String::from("Component Key: "), key), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getReplaceKey()"));
         }
         return key.clone();
     }
 }
-pub trait TransformInfoDomNodeDyn {
+pub trait TransformInfoDomNodeDyn: std::any::Any {
     fn as_TransformInfoDomNode(&self) -> &TransformInfoDomNode;
     fn as_TransformInfoDomNode_mut(&mut self) -> &mut TransformInfoDomNode;
     fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn TransformInfoInterface>>> { TransformInfoDomNode::getTransformInfoInterface(self.as_TransformInfoDomNode_mut()) }

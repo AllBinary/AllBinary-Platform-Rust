@@ -27,6 +27,7 @@ use crate::org::allbinary::image::ImageCache::ImageCache;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::OnDemandResourcesFactory::OnDemandResourcesFactory;
 use super::OnDemandResources::OnDemandResources;
 
@@ -45,6 +46,10 @@ pub struct OnDemandLoader {
 
 
 impl OnDemandLoader {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut onDemandResourcesFactory: Option<Rc<RefCell<OnDemandResourcesFactory>>>, mut gameLayerPlacementInterfaceBasicArrayListFactoryInterfaceFactory: Option<Rc<RefCell<dyn GameLayerPlacementInterfaceBasicArrayListFactoryInterfaceFactory>>>, mut resourceAnimationInterfaceFactoryInterfaceFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::resource::BaseResourceAnimationInterfaceFactoryInterfaceFactory::BaseResourceAnimationInterfaceFactoryInterfaceFactoryDyn>>>) -> Self {
@@ -67,12 +72,12 @@ impl OnDemandLoader {
     // throws Exception
     pub fn init(&mut self, mut imageCache: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>>, mut level: i32, mut loadingString: String) {
         let mut resourceLoadingLevelFactory: Option<Rc<RefCell<ResourceLoadingLevelFactory>>> = ResourceLoadingLevelFactory::getInstance();
-        if jcall!(Features::getInstance()).isFeature(jcall!(MainFeatureFactory::getInstance()).LOAD_ALL.clone()) {
+        if jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(MainFeatureFactory::getInstance()).LOAD_ALL.clone(); java_field }.clone()) {
             if jcall!(self.resourceAnimationInterfaceFactoryInterfaceFactory).isInitialized() {
                 return;
             }
             self.initAll(imageCache.clone(), loadingString.clone());
-        } else if level != jcall!(jcall!(resourceLoadingLevelFactory).LOAD_ALL).getLevel() {
+        } else if level != jcall!({ let java_field = jcall!(resourceLoadingLevelFactory).LOAD_ALL.clone(); java_field }).getLevel() {
             let mut layerPlacementInterfaceBasicArrayListFactoryInterface: Option<Rc<RefCell<dyn LayerPlacementInterfaceBasicArrayListFactoryInterface>>> = jcall!(self.gameLayerPlacementInterfaceBasicArrayListFactoryInterfaceFactory).getInstance(level.clone());
             self.initLevel(layerPlacementInterfaceBasicArrayListFactoryInterface.clone(), imageCache.clone(), level.clone(), loadingString.clone());
         }
@@ -87,9 +92,9 @@ impl OnDemandLoader {
         {
             let mut onDemandIndex: i32 = jcall!(self.onDemandResourcesFactory).size();
             while { onDemandIndex -= 1; onDemandIndex } >= 0 {
-            onDemandResources = jcall!(self.onDemandResourcesFactory).remove(onDemandIndex.clone());
+            onDemandResources = { let java_value = (jcall!(self.onDemandResourcesFactory).remove(onDemandIndex.clone())).clone(); java_value };
             if !match (&onDemandResources, &OnDemandResources_NULL_ON_DEMAND_RESOURCES.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                index = jcall!(onDemandResources).initAt(imageCache.clone(), self.resourceAnimationInterfaceFactoryInterfaceFactory.clone(), portion.clone(), loadingString.clone(), index.clone());
+                index = { let java_value = (jcall!(onDemandResources).initAt(imageCache.clone(), self.resourceAnimationInterfaceFactoryInterfaceFactory.clone(), portion.clone(), loadingString.clone(), index.clone())).clone(); java_value };
             }
             }
         }
@@ -102,14 +107,14 @@ impl OnDemandLoader {
         let mut portion: i32 = 120;
         let mut index: i32 = 0;
         let mut onDemandArray: Vec<i32> = jcall!(layerPlacementInterfaceBasicArrayListFactoryInterface).getOnDemandResources();
-        PreLogUtil::put(jcall!(StringMaker::new()).append(jcall!(commonStrings).START.clone()).appendint((onDemandArray.len() as i32).clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initLevel"));
+        PreLogUtil::put(jcall!(StringMaker::new()).append({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone()).appendint((onDemandArray.len() as i32).clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initLevel"));
         let mut onDemandResources: Option<Rc<RefCell<OnDemandResources>>> = None;
         {
             let mut onDemandIndex: i32 = (onDemandArray.len() as i32).clone();
             while { onDemandIndex -= 1; onDemandIndex } >= 0 {
-            onDemandResources = jcall!(self.onDemandResourcesFactory).remove(onDemandArray[(onDemandIndex) as usize].clone());
+            onDemandResources = { let java_value = (jcall!(self.onDemandResourcesFactory).remove(onDemandArray[(onDemandIndex) as usize].clone())).clone(); java_value };
             if !match (&onDemandResources, &OnDemandResources_NULL_ON_DEMAND_RESOURCES.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                index = jcall!(onDemandResources).initAt(imageCache.clone(), self.resourceAnimationInterfaceFactoryInterfaceFactory.clone(), portion.clone(), loadingString.clone(), index.clone());
+                index = { let java_value = (jcall!(onDemandResources).initAt(imageCache.clone(), self.resourceAnimationInterfaceFactoryInterfaceFactory.clone(), portion.clone(), loadingString.clone(), index.clone())).clone(); java_value };
             }
             }
         }

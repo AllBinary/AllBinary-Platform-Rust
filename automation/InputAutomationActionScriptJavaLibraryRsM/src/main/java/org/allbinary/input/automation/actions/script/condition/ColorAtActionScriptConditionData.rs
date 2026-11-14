@@ -39,6 +39,10 @@ pub static mut ColorAtActionScriptConditionData_MIN_BLUE: std::cell::LazyCell<St
 pub static mut ColorAtActionScriptConditionData_MAX_BLUE: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("COLOR_AT_ACTION_CONDITION_MAX_BLUE"));
 
 impl ColorAtActionScriptConditionData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

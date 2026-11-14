@@ -35,6 +35,10 @@ pub struct NumberLayersSequenceAIFactory {
 
 impl NumberLayersSequenceAIFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -47,7 +51,7 @@ impl NumberLayersSequenceAIFactory {
     
 
     pub fn getInstance(&mut self, mut numberOfEnemiesLeft: i32, mut artificialIntelligenceInterface: Vec<Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> {
-        return NumberLayersSequenceAI::new(numberOfEnemiesLeft.clone(), artificialIntelligenceInterface.clone(), ownerLayerInterface.clone(), gameInput.clone()).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>);
+        return NumberLayersSequenceAI::new(numberOfEnemiesLeft.clone(), artificialIntelligenceInterface.clone(), ownerLayerInterface.clone(), gameInput.clone()).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>);
     }
 }
 

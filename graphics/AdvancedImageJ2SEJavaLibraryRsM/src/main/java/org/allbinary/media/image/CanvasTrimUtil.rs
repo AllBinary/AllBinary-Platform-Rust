@@ -18,7 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
-// use crate::java::io::IOException::IOException;
+use crate::java::io::IOException::IOException;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use super::ImageProcessorInput::ImageProcessorInput;
@@ -39,6 +39,10 @@ pub struct CanvasTrimUtil {
 thread_local! { pub static CanvasTrimUtil_instance: Option<Rc<RefCell<CanvasTrimUtil>>> = CanvasTrimUtil::new(); }
 
 impl CanvasTrimUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -67,9 +71,9 @@ impl CanvasTrimUtil {
         let mut size: i32 = (bufferedImageArray.len() as i32).clone();
         let mut bufferedImage: Option<Rc<RefCell<BufferedImage>>> = None;
         for index in (0..size) {
-            bufferedImage = bufferedImageArray[(index) as usize].clone();
+            bufferedImage = { let java_value = (bufferedImageArray[(index) as usize]).clone(); java_value }.clone();
             subBufferedImageArray[(index) as usize] = jcall!(bufferedImage).getSubimage(cutCanvasFromLeftReduction.clone(), cutCanvasFromTopReduction.clone(), jcall!(bufferedImage).getWidth() - cutCanvasFromLeftReduction - cutCanvasFromRightReduction, jcall!(bufferedImage).getHeight() - cutCanvasFromTopReduction - cutCanvasFromBottomReduction);
-            jcall!(visitor).visit(subBufferedImageArray[(index) as usize].clone(), jcall!(self.stringUtil).EMPTY_STRING.clone(), index.clone());
+            jcall!(visitor).visit(subBufferedImageArray[(index) as usize].clone(), { let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }.clone(), index.clone());
         }
     }
 }

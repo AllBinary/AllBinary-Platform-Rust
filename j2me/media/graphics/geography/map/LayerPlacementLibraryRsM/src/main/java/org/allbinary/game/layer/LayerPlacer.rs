@@ -27,6 +27,7 @@ use crate::org::allbinary::layer::LayerInterfaceVisitor::LayerInterfaceVisitor;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::EnumerationUtil::EnumerationUtil;
+use crate::java::lang::Exception::*;
 use super::LayerPlacementInterface::LayerPlacementInterface;
 use super::LayerPlacementType::LayerPlacementType;
 
@@ -45,6 +46,10 @@ pub struct LayerPlacer {
 
 
 impl LayerPlacer {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut layerInterfaceVisitor: Option<Rc<RefCell<dyn LayerInterfaceVisitor>>>, mut dimension: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) -> Self {
@@ -69,7 +74,7 @@ impl LayerPlacer {
         let mut size: i32 = jcall!(list).size();
         let mut layerPlacementInterface: Option<Rc<RefCell<dyn LayerPlacementInterface>>> = None;
         for index in (0..size) {
-            layerPlacementInterface = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn LayerPlacementInterface>>>>().expect("ClassCastException").clone()) };
+            layerPlacementInterface = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn LayerPlacementInterface>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             self.process(layerPlacementInterface.clone());
         }
     }
@@ -79,21 +84,21 @@ impl LayerPlacer {
     pub fn process(&mut self, mut layerPlacementInterface: Option<Rc<RefCell<dyn LayerPlacementInterface>>>) {
         let mut relativePoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = self.getPoint(layerPlacementInterface.clone());
         let mut layerInterfaceFactory: Option<Rc<RefCell<LayerInterfaceFactory>>> = LayerInterfaceFactory::getInstance();
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(layerPlacementInterface).getInstance();
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(layerPlacementInterface).getInstance();
         let mut enumeration: Option<Rc<RefCell<dyn Enumeration>>> = jcall!(hashtable).keys();
         let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = None;
-        let mut layerHashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = None;
+        let mut layerHashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = None;
         let mut x: i32 = 0;
         let mut y: i32 = 0;
         let mut z: i32 = 0;
         let mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = None;
         while jcall!(self.enumerationUtil).hasMoreElements(enumeration.clone()) {
-            point = { let java_object = (jcall!(self.enumerationUtil).nextElement(enumeration.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) };
-            layerHashtable = { let java_object = (jcall!(hashtable).get(crate::java_into_object(point.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ABHashtable>>>>().expect("ClassCastException").clone()) };
-            x = jcall!(point).getX() + jcall!(relativePoint).getX();
-            y = jcall!(point).getY() + jcall!(relativePoint).getY();
-            z = jcall!(point).getZ() + jcall!(relativePoint).getZ();
-            layerInterface = jcall!(layerInterfaceFactory).getNexInstance(layerHashtable.clone(), x.clone(), y.clone(), z.clone());
+            point = { let java_value = ({ let java_object = (jcall!(self.enumerationUtil).nextElement(enumeration.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            layerHashtable = { let java_value = ({ let java_object = (jcall!(hashtable).get(crate::java_into_object(point.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            x = { let java_value = (jcall!(point).getX() + jcall!(relativePoint).getX()).clone(); java_value };
+            y = { let java_value = (jcall!(point).getY() + jcall!(relativePoint).getY()).clone(); java_value };
+            z = { let java_value = (jcall!(point).getZ() + jcall!(relativePoint).getZ()).clone(); java_value };
+            layerInterface = { let java_value = (jcall!(layerInterfaceFactory).getNexInstance(layerHashtable.clone(), x.clone(), y.clone(), z.clone())).clone(); java_value };
             jcall!(self.layerInterfaceVisitor).visit(layerInterface.clone());
         }
     }
@@ -103,13 +108,13 @@ impl LayerPlacer {
     pub fn getPoint(&mut self, mut layerPlacementInterface: Option<Rc<RefCell<dyn LayerPlacementInterface>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> {
         let mut pointFactory: Option<Rc<RefCell<PointFactory>>> = PointFactory::getInstance();
         let mut layerPlacementType: Option<Rc<RefCell<LayerPlacementType>>> = jcall!(layerPlacementInterface).getLayerType();
-        if match (&layerPlacementType, &jcall!(LayerPlacementTypeFactory::LayerPlacementTypeFactory::getInstance()).MAP) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&layerPlacementType, &{ let java_field = jcall!(LayerPlacementTypeFactory::LayerPlacementTypeFactory::getInstance()).MAP.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             let mut width: i32 = jcall!(layerPlacementInterface).getWidth();
             let mut height: i32 = jcall!(layerPlacementInterface).getHeight();
             let mut x: i32 = ((jcall!(self.dimension).getX() - width) / 2);
             let mut y: i32 = ((jcall!(self.dimension).getY() - height) / 2);
             return jcall!(pointFactory).createXY(x.clone(), y.clone());
-        } else if match (&layerPlacementType, &jcall!(LayerPlacementTypeFactory::LayerPlacementTypeFactory::getInstance()).UP) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        } else if match (&layerPlacementType, &{ let java_field = jcall!(LayerPlacementTypeFactory::LayerPlacementTypeFactory::getInstance()).UP.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             let mut width: i32 = jcall!(layerPlacementInterface).getWidth();
             let mut height: i32 = jcall!(layerPlacementInterface).getHeight();
             let mut x: i32 = ((jcall!(self.dimension).getX() - width) / 2);

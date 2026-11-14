@@ -33,6 +33,10 @@ thread_local! { pub static LockedResources_instance: Option<Rc<RefCell<LockedRes
 
 impl LockedResources {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             LOCKED_DEMO_GAME_FEATURE_RESOURCE: String::new(),

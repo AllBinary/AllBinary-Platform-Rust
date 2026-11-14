@@ -5,7 +5,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 
 // Borrows the object of a Java reference
@@ -21,6 +21,10 @@ pub struct OpenGLObject3dProcessor {
 
 
 impl OpenGLObject3dProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -43,11 +47,9 @@ impl OpenGLObject3dProcessor {
     pub fn process3(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut object3d: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut index: i32) {
     }
 }
-pub trait OpenGLObject3dProcessorDyn {
+pub trait OpenGLObject3dProcessorDyn: std::any::Any {
     fn as_OpenGLObject3dProcessor(&self) -> &OpenGLObject3dProcessor;
     fn as_OpenGLObject3dProcessor_mut(&mut self) -> &mut OpenGLObject3dProcessor;
-    fn process(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut object3d: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { OpenGLObject3dProcessor::process(self.as_OpenGLObject3dProcessor_mut(), gl, object3d) }
-    fn process3(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut object3d: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut index: i32) { OpenGLObject3dProcessor::process3(self.as_OpenGLObject3dProcessor_mut(), gl, object3d, index) }
     fn process(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut object3d: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { OpenGLObject3dProcessor::process(self.as_OpenGLObject3dProcessor_mut(), gl, object3d) }
     fn process3(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut object3d: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut index: i32) { OpenGLObject3dProcessor::process3(self.as_OpenGLObject3dProcessor_mut(), gl, object3d, index) }
 }

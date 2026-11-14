@@ -32,6 +32,10 @@ pub struct DisplayPointScalar {
 thread_local! { pub static DisplayPointScalar_instance: Option<Rc<RefCell<DisplayPointScalar>>> = DisplayPointScalar::new(); }
 
 impl DisplayPointScalar {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<DisplayPointScalar>>> {

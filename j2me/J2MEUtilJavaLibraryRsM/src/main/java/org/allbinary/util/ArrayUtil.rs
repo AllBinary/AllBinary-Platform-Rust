@@ -27,6 +27,10 @@ thread_local! { pub static ArrayUtil_instance: Option<Rc<RefCell<ArrayUtil>>> = 
 
 impl ArrayUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             mathUtil: None,
@@ -127,8 +131,8 @@ impl ArrayUtil {
         let mut temp: i32 = 0;
         let mut size: i32 = length / 2;
         for index in (0..=size) {
-            temp = intArray[(index) as usize].clone();
-            intArray[(index) as usize] = intArray[(length - index) as usize].clone();
+            temp = { let java_value = (intArray[(index) as usize]).clone(); java_value }.clone();
+            intArray[(index) as usize] = { let java_value = (intArray[(length - index) as usize]).clone(); java_value }.clone();
             intArray[(length - index) as usize] = temp.clone();
         }
     }
@@ -143,8 +147,8 @@ impl ArrayUtil {
             for x in (0..width) {
                 rowIndex = ((length - y) * width);
                 index = x + (y * width);
-                temp = intArray[(index) as usize].clone();
-                intArray[(index) as usize] = intArray[(rowIndex + x) as usize].clone();
+                temp = { let java_value = (intArray[(index) as usize]).clone(); java_value }.clone();
+                intArray[(index) as usize] = { let java_value = (intArray[(rowIndex + x) as usize]).clone(); java_value }.clone();
                 intArray[(rowIndex + x) as usize] = temp.clone();
             }
         }
@@ -157,13 +161,13 @@ impl ArrayUtil {
         let mut endIndex: i32 = (twoDimensionalIntArray.len() as i32).clone();
         let mut endIndex2: i32 = (twoDimensionalIntArray[(0) as usize].len() as i32).clone();
         for index in (0..endIndex) {
-            jcall!(stringBuffer).append(jcall!(commonSeps).BRACE_OPEN.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).BRACE_OPEN.clone(); java_field }.clone());
             for index2 in (0..endIndex2) {
                 jcall!(stringBuffer).appendint(((twoDimensionalIntArray[(index) as usize][(index2) as usize]) as i32).clone());
-                jcall!(stringBuffer).append(jcall!(commonSeps).COMMA_SEP.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).COMMA_SEP.clone(); java_field }.clone());
             }
-            jcall!(stringBuffer).append(jcall!(commonSeps).BRACE_CLOSE.clone());
-            jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).BRACE_CLOSE.clone(); java_field }.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         }
         return jcall!(stringBuffer).toString();
     }
@@ -174,7 +178,7 @@ impl ArrayUtil {
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
         for index in (0..(objectArray.len() as i32)) {
             jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(objectArray[(index) as usize].clone())));
-            jcall!(stringBuffer).append(jcall!(commonSeps).COMMA_SEP.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).COMMA_SEP.clone(); java_field }.clone());
         }
         return jcall!(stringBuffer).toString();
     }
@@ -185,7 +189,7 @@ impl ArrayUtil {
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
         for index in (0..(byteArray.len() as i32)) {
             jcall!(stringBuffer).appendbyte(byteArray[(index) as usize].clone());
-            jcall!(stringBuffer).append(jcall!(commonSeps).COMMA_SEP.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).COMMA_SEP.clone(); java_field }.clone());
         }
         return jcall!(stringBuffer).toString();
     }

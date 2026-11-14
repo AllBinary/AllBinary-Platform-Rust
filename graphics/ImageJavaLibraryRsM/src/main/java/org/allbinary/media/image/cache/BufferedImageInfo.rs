@@ -88,9 +88,9 @@ impl BufferedImageInfo {
         let mut commonLabels: Option<Rc<RefCell<CommonLabels>>> = CommonLabels::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(String::from("BufferedImageInfo -"));
-        jcall!(stringBuffer).append(jcall!(commonLabels).WIDTH_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonLabels).WIDTH_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.getWidth());
-        jcall!(stringBuffer).append(jcall!(commonLabels).HEIGHT_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonLabels).HEIGHT_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.getHeight());
         jcall!(stringBuffer).append(String::from(" Type: "));
         jcall!(stringBuffer).appendint(self.getType());

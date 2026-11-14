@@ -34,6 +34,10 @@ pub struct TouchButtonsPaintableFactory {
 
 impl TouchButtonsPaintableFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -46,7 +50,7 @@ impl TouchButtonsPaintableFactory {
     
 
     pub fn getInstance(mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>> {
-        return TouchButtonsPaintable::new(basicColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>);
+        return TouchButtonsPaintable::new(basicColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>);
     }
 }
 

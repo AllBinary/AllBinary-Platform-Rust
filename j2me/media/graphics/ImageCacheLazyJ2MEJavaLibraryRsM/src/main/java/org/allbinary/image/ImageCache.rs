@@ -17,9 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::InputStream::InputStream;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::NullImage::NullImage;
+use crate::java::io::InputStream::InputStream;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::NullImage::NullImage;
 use crate::org::allbinary::J2MEUtil::J2MEUtil;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::org::allbinary::animation::image::LazyImageRotationAnimation::LazyImageRotationAnimation;
@@ -45,11 +45,9 @@ use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::logic::ABSystemWrapper::ABSystemWrapper;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::ImageCacheBase::ImageCacheBase;
-use super::NotHTMLEndProcessor::NotHTMLEndProcessor;
-use super::FirstProcessor::FirstProcessor;
-use super::NotHTMLProcessor::NotHTMLProcessor;
-use super::HTMLEndProcessor::HTMLEndProcessor;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -110,29 +108,30 @@ impl ImageCache {
             LOAD_IMAGE_FOR_ANIMATION: String::new(),
         };
         this.tsUtil = TsUtil::getInstance();
-        this.concurrentImageLoadingProcessor = ConcurrentImageLoadingProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::BaseImageLoadingProcessor::BaseImageLoadingProcessorDyn>>);
         this.commonStrings = CommonStrings::getInstance();
         this.commonSeps = CommonSeps::getInstance();
         this.resourceUtil = ResourceUtil::getInstance();
         this.gameGlobalsFactory = GameGlobalsFactory::getInstance();
         this.gdResources = GDResources::getInstance();
-        this.loadNowList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.loadSoonList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.loadList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.loadAfterList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.loadNowList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.loadSoonList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.loadList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.loadAfterList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.lock = SynchObject::new();
         this.firstTime = true;
         this.totalLoaded = 0;
         this.progressEnded = false;
         this.hasAnyLazyAnimationFactories = false;
-        this.processor = FirstProcessor::new();
+        this.processor = FirstProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
         this.endProcessor = Processor::getInstance();
         this.LOAD_IMAGE_FOR_ANIMATION = String::from("Load Image Animation");
         this
     }
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct())))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct())));
+        jcall!(this).concurrentImageLoadingProcessor = ConcurrentImageLoadingProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn ImageCacheDyn>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::BaseImageLoadingProcessor::BaseImageLoadingProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::BaseImageLoadingProcessor::BaseImageLoadingProcessorDyn>>);
+        this
     }
     
 
@@ -140,19 +139,19 @@ impl ImageCache {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut isHTML: bool = J2MEUtil::isHTML();
         if isHTML {
-            self.processor = Processor::getInstance();
-            self.endProcessor = HTMLEndProcessor::new();
+            self.processor = { let java_value = (Processor::getInstance()).clone(); java_value };
+            self.endProcessor = HTMLEndProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
         } else {
-            self.processor = NotHTMLProcessor::new();
-            self.endProcessor = NotHTMLEndProcessor::new();
+            self.processor = NotHTMLProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
+            self.endProcessor = NotHTMLEndProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                 self.runTask();
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                jcall!(logUtil).putF(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).END_METHOD_NAME.clone());
+                jcall!(logUtil).putF({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).END_METHOD_NAME.clone(); java_field }.clone());
                 }
             }
         }
@@ -167,7 +166,7 @@ impl ImageCache {
     pub fn waitForLoadNow(&mut self) {
         if self.firstTime {
             let mut abToGBUtil: Option<Rc<RefCell<ABToGBUtil>>> = ABToGBUtil::getInstance();
-            let mut abCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>> = (jcall!(abToGBUtil).abCanvas).clone() /* as AllBinaryGameCanvas */;
+            let mut abCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>> { panic!("ClassCastException: a Rust dyn Canvas cannot be cast to AllBinaryGameCanvas") })();
             while jcall!(self.loadNowList).isEmpty() && (!jcall!(abCanvas).isInitialized() || (jcall!(abCanvas).isInitialized() && self.hasAnyLazyAnimationFactories)) && !self.progressEnded {
                 std::thread::sleep(std::time::Duration::from_millis((120) as u64));
             }
@@ -185,32 +184,32 @@ impl ImageCache {
                 if jcall!(self.loadSoonList).isEmpty() {
                     if jcall!(self.loadAfterList).isEmpty() {
                         if self.firstTime {
-                        } else if jcall!(self.gameGlobalsFactory).newCanvas {
+                        } else if { let java_field = jcall!(self.gameGlobalsFactory).newCanvas.clone(); java_field } {
                         } else {
                             self.loadNextImage();
                         }
                         return;
                     } else {
-                        lazyImageRotationAnimation = { let java_object = (jcall!(self.loadAfterList).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LazyImageRotationAnimation>>>>().expect("ClassCastException").clone()) };
+                        lazyImageRotationAnimation = { let java_value = ({ let java_object = (jcall!(self.loadAfterList).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LazyImageRotationAnimation>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                         if self.loadImageForLazyAnimation(lazyImageRotationAnimation.clone()) {
                             jcall!(self.loadAfterList).remove(crate::java_into_object(lazyImageRotationAnimation.clone()));
                         }
                     }
                 } else {
-                    lazyImageRotationAnimation = { let java_object = (jcall!(self.loadSoonList).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LazyImageRotationAnimation>>>>().expect("ClassCastException").clone()) };
+                    lazyImageRotationAnimation = { let java_value = ({ let java_object = (jcall!(self.loadSoonList).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LazyImageRotationAnimation>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                     if self.loadImageForLazyAnimation(lazyImageRotationAnimation.clone()) {
                         jcall!(self.loadSoonList).remove(crate::java_into_object(lazyImageRotationAnimation.clone()));
                     }
                 }
                 return;
             }
-            lazyImageRotationAnimation = { let java_object = (jcall!(self.loadNowList).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LazyImageRotationAnimation>>>>().expect("ClassCastException").clone()) };
+            lazyImageRotationAnimation = { let java_value = ({ let java_object = (jcall!(self.loadNowList).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LazyImageRotationAnimation>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
         }
         if self.loadImageForLazyAnimation(lazyImageRotationAnimation.clone()) {
             { // synchronized (self.lock)
                 jcall!(self.loadNowList).remove(crate::java_into_object(lazyImageRotationAnimation.clone()));
             }
-            if jcall!(lazyImageRotationAnimation).layoutIndex != 0 {
+            if { let java_field = jcall!(lazyImageRotationAnimation).layoutIndex.clone(); java_field } != 0 {
                 let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getAssociated(lazyImageRotationAnimation.clone());
                 { // synchronized (self.lock)
                     let mut size: i32 = jcall!(list).size();
@@ -258,7 +257,7 @@ impl ImageCache {
             let mut lazyImageRotationAnimation: Option<Rc<RefCell<LazyImageRotationAnimation>>> = None;
             { // synchronized (self.lock)
                 if !jcall!(self.loadAfterList).isEmpty() {
-                    lazyImageRotationAnimation = { let java_object = (jcall!(self.loadAfterList).removeAt(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LazyImageRotationAnimation>>>>().expect("ClassCastException").clone()) };
+                    lazyImageRotationAnimation = { let java_value = ({ let java_object = (jcall!(self.loadAfterList).removeAt(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LazyImageRotationAnimation>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 }
             }
             if lazyImageRotationAnimation.is_some() {
@@ -270,7 +269,7 @@ impl ImageCache {
 
     // throws Exception
     pub fn loadImageForLazyAnimation(&mut self, mut lazyImageRotationAnimation: Option<Rc<RefCell<LazyImageRotationAnimation>>>) -> bool {
-        let mut image: Option<Rc<RefCell<Image>>> = jcall!(jcall!(lazyImageRotationAnimation).animationInterfaceFactoryInterface).getImage();
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!({ let java_field = jcall!(lazyImageRotationAnimation).animationInterfaceFactoryInterface.clone(); java_field }).getImage();
         if self.loadImage(image.clone()) {
             jcall!(lazyImageRotationAnimation).setRealAnimation();
             return true;
@@ -281,37 +280,37 @@ impl ImageCache {
 
     // throws Exception
     pub fn loadNextImage(&mut self) {
-        let mut image: Option<Rc<RefCell<Image>>> = None;
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = None;
         { // synchronized (self.lock)
             if jcall!(self.loadList).size() == 0 {
                 return;
             }
-            image = (jcall!(self.loadList).removeAt(0)).clone() /* as Image */;
+            image = { let java_value = ({ let java_object = (jcall!(self.loadList).removeAt(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
         }
         self.loadImage(image.clone());
     }
     
 
     // throws Exception
-    pub fn loadImage(&mut self, mut image: Option<Rc<RefCell<Image>>>) -> bool {
-        if jcall!(image).isReady() {
+    pub fn loadImage(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) -> bool {
+        if jcall!(image).as_Image_mut().isReady() {
             return true;
         } else {
             if jcall!(image).getImage().is_some() {
-                if jcall!(image).setReady() {
-                    if jcall!(image).isReady() {
+                if jcall!(image).as_Image_mut().setReady() {
+                    if jcall!(image).as_Image_mut().isReady() {
                         self.totalLoaded += 1;
                         return true;
                     }
                 }
             } else {
                 let mut key: String = jcall!(image).getName();
-                let mut image2: Option<Rc<RefCell<Image>>> = self.creatImage(key.clone());
-                if jcall!(image2).isReady() {
+                let mut image2: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = self.creatImage(key.clone());
+                if jcall!(image2).as_Image_mut().isReady() {
                     self.init(image.clone(), image2.clone());
                     return true;
                 } else {
-                    jcall!(image).setImage(jcall!(image2).getImage());
+                    jcall!(image).as_Image_mut().setImage(jcall!(image2).getImage());
                 }
             }
         }
@@ -320,24 +319,24 @@ impl ImageCache {
     
 
     // throws Exception
-    pub fn init(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut image2: Option<Rc<RefCell<Image>>>) {
-        jcall!(image).init(jcall!(image2).getImage());
+    pub fn init(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image2: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) {
+        jcall!(image).as_Image_mut().init(jcall!(image2).getImage());
     }
     
 
     // throws Exception
-    pub fn creatImage(&mut self, mut key: String) -> Option<Rc<RefCell<Image>>> {
-        let mut inputStream: Option<Rc<RefCell<InputStream>>> = jcall!(self.resourceUtil).getResourceAsStream(key.clone());
-        let mut image: Option<Rc<RefCell<Image>>> = jcall!(ImageFactory::ImageFactory::getInstance()).createImageFromInputStream(inputStream.clone());
+    pub fn creatImage(&mut self, mut key: String) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = jcall!(self.resourceUtil).getResourceAsStream(key.clone());
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(ImageFactory::ImageFactory::getInstance()).createImageFromInputStream(inputStream.clone());
         jcall!(image).setName(key.clone());
         return image.clone();
     }
     
 
     // throws Exception
-    pub fn get(&mut self, mut caller: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> {
+    pub fn get(&mut self, mut caller: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         let mut foundIndex: i32 = self.getIndexWH(width.clone(), height.clone());
-        let mut image: Option<Rc<RefCell<Image>>> = self.getFromAvailable(foundIndex.clone(), width.clone(), height.clone());
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = self.getFromAvailable(foundIndex.clone(), width.clone(), height.clone());
         if match (&image, &crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             self.volume += width * height;
             if self.volume > 32000 {
@@ -348,11 +347,11 @@ impl ImageCache {
             if self.nextIndex > (self.widths.len() as i32) - 1 {
                 if foundIndex == -1 {
                     foundIndex = self.nextIndex.clone();
-                    self.widths[(self.nextIndex) as usize] = width.clone();
-                    self.heights[(self.nextIndex) as usize] = height.clone();
+                    { let java_index = (self.nextIndex) as usize; self.widths[java_index] = width.clone(); };
+                    { let java_index = (self.nextIndex) as usize; self.heights[java_index] = height.clone(); };
                     self.nextIndex += 1;
                 }
-                jcall!(self.listOfList[(foundIndex) as usize]).add(image.clone());
+                jcall!(self.listOfList[(foundIndex) as usize]).add(crate::java_into_object(image.clone()));
             }
         }
         return image.clone();
@@ -360,27 +359,27 @@ impl ImageCache {
     
 
     // throws Exception
-    pub fn getWithKey(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Image>>> {
-        let mut image: Option<Rc<RefCell<Image>>> = self.getImage(key.clone());
+    pub fn getWithKey(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = self.getImage(key.clone());
         if match (&image, &crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            let mut inputStream: Option<Rc<RefCell<InputStream>>> = None;
+            let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = None;
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                 image = self.createImageFromInputStream(key.clone(), inputStream.clone());
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                jcall!(self.logUtil).put(String::from("Exception: Trying Again After GC"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET.clone(), crate::java_into_object(e.clone()));
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("InputStream: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(inputStream.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                jcall!(self.logUtil).put(String::from("Exception: Trying Again After GC"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("InputStream: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(inputStream.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 jcall!(self.tsUtil).gc();
                 jcall!(self.tsUtil).gc();
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (Memory::getInfo(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (Memory::getInfo(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 std::thread::sleep(std::time::Duration::from_millis((100) as u64));
                 image = self.createImageFromInputStream(key.clone(), inputStream.clone());
                 }
             }
-            jcall!(self.hashtable).put(crate::java_into_object(key.clone()), crate::java_into_object(image.clone()));
+            jcall!(self.hashtable).put(key.clone(), crate::java_into_object(image.clone()));
         }
         return image.clone();
     }
@@ -388,33 +387,33 @@ impl ImageCache {
 
     pub fn getIndex(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> i32 {
         let mut gdResources: Option<Rc<RefCell<GDResources>>> = GDResources::getInstance();
-        let mut resourceStringArray: Vec<String> = jcall!(gdResources).resourceStringArray.clone();
+        let mut resourceStringArray: Vec<String> = { let java_field = jcall!(gdResources).resourceStringArray.clone(); java_field }.clone();
         let mut size: i32 = (resourceStringArray.len() as i32).clone();
         for index in (0..size) {
-            if resourceStringArray[(index) as usize] == key {
+            if crate::java_object_equals(&crate::java_into_object((resourceStringArray[(index) as usize]).clone()), &(key)) {
                 return index.clone();
             }
         }
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("unable to find key: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(key.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("unable to find key: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(key.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     
 
     // throws Exception
-    pub fn createImageFromInputStream(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut inputStream: Option<Rc<RefCell<InputStream>>>) -> Option<Rc<RefCell<Image>>> {
+    pub fn createImageFromInputStream(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         let mut gdLazyResources: Option<Rc<RefCell<GDLazyResources>>> = GDLazyResources::getInstance();
-        let mut resourceStringArray: Vec<String> = jcall!(gdLazyResources).requiredResourcesBeforeLoadingArray.clone();
+        let mut resourceStringArray: Vec<String> = { let java_field = jcall!(gdLazyResources).requiredResourcesBeforeLoadingArray.clone(); java_field }.clone();
         let mut size: i32 = (resourceStringArray.len() as i32).clone();
         for index in (0..size) {
-            if key == resourceStringArray[(index) as usize] {
-                return self.creatImage((key).clone() /* as String */);
+            if crate::java_object_equals(&crate::java_into_object((resourceStringArray[(index) as usize]).clone()), &(key)) {
+                return self.creatImage({ let java_object = (key).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() });
             }
         }
         self.runTask();
         let mut index: i32 = self.getIndex(key.clone());
         let mut width: i32 = jcall!(gdLazyResources).imageResourceWidthArray[(index) as usize].clone();
         let mut height: i32 = jcall!(gdLazyResources).imageResourceHeightArray[(index) as usize].clone();
-        let mut image: Option<Rc<RefCell<Image>>> = self.createImageLater((key).clone() /* as String */, width.clone(), height.clone());
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = self.createImageLater({ let java_object = (key).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, width.clone(), height.clone());
         { // synchronized (self.lock)
             jcall!(self.loadList).add(crate::java_into_object(image.clone()));
         }
@@ -423,19 +422,19 @@ impl ImageCache {
     
 
     // throws Exception
-    pub fn createImageLater(&mut self, mut key: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> {
+    pub fn createImageLater(&mut self, mut key: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return Image::createImageLater(key.clone(), width.clone(), height.clone());
     }
     
 
     pub fn getAssociated(&mut self, mut lazyImageRotationAnimation: Option<Rc<RefCell<LazyImageRotationAnimation>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         { // synchronized (self.lock)
             let mut lazyImageRotationAnimation2: Option<Rc<RefCell<LazyImageRotationAnimation>>> = None;
             let mut size: i32 = jcall!(self.loadAfterList).size();
             for index in (0..size) {
-                lazyImageRotationAnimation2 = { let java_object = (jcall!(self.loadAfterList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LazyImageRotationAnimation>>>>().expect("ClassCastException").clone()) };
-                if jcall!(lazyImageRotationAnimation2).instanceId == jcall!(lazyImageRotationAnimation).instanceId {
+                lazyImageRotationAnimation2 = { let java_value = ({ let java_object = (jcall!(self.loadAfterList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LazyImageRotationAnimation>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+                if { let java_field = jcall!(lazyImageRotationAnimation2).instanceId.clone(); java_field } == { let java_field = jcall!(lazyImageRotationAnimation).instanceId.clone(); java_field } {
                     jcall!(list).add(crate::java_into_object(lazyImageRotationAnimation2.clone()));
                 }
             }
@@ -510,20 +509,14 @@ pub trait ImageCacheDyn: crate::org::allbinary::image::ImageCacheBase::ImageCach
     fn loadRemainingAnimations(&mut self) { ImageCache::loadRemainingAnimations(self.as_ImageCache_mut()) }
     fn loadImageForLazyAnimation(&mut self, mut lazyImageRotationAnimation: Option<Rc<RefCell<LazyImageRotationAnimation>>>) -> bool { ImageCache::loadImageForLazyAnimation(self.as_ImageCache_mut(), lazyImageRotationAnimation) }
     fn loadNextImage(&mut self) { ImageCache::loadNextImage(self.as_ImageCache_mut()) }
-    fn loadImage(&mut self, mut image: Option<Rc<RefCell<Image>>>) -> bool { ImageCache::loadImage(self.as_ImageCache_mut(), image) }
-    fn init(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut image2: Option<Rc<RefCell<Image>>>) { ImageCache::init(self.as_ImageCache_mut(), image, image2) }
-    fn creatImage(&mut self, mut key: String) -> Option<Rc<RefCell<Image>>> { ImageCache::creatImage(self.as_ImageCache_mut(), key) }
+    fn loadImage(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) -> bool { ImageCache::loadImage(self.as_ImageCache_mut(), image) }
+    fn init(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image2: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) { ImageCache::init(self.as_ImageCache_mut(), image, image2) }
+    fn creatImage(&mut self, mut key: String) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { ImageCache::creatImage(self.as_ImageCache_mut(), key) }
     fn getIndex(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> i32 { ImageCache::getIndex(self.as_ImageCache_mut(), key) }
-    fn createImageLater(&mut self, mut key: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> { ImageCache::createImageLater(self.as_ImageCache_mut(), key, width, height) }
+    fn createImageLater(&mut self, mut key: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { ImageCache::createImageLater(self.as_ImageCache_mut(), key, width, height) }
     fn getAssociated(&mut self, mut lazyImageRotationAnimation: Option<Rc<RefCell<LazyImageRotationAnimation>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { ImageCache::getAssociated(self.as_ImageCache_mut(), lazyImageRotationAnimation) }
     fn add(&mut self, mut lazyImageRotationAnimation: Option<Rc<RefCell<LazyImageRotationAnimation>>>) { ImageCache::add(self.as_ImageCache_mut(), lazyImageRotationAnimation) }
     fn insertFirst(&mut self, mut lazyImageRotationAnimation: Option<Rc<RefCell<LazyImageRotationAnimation>>>) { ImageCache::insertFirst(self.as_ImageCache_mut(), lazyImageRotationAnimation) }
-    fn progressEnded(&mut self) { ImageCache::progressEnded(self.as_ImageCache_mut()) }
-    fn runTask(&mut self) { ImageCache::runTask(self.as_ImageCache_mut()) }
-    fn isLazy(&mut self) -> bool { ImageCache::isLazy(self.as_ImageCache_mut()) }
-    fn addListener(&mut self, mut renderer: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { ImageCache::addListener(self.as_ImageCache_mut(), renderer) }
-    fn getIndex(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> i32 { ImageCache::getIndex(self.as_ImageCache_mut(), key) }
-    fn loadImageForAnimation(&mut self) { ImageCache::loadImageForAnimation(self.as_ImageCache_mut()) }
     fn progressEnded(&mut self) { ImageCache::progressEnded(self.as_ImageCache_mut()) }
     fn runTask(&mut self) { ImageCache::runTask(self.as_ImageCache_mut()) }
     fn isLazy(&mut self) -> bool { ImageCache::isLazy(self.as_ImageCache_mut()) }
@@ -536,9 +529,9 @@ impl ImageCacheDyn for ImageCache {
 impl crate::org::allbinary::image::ImageCacheBase::ImageCacheBaseDyn for ImageCache {
     fn as_ImageCacheBase(&self) -> &crate::org::allbinary::image::ImageCacheBase::ImageCacheBase { &self.base }
     fn as_ImageCacheBase_mut(&mut self) -> &mut crate::org::allbinary::image::ImageCacheBase::ImageCacheBase { &mut self.base }
-    fn get(&mut self, mut caller: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> { Self::get(self, caller, width, height) }
-    fn getWithKey(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Image>>> { Self::getWithKey(self, key) }
-    fn createImageFromInputStream(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut inputStream: Option<Rc<RefCell<InputStream>>>) -> Option<Rc<RefCell<Image>>> { Self::createImageFromInputStream(self, key, inputStream) }
+    fn get(&mut self, mut caller: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { Self::get(self, caller, width, height) }
+    fn getWithKey(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { Self::getWithKey(self, key) }
+    fn createImageFromInputStream(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { Self::createImageFromInputStream(self, key, inputStream) }
     fn initProgress(&mut self) { Self::initProgress(self) }
 }
 
@@ -575,8 +568,8 @@ impl std::ops::DerefMut for NotHTMLProcessor {
 }
 
 impl crate::org::allbinary::canvas::Processor::ProcessorDyn for NotHTMLProcessor {
-    fn as_Processor(&self) -> &crate::org::allbinary::canvas::Processor::Processor { &self }
-    fn as_Processor_mut(&mut self) -> &mut crate::org::allbinary::canvas::Processor::Processor { &mut self }
+    fn as_Processor(&self) -> &crate::org::allbinary::canvas::Processor::Processor { &self.base }
+    fn as_Processor_mut(&mut self) -> &mut crate::org::allbinary::canvas::Processor::Processor { &mut self.base }
     fn process(&mut self) { Self::process(self) }
 }
 
@@ -614,8 +607,8 @@ impl std::ops::DerefMut for NotHTMLEndProcessor {
 }
 
 impl crate::org::allbinary::canvas::Processor::ProcessorDyn for NotHTMLEndProcessor {
-    fn as_Processor(&self) -> &crate::org::allbinary::canvas::Processor::Processor { &self }
-    fn as_Processor_mut(&mut self) -> &mut crate::org::allbinary::canvas::Processor::Processor { &mut self }
+    fn as_Processor(&self) -> &crate::org::allbinary::canvas::Processor::Processor { &self.base }
+    fn as_Processor_mut(&mut self) -> &mut crate::org::allbinary::canvas::Processor::Processor { &mut self.base }
     fn process(&mut self) { Self::process(self) }
 }
 
@@ -640,14 +633,14 @@ impl HTMLEndProcessor {
         
 
         pub fn process(&mut self) {
-            let mut size: i32 = jcall!(self.gdResources).currentLayoutRequiredTotal.clone();
+            let mut size: i32 = { let java_field = jcall!(self.gdResources).currentLayoutRequiredTotal.clone(); java_field }.clone();
             if size == 0 {
                 let mut progressCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn>>> = ProgressCanvasFactory::getInstance();
                 jcall!(progressCanvas).endIfPaintedSinceStart();
             } else if self.totalLoaded > size / 12 {
                 let mut progressCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn>>> = ProgressCanvasFactory::getInstance();
                 jcall!(progressCanvas).endIfPaintedSinceStart();
-                self.endProcessor = NotHTMLEndProcessor::new();
+                self.endProcessor = NotHTMLEndProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
             }
         }
 }
@@ -660,8 +653,8 @@ impl std::ops::DerefMut for HTMLEndProcessor {
 }
 
 impl crate::org::allbinary::canvas::Processor::ProcessorDyn for HTMLEndProcessor {
-    fn as_Processor(&self) -> &crate::org::allbinary::canvas::Processor::Processor { &self }
-    fn as_Processor_mut(&mut self) -> &mut crate::org::allbinary::canvas::Processor::Processor { &mut self }
+    fn as_Processor(&self) -> &crate::org::allbinary::canvas::Processor::Processor { &self.base }
+    fn as_Processor_mut(&mut self) -> &mut crate::org::allbinary::canvas::Processor::Processor { &mut self.base }
     fn process(&mut self) { Self::process(self) }
 }
 
@@ -698,8 +691,8 @@ impl std::ops::DerefMut for FirstProcessor {
 }
 
 impl crate::org::allbinary::canvas::Processor::ProcessorDyn for FirstProcessor {
-    fn as_Processor(&self) -> &crate::org::allbinary::canvas::Processor::Processor { &self }
-    fn as_Processor_mut(&mut self) -> &mut crate::org::allbinary::canvas::Processor::Processor { &mut self }
+    fn as_Processor(&self) -> &crate::org::allbinary::canvas::Processor::Processor { &self.base }
+    fn as_Processor_mut(&mut self) -> &mut crate::org::allbinary::canvas::Processor::Processor { &mut self.base }
     fn process(&mut self) { Self::process(self) }
 }
 

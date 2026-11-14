@@ -21,6 +21,10 @@ thread_local! { pub static PGUtil_instance: Option<Rc<RefCell<PGUtil>>> = PGUtil
 
 impl PGUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -42,7 +46,7 @@ impl PGUtil {
         let mut steps: i32 = 10;
         for i in (1..=steps) {
             let mut t: i32 = jcall!(fixedPoint).div(jcall!(fixedPoint).toFixed(((i) as f64)), jcall!(fixedPoint).toFixed(steps.clone()));
-            let mut mt: i32 = jcall!(fixedPoint).ONE - t;
+            let mut mt: i32 = { let java_field = jcall!(fixedPoint).ONE.clone(); java_field } - t;
             let mut mt3: i32 = jcall!(fixedPoint).mul(jcall!(fixedPoint).mul(mt.clone(), mt.clone()), mt.clone());
             let mut mt2t3: i32 = 3 * jcall!(fixedPoint).mul(jcall!(fixedPoint).mul(mt.clone(), mt.clone()), t.clone());
             let mut mtt23: i32 = 3 * jcall!(fixedPoint).mul(jcall!(fixedPoint).mul(mt.clone(), t.clone()), t.clone());

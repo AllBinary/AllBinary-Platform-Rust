@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::configuration::feature::GameFeatureControlledInterface::GameFeatureControlledInterface;
 use crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationship;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::util::Arrays::Arrays;
+use crate::java::util::Arrays::Arrays;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::org::allbinary::logic::util::visitor::Visitor::Visitor;
 use super::ComparableObject::ComparableObject;
@@ -42,6 +42,10 @@ pub struct OrderedObjectArrayPermutationUtil {
 thread_local! { pub static OrderedObjectArrayPermutationUtil_instance: Option<Rc<RefCell<OrderedObjectArrayPermutationUtil>>> = OrderedObjectArrayPermutationUtil::new(); }
 
 impl OrderedObjectArrayPermutationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<OrderedObjectArrayPermutationUtil>>> {
@@ -88,7 +92,7 @@ impl OrderedObjectArrayPermutationUtil {
 
     pub fn swap(&mut self, mut data: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>>, mut a: i32, mut b: i32) {
         let mut temp: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = data[(a) as usize].clone();
-        data[(a) as usize] = data[(b) as usize].clone();
+        data[(a) as usize] = { let java_value = (data[(b) as usize]).clone(); java_value }.clone();
         data[(b) as usize] = temp.clone();
     }
     
@@ -110,7 +114,7 @@ impl OrderedObjectArrayPermutationUtil {
         println!("{}", iterations.clone());
         for count in (0..iterations - 1_i64) {
             self.getNext(data.clone());
-            jcall!(visitor).visit(None /* Java this: a &mut self method has no Rc of itself */);
+            jcall!(visitor).as_Visitor_mut().visit(None /* Java this: a &mut self method has no Rc of itself */);
         }
         println!("{}", self.FINISHED.clone());
     }

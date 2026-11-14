@@ -5,7 +5,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::InputStream::InputStream;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -20,6 +22,10 @@ pub struct OpenGLResources {
 thread_local! { pub static OpenGLResources_instance: Option<Rc<RefCell<OpenGLResources>>> = OpenGLResources::new(); }
 
 impl OpenGLResources {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -52,19 +58,19 @@ impl OpenGLResources {
     
 
     // throws Exception
-    pub fn openRawResource(&mut self, mut id: i32) -> Option<Rc<RefCell<InputStream>>> {
+    pub fn openRawResource(&mut self, mut id: i32) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     
 
     // throws Exception
-    pub fn openRawResourceFromName(&mut self, mut resourceName: String) -> Option<Rc<RefCell<InputStream>>> {
+    pub fn openRawResourceFromName(&mut self, mut resourceName: String) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     
 
     // throws Exception
-    pub fn getResourceAsStream(&mut self, mut resourceName: String) -> Option<Rc<RefCell<InputStream>>> {
+    pub fn getResourceAsStream(&mut self, mut resourceName: String) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     

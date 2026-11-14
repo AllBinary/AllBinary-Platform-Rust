@@ -16,10 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::awt::event::KeyEvent::KeyEvent;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::awt::event::KeyEvent::KeyEvent;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::data::tree::dom::DomNodeHelper::DomNodeHelper;
@@ -34,6 +33,7 @@ use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::BasicProfileActionScriptInput::BasicProfileActionScriptInput;
 use super::KeyboardActionScriptInputInterface::KeyboardActionScriptInputInterface;
 use super::KeyboardActionScriptInputJPanel::KeyboardActionScriptInputJPanel;
@@ -60,8 +60,6 @@ thread_local! { pub static KeyboardActionScriptInput_NAME: String = String::from
 impl crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface for KeyboardActionScriptInput {
     fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { Self::toXmlNode(self, document) }
 }
-impl crate::org::allbinary::input::automation::actions::script::condition::processors::ProfileActionScriptProcessorInterface::ProfileActionScriptProcessorInterface for KeyboardActionScriptInput {
-}
 impl crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItemInterface::ProfileActionScriptItemInterface for KeyboardActionScriptInput {
     fn process(&mut self, mut frame: Option<i64>) { Self::process(self, frame) }
 }
@@ -82,30 +80,30 @@ impl KeyboardActionScriptInput {
         this.logUtil = LogUtil::getInstance();
         this.keyArray = vec![KeySingletonFactory::getInstance(unsafe { crate::java::awt::event::KeyEvent::KeyEvent_VK_0.clone() }.clone())];
         // super(...) is in the struct literal above
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         let mut actionNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(unsafe { KeyboardActionScriptInputData_NAME.clone() }.clone(), jcall!(node).getChildNodes());
         if actionNode.is_some() {
             let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(actionNode).getChildNodes();
-            let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-            for index in (0..jcall!(nodeList).getLength()) {
+            let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
                 let mut childNode: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
                 if jcall!(jcall!(childNode).getNodeName()).startsWith(unsafe { KeyboardActionScriptInputData_KEY.clone() }.clone()) {
                     let mut keyString: String = DomNodeHelper::getTextNodeValue(childNode.clone());
-                    jcall!(vector).add(crate::java_into_object((keyString.clone()).to_string()));
+                    jcall!(vector).add(crate::java_into_object(Some((keyString.clone()).trim().parse::<i32>().expect("NumberFormatException"))));
                 } else if jcall!(jcall!(childNode).getNodeName()).compareTo(unsafe { KeyboardActionScriptInputData_DELAY_BETWEEN_KEYS.clone() }.clone()) == 0 {
                     let mut time: String = DomNodeHelper::getTextNodeValue(childNode.clone());
-                    { let java_arguments = ((((time.clone()).to_string()).unwrap() as i32),); this.setDelayBetweenKeys(java_arguments.0) };
+                    { let java_arguments = (((Some((time.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32),); this.setDelayBetweenKeys(java_arguments.0) };
                 } else if jcall!(jcall!(childNode).getNodeName()).compareTo(unsafe { KeyboardActionScriptInputData_PRESS.clone() }.clone()) == 0 {
                     let mut value: String = DomNodeHelper::getTextNodeValue(childNode.clone());
-                    { let java_arguments = ((value.clone()).to_string(),); this.setPress(java_arguments.0) };
+                    { let java_arguments = (Some((value.clone()).eq_ignore_ascii_case("true")),); this.setPress(java_arguments.0) };
                 } else if jcall!(jcall!(childNode).getNodeName()).compareTo(unsafe { KeyboardActionScriptInputData_RELEASE.clone() }.clone()) == 0 {
                     let mut value: String = DomNodeHelper::getTextNodeValue(childNode.clone());
-                    { let java_arguments = ((value.clone()).to_string(),); this.setRelease(java_arguments.0) };
+                    { let java_arguments = (Some((value.clone()).eq_ignore_ascii_case("true")),); this.setRelease(java_arguments.0) };
                 } else {
                     panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Action Script Input Unknown Node"))));
                 }
             }
-            { let java_arguments = ((jcall!(vector).toArrayType(vec![None; (jcall!(vector).size()) as usize])).clone() /* as  */,); this.setKeyArray(java_arguments.0) };
+            { let java_arguments = (jcall!(vector).toArrayType(vec![None; (jcall!(vector).size()) as usize]),); this.setKeyArray(java_arguments.0) };
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Action Script Input Node Null"))));
         }
@@ -117,8 +115,9 @@ impl KeyboardActionScriptInput {
     }
 
     pub fn new1(mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct1(node))));
-            this.keyboardActionScriptInputJPanel = KeyboardActionScriptInputJPanel::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct1(node.clone()))));
+            let mut actionNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(unsafe { KeyboardActionScriptInputData_NAME.clone() }.clone(), jcall!(node).getChildNodes());
+            jcall!(this).keyboardActionScriptInputJPanel = KeyboardActionScriptInputJPanel::new(this.clone().map(|reference| reference as Rc<RefCell<dyn KeyboardActionScriptInputInterface>>));
         this
     }
     
@@ -146,7 +145,7 @@ impl KeyboardActionScriptInput {
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
         let this = Some(Rc::new(RefCell::new(Self::new_struct())));
-            this.keyboardActionScriptInputJPanel = KeyboardActionScriptInputJPanel::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+            jcall!(this).keyboardActionScriptInputJPanel = KeyboardActionScriptInputJPanel::new(this.clone().map(|reference| reference as Rc<RefCell<dyn KeyboardActionScriptInputInterface>>));
         this
     }
     
@@ -198,8 +197,8 @@ impl KeyboardActionScriptInput {
     
 
     pub fn setKeyArray(&mut self, mut keyArray: Vec<Option<i32>>) {
-        if keyArray.is_some() {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", jcall!(CommonLabels::getInstance()).START, (keyArray.len() as i32)), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setKeyArray"),); let java_result = jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); java_result };
+        if !keyArray.is_empty() {
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).START.clone(); java_field }, (keyArray.len() as i32)), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setKeyArray"),); let java_result = jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); java_result };
         }
         self.keyArray = keyArray.clone();
     }
@@ -216,7 +215,7 @@ impl KeyboardActionScriptInput {
     
 
     pub fn setText(&mut self, mut text: String) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", jcall!(CommonLabels::getInstance()).START, text), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setText"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).START.clone(); java_field }, text), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setText"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut integerArray: Vec<Option<i32>> = self.integerArrayValue(text.clone());
         self.setKeyArray(integerArray.clone());
     }
@@ -240,39 +239,39 @@ impl KeyboardActionScriptInput {
     
 
     pub fn integerArrayValue(&mut self, mut text: String) -> Vec<Option<i32>> {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", jcall!(CommonLabels::getInstance()).START, text), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("integerArrayValue"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).START.clone(); java_field }, text), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("integerArrayValue"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut index: i32 = 0;
         while index < (text.chars().count() as i32) {
             let mut aChar: char = text.chars().nth((index.clone()) as usize).unwrap();
             if aChar == '&' {
                 if text.chars().nth((index + 1) as usize).unwrap() == '#' {
-                    let mut endIndex: i32 = jcall!(text).indexOf(';', index + 1);
+                    let mut endIndex: i32 = { let java_from = (index + 1).max(0) as usize; text.get(java_from..).and_then(|java_rest| java_rest.find(';')).map(|index| (index + java_from) as i32).unwrap_or(-1) };
                     if endIndex != -1 {
                         let mut nextCharString: String = text[(index + 2) as usize..(endIndex) as usize].to_string();
-                        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", jcall!(CommonLabels::getInstance()).NEXT, String::from(" Char String: ")), nextCharString), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("integerArrayValue"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-                        jcall!(vector).add(crate::java_into_object((nextCharString[(index) as usize..((nextCharString.chars().count() as i32)) as usize].to_string()).to_string()));
-                        index = index + (nextCharString.chars().count() as i32) + 3;
+                        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).NEXT.clone(); java_field }, String::from(" Char String: ")), nextCharString), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("integerArrayValue"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                        jcall!(vector).add(crate::java_into_object(Some((nextCharString[(index) as usize..((nextCharString.chars().count() as i32)) as usize].to_string()) as i32)));
+                        index = { let java_value = (index + (nextCharString.chars().count() as i32) + 3).clone(); java_value };
                         continue;
                     }
                 }
             }
-            jcall!(vector).add(crate::java_into_object(jcall!(KeySingletonFactory::getHashtable()).get((aChar.clone()).to_string())));
+            jcall!(vector).add(crate::java_into_object(jcall!(KeySingletonFactory::getHashtable()).get(crate::java_into_object((aChar.clone()).to_string()))));
             index += 1;
         }
-        let mut integerArray: Vec<Option<i32>> = (jcall!(vector).toArrayType(vec![None; (jcall!(vector).size()) as usize])).clone() /* as  */;
+        let mut integerArray: Vec<Option<i32>> = jcall!(vector).toArrayType(vec![None; (jcall!(vector).size()) as usize]);
         return integerArray.clone();
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
         for index in (0..(self.getKeyArray().len() as i32)) {
-            jcall!(hashMap).put(format!("{}{}", unsafe { KeyboardActionScriptInputData_KEY.clone() }, index), (self.getKeyArray()[(index) as usize].clone()).to_string());
+            jcall!(hashMap).put(crate::java_into_object(format!("{}{}", unsafe { KeyboardActionScriptInputData_KEY.clone() }, index)), { let java_argument = crate::java_into_object((self.getKeyArray()[(index) as usize].clone()).to_string()); java_argument });
         }
-        jcall!(hashMap).put(unsafe { KeyboardActionScriptInputData_DELAY_BETWEEN_KEYS.clone() }.clone(), (self.getDelayBetweenKeys()).to_string());
-        jcall!(hashMap).put(unsafe { KeyboardActionScriptInputData_PRESS.clone() }.clone(), (self.isPress()).to_string());
-        jcall!(hashMap).put(unsafe { KeyboardActionScriptInputData_RELEASE.clone() }.clone(), (self.isRelease()).to_string());
+        jcall!(hashMap).put(crate::java_into_object(unsafe { KeyboardActionScriptInputData_DELAY_BETWEEN_KEYS.clone() }.clone()), { let java_argument = crate::java_into_object((self.getDelayBetweenKeys()).to_string()); java_argument });
+        jcall!(hashMap).put(crate::java_into_object(unsafe { KeyboardActionScriptInputData_PRESS.clone() }.clone()), { let java_argument = crate::java_into_object((self.isPress()).to_string()); java_argument });
+        jcall!(hashMap).put(crate::java_into_object(unsafe { KeyboardActionScriptInputData_RELEASE.clone() }.clone()), { let java_argument = crate::java_into_object((self.isRelease()).to_string()); java_argument });
         { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("HashMap: "), jcall!(hashMap).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toHashMap()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         return hashMap.clone();
     }
@@ -280,8 +279,8 @@ impl KeyboardActionScriptInput {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut node: Option<Rc<RefCell<Node>>> = self.base.toXmlNode(document.clone());
-        jcall!(node).appendChild(ModDomHelper::createNodeWithValueNodes(document.clone(), unsafe { KeyboardActionScriptInputData_NAME.clone() }.clone(), self.toHashMap()));
+        let mut node: Option<Rc<RefCell<Node>>> = { let java_arguments = (document.clone(),); self.base.toXmlNode(java_arguments.0) };
+        jcall!(node).appendChild({ let java_argument = ModDomHelper::createNodeWithValueNodes_Document_Node_HashMap(document.clone(), unsafe { KeyboardActionScriptInputData_NAME.clone() }.clone(), self.toHashMap()); java_argument });
         return node.clone();
     }
     
@@ -335,7 +334,7 @@ pub trait KeyboardActionScriptInputDyn: crate::org::allbinary::input::automation
     fn getText(&mut self) -> String { KeyboardActionScriptInput::getText(self.as_KeyboardActionScriptInput_mut()) }
     fn setText(&mut self, mut text: String) { KeyboardActionScriptInput::setText(self.as_KeyboardActionScriptInput_mut(), text) }
     fn integerArrayValue(&mut self, mut text: String) -> Vec<Option<i32>> { KeyboardActionScriptInput::integerArrayValue(self.as_KeyboardActionScriptInput_mut(), text) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { KeyboardActionScriptInput::toHashMap(self.as_KeyboardActionScriptInput_mut()) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { KeyboardActionScriptInput::toHashMap(self.as_KeyboardActionScriptInput_mut()) }
     fn log(&mut self) { KeyboardActionScriptInput::log(self.as_KeyboardActionScriptInput_mut()) }
 }
 impl KeyboardActionScriptInputDyn for KeyboardActionScriptInput {

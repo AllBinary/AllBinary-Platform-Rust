@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::string::CommonPhoneStrings::CommonPhoneStrings;
 
 // Borrows the object of a Java reference
@@ -32,6 +32,10 @@ pub struct CanvasUtil {
 
 
 impl CanvasUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -47,16 +51,16 @@ impl CanvasUtil {
 
     pub fn getKeyName(mut key: i32) -> String {
         let mut commonPhoneStrings: Option<Rc<RefCell<CommonPhoneStrings>>> = CommonPhoneStrings::getInstance();
-        if key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() } {
-            return jcall!(commonPhoneStrings).UP.clone();
-        } else if key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.clone() } {
-            return jcall!(commonPhoneStrings).DOWN.clone();
-        } else if key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() } {
-            return jcall!(commonPhoneStrings).RIGHT.clone();
-        } else if key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() } {
-            return jcall!(commonPhoneStrings).LEFT.clone();
-        } else if key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_FIRE.clone() } {
-            return jcall!(commonPhoneStrings).FIRE.clone();
+        if key == crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone) {
+            return { let java_field = jcall!(commonPhoneStrings).UP.clone(); java_field }.clone();
+        } else if key == crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.with(Clone::clone) {
+            return { let java_field = jcall!(commonPhoneStrings).DOWN.clone(); java_field }.clone();
+        } else if key == crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone) {
+            return { let java_field = jcall!(commonPhoneStrings).RIGHT.clone(); java_field }.clone();
+        } else if key == crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone) {
+            return { let java_field = jcall!(commonPhoneStrings).LEFT.clone(); java_field }.clone();
+        } else if key == crate::javax::microedition::lcdui::Canvas::Canvas_FIRE.with(Clone::clone) {
+            return { let java_field = jcall!(commonPhoneStrings).FIRE.clone(); java_field }.clone();
         }
         return String::from("UNKNOWN KEY");
     }

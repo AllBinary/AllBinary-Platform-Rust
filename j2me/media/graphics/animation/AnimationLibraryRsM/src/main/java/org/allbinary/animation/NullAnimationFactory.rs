@@ -17,8 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
 use super::ProceduralAnimationInterfaceFactoryInterface::ProceduralAnimationInterfaceFactoryInterface;
 use super::Animation::Animation;
@@ -46,10 +47,12 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 impl ProceduralAnimationInterfaceFactoryInterface for NullAnimationFactory {
     fn getInstanceAnimation(&mut self, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { Self::getInstanceAnimation(self, animationInterface) }
 }
-impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface for NullAnimationFactory {
-}
 
 impl NullAnimationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -60,9 +63,9 @@ impl NullAnimationFactory {
         this.NULL_ANIMATION = Animation::new() /* Java anonymous class body: implement it as a named type
         
 
-        pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+        pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         }
-*/;
+*/.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
         this.EMPTY_ARRAY = vec![None; (0) as usize];
         this
     }

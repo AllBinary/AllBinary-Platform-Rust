@@ -18,7 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::android::NullParcelable::NullParcelable;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Command::Command;
 use crate::android::app::PendingIntent::PendingIntent;
 use crate::android::content::Context::Context;
 use crate::android::os::Parcelable::Parcelable;
@@ -37,6 +37,10 @@ thread_local! { pub static NotificationBuilder_NULL_NOTIFICATION_BUILDER: Option
 
 impl NotificationBuilder {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -48,14 +52,14 @@ impl NotificationBuilder {
     }
     
 
-    pub fn build(&mut self, mut context: Option<Rc<RefCell<Context>>>, mut command: Option<Rc<RefCell<Command>>>, mut message: String, mut integer: Option<i32>, mut pendingIntent: Option<Rc<RefCell<PendingIntent>>>) -> Option<Rc<RefCell<Parcelable>>> {
+    pub fn build(&mut self, mut context: Option<Rc<RefCell<Context>>>, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut message: String, mut integer: Option<i32>, mut pendingIntent: Option<Rc<RefCell<PendingIntent>>>) -> Option<Rc<RefCell<Parcelable>>> {
         return crate::org::allbinary::android::NullParcelable::NullParcelable_NULL_PARCELABLE.with(Clone::clone).clone();
     }
 }
-pub trait NotificationBuilderDyn {
+pub trait NotificationBuilderDyn: std::any::Any {
     fn as_NotificationBuilder(&self) -> &NotificationBuilder;
     fn as_NotificationBuilder_mut(&mut self) -> &mut NotificationBuilder;
-    fn build(&mut self, mut context: Option<Rc<RefCell<Context>>>, mut command: Option<Rc<RefCell<Command>>>, mut message: String, mut integer: Option<i32>, mut pendingIntent: Option<Rc<RefCell<PendingIntent>>>) -> Option<Rc<RefCell<Parcelable>>> { NotificationBuilder::build(self.as_NotificationBuilder_mut(), context, command, message, integer, pendingIntent) }
+    fn build(&mut self, mut context: Option<Rc<RefCell<Context>>>, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut message: String, mut integer: Option<i32>, mut pendingIntent: Option<Rc<RefCell<PendingIntent>>>) -> Option<Rc<RefCell<Parcelable>>> { NotificationBuilder::build(self.as_NotificationBuilder_mut(), context, command, message, integer, pendingIntent) }
 }
 impl NotificationBuilderDyn for NotificationBuilder {
     fn as_NotificationBuilder(&self) -> &NotificationBuilder { self }

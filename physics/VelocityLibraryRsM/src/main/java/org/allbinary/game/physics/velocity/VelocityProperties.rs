@@ -175,13 +175,13 @@ impl VelocityProperties {
     
 
     pub fn setVelocityi(&mut self, mut magnitude: i64, mut angle: i32, mut otherAngle: i32) {
-        self.base.setVelocityi(magnitude.clone(), angle.clone(), otherAngle.clone());
+        { let java_arguments = (magnitude.clone(), angle.clone(), otherAngle.clone(),); self.base.setVelocityi(java_arguments.0, java_arguments.1, java_arguments.2) };
         self.limitXYToForwardAndReverseMaxVelocity();
     }
     
 
     pub fn addVelocityi(&mut self, mut magnitude: i64, mut angle: i32, mut otherAngle: i32) {
-        self.base.addVelocityi(magnitude.clone(), angle.clone(), otherAngle.clone());
+        { let java_arguments = (magnitude.clone(), angle.clone(), otherAngle.clone(),); self.base.addVelocityi(java_arguments.0, java_arguments.1, java_arguments.2) };
         self.limitXYToForwardAndReverseMaxVelocity();
     }
 }
@@ -197,6 +197,20 @@ impl crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::Ba
     fn as_BasicVelocityProperties(&self) -> &crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties { &self.base }
     fn as_BasicVelocityProperties_mut(&mut self) -> &mut crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties { &mut self.base }
     fn setVelocityi(&mut self, mut magnitude: i64, mut angle: i32, mut otherAngle: i32) { Self::setVelocityi(self, magnitude, angle, otherAngle) }
+}
+impl crate::org::allbinary::game::physics::velocity::BasicVelocityInterface::BasicVelocityInterface for VelocityProperties {
+    fn getVelocityXBasicDecimalP(&mut self) -> Option<Rc<RefCell<crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal>>> { crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties::getVelocityXBasicDecimalP(crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn::as_BasicVelocityProperties_mut(self)) }
+    fn getVelocityYBasicDecimalP(&mut self) -> Option<Rc<RefCell<crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal>>> { crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties::getVelocityYBasicDecimalP(crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn::as_BasicVelocityProperties_mut(self)) }
+    fn zero(&mut self) { crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties::zero(crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn::as_BasicVelocityProperties_mut(self)) }
+    fn setVelocityWithBigDecimalAndDirection(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal>>>, p2: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>, p3: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>) { crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties::setVelocityWithBigDecimalAndDirection(crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn::as_BasicVelocityProperties_mut(self), p1, p2, p3) }
+    fn addVelocityWithBigDecimalAndDirection(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal>>>, p2: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>, p3: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>) { crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties::addVelocityWithBigDecimalAndDirection(crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn::as_BasicVelocityProperties_mut(self), p1, p2, p3) }
+    fn setVelocityWithDirection(&mut self, p1: i64, p2: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>, p3: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>) { crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties::setVelocityWithDirection(crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn::as_BasicVelocityProperties_mut(self), p1, p2, p3) }
+    fn addVelocityWithDirection(&mut self, p1: i64, p2: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>, p3: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>) { crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties::addVelocityWithDirection(crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn::as_BasicVelocityProperties_mut(self), p1, p2, p3) }
+    fn setVelocityWithBigDecimal(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal>>>, p2: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>, p3: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties::setVelocityWithBigDecimal(crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn::as_BasicVelocityProperties_mut(self), p1, p2, p3) }
+    fn addVelocityWithBigDecimal(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal>>>, p2: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>, p3: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties::addVelocityWithBigDecimal(crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn::as_BasicVelocityProperties_mut(self), p1, p2, p3) }
+    fn setVelocity(&mut self, p1: i64, p2: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>, p3: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties::setVelocity(crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn::as_BasicVelocityProperties_mut(self), p1, p2, p3) }
+    fn addVelocity(&mut self, p1: i64, p2: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>, p3: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties::addVelocity(crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn::as_BasicVelocityProperties_mut(self), p1, p2, p3) }
+    fn addVelocityi(&mut self, mut magnitude: i64, mut angle: i32, mut otherAngle: i32) { Self::addVelocityi(self, magnitude, angle, otherAngle) }
 }
 
 

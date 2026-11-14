@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use super::MyFontProcessor::MyFontProcessor;
 use super::UpdateMyFontInterface::UpdateMyFontInterface;
 
@@ -51,7 +51,7 @@ impl UpdateMyFontProcessor {
     }
     
 
-    pub fn process(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn process(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.updateMeasurementProcessor).updateMeasurement(graphics.clone());
     }
 }
@@ -66,7 +66,7 @@ impl std::ops::DerefMut for UpdateMyFontProcessor {
 impl crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn for UpdateMyFontProcessor {
     fn as_MyFontProcessor(&self) -> &crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessor { &self.base }
     fn as_MyFontProcessor_mut(&mut self) -> &mut crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessor { &mut self.base }
-    fn process(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::process(self, graphics) }
+    fn process(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::process(self, graphics) }
 }
 
 

@@ -27,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait DirectionalInterface {
+pub trait DirectionalInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn setFrameByDirection(&mut self, direction: Option<Rc<RefCell<Direction>>>);
@@ -40,8 +40,6 @@ pub trait DirectionalInterface {
     
 
     fn adjustFrame(&mut self, angle: i16);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

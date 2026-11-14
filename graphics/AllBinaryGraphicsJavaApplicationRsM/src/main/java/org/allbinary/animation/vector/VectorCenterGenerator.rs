@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::graphics::GPoint::GPoint;
 use crate::org::allbinary::graphics::j2me::workarea::tools::GraphicItemInterface::GraphicItemInterface;
 use crate::org::allbinary::graphics::j2me::workarea::tools::LinesGraphicItem::LinesGraphicItem;
@@ -29,6 +28,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -52,6 +52,10 @@ pub struct VectorCenterGenerator {
 
 
 impl VectorCenterGenerator {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -84,26 +88,26 @@ impl VectorCenterGenerator {
     
 
     // throws Exception
-    pub fn calculate(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) {
+    pub fn calculate(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
         let mut graphicItemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(hashMap).keySet()).toArray();
         let mut size: i32 = (graphicItemArray.len() as i32).clone();
         for index in (0..size) {
-            let mut item: Option<Rc<RefCell<dyn GraphicItemInterface>>> = (jcall!(hashMap).get(graphicItemArray[(index) as usize].clone())).clone() /* as GraphicItemInterface */;
+            let mut item: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(hashMap).get(graphicItemArray[(index) as usize].clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
             if jcall!(item).getName() == LinesGraphicItem::getStaticName() {
                 { let java_arguments = (jcall!(jcall!(item).getPointsInterface()).getPoints(),); self.getInstance(java_arguments.0) };
             }
         }
-        jcall!(self.logUtil).putF(format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("minX: "), self.minX), String::from(" minY: ")), self.minY), String::from(" maxX: ")), self.maxX), String::from(" maxY: ")), self.maxY), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET_INSTANCE.clone());
-        self.setWidth(self.maxX - self.minX);
-        self.setHeight(self.maxY - self.minY);
+        jcall!(self.logUtil).putF(format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("minX: "), self.minX), String::from(" minY: ")), self.minY), String::from(" maxX: ")), self.maxX), String::from(" maxY: ")), self.maxY), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET_INSTANCE.clone(); java_field }.clone());
+        { let java_arguments = (self.maxX - self.minX,); self.setWidth(java_arguments.0) };
+        { let java_arguments = (self.maxY - self.minY,); self.setHeight(java_arguments.0) };
         let mut max: i32 = self.getWidth();
         if self.getHeight() > max {
             max = self.getHeight();
         }
         let mut middle: i32 = max / 2;
         let mut commonLabels: Option<Rc<RefCell<CommonLabels>>> = CommonLabels::getInstance();
-        let mut s: String = jcall!(StringMaker::new()).append(jcall!(commonLabels).WIDTH_LABEL.clone()).appendint(self.getWidth()).append(jcall!(commonLabels).HEIGHT_LABEL.clone()).appendint(self.getHeight()).append(String::from(" max: ")).appendint(max.clone()).append(String::from(" middle: ")).appendint(middle.clone()).toString();
-        jcall!(self.logUtil).putF(s.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET_INSTANCE.clone());
+        let mut s: String = jcall!(StringMaker::new()).append({ let java_field = jcall!(commonLabels).WIDTH_LABEL.clone(); java_field }.clone()).appendint(self.getWidth()).append({ let java_field = jcall!(commonLabels).HEIGHT_LABEL.clone(); java_field }.clone()).appendint(self.getHeight()).append(String::from(" max: ")).appendint(max.clone()).append(String::from(" middle: ")).appendint(middle.clone()).toString();
+        jcall!(self.logUtil).putF(s.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET_INSTANCE.clone(); java_field }.clone());
         let mut currentMiddleX: i32 = self.minX + self.getWidth() / 2;
         let mut currentMiddleY: i32 = self.minY + self.getHeight() / 2;
         self.dx = middle - currentMiddleX;
@@ -112,13 +116,13 @@ impl VectorCenterGenerator {
     
 
     // throws Exception
-    pub fn transform(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) {
+    pub fn transform(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
         self.calculate(hashMap.clone());
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from(" dx: ")).appendint(self.dx.clone()).append(String::from(" dy: ")).appendint(self.dy.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET_INSTANCE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from(" dx: ")).appendint(self.dx.clone()).append(String::from(" dy: ")).appendint(self.dy.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET_INSTANCE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut graphicItemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(hashMap).keySet()).toArray();
         let mut size: i32 = (graphicItemArray.len() as i32).clone();
         for index in (0..size) {
-            let mut item: Option<Rc<RefCell<dyn GraphicItemInterface>>> = (jcall!(hashMap).get(graphicItemArray[(index) as usize].clone())).clone() /* as GraphicItemInterface */;
+            let mut item: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(hashMap).get(graphicItemArray[(index) as usize].clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
             let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = VectorCenterGenerator::translate(jcall!(jcall!(item).getPointsInterface()).getPoints(), self.dx.clone(), self.dy.clone());
             let mut newPoints: Option<Rc<RefCell<Points>>> = Points::new();
             jcall!(newPoints).addPoints(list.clone());
@@ -134,24 +138,24 @@ impl VectorCenterGenerator {
             for index in (0..size) {
                 let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = { let java_object = (jcall!(pointVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) };
                 if jcall!(point).getX() < self.minX {
-                    self.minX = jcall!(point).getX();
+                    self.minX = { let java_value = (jcall!(point).getX()).clone(); java_value };
                 }
                 if jcall!(point).getX() > self.maxX {
-                    self.maxX = jcall!(point).getX();
+                    self.maxX = { let java_value = (jcall!(point).getX()).clone(); java_value };
                 }
                 if jcall!(point).getY() < self.minY {
-                    self.minY = jcall!(point).getY();
+                    self.minY = { let java_value = (jcall!(point).getY()).clone(); java_value };
                 }
                 if jcall!(point).getY() > self.maxY {
-                    self.maxY = jcall!(point).getY();
+                    self.maxY = { let java_value = (jcall!(point).getY()).clone(); java_value };
                 }
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             panic!("{:?}", e);
             }
         }

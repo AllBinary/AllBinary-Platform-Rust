@@ -34,6 +34,10 @@ pub struct ForwardData {
 thread_local! { pub static ForwardData_instance: Option<Rc<RefCell<ForwardData>>> = ForwardData::new(); }
 
 impl ForwardData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

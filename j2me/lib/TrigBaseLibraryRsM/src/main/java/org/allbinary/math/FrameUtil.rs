@@ -35,6 +35,10 @@ pub struct FrameUtil {
 thread_local! { pub static FrameUtil_instance: Option<Rc<RefCell<FrameUtil>>> = FrameUtil::new(); }
 
 impl FrameUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<FrameUtil>>> {
@@ -67,15 +71,15 @@ impl FrameUtil {
     pub fn adjustAngleToFrameAngle(&mut self, mut currentAngle: i32) -> i32 {
         let mut angleFactory: Option<Rc<RefCell<AngleFactory>>> = AngleFactory::getInstance();
         if currentAngle > 359 {
-            currentAngle = (currentAngle - ((jcall!(angleFactory).TOTAL_ANGLE) as i32));
+            currentAngle = { let java_value = ((currentAngle - (({ let java_field = jcall!(angleFactory).TOTAL_ANGLE.clone(); java_field }) as i32))).clone(); java_value };
             while currentAngle > 359 {
-                currentAngle = (currentAngle - ((jcall!(angleFactory).TOTAL_ANGLE) as i32));
+                currentAngle = { let java_value = ((currentAngle - (({ let java_field = jcall!(angleFactory).TOTAL_ANGLE.clone(); java_field }) as i32))).clone(); java_value };
             }
         }
         if currentAngle < 0 {
-            currentAngle = (currentAngle + ((jcall!(angleFactory).TOTAL_ANGLE) as i32));
+            currentAngle = { let java_value = ((currentAngle + (({ let java_field = jcall!(angleFactory).TOTAL_ANGLE.clone(); java_field }) as i32))).clone(); java_value };
             while currentAngle < 0 {
-                currentAngle = (currentAngle + ((jcall!(angleFactory).TOTAL_ANGLE) as i32));
+                currentAngle = { let java_value = ((currentAngle + (({ let java_field = jcall!(angleFactory).TOTAL_ANGLE.clone(); java_field }) as i32))).clone(); java_value };
             }
         }
         return currentAngle.clone();

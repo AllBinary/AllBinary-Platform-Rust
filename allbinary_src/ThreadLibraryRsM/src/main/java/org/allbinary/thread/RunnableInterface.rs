@@ -19,6 +19,7 @@ use std::rc::Rc;
 use crate::Runnable;
 use super::*;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

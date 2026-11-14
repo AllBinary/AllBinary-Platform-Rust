@@ -33,6 +33,10 @@ pub struct RectangleCollisionPointUtil {
 
 
 impl RectangleCollisionPointUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -52,7 +56,7 @@ impl RectangleCollisionPointUtil {
         {
             let mut index: i32 = jcall!(list).size();
             while { index -= 1; index } >= 0 {
-            point = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) };
+            point = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             if !jcall!(rectangleCollisionUtil).isInside(rectX1.clone(), rectY1.clone(), rectX2.clone(), rectY2.clone(), jcall!(point).getX(), jcall!(point).getY()) {
                 return false;
             }
@@ -68,7 +72,7 @@ impl RectangleCollisionPointUtil {
         {
             let mut index: i32 = jcall!(list).size();
             while { index -= 1; index } >= 0 {
-            point = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) };
+            point = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             if !jcall!(rectangleCollisionUtil).isInside(rectX1.clone(), rectY1.clone(), rectX2.clone(), rectY2.clone(), jcall!(point).getX() * xCellSize, jcall!(point).getY() * yCellSize) {
                 return false;
             }

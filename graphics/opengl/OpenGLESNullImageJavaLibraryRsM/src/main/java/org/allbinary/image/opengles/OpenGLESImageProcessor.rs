@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,6 +32,10 @@ pub struct OpenGLESImageProcessor {
 thread_local! { pub static OpenGLESImageProcessor_instance: Option<Rc<RefCell<dyn OpenGLESImageProcessorDyn>>> = OpenGLESImageProcessor::new().map(|reference| reference as Rc<RefCell<dyn OpenGLESImageProcessorDyn>>); }
 
 impl OpenGLESImageProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -64,7 +68,7 @@ impl OpenGLESImageProcessor {
     pub fn colorMask(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut red: f32, mut green: f32, mut blue: f32, mut alpha: f32) {
     }
 }
-pub trait OpenGLESImageProcessorDyn {
+pub trait OpenGLESImageProcessorDyn: std::any::Any {
     fn as_OpenGLESImageProcessor(&self) -> &OpenGLESImageProcessor;
     fn as_OpenGLESImageProcessor_mut(&mut self) -> &mut OpenGLESImageProcessor;
     fn translate(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut translateX: f32, mut translateY: f32) { OpenGLESImageProcessor::translate(self.as_OpenGLESImageProcessor_mut(), gl, translateX, translateY) }

@@ -27,12 +27,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait HighScoresCanvasInputProcessorFactoryInterface {
+pub trait HighScoresCanvasInputProcessorFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getInstance(&mut self, highScoresCanvas: Option<Rc<RefCell<HighScoresCanvas>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScoresCanvasInputProcessor::HighScoresCanvasInputProcessorDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

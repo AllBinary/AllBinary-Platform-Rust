@@ -22,6 +22,7 @@ use crate::org::allbinary::game::state::GameState::GameState;
 use crate::org::allbinary::logic::communication::log::ForcedLogUtil::ForcedLogUtil;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventStrings::EventStrings;
+use crate::java::lang::Exception::*;
 use super::AdConfiguration::AdConfiguration;
 use super::Advertisements::Advertisements;
 
@@ -40,6 +41,10 @@ pub struct GameAdStateBase {
 
 
 impl GameAdStateBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut adConfiguration: Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::AdConfiguration::AdConfigurationDyn>>>) -> Self {
@@ -90,7 +95,7 @@ impl GameAdStateBase {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
@@ -155,7 +160,7 @@ impl GameAdStateBase {
         return false;
     }
 }
-pub trait GameAdStateBaseDyn {
+pub trait GameAdStateBaseDyn: std::any::Any {
     fn as_GameAdStateBase(&self) -> &GameAdStateBase;
     fn as_GameAdStateBase_mut(&mut self) -> &mut GameAdStateBase;
     fn initViewArray(&mut self, mut viewArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>>) { GameAdStateBase::initViewArray(self.as_GameAdStateBase_mut(), viewArray) }

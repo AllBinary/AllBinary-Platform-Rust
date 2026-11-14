@@ -17,8 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::InputStream::InputStream;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::java::io::InputStream::InputStream;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::org::allbinary::MIDPUtil::MIDPUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,6 +36,10 @@ pub struct ImageFactory {
 thread_local! { pub static ImageFactory_instance: Option<Rc<RefCell<ImageFactory>>> = ImageFactory::new(); }
 
 impl ImageFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -52,28 +58,28 @@ impl ImageFactory {
     
 
     // throws Exception
-    pub fn createImageUrl(&mut self, mut url: String) -> Option<Rc<RefCell<Image>>> {
+    pub fn createImageUrl(&mut self, mut url: String) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return Image::createImage(url.clone());
     }
     
 
     // throws Exception
-    pub fn createImage(&mut self, mut caller: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> {
-        return Image::createImage(width.clone(), height.clone());
+    pub fn createImage(&mut self, mut caller: String, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        return jcall!(MIDPUtil::getInstance()).createImageWH(width.clone(), height.clone());
     }
     
 
     // throws Exception
-    pub fn createImageFromInputStream2(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut inputStream: Option<Rc<RefCell<InputStream>>>) -> Option<Rc<RefCell<Image>>> {
-        let mut image: Option<Rc<RefCell<Image>>> = Image::createImage(inputStream.clone());
+    pub fn createImageFromInputStream2(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(MIDPUtil::getInstance()).createImageFromInputStream(inputStream.clone());
         return image.clone();
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn createImageFromInputStream(&mut self, mut inputStream: Option<Rc<RefCell<InputStream>>>) -> Option<Rc<RefCell<Image>>> {
-        return Image::createImage(inputStream.clone());
+    pub fn createImageFromInputStream(&mut self, mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        return jcall!(MIDPUtil::getInstance()).createImageFromInputStream(inputStream.clone());
     }
 }
 

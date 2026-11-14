@@ -32,6 +32,10 @@ pub struct GameInputMotionInfo {
 
 
 impl GameInputMotionInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut maxApi: i32, mut maxPointers: i32) -> Self {
@@ -48,7 +52,7 @@ impl GameInputMotionInfo {
         Some(Rc::new(RefCell::new(Self::new_struct(maxApi, maxPointers))))
     }
 }
-pub trait GameInputMotionInfoDyn {
+pub trait GameInputMotionInfoDyn: std::any::Any {
     fn as_GameInputMotionInfo(&self) -> &GameInputMotionInfo;
     fn as_GameInputMotionInfo_mut(&mut self) -> &mut GameInputMotionInfo;
 }

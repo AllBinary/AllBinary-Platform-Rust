@@ -17,11 +17,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -47,7 +48,7 @@ impl PositionWidget {
             position: 0,
             positionString: String::new(),
         };
-        this.positionString = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.positionString = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this.updateMaxHeight = 10;
         this.updateMaxWidth = 40;
@@ -66,12 +67,12 @@ impl PositionWidget {
 
     pub fn set(&mut self, mut position: i32) {
         self.position = position.clone();
-        self.positionString = PositionWidget::toString(self.get());
+        self.positionString = { let java_value = (PositionWidget::toString(self.get())).clone(); java_value };
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.paintString(graphics.clone(), self.positionString.clone());
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(), self.positionString.clone(),); self.base.paintString(java_arguments.0, java_arguments.1) };
     }
     
 
@@ -101,6 +102,9 @@ impl std::ops::DerefMut for PositionWidget {
 impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for PositionWidget {
     fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self.base }
     fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self.base }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for PositionWidget {
+    fn updateMeasurement(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud::updateMeasurement(crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn::as_BasicHud_mut(self), p1) }
 }
 
 

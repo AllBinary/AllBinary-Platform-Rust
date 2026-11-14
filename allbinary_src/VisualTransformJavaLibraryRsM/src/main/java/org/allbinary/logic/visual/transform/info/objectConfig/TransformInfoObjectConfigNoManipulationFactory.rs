@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::control::crypt::file::CryptFileReader::CryptFi
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::TransformInfoObjectConfigData::TransformInfoObjectConfigData;
 use super::TransformInfoObjectConfig::TransformInfoObjectConfig;
 use super::TransformInfoObjectConfigInterface::TransformInfoObjectConfigInterface;
@@ -41,6 +42,10 @@ pub struct TransformInfoObjectConfigNoManipulationFactory {
 thread_local! { pub static TransformInfoObjectConfigNoManipulationFactory_instance: Option<Rc<RefCell<TransformInfoObjectConfigNoManipulationFactory>>> = TransformInfoObjectConfigNoManipulationFactory::new(); }
 
 impl TransformInfoObjectConfigNoManipulationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<TransformInfoObjectConfigNoManipulationFactory>>> {
@@ -64,22 +69,23 @@ impl TransformInfoObjectConfigNoManipulationFactory {
     // throws Exception
     // Java overloaded method: Rust needs a different name
     pub fn getInstance2(&mut self, mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut objectConfigFileAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>) -> Option<Rc<RefCell<dyn TransformInfoObjectConfigInterface>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut transformInfoObjectConfigData: Option<Rc<RefCell<TransformInfoObjectConfigData>>> = TransformInfoObjectConfigData::getInstance();
-            let mut data: String = jcall!(CryptFileReader::new(jcall!(transformInfoObjectConfigData).UNCRYPTED_EXTENSION.clone(), jcall!(jcall!(transformInfoObjectConfigData).getInstance()).ENCRYPTED_EXTENSION.clone())).get(objectConfigFileAbPath.clone());
-            return TransformInfoObjectConfig::new2(transformInfoInterface.clone(), DomDocumentHelper::create1(data.clone())).map(|reference| reference as Rc<RefCell<dyn TransformInfoObjectConfigInterface>>);
+            let mut data: String = jcall!(CryptFileReader::new({ let java_field = jcall!(transformInfoObjectConfigData).UNCRYPTED_EXTENSION.clone(); java_field }.clone(), { let java_field = jcall!(jcall!(transformInfoObjectConfigData).getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone())).get(objectConfigFileAbPath.clone());
+            return Some(TransformInfoObjectConfig::new2(transformInfoInterface.clone(), DomDocumentHelper::create1_String(data.clone())).map(|reference| reference as Rc<RefCell<dyn TransformInfoObjectConfigInterface>>).map(|_java_reference| -> Rc<RefCell<dyn TransformInfoObjectConfigInterface>> { panic!("ClassCastException: the Rust trait of TransformInfoObjectConfig does not have TransformInfoObjectConfigInterface as a base trait") }));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
-                jcall!(self.logUtil).put(String::from("Could Not Load Object Config"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put(String::from("Could Not Load Object Config"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::media::Control::Control;
+use crate::javax::microedition::media::Control::Control;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -29,9 +29,14 @@ macro_rules! jcall {
 pub struct NullControl {
 }
 
-// impl Control for NullControl with the methods of the trait
+impl Control for NullControl {
+}
 
 impl NullControl {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

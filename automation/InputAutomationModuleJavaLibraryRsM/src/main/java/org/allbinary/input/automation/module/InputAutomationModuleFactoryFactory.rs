@@ -16,10 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::util::Collection::Collection;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::java::util::Iterator::Iterator;
 // use crate::javax::help::HelpSet::HelpSet;
 // use crate::javax::help::event::HelpSetEvent::HelpSetEvent;
@@ -31,6 +30,7 @@ use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::java::help::JavaHelpSetNotifier::JavaHelpSetNotifier;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::DefaultListModelHelper::DefaultListModelHelper;
 use super::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterface;
 
@@ -43,13 +43,17 @@ macro_rules! jcall {
 
 pub struct InputAutomationModuleFactoryFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
-    pub hashMap: Option<Rc<RefCell<HashMap>>>,
+    pub hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
     pub defaultListModelHelper: Option<Rc<RefCell<DefaultListModelHelper>>>,
     pub helpSetListenerInterface: Option<Rc<RefCell<HelpSetListener>>>,
 }
 
 
 impl InputAutomationModuleFactoryFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut inputAutomationModuleConfigurations: Option<Rc<RefCell<InputAutomationModuleConfigurations>>>, mut helpSetListenerInterface: Option<Rc<RefCell<HelpSetListener>>>) -> Self {
@@ -62,12 +66,12 @@ impl InputAutomationModuleFactoryFactory {
         this.logUtil = LogUtil::getInstance();
         this.helpSetListenerInterface = helpSetListenerInterface.clone();
         this.defaultListModelHelper = DefaultListModelHelper::new();
-        this.hashMap = jcall!(StdUtil::getInstance()).createHashMap();
+        this.hashMap = { let java_value = (jcall!(StdUtil::getInstance()).createHashMap()).clone(); java_value };
         let mut collection: Option<Rc<RefCell<dyn Collection>>> = jcall!(jcall!(inputAutomationModuleConfigurations).getHashMap()).values();
         let mut iterator: Option<Rc<RefCell<dyn Iterator>>> = jcall!(collection).iterator();
         let mut inputAutomationModuleConfiguration: Option<Rc<RefCell<InputAutomationModuleConfiguration>>> = None;
         while jcall!(iterator).hasNext() {
-            inputAutomationModuleConfiguration = (jcall!(iterator).next()).clone() /* as InputAutomationModuleConfiguration */;
+            inputAutomationModuleConfiguration = { let java_value = ((jcall!(iterator).next()).clone()).clone(); java_value };
             this.add(inputAutomationModuleConfiguration.clone());
         }
         jcall!(this.defaultListModelHelper).initDefaultModelList();
@@ -81,8 +85,8 @@ impl InputAutomationModuleFactoryFactory {
     
 
     pub fn add(&mut self, mut inputAutomationModuleConfiguration: Option<Rc<RefCell<InputAutomationModuleConfiguration>>>) {
-        let mut inputAutomationModuleInterface: Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>> = jcall!(inputAutomationModuleConfiguration).getInputAutomationModuleInterface();
-        { let java_receiver = self.hashMap.clone(); let java_arguments = (jcall!(inputAutomationModuleConfiguration).getName(), inputAutomationModuleInterface.clone(),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
+        let mut inputAutomationModuleInterface: Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>> = jcall!(inputAutomationModuleConfiguration).getInputAutomationModuleInterface();
+        { let java_receiver = self.hashMap.clone(); let java_arguments = (crate::java_into_object(jcall!(inputAutomationModuleConfiguration).getName()), crate::java_into_object(inputAutomationModuleInterface.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
         { let java_receiver = self.defaultListModelHelper.clone(); let java_arguments = (jcall!(inputAutomationModuleConfiguration).getName(),); jcall!(java_receiver).add(java_arguments.0); };
         let mut helpSet: Option<Rc<RefCell<HelpSet>>> = jcall!(inputAutomationModuleInterface).getHelpSet();
         if !JavaHelpSetNotifier::isNotified(helpSet.clone()) {
@@ -97,12 +101,12 @@ impl InputAutomationModuleFactoryFactory {
     }
     
 
-    pub fn getInstance(&mut self, mut moduleName: String) -> Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>> {
+    pub fn getInstance(&mut self, mut moduleName: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>> {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(self.logUtil).putF(format!("{}{}", String::from("Getting Module: "), moduleName), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone());
-        let mut inputAutomationModuleFactoryInterface: Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>> = (jcall!(self.hashMap).get(moduleName.clone())).clone() /* as InputAutomationModuleFactoryInterface */;
+        jcall!(self.logUtil).putF(format!("{}{}", String::from("Getting Module: "), moduleName), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone());
+        let mut inputAutomationModuleFactoryInterface: Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>> = { let java_object = (jcall!(self.hashMap).get(crate::java_into_object(moduleName.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>>().expect("ClassCastException").clone()) };
         if inputAutomationModuleFactoryInterface.is_none() {
-            jcall!(self.logUtil).putF(format!("{}{}", format!("{}{}", String::from("Module: "), moduleName), String::from(" was null")), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone());
+            jcall!(self.logUtil).putF(format!("{}{}", format!("{}{}", String::from("Module: "), moduleName), String::from(" was null")), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone());
         }
         return inputAutomationModuleFactoryInterface.clone();
     }

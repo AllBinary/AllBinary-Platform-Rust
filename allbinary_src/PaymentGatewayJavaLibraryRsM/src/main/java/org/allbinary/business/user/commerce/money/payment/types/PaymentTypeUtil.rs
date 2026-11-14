@@ -38,6 +38,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::PaymentType::PaymentType;
 
 // Borrows the object of a Java reference
@@ -59,6 +60,10 @@ pub struct PaymentTypeUtil {
 thread_local! { pub static PaymentTypeUtil_instance: Option<Rc<RefCell<PaymentTypeUtil>>> = PaymentTypeUtil::new(); }
 
 impl PaymentTypeUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     // Java static initializer: call this once at startup
@@ -84,9 +89,9 @@ impl PaymentTypeUtil {
         this.commonStrings = CommonStrings::getInstance();
         this.SHIPPINGMETHODSFILENAME = String::from("paymentGatewayTypes.xml");
         this.defaultName = String::new();
-        this.paymentTypeVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.paymentTypeVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        let mut sep: String = jcall!(AbPathData::getInstance()).SEPARATOR.clone();
+        let mut sep: String = { let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone();
         jcall!(stringBuffer).append(sep.clone());
         jcall!(stringBuffer).append(String::from("generic"));
         jcall!(stringBuffer).append(sep.clone());
@@ -100,7 +105,7 @@ impl PaymentTypeUtil {
         jcall!(stringBuffer).append(sep.clone());
         jcall!(stringBuffer).append(String::from("gateway"));
         jcall!(stringBuffer).append(sep.clone());
-        this.PAYMENTGATEWAYFILEPATHSTRING = jcall!(stringBuffer).toString();
+        this.PAYMENTGATEWAYFILEPATHSTRING = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         this
     }
 
@@ -119,7 +124,7 @@ impl PaymentTypeUtil {
         let mut size: i32 = jcall!(self.paymentTypeVector).size();
         for i in (0..size) {
             let mut paymentType: Option<Rc<RefCell<PaymentType>>> = { let java_object = (jcall!(self.paymentTypeVector).get(i.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<PaymentType>>>>().expect("ClassCastException").clone()) };
-            if jcall!(jcall!(jcall!(paymentType).getBasicPaymentType()).getName()).compareTo(paymentTypeString.clone()) == 0 {
+            if (jcall!(jcall!(paymentType).getBasicPaymentType()).getName().cmp(&paymentTypeString.clone()) as i32) == 0 {
                 return paymentType.clone();
             }
         }
@@ -129,25 +134,25 @@ impl PaymentTypeUtil {
 
     // throws Exception
     pub fn initDefault(&mut self, mut storeName: String) {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PAYMENT.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PAYMENT.clone(); java_field }.clone()) {
             jcall!(self.logUtil).putF(format!("{}{}", String::from("initDefault Payment: "), self.defaultName), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initDefault"));
         }
         if jcall!(StringValidationUtil::getInstance()).isEmpty(self.defaultName.clone()) {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(URLGLOBALS::getMainPath());
-            jcall!(stringBuffer).append(jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }.clone());
             jcall!(stringBuffer).append(storeName.clone());
-            jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
             jcall!(stringBuffer).append(self.PAYMENTGATEWAYFILEPATHSTRING.clone());
             let mut abPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = (AbPath::new(jcall!(stringBuffer).toString(), self.SHIPPINGMETHODSFILENAME.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone() /* as AbPath */;
-            let mut data: String = jcall!(CryptFileReader::new(jcall!(TransformInfoObjectConfigData::getInstance()).UNCRYPTED_EXTENSION.clone(), jcall!(TransformInfoObjectConfigData::getInstance()).ENCRYPTED_EXTENSION.clone())).get(abPath.clone());
-            let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1(data.clone());
+            let mut data: String = jcall!(CryptFileReader::new({ let java_field = jcall!(TransformInfoObjectConfigData::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field }.clone(), { let java_field = jcall!(TransformInfoObjectConfigData::getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone())).get(abPath.clone());
+            let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1_String(data.clone());
             let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(document).getElementsByTagName(unsafe { crate::org::allbinary::business::user::commerce::money::payment::gateway::PaymentGatewaysData::PaymentGatewaysData_NAME.clone() }.clone());
-            for index in (0..jcall!(nodeList).getLength()) {
+            for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
                 let mut node: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
-                let mut defaultPaymentGatewayNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(EntryData::getInstance()).DEFAULT.clone(), jcall!(node).getChildNodes());
+                let mut defaultPaymentGatewayNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(EntryData::getInstance()).DEFAULT.clone(); java_field }.clone(), jcall!(node).getChildNodes());
                 let mut defaultPaymentGatewayNodeValue: String = DomNodeHelper::getTextNodeValue(defaultPaymentGatewayNode.clone());
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PAYMENT.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PAYMENT.clone(); java_field }.clone()) {
                     jcall!(self.logUtil).putF(format!("{}{}", String::from("DefaultPaymentGatewayNodeValue: "), defaultPaymentGatewayNodeValue), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initDefault"));
                 }
                 if !jcall!(StringValidationUtil::getInstance()).isEmpty(defaultPaymentGatewayNodeValue.clone()) {
@@ -160,12 +165,12 @@ impl PaymentTypeUtil {
 
     // throws Exception
     pub fn getDefault(&mut self, mut storeName: String) -> Option<Rc<RefCell<PaymentType>>> {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PAYMENT.clone()) {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getDefault"));
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PAYMENT.clone(); java_field }.clone()) {
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getDefault"));
         }
         self.initDefault(storeName.clone());
         if !jcall!(StringValidationUtil::getInstance()).isEmpty(self.defaultName.clone()) {
-            return self.get(self.defaultName.clone());
+            return { let java_arguments = (self.defaultName.clone(),); self.get(java_arguments.0) };
         }
         panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("No Default: "), self.defaultName))));
     }
@@ -177,7 +182,7 @@ impl PaymentTypeUtil {
     
 
     pub fn difference(&mut self, mut a_PaymentTypeVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut diff: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut diff: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut size: i32 = jcall!(self.paymentTypeVector).size();
         for i in (0..size) {
             let mut paymentType: Option<Rc<RefCell<PaymentType>>> = { let java_object = (jcall!(self.paymentTypeVector).get(i.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<PaymentType>>>>().expect("ClassCastException").clone()) };

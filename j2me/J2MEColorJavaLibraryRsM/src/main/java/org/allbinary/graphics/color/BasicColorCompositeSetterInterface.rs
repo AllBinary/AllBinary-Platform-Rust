@@ -28,12 +28,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait BasicColorCompositeSetterInterface {
+pub trait BasicColorCompositeSetterInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn setBasicColorP(&mut self, basicColor: Option<Rc<RefCell<BasicColor>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

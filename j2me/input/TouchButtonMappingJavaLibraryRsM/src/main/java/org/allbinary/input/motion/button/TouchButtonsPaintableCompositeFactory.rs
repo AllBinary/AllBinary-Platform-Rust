@@ -35,6 +35,10 @@ pub struct TouchButtonsPaintableCompositeFactory {
 
 impl TouchButtonsPaintableCompositeFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -47,7 +51,7 @@ impl TouchButtonsPaintableCompositeFactory {
     
 
     pub fn getInstance(mut inputMappingInterface: Option<Rc<RefCell<dyn InputMappingInterface>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintableDyn>>> {
-        return TouchButtonsPaintableComposite::new(inputMappingInterface.clone(), basicColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintableDyn>>);
+        return TouchButtonsPaintableComposite::new(inputMappingInterface.clone(), basicColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintableDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintableDyn>>);
     }
 }
 

@@ -33,13 +33,16 @@ pub struct AbFileLocalInputStream {
     pub base: AbFileInputStream,
 }
 
+impl crate::java::io::Closeable::Closeable for AbFileLocalInputStream {
+    fn close(&mut self) { self.base.close() }
+}
 
 impl AbFileLocalInputStream {
     
 
     pub fn new_struct(mut file: Option<Rc<RefCell<AbFile>>>) -> Self {
         let mut this = Self {
-            base: AbFileInputStream::new_struct1(AbFileNativeUtil::get(file.clone())),
+            base: AbFileInputStream::new_struct(jcall!(AbFileNativeUtil::get(file.clone())).getPath()),
         };
         // super(...) is in the struct literal above
         this
@@ -60,6 +63,14 @@ impl std::ops::DerefMut for AbFileLocalInputStream {
 impl crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStreamDyn for AbFileLocalInputStream {
     fn as_AbFileInputStream(&self) -> &crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStream { &self.base }
     fn as_AbFileInputStream_mut(&mut self) -> &mut crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStream { &mut self.base }
+}
+impl crate::java::io::InputStream::InputStreamDyn for AbFileLocalInputStream {
+    fn as_InputStream(&self) -> &crate::java::io::InputStream::InputStream { &self.base.base.base }
+    fn as_InputStream_mut(&mut self) -> &mut crate::java::io::InputStream::InputStream { &mut self.base.base.base }
+}
+impl crate::java::io::FileInputStream::FileInputStreamDyn for AbFileLocalInputStream {
+    fn as_FileInputStream(&self) -> &crate::java::io::FileInputStream::FileInputStream { &self.base.base }
+    fn as_FileInputStream_mut(&mut self) -> &mut crate::java::io::FileInputStream::FileInputStream { &mut self.base.base }
 }
 
 

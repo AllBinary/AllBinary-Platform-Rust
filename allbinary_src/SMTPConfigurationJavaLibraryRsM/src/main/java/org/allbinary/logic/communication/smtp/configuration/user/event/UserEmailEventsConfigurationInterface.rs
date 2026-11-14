@@ -16,13 +16,13 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::user::UserInterface::UserInterface;
 use crate::org::allbinary::logic::communication::smtp::event::UserEmailEventListenerInterface::UserEmailEventListenerInterface;
 use crate::org::allbinary::logic::communication::smtp::event::UserEmailEventNameData::UserEmailEventNameData;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
+use crate::java::lang::Exception::*;
 use super::UserEmailEventConfigurationInterface::UserEmailEventConfigurationInterface;
 
 // Borrows the object of a Java reference
@@ -32,10 +32,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait UserEmailEventsConfigurationInterface {
+pub trait UserEmailEventsConfigurationInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
-    fn getEventConfigurationHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>>;
+    fn getEventConfigurationHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>;
     
 
     fn addUserEmailEventConfiguration(&mut self, userEmailEventConfigurationInterface: Option<Rc<RefCell<dyn UserEmailEventConfigurationInterface>>>);
@@ -43,8 +43,6 @@ pub trait UserEmailEventsConfigurationInterface {
 
     // throws Exception
     fn getEventListener(&mut self, abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, userEmailEventNameData: Option<Rc<RefCell<UserEmailEventNameData>>>, userInterface: Option<Rc<RefCell<dyn UserInterface>>>) -> Option<Rc<RefCell<dyn UserEmailEventListenerInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -21,6 +21,7 @@ use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::game::graphics::hud::BasicHudFactory::BasicHudFactory;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,6 +39,13 @@ pub struct HealthBarAnimation {
     pub allbinaryLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>,
 }
 
+impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for HealthBarAnimation {
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::animation::Animation::Animation::paintXY(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3) }
+}
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for HealthBarAnimation {
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::Animation::Animation::nextFrame(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self)) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
+}
 
 impl HealthBarAnimation {
     
@@ -55,7 +63,7 @@ impl HealthBarAnimation {
         this.allbinaryLayer = layerInterface.clone();
         this.location = location.clone();
         let mut basicHudFactory: Option<Rc<RefCell<BasicHudFactory>>> = BasicHudFactory::getInstance();
-        if this.location != jcall!(basicHudFactory).TOPLEFT && this.location != jcall!(basicHudFactory).BOTTOMLEFT {
+        if this.location != { let java_field = jcall!(basicHudFactory).TOPLEFT.clone(); java_field } && this.location != { let java_field = jcall!(basicHudFactory).BOTTOMLEFT.clone(); java_field } {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Location Not Valid"))));
         }
         if jcall!(layerInterface).getWidth() > 40 {
@@ -77,26 +85,26 @@ impl HealthBarAnimation {
         self.x2 = newX2.clone();
         let mut quarter: i32 = (jcall!(self.allbinaryLayer).getWidth() >> 2);
         if self.x2 > quarter * 3 {
-            self.basicColor = jcall!(self.basicColorFactory).GREEN.clone();
-            self.colorP = jcall!(self.basicColor).intValue();
+            self.basicColor = { let java_value = ({ let java_field = jcall!(self.basicColorFactory).GREEN.clone(); java_field }).clone(); java_value }.clone();
+            self.colorP = { let java_value = (jcall!(self.basicColor).intValue()).clone(); java_value };
         } else if self.x2 > quarter * 2 {
-            self.basicColor = jcall!(self.basicColorFactory).YELLOW.clone();
-            self.colorP = jcall!(self.basicColor).intValue();
+            self.basicColor = { let java_value = ({ let java_field = jcall!(self.basicColorFactory).YELLOW.clone(); java_field }).clone(); java_value }.clone();
+            self.colorP = { let java_value = (jcall!(self.basicColor).intValue()).clone(); java_value };
         } else if self.x2 > quarter {
-            self.basicColor = jcall!(self.basicColorFactory).ORANGE.clone();
-            self.colorP = jcall!(self.basicColor).intValue();
+            self.basicColor = { let java_value = ({ let java_field = jcall!(self.basicColorFactory).ORANGE.clone(); java_field }).clone(); java_value }.clone();
+            self.colorP = { let java_value = (jcall!(self.basicColor).intValue()).clone(); java_value };
         } else {
-            self.basicColor = jcall!(self.basicColorFactory).RED.clone();
-            self.colorP = jcall!(self.basicColor).intValue();
+            self.basicColor = { let java_value = ({ let java_field = jcall!(self.basicColorFactory).RED.clone(); java_field }).clone(); java_value }.clone();
+            self.colorP = { let java_value = (jcall!(self.basicColor).intValue()).clone(); java_value };
         }
     }
     
 
     pub fn getY(&mut self) -> i32 {
         let mut basicHudFactory: Option<Rc<RefCell<BasicHudFactory>>> = BasicHudFactory::getInstance();
-        if self.location == jcall!(basicHudFactory).TOPLEFT {
+        if self.location == { let java_field = jcall!(basicHudFactory).TOPLEFT.clone(); java_field } {
             return jcall!(jcall!(self.allbinaryLayer).getViewPosition()).getY() - 4;
-        } else if self.location == jcall!(basicHudFactory).BOTTOMLEFT {
+        } else if self.location == { let java_field = jcall!(basicHudFactory).BOTTOMLEFT.clone(); java_field } {
             return jcall!(jcall!(self.allbinaryLayer).getViewPosition()).getY2() + 4;
         }
         return -1;

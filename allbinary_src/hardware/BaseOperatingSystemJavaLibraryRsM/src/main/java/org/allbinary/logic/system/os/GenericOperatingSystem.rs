@@ -68,21 +68,21 @@ impl GenericOperatingSystem {
         this.scalable = false;
         let mut systemProperties: Option<Rc<RefCell<SystemProperties>>> = SystemProperties::getInstance();
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
-        let mut EMPTY_STRING: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        let mut EMPTY_STRING: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         if jcall!(stringValidationUtil).isEmpty(jcall!(systemProperties).getName()) {
             this.osName = EMPTY_STRING.clone();
         } else {
-            this.osName = jcall!(systemProperties).getName();
+            this.osName = { let java_value = (jcall!(systemProperties).getName()).clone(); java_value };
         }
         if jcall!(stringValidationUtil).isEmpty(jcall!(systemProperties).getArch()) {
             this.osArch = EMPTY_STRING.clone();
         } else {
-            this.osArch = jcall!(systemProperties).getArch();
+            this.osArch = { let java_value = (jcall!(systemProperties).getArch()).clone(); java_value };
         }
         if jcall!(stringValidationUtil).isEmpty(jcall!(systemProperties).getVersion()) {
             this.osVersion = EMPTY_STRING.clone();
         } else {
-            this.osVersion = jcall!(systemProperties).getVersion();
+            this.osVersion = { let java_value = (jcall!(systemProperties).getVersion()).clone(); java_value };
         }
         this
     }
@@ -138,7 +138,7 @@ impl GenericOperatingSystem {
     
 
     pub fn toString(&mut self) -> String {
-        let mut NEW_LINE: String = jcall!(CommonSeps::getInstance()).NEW_LINE.clone();
+        let mut NEW_LINE: String = { let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone();
         let mut osBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(osBuffer).append(String::from("Operating System Info: \n"));
         jcall!(osBuffer).append(self.getName());
@@ -147,12 +147,12 @@ impl GenericOperatingSystem {
         jcall!(osBuffer).append(NEW_LINE.clone());
         jcall!(osBuffer).append(self.getVersion());
         jcall!(osBuffer).append(NEW_LINE.clone());
-        jcall!(osBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getCharacterSet())));
+        jcall!(osBuffer).append({ let java_argument = jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getCharacterSet())); java_argument });
         jcall!(osBuffer).append(NEW_LINE.clone());
         return jcall!(osBuffer).toString();
     }
 }
-pub trait GenericOperatingSystemDyn: crate::org::allbinary::logic::system::os::OperatingSystemInterface::OperatingSystemInterface {
+pub trait GenericOperatingSystemDyn: std::any::Any + crate::org::allbinary::logic::system::os::OperatingSystemInterface::OperatingSystemInterface {
     fn as_GenericOperatingSystem(&self) -> &GenericOperatingSystem;
     fn as_GenericOperatingSystem_mut(&mut self) -> &mut GenericOperatingSystem;
 }

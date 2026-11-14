@@ -33,6 +33,10 @@ thread_local! { pub static WaypointRunnableLogHelper_instance: Option<Rc<RefCell
 
 impl WaypointRunnableLogHelper {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -56,7 +60,7 @@ impl WaypointRunnableLogHelper {
     pub fn end(&mut self, mut pathFindingLayerInterface: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>) {
     }
 }
-pub trait WaypointRunnableLogHelperDyn {
+pub trait WaypointRunnableLogHelperDyn: std::any::Any {
     fn as_WaypointRunnableLogHelper(&self) -> &WaypointRunnableLogHelper;
     fn as_WaypointRunnableLogHelper_mut(&mut self) -> &mut WaypointRunnableLogHelper;
     fn start(&mut self, mut pathFindingLayerInterface: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>) { WaypointRunnableLogHelper::start(self.as_WaypointRunnableLogHelper_mut(), pathFindingLayerInterface) }

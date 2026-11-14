@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::IOException::IOException;
+use crate::java::io::IOException::IOException;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
 use crate::org::apache::commons::fileupload::FileItemFactory::FileItemFactory;
 use crate::org::apache::commons::fileupload::FileItemIterator::FileItemIterator;
@@ -55,7 +55,7 @@ impl AbFileUpload {
 
     // throws FileUploadException, IOException
     pub fn getItemIterator(&mut self, mut request: Option<Rc<RefCell<HttpServletRequest>>>) -> Option<Rc<RefCell<FileItemIterator>>> {
-        return self.base.getItemIterator(ServletRequestContext::new(request.clone()));
+        return { let java_arguments = (ServletRequestContext::new(request.clone()),); self.base.getItemIterator(java_arguments.0) };
     }
 }
 impl std::ops::Deref for AbFileUpload {

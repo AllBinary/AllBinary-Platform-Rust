@@ -34,6 +34,10 @@ pub struct HtmlMetaAttributeValuesData {
 thread_local! { pub static HtmlMetaAttributeValuesData_instance: Option<Rc<RefCell<HtmlMetaAttributeValuesData>>> = HtmlMetaAttributeValuesData::new(); }
 
 impl HtmlMetaAttributeValuesData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<HtmlMetaAttributeValuesData>>> {

@@ -66,6 +66,10 @@ impl DatabaseConnectionInfoInterface for DbConnectionInfo {
 }
 
 impl DbConnectionInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -103,7 +107,7 @@ impl DbConnectionInfo {
         jcall!(stringBuffer).append(self.getUserName());
         jcall!(stringBuffer).append(self.getPasswordKey());
         jcall!(stringBuffer).append(self.getPassword());
-        self.url = jcall!(stringBuffer).toString();
+        self.url = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
     }
     
 
@@ -137,12 +141,12 @@ impl DbConnectionInfo {
         jcall!(stringBuffer).append(self.getSchema());
         jcall!(stringBuffer).append(self.SCHEMA_SEP.clone());
         jcall!(stringBuffer).append(self.getServer());
-        if self.getPort().is_some() && jcall!(self.getPort()).length() > 1 {
-            jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).COLON.clone());
+        if true && { let java_value = (self.getPort().chars().count() as i32); java_value } > 1 {
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).COLON.clone(); java_field }.clone());
             jcall!(stringBuffer).append(self.getPort());
         }
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-        self.host = jcall!(stringBuffer).toString();
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+        self.host = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
     }
     
 
@@ -216,7 +220,7 @@ impl DbConnectionInfo {
         return self.PASSWORD_KEY.clone();
     }
 }
-pub trait DbConnectionInfoDyn: crate::org::allbinary::business::init::db::DatabaseConnectionInfoInterface::DatabaseConnectionInfoInterface {
+pub trait DbConnectionInfoDyn: std::any::Any + crate::org::allbinary::business::init::db::DatabaseConnectionInfoInterface::DatabaseConnectionInfoInterface {
     fn as_DbConnectionInfo(&self) -> &DbConnectionInfo;
     fn as_DbConnectionInfo_mut(&mut self) -> &mut DbConnectionInfo;
     fn updateUrl(&mut self) { DbConnectionInfo::updateUrl(self.as_DbConnectionInfo_mut()) }

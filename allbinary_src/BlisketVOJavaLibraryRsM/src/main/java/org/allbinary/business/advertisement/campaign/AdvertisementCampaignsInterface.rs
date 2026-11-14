@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AdvertisementCampaignsInterface {
+pub trait AdvertisementCampaignsInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn add(&mut self, advertisementInterface: Option<Rc<RefCell<dyn AdvertisementInterface>>>);
@@ -39,8 +39,6 @@ pub trait AdvertisementCampaignsInterface {
     
 
     fn isEnabled(&mut self) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

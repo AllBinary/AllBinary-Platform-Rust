@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::TransformInfoInterface::TransformInfoInterface;
 
 // Borrows the object of a Java reference
@@ -26,13 +27,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait CompositeTransformInfoInterface {
+pub trait CompositeTransformInfoInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn TransformInfoInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

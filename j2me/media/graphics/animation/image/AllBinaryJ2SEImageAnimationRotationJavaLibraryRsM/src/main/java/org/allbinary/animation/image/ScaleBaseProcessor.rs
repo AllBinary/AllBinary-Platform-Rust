@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,6 +32,10 @@ pub struct ScaleBaseProcessor {
 thread_local! { pub static ScaleBaseProcessor_instance: Option<Rc<RefCell<dyn ScaleBaseProcessorDyn>>> = ScaleBaseProcessor::new().map(|reference| reference as Rc<RefCell<dyn ScaleBaseProcessorDyn>>); }
 
 impl ScaleBaseProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -49,13 +53,13 @@ impl ScaleBaseProcessor {
     }
     
 
-    pub fn update(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut originalImageArray: Vec<Option<Rc<RefCell<Image>>>>, mut imageToShowArray: Vec<Option<Rc<RefCell<Image>>>>, mut index: i32, mut scaleX: f32, mut scaleY: f32, mut maxScaleX: f32, mut maxScaleY: f32) {
+    pub fn update(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut originalImageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut imageToShowArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut index: i32, mut scaleX: f32, mut scaleY: f32, mut maxScaleX: f32, mut maxScaleY: f32) {
     }
 }
-pub trait ScaleBaseProcessorDyn {
+pub trait ScaleBaseProcessorDyn: std::any::Any {
     fn as_ScaleBaseProcessor(&self) -> &ScaleBaseProcessor;
     fn as_ScaleBaseProcessor_mut(&mut self) -> &mut ScaleBaseProcessor;
-    fn update(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut originalImageArray: Vec<Option<Rc<RefCell<Image>>>>, mut imageToShowArray: Vec<Option<Rc<RefCell<Image>>>>, mut index: i32, mut scaleX: f32, mut scaleY: f32, mut maxScaleX: f32, mut maxScaleY: f32) { ScaleBaseProcessor::update(self.as_ScaleBaseProcessor_mut(), originalImage, originalImageArray, imageToShowArray, index, scaleX, scaleY, maxScaleX, maxScaleY) }
+    fn update(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut originalImageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut imageToShowArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut index: i32, mut scaleX: f32, mut scaleY: f32, mut maxScaleX: f32, mut maxScaleY: f32) { ScaleBaseProcessor::update(self.as_ScaleBaseProcessor_mut(), originalImage, originalImageArray, imageToShowArray, index, scaleX, scaleY, maxScaleX, maxScaleY) }
 }
 impl ScaleBaseProcessorDyn for ScaleBaseProcessor {
     fn as_ScaleBaseProcessor(&self) -> &ScaleBaseProcessor { self }

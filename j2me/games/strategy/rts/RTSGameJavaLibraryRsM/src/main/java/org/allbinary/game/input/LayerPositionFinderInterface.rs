@@ -27,12 +27,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait LayerPositionFinderInterface {
+pub trait LayerPositionFinderInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getLayerInterface(&mut self, geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

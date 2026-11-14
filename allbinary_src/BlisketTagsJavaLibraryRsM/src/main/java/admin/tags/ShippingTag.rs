@@ -16,10 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::lang::reflect::Method::Method;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::JspTagException::JspTagException;
 use crate::admin::taghelpers::ShippingHelperFactory::ShippingHelperFactory;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontData::StoreFrontData;
@@ -28,6 +27,7 @@ use crate::org::allbinary::logic::communication::http::request::AbResponseHandle
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
 use crate::tags::CustomTagSupport::CustomTagSupport;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -41,7 +41,7 @@ pub struct ShippingTag {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub command: String,
     pub storeName: String,
-    pub propertiesHashMap: Option<Rc<RefCell<HashMap>>>,
+    pub propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 
@@ -77,43 +77,45 @@ impl ShippingTag {
 
     // throws LicensingException
     pub fn setShippingType(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(ShippingHelperFactory::new()).getInstance(self.propertiesHashMap.clone(), self.pageContext.clone());
             let mut addressHelperClass: &'static str = std::any::type_name_of_val(&anyType);
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(addressHelperClass).getMethod(String::from("setShippingType"), None);
             let mut result: String = (jcall!(method).invoke(anyType.clone(), None)).clone() /* as String */;
-            return result.clone();
+            return Some(result.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws JspTagException
     pub fn doStartTag(&mut self) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if true {
-                self.propertiesHashMap = jcall!(StdUtil::getInstance()).createHashMap();
-                { let java_receiver = self.propertiesHashMap.clone(); let java_arguments = (jcall!(StoreFrontData::getInstance()).NAME.clone(), self.storeName.clone(),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
-                if (self.command.cmp(&jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).GLOBALS2).SETSHIPPINGTYPE.clone()) as i32) == 0 {
+                self.propertiesHashMap = { let java_value = (jcall!(StdUtil::getInstance()).createHashMap()).clone(); java_value };
+                { let java_receiver = self.propertiesHashMap.clone(); let java_arguments = (crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(self.storeName.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
+                if (self.command.cmp(&{ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).GLOBALS2.clone(); java_field }).SETSHIPPINGTYPE.clone(); java_field }.clone()) as i32) == 0 {
                     self.setShippingType();
                 }
             }
-            return SKIP_BODY.clone();
+            return Some(SKIP_BODY.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             AbResponseHandler::sendJspTagLicensingRedirect(self.pageContext.clone(), e.clone());
             return SKIP_BODY.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for ShippingTag {

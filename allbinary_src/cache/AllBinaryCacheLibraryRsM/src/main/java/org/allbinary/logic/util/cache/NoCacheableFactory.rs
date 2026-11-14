@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::CacheableInterfaceFactoryInterface::CacheableInterfaceFactoryInterface;
 use super::CacheableInterface::CacheableInterface;
 
@@ -35,6 +36,10 @@ impl CacheableInterfaceFactoryInterface for NoCacheableFactory {
 }
 
 impl NoCacheableFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

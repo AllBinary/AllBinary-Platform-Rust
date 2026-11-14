@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources;
 use crate::org::allbinary::game::layer::resources::GameGraphicsResourceUtil::GameGraphicsResourceUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -54,10 +55,10 @@ impl FlagGameResources {
             RESOURCE_ICON: String::new(),
             ICON_SIZE: String::new(),
         };
-        this.NAME = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.RESOURCE_ICON_ANIMATION = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.RESOURCE_ICON_BUILD = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.RESOURCE_ICON = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.NAME = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.RESOURCE_ICON_ANIMATION = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.RESOURCE_ICON_BUILD = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.RESOURCE_ICON = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.ICON_SIZE = String::from("_64_by_64.png");
         this
     }
@@ -69,30 +70,30 @@ impl FlagGameResources {
 
     // throws Exception
     pub fn append(&mut self, mut ROOT: String, mut sizeString: String) {
-        self.base.append(ROOT.clone(), sizeString.clone());
+        { let java_arguments = (ROOT.clone(), sizeString.clone(),); self.base.append(java_arguments.0, java_arguments.1) };
         let mut string: String = jcall!(GameGraphicsResourceUtil::getInstance()).getName();
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).delete(0, jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).length());
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).append(ROOT.clone());
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).append(FlagGameResources_DESTROY.with(Clone::clone).clone());
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).append(string.clone());
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).append(sizeString.clone());
-        self.RESOURCE_DESTROY = jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).toString();
+        self.RESOURCE_DESTROY = { let java_value = (jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).toString()).clone(); java_value };
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).delete(0, jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).length());
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).append(FlagGameResources_ICON.with(Clone::clone).clone());
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).append(ROOT.clone());
-        self.RESOURCE_ICON_ANIMATION = jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).toString();
+        self.RESOURCE_ICON_ANIMATION = { let java_value = (jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).toString()).clone(); java_value };
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).delete(0, jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).length());
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).append(ROOT.clone());
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).append(FlagGameResources_ICON.with(Clone::clone).clone());
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).append(string.clone());
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).append(self.ICON_SIZE.clone());
-        self.RESOURCE_ICON = jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).toString();
+        self.RESOURCE_ICON = { let java_value = (jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).toString()).clone(); java_value };
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).delete(0, jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).length());
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).append(ROOT.clone());
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).append(FlagGameResources_ICON_BUILD.with(Clone::clone).clone());
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).append(string.clone());
         jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).append(self.ICON_SIZE.clone());
-        self.RESOURCE_ICON_BUILD = jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).toString();
+        self.RESOURCE_ICON_BUILD = { let java_value = (jcall!(crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResources_stringBuffer.with(Clone::clone)).toString()).clone(); java_value };
     }
 }
 impl std::ops::Deref for FlagGameResources {

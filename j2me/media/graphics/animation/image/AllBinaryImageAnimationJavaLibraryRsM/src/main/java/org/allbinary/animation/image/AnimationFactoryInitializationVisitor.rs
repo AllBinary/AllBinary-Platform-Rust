@@ -66,12 +66,12 @@ impl AnimationFactoryInitializationVisitor {
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
         let mut commonLabels: Option<Rc<RefCell<CommonLabels>>> = CommonLabels::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(jcall!(PositionStrings::getInstance()).DX_LABEL.clone()).appendfloat(((self.dx) as f32));
-        jcall!(stringBuffer).append(jcall!(PositionStrings::getInstance()).DY_LABEL.clone()).appendfloat(((self.dy) as f32));
-        jcall!(stringBuffer).append(jcall!(commonLabels).WIDTH_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(PositionStrings::getInstance()).DX_LABEL.clone(); java_field }.clone()).appendfloat(((self.dx) as f32));
+        jcall!(stringBuffer).append({ let java_field = jcall!(PositionStrings::getInstance()).DY_LABEL.clone(); java_field }.clone()).appendfloat(((self.dy) as f32));
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonLabels).WIDTH_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.width.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(commonLabels).HEIGHT_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonLabels).HEIGHT_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.height.clone());
         return jcall!(stringBuffer).toString();
     }

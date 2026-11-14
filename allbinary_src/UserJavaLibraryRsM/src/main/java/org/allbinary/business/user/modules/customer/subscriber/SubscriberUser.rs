@@ -16,12 +16,12 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::user::modules::User::User;
 use crate::org::allbinary::business::user::subscription::Subscription::Subscription;
 use crate::org::allbinary::logic::communication::http::request::session::WeblisketSessionInterface::WeblisketSessionInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -54,9 +54,9 @@ impl SubscriberUser {
     }
     
 
-    pub fn new_struct1(mut userHashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1(mut userHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
-            base: User::new_struct1(userHashMap.clone()),
+            base: User::new_struct1_HashMap(userHashMap.clone()),
             subscription: None,
         };
         // super(...) is in the struct literal above
@@ -64,13 +64,13 @@ impl SubscriberUser {
         this
     }
 
-    pub fn new1(mut userHashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new1(mut userHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct1(userHashMap))))
     }
     
 
     pub fn validateSession(&mut self, mut weblisketSession: Option<Rc<RefCell<dyn WeblisketSessionInterface>>>) {
-        self.base.validateSession(weblisketSession.clone());
+        { let java_arguments = (weblisketSession.clone(),); self.base.validateSession(java_arguments.0) };
         self.updateSession(weblisketSession.clone());
     }
     

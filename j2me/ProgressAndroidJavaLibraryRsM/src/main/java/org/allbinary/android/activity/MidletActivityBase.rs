@@ -26,6 +26,8 @@ use crate::org::allbinary::game::configuration::event::GameFeatureListenerInterf
 use crate::org::allbinary::game::configuration::event::GameInitializedEvent::GameInitializedEvent;
 use crate::org::allbinary::game::configuration::event::GameInitializedListenerInterface::GameInitializedListenerInterface;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::SimpleProgressActivityInterface::SimpleProgressActivityInterface;
 use super::KeyInputViewCompositeInterface::KeyInputViewCompositeInterface;
 
@@ -48,9 +50,6 @@ impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventLis
 }
 impl GameInitializedListenerInterface for MidletActivityBase {
     fn onGameInitialized(&mut self, mut gameInitializedEvent: Option<Rc<RefCell<GameInitializedEvent>>>) { Self::onGameInitialized(self, gameInitializedEvent) }
-}
-impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for MidletActivityBase {
-    fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, eventObject) }
 }
 // impl SimpleProgressActivityInterface for MidletActivityBase with the methods of the trait
 // impl KeyInputViewCompositeInterface for MidletActivityBase with the methods of the trait
@@ -125,7 +124,7 @@ impl std::ops::DerefMut for MidletActivityBase {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait MidletActivityBaseDyn {
+pub trait MidletActivityBaseDyn: std::any::Any {
     fn as_MidletActivityBase(&self) -> &MidletActivityBase;
     fn as_MidletActivityBase_mut(&mut self) -> &mut MidletActivityBase;
     fn onGameFeatureChange(&mut self, mut gameFeatureEvent: Option<Rc<RefCell<GameFeatureEvent>>>) { MidletActivityBase::onGameFeatureChange(self.as_MidletActivityBase_mut(), gameFeatureEvent) }

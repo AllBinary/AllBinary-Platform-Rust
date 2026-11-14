@@ -33,6 +33,10 @@ pub struct FontFamilyData {
 thread_local! { pub static FontFamilyData_instance: Option<Rc<RefCell<FontFamilyData>>> = FontFamilyData::new(); }
 
 impl FontFamilyData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<FontFamilyData>>> {

@@ -40,6 +40,7 @@ use crate::org::allbinary::logic::visual::transform::info::objectConfig::Transfo
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -58,18 +59,22 @@ thread_local! { pub static ShippingMethodsFactory_SHIPPINGMETHODSFILEPATHSTRING:
 thread_local! { pub static ShippingMethodsFactory_SHIPPINGMETHODSFILENAME: String = String::from("shippingMethods.xml"); }
 
 impl ShippingMethodsFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     // Java static initializer: call this once at startup
     pub fn static_init() {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        let mut sep: String = jcall!(AbPathData::getInstance()).SEPARATOR.clone();
+        let mut sep: String = { let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone();
         jcall!(stringBuffer).append(sep.clone());
         jcall!(stringBuffer).append(String::from("generic"));
         jcall!(stringBuffer).append(sep.clone());
         jcall!(stringBuffer).append(String::from("shipping"));
         jcall!(stringBuffer).append(sep.clone());
-        ShippingMethodsFactory_SHIPPINGMETHODSFILEPATHSTRING.with(Clone::clone) = jcall!(stringBuffer).toString();
+        ShippingMethodsFactory_SHIPPINGMETHODSFILEPATHSTRING.with(Clone::clone) = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
     }
     
 
@@ -80,24 +85,24 @@ impl ShippingMethodsFactory {
             shippingVector: None,
         };
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        let mut sep: String = jcall!(AbPathData::getInstance()).SEPARATOR.clone();
+        let mut sep: String = { let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone();
         jcall!(stringBuffer).append(URLGLOBALS::getMainPath());
-        jcall!(stringBuffer).append(jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(storeFrontInterface).getName());
         jcall!(stringBuffer).append(sep.clone());
         jcall!(stringBuffer).append(ShippingMethodsFactory_SHIPPINGMETHODSFILEPATHSTRING.with(Clone::clone).clone());
         let mut abPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = (AbPath::new(jcall!(stringBuffer).toString(), ShippingMethodsFactory_SHIPPINGMETHODSFILENAME.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone() /* as AbPath */;
-        let mut data: String = jcall!(CryptFileReader::new(jcall!(TransformInfoObjectConfigData::getInstance()).UNCRYPTED_EXTENSION.clone(), jcall!(TransformInfoObjectConfigData::getInstance()).ENCRYPTED_EXTENSION.clone())).get(abPath.clone());
-        this.document = DomDocumentHelper::create1(data.clone());
+        let mut data: String = jcall!(CryptFileReader::new({ let java_field = jcall!(TransformInfoObjectConfigData::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field }.clone(), { let java_field = jcall!(TransformInfoObjectConfigData::getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone())).get(abPath.clone());
+        this.document = { let java_value = (DomDocumentHelper::create1_String(data.clone())).clone(); java_value };
         this.shippingVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(this.document).getElementsByTagName(ShippingMethodsData_NAME.with(Clone::clone).clone());
-        for index in (0..jcall!(nodeList).getLength()) {
+        for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
             let mut node: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
             let mut shippingMethodNodeChildren: Option<Rc<RefCell<NodeList>>> = jcall!(node).getChildNodes();
             let mut shippingMethodNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(ShippingMethodData_NAME.with(Clone::clone).clone(), shippingMethodNodeChildren.clone());
             let mut classNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(crate::org::allbinary::business::DynamicObjectData::DynamicObjectData_NAME.with(Clone::clone).clone(), jcall!(shippingMethodNameNode).getChildNodes());
             let mut shippingMethodClassName: String = DomNodeHelper::getTextNodeValue(classNameNode.clone());
-            let mut shippingMethodInterface: Option<Rc<RefCell<dyn ShippingInterface>>> = (jcall!(AbeFactory::getInstance()).getInstance2(abeClientInformation.clone(), shippingMethodClassName.clone())).clone() /* as ShippingInterface */;
+            let mut shippingMethodInterface: Option<Rc<RefCell<dyn ShippingInterface>>> = (jcall!(AbeFactory::getInstance()).getInstance2(abeClientInformation.clone(), shippingMethodClassName.clone())).clone();
             jcall!(this.shippingVector).add(crate::java_into_object(shippingMethodInterface.clone()));
             let mut defaultShippingMethodNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(ShippingMethodData_DEFAULT.with(Clone::clone).clone(), jcall!(shippingMethodNameNode).getChildNodes());
             let mut defaultShippingMethodNameNodeValue: String = DomNodeHelper::getTextNodeValue(defaultShippingMethodNameNode.clone());

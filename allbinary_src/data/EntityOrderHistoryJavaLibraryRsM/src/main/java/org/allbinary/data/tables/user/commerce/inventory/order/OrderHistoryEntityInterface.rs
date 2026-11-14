@@ -16,15 +16,15 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontInterface::StoreFrontInterface;
 use crate::org::allbinary::business::user::commerce::inventory::order::Order::Order;
 use crate::org::allbinary::business::user::commerce::inventory::order::OrderHistory::OrderHistory;
 use crate::org::allbinary::data::tables::BasicDataTableInterface::BasicDataTableInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -63,7 +63,7 @@ pub trait OrderHistoryEntityInterface: BasicDataTableInterface {
     
 
     // throws Exception
-    fn update(&mut self, whereHashMap: Option<Rc<RefCell<HashMap>>>, orderHashMap: Option<Rc<RefCell<HashMap>>>);
+    fn update(&mut self, whereHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, orderHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>);
 }
 
 

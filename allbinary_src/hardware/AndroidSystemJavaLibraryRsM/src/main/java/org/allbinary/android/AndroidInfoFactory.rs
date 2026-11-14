@@ -34,11 +34,15 @@ thread_local! { pub static AndroidInfoFactory_instance: Option<Rc<RefCell<Androi
 
 impl AndroidInfoFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             version: 0,
         };
-        this.version = jcall!(unsafe { crate::android::os::Build::Build_VERSION.clone() }).SDK.clone().parse::<i32>().unwrap();
+        this.version = { let java_field = jcall!(unsafe { crate::android::os::Build::Build_VERSION.clone() }).SDK.clone(); java_field }.clone().parse::<i32>().unwrap();
         this
     }
 

@@ -28,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait HighScoresFactoryInterface {
+pub trait HighScoresFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn fetchHighScores(&mut self, gameInfo: Option<Rc<RefCell<GameInfo>>>, highScoresResultsListener: Option<Rc<RefCell<dyn HighScoresResultsListener>>>);
@@ -38,8 +38,6 @@ pub trait HighScoresFactoryInterface {
     
 
     fn createHighScoresHelper(&mut self) -> Option<Rc<RefCell<dyn HighScoresHelperBaseInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

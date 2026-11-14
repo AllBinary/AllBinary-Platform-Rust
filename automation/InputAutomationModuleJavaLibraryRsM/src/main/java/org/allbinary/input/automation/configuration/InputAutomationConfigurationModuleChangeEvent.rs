@@ -32,6 +32,10 @@ pub struct InputAutomationConfigurationModuleChangeEvent {
 
 
 impl InputAutomationConfigurationModuleChangeEvent {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut inputAutomationModuleConfiguration: Option<Rc<RefCell<InputAutomationModuleConfiguration>>>) -> Self {

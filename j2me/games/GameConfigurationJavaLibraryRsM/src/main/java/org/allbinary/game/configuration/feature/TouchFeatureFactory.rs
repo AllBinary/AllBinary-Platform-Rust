@@ -36,6 +36,10 @@ pub struct TouchFeatureFactory {
 thread_local! { pub static TouchFeatureFactory_instance: Option<Rc<RefCell<TouchFeatureFactory>>> = TouchFeatureFactory::new(); }
 
 impl TouchFeatureFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<TouchFeatureFactory>>> {

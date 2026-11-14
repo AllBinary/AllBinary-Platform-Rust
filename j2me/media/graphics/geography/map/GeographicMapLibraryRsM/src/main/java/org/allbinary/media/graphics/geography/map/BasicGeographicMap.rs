@@ -22,6 +22,7 @@ use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::layer::Layer::Layer;
 use crate::org::allbinary::logic::math::MathUtil::MathUtil;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::SimpleGeographicMap::SimpleGeographicMap;
 use super::GeographicMapInterface::GeographicMapInterface;
 use super::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactory;
@@ -63,13 +64,13 @@ impl BasicGeographicMap {
         this.mathUtil = MathUtil::getInstance();
         // super(...) is in the struct literal above
         this.geographicMapCellPositionFactoryInterface = geographicMapCellPositionFactoryInterface.clone();
-        this.geographicMapCellTypeFactory = geographicMapCellTypeFactory.clone();
         this
     }
 
     pub fn new(mut id: Option<i32>, mut name: String, mut cellTypeIdToGeographicMapCellType: Vec<i32>, mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut geographicMapCellPositionFactoryInterface: Option<Rc<RefCell<dyn GeographicMapCellPositionFactoryInterface>>>, mut geographicMapCellPositionBaseFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionBaseFactory::GeographicMapCellPositionBaseFactoryDyn>>>, mut geographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellTypeFactory::GeographicMapCellTypeFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(id, name, cellTypeIdToGeographicMapCellType, tiledLayer, foregroundBasicColor, backgroundBasicColor, geographicMapCellPositionFactoryInterface, geographicMapCellPositionBaseFactory, geographicMapCellTypeFactory))));
-            this.geographicMapCellPositionFactory = jcall!(geographicMapCellPositionBaseFactory).getInstance((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(id.clone(), name.clone(), cellTypeIdToGeographicMapCellType.clone(), tiledLayer.clone(), foregroundBasicColor.clone(), backgroundBasicColor.clone(), geographicMapCellPositionFactoryInterface.clone(), geographicMapCellPositionBaseFactory.clone(), geographicMapCellTypeFactory.clone()))));
+            jcall!(this).geographicMapCellPositionFactory = { let java_value = (jcall!(geographicMapCellPositionBaseFactory).getInstance(this.clone().map(|reference| reference as Rc<RefCell<dyn BasicGeographicMapDyn>>))).clone(); java_value };
+            jcall!(this).geographicMapCellTypeFactory = geographicMapCellTypeFactory.clone();
         this
     }
     
@@ -107,7 +108,7 @@ impl BasicGeographicMap {
                 }
             }
             switch_value if switch_value == 1 => {
-                if jcall!(oldGeographicMapCellPosition).getColumn() + 1 < jcall!(self.getAllBinaryTiledLayer()).getColumns() {
+                if jcall!(oldGeographicMapCellPosition).getColumn() + 1 < { let java_value = jcall!(self.getAllBinaryTiledLayer()).getColumns(); java_value } {
                     return { let java_receiver = self.geographicMapCellPositionFactory.clone(); let java_arguments = (jcall!(oldGeographicMapCellPosition).getColumn() + 1, jcall!(oldGeographicMapCellPosition).getRow(),); let java_result = jcall!(java_receiver).getAt(java_arguments.0, java_arguments.1); java_result };
                 } else {
                     return SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone).clone();
@@ -121,7 +122,7 @@ impl BasicGeographicMap {
                 }
             }
             switch_value if switch_value == 3 => {
-                if jcall!(oldGeographicMapCellPosition).getRow() + 1 < jcall!(self.getAllBinaryTiledLayer()).getRows() {
+                if jcall!(oldGeographicMapCellPosition).getRow() + 1 < { let java_value = jcall!(self.getAllBinaryTiledLayer()).getRows(); java_value } {
                     return { let java_receiver = self.geographicMapCellPositionFactory.clone(); let java_arguments = (jcall!(oldGeographicMapCellPosition).getColumn(), jcall!(oldGeographicMapCellPosition).getRow() + 1,); let java_result = jcall!(java_receiver).getAt(java_arguments.0, java_arguments.1); java_result };
                 } else {
                     return SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone).clone();
@@ -159,16 +160,18 @@ impl BasicGeographicMap {
         let mut i_column: i32 = { let java_receiver = self.mathUtil.clone(); let java_arguments = (x / jcall!(allBinaryTiledLayer).getCellHeight(),); let java_result = jcall!(java_receiver).abs(java_arguments.0); java_result };
         let mut i_row: i32 = { let java_receiver = self.mathUtil.clone(); let java_arguments = (y / jcall!(allBinaryTiledLayer).getCellWidth(),); let java_result = jcall!(java_receiver).abs(java_arguments.0); java_result };
         if jcall!(allBinaryTiledLayer).getColumns() > i_column && jcall!(allBinaryTiledLayer).getRows() > i_row {
-            match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                return jcall!(self.geographicMapCellPositionFactory).getAt(i_column.clone(), i_row.clone());
+            let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                return Some(jcall!(self.geographicMapCellPositionFactory).getAt(i_column.clone(), i_row.clone()));
             })) {
-                Ok(java_return) => return java_return,
+                Ok(java_return) => java_return,
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                 return SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone).clone();
+                None
                 }
-            }
+            };
+        if let Some(java_return) = java_try_result { return java_return; }
         } else {
             return SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone).clone();
         }

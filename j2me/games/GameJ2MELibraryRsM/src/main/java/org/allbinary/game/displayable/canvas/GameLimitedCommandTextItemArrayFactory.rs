@@ -35,11 +35,15 @@ thread_local! { pub static GameLimitedCommandTextItemArrayFactory_instance: Opti
 
 impl GameLimitedCommandTextItemArrayFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             commandTextItemArrayFactory: None,
         };
-        this.commandTextItemArrayFactory = CommandTextItemArrayFactory::new(LimitCommandsVisitor::new());
+        this.commandTextItemArrayFactory = CommandTextItemArrayFactory::new(LimitCommandsVisitor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>));
         this
     }
 

@@ -48,6 +48,10 @@ impl RTSInterface for ReloadTechnology {
 }
 
 impl ReloadTechnology {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut maxLevel: i32) -> Self {
@@ -120,7 +124,7 @@ impl ReloadTechnology {
     pub fn upgrade(&mut self) {
         self.level += 1;
         let mut unitTechnologySingletonFactory: Option<Rc<RefCell<UnitTechnologySingletonFactory>>> = UnitTechnologySingletonFactory::getInstance();
-        jcall!(unitTechnologySingletonFactory).setReload(jcall!(unitTechnologySingletonFactory).getReload() + (self.getLevel() * 10));
+        jcall!(unitTechnologySingletonFactory).setReload({ let java_value = jcall!(unitTechnologySingletonFactory).getReload(); java_value } + (self.getLevel() * 10));
     }
     
 

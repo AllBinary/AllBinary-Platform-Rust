@@ -39,6 +39,10 @@ impl AllBinaryLayerFactoryInterface for AllBinaryLayerFactory {
 }
 
 impl AllBinaryLayerFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut rectangle: Option<Rc<RefCell<Rectangle>>>) -> Self {
@@ -55,7 +59,7 @@ impl AllBinaryLayerFactory {
     
 
     pub fn getInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> {
-        return AllBinaryLayer::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), self.rectangle.clone(), ViewPosition::getInstanceD()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>);
+        return AllBinaryLayer::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), self.rectangle.clone(), ViewPosition::getInstanceD().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>);
     }
 }
 

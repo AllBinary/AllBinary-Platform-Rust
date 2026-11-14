@@ -35,9 +35,12 @@ pub struct TimedVectorAnimation {
     pub timeElapsedHelper: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>>,
 }
 
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for TimedVectorAnimation {
-    fn getSize(&mut self) -> i32 { self.base.getSize() }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for TimedVectorAnimation {
+    fn nextFrame(&mut self) { Self::nextFrame(self) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
+}
+impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for TimedVectorAnimation {
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::animation::VectorAnimation::VectorAnimation::paintXY(crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn::as_VectorAnimation_mut(self), p1, p2, p3) }
 }
 
 impl TimedVectorAnimation {
@@ -59,7 +62,7 @@ impl TimedVectorAnimation {
     
 
     pub fn nextFrame(&mut self) {
-        if { let java_receiver = self.timeElapsedHelper.clone(); let java_arguments = (jcall!(GameTickTimeDelayHelperFactory::getInstance()).startTime.clone(),); let java_result = jcall!(java_receiver).isTime(java_arguments.0); java_result } {
+        if { let java_receiver = self.timeElapsedHelper.clone(); let java_arguments = ({ let java_field = jcall!(GameTickTimeDelayHelperFactory::getInstance()).startTime.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).isTime(java_arguments.0); java_result } {
             self.base.nextFrame();
         }
     }
@@ -77,6 +80,8 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for TimedVectorAn
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base.base }
     fn setAlpha(&mut self, p1: i32) { crate::org::allbinary::animation::VectorAnimation::VectorAnimation::setAlpha(crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn::as_VectorAnimation_mut(self), p1) }
     fn nextFrame(&mut self) { Self::nextFrame(self) }
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::animation::VectorAnimation::VectorAnimation::paintXY(crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn::as_VectorAnimation_mut(self), p1, p2, p3) }
+    fn getBasicColorP(&mut self) -> Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>> { crate::org::allbinary::animation::VectorAnimation::VectorAnimation::getBasicColorP(crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn::as_VectorAnimation_mut(self)) }
     fn setBasicColorP(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::animation::VectorAnimation::VectorAnimation::setBasicColorP(crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn::as_VectorAnimation_mut(self), p1) }
     fn changeBasicColor(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::animation::VectorAnimation::VectorAnimation::changeBasicColor(crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn::as_VectorAnimation_mut(self), p1) }
     fn setScale(&mut self, p1: f32, p2: f32) { crate::org::allbinary::animation::VectorAnimation::VectorAnimation::setScale(crate::org::allbinary::animation::VectorAnimation::VectorAnimationDyn::as_VectorAnimation_mut(self), p1, p2) }

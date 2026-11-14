@@ -31,6 +31,10 @@ pub struct AdvertisementProcessorInterface {
 
 impl AdvertisementProcessorInterface {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -53,7 +57,7 @@ impl AdvertisementProcessorInterface {
     pub fn stop(&mut self) {
     }
 }
-pub trait AdvertisementProcessorInterfaceDyn {
+pub trait AdvertisementProcessorInterfaceDyn: std::any::Any {
     fn as_AdvertisementProcessorInterface(&self) -> &AdvertisementProcessorInterface;
     fn as_AdvertisementProcessorInterface_mut(&mut self) -> &mut AdvertisementProcessorInterface;
     fn process(&mut self) { AdvertisementProcessorInterface::process(self.as_AdvertisementProcessorInterface_mut()) }

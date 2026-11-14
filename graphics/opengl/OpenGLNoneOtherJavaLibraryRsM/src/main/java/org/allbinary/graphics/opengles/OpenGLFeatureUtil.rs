@@ -31,6 +31,10 @@ pub struct OpenGLFeatureUtil {
 thread_local! { pub static OpenGLFeatureUtil_instance: Option<Rc<RefCell<OpenGLFeatureUtil>>> = OpenGLFeatureUtil::new(); }
 
 impl OpenGLFeatureUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<OpenGLFeatureUtil>>> {

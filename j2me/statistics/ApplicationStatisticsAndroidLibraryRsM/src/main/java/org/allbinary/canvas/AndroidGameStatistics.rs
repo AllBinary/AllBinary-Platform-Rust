@@ -59,7 +59,7 @@ impl AndroidGameStatistics {
         this.ONDRAWS_RATE = String::from(" onDraws(/10) Sec: ");
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
         for index in (0..(this.ANDROID_STRING_ARRAY.len() as i32)) {
-            this.ANDROID_STRING_ARRAY[(index) as usize] = jcall!(stringUtil).EMPTY_STRING.clone();
+            { let java_index = (index) as usize; this.ANDROID_STRING_ARRAY[java_index] = { let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone(); };
         }
         this
     }
@@ -89,9 +89,9 @@ impl AndroidGameStatistics {
     pub fn toStringArray(&mut self) -> Vec<String> {
         let mut stringArray: Vec<String> = self.base.toStringArray();
         for index in (0..(stringArray.len() as i32)) {
-            self.ANDROID_STRING_ARRAY[(index) as usize] = stringArray[(index) as usize].clone();
+            { let java_index = (index) as usize; self.ANDROID_STRING_ARRAY[java_index] = { let java_value = (stringArray[(index) as usize]).clone(); java_value }.clone(); };
         }
-        let mut totalTime: i64 = jcall!(self.getTimeDelayHelper()).getElapsed(jcall!(self.gameTickTimeDelayHelper).startTime.clone());
+        let mut totalTime: i64 = jcall!(self.getTimeDelayHelper()).getElapsed({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone());
         totalTime = (totalTime / 10000_i64);
         self.ANDROID_STRING_ARRAY[(10) as usize] = self.TOTAL_ONDRAWS.clone();
         self.ANDROID_STRING_ARRAY[(11) as usize] = (self.totalOnDraws.clone()).to_string();
@@ -102,11 +102,11 @@ impl AndroidGameStatistics {
     
 
     pub fn toString(&mut self) -> String {
-        let mut totalTime: i64 = jcall!(self.getTimeDelayHelper()).getElapsed(jcall!(self.gameTickTimeDelayHelper).startTime.clone());
+        let mut totalTime: i64 = jcall!(self.getTimeDelayHelper()).getElapsed({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone());
         totalTime = (totalTime / 1000_i64);
         if totalTime > 0_i64 {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-            jcall!(stringBuffer).append(self.base.toStringAt(totalTime.clone()));
+            jcall!(stringBuffer).append({ let java_arguments = (totalTime.clone(),); self.base.toStringAt(java_arguments.0) });
             if self.totalOnDraws > 0_i64 {
                 jcall!(stringBuffer).append(self.TOTAL_ONDRAWS.clone());
                 jcall!(stringBuffer).append((self.totalOnDraws.clone()).to_string());

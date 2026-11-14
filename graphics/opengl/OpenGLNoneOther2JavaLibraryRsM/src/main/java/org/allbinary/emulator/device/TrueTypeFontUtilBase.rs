@@ -30,6 +30,10 @@ pub struct TrueTypeFontUtilBase {
 
 
 impl TrueTypeFontUtilBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut scale: i32) -> Self {
@@ -52,11 +56,9 @@ impl TrueTypeFontUtilBase {
         return -1;
     }
 }
-pub trait TrueTypeFontUtilBaseDyn {
+pub trait TrueTypeFontUtilBaseDyn: std::any::Any {
     fn as_TrueTypeFontUtilBase(&self) -> &TrueTypeFontUtilBase;
     fn as_TrueTypeFontUtilBase_mut(&mut self) -> &mut TrueTypeFontUtilBase;
-    fn getAsTextureSize(&mut self, mut textureSize: i32) -> i32 { TrueTypeFontUtilBase::getAsTextureSize(self.as_TrueTypeFontUtilBase_mut(), textureSize) }
-    fn getCellSize(&mut self, mut cellSize: i32) -> i32 { TrueTypeFontUtilBase::getCellSize(self.as_TrueTypeFontUtilBase_mut(), cellSize) }
     fn getAsTextureSize(&mut self, mut textureSize: i32) -> i32 { TrueTypeFontUtilBase::getAsTextureSize(self.as_TrueTypeFontUtilBase_mut(), textureSize) }
     fn getCellSize(&mut self, mut cellSize: i32) -> i32 { TrueTypeFontUtilBase::getCellSize(self.as_TrueTypeFontUtilBase_mut(), cellSize) }
 }

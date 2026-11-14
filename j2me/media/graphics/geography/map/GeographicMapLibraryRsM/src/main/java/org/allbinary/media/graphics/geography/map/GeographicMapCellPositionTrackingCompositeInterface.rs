@@ -14,12 +14,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait GeographicMapCellPositionTrackingCompositeInterface {
+pub trait GeographicMapCellPositionTrackingCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getGeographicMapCellPositionTracking(&mut self) -> Option<Rc<RefCell<GeographicMapCellPositionTracking>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

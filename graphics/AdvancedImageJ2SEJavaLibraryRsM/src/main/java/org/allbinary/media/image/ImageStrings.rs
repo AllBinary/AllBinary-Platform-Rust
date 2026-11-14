@@ -34,6 +34,10 @@ thread_local! { pub static ImageStrings_instance: Option<Rc<RefCell<ImageStrings
 
 impl ImageStrings {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             PNG: String::new(),

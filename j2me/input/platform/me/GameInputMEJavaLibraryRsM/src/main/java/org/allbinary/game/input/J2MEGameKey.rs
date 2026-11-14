@@ -39,7 +39,7 @@ impl J2MEGameKey {
 
     pub fn new_struct(mut key: i32, mut keyName: String) -> Self {
         let mut this = Self {
-            base: Input::new_struct2(key.clone(), keyName.clone()),
+            base: Input::new_struct(key.clone(), keyName.clone()),
         };
         // super(...) is in the struct literal above
         let mut id: i32 = this.getId();
@@ -47,10 +47,11 @@ impl J2MEGameKey {
     }
 
     pub fn new(mut key: i32, mut keyName: String) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(key, keyName))));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(key.clone(), keyName.clone()))));
+            let mut id: i32 = jcall!(this).getId();
             if id >= 0 {
             let mut inputFactory: Option<Rc<RefCell<InputFactory>>> = InputFactory::getInstance();
-            jcall!(inputFactory).add(id.clone(), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+            jcall!(inputFactory).add(id.clone(), this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
         }
         this
     }
@@ -62,11 +63,11 @@ impl J2MEGameKey {
     
 
     pub fn getString(mut keyCode: i32) -> String {
-        let mut input: Option<Rc<RefCell<Input>>> = jcall!(InputFactory::getInstance()).getInstanceById(keyCode.clone());
+        let mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>> = jcall!(InputFactory::getInstance()).getInstanceById(keyCode.clone());
         if input.is_some() {
             return jcall!(input).getName();
         } else {
-            return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         }
     }
 }
@@ -78,5 +79,10 @@ impl std::ops::DerefMut for J2MEGameKey {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::org::allbinary::game::input::Input::InputDyn for J2MEGameKey {
+    fn as_Input(&self) -> &crate::org::allbinary::game::input::Input::Input { &self.base }
+    fn as_Input_mut(&mut self) -> &mut crate::org::allbinary::game::input::Input::Input { &mut self.base }
+    fn toString(&mut self) -> String { Self::toString(self) }
+}
 
 

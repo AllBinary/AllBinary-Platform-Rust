@@ -21,6 +21,7 @@ use crate::org::allbinary::game::combat::weapon::WeaponProperties::WeaponPropert
 use crate::org::allbinary::game::score::ScoreableInterface::ScoreableInterface;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerCircularPool::AllBinaryLayerCircularPool;
+use crate::java::lang::Exception::*;
 use super::WeaponLayer::WeaponLayer;
 
 // Borrows the object of a Java reference
@@ -52,7 +53,7 @@ impl WeaponLayerCircularPool {
 
     // throws Exception
     pub fn getInstanceWeaponLayer(&mut self, mut sourceLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut x: i32, mut y: i32, mut z: i32, mut angle: i32, mut otherAngle: i32, mut weaponProperties: Option<Rc<RefCell<WeaponProperties>>>, mut scoreable: Option<Rc<RefCell<dyn ScoreableInterface>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::weapon::WeaponLayer::WeaponLayerDyn>>> {
-        let mut weaponLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::weapon::WeaponLayer::WeaponLayerDyn>>> = (self.base.getNextInstance()).clone() /* as WeaponLayer */;
+        let mut weaponLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::weapon::WeaponLayer::WeaponLayerDyn>>> = { let java_object = (self.base.getNextInstance()).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::weapon::WeaponLayer::WeaponLayerDyn>>>>().expect("ClassCastException").clone()) };
         jcall!(weaponLayer).initXYZ(x.clone(), y.clone(), z.clone());
         jcall!(weaponLayer).init(sourceLayerInterface.clone(), angle.clone(), otherAngle.clone(), weaponProperties.clone(), scoreable.clone());
         return weaponLayer.clone();

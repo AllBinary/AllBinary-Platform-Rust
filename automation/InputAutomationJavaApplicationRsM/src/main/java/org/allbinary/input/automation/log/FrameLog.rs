@@ -17,14 +17,15 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::File::File;
-// use crate::java::io::FileOutputStream::FileOutputStream;
+use crate::java::io::File::File;
+use crate::java::io::FileOutputStream::FileOutputStream;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::input::automation::ImageOutputData::ImageOutputData;
 use crate::org::allbinary::logic::java::number::LongUtil::LongUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,11 +40,15 @@ pub struct FrameLog {
     pub actionsStringBuffer: Option<Rc<RefCell<StringMaker>>>,
 }
 
-pub static mut FrameLog_frameBytes: std::cell::LazyCell<Vec<i8>> = std::cell::LazyCell::new(|| jcall!(String::from("Frame: ").clone()).getBytes());
-pub static mut FrameLog_info: std::cell::LazyCell<Vec<i8>> = std::cell::LazyCell::new(|| jcall!(String::from("Info: \n").clone()).getBytes());
-pub static mut FrameLog_actions: std::cell::LazyCell<Vec<i8>> = std::cell::LazyCell::new(|| jcall!(String::from("Actions: \n").clone()).getBytes());
+pub static mut FrameLog_frameBytes: std::cell::LazyCell<Vec<i8>> = std::cell::LazyCell::new(|| String::from("Frame: ").clone().bytes().map(|value| value as i8).collect::<Vec<i8>>());
+pub static mut FrameLog_info: std::cell::LazyCell<Vec<i8>> = std::cell::LazyCell::new(|| String::from("Info: \n").clone().bytes().map(|value| value as i8).collect::<Vec<i8>>());
+pub static mut FrameLog_actions: std::cell::LazyCell<Vec<i8>> = std::cell::LazyCell::new(|| String::from("Actions: \n").clone().bytes().map(|value| value as i8).collect::<Vec<i8>>());
 
 impl FrameLog {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut frame: Option<i64>) -> Self {
@@ -71,14 +76,14 @@ impl FrameLog {
     pub fn addActions(&mut self, mut vectorOfStrings: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         let mut size: i32 = jcall!(vectorOfStrings).size();
         for index in (0..size) {
-            { let java_arguments = ((jcall!(vectorOfStrings).get(index.clone())).clone() /* as String */,); self.addAction(java_arguments.0) };
+            { let java_arguments = ({ let java_object = (jcall!(vectorOfStrings).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.addAction(java_arguments.0) };
         }
     }
     
 
     pub fn addAction(&mut self, mut action: String) {
         jcall!(self.actionsStringBuffer).append(action.clone());
-        { let java_receiver = self.actionsStringBuffer.clone(); let java_arguments = (jcall!(CommonSeps::getInstance()).NEW_LINE.clone(),); jcall!(java_receiver).append(java_arguments.0); };
+        { let java_receiver = self.actionsStringBuffer.clone(); let java_arguments = ({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone(),); jcall!(java_receiver).append(java_arguments.0); };
     }
     
 
@@ -89,16 +94,16 @@ impl FrameLog {
         jcall!(filePathStringBuffer).append(LongUtil::fillIn((self.frame).expect("NullPointerException").to_string()));
         jcall!(filePathStringBuffer).append(String::from(".txt"));
         let mut filePath: String = jcall!(filePathStringBuffer).toString();
-        let mut fileOutputStream: Option<Rc<RefCell<FileOutputStream>>> = FileOutputStream::new(File::new(filePath.clone()));
-        jcall!(fileOutputStream).write(unsafe { FrameLog_frameBytes.clone() }.clone());
-        jcall!(fileOutputStream).write(jcall!(self.getFrame()).toString().bytes().map(|value| value as i8).collect::<Vec<i8>>());
-        jcall!(fileOutputStream).write('\n');
-        jcall!(fileOutputStream).write(unsafe { FrameLog_info.clone() }.clone());
-        jcall!(fileOutputStream).write(jcall!(self.infoStringBuffer).toString().bytes().map(|value| value as i8).collect::<Vec<i8>>());
-        jcall!(fileOutputStream).write('\n');
-        jcall!(fileOutputStream).write(unsafe { FrameLog_actions.clone() }.clone());
-        jcall!(fileOutputStream).write(jcall!(self.actionsStringBuffer).toString().bytes().map(|value| value as i8).collect::<Vec<i8>>());
-        jcall!(fileOutputStream).close();
+        let mut fileOutputStream: Option<Rc<RefCell<dyn crate::java::io::FileOutputStream::FileOutputStreamDyn>>> = FileOutputStream::new1(File::new1(filePath.clone())).map(|reference| reference as Rc<RefCell<dyn crate::java::io::FileOutputStream::FileOutputStreamDyn>>);
+        jcall!(fileOutputStream).as_FileOutputStream_mut().write(unsafe { FrameLog_frameBytes.clone() }.clone());
+        jcall!(fileOutputStream).as_FileOutputStream_mut().write({ let java_argument = (self.getFrame()).expect("NullPointerException").to_string().bytes().map(|value| value as i8).collect::<Vec<i8>>(); java_argument });
+        jcall!(fileOutputStream).as_FileOutputStream_mut().write('\n');
+        jcall!(fileOutputStream).as_FileOutputStream_mut().write(unsafe { FrameLog_info.clone() }.clone());
+        jcall!(fileOutputStream).as_FileOutputStream_mut().write(jcall!(self.infoStringBuffer).toString().bytes().map(|value| value as i8).collect::<Vec<i8>>());
+        jcall!(fileOutputStream).as_FileOutputStream_mut().write('\n');
+        jcall!(fileOutputStream).as_FileOutputStream_mut().write(unsafe { FrameLog_actions.clone() }.clone());
+        jcall!(fileOutputStream).as_FileOutputStream_mut().write(jcall!(self.actionsStringBuffer).toString().bytes().map(|value| value as i8).collect::<Vec<i8>>());
+        jcall!(fileOutputStream).as_FileOutputStream_mut().close();
     }
     
 

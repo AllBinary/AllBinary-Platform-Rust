@@ -20,6 +20,8 @@ use super::*;
 // use crate::java::awt::*;
 // use crate::javax::help::HelpSet::HelpSet;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -35,6 +37,10 @@ pub struct AbstractInputRobot {
 
 
 impl AbstractInputRobot {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut helpSet: Option<Rc<RefCell<HelpSet>>>) -> Self {
@@ -58,16 +64,16 @@ impl AbstractInputRobot {
     
 
     pub fn mouseMove(&mut self, mut point: Option<Rc<RefCell<Point>>>) {
-        self.mouseMove2(jcall!(point).x.clone(), jcall!(point).y.clone());
-        jcall!(self.logUtil).putF(format!("{}{}", format!("{}{}", format!("{}{}", String::from("Moved Mouse To: x: "), jcall!(point).x), String::from(" y: ")), jcall!(point).y), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("moveMouse"));
+        { let java_arguments = ({ let java_field = jcall!(point).x.clone(); java_field }.clone(), { let java_field = jcall!(point).y.clone(); java_field }.clone(),); self.mouseMove2(java_arguments.0, java_arguments.1) };
+        jcall!(self.logUtil).putF(format!("{}{}", format!("{}{}", format!("{}{}", String::from("Moved Mouse To: x: "), { let java_field = jcall!(point).x.clone(); java_field }), String::from(" y: ")), { let java_field = jcall!(point).y.clone(); java_field }), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("moveMouse"));
     }
     
 
     // throws Exception
     pub fn mouseMoveToTarget3(&mut self, mut rectangle: Option<Rc<RefCell<Rectangle>>>, mut x: Option<i32>, mut y: Option<i32>) {
         let mut point: Option<Rc<RefCell<Point>>> = PointHelper::PointHelper::getCenterPoint(rectangle.clone());
-        self.mouseMove2(jcall!(point).x + x, jcall!(point).y + y);
-        jcall!(self.logUtil).putF(format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Moved Mouse To: x: "), jcall!(point).x), String::from(" y: ")), jcall!(point).y), String::from(" in the middle of: ")), rectangle), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("moveMouseToTarget"));
+        { let java_arguments = ({ let java_field = jcall!(point).x.clone(); java_field } + x, { let java_field = jcall!(point).y.clone(); java_field } + y,); self.mouseMove2(java_arguments.0, java_arguments.1) };
+        jcall!(self.logUtil).putF(format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Moved Mouse To: x: "), { let java_field = jcall!(point).x.clone(); java_field }), String::from(" y: ")), { let java_field = jcall!(point).y.clone(); java_field }), String::from(" in the middle of: ")), rectangle), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("moveMouseToTarget"));
     }
     
 
@@ -88,7 +94,7 @@ impl AbstractInputRobot {
         self.helpSet = helpSet.clone();
     }
 }
-pub trait AbstractInputRobotDyn {
+pub trait AbstractInputRobotDyn: std::any::Any {
     fn as_AbstractInputRobot(&self) -> &AbstractInputRobot;
     fn as_AbstractInputRobot_mut(&mut self) -> &mut AbstractInputRobot;
     fn getHelpSet(&mut self) -> Option<Rc<RefCell<HelpSet>>> { AbstractInputRobot::getHelpSet(self.as_AbstractInputRobot_mut()) }

@@ -28,19 +28,23 @@ macro_rules! jcall {
 }
 
 pub struct InputAutomationModuleService {
-    pub inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>>,
+    pub inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>>,
 }
 
 impl InputAutomationModuleServiceInterface for InputAutomationModuleService {
-    fn getInputAutomationModuleInterfaceArray(&mut self) -> Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>> { Self::getInputAutomationModuleInterfaceArray(self) }
+    fn getInputAutomationModuleInterfaceArray(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>> { Self::getInputAutomationModuleInterfaceArray(self) }
 }
 impl crate::org::allbinary::osgi::OSGIServiceInterface::OSGIServiceInterface for InputAutomationModuleService {
 }
 
 impl InputAutomationModuleService {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct(mut inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>>) -> Self {
+    pub fn new_struct(mut inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>>) -> Self {
         let mut this = Self {
             inputAutomationModuleInterfaceArray: Vec::new(),
         };
@@ -48,17 +52,17 @@ impl InputAutomationModuleService {
         this
     }
 
-    pub fn new(mut inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(inputAutomationModuleInterfaceArray))))
     }
     
 
-    pub fn getInputAutomationModuleInterfaceArray(&mut self) -> Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>> {
+    pub fn getInputAutomationModuleInterfaceArray(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>> {
         return self.inputAutomationModuleInterfaceArray.clone();
     }
     
 
-    pub fn setInputAutomationModuleInterfaceArray(&mut self, mut inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>>) {
+    pub fn setInputAutomationModuleInterfaceArray(&mut self, mut inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>>) {
         self.inputAutomationModuleInterfaceArray = inputAutomationModuleInterfaceArray.clone();
     }
 }

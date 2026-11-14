@@ -10,6 +10,7 @@ use super::*;
 // use crate::javax::imageio::ImageIO::ImageIO;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::logic::io::file::AbFileNativeUtil::AbFileNativeUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -23,6 +24,10 @@ pub struct ImageIOUtil {
 
 
 impl ImageIOUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

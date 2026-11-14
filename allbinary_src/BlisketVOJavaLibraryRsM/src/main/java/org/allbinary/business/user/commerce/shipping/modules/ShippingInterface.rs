@@ -27,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait ShippingInterface {
+pub trait ShippingInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getCost(&mut self, order: Option<Rc<RefCell<dyn OrderInterface>>>) -> Option<Rc<RefCell<Money>>>;
@@ -37,8 +37,6 @@ pub trait ShippingInterface {
     
 
     fn getDescription(&mut self) -> String;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

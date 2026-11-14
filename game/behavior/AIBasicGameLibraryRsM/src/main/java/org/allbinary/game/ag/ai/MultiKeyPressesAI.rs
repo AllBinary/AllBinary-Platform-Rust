@@ -24,6 +24,7 @@ use crate::org::allbinary::time::GameTickTimeDelayHelper::GameTickTimeDelayHelpe
 use crate::org::allbinary::time::GameTickTimeDelayHelperFactory::GameTickTimeDelayHelperFactory;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::KeyPressesAI::KeyPressesAI;
 
 // Borrows the object of a Java reference
@@ -43,13 +44,13 @@ impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntel
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for MultiKeyPressesAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl MultiKeyPressesAI {
     
 
-    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
+    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
         let mut this = Self {
             base: KeyPressesAI::new_struct(hashtable.clone(), ownerLayerInterface.clone(), gameInput.clone()),
             toggleTimeHelper: None,
@@ -62,7 +63,7 @@ impl MultiKeyPressesAI {
         this
     }
 
-    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(hashtable, ownerLayerInterface, gameInput))))
     }
     
@@ -97,7 +98,7 @@ impl MultiKeyPressesAI {
 
     // throws Exception
     pub fn toggle(&mut self) {
-        if jcall!(self.toggleTimeHelper).isTime(jcall!(self.gameTickTimeDelayHelper).startTime.clone()) {
+        if jcall!(self.toggleTimeHelper).isTime({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone()) {
             self.base.toggle();
             self.update();
         }
@@ -106,7 +107,7 @@ impl MultiKeyPressesAI {
 
     // throws Exception
     pub fn disable(&mut self) {
-        if jcall!(self.toggleTimeHelper).isTime(jcall!(self.gameTickTimeDelayHelper).startTime.clone()) {
+        if jcall!(self.toggleTimeHelper).isTime({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone()) {
             self.base.disable();
             self.update();
         }
@@ -115,7 +116,7 @@ impl MultiKeyPressesAI {
 
     // throws Exception
     pub fn enable(&mut self) {
-        if jcall!(self.toggleTimeHelper).isTime(jcall!(self.gameTickTimeDelayHelper).startTime.clone()) {
+        if jcall!(self.toggleTimeHelper).isTime({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone()) {
             self.base.enable();
             self.update();
         }

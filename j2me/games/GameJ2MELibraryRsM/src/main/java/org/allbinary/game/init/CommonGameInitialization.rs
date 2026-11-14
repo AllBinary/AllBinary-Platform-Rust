@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
 use crate::org::allbinary::game::resource::ResourceInitialization::ResourceInitialization;
 use crate::org::allbinary::game::resource::ResourceLoadingLevelFactory::ResourceLoadingLevelFactory;
 use crate::org::allbinary::graphics::PointFactory::PointFactory;
@@ -27,6 +27,7 @@ use crate::org::allbinary::logic::math::SmallIntegerSingletonFactory::SmallInteg
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
 use crate::org::allbinary::math::AngleFactory::AngleFactory;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::BaseGameInitialization::BaseGameInitialization;
 
 // Borrows the object of a Java reference
@@ -41,9 +42,6 @@ pub struct CommonGameInitialization {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-impl crate::org::allbinary::game::init::GameInitializationInterface::GameInitializationInterface for CommonGameInitialization {
-    fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut commandListener: Option<Rc<RefCell<CommandListener>>>, mut level: i32) { Self::init(self, abeClientInformation, commandListener, level) }
-}
 
 impl CommonGameInitialization {
     
@@ -64,10 +62,10 @@ impl CommonGameInitialization {
     
 
     // throws Exception
-    pub fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut commandListener: Option<Rc<RefCell<CommandListener>>>, mut level: i32) {
-        self.base.init(abeClientInformation.clone(), commandListener.clone(), level.clone());
+    pub fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut commandListener: Option<Rc<RefCell<dyn CommandListener>>>, mut level: i32) {
+        { let java_arguments = (abeClientInformation.clone(), commandListener.clone(), level.clone(),); self.base.init(java_arguments.0, java_arguments.1, java_arguments.2) };
         let mut resourceLoadingLevelFactory: Option<Rc<RefCell<ResourceLoadingLevelFactory>>> = ResourceLoadingLevelFactory::getInstance();
-        if !self.isGameInitialized() && level == jcall!(jcall!(resourceLoadingLevelFactory).LOAD_ALL).getLevel() {
+        if !self.isGameInitialized() && level == jcall!({ let java_field = jcall!(resourceLoadingLevelFactory).LOAD_ALL.clone(); java_field }).getLevel() {
             self.setGameInitialized(true);
             let mut progressCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn>>> = ProgressCanvasFactory::getInstance();
             jcall!(SmallIntegerSingletonFactory::getInstance()).init();
@@ -79,13 +77,13 @@ impl CommonGameInitialization {
             self.initGame();
             jcall!(self.resourceInitializationArray[(self.GAME_RESOURCES) as usize]).init();
         }
-        self.base.resourceInitialization(level.clone());
+        { let java_arguments = (level.clone(),); self.base.resourceInitialization(java_arguments.0) };
     }
     
 
     // throws Exception
     pub fn initGame(&mut self) {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
 }
 impl std::ops::Deref for CommonGameInitialization {
@@ -99,7 +97,9 @@ impl std::ops::DerefMut for CommonGameInitialization {
 impl crate::org::allbinary::game::init::BaseGameInitialization::BaseGameInitializationDyn for CommonGameInitialization {
     fn as_BaseGameInitialization(&self) -> &crate::org::allbinary::game::init::BaseGameInitialization::BaseGameInitialization { &self.base }
     fn as_BaseGameInitialization_mut(&mut self) -> &mut crate::org::allbinary::game::init::BaseGameInitialization::BaseGameInitialization { &mut self.base }
-    fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut commandListener: Option<Rc<RefCell<CommandListener>>>, mut level: i32) { Self::init(self, abeClientInformation, commandListener, level) }
+}
+impl crate::org::allbinary::game::init::GameInitializationInterface::GameInitializationInterface for CommonGameInitialization {
+    fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut commandListener: Option<Rc<RefCell<dyn CommandListener>>>, mut level: i32) { Self::init(self, abeClientInformation, commandListener, level) }
 }
 
 

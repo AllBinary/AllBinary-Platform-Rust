@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::Anchor::Anchor;
 use crate::org::allbinary::graphics::GPoint::GPoint;
 use crate::org::allbinary::graphics::PointFactory::PointFactory;
@@ -36,6 +36,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventStrings::EventStrings;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::HudGraphicsPosition::HudGraphicsPosition;
 use super::BasicHudFactory::BasicHudFactory;
 
@@ -68,10 +69,14 @@ pub struct BasicHud_1 {
 }
 
 impl UpdateMyFontInterface for BasicHud_1 {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 impl BasicHud_1 {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut location: i32, mut direction: i32, mut bufferZone: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Self {
@@ -100,39 +105,40 @@ impl BasicHud_1 {
         this.canvasStrings = CanvasStrings::getInstance();
         this.basicSetColorUtil = BasicColorSetUtil::getInstance();
         this.displayInfo = DisplayInfoSingleton::getInstance();
-        this.updateMyFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
         this.myFontProcessor = this.updateMyFontProcessor.clone();
         this.hudGraphicsPosition = HudGraphicsPosition_NULL_HUD_GRAPHICS_POSITION.with(Clone::clone).clone();
-        this.basicColor = jcall!(BasicColorFactory::getInstance()).BLACK.clone();
+        this.basicColor = { let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone();
         this.setLocation(location.clone());
         this.setDirection(direction.clone());
         this.setBufferZone(bufferZone.clone());
-        { let java_arguments = (jcall!(DisplayInfoSingleton::getInstance()).displayChangeEvent.clone(),); this.onDisplayChangeEvent(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(DisplayInfoSingleton::getInstance()).displayChangeEvent.clone(); java_field }.clone(),); this.onDisplayChangeEvent(java_arguments.0) };
         this.setBasicColorP(basicColor.clone());
-        this.color = jcall!(basicColor).intValue();
+        this.color = { let java_value = (jcall!(basicColor).intValue()).clone(); java_value };
         this
     }
 
     pub fn new(mut location: i32, mut direction: i32, mut bufferZone: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(location, direction, bufferZone, basicColor))))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(location.clone(), direction.clone(), bufferZone.clone(), basicColor.clone()))));
+        jcall!(this).updateMyFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            self.hudGraphicsPosition = { let java_arguments = (jcall!(self.displayInfo).getLastWidth(), jcall!(self.displayInfo).getLastHeight(), self.updateMaxWidth.clone(), self.updateMaxHeight.clone(),); self.getHudGraphicsPositionWH(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3) };
-            self.x = jcall!(jcall!(self.hudGraphicsPosition).getPoint()).getX();
+            self.hudGraphicsPosition = { let java_value = ({ let java_arguments = (jcall!(self.displayInfo).getLastWidth(), jcall!(self.displayInfo).getLastHeight(), self.updateMaxWidth.clone(), self.updateMaxHeight.clone(),); self.getHudGraphicsPositionWH(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3) }).clone(); java_value };
+            self.x = { let java_value = (jcall!(jcall!(self.hudGraphicsPosition).getPoint()).getX()).clone(); java_value };
             { let java_arguments = (jcall!(jcall!(self.hudGraphicsPosition).getPoint()).getY(),); self.setY(java_arguments.0) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.canvasStrings).ON_DISPLAY_CHANGE_EVENT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.canvasStrings).ON_DISPLAY_CHANGE_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
-        self.myFontProcessor = MyFontProcessor::getInstance();
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
@@ -152,31 +158,31 @@ impl BasicHud_1 {
         let mut y: i32 = 0;
         let mut anchor: i32 = 0;
         let mut basicHudFactory: Option<Rc<RefCell<BasicHudFactory>>> = BasicHudFactory::getInstance();
-        if jcall!(basicHudFactory).BOTTOMLEFT == self.getLocation() {
+        if { let java_field = jcall!(basicHudFactory).BOTTOMLEFT.clone(); java_field } == self.getLocation() {
             x = self.bufferZone + 2;
             y = height - maxHeight - self.bufferZone;
-            anchor = unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_BOTTOM.clone() } & unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_LEFT.clone() };
-        } else if jcall!(basicHudFactory).BOTTOMRIGHT == self.getLocation() {
+            anchor = { let java_value = (crate::javax::microedition::lcdui::Graphics::Graphics_BOTTOM.with(Clone::clone) & crate::javax::microedition::lcdui::Graphics::Graphics_LEFT.with(Clone::clone)).clone(); java_value };
+        } else if { let java_field = jcall!(basicHudFactory).BOTTOMRIGHT.clone(); java_field } == self.getLocation() {
             x = width - maxWidth;
             y = height - maxHeight - self.bufferZone;
-            anchor = unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_BOTTOM.clone() } & unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_RIGHT.clone() };
-        } else if jcall!(basicHudFactory).TOPLEFT == self.getLocation() {
+            anchor = { let java_value = (crate::javax::microedition::lcdui::Graphics::Graphics_BOTTOM.with(Clone::clone) & crate::javax::microedition::lcdui::Graphics::Graphics_RIGHT.with(Clone::clone)).clone(); java_value };
+        } else if { let java_field = jcall!(basicHudFactory).TOPLEFT.clone(); java_field } == self.getLocation() {
             x = self.bufferZone + 2;
             y = self.bufferZone + 5;
-            anchor = unsafe { crate::org::allbinary::graphics::Anchor::Anchor_TOP_LEFT.clone() }.clone();
-        } else if jcall!(basicHudFactory).TOPRIGHT == self.getLocation() {
+            anchor = { let java_value = (unsafe { crate::org::allbinary::graphics::Anchor::Anchor_TOP_LEFT.clone() }).clone(); java_value }.clone();
+        } else if { let java_field = jcall!(basicHudFactory).TOPRIGHT.clone(); java_field } == self.getLocation() {
             x = width - maxWidth;
             y = self.bufferZone + 5;
-            anchor = unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_TOP.clone() } & unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_RIGHT.clone() };
-        } else if jcall!(basicHudFactory).TOPCENTER == self.getLocation() {
+            anchor = { let java_value = (crate::javax::microedition::lcdui::Graphics::Graphics_TOP.with(Clone::clone) & crate::javax::microedition::lcdui::Graphics::Graphics_RIGHT.with(Clone::clone)).clone(); java_value };
+        } else if { let java_field = jcall!(basicHudFactory).TOPCENTER.clone(); java_field } == self.getLocation() {
             x = ((width - maxWidth) / 2);
             y = self.bufferZone + 5;
-            anchor = unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_TOP.clone() } & unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_HCENTER.clone() };
-        } else if jcall!(basicHudFactory).BOTTOMCENTER == self.getLocation() {
+            anchor = { let java_value = (crate::javax::microedition::lcdui::Graphics::Graphics_TOP.with(Clone::clone) & crate::javax::microedition::lcdui::Graphics::Graphics_HCENTER.with(Clone::clone)).clone(); java_value };
+        } else if { let java_field = jcall!(basicHudFactory).BOTTOMCENTER.clone(); java_field } == self.getLocation() {
             x = ((width - maxWidth) / 2);
             y = height - maxHeight - self.bufferZone;
-            anchor = unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_BOTTOM.clone() } & unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_HCENTER.clone() };
-        } else if jcall!(basicHudFactory).ABSOLUTE == self.getLocation() {
+            anchor = { let java_value = (crate::javax::microedition::lcdui::Graphics::Graphics_BOTTOM.with(Clone::clone) & crate::javax::microedition::lcdui::Graphics::Graphics_HCENTER.with(Clone::clone)).clone(); java_value };
+        } else if { let java_field = jcall!(basicHudFactory).ABSOLUTE.clone(); java_field } == self.getLocation() {
             x = maxHeight.clone();
             y = maxWidth.clone();
             anchor = 0;
@@ -186,7 +192,7 @@ impl BasicHud_1 {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
@@ -260,23 +266,23 @@ impl BasicHud_1 {
     }
     
 
-    pub fn paintSSO(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut string: String, mut string2: String, mut offset: i32) {
+    pub fn paintSSO(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut string: String, mut string2: String, mut offset: i32) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         { let java_receiver = self.basicSetColorUtil.clone(); let java_arguments = (graphics.clone(), self.getBasicColorP(),); jcall!(java_receiver).setBasicColorP(java_arguments.0, java_arguments.1); };
-        jcall!(graphics).drawString(string.clone(), self.x.clone(), self.getY(), jcall!(self.hudGraphicsPosition).getAnchor());
-        jcall!(graphics).drawString(string2.clone(), self.x + offset, self.getY(), jcall!(self.hudGraphicsPosition).getAnchor());
+        jcall!(graphics).drawString(string.clone(), self.x.clone(), self.getY(), { let java_argument = jcall!(self.hudGraphicsPosition).getAnchor(); java_argument });
+        jcall!(graphics).drawString(string2.clone(), self.x + offset, self.getY(), { let java_argument = jcall!(self.hudGraphicsPosition).getAnchor(); java_argument });
     }
     
 
-    pub fn paintSSOO(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut string: String, mut string2: String, mut offset: i32, mut offset2: i32) {
+    pub fn paintSSOO(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut string: String, mut string2: String, mut offset: i32, mut offset2: i32) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         jcall!(graphics).setColor(self.getColor());
-        jcall!(graphics).drawString(string.clone(), self.x + offset, self.getY(), jcall!(self.hudGraphicsPosition).getAnchor());
-        jcall!(graphics).drawString(string2.clone(), self.x + offset2, self.getY(), jcall!(self.hudGraphicsPosition).getAnchor());
+        jcall!(graphics).drawString(string.clone(), self.x + offset, self.getY(), { let java_argument = jcall!(self.hudGraphicsPosition).getAnchor(); java_argument });
+        jcall!(graphics).drawString(string2.clone(), self.x + offset2, self.getY(), { let java_argument = jcall!(self.hudGraphicsPosition).getAnchor(); java_argument });
     }
     
 
-    pub fn paintDXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut charArray: Vec<char>, mut offset: i32, mut len: i32, mut charArray2: Vec<char>, mut offset2: i32, mut len2: i32, mut xOffset: i32, mut xOffset2: i32) {
+    pub fn paintDXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut charArray: Vec<char>, mut offset: i32, mut len: i32, mut charArray2: Vec<char>, mut offset2: i32, mut len2: i32, mut xOffset: i32, mut xOffset2: i32) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         { let java_receiver = self.basicSetColorUtil.clone(); let java_arguments = (graphics.clone(), self.getBasicColorP(),); jcall!(java_receiver).setBasicColorP(java_arguments.0, java_arguments.1); };
         let mut y: i32 = self.getY();
@@ -285,7 +291,7 @@ impl BasicHud_1 {
     }
     
 
-    pub fn paintDX(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut charArray: Vec<char>, mut offset: i32, mut len: i32, mut charArray2: Vec<char>, mut offset2: i32, mut len2: i32, mut xOffset: i32) {
+    pub fn paintDX(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut charArray: Vec<char>, mut offset: i32, mut len: i32, mut charArray2: Vec<char>, mut offset2: i32, mut len2: i32, mut xOffset: i32) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         { let java_receiver = self.basicSetColorUtil.clone(); let java_arguments = (graphics.clone(), self.getBasicColorP(),); jcall!(java_receiver).setBasicColorP(java_arguments.0, java_arguments.1); };
         let mut y: i32 = self.getY();
@@ -294,7 +300,7 @@ impl BasicHud_1 {
     }
     
 
-    pub fn paintOffsetAndLength(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut charArray: Vec<char>, mut offset: i32, mut len: i32) {
+    pub fn paintOffsetAndLength(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut charArray: Vec<char>, mut offset: i32, mut len: i32) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         { let java_receiver = self.basicSetColorUtil.clone(); let java_arguments = (graphics.clone(), self.getBasicColorP(),); jcall!(java_receiver).setBasicColorP(java_arguments.0, java_arguments.1); };
         let mut y: i32 = self.getY();
@@ -302,7 +308,7 @@ impl BasicHud_1 {
     }
     
 
-    pub fn paintString(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut string: String) {
+    pub fn paintString(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut string: String) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         { let java_receiver = self.basicSetColorUtil.clone(); let java_arguments = (graphics.clone(), self.getBasicColorP(),); jcall!(java_receiver).setBasicColorP(java_arguments.0, java_arguments.1); };
         let mut y: i32 = self.getY() + self.offsetY;

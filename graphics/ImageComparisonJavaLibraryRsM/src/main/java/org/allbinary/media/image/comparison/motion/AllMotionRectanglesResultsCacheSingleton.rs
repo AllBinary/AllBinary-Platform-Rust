@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::util::cache::CacheInterfaceFactory::CacheInter
 use crate::org::allbinary::logic::util::cache::CachePolicyFactory::CachePolicyFactory;
 use crate::org::allbinary::logic::util::cache::CacheTypeFactory::CacheTypeFactory;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,6 +39,10 @@ pub struct AllMotionRectanglesResultsCacheSingleton {
 pub static mut AllMotionRectanglesResultsCacheSingleton_cacheInterface: std::cell::LazyCell<Option<Rc<RefCell<dyn CacheInterface>>>> = std::cell::LazyCell::new(|| None);
 
 impl AllMotionRectanglesResultsCacheSingleton {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     // Java static initializer: call this once at startup
@@ -47,15 +52,15 @@ impl AllMotionRectanglesResultsCacheSingleton {
         let mut STATIC_BLOCK: String = String::from("Static Block");
         let mut instance: String = String::from("MotionRectanglesResultsCacheSingleton");
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
-            unsafe { *AllMotionRectanglesResultsCacheSingleton_cacheInterface = CacheInterfaceFactory::getInstance(jcall!(CacheTypeFactory::getInstance()).CACHE.clone(), jcall!(CachePolicyFactory::getInstance()).ONE_MINUTE_FIVE_MAX.clone()) };
-            jcall!(logUtil).putF(jcall!(commonStrings).END.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
+            jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
+            unsafe { *AllMotionRectanglesResultsCacheSingleton_cacheInterface = CacheInterfaceFactory::getInstance({ let java_field = jcall!(CacheTypeFactory::getInstance()).CACHE.clone(); java_field }.clone(), { let java_field = jcall!(CachePolicyFactory::getInstance()).ONE_MINUTE_FIVE_MAX.clone(); java_field }.clone()) };
+            jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).END.clone(); java_field }.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone(), crate::java_into_object(e.clone()));
+            jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

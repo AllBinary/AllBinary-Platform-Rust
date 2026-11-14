@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::game::Sprite::Sprite;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::game::Sprite::Sprite;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use super::SpriteFactoryInterface::SpriteFactoryInterface;
 
@@ -35,10 +35,14 @@ pub struct SpriteFactory {
 
 thread_local! { pub static SpriteFactory_instance: Option<Rc<RefCell<SpriteFactory>>> = SpriteFactory::new(); }
 impl SpriteFactoryInterface for SpriteFactory {
-    fn createSprite(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut frameWidth: i32, mut frameHeight: i32) -> Option<Rc<RefCell<Sprite>>> { Self::createSprite(self, image, frameWidth, frameHeight) }
+    fn createSprite(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut frameWidth: i32, mut frameHeight: i32) -> Option<Rc<RefCell<Sprite>>> { Self::createSprite(self, image, frameWidth, frameHeight) }
 }
 
 impl SpriteFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -58,8 +62,8 @@ impl SpriteFactory {
     }
     
 
-    pub fn createSprite(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut frameWidth: i32, mut frameHeight: i32) -> Option<Rc<RefCell<Sprite>>> {
-        return Sprite::new(image.clone(), frameWidth.clone(), frameHeight.clone());
+    pub fn createSprite(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut frameWidth: i32, mut frameHeight: i32) -> Option<Rc<RefCell<Sprite>>> {
+        return Sprite::new3(image.clone(), frameWidth.clone(), frameHeight.clone());
     }
 }
 

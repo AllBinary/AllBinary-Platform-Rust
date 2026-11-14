@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::input::automation::actions::script::ProfileActionScriptItemInterface::ProfileActionScriptItemInterface;
 use crate::org::allbinary::input::automation::actions::script::ProfileActionScriptNodeInterface::ProfileActionScriptNodeInterface;
 use crate::org::allbinary::input::automation::actions::script::condition::processors::ProfileActionScriptProcessorInterface::ProfileActionScriptProcessorInterface;
+use crate::java::lang::Exception::*;
 use super::CustomTreeNodeInterface::CustomTreeNodeInterface;
 
 // Borrows the object of a Java reference

@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerFactoryInterface::AllBinaryLayerFactoryInterface;
+use crate::java::lang::Exception::*;
 use super::PointsLayer::PointsLayer;
 
 // Borrows the object of a Java reference
@@ -37,6 +38,10 @@ impl AllBinaryLayerFactoryInterface for PointsLayerFactory {
 }
 
 impl PointsLayerFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut points: i32) -> Self {
@@ -54,7 +59,7 @@ impl PointsLayerFactory {
 
     // throws Exception
     pub fn getInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> {
-        return PointsLayer::new(self.points.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>);
+        return PointsLayer::new(self.points.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>);
     }
 }
 

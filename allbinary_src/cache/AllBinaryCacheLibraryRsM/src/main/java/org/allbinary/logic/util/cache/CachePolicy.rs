@@ -33,6 +33,10 @@ pub struct CachePolicy {
 
 
 impl CachePolicy {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut name: String, mut maxTime: i64, mut maxSize: i64) -> Self {

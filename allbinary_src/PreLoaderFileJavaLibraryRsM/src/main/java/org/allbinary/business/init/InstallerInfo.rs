@@ -29,6 +29,7 @@ use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::system::security::crypt::DatabaseEncoder::DatabaseEncoder;
 use crate::org::allbinary::logic::system::security::crypt::WeakCrypt::WeakCrypt;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -43,12 +44,16 @@ pub struct InstallerInfo {
 
 thread_local! { pub static InstallerInfo_instance: Option<Rc<RefCell<InstallerInfo>>> = InstallerInfo::new(); }
 thread_local! { pub static InstallerInfo_INITFILENAME: String = String::from("installerdata.dat"); }
-thread_local! { pub static InstallerInfo_PACKAGE: String = jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone(); }
-pub static mut InstallerInfo_userName: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| jcall!(StringUtil::getInstance()).EMPTY_STRING.clone());
-pub static mut InstallerInfo_password: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| jcall!(StringUtil::getInstance()).EMPTY_STRING.clone());
+thread_local! { pub static InstallerInfo_PACKAGE: String = { let java_field = jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field }.clone(); }
+pub static mut InstallerInfo_userName: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
+pub static mut InstallerInfo_password: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
 pub static mut InstallerInfo_hasRead: std::cell::LazyCell<bool> = std::cell::LazyCell::new(|| false);
 
 impl InstallerInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -72,17 +77,17 @@ impl InstallerInfo {
             let mut newFile: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFileFromAbPath(FILEABPATH.clone());
             jcall!(newFile).createNewFile();
             let mut dataOutputStream: Option<Rc<RefCell<AbDataOutputStream>>> = jcall!(DataOutputStreamFactory::getInstance()).getInstanceForAbFile(newFile.clone());
-            let mut cryptedUserName: Vec<i8> = jcall!(jcall!(WeakCrypt::new(1)).encrypt(self.getUserName())).getBytes();
-            let mut cryptedPassword: Vec<i8> = jcall!(jcall!(WeakCrypt::new(2)).encrypt(self.getPassword())).getBytes();
+            let mut cryptedUserName: Vec<i8> = jcall!(WeakCrypt::new(1)).encrypt(self.getUserName()).bytes().map(|value| value as i8).collect::<Vec<i8>>();
+            let mut cryptedPassword: Vec<i8> = jcall!(WeakCrypt::new(2)).encrypt(self.getPassword()).bytes().map(|value| value as i8).collect::<Vec<i8>>();
             jcall!(dataOutputStream).writeUTF(DatabaseEncoder::encode(cryptedUserName.clone()));
             jcall!(dataOutputStream).writeUTF(DatabaseEncoder::encode(cryptedPassword.clone()));
             unsafe { *InstallerInfo_hasRead = false };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PRELOADERERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PRELOADERERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).putF(String::from("Failed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("write"));
             }
             panic!("{:?}", e);
@@ -99,22 +104,22 @@ impl InstallerInfo {
             let mut file: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFileFromAbPath(FILEABPATH.clone());
             if jcall!(file).isFile() {
                 let mut iFile: Option<Rc<RefCell<AbFileLocalInputStream>>> = AbFileLocalInputStream::new(file.clone());
-                let mut iData: Option<Rc<RefCell<AbDataInputStream>>> = AbDataInputStream::new(iFile.clone());
+                let mut iData: Option<Rc<RefCell<AbDataInputStream>>> = AbDataInputStream::new(iFile.clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>));
                 let mut decryptedUserName: String = DatabaseEncoder::decode(jcall!(iData).readUTF()).clone();
                 let mut decryptedPassword: String = DatabaseEncoder::decode(jcall!(iData).readUTF()).clone();
                 { let java_arguments = (jcall!(WeakCrypt::new(1)).decrypt(decryptedUserName.clone()),); self.setUserName(java_arguments.0) };
                 { let java_arguments = (jcall!(WeakCrypt::new(2)).decrypt(decryptedPassword.clone()),); self.setPassword(java_arguments.0) };
             } else {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PRELOADER.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PRELOADER.clone(); java_field }.clone()) {
                     { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Not a File - Failed Loading: "), jcall!(FILEABPATH).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("read"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PRELOADERERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PRELOADERERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).putF(String::from("Failed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("read"));
             }
             }
@@ -145,7 +150,7 @@ impl InstallerInfo {
             unsafe { *InstallerInfo_hasRead = true };
             self.read();
             if false || false {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PRELOADER.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PRELOADER.clone(); java_field }.clone()) {
                     jcall!(self.logUtil).putF(String::from("Failed"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateIfNeeded"));
                 }
             }

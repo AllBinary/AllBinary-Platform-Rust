@@ -22,6 +22,7 @@ use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEv
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::VirtualKeyboardEvent::VirtualKeyboardEvent;
 use super::VirtualKeyboardEventListenerInterface::VirtualKeyboardEventListenerInterface;
 
@@ -49,8 +50,8 @@ impl VirtualKeyboardEventHandler {
             SHOW_EVENT: None,
             HIDE_EVENT: None,
         };
-        this.SHOW_EVENT = VirtualKeyboardEvent::new(jcall!(BooleanFactory::getInstance()).TRUE.clone());
-        this.HIDE_EVENT = VirtualKeyboardEvent::new(jcall!(BooleanFactory::getInstance()).FALSE.clone());
+        this.SHOW_EVENT = VirtualKeyboardEvent::new(crate::java_into_object({ let java_field = jcall!(BooleanFactory::getInstance()).TRUE.clone(); java_field }.clone()));
+        this.HIDE_EVENT = VirtualKeyboardEvent::new(crate::java_into_object({ let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone()));
         this
     }
 
@@ -66,21 +67,21 @@ impl VirtualKeyboardEventHandler {
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut virtualKeyboardEventListenerInterface: Option<Rc<RefCell<dyn VirtualKeyboardEventListenerInterface>>> = panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn VirtualKeyboardEventListenerInterface");
-        jcall!(virtualKeyboardEventListenerInterface).onVirtualKeyboardEvent((eventObject).clone() /* as VirtualKeyboardEvent */);
+        let mut virtualKeyboardEventListenerInterface: Option<Rc<RefCell<dyn VirtualKeyboardEventListenerInterface>>> = (|| -> Option<Rc<RefCell<dyn VirtualKeyboardEventListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn VirtualKeyboardEventListenerInterface") })();
+        jcall!(virtualKeyboardEventListenerInterface).onVirtualKeyboardEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<VirtualKeyboardEvent>() }, "ClassCastException: not a VirtualKeyboardEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<VirtualKeyboardEvent>) } }));
     }
     
 
     pub fn open(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             std::thread::sleep(std::time::Duration::from_millis((120) as u64));
-            self.fireEvent(self.SHOW_EVENT.clone());
+            { let java_arguments = (self.SHOW_EVENT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>),); self.fireEvent(java_arguments.0) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("open"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("open"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -90,13 +91,13 @@ impl VirtualKeyboardEventHandler {
     pub fn close(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             std::thread::sleep(std::time::Duration::from_millis((120) as u64));
-            self.fireEvent(self.HIDE_EVENT.clone());
+            { let java_arguments = (self.HIDE_EVENT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>),); self.fireEvent(java_arguments.0) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CLOSE.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CLOSE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

@@ -17,12 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation;
 use crate::org::allbinary::animation::SingletonAnimationInterfaceFactory::SingletonAnimationInterfaceFactory;
 use crate::org::allbinary::image::IndexedAnimationToImageArrayUtil::IndexedAnimationToImageArrayUtil;
+use crate::java::lang::Exception::*;
 use super::ImageArrayAnimation::ImageArrayAnimation;
 
 // Borrows the object of a Java reference
@@ -36,21 +37,28 @@ pub struct ImageArraySingletonAnimationInterfaceFactory {
     pub base: SingletonAnimationInterfaceFactory,
 }
 
+impl crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface for ImageArraySingletonAnimationInterfaceFactory {
+    fn getInstance(&mut self, p1: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { crate::org::allbinary::animation::SingletonAnimationInterfaceFactory::SingletonAnimationInterfaceFactory::getInstance(crate::org::allbinary::animation::SingletonAnimationInterfaceFactory::SingletonAnimationInterfaceFactoryDyn::as_SingletonAnimationInterfaceFactory_mut(self), p1) }
+    fn setInitialScale(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::media::ScaleProperties::ScaleProperties>>>) { crate::org::allbinary::animation::SingletonAnimationInterfaceFactory::SingletonAnimationInterfaceFactory::setInitialScale(crate::org::allbinary::animation::SingletonAnimationInterfaceFactory::SingletonAnimationInterfaceFactoryDyn::as_SingletonAnimationInterfaceFactory_mut(self), p1) }
+}
 impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface for ImageArraySingletonAnimationInterfaceFactory {
+}
+impl crate::org::allbinary::animation::ProceduralAnimationInterfaceFactoryInterface::ProceduralAnimationInterfaceFactoryInterface for ImageArraySingletonAnimationInterfaceFactory {
+    fn getInstanceAnimation(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { crate::org::allbinary::animation::SingletonAnimationInterfaceFactory::SingletonAnimationInterfaceFactory::getInstanceAnimation(crate::org::allbinary::animation::SingletonAnimationInterfaceFactory::SingletonAnimationInterfaceFactoryDyn::as_SingletonAnimationInterfaceFactory_mut(self), p1) }
 }
 
 impl ImageArraySingletonAnimationInterfaceFactory {
     
 
-    pub fn new_struct(mut imageArray: Vec<Option<Rc<RefCell<Image>>>>) -> Self {
+    pub fn new_struct(mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>) -> Self {
         let mut this = Self {
-            base: SingletonAnimationInterfaceFactory::new_struct(ImageArrayAnimation::new(imageArray.clone(), AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::image::ImageArrayAnimation::ImageArrayAnimationDyn>>)),
+            base: SingletonAnimationInterfaceFactory::new_struct(ImageArrayAnimation::new(imageArray.clone(), AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::image::ImageArrayAnimation::ImageArrayAnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>)),
         };
         // super(...) is in the struct literal above
         this
     }
 
-    pub fn new(mut imageArray: Vec<Option<Rc<RefCell<Image>>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(imageArray))))
     }
 }

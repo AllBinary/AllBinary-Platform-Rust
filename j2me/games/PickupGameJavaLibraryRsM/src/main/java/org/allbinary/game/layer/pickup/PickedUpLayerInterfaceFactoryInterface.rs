@@ -28,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait PickedUpLayerInterfaceFactoryInterface {
+pub trait PickedUpLayerInterfaceFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getPickedUpLayerType(&mut self) -> Option<Rc<RefCell<PickedUpLayerType>>>;
@@ -38,8 +38,6 @@ pub trait PickedUpLayerInterfaceFactoryInterface {
     
 
     fn getAnimationInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

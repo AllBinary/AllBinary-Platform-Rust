@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::graphics::j2me::StatusFactory::StatusFactory;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::GraphicsItemInterfaceFactoryInterface::GraphicsItemInterfaceFactoryInterface;
 
 // Borrows the object of a Java reference
@@ -40,6 +41,10 @@ pub struct ToolFactory {
 thread_local! { pub static ToolFactory_instance: Option<Rc<RefCell<ToolFactory>>> = ToolFactory::new(); }
 
 impl ToolFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -74,9 +79,9 @@ impl ToolFactory {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setSelectionTool"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setSelectionTool"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -85,7 +90,7 @@ impl ToolFactory {
     pub fn getSelectedToolFactory(&mut self) -> Option<Rc<RefCell<dyn GraphicsItemInterfaceFactoryInterface>>> {
         jcall!(StatusFactory::getInstance()).setStatus(format!("{}{}", String::from("Tool In Use: "), self.tool));
         if true {
-            self.selectedTool = jcall!(GraphicItemFactory::GraphicItemFactory::getInstance()).getInstance1(self.tool.clone());
+            self.selectedTool = { let java_value = (jcall!(GraphicItemFactory::GraphicItemFactory::getInstance()).getInstance1(self.tool.clone())).clone(); java_value };
             jcall!(self.logUtil).putF(format!("{}{}", String::from("New Tool: "), self.selectedTool), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getSelectedToolFactory"));
             return self.selectedTool.clone();
         } else {

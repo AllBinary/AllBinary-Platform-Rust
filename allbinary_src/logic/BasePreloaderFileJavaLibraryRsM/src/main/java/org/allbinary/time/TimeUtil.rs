@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::Calendar;
 use super::*;
-// use crate::java::util::Calendar::Calendar;
+use crate::java::util::Calendar::Calendar;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,6 +33,10 @@ thread_local! { pub static TimeUtil_instance: Option<Rc<RefCell<TimeUtil>>> = Ti
 thread_local! { pub static TimeUtil_calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance(); }
 
 impl TimeUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -52,40 +55,39 @@ impl TimeUtil {
     
 
     pub fn setCalendar(&mut self, mut calendar: Option<Rc<RefCell<Calendar>>>, mut yearString: String, mut monthString: String, mut dayString: String, mut hourString: String) {
-        let mut year: i32 = ((Some((yearString.clone()) as i32)).unwrap() as i32);
-        let mut month: i32 = ((Some((monthString.clone()) as i32)).unwrap() as i32);
-        let mut day: i32 = ((Some((dayString.clone()) as i32)).unwrap() as i32);
-        let mut hour: i32 = ((Some((hourString.clone()) as i32)).unwrap() as i32);
-        jcall!(calendar).set(year.clone(), month.clone(), day.clone(), hour.clone(), 0);
+        let mut year: i32 = ((Some((yearString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        let mut month: i32 = ((Some((monthString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        let mut day: i32 = ((Some((dayString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        let mut hour: i32 = ((Some((hourString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        jcall!(calendar).set5(year.clone(), month.clone(), day.clone(), hour.clone(), 0);
     }
     
 
-    // Java overloaded method: Rust needs a different name
-    pub fn setCalendar7(&mut self, mut calendar: Option<Rc<RefCell<Calendar>>>, mut yearString: String, mut monthString: String, mut dayString: String, mut hourString: String, mut minuteString: String, mut secondString: String) {
-        let mut year: i32 = ((Some((yearString.clone()) as i32)).unwrap() as i32);
-        let mut month: i32 = ((Some((monthString.clone()) as i32)).unwrap() as i32);
-        let mut day: i32 = ((Some((dayString.clone()) as i32)).unwrap() as i32);
-        let mut hour: i32 = ((Some((hourString.clone()) as i32)).unwrap() as i32);
-        let mut minute: i32 = ((Some((minuteString.clone()) as i32)).unwrap() as i32);
-        let mut second: i32 = ((Some((secondString.clone()) as i32)).unwrap() as i32);
-        jcall!(calendar).set(year.clone(), month.clone(), day.clone(), hour.clone(), minute.clone(), second.clone());
+    pub fn setCalendarWithTime(&mut self, mut calendar: Option<Rc<RefCell<Calendar>>>, mut yearString: String, mut monthString: String, mut dayString: String, mut hourString: String, mut minuteString: String, mut secondString: String) {
+        let mut year: i32 = ((Some((yearString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        let mut month: i32 = ((Some((monthString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        let mut day: i32 = ((Some((dayString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        let mut hour: i32 = ((Some((hourString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        let mut minute: i32 = ((Some((minuteString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        let mut second: i32 = ((Some((secondString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        jcall!(calendar).set6(year.clone(), month.clone(), day.clone(), hour.clone(), minute.clone(), second.clone());
     }
     
 
     pub fn setExpirationCalendar(&mut self, mut calendar: Option<Rc<RefCell<Calendar>>>, mut yearsString: String, mut monthsString: String, mut daysString: String, mut hoursString: String, mut minutesString: String, mut secondsString: String) {
-        let mut year: i32 = jcall!(calendar).get(unsafe { crate::java::util::Calendar::Calendar_YEAR.clone() }.clone()) + ((Some((yearsString.clone()) as i32)).unwrap() as i32);
-        let mut month: i32 = jcall!(calendar).get(unsafe { crate::java::util::Calendar::Calendar_MONTH.clone() }.clone()) + ((Some((monthsString.clone()) as i32)).unwrap() as i32);
-        let mut day: i32 = jcall!(calendar).get(unsafe { crate::java::util::Calendar::Calendar_DAY_OF_MONTH.clone() }.clone()) + ((Some((daysString.clone()) as i32)).unwrap() as i32);
-        let mut hour: i32 = jcall!(calendar).get(unsafe { crate::java::util::Calendar::Calendar_HOUR.clone() }.clone()) + ((Some((hoursString.clone()) as i32)).unwrap() as i32);
-        let mut minute: i32 = jcall!(calendar).get(unsafe { crate::java::util::Calendar::Calendar_MINUTE.clone() }.clone()) + ((Some((minutesString.clone()) as i32)).unwrap() as i32);
-        let mut second: i32 = jcall!(calendar).get(unsafe { crate::java::util::Calendar::Calendar_SECOND.clone() }.clone()) + ((Some((secondsString.clone()) as i32)).unwrap() as i32);
-        jcall!(calendar).set(year.clone(), month.clone(), day.clone(), hour.clone(), minute.clone(), second.clone());
+        let mut year: i32 = jcall!(calendar).get(unsafe { crate::java::util::Calendar::Calendar_YEAR.clone() }.clone()) + ((Some((yearsString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        let mut month: i32 = jcall!(calendar).get(unsafe { crate::java::util::Calendar::Calendar_MONTH.clone() }.clone()) + ((Some((monthsString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        let mut day: i32 = jcall!(calendar).get(unsafe { crate::java::util::Calendar::Calendar_DAY_OF_MONTH.clone() }.clone()) + ((Some((daysString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        let mut hour: i32 = jcall!(calendar).get(unsafe { crate::java::util::Calendar::Calendar_HOUR.clone() }.clone()) + ((Some((hoursString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        let mut minute: i32 = jcall!(calendar).get(unsafe { crate::java::util::Calendar::Calendar_MINUTE.clone() }.clone()) + ((Some((minutesString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        let mut second: i32 = jcall!(calendar).get(unsafe { crate::java::util::Calendar::Calendar_SECOND.clone() }.clone()) + ((Some((secondsString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
+        jcall!(calendar).set6(year.clone(), month.clone(), day.clone(), hour.clone(), minute.clone(), second.clone());
     }
     
 
     pub fn getTotalTime(&mut self, mut yearString: String, mut monthString: String, mut dayString: String, mut hourString: String, mut minuteString: String, mut secondString: String) -> i64 {
         let mut time: i64 = jcall!(TimeUtil_calendar.with(Clone::clone)).getTimeInMillis();
-        self.setExpirationCalendar(TimeUtil_calendar.with(Clone::clone).clone(), yearString.clone(), monthString.clone(), dayString.clone(), hourString.clone(), minuteString.clone(), secondString.clone());
+        { let java_arguments = (TimeUtil_calendar.with(Clone::clone).clone(), yearString.clone(), monthString.clone(), dayString.clone(), hourString.clone(), minuteString.clone(), secondString.clone(),); self.setExpirationCalendar(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5, java_arguments.6) };
         let mut timeDelta: i64 = jcall!(TimeUtil_calendar.with(Clone::clone)).getTimeInMillis();
         return timeDelta - time;
     }

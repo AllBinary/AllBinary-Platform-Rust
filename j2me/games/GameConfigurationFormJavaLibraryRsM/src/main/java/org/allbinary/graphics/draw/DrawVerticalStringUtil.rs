@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::AndroidUtil::AndroidUtil;
 use crate::org::allbinary::J2MEUtil::J2MEUtil;
 use crate::org::allbinary::graphics::Anchor::Anchor;
@@ -27,6 +27,7 @@ use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -47,6 +48,10 @@ thread_local! { pub static DrawVerticalStringUtil_instance: Option<Rc<RefCell<Dr
 
 impl DrawVerticalStringUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             EMPTY_STRING: String::new(),
@@ -55,9 +60,9 @@ impl DrawVerticalStringUtil {
             offsetY: 0,
             offsetXArray: Vec::new(),
         };
-        this.EMPTY_STRING = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.EMPTY_STRING = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.anchor = unsafe { crate::org::allbinary::graphics::Anchor::Anchor_TOP_LEFT.clone() }.clone();
-        this.offsetXArray = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone();
+        this.offsetXArray = { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone(); java_field }.clone();
         this
     }
 
@@ -71,10 +76,10 @@ impl DrawVerticalStringUtil {
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut string: String) {
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut string: String) {
         let mut openGLFeatureUtil: Option<Rc<RefCell<OpenGLFeatureUtil>>> = OpenGLFeatureUtil::getInstance();
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.charHeight = jcall!(font).getHeight();
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.charHeight = { let java_value = (jcall!(font).getHeight()).clone(); java_value };
         self.offsetY = 0;
         if J2MEUtil::isHTML() {
             self.charHeight += 1;
@@ -89,7 +94,7 @@ impl DrawVerticalStringUtil {
         let mut aChar: char = '\0';
         let mut offsetXArray: Vec<i32> = vec![0; (size) as usize];
         for index in (0..=size - 1).rev() {
-            aChar = string.chars().nth((index.clone()) as usize).unwrap();
+            aChar = { let java_value = (string.chars().nth((index.clone()) as usize).unwrap()).clone(); java_value };
             if jcall!(openGLFeatureUtil).isAnyThreed() {
                 offsetXArray[(index) as usize] = jcall!(font).charWidth(aChar.clone()) / 2;
             }
@@ -98,24 +103,24 @@ impl DrawVerticalStringUtil {
     }
     
 
-    pub fn paintVerticle(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut string: String, mut x: i32, mut y: i32, mut anchor: i32) {
+    pub fn paintVerticle(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut string: String, mut x: i32, mut y: i32, mut anchor: i32) {
         let mut size: i32 = (string.chars().count() as i32);
         let mut aChar: char = '\0';
         for index in (0..=size - 1).rev() {
-            aChar = string.chars().nth((index.clone()) as usize).unwrap();
+            aChar = { let java_value = (string.chars().nth((index.clone()) as usize).unwrap()).clone(); java_value };
             jcall!(graphics).drawChar(aChar.clone(), x + self.offsetXArray[(index) as usize], y + (self.charHeight * index) + self.offsetY, anchor.clone());
         }
     }
     
 
-    pub fn drawCenterString(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut string: String, mut offset: i32, mut length: i32, mut x: i32, mut y: i32) {
+    pub fn drawCenterString(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut string: String, mut offset: i32, mut length: i32, mut x: i32, mut y: i32) {
         let mut width: i32 = (jcall!(jcall!(graphics).getFont()).substringWidth(string.clone(), offset.clone(), length.clone()) >> 1);
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(graphics).drawSubstring(string.clone(), offset.clone(), length.clone(), x - width, y.clone(), self.anchor.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             PreLogUtil::put(jcall!(StringMaker::new()).append(String::from("Exception: stringLength: ")).appendint((string.chars().count() as i32)).append(String::from(" offset: ")).appendint(offset.clone()).append(String::from(" currentLength: ")).appendint(length.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("drawCenterString"));
             }
@@ -123,7 +128,7 @@ impl DrawVerticalStringUtil {
     }
     
 
-    pub fn drawCenterStrings(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut stringArray: Vec<String>, mut maxWidth: i32, mut x: i32, mut y: i32) {
+    pub fn drawCenterStrings(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut stringArray: Vec<String>, mut maxWidth: i32, mut x: i32, mut y: i32) {
         let mut extraLines: i32 = 0;
         for index in (0..(stringArray.len() as i32)) {
             let mut string: String = stringArray[(index) as usize].clone();

@@ -46,7 +46,7 @@ impl SoftwareInformation {
         };
         this.name = name.clone();
         this.version = version.clone();
-        this.shortName = jcall!(StringMaker::new()).append(shortName.clone()).append(KotlinUtil::getShortName()).toString();
+        this.shortName = { let java_value = (jcall!(StringMaker::new()).append(shortName.clone()).append(KotlinUtil::getShortName()).toString()).clone(); java_value };
         this
     }
 
@@ -76,7 +76,7 @@ impl SoftwareInformation {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(NAME.clone());
         jcall!(stringBuffer).append(self.getName());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(VERSION.clone());
         jcall!(stringBuffer).append(self.getVersion());
         return jcall!(stringBuffer).toString();

@@ -36,6 +36,10 @@ impl CacheableInterfaceFactoryInterface for ColorCacheableFactory {
 }
 
 impl ColorCacheableFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -50,7 +54,7 @@ impl ColorCacheableFactory {
     
 
     pub fn getInstance(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn CacheableInterface>>> {
-        return ColorCacheable::new(key.clone()).map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>);
+        return ColorCacheable::new(crate::java_into_object(key.clone())).map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>).map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>);
     }
 }
 

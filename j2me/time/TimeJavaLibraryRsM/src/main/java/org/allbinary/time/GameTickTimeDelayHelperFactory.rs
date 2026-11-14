@@ -32,6 +32,10 @@ pub struct GameTickTimeDelayHelperFactory {
 thread_local! { pub static GameTickTimeDelayHelperFactory_instance: Option<Rc<RefCell<GameTickTimeDelayHelper>>> = GameTickTimeDelayHelper::new(-1); }
 
 impl GameTickTimeDelayHelperFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GameTickTimeDelayHelper>>> {

@@ -17,10 +17,11 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::game::configuration::feature::MainFeatureFactory::MainFeatureFactory;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::java::lang::Exception::*;
 use super::RunnableCanvas::RunnableCanvas;
 
 // Borrows the object of a Java reference
@@ -36,6 +37,10 @@ pub struct FullScreenUtil {
 thread_local! { pub static FullScreenUtil_instance: Option<Rc<RefCell<FullScreenUtil>>> = FullScreenUtil::new(); }
 
 impl FullScreenUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -54,18 +59,18 @@ impl FullScreenUtil {
     
 
     // throws Exception
-    pub fn initOnRun(&mut self, mut fullScreenInterface: Option<Rc<RefCell<Canvas>>>, mut commandListener: Option<Rc<RefCell<CommandListener>>>) {
-        jcall!(((fullScreenInterface).clone() /* as RunnableCanvas */)).waitOnNotify(0);
+    pub fn initOnRun(&mut self, mut fullScreenInterface: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>, mut commandListener: Option<Rc<RefCell<dyn CommandListener>>>) {
+        jcall!(((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn>>> { panic!("ClassCastException: a Rust dyn Canvas cannot be cast to RunnableCanvas") })())).waitOnNotify(0);
         if commandListener.is_some() {
             self.init(fullScreenInterface.clone());
         }
     }
     
 
-    pub fn init(&mut self, mut fullScreenInterface: Option<Rc<RefCell<Canvas>>>) {
+    pub fn init(&mut self, mut fullScreenInterface: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>) {
         let mut mainFeatureFactory: Option<Rc<RefCell<MainFeatureFactory>>> = MainFeatureFactory::getInstance();
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
-        if jcall!(features).isFeature(jcall!(mainFeatureFactory).FULL_SCREEN.clone()) {
+        if jcall!(features).isFeature({ let java_field = jcall!(mainFeatureFactory).FULL_SCREEN.clone(); java_field }.clone()) {
             jcall!(fullScreenInterface).setFullScreenMode(true);
         } else {
             jcall!(fullScreenInterface).setFullScreenMode(false);
@@ -76,14 +81,14 @@ impl FullScreenUtil {
     pub fn isScreenChange(&mut self, mut isFullScreen: bool) -> bool {
         let mut mainFeatureFactory: Option<Rc<RefCell<MainFeatureFactory>>> = MainFeatureFactory::getInstance();
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
-        if jcall!(features).isFeature(jcall!(mainFeatureFactory).FULL_SCREEN.clone()) != isFullScreen {
+        if jcall!(features).isFeature({ let java_field = jcall!(mainFeatureFactory).FULL_SCREEN.clone(); java_field }.clone()) != isFullScreen {
             return true;
         }
         return false;
     }
     
 
-    pub fn isScreenChangeCanvas(&mut self, mut fullScreenInterface: Option<Rc<RefCell<Canvas>>>) -> bool {
+    pub fn isScreenChangeCanvas(&mut self, mut fullScreenInterface: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>) -> bool {
         return { let java_arguments = (jcall!(fullScreenInterface).isFullScreenMode(),); self.isScreenChange(java_arguments.0) };
     }
 }

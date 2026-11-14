@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput;
 use crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent;
 use crate::org::allbinary::game::score::displayable::HighScoresCanvas::HighScoresCanvas;
@@ -36,24 +36,13 @@ pub struct HighScoresCanvasInputProcessor {
     pub highScoresCanvas: Option<Rc<RefCell<HighScoresCanvas>>>,
 }
 
-impl crate::org::allbinary::game::input::event::DownGameKeyEventListenerInterface::DownGameKeyEventListenerInterface for HighScoresCanvasInputProcessor {
-    fn onDownGameKeyEvent(&mut self, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) { Self::onDownGameKeyEvent(self, gameKeyEvent) }
-}
-impl crate::org::allbinary::game::input::event::GameKeyEventListenerInterface::GameKeyEventListenerInterface for HighScoresCanvasInputProcessor {
-}
-impl crate::org::allbinary::game::input::event::PressGameKeyEventListenerInterface::PressGameKeyEventListenerInterface for HighScoresCanvasInputProcessor {
-    fn onPressGameKeyEvent(&mut self, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) { Self::onPressGameKeyEvent(self, gameKeyEvent) }
-}
-impl crate::org::allbinary::game::input::event::UpGameKeyEventListenerInterface::UpGameKeyEventListenerInterface for HighScoresCanvasInputProcessor {
-    fn onUpGameKeyEvent(&mut self, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) { Self::onUpGameKeyEvent(self, gameKeyEvent) }
-}
 
 impl HighScoresCanvasInputProcessor {
     
 
     pub fn new_struct(mut highScoresCanvas: Option<Rc<RefCell<HighScoresCanvas>>>) -> Self {
         let mut this = Self {
-            base: PlayerGameInput::new_struct(BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>), -1),
+            base: PlayerGameInput::new_struct(BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>), -1),
             highScoresCanvas: None,
         };
         // super(...) is in the struct literal above
@@ -76,26 +65,26 @@ impl HighScoresCanvasInputProcessor {
 
     // synchronized
     pub fn onPressGameKeyEvent(&mut self, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) {
-        self.base.onPressGameKeyEvent(gameKeyEvent.clone());
+        { let java_arguments = (gameKeyEvent.clone(),); self.base.onPressGameKeyEvent(java_arguments.0) };
         self.update();
     }
     
 
     // synchronized
     pub fn onDownGameKeyEvent(&mut self, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) {
-        self.base.onDownGameKeyEvent(gameKeyEvent.clone());
+        { let java_arguments = (gameKeyEvent.clone(),); self.base.onDownGameKeyEvent(java_arguments.0) };
         self.update();
     }
     
 
     // synchronized
     pub fn onUpGameKeyEvent(&mut self, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) {
-        self.base.onUpGameKeyEvent(gameKeyEvent.clone());
+        { let java_arguments = (gameKeyEvent.clone(),); self.base.onUpGameKeyEvent(java_arguments.0) };
         self.update();
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 
@@ -116,7 +105,7 @@ pub trait HighScoresCanvasInputProcessorDyn: crate::org::allbinary::game::input:
     fn as_HighScoresCanvasInputProcessor_mut(&mut self) -> &mut HighScoresCanvasInputProcessor;
     fn open(&mut self) { HighScoresCanvasInputProcessor::open(self.as_HighScoresCanvasInputProcessor_mut()) }
     fn close(&mut self) { HighScoresCanvasInputProcessor::close(self.as_HighScoresCanvasInputProcessor_mut()) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { HighScoresCanvasInputProcessor::paint(self.as_HighScoresCanvasInputProcessor_mut(), graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { HighScoresCanvasInputProcessor::paint(self.as_HighScoresCanvasInputProcessor_mut(), graphics) }
     fn getHighScoresCanvas(&mut self) -> Option<Rc<RefCell<HighScoresCanvas>>> { HighScoresCanvasInputProcessor::getHighScoresCanvas(self.as_HighScoresCanvasInputProcessor_mut()) }
 }
 impl HighScoresCanvasInputProcessorDyn for HighScoresCanvasInputProcessor {

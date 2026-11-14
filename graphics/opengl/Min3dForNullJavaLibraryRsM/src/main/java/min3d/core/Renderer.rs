@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::egl::EGLConfig::EGLConfig;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::egl::EGLConfig::EGLConfig;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait Renderer {
+pub trait Renderer: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn onSurfaceCreated(&mut self, gl: Option<Rc<RefCell<dyn GL10>>>, config: Option<Rc<RefCell<EGLConfig>>>);
@@ -37,8 +37,6 @@ pub trait Renderer {
     
 
     fn onDrawFrame(&mut self, gl: Option<Rc<RefCell<dyn GL10>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

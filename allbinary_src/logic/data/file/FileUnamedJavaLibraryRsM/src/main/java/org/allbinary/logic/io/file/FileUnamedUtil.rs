@@ -34,6 +34,10 @@ thread_local! { pub static FileUnamedUtil_instance: Option<Rc<RefCell<FileUnamed
 
 impl FileUnamedUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             commonSeps: None,
@@ -54,8 +58,8 @@ impl FileUnamedUtil {
 
     pub fn process(&mut self, mut string: String) -> String {
         let mut simplifiedString: String = string.to_lowercase();
-        simplifiedString = simplifiedString.replace(&jcall!(self.commonSeps).SPACE, &jcall!(self.commonSeps).UNDERSCORE);
-        simplifiedString = simplifiedString.replace(&jcall!(self.commonSeps).DASH, &jcall!(self.commonSeps).UNDERSCORE);
+        simplifiedString = { let java_value = (simplifiedString.replace(&({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }).to_string(), &({ let java_field = jcall!(self.commonSeps).UNDERSCORE.clone(); java_field }).to_string())).clone(); java_value };
+        simplifiedString = { let java_value = (simplifiedString.replace(&({ let java_field = jcall!(self.commonSeps).DASH.clone(); java_field }).to_string(), &({ let java_field = jcall!(self.commonSeps).UNDERSCORE.clone(); java_field }).to_string())).clone(); java_value };
         return simplifiedString.clone();
     }
 }

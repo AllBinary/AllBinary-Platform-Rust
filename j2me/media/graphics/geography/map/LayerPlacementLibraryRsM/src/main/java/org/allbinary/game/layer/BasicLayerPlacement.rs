@@ -34,6 +34,10 @@ pub struct BasicLayerPlacement {
 
 
 impl BasicLayerPlacement {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut layerType: Option<Rc<RefCell<LayerPlacementType>>>, mut width: i32, mut height: i32) -> Self {

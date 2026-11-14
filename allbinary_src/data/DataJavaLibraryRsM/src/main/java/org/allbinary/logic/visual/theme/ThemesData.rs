@@ -32,6 +32,10 @@ pub struct ThemesData {
 thread_local! { pub static ThemesData_instance: Option<Rc<RefCell<ThemesData>>> = ThemesData::new(); }
 
 impl ThemesData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ThemesData>>> {

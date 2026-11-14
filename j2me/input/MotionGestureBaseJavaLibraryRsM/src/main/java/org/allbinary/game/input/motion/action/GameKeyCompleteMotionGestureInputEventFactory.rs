@@ -40,13 +40,17 @@ thread_local! { pub static GameKeyCompleteMotionGestureInputEventFactory_SINGLET
 
 impl GameKeyCompleteMotionGestureInputEventFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,
             eventList: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.eventList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.eventList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -66,8 +70,8 @@ impl GameKeyCompleteMotionGestureInputEventFactory {
     
 
     pub fn updateAll(&mut self) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).START_LABEL.clone()).appendint(jcall!(self.eventList).size()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateAll"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        for index in (0..=jcall!(self.eventList).size() - 1).rev() {
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).START_LABEL.clone(); java_field }.clone()).appendint(jcall!(self.eventList).size()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateAll"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        for index in (0..={ let java_bound = jcall!(self.eventList).size() - 1; java_bound }).rev() {
             let mut gameKeyCompleteMotionGestureInputEvent: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::motion::action::GameKeyCompleteMotionGestureInputEvent::GameKeyCompleteMotionGestureInputEventDyn>>> = { let java_object = (jcall!(self.eventList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::motion::action::GameKeyCompleteMotionGestureInputEvent::GameKeyCompleteMotionGestureInputEventDyn>>>>().expect("ClassCastException").clone()) };
             jcall!(gameKeyCompleteMotionGestureInputEvent).update();
         }

@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AdvertisementCategoryInterface {
+pub trait AdvertisementCategoryInterface: std::any::Any {
     
 
     fn toString(&mut self) -> String;

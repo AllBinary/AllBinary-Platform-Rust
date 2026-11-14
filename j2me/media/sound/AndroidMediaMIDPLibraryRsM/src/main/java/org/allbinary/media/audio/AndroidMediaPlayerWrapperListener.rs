@@ -5,25 +5,18 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::media::PlayerListener::PlayerListener;
+use crate::javax::microedition::media::PlayerListener::PlayerListener;
 use crate::android::media::MediaPlayer::MediaPlayer;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::AndroidMediaPlayerWrapper::AndroidMediaPlayerWrapper;
 use super::OnBufferingUpdateListener::OnBufferingUpdateListener;
 use super::OnPreparedListener::OnPreparedListener;
 use super::OnErrorListener::OnErrorListener;
 use super::OnCompletionListener::OnCompletionListener;
-use super::MediaPlayerOnBufferingUpdateListener::MediaPlayerOnBufferingUpdateListener;
-use super::AndroidMediaPlayerOnBufferingUpdateListener::AndroidMediaPlayerOnBufferingUpdateListener;
-use super::MediaPlayerOnPreparedListener::MediaPlayerOnPreparedListener;
-use super::AndroidMediaPlayerOnPreparedListener::AndroidMediaPlayerOnPreparedListener;
-use super::MediaPlayerOnErrorListener::MediaPlayerOnErrorListener;
-use super::AndroidMediaPlayerOnErrorListener::AndroidMediaPlayerOnErrorListener;
-use super::MediaPlayerOnCompletionListener::MediaPlayerOnCompletionListener;
-use super::AndroidMediaPlayerOnCompletionListener::AndroidMediaPlayerOnCompletionListener;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -44,6 +37,10 @@ pub struct AndroidMediaPlayerWrapperListener {
 
 
 impl AndroidMediaPlayerWrapperListener {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut androidMediaPlayerWrapper: Option<Rc<RefCell<AndroidMediaPlayerWrapper>>>) -> Self {
@@ -59,12 +56,8 @@ impl AndroidMediaPlayerWrapperListener {
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
         this.androidMediaPlayerWrapper = AndroidMediaPlayerWrapper_NULL_ANDROID_MEDIA_PLAYER_WRAPPER.with(Clone::clone).clone();
-        this.mOnBufferingUpdateListener = AndroidMediaPlayerOnBufferingUpdateListener::new(this);
-        this.mOnPreparedListener = AndroidMediaPlayerOnPreparedListener::new(this);
-        this.mOnErrorListener = AndroidMediaPlayerOnErrorListener::new(this);
-        this.mOnCompletionListener = AndroidMediaPlayerOnCompletionListener::new(this);
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+            jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
             this.androidMediaPlayerWrapper = androidMediaPlayerWrapper.clone();
             let mut mediaPlayer: Option<Rc<RefCell<MediaPlayer>>> = jcall!(androidMediaPlayerWrapper).getMediaPlayer();
             jcall!(mediaPlayer).setOnCompletionListener(this.mOnCompletionListener.clone());
@@ -74,16 +67,21 @@ impl AndroidMediaPlayerWrapperListener {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(this.logUtil).put(jcall!(this.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(e.clone()));
+            jcall!(this.logUtil).put({ let java_field = jcall!(this.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         this
     }
 
     pub fn new(mut androidMediaPlayerWrapper: Option<Rc<RefCell<AndroidMediaPlayerWrapper>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(androidMediaPlayerWrapper))))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(androidMediaPlayerWrapper.clone()))));
+        jcall!(this).mOnBufferingUpdateListener = AndroidMediaPlayerOnBufferingUpdateListener::new(this.clone());
+        jcall!(this).mOnPreparedListener = AndroidMediaPlayerOnPreparedListener::new(this.clone());
+        jcall!(this).mOnErrorListener = AndroidMediaPlayerOnErrorListener::new(this.clone());
+        jcall!(this).mOnCompletionListener = AndroidMediaPlayerOnCompletionListener::new(this.clone());
+        this
     }
 }
 
@@ -93,6 +91,10 @@ pub struct MediaPlayerOnBufferingUpdateListener {
 // impl OnBufferingUpdateListener for MediaPlayerOnBufferingUpdateListener with the methods of the trait
 
 impl MediaPlayerOnBufferingUpdateListener {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -116,6 +118,10 @@ pub struct MediaPlayerOnPreparedListener {
 
 impl MediaPlayerOnPreparedListener {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -137,6 +143,10 @@ pub struct MediaPlayerOnErrorListener {
 // impl OnErrorListener for MediaPlayerOnErrorListener with the methods of the trait
 
 impl MediaPlayerOnErrorListener {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -160,6 +170,10 @@ pub struct MediaPlayerOnCompletionListener {
 // impl OnCompletionListener for MediaPlayerOnCompletionListener with the methods of the trait
 
 impl MediaPlayerOnCompletionListener {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -205,7 +219,7 @@ impl AndroidMediaPlayerOnBufferingUpdateListener {
         pub fn onBufferingUpdate(&mut self, mut mediaPlayer: Option<Rc<RefCell<MediaPlayer>>>, mut i: i32) {
             let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
             jcall!(logUtil).putF(jcall!(StringMaker::new()).append(String::from("Update buffer: ")).appendint(i.clone()).append(String::from("%")).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ON_BUFFERING_UPDATE.clone());
-            jcall!(jcall!(self.androidMediaPlayerWrapperListener).androidMediaPlayerWrapper).update(unsafe { crate::javax::microedition::media::PlayerListener::PlayerListener_DEVICE_UNAVAILABLE.clone() }.clone());
+            jcall!({ let java_field = jcall!(self.androidMediaPlayerWrapperListener).androidMediaPlayerWrapper.clone(); java_field }).update(crate::javax::microedition::media::PlayerListener::PlayerListener_DEVICE_UNAVAILABLE.with(Clone::clone).clone());
         }
 }
 impl std::ops::Deref for AndroidMediaPlayerOnBufferingUpdateListener {
@@ -247,8 +261,8 @@ impl AndroidMediaPlayerOnPreparedListener {
         pub fn onPrepared(&mut self, mut mp: Option<Rc<RefCell<MediaPlayer>>>) {
             let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ON_PREPARE.clone());
-            jcall!(jcall!(self.androidMediaPlayerWrapperListener).androidMediaPlayerWrapper).update(unsafe { crate::javax::microedition::media::PlayerListener::PlayerListener_DEVICE_AVAILABLE.clone() }.clone());
+            jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ON_PREPARE.clone());
+            jcall!({ let java_field = jcall!(self.androidMediaPlayerWrapperListener).androidMediaPlayerWrapper.clone(); java_field }).update(crate::javax::microedition::media::PlayerListener::PlayerListener_DEVICE_AVAILABLE.with(Clone::clone).clone());
         }
 }
 impl std::ops::Deref for AndroidMediaPlayerOnPreparedListener {
@@ -289,8 +303,8 @@ impl AndroidMediaPlayerOnErrorListener {
 
         pub fn onError(&mut self, mut mp: Option<Rc<RefCell<MediaPlayer>>>, mut what: i32, mut extra: i32) -> bool {
             let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-            jcall!(logUtil).putF(jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).START_LABEL.clone()).append(String::from("What: ")).appendint(what.clone()).append(String::from(" Extra: ")).appendint(extra.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ON_ERROR.clone());
-            jcall!(jcall!(self.androidMediaPlayerWrapperListener).androidMediaPlayerWrapper).update(unsafe { crate::javax::microedition::media::PlayerListener::PlayerListener_ERROR.clone() }.clone());
+            jcall!(logUtil).putF(jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).START_LABEL.clone(); java_field }.clone()).append(String::from("What: ")).appendint(what.clone()).append(String::from(" Extra: ")).appendint(extra.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ON_ERROR.clone());
+            jcall!({ let java_field = jcall!(self.androidMediaPlayerWrapperListener).androidMediaPlayerWrapper.clone(); java_field }).update(crate::javax::microedition::media::PlayerListener::PlayerListener_ERROR.with(Clone::clone).clone());
             return true;
         }
 }
@@ -333,8 +347,8 @@ impl AndroidMediaPlayerOnCompletionListener {
         pub fn onCompletion(&mut self, mut mp: Option<Rc<RefCell<MediaPlayer>>>) {
             let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ON_COMPLETE.clone());
-            jcall!(jcall!(self.androidMediaPlayerWrapperListener).androidMediaPlayerWrapper).update(unsafe { crate::javax::microedition::media::PlayerListener::PlayerListener_END_OF_MEDIA.clone() }.clone());
+            jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ON_COMPLETE.clone());
+            jcall!({ let java_field = jcall!(self.androidMediaPlayerWrapperListener).androidMediaPlayerWrapper.clone(); java_field }).update(crate::javax::microedition::media::PlayerListener::PlayerListener_END_OF_MEDIA.with(Clone::clone).clone());
         }
 }
 impl std::ops::Deref for AndroidMediaPlayerOnCompletionListener {

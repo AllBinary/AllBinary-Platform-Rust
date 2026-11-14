@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::MyCanvasEvent::MyCanvasEvent;
 
 // Borrows the object of a Java reference
@@ -26,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait MyCanvasEventListener {
+pub trait MyCanvasEventListener: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn delete(&mut self, evt: Option<Rc<RefCell<MyCanvasEvent>>>);
@@ -51,8 +52,6 @@ pub trait MyCanvasEventListener {
 
     // throws Exception
     fn center(&mut self, evt: Option<Rc<RefCell<MyCanvasEvent>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

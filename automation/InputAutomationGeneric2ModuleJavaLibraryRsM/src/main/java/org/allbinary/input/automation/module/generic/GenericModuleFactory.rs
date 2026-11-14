@@ -25,6 +25,7 @@ use crate::org::allbinary::input::automation::module::generic::configuration::pr
 use crate::org::allbinary::input::automation::module::generic::constraints::NoImageComparatorConstraints::NoImageComparatorConstraints;
 use crate::org::allbinary::input::automation::module::generic::constraints::NoMotionRectangleConstraints::NoMotionRectangleConstraints;
 use crate::org::allbinary::thread::RunnableInterface::RunnableInterface;
+use crate::java::lang::Exception::*;
 use super::GenericInputAutomationAction::GenericInputAutomationAction;
 use super::GenericInputAutomationWorker::GenericInputAutomationWorker;
 
@@ -60,7 +61,7 @@ impl GenericModuleFactory {
     // throws Exception
     // synchronized
     pub fn getInstance(&mut self) -> Option<Rc<RefCell<dyn RunnableInterface>>> {
-        let mut genericProfile: Option<Rc<RefCell<GenericProfile>>> = jcall!(((self.getConfigurationJPanel()).clone() /* as GenericModuleConfigurationJPanel */)).getSelectedGenericProfile();
+        let mut genericProfile: Option<Rc<RefCell<GenericProfile>>> = jcall!(((self.getConfigurationJPanel()).clone())).getSelectedGenericProfile();
         let mut inputAutomationActionInterface: Option<Rc<RefCell<dyn InputAutomationActionInterface>>> = (GenericInputAutomationAction::new()).clone() /* as InputAutomationActionInterface */;
         return (GenericInputAutomationWorker::new(inputAutomationActionInterface.clone(), genericProfile.clone(), NoMotionRectangleConstraints::new(), NoImageComparatorConstraints::new())).clone() /* as RunnableInterface */;
     }

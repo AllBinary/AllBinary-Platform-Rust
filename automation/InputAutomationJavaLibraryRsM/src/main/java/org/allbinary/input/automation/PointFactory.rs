@@ -32,6 +32,10 @@ pub struct PointFactory {
 pub static mut PointFactory_pointArray: std::cell::LazyCell<Vec<Vec<Option<Rc<RefCell<Point>>>>>> = std::cell::LazyCell::new(|| vec![vec![None; (3000) as usize]; (3000) as usize]);
 
 impl PointFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -48,7 +52,7 @@ impl PointFactory {
     pub fn getInstance(mut x: i32, mut y: i32) -> Option<Rc<RefCell<Point>>> {
         let mut point: Option<Rc<RefCell<Point>>> = unsafe { PointFactory_pointArray.clone() }[(x) as usize][(y) as usize].clone();
         if point.is_none() {
-            unsafe { *PointFactory_pointArray = Point::new(x.clone(), y.clone()) };
+            unsafe { (*PointFactory_pointArray)[(x) as usize][(y) as usize] = Point::new(x.clone(), y.clone()) };
             point = unsafe { PointFactory_pointArray.clone() }[(x) as usize][(y) as usize];
         }
         return point.clone();

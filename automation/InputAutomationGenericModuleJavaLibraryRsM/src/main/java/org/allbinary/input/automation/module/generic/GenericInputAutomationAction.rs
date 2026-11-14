@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::input::automation::module::InputAutomationActionInterface::InputAutomationActionInterface;
 use crate::org::allbinary::input::automation::robot::InputRobotInterface::InputRobotInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,6 +35,10 @@ impl InputAutomationActionInterface for GenericInputAutomationAction {
 }
 
 impl GenericInputAutomationAction {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::entry::EntryData::EntryData;
@@ -30,12 +29,8 @@ use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::communication::sql::AbSqlBean::AbSqlBean;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
+use crate::java::lang::Exception::*;
 use super::QuoteRequestEntityInterface::QuoteRequestEntityInterface;
-use super::quoterequest::quoterequest;
-use super::user::user;
-use super::business::business;
-use super::allbinary::allbinary;
-use super::org::org;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -55,7 +50,7 @@ impl QuoteRequestEntityInterface for QuoteRequestEntity {
     fn getIds(&mut self, mut userName: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::getIds(self, userName) }
     fn deleteWhere(&mut self, mut key: String, mut value: String) { Self::deleteWhere2(self, key, value) }
     fn insert(&mut self, mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) { Self::insert(self, values) }
-    fn update(&mut self, mut userName: String, mut updatedValues: Option<Rc<RefCell<HashMap>>>) { Self::update(self, userName, updatedValues) }
+    fn update(&mut self, mut userName: String, mut updatedValues: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) { Self::update(self, userName, updatedValues) }
 }
 impl crate::org::allbinary::data::tables::BasicDataTableInterface::BasicDataTableInterface for QuoteRequestEntity {
     fn createTable(&mut self) -> String { Self::createTable(self) }
@@ -67,14 +62,14 @@ impl QuoteRequestEntity {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: AbSqlBean::new_struct(UserDbInitInfo::new()),
+            base: AbSqlBean::new_struct(UserDbInitInfo::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfoDyn>>)),
             logUtil: None,
             tableName: String::new(),
         };
         this.logUtil = LogUtil::getInstance();
         this.tableName = String::from("quoterequest");
         // super(...) is in the struct literal above
-        this.setTableName(this.tableName.clone());
+        { let java_arguments = (this.tableName.clone(),); this.setTableName(java_arguments.0) };
         this
     }
 
@@ -85,17 +80,17 @@ impl QuoteRequestEntity {
 
     pub fn insert(&mut self, mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            self.base.insert(values.clone());
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).putF(jcall!(self.commonStrings).SUCCESS.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone());
+            { let java_arguments = (values.clone(),); self.base.insert(java_arguments.0) };
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).SUCCESS.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.base.INSERT.clone());
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).FAILURE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).FAILURE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.base.INSERT.clone(), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -104,10 +99,10 @@ impl QuoteRequestEntity {
 
     // throws Exception
     pub fn get(&mut self, mut userName: String, mut id: i32) -> Option<Rc<RefCell<QuoteRequest>>> {
-        let mut row: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(row).put(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), userName.clone());
-        jcall!(row).put(jcall!(QuoteRequestData::getInstance()).ID.clone(), (id.clone()).to_string());
-        let mut quoteRequestHashMap: Option<Rc<RefCell<HashMap>>> = self.base.getRow(row.clone());
+        let mut row: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(row).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()), crate::java_into_object(userName.clone()));
+        jcall!(row).put(crate::java_into_object({ let java_field = jcall!(QuoteRequestData::getInstance()).ID.clone(); java_field }.clone()), crate::java_into_object((id.clone()).to_string()));
+        let mut quoteRequestHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = { let java_arguments = (row.clone(),); self.base.getRow(java_arguments.0) };
         if quoteRequestHashMap.is_some() {
             return QuoteRequest::new1(quoteRequestHashMap.clone());
         } else {
@@ -117,23 +112,23 @@ impl QuoteRequestEntity {
     
 
     pub fn getIds(&mut self, mut userName: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        return self.base.getColumnWhere(jcall!(QuoteRequestData::getInstance()).ID.clone(), crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), userName.clone());
+        return { let java_arguments = ({ let java_field = jcall!(QuoteRequestData::getInstance()).ID.clone(); java_field }.clone(), crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), userName.clone(),); self.base.getColumnWhere(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
     
 
     pub fn deleteWhere2(&mut self, mut key: String, mut value: String) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            self.base.deleteWhere2(key.clone(), value.clone());
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).putF(jcall!(self.commonStrings).SUCCESS.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("deleteWhere"));
+            { let java_arguments = (key.clone(), value.clone(),); self.base.deleteWhere2(java_arguments.0, java_arguments.1) };
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).SUCCESS.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("deleteWhere"));
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).FAILURE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("deleteWhere"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).FAILURE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("deleteWhere"), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -143,33 +138,33 @@ impl QuoteRequestEntity {
     pub fn createTableStatement(&mut self) -> String {
         let mut quoteRequestData: Option<Rc<RefCell<QuoteRequestData>>> = QuoteRequestData::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(jcall!(self.sqlStrings).CREATE_TABLE.clone()).append(self.tableName.clone()).append(jcall!(self.sqlStrings).START.clone());
-        jcall!(stringBuffer).append(jcall!(quoteRequestData).ID.clone()).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlStrings).CREATE_TABLE.clone(); java_field }.clone()).append(self.tableName.clone()).append({ let java_field = jcall!(self.sqlStrings).START.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(quoteRequestData).ID.clone(); java_field }.clone()).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(quoteRequestData).PROJECT_INFO.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(quoteRequestData).CUSTOMER_COMMENTS.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(quoteRequestData).BUDGET.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(quoteRequestData).TIMEFRAME.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(quoteRequestData).COMMENTS.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(EntryData::getInstance()).TIMECREATED.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(EntryData::getInstance()).LASTMODIFIED.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlStrings).PRIMARY_KEY.clone());
-        jcall!(stringBuffer).append(jcall!(quoteRequestData).ID.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlStrings).END.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(quoteRequestData).PROJECT_INFO.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(quoteRequestData).CUSTOMER_COMMENTS.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(quoteRequestData).BUDGET.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(quoteRequestData).TIMEFRAME.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(quoteRequestData).COMMENTS.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(EntryData::getInstance()).TIMECREATED.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlStrings).PRIMARY_KEY.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(quoteRequestData).ID.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlStrings).END.clone(); java_field }.clone());
         return jcall!(stringBuffer).toString();
     }
     
 
     pub fn createTable(&mut self) -> String {
-        return self.base.createTable(self.createTableStatement());
+        return { let java_arguments = (self.createTableStatement(),); self.base.createTable(java_arguments.0) };
     }
     
 
@@ -179,8 +174,8 @@ impl QuoteRequestEntity {
     }
     
 
-    pub fn update(&mut self, mut userName: String, mut updatedValues: Option<Rc<RefCell<HashMap>>>) {
-        self.base.updateWhere3(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), userName.clone(), updatedValues.clone());
+    pub fn update(&mut self, mut userName: String, mut updatedValues: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
+        { let java_arguments = (crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), userName.clone(), updatedValues.clone(),); self.base.updateWhere3(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
 }
 impl std::ops::Deref for QuoteRequestEntity {

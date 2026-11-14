@@ -21,6 +21,7 @@ use crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableComp
 use crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
+use crate::java::lang::Exception::*;
 use super::DamageableInterface::DamageableInterface;
 
 // Borrows the object of a Java reference
@@ -38,6 +39,10 @@ pub struct DamageUtil {
 thread_local! { pub static DamageUtil_instance: Option<Rc<RefCell<DamageUtil>>> = DamageUtil::new(); }
 
 impl DamageUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<DamageUtil>>> {
@@ -68,14 +73,14 @@ impl DamageUtil {
 
     // throws Exception
     pub fn debugDamage(&mut self, mut collidableInterfaceCompositeInterface1: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, mut collidableInterfaceCompositeInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) {
-        let mut collidableDestroyableDamageableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (collidableInterfaceCompositeInterface).clone() /* as CollidableDestroyableDamageableLayer */;
+        let mut collidableDestroyableDamageableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableCompositeLayer cannot be cast to CollidableDestroyableDamageableLayer") })();
         let mut damage: i32 = jcall!(collidableDestroyableDamageableLayer).getDamage(0);
         if damage > 20000 {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(String::from("Collision "));
-            jcall!(stringBuffer).append(jcall!(collidableInterfaceCompositeInterface1).toString());
+            jcall!(stringBuffer).append(jcall!(collidableInterfaceCompositeInterface1).as_CollidableCompositeLayer_mut().toString());
             jcall!(stringBuffer).append(String::from(" with: "));
-            jcall!(stringBuffer).append(jcall!(collidableInterfaceCompositeInterface).toString());
+            jcall!(stringBuffer).append(jcall!(collidableInterfaceCompositeInterface).as_CollidableCompositeLayer_mut().toString());
             jcall!(stringBuffer).append(String::from(" damage: "));
             jcall!(stringBuffer).appendint(damage.clone());
             { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(collidableInterfaceCompositeInterface1.clone()), self.COLLIDE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };

@@ -28,6 +28,7 @@ use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -44,6 +45,10 @@ thread_local! { pub static InitializeCloud_CLOUD: String = String::from("cloud/"
 thread_local! { pub static InitializeCloud_CLOUD_UPDATE: String = String::from("cloudupdate/"); }
 
 impl InitializeCloud {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -60,18 +65,18 @@ impl InitializeCloud {
     
 
     pub fn initialize(&mut self, mut cloud: String, mut overwriteNewer: bool, mut overwriteAll: bool, mut current: i32, mut total: i32) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if jcall!(AbIOSystem::getInstance()).isType(String::from("com.vobject.appengine.java.io")) {
                 let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                 jcall!(stringBuffer).append(URLGLOBALS::getWebappPath());
                 jcall!(stringBuffer).append(cloud.clone());
-                jcall!(stringBuffer).append(jcall!(PATH_GLOBALS::getInstance()).DATA_PATH.clone());
-                let mut path: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+                jcall!(stringBuffer).append({ let java_field = jcall!(PATH_GLOBALS::getInstance()).DATA_PATH.clone(); java_field }.clone());
+                let mut path: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
                 jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
                 jcall!(stringBuffer).append(URLGLOBALS::getWebappPath());
-                let mut realPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+                let mut realPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
                 let mut file: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFileFromAbPath(path.clone());
-                let mut fileBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(Directory::getInstance()).search2(file.clone(), true);
+                let mut fileBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(Directory::getInstance()).search2_AbFile_boolean(file.clone(), true);
                 let mut size: i32 = jcall!(fileBasicArrayList).size();
                 jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
                 jcall!(stringBuffer).append(String::from("Searched: "));
@@ -91,7 +96,7 @@ impl InitializeCloud {
                 { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initialize()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 let mut nextFile: Option<Rc<RefCell<AbFile>>> = None;
                 for index in (start..end) {
-                    nextFile = { let java_object = (jcall!(fileBasicArrayList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AbFile>>>>().expect("ClassCastException").clone()) };
+                    nextFile = { let java_value = ({ let java_object = (jcall!(fileBasicArrayList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AbFile>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                     if jcall!(nextFile).isDirectory() {
                     } else {
                         jcall!(FileUtil::getInstance()).copyToCloud6(nextFile.clone(), path.clone(), realPath.clone(), cloud.clone(), overwriteNewer.clone(), overwriteAll.clone());
@@ -99,16 +104,17 @@ impl InitializeCloud {
                 }
                 jcall!(self.logUtil).putF(String::from("Copied Files To Cloud"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initialize()"));
             }
-            return true;
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             jcall!(self.logUtil).put(String::from("Unable to copy installer files into cloud"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initialize()"), crate::java_into_object(e.clone()));
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

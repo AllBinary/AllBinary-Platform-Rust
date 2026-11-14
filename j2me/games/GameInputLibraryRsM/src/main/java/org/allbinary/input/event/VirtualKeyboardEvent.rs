@@ -36,7 +36,7 @@ impl VirtualKeyboardEvent {
 
     pub fn new_struct(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(anyType.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(anyType.clone())),
         };
         // super(...) is in the struct literal above
         this

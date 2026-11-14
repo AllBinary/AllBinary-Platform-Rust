@@ -17,12 +17,14 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::security::spec::KeySpec::KeySpec;
-// use crate::javax::crypto::spec::DESKeySpec::DESKeySpec;
-// use crate::javax::crypto::spec::DESedeKeySpec::DESedeKeySpec;
+use crate::java::security::spec::KeySpec::KeySpec;
+use crate::javax::crypto::spec::DESKeySpec::DESKeySpec;
+use crate::javax::crypto::spec::DESedeKeySpec::DESedeKeySpec;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,6 +42,10 @@ pub struct KeySpecFactory {
 thread_local! { pub static KeySpecFactory_instance: Option<Rc<RefCell<KeySpecFactory>>> = KeySpecFactory::new(); }
 
 impl KeySpecFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<KeySpecFactory>>> {
@@ -65,26 +71,27 @@ impl KeySpecFactory {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn getInstance2(&mut self, mut algorithm: String, mut keyData: Vec<i8>) -> Option<Rc<RefCell<KeySpec>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+    pub fn getInstance2(&mut self, mut algorithm: String, mut keyData: Vec<i8>) -> Option<Rc<RefCell<dyn KeySpec>>> {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut tsUtil: Option<Rc<RefCell<TsUtil>>> = TsUtil::getInstance();
-            if { let left = &(algorithm); let right = &(self.DES); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 {
-                return DESKeySpec::new(keyData.clone());
-            } else if { let left = &(algorithm); let right = &(self.DESEDE); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 {
-                return DESedeKeySpec::new(keyData.clone());
+            if { let left = (algorithm).clone(); let right = (self.DES).clone(); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 {
+                return Some(DESKeySpec::new(keyData.clone()).map(|reference| reference as Rc<RefCell<dyn KeySpec>>).map(|reference| reference as Rc<RefCell<dyn KeySpec>>));
+            } else if { let left = (algorithm).clone(); let right = (self.DESEDE).clone(); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 {
+                return Some(DESedeKeySpec::new(keyData.clone()).map(|reference| reference as Rc<RefCell<dyn KeySpec>>).map(|reference| reference as Rc<RefCell<dyn KeySpec>>));
             } else {
                 panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
-            }
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            PreLogUtil::putOE(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(), e.clone());
+            PreLogUtil::putOE({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

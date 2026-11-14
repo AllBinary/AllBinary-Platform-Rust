@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait UserEmailConfigurationInterface {
+pub trait UserEmailConfigurationInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getUserEmailEventsConfigurationInterface(&mut self) -> Option<Rc<RefCell<dyn UserEmailEventsConfigurationInterface>>>;
     
 
     fn setUserEmailEventsConfigurationInterface(&mut self, emailEventsConfigurationInterface: Option<Rc<RefCell<dyn UserEmailEventsConfigurationInterface>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use super::OpenGLESImageProcessor::OpenGLESImageProcessor;
 
 // Borrows the object of a Java reference
@@ -67,7 +67,6 @@ impl std::ops::DerefMut for ModifierOpenGLESImageProcessor {
 impl crate::org::allbinary::image::opengles::OpenGLESImageProcessor::OpenGLESImageProcessorDyn for ModifierOpenGLESImageProcessor {
     fn as_OpenGLESImageProcessor(&self) -> &crate::org::allbinary::image::opengles::OpenGLESImageProcessor::OpenGLESImageProcessor { &self.base }
     fn as_OpenGLESImageProcessor_mut(&mut self) -> &mut crate::org::allbinary::image::opengles::OpenGLESImageProcessor::OpenGLESImageProcessor { &mut self.base }
-    fn colorMask(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut red: f32, mut green: f32, mut blue: f32, mut alpha: f32) { Self::colorMask(self, gl, red, green, blue, alpha) }
     fn colorMask(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut red: f32, mut green: f32, mut blue: f32, mut alpha: f32) { Self::colorMask(self, gl, red, green, blue, alpha) }
 }
 

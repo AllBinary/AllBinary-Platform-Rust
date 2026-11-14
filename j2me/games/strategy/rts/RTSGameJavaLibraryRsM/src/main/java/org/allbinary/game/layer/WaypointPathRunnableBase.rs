@@ -23,6 +23,7 @@ use crate::org::allbinary::math::LayerDistanceUtil::LayerDistanceUtil;
 use crate::org::allbinary::thread::PriorityRunnable::PriorityRunnable;
 use crate::org::allbinary::thread::RunnableInterface::RunnableInterface;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::PathFindingLayerInterface::PathFindingLayerInterface;
 
 // Borrows the object of a Java reference
@@ -53,11 +54,12 @@ impl PriorityRunnable for WaypointPathRunnableBase {
     fn isDone(&mut self) -> bool { Self::isDone(self) }
     fn reset(&mut self) { Self::reset(self) }
 }
-impl crate::Runnable for WaypointPathRunnableBase {
-    fn run(&mut self) { Self::run(self) }
-}
 
 impl WaypointPathRunnableBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -68,8 +70,8 @@ impl WaypointPathRunnableBase {
             runningP: false,
         };
         this.layerDistanceUtil = LayerDistanceUtil::getInstance();
-        this.pathFindingLayer = NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone();
-        this.targetPathFindingLayer = NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone();
+        this.pathFindingLayer = NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of NullPathFindingLayer does not have PathFindingLayerInterface as a base trait") });
+        this.targetPathFindingLayer = NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of NullPathFindingLayer does not have PathFindingLayerInterface as a base trait") });
         this.priorityP = i32::MAX.clone();
         this
     }
@@ -101,8 +103,8 @@ impl WaypointPathRunnableBase {
     
 
     pub fn setPriority(&mut self) {
-        let mut pathFindingLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = (self.pathFindingLayer).clone() /* as AllBinaryLayer */;
-        let mut targetLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = (self.targetPathFindingLayer).clone() /* as AllBinaryLayer */;
+        let mut pathFindingLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> { panic!("ClassCastException: a Rust dyn PathFindingLayerInterface cannot be cast to AllBinaryLayer") })();
+        let mut targetLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> { panic!("ClassCastException: a Rust dyn PathFindingLayerInterface cannot be cast to AllBinaryLayer") })();
         if targetLayer.is_some() {
             let mut distance: i32 = jcall!(self.layerDistanceUtil).getDistance(targetLayer.clone(), pathFindingLayer.clone());
             let mut distanceCategory: i32 = distance / 70;
@@ -138,7 +140,7 @@ impl WaypointPathRunnableBase {
     pub fn reset(&mut self) {
     }
 }
-pub trait WaypointPathRunnableBaseDyn {
+pub trait WaypointPathRunnableBaseDyn: std::any::Any {
     fn as_WaypointPathRunnableBase(&self) -> &WaypointPathRunnableBase;
     fn as_WaypointPathRunnableBase_mut(&mut self) -> &mut WaypointPathRunnableBase;
     fn isRunning(&mut self) -> bool { WaypointPathRunnableBase::isRunning(self.as_WaypointPathRunnableBase_mut()) }

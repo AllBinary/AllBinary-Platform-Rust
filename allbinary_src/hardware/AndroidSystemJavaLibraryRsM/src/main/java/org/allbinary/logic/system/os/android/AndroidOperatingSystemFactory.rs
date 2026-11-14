@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::system::os::NoOperatingSystem::NoOperatingSyst
 use crate::org::allbinary::logic::system::os::OperatingSystems::OperatingSystems;
 use crate::org::allbinary::logic::system::os::SystemProperties::SystemProperties;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::AndroidOS::AndroidOS;
 
 // Borrows the object of a Java reference
@@ -41,6 +42,10 @@ pub struct AndroidOperatingSystemFactory {
 thread_local! { pub static AndroidOperatingSystemFactory_instance: Option<Rc<RefCell<AndroidOperatingSystemFactory>>> = AndroidOperatingSystemFactory::new(); }
 
 impl AndroidOperatingSystemFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AndroidOperatingSystemFactory>>> {
@@ -65,11 +70,11 @@ impl AndroidOperatingSystemFactory {
 
     // throws Exception
     pub fn getOperatingSystemInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut GenericOperatingSystem: Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>> = None;
             let mut systemProperties: Option<Rc<RefCell<SystemProperties>>> = SystemProperties::getInstance();
             let mut osName: String = jcall!(systemProperties).getName();
-            if { let left = &(osName); let right = &(jcall!(OperatingSystems::getInstance()).ANDROID); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 {
+            if { let left = (osName).clone(); let right = ({ let java_field = jcall!(OperatingSystems::getInstance()).ANDROID.clone(); java_field }).clone(); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 {
                 GenericOperatingSystem = AndroidOS::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>);
             } else {
                 if jcall!(OperatingSystems::getInstance()).isUnknownSpecificOSAllowed() {
@@ -78,17 +83,18 @@ impl AndroidOperatingSystemFactory {
                     panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Specific Android OS Not Supported: "), osName))));
                 }
             }
-            return GenericOperatingSystem.clone();
+            return Some(GenericOperatingSystem.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(String::from("Failed to get OperatingSystem returning NoOperatingSystem"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put(String::from("Failed to get OperatingSystem returning NoOperatingSystem"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             return crate::org::allbinary::logic::system::os::NoOperatingSystem::NoOperatingSystem_NO_OPERATING_SYSTEM.with(Clone::clone).clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

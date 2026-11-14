@@ -37,13 +37,29 @@ pub struct MobileClientInformation {
 
 thread_local! { pub static MobileClientInformation_DESC: String = String::from("Mobile"); }
 thread_local! { pub static MobileClientInformation_ANDROID_DESC: String = format!("{}{}", String::from("Android"), MobileClientInformation_DESC.with(Clone::clone)); }
+impl crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface for MobileClientInformation {
+    fn init(&mut self) { crate::org::allbinary::logic::system::security::licensing::AbeClientInformation::AbeClientInformation::init(crate::org::allbinary::logic::system::security::licensing::AbeClientInformation::AbeClientInformationDyn::as_AbeClientInformation_mut(self)) }
+    fn getOperatingSystemInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>> { crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation::getOperatingSystemInterface(crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn::as_ClientInformation_mut(self)) }
+    fn getName(&mut self) -> String { crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation::getName(crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn::as_ClientInformation_mut(self)) }
+    fn getSpecialName(&mut self) -> String { crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation::getSpecialName(crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn::as_ClientInformation_mut(self)) }
+    fn getVersion(&mut self) -> String { crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation::getVersion(crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn::as_ClientInformation_mut(self)) }
+    fn getLicenseId(&mut self) -> String { crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation::getLicenseId(crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn::as_ClientInformation_mut(self)) }
+    fn getLicenseServers(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation::getLicenseServers(crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn::as_ClientInformation_mut(self)) }
+    fn getLicenseServer(&mut self, p1: i32) -> String { crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation::getLicenseServer(crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn::as_ClientInformation_mut(self), p1) }
+    fn getNumberOfLicenseServers(&mut self) -> i32 { crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation::getNumberOfLicenseServers(crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn::as_ClientInformation_mut(self)) }
+    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { Self::toHashtable(self) }
+    fn isSameId(&mut self, p1: String) -> bool { crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation::isSameId(crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn::as_ClientInformation_mut(self), p1) }
+    fn isLargerOrDifferentServerList(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> bool { crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation::isLargerOrDifferentServerList(crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn::as_ClientInformation_mut(self), p1) }
+    fn isHardSale(&mut self) -> bool { crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation::isHardSale(crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn::as_ClientInformation_mut(self)) }
+    fn toShortString(&mut self) -> String { crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation::toShortString(crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn::as_ClientInformation_mut(self)) }
+}
 
 impl MobileClientInformation {
     
 
     pub fn new_struct(mut name: String, mut version: String, mut specialName: String, mut shortName: String) -> Self {
         let mut this = Self {
-            base: AbeClientInformation::new_struct(name.clone(), version.clone(), jcall!(StringMaker::new()).append(specialName.clone()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(jcall!(PartnerIdentifierFileUtil::PartnerIdentifierFileUtil::getInstance()).get()).toString(), shortName.clone()),
+            base: AbeClientInformation::new_struct(name.clone(), version.clone(), jcall!(StringMaker::new()).append(specialName.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(jcall!(PartnerIdentifierFileUtil::PartnerIdentifierFileUtil::getInstance()).get()).toString(), shortName.clone()),
         };
         // super(...) is in the struct literal above
         let mut string: String = this.getSpecialName();
@@ -53,9 +69,9 @@ impl MobileClientInformation {
         }
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
         if this.isHardSale() {
-            jcall!(this.logUtil).putF(String::from("Use Hard Coded Selling"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone());
+            jcall!(this.logUtil).putF(String::from("Use Hard Coded Selling"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         } else {
-            jcall!(this.logUtil).putF(String::from("Don't Use Hard Coded Selling"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone());
+            jcall!(this.logUtil).putF(String::from("Don't Use Hard Coded Selling"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         }
         this
     }
@@ -65,10 +81,10 @@ impl MobileClientInformation {
     }
     
 
-    pub fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = self.base.toHashtable();
+    pub fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = self.base.toHashtable();
         let mut registrationConfiguration: Option<Rc<RefCell<RegistrationConfiguration>>> = RegistrationConfiguration::getInstance();
-        jcall!(hashtable).put(crate::java_into_object(jcall!(registrationConfiguration).NAME.clone()), crate::java_into_object(jcall!(registrationConfiguration).getRegistrationCode()));
+        jcall!(hashtable).put(crate::java_into_object({ let java_field = jcall!(registrationConfiguration).NAME.clone(); java_field }.clone()), crate::java_into_object(jcall!(registrationConfiguration).getRegistrationCode()));
         return hashtable.clone();
     }
 }
@@ -84,7 +100,7 @@ impl crate::org::allbinary::logic::system::security::licensing::ClientInformatio
     fn as_ClientInformation(&self) -> &crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation { &self.base.base }
     fn as_ClientInformation_mut(&mut self) -> &mut crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation { &mut self.base.base }
     fn init(&mut self) { crate::org::allbinary::logic::system::security::licensing::AbeClientInformation::AbeClientInformation::init(crate::org::allbinary::logic::system::security::licensing::AbeClientInformation::AbeClientInformationDyn::as_AbeClientInformation_mut(self)) }
-    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { Self::toHashtable(self) }
+    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { Self::toHashtable(self) }
 }
 impl crate::org::allbinary::logic::system::security::licensing::AbeClientInformation::AbeClientInformationDyn for MobileClientInformation {
     fn as_AbeClientInformation(&self) -> &crate::org::allbinary::logic::system::security::licensing::AbeClientInformation::AbeClientInformation { &self.base }

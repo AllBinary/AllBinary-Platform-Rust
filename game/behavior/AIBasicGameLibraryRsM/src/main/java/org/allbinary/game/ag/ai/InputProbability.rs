@@ -39,6 +39,10 @@ pub struct InputProbability {
 pub static mut InputProbability_INPUT_PROBABILITY: std::cell::LazyCell<Option<i32>> = std::cell::LazyCell::new(|| jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0));
 
 impl InputProbability {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut likelyhoodIntegerArray: Vec<Vec<Option<i32>>>, mut repeatLikelyhoodIntegerArray: Vec<Option<i32>>, mut max: i32, mut timeDelayHelper: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>>) -> Self {
@@ -80,8 +84,8 @@ impl InputProbability {
     }
     
 
-    pub fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(StdUtil::getInstance()).createHashtable();
+    pub fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashtable();
         jcall!(hashtable).put(crate::java_into_object(unsafe { InputProbability_INPUT_PROBABILITY.clone() }.clone()), None /* Java this: a &mut self method has no Rc of itself */);
         return hashtable.clone();
     }

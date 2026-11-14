@@ -34,6 +34,10 @@ thread_local! { pub static OpenGLVersionValidator_instance: Option<Rc<RefCell<Op
 
 impl OpenGLVersionValidator {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             EGL_CONTEXT_CLIENT_VERSION_VALUE: 0,

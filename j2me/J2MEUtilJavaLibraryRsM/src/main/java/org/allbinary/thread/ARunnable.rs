@@ -37,6 +37,10 @@ impl Runnable for ARunnable {
 
 impl ARunnable {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -51,7 +55,7 @@ impl ARunnable {
     pub fn run(&mut self) {
     }
 }
-pub trait ARunnableDyn: crate::Runnable {
+pub trait ARunnableDyn: std::any::Any + crate::Runnable {
     fn as_ARunnable(&self) -> &ARunnable;
     fn as_ARunnable_mut(&mut self) -> &mut ARunnable;
 }

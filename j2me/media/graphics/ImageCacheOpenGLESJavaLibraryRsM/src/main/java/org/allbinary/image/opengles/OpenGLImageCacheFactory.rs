@@ -31,9 +31,13 @@ macro_rules! jcall {
 pub struct OpenGLImageCacheFactory {
 }
 
-thread_local! { pub static OpenGLImageCacheFactory_IMAGE_CACHE: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>> = OpenGLImageCache::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>); }
+thread_local! { pub static OpenGLImageCacheFactory_IMAGE_CACHE: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>> = OpenGLImageCache::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>); }
 
 impl OpenGLImageCacheFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

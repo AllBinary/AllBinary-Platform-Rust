@@ -28,12 +28,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait RemoteHighScoresSubmissionProcessorInterface {
+pub trait RemoteHighScoresSubmissionProcessorInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn process(&mut self, remoteHighScores: Option<Rc<RefCell<RemoteHighScores>>>, abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, highScore: Option<Rc<RefCell<HighScore>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

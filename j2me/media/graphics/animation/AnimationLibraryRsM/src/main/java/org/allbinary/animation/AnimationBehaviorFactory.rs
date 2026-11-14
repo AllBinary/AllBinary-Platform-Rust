@@ -33,6 +33,10 @@ thread_local! { pub static AnimationBehaviorFactory_instance: Option<Rc<RefCell<
 
 impl AnimationBehaviorFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -53,7 +57,7 @@ impl AnimationBehaviorFactory {
         return AnimationBehavior::getInstance();
     }
 }
-pub trait AnimationBehaviorFactoryDyn {
+pub trait AnimationBehaviorFactoryDyn: std::any::Any {
     fn as_AnimationBehaviorFactory(&self) -> &AnimationBehaviorFactory;
     fn as_AnimationBehaviorFactory_mut(&mut self) -> &mut AnimationBehaviorFactory;
     fn getOrCreateInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>> { AnimationBehaviorFactory::getOrCreateInstance(self.as_AnimationBehaviorFactory_mut()) }

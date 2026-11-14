@@ -32,6 +32,10 @@ pub struct StoreFrontStatisticsData {
 thread_local! { pub static StoreFrontStatisticsData_instance: Option<Rc<RefCell<StoreFrontStatisticsData>>> = StoreFrontStatisticsData::new(); }
 
 impl StoreFrontStatisticsData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<StoreFrontStatisticsData>>> {

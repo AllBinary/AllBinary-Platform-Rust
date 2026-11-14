@@ -23,6 +23,7 @@ use crate::org::allbinary::layer::LayerInterface::LayerInterface;
 use crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellHistory::GeographicMapCellHistory;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionTracking::GeographicMapCellPositionTracking;
+use crate::java::lang::Exception::*;
 use super::VehiclePropertiesCompositeInterface::VehiclePropertiesCompositeInterface;
 
 // Borrows the object of a Java reference

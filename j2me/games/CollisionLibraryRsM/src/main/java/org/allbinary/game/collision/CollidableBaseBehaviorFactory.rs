@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::RuntimeException::*;
 use super::CollidableBaseBehaviorFactoryInterface::CollidableBaseBehaviorFactoryInterface;
 use super::CollidableBaseBehavior::CollidableBaseBehavior;
 
@@ -36,6 +37,10 @@ impl CollidableBaseBehaviorFactoryInterface for CollidableBaseBehaviorFactory {
 
 impl CollidableBaseBehaviorFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -51,7 +56,7 @@ impl CollidableBaseBehaviorFactory {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait CollidableBaseBehaviorFactoryDyn: crate::org::allbinary::game::collision::CollidableBaseBehaviorFactoryInterface::CollidableBaseBehaviorFactoryInterface {
+pub trait CollidableBaseBehaviorFactoryDyn: std::any::Any + crate::org::allbinary::game::collision::CollidableBaseBehaviorFactoryInterface::CollidableBaseBehaviorFactoryInterface {
     fn as_CollidableBaseBehaviorFactory(&self) -> &CollidableBaseBehaviorFactory;
     fn as_CollidableBaseBehaviorFactory_mut(&mut self) -> &mut CollidableBaseBehaviorFactory;
 }

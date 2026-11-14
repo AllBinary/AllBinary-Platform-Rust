@@ -22,6 +22,7 @@ use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Element::Element;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::CategoryPropertiesInterface::CategoryPropertiesInterface;
 
 // Borrows the object of a Java reference
@@ -40,6 +41,10 @@ impl DomNodeInterface for CategoryPropertiesView {
 }
 
 impl CategoryPropertiesView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut categoryPropertiesInterface: Option<Rc<RefCell<dyn CategoryPropertiesInterface>>>) -> Self {
@@ -57,13 +62,13 @@ impl CategoryPropertiesView {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut categoryNode: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(jcall!(CategoryData::getInstance()).NAME.clone());
+        let mut categoryNode: Option<Rc<RefCell<Node>>> = jcall!(document).createElement({ let java_field = jcall!(CategoryData::getInstance()).NAME.clone(); java_field }.clone());
         let mut newCategoryNode: Option<Rc<RefCell<Element>>> = (categoryNode).clone() /* as Element */;
-        jcall!(newCategoryNode).setAttribute(jcall!(CategoryData::getInstance()).LABEL.clone(), jcall!(self.categoryPropertiesInterface).getValue());
+        jcall!(newCategoryNode).setAttribute({ let java_field = jcall!(CategoryData::getInstance()).LABEL.clone(); java_field }.clone(), jcall!(self.categoryPropertiesInterface).getValue());
         return categoryNode.clone();
     }
 }
-pub trait CategoryPropertiesViewDyn {
+pub trait CategoryPropertiesViewDyn: std::any::Any {
     fn as_CategoryPropertiesView(&self) -> &CategoryPropertiesView;
     fn as_CategoryPropertiesView_mut(&mut self) -> &mut CategoryPropertiesView;
     fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { CategoryPropertiesView::toXmlNode(self.as_CategoryPropertiesView_mut(), document) }

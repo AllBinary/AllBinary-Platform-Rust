@@ -34,6 +34,10 @@ pub struct AdvertisementAreaData {
 thread_local! { pub static AdvertisementAreaData_instance: Option<Rc<RefCell<AdvertisementAreaData>>> = AdvertisementAreaData::new(); }
 
 impl AdvertisementAreaData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AdvertisementAreaData>>> {

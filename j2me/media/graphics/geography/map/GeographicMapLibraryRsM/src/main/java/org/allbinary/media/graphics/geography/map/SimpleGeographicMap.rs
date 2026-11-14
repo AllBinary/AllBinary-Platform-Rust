@@ -21,6 +21,7 @@ use crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayer
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::GeographicMapCellTypeFactory::GeographicMapCellTypeFactory;
 use super::GeographicMapCellType::GeographicMapCellType;
 use super::GeographicMapCellPosition::GeographicMapCellPosition;
@@ -45,6 +46,10 @@ pub struct SimpleGeographicMap {
 
 
 impl SimpleGeographicMap {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut id: Option<i32>, mut name: String, mut cellTypeIdToGeographicMapCellType: Vec<i32>, mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Self {
@@ -59,8 +64,8 @@ impl SimpleGeographicMap {
             geographicMapCellTypeFactory: None,
         };
         this.commonStrings = CommonStrings::getInstance();
-        this.foregroundBasicColor = jcall!(BasicColorFactory::getInstance()).NULL_COLOR.clone();
-        this.backgroundBasicColor = jcall!(BasicColorFactory::getInstance()).NULL_COLOR.clone();
+        this.foregroundBasicColor = { let java_field = jcall!(BasicColorFactory::getInstance()).NULL_COLOR.clone(); java_field }.clone();
+        this.backgroundBasicColor = { let java_field = jcall!(BasicColorFactory::getInstance()).NULL_COLOR.clone(); java_field }.clone();
         this.geographicMapCellTypeFactory = GeographicMapCellTypeFactory::getInstance();
         this.id = id.clone();
         this.name = name.clone();
@@ -101,7 +106,7 @@ impl SimpleGeographicMap {
         let mut i_row: i32 = jcall!(cellPosition).getRow();
         let mut cellTypeId: i32 = jcall!(self.tiledLayer).getCell(i_column.clone(), i_row.clone());
         if cellTypeId < 0 {
-            cellTypeId = jcall!(self.tiledLayer).getAnimatedTile(cellTypeId.clone());
+            cellTypeId = { let java_value = (jcall!(self.tiledLayer).getAnimatedTile(cellTypeId.clone())).clone(); java_value };
         }
         return jcall!(self.geographicMapCellTypeFactory).get(self.cellTypeIdToGeographicMapCellType[(cellTypeId) as usize].clone());
     }
@@ -131,7 +136,7 @@ impl SimpleGeographicMap {
         self.backgroundBasicColor = backgroundBasicColor.clone();
     }
 }
-pub trait SimpleGeographicMapDyn {
+pub trait SimpleGeographicMapDyn: std::any::Any {
     fn as_SimpleGeographicMap(&self) -> &SimpleGeographicMap;
     fn as_SimpleGeographicMap_mut(&mut self) -> &mut SimpleGeographicMap;
     fn getId(&mut self) -> Option<i32> { SimpleGeographicMap::getId(self.as_SimpleGeographicMap_mut()) }

@@ -24,6 +24,7 @@ use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactory;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellTypeFactory::GeographicMapCellTypeFactory;
 use crate::org::allbinary::media::graphics::geography::map::drop::DropCellPositionHistory::DropCellPositionHistory;
+use crate::java::lang::Exception::*;
 use super::CustomMapGeneratorBase::CustomMapGeneratorBase;
 use super::RaceTrackGeographicMap::RaceTrackGeographicMap;
 
@@ -56,10 +57,10 @@ impl CustomMapGenerator {
         };
         this.dropCellPositionHistory = DropCellPositionHistory::getInstance();
         this.raceTrackGeographicMap = raceTrackGeographicMap.clone();
-        this.geographicMapCellTypeFactory = jcall!(this.raceTrackGeographicMap).getGeographicMapCellTypeFactory();
+        this.geographicMapCellTypeFactory = { let java_value = (jcall!(this.raceTrackGeographicMap).getGeographicMapCellTypeFactory()).clone(); java_value };
         let mut mapArray: Vec<Vec<i32>> = jcall!(jcall!(raceTrackGeographicMap).getRaceTrackData()).getMapArray();
         let mut size2: i32 = (mapArray[(0) as usize].len() as i32).clone();
-        this.customMapArray = vec![vec![0; (size2) as usize]; ((mapArray.len() as i32)) as usize];
+        this.customMapArray = { let java_value = (vec![vec![0; (size2) as usize]; ((mapArray.len() as i32)) as usize]).clone(); java_value };
         if (mapArray.len() as i32) != (this.customMapArray.len() as i32) || (mapArray[(0) as usize].len() as i32) != (this.customMapArray[(0) as usize].len() as i32) {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Array Incorrect"))));
         }
@@ -77,7 +78,7 @@ impl CustomMapGenerator {
         let mut startIndex2: i32 = (mapArray[(0) as usize].len() as i32) - 1;
         for index in (0..=(mapArray.len() as i32) - 1).rev() {
             for index2 in (0..=startIndex2).rev() {
-                self.customMapArray[(index) as usize][(index2) as usize] = self.getCustomType(index2.clone(), index.clone(), mapArray[(index) as usize][(index2) as usize].clone());
+                { let java_index = (index2) as usize; self.customMapArray[(index) as usize][java_index] = self.getCustomType(index2.clone(), index.clone(), mapArray[(index) as usize][(index2) as usize].clone()); };
             }
         }
     }
@@ -87,13 +88,13 @@ impl CustomMapGenerator {
     pub fn getCustomType(&mut self, mut column: i32, mut row: i32, mut currentType: i32) -> i32 {
         let mut emptyType: i32 = jcall!(self.geographicMapCellTypeFactory).getEmptyType();
         let mut geographicMapCellPositionFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactoryDyn>>> = jcall!(self.raceTrackGeographicMap).getGeographicMapCellPositionFactory();
-        let mut cellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>> = jcall!(geographicMapCellPositionFactory).getAt(column.clone(), row.clone());
+        let mut cellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>> = jcall!(geographicMapCellPositionFactory).getAt(column.clone(), row.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>);
         if jcall!(self.dropCellPositionHistory).isCellPositionWithDrop(cellPosition.clone()) {
             let mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = jcall!(self.dropCellPositionHistory).getLayerInterface(cellPosition.clone());
             if match (&layer, &crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 return emptyType.clone();
             }
-            let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>> = (layer).clone() /* as AdvancedRTSGameLayer */;
+            let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to AdvancedRTSGameLayer") })();
             if !(jcall!(rtsLayer).getType() == WaypointLayer::getStaticType()) {
                 return emptyType.clone();
             }

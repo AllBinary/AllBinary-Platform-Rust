@@ -32,12 +32,16 @@ macro_rules! jcall {
 
 pub struct GameConfigurationSingleton {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
-    pub hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 pub static mut GameConfigurationSingleton_SINGLETON: std::cell::LazyCell<Option<Rc<RefCell<GameConfigurationSingleton>>>> = std::cell::LazyCell::new(|| GameConfigurationSingleton::new());
 
 impl GameConfigurationSingleton {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GameConfigurationSingleton>>> {
@@ -51,7 +55,7 @@ impl GameConfigurationSingleton {
             hashtable: None,
         };
         this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.hashtable = jcall!(StdUtil::getInstance()).createHashtable();
+        this.hashtable = { let java_value = (jcall!(StdUtil::getInstance()).createHashtable()).clone(); java_value };
         this
     }
 
@@ -75,7 +79,7 @@ impl GameConfigurationSingleton {
     }
     
 
-    pub fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
         return self.hashtable.clone();
     }
 }

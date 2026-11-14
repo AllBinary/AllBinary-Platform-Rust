@@ -38,6 +38,10 @@ thread_local! { pub static EmailData_SUBJECT: String = String::from("EMAIL_SUBJE
 thread_local! { pub static EmailData_CONTENT: String = String::from("EMAIL_CONTENT"); }
 
 impl EmailData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

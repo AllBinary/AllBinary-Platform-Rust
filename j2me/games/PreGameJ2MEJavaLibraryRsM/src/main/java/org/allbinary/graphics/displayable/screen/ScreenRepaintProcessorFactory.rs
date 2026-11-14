@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Displayable::Displayable;
+use crate::javax::microedition::lcdui::Displayable::Displayable;
 use crate::org::allbinary::J2MEUtil::J2MEUtil;
 use crate::org::allbinary::canvas::Processor::Processor;
 use super::ScreenRepaintProcessor::ScreenRepaintProcessor;
@@ -35,6 +35,10 @@ pub struct ScreenRepaintProcessorFactory {
 thread_local! { pub static ScreenRepaintProcessorFactory_instance: Option<Rc<RefCell<ScreenRepaintProcessorFactory>>> = ScreenRepaintProcessorFactory::new(); }
 
 impl ScreenRepaintProcessorFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ScreenRepaintProcessorFactory>>> {
@@ -53,9 +57,9 @@ impl ScreenRepaintProcessorFactory {
     }
     
 
-    pub fn create(&mut self, mut displayable: Option<Rc<RefCell<Displayable>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>> {
+    pub fn create(&mut self, mut displayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>> {
         if !J2MEUtil::isJ2ME() {
-            return ScreenRepaintProcessor::new(displayable.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
+            return ScreenRepaintProcessor::new(displayable.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
         } else {
             return Processor::getInstance();
         }

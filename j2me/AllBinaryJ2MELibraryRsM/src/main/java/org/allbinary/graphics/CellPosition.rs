@@ -80,11 +80,11 @@ impl CellPosition {
     pub fn toStringColRow(mut i_column: i32, mut i_row: i32) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
-        jcall!(stringBuffer).append(jcall!(commonSeps).PARENTHESIS_OPEN.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).PARENTHESIS_OPEN.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(i_column.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).COMMA.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).COMMA.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(i_row.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).PARENTHESIS_CLOSE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).PARENTHESIS_CLOSE.clone(); java_field }.clone());
         return jcall!(stringBuffer).toString();
     }
     

@@ -88,18 +88,25 @@ impl crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn for SpecialD
     fn setDemo(&mut self) { crate::org::allbinary::game::midlet::DemoGameMidlet::DemoGameMidlet::setDemo(crate::org::allbinary::game::midlet::DemoGameMidlet::DemoGameMidletDyn::as_DemoGameMidlet_mut(self)) }
     fn createGame(&mut self) { crate::org::allbinary::game::midlet::DemoGameMidlet::DemoGameMidlet::createGame(crate::org::allbinary::game::midlet::DemoGameMidlet::DemoGameMidletDyn::as_DemoGameMidlet_mut(self)) }
 }
+impl crate::javax::microedition::midlet::MIDlet::MIDletDyn for SpecialDemoGameMidlet {
+    fn as_MIDlet(&self) -> &crate::javax::microedition::midlet::MIDlet::MIDlet { &self.base.base.base.base.base }
+    fn as_MIDlet_mut(&mut self) -> &mut crate::javax::microedition::midlet::MIDlet::MIDlet { &mut self.base.base.base.base.base }
+    fn startApp(&mut self) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::startApp(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self)) }
+    fn pauseApp(&mut self) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::pauseApp(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self)) }
+    fn destroyApp(&mut self, p1: bool) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::destroyApp(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self), p1) }
+}
 impl crate::org::allbinary::midlet::AllBinaryMidlet::AllBinaryMidletDyn for SpecialDemoGameMidlet {
     fn as_AllBinaryMidlet(&self) -> &crate::org::allbinary::midlet::AllBinaryMidlet::AllBinaryMidlet { &self.base.base.base.base }
     fn as_AllBinaryMidlet_mut(&mut self) -> &mut crate::org::allbinary::midlet::AllBinaryMidlet::AllBinaryMidlet { &mut self.base.base.base.base }
-    fn startApp(&mut self) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::startApp(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self)) }
-    fn pauseApp(&mut self) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::pauseApp(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self)) }
     fn destroyAppInRunnable(&mut self, p1: bool, p2: bool) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::destroyAppInRunnable(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self), p1, p2) }
-    fn destroyApp(&mut self, p1: bool) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::destroyApp(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self), p1) }
 }
 impl crate::org::allbinary::midlet::ProgressMidlet::ProgressMidletDyn for SpecialDemoGameMidlet {
     fn as_ProgressMidlet(&self) -> &crate::org::allbinary::midlet::ProgressMidlet::ProgressMidlet { &self.base.base.base }
     fn as_ProgressMidlet_mut(&mut self) -> &mut crate::org::allbinary::midlet::ProgressMidlet::ProgressMidlet { &mut self.base.base.base }
     fn preInit(&mut self) { Self::preInit(self) }
+}
+impl crate::javax::microedition::lcdui::CommandListener::CommandListener for SpecialDemoGameMidlet {
+    fn commandAction(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, p2: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) { crate::org::allbinary::game::midlet::GameMidlet::GameMidlet::commandAction(crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn::as_GameMidlet_mut(self), p1, p2) }
 }
 
 

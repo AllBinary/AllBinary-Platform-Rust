@@ -21,6 +21,7 @@ use crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGame
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -29,7 +30,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait DropCellPositionGeneratorInterface {
+pub trait DropCellPositionGeneratorInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getName(&mut self) -> String;
@@ -45,8 +46,6 @@ pub trait DropCellPositionGeneratorInterface {
 
     // throws Exception
     fn isDropAllowedAt(&mut self, geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

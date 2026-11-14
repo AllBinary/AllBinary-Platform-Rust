@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,13 +28,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait DomNodeInterface {
+pub trait DomNodeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn toXmlNode(&mut self, document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

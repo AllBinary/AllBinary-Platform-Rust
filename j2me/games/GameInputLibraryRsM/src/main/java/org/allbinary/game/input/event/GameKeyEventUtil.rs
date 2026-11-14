@@ -31,6 +31,10 @@ pub struct GameKeyEventUtil {
 
 
 impl GameKeyEventUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -45,7 +49,7 @@ impl GameKeyEventUtil {
     
 
     pub fn getKey(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> i32 {
-        let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = (anyType).clone() /* as GameKeyEvent */;
+        let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = { let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameKeyEvent>>>>().expect("ClassCastException").clone()) };
         return jcall!(gameKeyEvent).getKey();
     }
 }

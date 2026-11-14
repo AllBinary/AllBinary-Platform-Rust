@@ -17,9 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
-// use crate::javax::microedition::lcdui::Command::Command;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,6 +34,10 @@ pub struct AboutCommandProcessor {
 thread_local! { pub static AboutCommandProcessor_instance: Option<Rc<RefCell<AboutCommandProcessor>>> = AboutCommandProcessor::new(); }
 
 impl AboutCommandProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -51,8 +55,8 @@ impl AboutCommandProcessor {
     }
     
 
-    pub fn process(&mut self, mut midletCommandListener: Option<Rc<RefCell<CommandListener>>>, mut command: Option<Rc<RefCell<Command>>>, mut canvas: Option<Rc<RefCell<Canvas>>>) {
-        jcall!(midletCommandListener).commandAction(command.clone(), canvas.clone());
+    pub fn process(&mut self, mut midletCommandListener: Option<Rc<RefCell<dyn CommandListener>>>, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>) {
+        jcall!(midletCommandListener).commandAction(command.clone(), canvas.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>));
     }
 }
 

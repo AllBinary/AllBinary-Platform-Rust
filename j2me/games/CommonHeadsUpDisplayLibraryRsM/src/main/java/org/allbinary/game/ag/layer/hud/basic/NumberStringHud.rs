@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud;
 use crate::org::allbinary::game::graphics::hud::BasicHudFactory::BasicHudFactory;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
@@ -26,6 +26,7 @@ use crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessor;
 use crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface;
 use crate::org::allbinary::logic::math::PrimitiveLongSingleton::PrimitiveLongSingleton;
 use crate::org::allbinary::logic::math::PrimitiveLongUtil::PrimitiveLongUtil;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -47,11 +48,8 @@ pub struct NumberStringHud {
 }
 
 impl PaintableInterface for NumberStringHud {
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
-}
-impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for NumberStringHud {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paintThreed(self, graphics) }
 }
 
 impl NumberStringHud {
@@ -71,13 +69,13 @@ impl NumberStringHud {
         };
         // super(...) is in the struct literal above
         this.prependString = prependString.clone();
-        this.PREPEND_STRING = prependString.chars().collect::<Vec<char>>();
-        this.valueString = jcall!(PrimitiveLongSingleton::getInstance()).NUMBER_CHAR_ARRAYS[(0) as usize].clone();
-        this.primitiveLongUtil = PrimitiveLongUtil::createPowerOfTen(max + 1);
+        this.PREPEND_STRING = { let java_value = (prependString.chars().collect::<Vec<char>>()).clone(); java_value };
+        this.valueString = { let java_value = (jcall!(PrimitiveLongSingleton::getInstance()).NUMBER_CHAR_ARRAYS[(0) as usize]).clone(); java_value }.clone();
+        this.primitiveLongUtil = { let java_value = (PrimitiveLongUtil::createPowerOfTen(max + 1)).clone(); java_value };
         this.max = max.clone();
         this.value = 0;
         if direction == 0 {
-            panic!("{:?}", format!("{}: {:?}", "RuntimeException", (jcall!(BasicHudFactory::getInstance()).DIRECTION_EXCEPTION.clone())));
+            panic!("{:?}", format!("{}: {:?}", "RuntimeException", ({ let java_field = jcall!(BasicHudFactory::getInstance()).DIRECTION_EXCEPTION.clone(); java_field }.clone())));
         }
         this
     }
@@ -87,10 +85,10 @@ impl NumberStringHud {
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.offset = jcall!(font).stringWidth(self.prependString.clone()) + MyFontProcessor::defaultCharWidth(font.clone());
-        self.base.updateMeasurement(graphics.clone());
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.offset = { let java_value = (jcall!(font).stringWidth(self.prependString.clone()) + MyFontProcessor::defaultCharWidth(font.clone())).clone(); java_value };
+        { let java_arguments = (graphics.clone(),); self.base.updateMeasurement(java_arguments.0) };
     }
     
 
@@ -100,7 +98,7 @@ impl NumberStringHud {
     
 
     pub fn add(&mut self, mut value: i32) {
-        self.set(self.value + value);
+        { let java_arguments = (self.value + value,); self.set(java_arguments.0) };
     }
     
 
@@ -109,22 +107,22 @@ impl NumberStringHud {
         if self.value > self.max {
             self.value = 0;
         }
-        self.valueString = jcall!(self.primitiveLongUtil).getCharArray(self.value.clone());
-        self.valueTotalDigits = jcall!(self.primitiveLongUtil).getCurrentTotalDigits();
+        self.valueString = { let java_value = (jcall!(self.primitiveLongUtil).getCharArray(self.value.clone())).clone(); java_value };
+        self.valueTotalDigits = { let java_value = (jcall!(self.primitiveLongUtil).getCurrentTotalDigits()).clone(); java_value };
     }
     
 
     pub fn reduce(&mut self, mut value: i32) {
-        self.set(self.value - value);
+        { let java_arguments = (self.value - value,); self.set(java_arguments.0) };
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.paintDX(graphics.clone(), self.PREPEND_STRING.clone(), 0, (self.PREPEND_STRING.len() as i32).clone(), self.valueString.clone(), 0, self.valueTotalDigits.clone(), self.offset.clone());
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(), self.PREPEND_STRING.clone(), 0, (self.PREPEND_STRING.len() as i32).clone(), self.valueString.clone(), 0, self.valueTotalDigits.clone(), self.offset.clone(),); self.base.paintDX(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5, java_arguments.6, java_arguments.7) };
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         let mut charArray: Vec<char> = self.PREPEND_STRING.clone();
         let mut len: i32 = (self.PREPEND_STRING.len() as i32).clone();
@@ -136,7 +134,7 @@ impl NumberStringHud {
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
 }
 impl std::ops::Deref for NumberStringHud {
@@ -147,16 +145,14 @@ impl std::ops::DerefMut for NumberStringHud {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait NumberStringHudDyn: crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn {
+pub trait NumberStringHudDyn: crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn + crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface {
     fn as_NumberStringHud(&self) -> &NumberStringHud;
     fn as_NumberStringHud_mut(&mut self) -> &mut NumberStringHud;
     fn get(&mut self) -> i32 { NumberStringHud::get(self.as_NumberStringHud_mut()) }
     fn add(&mut self, mut value: i32) { NumberStringHud::add(self.as_NumberStringHud_mut(), value) }
     fn set(&mut self, mut value: i32) { NumberStringHud::set(self.as_NumberStringHud_mut(), value) }
     fn reduce(&mut self, mut value: i32) { NumberStringHud::reduce(self.as_NumberStringHud_mut(), value) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { NumberStringHud::paint(self.as_NumberStringHud_mut(), graphics) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { NumberStringHud::paintXY(self.as_NumberStringHud_mut(), graphics, x, y) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { NumberStringHud::paintThreed(self.as_NumberStringHud_mut(), graphics) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { NumberStringHud::paintXY(self.as_NumberStringHud_mut(), graphics, x, y) }
 }
 impl NumberStringHudDyn for NumberStringHud {
     fn as_NumberStringHud(&self) -> &NumberStringHud { self }
@@ -166,7 +162,9 @@ impl NumberStringHudDyn for NumberStringHud {
 impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for NumberStringHud {
     fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self.base }
     fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self.base }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for NumberStringHud {
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 

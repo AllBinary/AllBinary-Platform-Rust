@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
 use super::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface;
 use super::Animation::Animation;
@@ -41,6 +42,10 @@ impl BasicAnimationInterfaceFactoryInterface for BaseAnimationInterfaceFactoryIn
 }
 
 impl BaseAnimationInterfaceFactoryInterfaceComposite {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut basicAnimationInterfaceFactoryInterfaceArray: Vec<Option<Rc<RefCell<dyn BasicAnimationInterfaceFactoryInterface>>>>) -> Self {

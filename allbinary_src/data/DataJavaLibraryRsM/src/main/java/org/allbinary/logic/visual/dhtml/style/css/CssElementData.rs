@@ -32,6 +32,10 @@ pub struct CssElementData {
 thread_local! { pub static CssElementData_instance: Option<Rc<RefCell<CssElementData>>> = CssElementData::new(); }
 
 impl CssElementData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<CssElementData>>> {

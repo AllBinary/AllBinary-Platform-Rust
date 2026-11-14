@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::security::spec::KeySpec::KeySpec;
+use crate::java::security::spec::KeySpec::KeySpec;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +33,10 @@ thread_local! { pub static KeySpecFactory_DES: String = String::from("DES"); }
 thread_local! { pub static KeySpecFactory_DESEDE: String = String::from("DESede"); }
 
 impl KeySpecFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -46,7 +50,7 @@ impl KeySpecFactory {
     }
     
 
-    pub fn getInstance(mut algorithm: String, mut keyData: Vec<i8>) -> Option<Rc<RefCell<KeySpec>>> {
+    pub fn getInstance(mut algorithm: String, mut keyData: Vec<i8>) -> Option<Rc<RefCell<dyn KeySpec>>> {
         return None;
     }
 }

@@ -30,6 +30,7 @@ use crate::org::allbinary::business::user::role::UserRoleFactory::UserRoleFactor
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::StoreFrontStatisticsInterface::StoreFrontStatisticsInterface;
 
 // Borrows the object of a Java reference
@@ -49,6 +50,10 @@ impl DomNodeInterface for RealTimeStoreFrontStatisticsView {
 }
 
 impl RealTimeStoreFrontStatisticsView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut storeFrontStatisticsInterface: Option<Rc<RefCell<dyn StoreFrontStatisticsInterface>>>, mut userRole: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::role::UserRole::UserRoleDyn>>>) -> Self {
@@ -68,19 +73,19 @@ impl RealTimeStoreFrontStatisticsView {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(jcall!(StoreFrontStatisticsData::StoreFrontStatisticsData::getInstance()).NAME.clone());
+        let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement({ let java_field = jcall!(StoreFrontStatisticsData::StoreFrontStatisticsData::getInstance()).NAME.clone(); java_field }.clone());
         let mut storeFrontAdvertisementsStatisticsInterface: Option<Rc<RefCell<dyn StoreFrontAdvertisementsStatisticsInterface>>> = jcall!(self.storeFrontStatisticsInterface).getAdvertisements();
-        let mut storeFrontAdvertisementsStatisticsDomNodeInterface: Option<Rc<RefCell<dyn DomNodeInterface>>> = StoreFrontAdvertisementsStatisticsView::new(storeFrontAdvertisementsStatisticsInterface.clone()).map(|reference| reference as Rc<RefCell<dyn DomNodeInterface>>);
+        let mut storeFrontAdvertisementsStatisticsDomNodeInterface: Option<Rc<RefCell<dyn DomNodeInterface>>> = StoreFrontAdvertisementsStatisticsView::new(storeFrontAdvertisementsStatisticsInterface.clone()).map(|reference| reference as Rc<RefCell<dyn DomNodeInterface>>).map(|reference| reference as Rc<RefCell<dyn DomNodeInterface>>);
         jcall!(node).appendChild(jcall!(storeFrontAdvertisementsStatisticsDomNodeInterface).toXmlNode(document.clone()));
         let mut storeFrontInventoryStatisticsInterface: Option<Rc<RefCell<dyn StoreFrontInventoryStatisticsInterface>>> = jcall!(self.storeFrontStatisticsInterface).getInventory();
-        let mut storeFrontInventoryStatisticsDomNodeInterface: Option<Rc<RefCell<dyn DomNodeInterface>>> = StoreFrontInventoryStatisticsView::new(storeFrontInventoryStatisticsInterface.clone()).map(|reference| reference as Rc<RefCell<dyn DomNodeInterface>>);
+        let mut storeFrontInventoryStatisticsDomNodeInterface: Option<Rc<RefCell<dyn DomNodeInterface>>> = StoreFrontInventoryStatisticsView::new(storeFrontInventoryStatisticsInterface.clone()).map(|reference| reference as Rc<RefCell<dyn DomNodeInterface>>).map(|reference| reference as Rc<RefCell<dyn DomNodeInterface>>);
         jcall!(node).appendChild(jcall!(storeFrontInventoryStatisticsDomNodeInterface).toXmlNode(document.clone()));
         let mut storeFrontOrdersHistoryStatisticsInterface: Option<Rc<RefCell<dyn StoreFrontOrdersHistoryStatisticsInterface>>> = jcall!(self.storeFrontStatisticsInterface).getOrders();
-        let mut storeFrontOrdersHistoryStatisticsDomNodeInterface: Option<Rc<RefCell<dyn DomNodeInterface>>> = StoreFrontOrdersHistoryStatisticsView::new(storeFrontOrdersHistoryStatisticsInterface.clone()).map(|reference| reference as Rc<RefCell<dyn DomNodeInterface>>);
+        let mut storeFrontOrdersHistoryStatisticsDomNodeInterface: Option<Rc<RefCell<dyn DomNodeInterface>>> = StoreFrontOrdersHistoryStatisticsView::new(storeFrontOrdersHistoryStatisticsInterface.clone()).map(|reference| reference as Rc<RefCell<dyn DomNodeInterface>>).map(|reference| reference as Rc<RefCell<dyn DomNodeInterface>>);
         jcall!(node).appendChild(jcall!(storeFrontOrdersHistoryStatisticsDomNodeInterface).toXmlNode(document.clone()));
-        if match (&self.userRole, &jcall!(UserRoleFactory::getInstance()).ADMINISTRATOR) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&self.userRole, &{ let java_field = jcall!(UserRoleFactory::getInstance()).ADMINISTRATOR.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             let mut storeFrontUsersStatisticsInterface: Option<Rc<RefCell<dyn StoreFrontUsersStatisticsInterface>>> = jcall!(self.storeFrontStatisticsInterface).getUsers();
-            let mut storeFrontUsersStatisticsDomNodeInterface: Option<Rc<RefCell<dyn DomNodeInterface>>> = StoreFrontUsersStatisticsView::new(storeFrontUsersStatisticsInterface.clone()).map(|reference| reference as Rc<RefCell<dyn DomNodeInterface>>);
+            let mut storeFrontUsersStatisticsDomNodeInterface: Option<Rc<RefCell<dyn DomNodeInterface>>> = StoreFrontUsersStatisticsView::new(storeFrontUsersStatisticsInterface.clone()).map(|reference| reference as Rc<RefCell<dyn DomNodeInterface>>).map(|reference| reference as Rc<RefCell<dyn DomNodeInterface>>);
             jcall!(node).appendChild(jcall!(storeFrontUsersStatisticsDomNodeInterface).toXmlNode(document.clone()));
         }
         return node.clone();

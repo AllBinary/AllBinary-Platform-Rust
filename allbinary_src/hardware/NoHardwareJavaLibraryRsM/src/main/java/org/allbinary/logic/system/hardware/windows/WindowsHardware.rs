@@ -33,6 +33,8 @@ use crate::org::allbinary::logic::system::hardware::components::interfaces::Moni
 use crate::org::allbinary::logic::system::hardware::components::interfaces::UsbInterface::UsbInterface;
 use crate::org::allbinary::logic::system::hardware::components::interfaces::VideoInterface::VideoInterface;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -48,7 +50,7 @@ impl HardwareInterface for WindowsHardware {
     fn getComponent(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn HardwareComponentInterface>>> { Self::getComponent(self, index) }
     fn toString(&mut self) -> String { Self::toString(self) }
     fn compareTo(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> bool { Self::compareTo(self, hardwareInterface) }
-    fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { Self::difference(self, hardwareInterface) }
+    fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { Self::difference(self, hardwareInterface) }
 }
 
 impl WindowsHardware {
@@ -126,7 +128,7 @@ impl WindowsHardware {
     
 
     pub fn toString(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 
@@ -135,8 +137,8 @@ impl WindowsHardware {
     }
     
 
-    pub fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        return jcall!(StdUtil::getInstance()).NULL_TABLE.clone();
+    pub fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        return { let java_field = jcall!(StdUtil::getInstance()).NULL_TABLE.clone(); java_field }.clone();
     }
 }
 

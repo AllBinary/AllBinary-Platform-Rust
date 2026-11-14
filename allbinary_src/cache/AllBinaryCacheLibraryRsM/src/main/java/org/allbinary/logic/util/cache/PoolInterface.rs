@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::CacheInterface::CacheInterface;
 use super::CacheableInterface::CacheableInterface;
 

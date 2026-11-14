@@ -37,6 +37,10 @@ pub struct EndGameInfo {
 
 
 impl EndGameInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -48,7 +52,7 @@ impl EndGameInfo {
         };
         this.NORMAL_GAME_OVER = String::from("Game Over");
         this.NORMAL_GAME_OVER_WIN = String::from("You Won");
-        this.gameOverStr = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.gameOverStr = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.winStr = this.gameOverStr.clone();
         this
     }
@@ -59,8 +63,8 @@ impl EndGameInfo {
     
 
     pub fn update(&mut self, mut gameInfo: Option<Rc<RefCell<GameInfo>>>, mut myCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn>>>) {
-        self.setGameOverStr(self.NORMAL_GAME_OVER.clone());
-        self.setWinStr(self.NORMAL_GAME_OVER_WIN.clone());
+        { let java_arguments = (self.NORMAL_GAME_OVER.clone(),); self.setGameOverStr(java_arguments.0) };
+        { let java_arguments = (self.NORMAL_GAME_OVER_WIN.clone(),); self.setWinStr(java_arguments.0) };
     }
     
 
@@ -83,7 +87,7 @@ impl EndGameInfo {
         self.winStr = winStr.clone();
     }
 }
-pub trait EndGameInfoDyn {
+pub trait EndGameInfoDyn: std::any::Any {
     fn as_EndGameInfo(&self) -> &EndGameInfo;
     fn as_EndGameInfo_mut(&mut self) -> &mut EndGameInfo;
     fn update(&mut self, mut gameInfo: Option<Rc<RefCell<GameInfo>>>, mut myCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn>>>) { EndGameInfo::update(self.as_EndGameInfo_mut(), gameInfo, myCanvas) }

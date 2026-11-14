@@ -26,6 +26,7 @@ use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::PickupBehaviorInterface::PickupBehaviorInterface;
 use super::PickupProcessorInterface::PickupProcessorInterface;
 use super::PickedUpLayerInterfaceFactoryInterface::PickedUpLayerInterfaceFactoryInterface;
@@ -48,20 +49,24 @@ pub struct PickupBehavior {
     pub ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>,
 }
 
-pub static mut PickupBehavior_NULL_PICKUP_BEHAVIOR: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut PickupBehavior_NULL_PICKUP_BEHAVIOR: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 impl PickupBehaviorInterface for PickupBehavior {
     fn doPickup(&mut self, mut pickupProcessorInterface: Option<Rc<RefCell<dyn PickupProcessorInterface>>>) { Self::doPickup(self, pickupProcessorInterface) }
     fn doPickupLayer(&mut self, mut pickupLayerInterface: Option<Rc<RefCell<dyn PickedUpLayerInterface>>>) { Self::doPickupLayer(self, pickupLayerInterface) }
 }
 
 impl PickupBehavior {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getNullInstance() -> Option<Rc<RefCell<PickupBehavior>>> {
-        if match (&unsafe { PickupBehavior_NULL_PICKUP_BEHAVIOR.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *PickupBehavior_NULL_PICKUP_BEHAVIOR = PickupBehavior::new(CollidableCompositeLayer::getNullInstance(), 0) };
+        if match (&unsafe { PickupBehavior_NULL_PICKUP_BEHAVIOR.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *PickupBehavior_NULL_PICKUP_BEHAVIOR = crate::java_into_object(PickupBehavior::new(CollidableCompositeLayer::getNullInstance(), 0)) };
         }
-        return (unsafe { PickupBehavior_NULL_PICKUP_BEHAVIOR.clone() }).clone() /* as PickupBehavior */;
+        return { let java_object = (unsafe { PickupBehavior_NULL_PICKUP_BEHAVIOR.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<PickupBehavior>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -84,17 +89,17 @@ impl PickupBehavior {
 
     pub fn doPickup(&mut self, mut pickupProcessorInterface: Option<Rc<RefCell<dyn PickupProcessorInterface>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut healthInterfaceCompositeInterface: Option<Rc<RefCell<dyn HealthInterfaceCompositeInterface>>> = (self.ownerLayerInterface).clone() /* as HealthInterfaceCompositeInterface */;
+            let mut healthInterfaceCompositeInterface: Option<Rc<RefCell<dyn HealthInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn HealthInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn CollidableCompositeLayer cannot be cast to HealthInterfaceCompositeInterface") })();
             if jcall!(jcall!(healthInterfaceCompositeInterface).getHealthInterface()).isAlive() {
                 jcall!(pickupProcessorInterface).process(self.ownerLayerInterface.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>));
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("doPickup"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("doPickup"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -105,24 +110,24 @@ impl PickupBehavior {
             let mut pickedUpLayerInterfaceFactoryInterface: Option<Rc<RefCell<dyn PickedUpLayerInterfaceFactoryInterface>>> = jcall!(pickupLayerInterface).getPickedUpLayerInterfaceFactoryInterface();
             let mut pickedUpLayerType: Option<Rc<RefCell<PickedUpLayerType>>> = jcall!(pickedUpLayerInterfaceFactoryInterface).getPickedUpLayerType();
             let mut pickedUpLayerTypeFactory: Option<Rc<RefCell<PickedUpLayerTypeFactory>>> = PickedUpLayerTypeFactory::getInstance();
-            if match (&pickedUpLayerType, &jcall!(pickedUpLayerTypeFactory).BEAM) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&pickedUpLayerType, &jcall!(pickedUpLayerTypeFactory).MINE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&pickedUpLayerType, &jcall!(pickedUpLayerTypeFactory).PROJECTILE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&pickedUpLayerType, &jcall!(pickedUpLayerTypeFactory).ENHANCEMENT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                self.add(panic!("ClassCastException: a Rust dyn PickedUpLayerInterfaceFactoryInterface cannot be cast to dyn CountedPickedUpLayerInterfaceFactoryInterface"));
-            } else if match (&jcall!(pickedUpLayerInterfaceFactoryInterface).getPickedUpLayerType(), &jcall!(pickedUpLayerTypeFactory).PART) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                let mut collidableDestroyableDamageableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (self.ownerLayerInterface).clone() /* as CollidableDestroyableDamageableLayer */;
+            if match (&pickedUpLayerType, &{ let java_field = jcall!(pickedUpLayerTypeFactory).BEAM.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&pickedUpLayerType, &{ let java_field = jcall!(pickedUpLayerTypeFactory).MINE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&pickedUpLayerType, &{ let java_field = jcall!(pickedUpLayerTypeFactory).PROJECTILE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&pickedUpLayerType, &{ let java_field = jcall!(pickedUpLayerTypeFactory).ENHANCEMENT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                self.add((|| -> Option<Rc<RefCell<dyn CountedPickedUpLayerInterfaceFactoryInterface>>> { panic!("ClassCastException: a Rust dyn PickedUpLayerInterfaceFactoryInterface cannot be cast to dyn CountedPickedUpLayerInterfaceFactoryInterface") })());
+            } else if match (&jcall!(pickedUpLayerInterfaceFactoryInterface).getPickedUpLayerType(), &{ let java_field = jcall!(pickedUpLayerTypeFactory).PART.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                let mut collidableDestroyableDamageableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableCompositeLayer cannot be cast to CollidableDestroyableDamageableLayer") })();
                 jcall!(collidableDestroyableDamageableLayer).addPart(pickedUpLayerInterfaceFactoryInterface.clone());
-            } else if match (&pickedUpLayerType, &jcall!(pickedUpLayerTypeFactory).NONE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            } else if match (&pickedUpLayerType, &{ let java_field = jcall!(pickedUpLayerTypeFactory).NONE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             } else {
-                let mut pickupProcessorInterface: Option<Rc<RefCell<dyn PickupProcessorInterface>>> = panic!("ClassCastException: a Rust dyn PickedUpLayerInterfaceFactoryInterface cannot be cast to dyn PickupProcessorInterface");
+                let mut pickupProcessorInterface: Option<Rc<RefCell<dyn PickupProcessorInterface>>> = (|| -> Option<Rc<RefCell<dyn PickupProcessorInterface>>> { panic!("ClassCastException: a Rust dyn PickedUpLayerInterfaceFactoryInterface cannot be cast to dyn PickupProcessorInterface") })();
                 self.doPickup(pickupProcessorInterface.clone());
             }
             jcall!(pickupLayerInterface).setPickedUp();
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            PreLogUtil::putOE(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("doPickup"), e.clone());
+            PreLogUtil::putOE({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("doPickup"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -135,25 +140,25 @@ impl PickupBehavior {
     
 
     pub fn addAt(&mut self, mut countedPickedUpLayerInterfaceFactoryInterface: Option<Rc<RefCell<dyn CountedPickedUpLayerInterfaceFactoryInterface>>>, mut partIndex: i32) {
-        let mut collidableDestroyableDamageableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (self.ownerLayerInterface).clone() /* as CollidableDestroyableDamageableLayer */;
-        let mut countedLayerInterfaceFactory: Option<Rc<RefCell<CountedLayerInterfaceFactoryPart>>> = (jcall!(collidableDestroyableDamageableLayer).getPartInterfaceArray()[(partIndex) as usize]).clone() /* as CountedLayerInterfaceFactoryPart */;
+        let mut collidableDestroyableDamageableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableCompositeLayer cannot be cast to CollidableDestroyableDamageableLayer") })();
+        let mut countedLayerInterfaceFactory: Option<Rc<RefCell<CountedLayerInterfaceFactoryPart>>> = (jcall!(collidableDestroyableDamageableLayer).getPartInterfaceArray()[(partIndex) as usize]).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<CountedLayerInterfaceFactoryPart>() }, "ClassCastException: not a CountedLayerInterfaceFactoryPart"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<CountedLayerInterfaceFactoryPart>) } });
         jcall!(countedLayerInterfaceFactory).setTotal(jcall!(countedLayerInterfaceFactory).getTotal() + jcall!(countedPickedUpLayerInterfaceFactoryInterface).getTotal());
     }
     
 
     pub fn getFirstAvailableCountedLayerInterfaceFactory(&mut self, mut pickedUpLayerTypeArray: Vec<Option<Rc<RefCell<PickedUpLayerType>>>>) -> Option<Rc<RefCell<CountedLayerInterfaceFactoryPart>>> {
-        let mut collidableDestroyableDamageableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (self.ownerLayerInterface).clone() /* as CollidableDestroyableDamageableLayer */;
+        let mut collidableDestroyableDamageableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableCompositeLayer cannot be cast to CollidableDestroyableDamageableLayer") })();
         let mut partInterfaceArray: Vec<Option<Rc<RefCell<dyn PartInterface>>>> = jcall!(collidableDestroyableDamageableLayer).getPartInterfaceArray();
         let mut size: i32 = (partInterfaceArray.len() as i32).clone();
         let mut nextCountedLayerInterfaceFactory: Option<Rc<RefCell<CountedLayerInterfaceFactoryPart>>> = None;
         let mut countedPickedUpLayerInterfaceFactory: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::pickup::CountedPickedUpLayerInterfaceFactory::CountedPickedUpLayerInterfaceFactoryDyn>>> = None;
         for index in (self.countedIndex..size) {
-            nextCountedLayerInterfaceFactory = (jcall!(collidableDestroyableDamageableLayer).getPartInterfaceArray()[(index) as usize]).clone() /* as CountedLayerInterfaceFactoryPart */;
-            countedPickedUpLayerInterfaceFactory = jcall!(nextCountedLayerInterfaceFactory).getCountedPickedUpLayerInterfaceFactory();
+            nextCountedLayerInterfaceFactory = { let java_value = ((jcall!(collidableDestroyableDamageableLayer).getPartInterfaceArray()[(index) as usize]).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<CountedLayerInterfaceFactoryPart>() }, "ClassCastException: not a CountedLayerInterfaceFactoryPart"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<CountedLayerInterfaceFactoryPart>) } })).clone(); java_value };
+            countedPickedUpLayerInterfaceFactory = { let java_value = (jcall!(nextCountedLayerInterfaceFactory).getCountedPickedUpLayerInterfaceFactory()).clone(); java_value };
             {
                 let mut index2: i32 = (pickedUpLayerTypeArray.len() as i32).clone();
                 while { index2 -= 1; index2 } >= 0 {
-                if match (&jcall!(countedPickedUpLayerInterfaceFactory).getPickedUpLayerType(), &pickedUpLayerTypeArray[(index2) as usize]) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                if match (&jcall!(countedPickedUpLayerInterfaceFactory).as_CountedPickedUpLayerInterfaceFactory_mut().getPickedUpLayerType(), &pickedUpLayerTypeArray[(index2) as usize]) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                     if jcall!(nextCountedLayerInterfaceFactory).getTotal() > 0 {
                         return nextCountedLayerInterfaceFactory.clone();
                     }
@@ -168,12 +173,12 @@ impl PickupBehavior {
     // throws Exception
     pub fn getCountedLayerInterfaceFactoryForSlot(&mut self, mut slotIndex: i32) -> Option<Rc<RefCell<CountedLayerInterfaceFactoryPart>>> {
         let mut currentSlot: i32 = 0;
-        let mut collidableDestroyableDamageableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (self.ownerLayerInterface).clone() /* as CollidableDestroyableDamageableLayer */;
+        let mut collidableDestroyableDamageableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableCompositeLayer cannot be cast to CollidableDestroyableDamageableLayer") })();
         let mut partInterfaceArray: Vec<Option<Rc<RefCell<dyn PartInterface>>>> = jcall!(collidableDestroyableDamageableLayer).getPartInterfaceArray();
         let mut size: i32 = (partInterfaceArray.len() as i32).clone();
         let mut nextCountedLayerInterfaceFactory: Option<Rc<RefCell<CountedLayerInterfaceFactoryPart>>> = None;
         for index in (self.countedIndex..size) {
-            nextCountedLayerInterfaceFactory = (jcall!(collidableDestroyableDamageableLayer).getPartInterfaceArray()[(index) as usize]).clone() /* as CountedLayerInterfaceFactoryPart */;
+            nextCountedLayerInterfaceFactory = { let java_value = ((jcall!(collidableDestroyableDamageableLayer).getPartInterfaceArray()[(index) as usize]).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<CountedLayerInterfaceFactoryPart>() }, "ClassCastException: not a CountedLayerInterfaceFactoryPart"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<CountedLayerInterfaceFactoryPart>) } })).clone(); java_value };
             if jcall!(nextCountedLayerInterfaceFactory).getTotal() > 0 {
                 if currentSlot == slotIndex {
                     return nextCountedLayerInterfaceFactory.clone();

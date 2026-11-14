@@ -17,7 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,6 +38,10 @@ pub struct Shader {
 
 impl Shader {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             shaderName: String::new(),
@@ -43,6 +49,9 @@ impl Shader {
             shaderAsString: String::new(),
             shaderHandle: 0,
         };
+        this.shaderName = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.shaderStringList = jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance();
+        this.shaderAsString = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this
     }
 

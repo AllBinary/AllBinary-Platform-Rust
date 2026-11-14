@@ -17,12 +17,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait ChallengerInterface {
+pub trait ChallengerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn setWinner(&mut self, isWinner: bool);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

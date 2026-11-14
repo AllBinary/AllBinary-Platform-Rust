@@ -39,6 +39,10 @@ pub struct CategoryUtil {
 
 
 impl CategoryUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -54,7 +58,7 @@ impl CategoryUtil {
 
     // synchronized
     pub fn getPathLevel(mut categoryPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>) -> i32 {
-        let mut count: i32 = StringUtils::countMatches(jcall!(categoryPath).toString(), jcall!(AbPathData::getInstance()).SEPARATOR.clone());
+        let mut count: i32 = StringUtils::countMatches(jcall!(categoryPath).toString(), { let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
         return count.clone();
     }
     
@@ -62,16 +66,16 @@ impl CategoryUtil {
     // synchronized
     pub fn getNameFromNode(mut node: Option<Rc<RefCell<Node>>>) -> String {
         let mut attributes: Option<Rc<RefCell<NamedNodeMap>>> = jcall!(node).getAttributes();
-        let mut attrNode: Option<Rc<RefCell<Attr>>> = (jcall!(attributes).getNamedItem(jcall!(CategoryData::CategoryData::getInstance()).LABEL.clone())).clone() /* as Attr */;
+        let mut attrNode: Option<Rc<RefCell<Attr>>> = (jcall!(attributes).getNamedItem({ let java_field = jcall!(CategoryData::CategoryData::getInstance()).LABEL.clone(); java_field }.clone())).clone() /* as Attr */;
         if attrNode.is_some() {
             return jcall!(attrNode).getValue();
         } else {
-            let mut labelNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNodeNoThrow(jcall!(CategoryData::CategoryData::getInstance()).LABEL.clone(), jcall!(node).getChildNodes());
+            let mut labelNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNodeNoThrow({ let java_field = jcall!(CategoryData::CategoryData::getInstance()).LABEL.clone(); java_field }.clone(), jcall!(node).getChildNodes());
             if labelNode.is_some() {
                 return DomNodeHelper::getTextNodeValue(labelNode.clone());
             }
         }
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
 }
 

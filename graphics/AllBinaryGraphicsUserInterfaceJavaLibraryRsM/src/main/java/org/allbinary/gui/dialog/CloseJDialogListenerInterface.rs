@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait CloseJDialogListenerInterface {
+pub trait CloseJDialogListenerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn onClose(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

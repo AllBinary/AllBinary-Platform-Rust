@@ -42,6 +42,10 @@ impl crate::org::allbinary::business::advertisement::image::AdvertisementImageIn
 }
 
 impl AdvertisementThumbnail {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

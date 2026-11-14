@@ -56,7 +56,7 @@ impl MotionRectanglesResultsFrameCacheable {
     
 
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return self.frame.clone();
+        return crate::java_into_object(self.frame.clone());
     }
     
 
@@ -72,9 +72,9 @@ impl MotionRectanglesResultsFrameCacheable {
 
     pub fn toString(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(std::any::type_name_of_val(&self).to_string());
+        jcall!(stringBuffer).append({ let java_argument = std::any::type_name_of_val(&self).to_string(); java_argument });
         jcall!(stringBuffer).append(String::from(" Frame: "));
-        jcall!(stringBuffer).append(jcall!(self.getKey()).toString());
+        jcall!(stringBuffer).append({ let java_argument = { let java_object = (self.getKey()).clone(); let value = jcall!(java_object); value.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", value.as_ref().type_id())) }; java_argument });
         return jcall!(stringBuffer).toString();
     }
 }

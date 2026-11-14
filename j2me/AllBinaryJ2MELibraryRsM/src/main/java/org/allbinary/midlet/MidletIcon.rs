@@ -32,6 +32,10 @@ pub static mut MidletIcon_RESOURCE: std::cell::LazyCell<String> = std::cell::Laz
 
 impl MidletIcon {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };

@@ -48,6 +48,10 @@ impl RTSInterface for RepairTechnology {
 }
 
 impl RepairTechnology {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut maxLevel: i32) -> Self {
@@ -120,7 +124,7 @@ impl RepairTechnology {
     pub fn upgrade(&mut self) {
         self.level += 1;
         let mut unitTechnologySingletonFactory: Option<Rc<RefCell<UnitTechnologySingletonFactory>>> = UnitTechnologySingletonFactory::getInstance();
-        jcall!(unitTechnologySingletonFactory).setRepair(jcall!(unitTechnologySingletonFactory).getRepair() + (self.getLevel() * 10));
+        jcall!(unitTechnologySingletonFactory).setRepair({ let java_value = jcall!(unitTechnologySingletonFactory).getRepair(); java_value } + (self.getLevel() * 10));
     }
     
 

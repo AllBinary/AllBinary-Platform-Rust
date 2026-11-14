@@ -5,12 +5,14 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL::GL;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
-// use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::khronos::opengles::GL::GL;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::lcdui::Font::Font;
 use crate::org::allbinary::graphics::font::FontDebugBase::FontDebugBase;
 use crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::GraphicsInterface::GraphicsInterface;
 
 // Borrows the object of a Java reference
@@ -29,10 +31,14 @@ impl OpenGLSurfaceChangedInterface for OpenGLESGraphics {
     fn set(&mut self, mut gl: Option<Rc<RefCell<dyn GL>>>) { Self::set(self, gl) }
 }
 impl GraphicsInterface for OpenGLESGraphics {
-    fn setFontDebug(&mut self, mut font: Option<Rc<RefCell<Font>>>, mut fontDebug: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::font::FontDebugBase::FontDebugBaseDyn>>>) { Self::setFontDebug(self, font, fontDebug) }
+    fn setFontDebug(&mut self, mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, mut fontDebug: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::font::FontDebugBase::FontDebugBaseDyn>>>) { Self::setFontDebug(self, font, fontDebug) }
 }
 
 impl OpenGLESGraphics {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -41,7 +47,7 @@ impl OpenGLESGraphics {
             gl: None,
         };
         this.commonStrings = CommonStrings::getInstance();
-        this.gl = NullGL10_NULL_GL10.with(Clone::clone).clone();
+        this.gl = NullGL10_NULL_GL10.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn GL10>>);
         this
     }
 
@@ -81,11 +87,11 @@ impl OpenGLESGraphics {
     }
     
 
-    pub fn setFontDebug(&mut self, mut font: Option<Rc<RefCell<Font>>>, mut fontDebug: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::font::FontDebugBase::FontDebugBaseDyn>>>) {
+    pub fn setFontDebug(&mut self, mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, mut fontDebug: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::font::FontDebugBase::FontDebugBaseDyn>>>) {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait OpenGLESGraphicsDyn: crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface {
+pub trait OpenGLESGraphicsDyn: std::any::Any + crate::org::allbinary::device::GraphicsInterface::GraphicsInterface + crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface {
     fn as_OpenGLESGraphics(&self) -> &OpenGLESGraphics;
     fn as_OpenGLESGraphics_mut(&mut self) -> &mut OpenGLESGraphics;
     fn updateGL(&mut self, mut gl: Option<Rc<RefCell<dyn GL>>>) { OpenGLESGraphics::updateGL(self.as_OpenGLESGraphics_mut(), gl) }
@@ -94,7 +100,6 @@ pub trait OpenGLESGraphicsDyn: crate::org::allbinary::image::opengles::OpenGLSur
     fn setOrthoginalMode(&mut self) { OpenGLESGraphics::setOrthoginalMode(self.as_OpenGLESGraphics_mut()) }
     fn setCameraMode(&mut self) { OpenGLESGraphics::setCameraMode(self.as_OpenGLESGraphics_mut()) }
     fn getGlP(&mut self) -> Option<Rc<RefCell<dyn GL10>>> { OpenGLESGraphics::getGlP(self.as_OpenGLESGraphics_mut()) }
-    fn setFontDebug(&mut self, mut font: Option<Rc<RefCell<Font>>>, mut fontDebug: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::font::FontDebugBase::FontDebugBaseDyn>>>) { OpenGLESGraphics::setFontDebug(self.as_OpenGLESGraphics_mut(), font, fontDebug) }
 }
 impl OpenGLESGraphicsDyn for OpenGLESGraphics {
     fn as_OpenGLESGraphics(&self) -> &OpenGLESGraphics { self }

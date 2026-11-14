@@ -24,6 +24,10 @@ pub struct R {
 
 impl R {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -40,6 +44,10 @@ pub struct attr {
 
 
 impl attr {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -58,6 +66,10 @@ pub struct drawable {
 
 impl drawable {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -72,13 +84,17 @@ impl drawable {
 pub struct id {
 }
 
-    thread_local! { pub static R_custom_web_view: i32 = 0x7f050000_u32 as i32; }
-    thread_local! { pub static R_ad_area_bottom: i32 = 0x7f060002_u32 as i32; }
-    thread_local! { pub static R_ad_area_left: i32 = 0x7f060003_u32 as i32; }
-    thread_local! { pub static R_ad_area_right: i32 = 0x7f060004_u32 as i32; }
-    thread_local! { pub static R_ad_area_top: i32 = 0x7f060001_u32 as i32; }
+    thread_local! { pub static R_custom_web_view: i32 = 0x7f050000; }
+    thread_local! { pub static R_ad_area_bottom: i32 = 0x7f060002; }
+    thread_local! { pub static R_ad_area_left: i32 = 0x7f060003; }
+    thread_local! { pub static R_ad_area_right: i32 = 0x7f060004; }
+    thread_local! { pub static R_ad_area_top: i32 = 0x7f060001; }
 
 impl id {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -94,9 +110,13 @@ impl id {
 pub struct layout {
 }
 
-    thread_local! { pub static R_webview_layout: i32 = 0x7f020000_u32 as i32; }
+    thread_local! { pub static R_webview_layout: i32 = 0x7f020000; }
 
 impl layout {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -112,40 +132,44 @@ impl layout {
 pub struct raw {
 }
 
-    thread_local! { pub static R_about: i32 = 0x7f030000_u32 as i32; }
-    thread_local! { pub static R_privacy_policy: i32 = 0x7f030001_u32 as i32; }
-    thread_local! { pub static R_error: i32 = 0x7f040000_u32 as i32; }
-    thread_local! { pub static R_licenseinitdata: i32 = 0x7f040001_u32 as i32; }
-    thread_local! { pub static R_partner: i32 = 0x7f040002_u32 as i32; }
-    thread_local! { pub static R_select: i32 = 0x7f040003_u32 as i32; }
-    thread_local! { pub static R_test: i32 = 0x7f040004_u32 as i32; }
-    thread_local! { pub static R_testgamedemo_wait_256_by_256: i32 = 0x7f040005_u32 as i32; }
-    thread_local! { pub static R_touch_button_128_by_128: i32 = 0x7f040026_u32 as i32; }
-    thread_local! { pub static R_touch_button_64_by_64: i32 = 0x7f040027_u32 as i32; }
-    thread_local! { pub static R_touch_button_down_arrow_128_by_128: i32 = 0x7f04002a_u32 as i32; }
-    thread_local! { pub static R_touch_button_down_arrow_64_by_64: i32 = 0x7f04002b_u32 as i32; }
-    thread_local! { pub static R_touch_button_generic_action_128_by_128: i32 = 0x7f04002c_u32 as i32; }
-    thread_local! { pub static R_touch_button_generic_action_64_by_64: i32 = 0x7f04002d_u32 as i32; }
-    thread_local! { pub static R_touch_button_start_128_by_128: i32 = 0x7f040038_u32 as i32; }
-    thread_local! { pub static R_touch_button_start_64_by_64: i32 = 0x7f040039_u32 as i32; }
-    thread_local! { pub static R_touch_button_strafe_left_arrow_128_by_128: i32 = 0x7f04003a_u32 as i32; }
-    thread_local! { pub static R_touch_button_strafe_left_arrow_64_by_64: i32 = 0x7f04003b_u32 as i32; }
-    thread_local! { pub static R_touch_button_strafe_right_arrow_128_by_128: i32 = 0x7f04003c_u32 as i32; }
-    thread_local! { pub static R_touch_button_strafe_right_arrow_64_by_64: i32 = 0x7f04003d_u32 as i32; }
-    thread_local! { pub static R_touch_button_turn_left_arrow_128_by_128: i32 = 0x7f04003e_u32 as i32; }
-    thread_local! { pub static R_touch_button_turn_left_arrow_64_by_64: i32 = 0x7f04003f_u32 as i32; }
-    thread_local! { pub static R_touch_button_turn_right_arrow_128_by_128: i32 = 0x7f040040_u32 as i32; }
-    thread_local! { pub static R_touch_button_turn_right_arrow_64_by_64: i32 = 0x7f040041_u32 as i32; }
-    thread_local! { pub static R_touch_button_up_arrow_128_by_128: i32 = 0x7f040042_u32 as i32; }
-    thread_local! { pub static R_touch_button_up_arrow_64_by_64: i32 = 0x7f040043_u32 as i32; }
-    thread_local! { pub static R_ouya_a: i32 = 0x7f040012_u32 as i32; }
-    thread_local! { pub static R_ouya_o: i32 = 0x7f040014_u32 as i32; }
-    thread_local! { pub static R_ouya_u: i32 = 0x7f040015_u32 as i32; }
-    thread_local! { pub static R_ouya_y: i32 = 0x7f040016_u32 as i32; }
-    thread_local! { pub static R_ouya_key: i32 = 0x7f040013_u32 as i32; }
-    thread_local! { pub static R_google_key: i32 = 0x7f040013_u32 as i32; }
+    thread_local! { pub static R_about: i32 = 0x7f030000; }
+    thread_local! { pub static R_privacy_policy: i32 = 0x7f030001; }
+    thread_local! { pub static R_error: i32 = 0x7f040000; }
+    thread_local! { pub static R_licenseinitdata: i32 = 0x7f040001; }
+    thread_local! { pub static R_partner: i32 = 0x7f040002; }
+    thread_local! { pub static R_select: i32 = 0x7f040003; }
+    thread_local! { pub static R_test: i32 = 0x7f040004; }
+    thread_local! { pub static R_testgamedemo_wait_256_by_256: i32 = 0x7f040005; }
+    thread_local! { pub static R_touch_button_128_by_128: i32 = 0x7f040026; }
+    thread_local! { pub static R_touch_button_64_by_64: i32 = 0x7f040027; }
+    thread_local! { pub static R_touch_button_down_arrow_128_by_128: i32 = 0x7f04002a; }
+    thread_local! { pub static R_touch_button_down_arrow_64_by_64: i32 = 0x7f04002b; }
+    thread_local! { pub static R_touch_button_generic_action_128_by_128: i32 = 0x7f04002c; }
+    thread_local! { pub static R_touch_button_generic_action_64_by_64: i32 = 0x7f04002d; }
+    thread_local! { pub static R_touch_button_start_128_by_128: i32 = 0x7f040038; }
+    thread_local! { pub static R_touch_button_start_64_by_64: i32 = 0x7f040039; }
+    thread_local! { pub static R_touch_button_strafe_left_arrow_128_by_128: i32 = 0x7f04003a; }
+    thread_local! { pub static R_touch_button_strafe_left_arrow_64_by_64: i32 = 0x7f04003b; }
+    thread_local! { pub static R_touch_button_strafe_right_arrow_128_by_128: i32 = 0x7f04003c; }
+    thread_local! { pub static R_touch_button_strafe_right_arrow_64_by_64: i32 = 0x7f04003d; }
+    thread_local! { pub static R_touch_button_turn_left_arrow_128_by_128: i32 = 0x7f04003e; }
+    thread_local! { pub static R_touch_button_turn_left_arrow_64_by_64: i32 = 0x7f04003f; }
+    thread_local! { pub static R_touch_button_turn_right_arrow_128_by_128: i32 = 0x7f040040; }
+    thread_local! { pub static R_touch_button_turn_right_arrow_64_by_64: i32 = 0x7f040041; }
+    thread_local! { pub static R_touch_button_up_arrow_128_by_128: i32 = 0x7f040042; }
+    thread_local! { pub static R_touch_button_up_arrow_64_by_64: i32 = 0x7f040043; }
+    thread_local! { pub static R_ouya_a: i32 = 0x7f040012; }
+    thread_local! { pub static R_ouya_o: i32 = 0x7f040014; }
+    thread_local! { pub static R_ouya_u: i32 = 0x7f040015; }
+    thread_local! { pub static R_ouya_y: i32 = 0x7f040016; }
+    thread_local! { pub static R_ouya_key: i32 = 0x7f040013; }
+    thread_local! { pub static R_google_key: i32 = 0x7f040013; }
 
 impl raw {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -161,9 +185,13 @@ impl raw {
 pub struct string {
 }
 
-    thread_local! { pub static R_progressbar_in_title_string: i32 = 0x7f050001_u32 as i32; }
+    thread_local! { pub static R_progressbar_in_title_string: i32 = 0x7f050001; }
 
 impl string {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

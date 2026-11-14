@@ -27,6 +27,7 @@ macro_rules! jcall {
 }
 
 pub struct OpenGLCapabilities {
+    pub CUSTOM_GL_SURFACE_VIEW: bool,
     pub VERSION_1_0: String,
     pub VERSION_1_1: String,
     pub VERSION_2_0: String,
@@ -43,6 +44,10 @@ pub struct OpenGLCapabilities {
 thread_local! { pub static OpenGLCapabilities_instance: Option<Rc<RefCell<OpenGLCapabilities>>> = OpenGLCapabilities::new(); }
 
 impl OpenGLCapabilities {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<OpenGLCapabilities>>> {
@@ -52,6 +57,7 @@ impl OpenGLCapabilities {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
+            CUSTOM_GL_SURFACE_VIEW: false,
             VERSION_1_0: String::new(),
             VERSION_1_1: String::new(),
             VERSION_2_0: String::new(),
@@ -64,6 +70,7 @@ impl OpenGLCapabilities {
             glInstanceVersion: String::new(),
             maxTextureSize: 0,
         };
+        this.CUSTOM_GL_SURFACE_VIEW = true;
         this.VERSION_1_0 = String::from("1.0");
         this.VERSION_1_1 = String::from("1.1");
         this.VERSION_2_0 = String::from("2.0");
@@ -71,15 +78,20 @@ impl OpenGLCapabilities {
         this.VERSION_3_1 = String::from("3.1");
         this.VERSION_3_2 = String::from("3.2");
         this.VERSION_HIGHER_THAN_EXISTS = String::from("999.999");
-        this.glVersion = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.glVersion = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.shaderVersion = 0;
-        this.glInstanceVersion = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.glInstanceVersion = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.maxTextureSize = 64;
         this
     }
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct())))
+    }
+    
+
+    pub fn isInitialized(&mut self) -> bool {
+        return true;
     }
     
 

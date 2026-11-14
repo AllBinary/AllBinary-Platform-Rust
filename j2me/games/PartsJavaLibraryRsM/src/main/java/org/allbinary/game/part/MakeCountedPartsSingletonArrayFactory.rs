@@ -25,6 +25,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
+use crate::java::lang::Exception::*;
 use super::CountedLayerInterfaceFactoryPart::CountedLayerInterfaceFactoryPart;
 use super::PartInterface::PartInterface;
 
@@ -43,6 +44,10 @@ pub struct MakeCountedPartsSingletonArrayFactory {
 thread_local! { pub static MakeCountedPartsSingletonArrayFactory_instance: Option<Rc<RefCell<MakeCountedPartsSingletonArrayFactory>>> = MakeCountedPartsSingletonArrayFactory::new(); }
 
 impl MakeCountedPartsSingletonArrayFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -74,7 +79,7 @@ impl MakeCountedPartsSingletonArrayFactory {
         let mut layerInterfaceFactoryInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::pickup::CountedPickedUpLayerInterfaceFactory::CountedPickedUpLayerInterfaceFactoryDyn>>> = None;
         let mut size: i32 = jcall!(countedBasicArrayList).size();
         for index in (0..size) {
-            layerInterfaceFactoryInterface = { let java_object = (jcall!(countedBasicArrayList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::pickup::CountedPickedUpLayerInterfaceFactory::CountedPickedUpLayerInterfaceFactoryDyn>>>>().expect("ClassCastException").clone()) };
+            layerInterfaceFactoryInterface = { let java_value = ({ let java_object = (jcall!(countedBasicArrayList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::pickup::CountedPickedUpLayerInterfaceFactory::CountedPickedUpLayerInterfaceFactoryDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             jcall!(self.list).add(crate::java_into_object(CountedLayerInterfaceFactoryPart::new(0, layerInterfaceFactoryInterface.clone())));
         }
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
@@ -83,11 +88,11 @@ impl MakeCountedPartsSingletonArrayFactory {
         jcall!(stringBuffer).append(String::from(" Counted: "));
         jcall!(stringBuffer).appendint(jcall!(countedBasicArrayList).size());
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut newPartInterfaceArray: Vec<Option<Rc<RefCell<dyn PartInterface>>>> = vec![None; (jcall!(self.list).size()) as usize];
         let mut newSize: i32 = (newPartInterfaceArray.len() as i32).clone();
         for index in (0..newSize) {
-            newPartInterfaceArray[(index) as usize] = { let java_object = jcall!(self.list).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn PartInterface>>>>().expect("ClassCastException").clone()) };
+            newPartInterfaceArray[(index) as usize] = { let java_object = (jcall!(self.list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn PartInterface>>>>().expect("ClassCastException").clone()) };
         }
         return newPartInterfaceArray.clone();
     }

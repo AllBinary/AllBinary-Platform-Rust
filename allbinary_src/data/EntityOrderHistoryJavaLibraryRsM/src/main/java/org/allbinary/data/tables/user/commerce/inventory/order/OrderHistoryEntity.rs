@@ -16,11 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::Calendar;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::Calendar::Calendar;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::Calendar::Calendar;
+use crate::java::util::HashMap::HashMap;
 // use crate::java::util::Random::Random;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
@@ -71,6 +69,7 @@ impl Random {
         (self.seed >> 16) as u32 as i32
     }
 }
+use crate::java::lang::Exception::*;
 use super::OrderHistoryEntityInterface::OrderHistoryEntityInterface;
 
 // Borrows the object of a Java reference
@@ -94,7 +93,7 @@ impl OrderHistoryEntityInterface for OrderHistoryEntity {
     fn getOrders(&mut self, mut userName: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::getOrders(self, userName) }
     fn getOrders3(&mut self, mut status: String, mut fromDate: String, mut toDate: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::getOrders3(self, status, fromDate, toDate) }
     fn getOrder(&mut self, mut id: String) -> Option<Rc<RefCell<OrderHistory>>> { Self::getOrder(self, id) }
-    fn update(&mut self, mut whereHashMap: Option<Rc<RefCell<HashMap>>>, mut orderHashMap: Option<Rc<RefCell<HashMap>>>) { Self::update(self, whereHashMap, orderHashMap) }
+    fn update(&mut self, mut whereHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut orderHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) { Self::update(self, whereHashMap, orderHashMap) }
 }
 impl crate::org::allbinary::data::tables::BasicDataTableInterface::BasicDataTableInterface for OrderHistoryEntity {
     fn createTable(&mut self) -> String { Self::createTable(self) }
@@ -106,14 +105,14 @@ impl OrderHistoryEntity {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: AbSqlBean::new_struct(HistoryDbInitInfo::new()),
+            base: AbSqlBean::new_struct(HistoryDbInitInfo::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfoDyn>>)),
             logUtil: None,
             tableName: String::new(),
         };
         this.logUtil = LogUtil::getInstance();
         this.tableName = String::from("orderhistory");
         // super(...) is in the struct literal above
-        this.setTableName(this.tableName.clone());
+        { let java_arguments = (this.tableName.clone(),); this.setTableName(java_arguments.0) };
         this
     }
 
@@ -123,16 +122,16 @@ impl OrderHistoryEntity {
     
 
     pub fn insert2(&mut self, mut userName: String, mut order: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::order::Order::OrderDyn>>>) {
-        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut paymentInterface: Option<Rc<RefCell<dyn PaymentInterface>>> = jcall!(PaymentEntity::new()).getDefault(userName.clone());
             let mut billingAddress: Option<Rc<RefCell<StreetAddress>>> = jcall!(BillingAddressesEntity::new(userName.clone())).getDefault();
             let mut shippingAddress: Option<Rc<RefCell<StreetAddress>>> = jcall!(ShippingAddressesEntity::new(userName.clone())).getDefault();
-            let mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>> = ServiceClientInformationInterfaceFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn AbeClientInformationInterface>>);
-            let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(order).getStoreName());
-            let mut shippingInterface: Option<Rc<RefCell<dyn ShippingInterface>>> = jcall!(ShippingMethods::new(abeClientInformation.clone(), storeFrontInterface.clone())).getShippingInterface(jcall!(order).getShippingMethod());
+            let mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>> = ServiceClientInformationInterfaceFactory::getInstance();
+            let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(order).as_Order_mut().getStoreName()).map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
+            let mut shippingInterface: Option<Rc<RefCell<dyn ShippingInterface>>> = jcall!(ShippingMethods::new(abeClientInformation.clone(), storeFrontInterface.clone())).getShippingInterface(jcall!(order).as_Order_mut().getShippingMethod());
             let mut shippingCost: Option<Rc<RefCell<Money>>> = jcall!(shippingInterface).getCost(order.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::order::OrderInterface::OrderInterface>>));
-            let mut basketInterface: Option<Rc<RefCell<dyn BasketInterface>>> = jcall!(order).getBasket();
+            let mut basketInterface: Option<Rc<RefCell<dyn BasketInterface>>> = jcall!(order).as_Order_mut().getBasket();
             let mut subTotal: Option<Rc<RefCell<Money>>> = jcall!(basketInterface).getSubTotal();
             let mut taxRate: Option<f32> = jcall!(jcall!(TaxFactory::getInstance()).getInstance2(abeClientInformation.clone(), storeFrontInterface.clone())).getTaxRate(shippingAddress.clone(), storeFrontInterface.clone());
             let mut tax: Option<Rc<RefCell<Money>>> = Money::new();
@@ -142,27 +141,27 @@ impl OrderHistoryEntity {
             jcall!(tax).add(jcall!(total).toString());
             jcall!(tax).multiply(taxRate.clone());
             jcall!(total).add(jcall!(tax).toString());
-            let mut empty: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            let mut empty: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
             jcall!(vector).add(crate::java_into_object(jcall!(OrderHistoryIdGenerator::new()).getNext()));
-            let mut ZERO: String = jcall!(TableDataFactory::getInstance()).ZERO_STRING.clone();
-            jcall!(vector).add(crate::java_into_object(jcall!(order).getId()));
+            let mut ZERO: String = { let java_field = jcall!(TableDataFactory::getInstance()).ZERO_STRING.clone(); java_field }.clone();
+            jcall!(vector).add(crate::java_into_object(jcall!(order).as_Order_mut().getId()));
             jcall!(vector).add(crate::java_into_object(userName.clone()));
-            jcall!(vector).add(crate::java_into_object(jcall!(order).getStoreName()));
+            jcall!(vector).add(crate::java_into_object(jcall!(order).as_Order_mut().getStoreName()));
             let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-            let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString().clone();
+            let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string().clone();
             jcall!(vector).add(crate::java_into_object(ZERO.clone()));
             jcall!(vector).add(crate::java_into_object(time.clone()));
             jcall!(vector).add(crate::java_into_object(ZERO.clone()));
             jcall!(vector).add(crate::java_into_object(ZERO.clone()));
             jcall!(vector).add(crate::java_into_object(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PREPROCESSING.with(Clone::clone).clone()));
-            jcall!(vector).add(crate::java_into_object(jcall!(order).getPaymentMethod()));
+            jcall!(vector).add(crate::java_into_object(jcall!(order).as_Order_mut().getPaymentMethod()));
             if paymentInterface.is_some() {
                 jcall!(vector).add(crate::java_into_object(jcall!(paymentInterface).getName()));
                 jcall!(vector).add(crate::java_into_object(jcall!(paymentInterface).getType()));
                 jcall!(vector).add(crate::java_into_object(jcall!(paymentInterface).getExpiration()));
                 let mut random: i32 = jcall!(Random::new()).nextInt(unsafe { crate::org::allbinary::logic::control::crypt::SuperCrypt::SuperCrypt_KEYMAX.clone() }.clone());
                 jcall!(vector).add(crate::java_into_object(jcall!(SuperCrypt::new(random.clone())).encrypt(jcall!(paymentInterface).getNumber())));
-                jcall!(vector).add(crate::java_into_object(jcall!(Some((random.clone()) as i32)).toString()));
+                jcall!(vector).add(crate::java_into_object((Some((random.clone()) as i32)).expect("NullPointerException").to_string()));
             } else {
                 jcall!(vector).add(crate::java_into_object(empty.clone()));
                 jcall!(vector).add(crate::java_into_object(empty.clone()));
@@ -200,26 +199,26 @@ impl OrderHistoryEntity {
                 jcall!(vector).add(crate::java_into_object(empty.clone()));
                 jcall!(vector).add(crate::java_into_object(empty.clone()));
             }
-            jcall!(vector).add(crate::java_into_object(jcall!(order).getShippingMethod()));
+            jcall!(vector).add(crate::java_into_object(jcall!(order).as_Order_mut().getShippingMethod()));
             jcall!(vector).add(crate::java_into_object(jcall!(subTotal).toString()));
             jcall!(vector).add(crate::java_into_object(jcall!(shippingCost).toString()));
             jcall!(vector).add(crate::java_into_object(jcall!(tax).toString()));
             jcall!(vector).add(crate::java_into_object(jcall!(total).toString()));
-            jcall!(vector).add(crate::java_into_object(jcall!(order).getSpecial()));
-            jcall!(vector).add(crate::java_into_object(jcall!(order).getUserComments()));
-            jcall!(vector).add(crate::java_into_object(jcall!(order).getUserCancelComments()));
-            jcall!(vector).add(crate::java_into_object(jcall!(order).getStoreComments()));
-            jcall!(vector).add(crate::java_into_object(jcall!(order).getStoreCancelComments()));
+            jcall!(vector).add(crate::java_into_object(jcall!(order).as_Order_mut().getSpecial()));
+            jcall!(vector).add(crate::java_into_object(jcall!(order).as_Order_mut().getUserComments()));
+            jcall!(vector).add(crate::java_into_object(jcall!(order).as_Order_mut().getUserCancelComments()));
+            jcall!(vector).add(crate::java_into_object(jcall!(order).as_Order_mut().getStoreComments()));
+            jcall!(vector).add(crate::java_into_object(jcall!(order).as_Order_mut().getStoreCancelComments()));
             self.insert(vector.clone());
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).putF(jcall!(self.commonStrings).SUCCESS.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone());
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).SUCCESS.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone());
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).put(format!("{}{}", String::from("Command Failed: "), vector), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone(), crate::java_into_object(e.clone()));
             }
             }
@@ -230,17 +229,17 @@ impl OrderHistoryEntity {
     // Java overloaded method: Rust needs a different name
     pub fn insert(&mut self, mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            self.base.insert(values.clone());
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).putF(jcall!(self.commonStrings).SUCCESS.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone());
+            { let java_arguments = (values.clone(),); self.base.insert(java_arguments.0) };
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).SUCCESS.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone());
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).FAILURE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).FAILURE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), INSERT.clone(), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -250,22 +249,22 @@ impl OrderHistoryEntity {
     pub fn setStatus(&mut self, mut orderId: String, mut status: String) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-            let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString().clone();
-            let mut updateHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-            jcall!(updateHashMap).put(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_STATUS.with(Clone::clone).clone(), status.clone());
+            let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string().clone();
+            let mut updateHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+            jcall!(updateHashMap).put(crate::java_into_object(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_STATUS.with(Clone::clone).clone()), crate::java_into_object(status.clone()));
             if (status.cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELLED.with(Clone::clone).clone()) as i32) == 0 {
-                jcall!(updateHashMap).put(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELDATE.with(Clone::clone).clone(), time.clone());
+                jcall!(updateHashMap).put(crate::java_into_object(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELDATE.with(Clone::clone).clone()), crate::java_into_object(time.clone()));
             } else if (status.cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPED.with(Clone::clone).clone()) as i32) == 0 {
-                jcall!(updateHashMap).put(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPEDDATE.with(Clone::clone).clone(), time.clone());
+                jcall!(updateHashMap).put(crate::java_into_object(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPEDDATE.with(Clone::clone).clone()), crate::java_into_object(time.clone()));
             }
-            self.base.updateWhere3(crate::org::allbinary::business::user::commerce::inventory::order::OrderData::OrderData_ID.with(Clone::clone).clone(), orderId.clone(), updateHashMap.clone());
+            { let java_arguments = (crate::org::allbinary::business::user::commerce::inventory::order::OrderData::OrderData_ID.with(Clone::clone).clone(), orderId.clone(), updateHashMap.clone(),); self.base.updateWhere3(java_arguments.0, java_arguments.1, java_arguments.2) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).FAILURE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setStatus"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).FAILURE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setStatus"), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -275,18 +274,18 @@ impl OrderHistoryEntity {
     pub fn setPaymentMethod(&mut self, mut orderId: String, mut paymentMethod: String) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-            let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString().clone();
-            let mut updateHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-            jcall!(updateHashMap).put(crate::org::allbinary::business::user::commerce::money::payment::PaymentData::PaymentData_METHOD.with(Clone::clone).clone(), paymentMethod.clone());
-            jcall!(updateHashMap).put(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TRANSDATE.with(Clone::clone).clone(), time.clone());
-            self.base.updateWhere3(crate::org::allbinary::business::user::commerce::inventory::order::OrderData::OrderData_ID.with(Clone::clone).clone(), orderId.clone(), updateHashMap.clone());
+            let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string().clone();
+            let mut updateHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+            jcall!(updateHashMap).put(crate::java_into_object(crate::org::allbinary::business::user::commerce::money::payment::PaymentData::PaymentData_METHOD.with(Clone::clone).clone()), crate::java_into_object(paymentMethod.clone()));
+            jcall!(updateHashMap).put(crate::java_into_object(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TRANSDATE.with(Clone::clone).clone()), crate::java_into_object(time.clone()));
+            { let java_arguments = (crate::org::allbinary::business::user::commerce::inventory::order::OrderData::OrderData_ID.with(Clone::clone).clone(), orderId.clone(), updateHashMap.clone(),); self.base.updateWhere3(java_arguments.0, java_arguments.1, java_arguments.2) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).FAILURE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setPaymentMethod"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).FAILURE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setPaymentMethod"), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -295,13 +294,13 @@ impl OrderHistoryEntity {
 
     // throws Exception
     pub fn getStoreOrders(&mut self, mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut orderReviewVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        let mut whereHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(whereHashMap).put(jcall!(StoreFrontData::getInstance()).NAME.clone(), jcall!(storeFrontInterface).getName());
-        let mut orderHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.base.getRows(whereHashMap.clone());
+        let mut orderReviewVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut whereHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(whereHashMap).put(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(jcall!(storeFrontInterface).getName()));
+        let mut orderHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_arguments = (whereHashMap.clone(),); self.base.getRows(java_arguments.0) };
         let mut size: i32 = jcall!(orderHashMapVector).size();
         for i in (0..size) {
-            let mut orderReviewHashMap: Option<Rc<RefCell<HashMap>>> = (jcall!(orderHashMapVector).get(i.clone())).clone() /* as HashMap */;
+            let mut orderReviewHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = { let java_object = (jcall!(orderHashMapVector).get(i.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>>().expect("ClassCastException").clone()) };
             let mut orderReview: Option<Rc<RefCell<OrderHistory>>> = OrderHistory::new2(Basket::new(), orderReviewHashMap.clone());
             jcall!(orderReviewVector).add(crate::java_into_object(orderReview.clone()));
         }
@@ -311,13 +310,13 @@ impl OrderHistoryEntity {
 
     // throws Exception
     pub fn getOrders(&mut self, mut userName: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut orderReviewVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        let mut whereHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(whereHashMap).put(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), userName.clone());
-        let mut orderHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.base.getRows(whereHashMap.clone());
+        let mut orderReviewVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut whereHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(whereHashMap).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()), crate::java_into_object(userName.clone()));
+        let mut orderHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_arguments = (whereHashMap.clone(),); self.base.getRows(java_arguments.0) };
         let mut size: i32 = jcall!(orderHashMapVector).size();
         for index in (0..size) {
-            let mut orderReviewHashMap: Option<Rc<RefCell<HashMap>>> = (jcall!(orderHashMapVector).get(index.clone())).clone() /* as HashMap */;
+            let mut orderReviewHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = { let java_object = (jcall!(orderHashMapVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>>().expect("ClassCastException").clone()) };
             let mut orderReview: Option<Rc<RefCell<OrderHistory>>> = OrderHistory::new2(Basket::new(), orderReviewHashMap.clone());
             jcall!(orderReviewVector).add(crate::java_into_object(orderReview.clone()));
         }
@@ -328,13 +327,13 @@ impl OrderHistoryEntity {
     // throws Exception
     // Java overloaded method: Rust needs a different name
     pub fn getOrders3(&mut self, mut status: String, mut fromDate: String, mut toDate: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut orderReviewVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        let mut whereHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(whereHashMap).put(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_STATUS.with(Clone::clone).clone(), status.clone());
-        let mut orderHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.base.getRowsWhereBetween4(whereHashMap.clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_ORDERDATE.with(Clone::clone).clone(), fromDate.clone(), toDate.clone());
+        let mut orderReviewVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut whereHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(whereHashMap).put(crate::java_into_object(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_STATUS.with(Clone::clone).clone()), crate::java_into_object(status.clone()));
+        let mut orderHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_arguments = (whereHashMap.clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_ORDERDATE.with(Clone::clone).clone(), fromDate.clone(), toDate.clone(),); self.base.getRowsWhereBetween4(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3) };
         let mut size: i32 = jcall!(orderHashMapVector).size();
         for index in (0..size) {
-            let mut orderReviewHashMap: Option<Rc<RefCell<HashMap>>> = (jcall!(orderHashMapVector).get(index.clone())).clone() /* as HashMap */;
+            let mut orderReviewHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = { let java_object = (jcall!(orderHashMapVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>>().expect("ClassCastException").clone()) };
             let mut orderReview: Option<Rc<RefCell<OrderHistory>>> = OrderHistory::new2(Basket::new(), orderReviewHashMap.clone());
             jcall!(orderReviewVector).add(crate::java_into_object(orderReview.clone()));
         }
@@ -345,11 +344,11 @@ impl OrderHistoryEntity {
     // throws Exception
     // Java overloaded method: Rust needs a different name
     pub fn getOrders2(&mut self, mut fromDate: String, mut toDate: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut orderReviewVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        let mut orderHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.base.getRowsWhereBetween(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_ORDERDATE.with(Clone::clone).clone(), fromDate.clone(), toDate.clone());
+        let mut orderReviewVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut orderHashMapVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_arguments = (crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_ORDERDATE.with(Clone::clone).clone(), fromDate.clone(), toDate.clone(),); self.base.getRowsWhereBetween(java_arguments.0, java_arguments.1, java_arguments.2) };
         let mut size: i32 = jcall!(orderHashMapVector).size();
         for index in (0..size) {
-            let mut orderReviewHashMap: Option<Rc<RefCell<HashMap>>> = (jcall!(orderHashMapVector).get(index.clone())).clone() /* as HashMap */;
+            let mut orderReviewHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = { let java_object = (jcall!(orderHashMapVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>>().expect("ClassCastException").clone()) };
             let mut orderReview: Option<Rc<RefCell<OrderHistory>>> = OrderHistory::new2(Basket::new(), orderReviewHashMap.clone());
             jcall!(orderReviewVector).add(crate::java_into_object(orderReview.clone()));
         }
@@ -359,9 +358,9 @@ impl OrderHistoryEntity {
 
     // throws Exception
     pub fn getOrder(&mut self, mut id: String) -> Option<Rc<RefCell<OrderHistory>>> {
-        let mut whereHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(whereHashMap).put(crate::org::allbinary::business::user::commerce::inventory::order::OrderData::OrderData_ID.with(Clone::clone).clone(), id.clone());
-        let mut orderReviewHashMap: Option<Rc<RefCell<HashMap>>> = self.base.getRow(whereHashMap.clone());
+        let mut whereHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(whereHashMap).put(crate::java_into_object(crate::org::allbinary::business::user::commerce::inventory::order::OrderData::OrderData_ID.with(Clone::clone).clone()), crate::java_into_object(id.clone()));
+        let mut orderReviewHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = { let java_arguments = (whereHashMap.clone(),); self.base.getRow(java_arguments.0) };
         if orderReviewHashMap.is_some() {
             let mut orderHistory: Option<Rc<RefCell<OrderHistory>>> = OrderHistory::new2(Basket::new(), orderReviewHashMap.clone());
             return orderHistory.clone();
@@ -377,26 +376,26 @@ impl OrderHistoryEntity {
         jcall!(stringBuffer).append(String::from("CREATE TABLE "));
         jcall!(stringBuffer).append(self.tableName.clone());
         jcall!(stringBuffer).append(String::from(" ("));
-        jcall!(stringBuffer).append(jcall!(entryData).ID.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(entryData).ID.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::inventory::order::OrderData::OrderData_ID.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(StoreFrontData::getInstance()).NAME.clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPEDDATE.with(Clone::clone).clone());
         jcall!(stringBuffer).append(String::from(" BIGINT(19) UNSIGNED ,"));
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_ORDERDATE.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_BIG_INT_UNSIGNED_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TRANSDATE.with(Clone::clone).clone());
         jcall!(stringBuffer).append(String::from(" BIGINT(19) UNSIGNED ,"));
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELDATE.with(Clone::clone).clone());
         jcall!(stringBuffer).append(String::from(" BIGINT(19) UNSIGNED ,"));
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_STATUS.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::money::payment::PaymentData::PaymentData_METHOD.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::money::payment::PaymentData::PaymentData_NAME.with(Clone::clone).clone());
         jcall!(stringBuffer).append(String::from(" VARCHAR(255) ,"));
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::money::payment::PaymentData::PaymentData_TYPE.with(Clone::clone).clone());
@@ -405,61 +404,61 @@ impl OrderHistoryEntity {
         jcall!(stringBuffer).append(String::from(" VARCHAR(255) ,"));
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::money::payment::PaymentData::PaymentData_NUMBER.with(Clone::clone).clone());
         jcall!(stringBuffer).append(String::from(" VARCHAR(255) ,"));
-        jcall!(stringBuffer).append(jcall!(entryData).ENCRYPTION.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(entryData).ENCRYPTION.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from(" BIGINT(19) UNSIGNED ,"));
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_NAME.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_STREET.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_CITY.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_STATE.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_CODE.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_COUNTRY.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_NAME.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_STREET.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_CITY.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_STATE.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_CODE.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_COUNTRY.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::shipping::ShippingMethodData::ShippingMethodData_NAME.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SUBTOTAL.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPINGCOST.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TAX.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TOTAL.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone());
-        jcall!(stringBuffer).append(jcall!(entryData).SPECIAL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).MAX_CHAR_COLUMN_NOT_NULL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(entryData).SPECIAL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from(" VARCHAR(255) ,"));
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::inventory::order::OrderData::OrderData_CUSTOMERCOMMENT.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::inventory::order::OrderData::OrderData_CUSTOMERCANCELCOMMENT.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::inventory::order::OrderData::OrderData_STORECOMMENT.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(crate::org::allbinary::business::user::commerce::inventory::order::OrderData::OrderData_STORECANCELCOMMENT.with(Clone::clone).clone());
-        jcall!(stringBuffer).append(jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sqlTypeStrings).BLOB_NOT_NULL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("PRIMARY KEY("));
-        jcall!(stringBuffer).append(jcall!(entryData).ID.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(entryData).ID.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from(") )"));
         return jcall!(stringBuffer).toString();
     }
     
 
     pub fn createTable(&mut self) -> String {
-        return self.base.createTable(self.createTableStatement());
+        return { let java_arguments = (self.createTableStatement(),); self.base.createTable(java_arguments.0) };
     }
     
 
@@ -469,13 +468,13 @@ impl OrderHistoryEntity {
     
 
     // throws Exception
-    pub fn update(&mut self, mut whereHashMap: Option<Rc<RefCell<HashMap>>>, mut orderHashMap: Option<Rc<RefCell<HashMap>>>) {
+    pub fn update(&mut self, mut whereHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut orderHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             self.updateWhere(whereHashMap.clone(), orderHashMap.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
             }

@@ -16,11 +16,11 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,7 +34,7 @@ pub struct UserEmailEventNameData {
     pub eventHandlerName: String,
 }
 
-pub static mut UserEmailEventNameData_userNameEvenNameHashMap: std::cell::LazyCell<Option<Rc<RefCell<HashMap>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashMap());
+pub static mut UserEmailEventNameData_userNameEvenNameHashMap: std::cell::LazyCell<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashMap());
 pub static mut UserEmailEventNameData_nextId: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 0);
 thread_local! { pub static UserEmailEventNameData_INSTALLER: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Installer")); }
 thread_local! { pub static UserEmailEventNameData_EXCEPTION: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Exception")); }
@@ -75,28 +75,28 @@ impl UserEmailEventNameData {
     }
 
     pub fn new(mut eventHandlerName: String) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(eventHandlerName))));
-            jcall!(unsafe { UserEmailEventNameData_userNameEvenNameHashMap.clone() }).put(this.eventHandlerName.clone(), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(eventHandlerName.clone()))));
+            jcall!(unsafe { UserEmailEventNameData_userNameEvenNameHashMap.clone() }).put(crate::java_into_object(jcall!(this).eventHandlerName.clone()), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
         this
     }
     
 
     // synchronized
     pub fn initNextId(&mut self) {
-        self.eventNameId = unsafe { UserEmailEventNameData_nextId.clone() }.clone();
+        self.eventNameId = { let java_value = (unsafe { UserEmailEventNameData_nextId.clone() }).clone(); java_value }.clone();
         unsafe { *UserEmailEventNameData_nextId += 1 };
     }
     
 
     pub fn isEvent(&mut self, mut userEmailEventNameString: String) -> bool {
-        return jcall!(unsafe { UserEmailEventNameData_userNameEvenNameHashMap.clone() }).containsKey(userEmailEventNameString.clone());
+        return jcall!(unsafe { UserEmailEventNameData_userNameEvenNameHashMap.clone() }).containsKey(crate::java_into_object(userEmailEventNameString.clone()));
     }
     
 
     // throws Exception
     // synchronized
     pub fn getInstance(mut userEmailEventNameString: String) -> Option<Rc<RefCell<UserEmailEventNameData>>> {
-        let mut userEmailEventNameData: Option<Rc<RefCell<UserEmailEventNameData>>> = (jcall!(unsafe { UserEmailEventNameData_userNameEvenNameHashMap.clone() }).get(userEmailEventNameString.clone())).clone() /* as UserEmailEventNameData */;
+        let mut userEmailEventNameData: Option<Rc<RefCell<UserEmailEventNameData>>> = { let java_object = (jcall!(unsafe { UserEmailEventNameData_userNameEvenNameHashMap.clone() }).get(crate::java_into_object(userEmailEventNameString.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<UserEmailEventNameData>>>>().expect("ClassCastException").clone()) };
         if userEmailEventNameData.is_none() {
             panic!("{:?}", format!("{}: {:?}", "Exception", ()));
         } else {

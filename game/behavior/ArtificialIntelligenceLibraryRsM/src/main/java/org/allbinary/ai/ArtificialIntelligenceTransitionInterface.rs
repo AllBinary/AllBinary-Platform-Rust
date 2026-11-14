@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait ArtificialIntelligenceTransitionInterface {
+pub trait ArtificialIntelligenceTransitionInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn transition(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -40,7 +40,7 @@ impl BasicArrayListS {
 
     pub fn new_struct(mut size: i32) -> Self {
         let mut this = Self {
-            base: BasicArrayList::new_struct(jcall!(NullUtil::getInstance()).NULL_OBJECT_ARRAY.clone()),
+            base: BasicArrayList::new_struct({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT_ARRAY.clone(); java_field }.clone()),
         };
         // super(...) is in the struct literal above
         if size < 0 {

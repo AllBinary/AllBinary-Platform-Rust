@@ -32,6 +32,10 @@ pub struct DebugFactory {
 
 impl DebugFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -44,7 +48,7 @@ impl DebugFactory {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn DebugInterface>>> {
-        return NoDebug::NoDebug::getInstance().map(|reference| reference as Rc<RefCell<dyn DebugInterface>>);
+        return NoDebug::NoDebug::getInstance();
     }
 }
 

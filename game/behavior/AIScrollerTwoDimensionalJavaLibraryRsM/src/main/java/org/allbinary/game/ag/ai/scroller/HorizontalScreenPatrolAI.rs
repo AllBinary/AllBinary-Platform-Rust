@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::game::ai::BasicAI::BasicAI;
 use crate::org::allbinary::game::input::GameInput::GameInput;
 use crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManager;
@@ -31,6 +31,7 @@ use crate::org::allbinary::media::audio::SecondaryPlayerQueueFactory::SecondaryP
 use crate::org::allbinary::media::audio::Sound::Sound;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -56,13 +57,13 @@ impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntel
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for HorizontalScreenPatrolAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl HorizontalScreenPatrolAI {
     
 
-    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
+    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
         let mut this = Self {
             base: BasicAI::new_struct(ownerLayerInterface.clone(), gameInput.clone()),
             keyDirection: 0,
@@ -74,7 +75,7 @@ impl HorizontalScreenPatrolAI {
             secondaryPlayerQueue: None,
             sound: None,
         };
-        this.keyDirection = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone();
+        this.keyDirection = crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone).clone();
         this.displayInfoSingleton = DisplayInfoSingleton::getInstance();
         this.firingX = jcall!(this.displayInfoSingleton).getLastHalfWidth();
         this.firedIndex = 0;
@@ -82,21 +83,21 @@ impl HorizontalScreenPatrolAI {
         this.timeDelayHelper = TimeDelayHelper::new(240).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
         this.secondaryPlayerQueue = SecondaryPlayerQueueFactory::getInstance();
         // super(...) is in the struct literal above
-        this.sound = { let java_object = (jcall!(hashtable).get(crate::java_into_object(HorizontalScreenPatrolAI_SOUND.with(Clone::clone).clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>>().expect("ClassCastException").clone()) };
+        this.sound = { let java_value = ({ let java_object = (jcall!(hashtable).get(crate::java_into_object(HorizontalScreenPatrolAI_SOUND.with(Clone::clone).clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
         if this.sound.is_none() {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("No Sound Provided!!"))));
         }
         this
     }
 
-    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(hashtable, ownerLayerInterface, gameInput))))
     }
     
 
     // throws Exception
     pub fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) {
-        self.base.processKeyAI(self.keyDirection.clone());
+        { let java_arguments = (self.keyDirection.clone(),); self.base.processKeyAI(java_arguments.0) };
         if jcall!(self.timeDelayHelper).isTimeTNT() {
             let mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = self.getOwnerLayerInterface();
             let mut currentOwnerLayerX: i32 = jcall!(layerInterface).getXP();
@@ -104,19 +105,19 @@ impl HorizontalScreenPatrolAI {
                 let mut y: i32 = jcall!(MyRandomFactory::getInstance()).getAbsoluteNextIntAllowZero(50);
                 jcall!(layerInterface).setPosition(jcall!(self.displayInfoSingleton).getLastWidth() + jcall!(layerInterface).getWidth() + 50, y.clone(), jcall!(layerInterface).getZP());
                 self.firedIndex = 0;
-                self.firingX = jcall!(self.displayInfoSingleton).getLastHalfWidth() + jcall!(MyRandomFactory::getInstance()).getNextInt(jcall!(self.displayInfoSingleton).getLastHalfWidth());
+                self.firingX = { let java_value = (jcall!(self.displayInfoSingleton).getLastHalfWidth() + jcall!(MyRandomFactory::getInstance()).getNextInt(jcall!(self.displayInfoSingleton).getLastHalfWidth())).clone(); java_value };
                 jcall!(self.secondaryPlayerQueue).add(self.sound.clone());
             }
             if currentOwnerLayerX < self.firingX && currentOwnerLayerX > -jcall!(layerInterface).getWidth() {
-                self.base.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }.clone());
-                let mut gameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>> = (allBinaryLayerManager).clone() /* as AllBinaryGameLayerManager */;
+                { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone).clone(),); self.base.processKeyAI(java_arguments.0) };
+                let mut gameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayerManager cannot be cast to AllBinaryGameLayerManager") })();
                 let mut FIRE: i32 = (jcall!(jcall!(gameLayerManager).getGameInfo()).getCurrentLevel() + 12) >> 2;
                 if FIRE > self.MAX_FIRE {
                     FIRE = self.MAX_FIRE.clone();
                 }
                 if self.firedIndex > FIRE {
                     self.firedIndex = 0;
-                    self.firingX = i32::MIN.clone();
+                    self.firingX = { let java_value = (i32::MIN).clone(); java_value }.clone();
                 }
                 self.firedIndex += 1;
             }

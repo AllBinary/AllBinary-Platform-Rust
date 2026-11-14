@@ -32,6 +32,10 @@ pub struct HtmlMetasData {
 thread_local! { pub static HtmlMetasData_instance: Option<Rc<RefCell<HtmlMetasData>>> = HtmlMetasData::new(); }
 
 impl HtmlMetasData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

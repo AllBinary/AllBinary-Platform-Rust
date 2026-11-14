@@ -17,13 +17,14 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::game::TiledLayer::TiledLayer;
+use crate::javax::microedition::lcdui::game::TiledLayer::TiledLayer;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
 use crate::org::allbinary::logic::math::SmallIntegerSingletonFactory::SmallIntegerSingletonFactory;
 use crate::org::allbinary::media::graphics::geography::map::racetrack::AllBinaryTiledLayerFactoryInterface::AllBinaryTiledLayerFactoryInterface;
 use crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackData::RaceTrackData;
 use crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackInfo::RaceTrackInfo;
 use crate::org::allbinary::media::graphics::geography::map::racetrack::TiledLayerFactory::TiledLayerFactory;
+use crate::java::lang::Exception::*;
 use super::AllBinaryTiledLayer::AllBinaryTiledLayer;
 use super::AllBinaryJ2METiledLayer::AllBinaryJ2METiledLayer;
 
@@ -44,6 +45,10 @@ impl AllBinaryTiledLayerFactoryInterface for AllBinaryTiledLayerFactory {
 
 impl AllBinaryTiledLayerFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -59,7 +64,7 @@ impl AllBinaryTiledLayerFactory {
     pub fn getInstance(&mut self, mut raceTrackInfo: Option<Rc<RefCell<RaceTrackInfo>>>, mut raceTrackData: Option<Rc<RefCell<RaceTrackData>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> {
         let mut allbinaryTiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = None;
         let mut tiledLayer: Option<Rc<RefCell<TiledLayer>>> = jcall!(TiledLayerFactory::new()).getInstance(raceTrackData.clone());
-        allbinaryTiledLayer = AllBinaryJ2METiledLayer::new(jcall!(raceTrackData).getId(), tiledLayer.clone(), jcall!(raceTrackData).getMapArray(), jcall!(jcall!(BasicColorFactory::getInstance()).RED).intValue()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>);
+        allbinaryTiledLayer = { let java_value = (AllBinaryJ2METiledLayer::new(jcall!(raceTrackData).getId(), tiledLayer.clone(), jcall!(raceTrackData).getMapArray(), jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }).intValue()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>)).clone(); java_value };
         jcall!(allbinaryTiledLayer).setCells(jcall!(raceTrackData).getMapArray());
         return allbinaryTiledLayer.clone();
     }
@@ -69,7 +74,7 @@ impl AllBinaryTiledLayerFactory {
     pub fn getMiniInstance(&mut self, mut raceTrackData: Option<Rc<RefCell<RaceTrackData>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> {
         let mut smallIntegerSingletonFactory: Option<Rc<RefCell<SmallIntegerSingletonFactory>>> = SmallIntegerSingletonFactory::getInstance();
         let mut tiledLayer: Option<Rc<RefCell<TiledLayer>>> = jcall!(TiledLayerFactory::new()).getMiniInstance(raceTrackData.clone());
-        let mut allbinaryTiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = AllBinaryJ2METiledLayer::new(jcall!(smallIntegerSingletonFactory).getAt(((jcall!(raceTrackData).getId()).unwrap() as i32) + 100 + 1), tiledLayer.clone(), jcall!(raceTrackData).getMapArray(), jcall!(jcall!(BasicColorFactory::getInstance()).RED).intValue()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>);
+        let mut allbinaryTiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = AllBinaryJ2METiledLayer::new(jcall!(smallIntegerSingletonFactory).getAt(((jcall!(raceTrackData).getId()).unwrap() as i32) + 100 + 1), tiledLayer.clone(), jcall!(raceTrackData).getMapArray(), jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }).intValue()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>);
         jcall!(allbinaryTiledLayer).setCells(jcall!(raceTrackData).getMapArray());
         return allbinaryTiledLayer.clone();
     }

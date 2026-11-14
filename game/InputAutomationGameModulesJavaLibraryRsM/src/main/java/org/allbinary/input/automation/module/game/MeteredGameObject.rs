@@ -20,6 +20,7 @@ use super::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
+use crate::java::lang::Exception::*;
 use super::MeteredGameObjectInterface::MeteredGameObjectInterface;
 
 // Borrows the object of a Java reference
@@ -76,14 +77,14 @@ impl MeteredGameObject {
         this.setSize(maxX - minX);
         for index in (0..(bufferedImage.len() as i32)) {
             let mut nominator: f64 = GraphicsAnalysisUtil::GraphicsAnalysisUtil::getNominator(bufferedImage[(index) as usize].clone(), this.getMinX(), this.getMaxX(), this.getY());
-            this.getRatios()[(index) as usize] = Some((nominator / this.getSize()) as f64);
+            { let java_index = (index) as usize; this.getRatios()[java_index] = Some((nominator / this.getSize()) as f64); };
         }
-        if ((this.getRatios()[((bufferedImage.len() as i32) - 1) as usize]).unwrap() as f64) > ((0.93_f32) as f64) {
+        if { let java_value = ((this.getRatios()[((bufferedImage.len() as i32) - 1) as usize]).unwrap() as f64); java_value } > ((0.93_f32) as f64) {
             this.setGood(true);
         } else {
             this.setGood(false);
         }
-        if ((this.getRatios()[((bufferedImage.len() as i32) - 1) as usize]).unwrap() as f64) < ((this.getRatios()[(0) as usize]).unwrap() as f64) {
+        if { let java_value = ((this.getRatios()[((bufferedImage.len() as i32) - 1) as usize]).unwrap() as f64); java_value } < { let java_value = ((this.getRatios()[(0) as usize]).unwrap() as f64); java_value } {
             this.setDropping(true);
         } else {
             this.setDropping(false);
@@ -124,18 +125,18 @@ impl MeteredGameObject {
     pub fn toString(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.RATIOS_LABEL.clone());
         for index in (0..(self.getRatios().len() as i32)) {
-            jcall!(stringBuffer).append(jcall!(self.getRatios()[(index) as usize]).toString());
+            jcall!(stringBuffer).append({ let java_argument = (self.getRatios()[(index) as usize]).expect("NullPointerException").to_string(); java_argument });
             if index < (self.getRatios().len() as i32) - 1 {
-                jcall!(stringBuffer).append(jcall!(commonSeps).COMMA_SEP.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).COMMA_SEP.clone(); java_field }.clone());
             }
         }
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.IS_GOOD_LABEL.clone());
         jcall!(stringBuffer).appendboolean(self.isGood());
-        jcall!(stringBuffer).append(jcall!(commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).NEW_LINE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.IS_DROPPPING_LABEL.clone());
         jcall!(stringBuffer).appendboolean(self.isDropping());
         return jcall!(stringBuffer).toString();
@@ -186,7 +187,7 @@ impl MeteredGameObject {
         self.size = size.clone();
     }
 }
-pub trait MeteredGameObjectDyn {
+pub trait MeteredGameObjectDyn: std::any::Any {
     fn as_MeteredGameObject(&self) -> &MeteredGameObject;
     fn as_MeteredGameObject_mut(&mut self) -> &mut MeteredGameObject;
     fn isGood(&mut self) -> bool { MeteredGameObject::isGood(self.as_MeteredGameObject_mut()) }

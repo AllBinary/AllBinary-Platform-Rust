@@ -18,8 +18,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::io::ByteArrayOutputStream::ByteArrayOutputStream;
-// use crate::java::io::IOException::IOException;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::IOException::IOException;
+use crate::java::io::InputStream::InputStream;
 // use crate::javax::servlet::ServletException::ServletException;
 // use crate::javax::servlet::http::HttpServlet::HttpServlet;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
@@ -30,6 +30,7 @@ use crate::org::allbinary::logic::io::CloudStreamUtil::CloudStreamUtil;
 use crate::org::allbinary::logic::io::StreamUtil::StreamUtil;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -65,29 +66,29 @@ impl MagicalImageServlet {
 
     // throws ServletException, IOException
     pub fn processRequest(&mut self, mut request: Option<Rc<RefCell<HttpServletRequest>>>, mut response: Option<Rc<RefCell<HttpServletResponse>>>) {
-        let mut inputStream: Option<Rc<RefCell<InputStream>>> = None;
+        let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = None;
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(BlisketServletUtil::BlisketServletUtil::getInstance()).init(request.clone());
             let mut requestURI: String = jcall!(request).getRequestURI();
             let mut file: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFile(format!("{}{}", URLGLOBALS::getWebappPath(), requestURI));
-            inputStream = jcall!(CloudStreamUtil::getInstance()).getFileAnyWhere(file.clone());
-            let mut outputStream: Vec<u8> = Vec::new();
+            inputStream = { let java_value = (jcall!(CloudStreamUtil::getInstance()).getFileAnyWhere(file.clone())).clone(); java_value };
+            let mut outputStream: Option<Rc<RefCell<crate::java::io::OutputStream::OutputStream>>> = crate::java::io::OutputStream::OutputStream::new();
             let mut byteArray: Vec<i8> = jcall!(StreamUtil::getInstance()).getByteArray(inputStream.clone(), outputStream.clone(), vec![0; (16384) as usize]);
             jcall!(response).setContentType(String::from("image/jpeg;charset=utf-8"));
             jcall!(jcall!(response).getOutputStream()).write(byteArray.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("processRequest()"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("processRequest()"), crate::java_into_object(e.clone()));
             }
             }
         }
         { // finally
             jcall!(StreamUtil::getInstance()).close(jcall!(response).getOutputStream());
-            if !jcall!(StreamUtil::getInstance()).close(inputStream.clone()) {
+            if !jcall!(StreamUtil::getInstance()).close(inputStream.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::java::io::Closeable::Closeable>> { panic!("ClassCastException: the Rust trait of InputStream does not have Closeable as a base trait") })) {
                 jcall!(response).sendError(unsafe { crate::javax::servlet::http::HttpServletResponse::HttpServletResponse_SC_NOT_FOUND.clone() }.clone());
             }
         }

@@ -24,6 +24,7 @@ use crate::org::allbinary::business::category::properties::CategoryPropertiesInt
 use crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface;
 use crate::org::allbinary::logic::control::validate::ValidationInterface::ValidationInterface;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

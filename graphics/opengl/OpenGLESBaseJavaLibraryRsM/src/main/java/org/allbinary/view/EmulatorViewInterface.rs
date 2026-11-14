@@ -5,8 +5,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Displayable::Displayable;
-// use crate::javax::microedition::midlet::MIDlet::MIDlet;
+use crate::javax::microedition::lcdui::Displayable::Displayable;
+use crate::javax::microedition::midlet::MIDlet::MIDlet;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -15,18 +15,16 @@ macro_rules! jcall {
     };
 }
 
-pub trait EmulatorViewInterface {
+pub trait EmulatorViewInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
-    fn setMidlet(&mut self, midlet: Option<Rc<RefCell<MIDlet>>>);
+    fn setMidlet(&mut self, midlet: Option<Rc<RefCell<dyn crate::javax::microedition::midlet::MIDlet::MIDletDyn>>>);
     
 
     fn onEmulatorInitComplete(&mut self, midletActivity: Option<Rc<RefCell<Box<dyn std::any::Any>>>>);
     
 
-    fn onSetDisplayable(&mut self, displayable: Option<Rc<RefCell<Displayable>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn onSetDisplayable(&mut self, displayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>);
 }
 
 

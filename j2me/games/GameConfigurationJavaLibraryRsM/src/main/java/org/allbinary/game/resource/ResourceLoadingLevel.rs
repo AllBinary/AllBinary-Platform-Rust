@@ -32,6 +32,10 @@ pub struct ResourceLoadingLevel {
 
 
 impl ResourceLoadingLevel {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut name: String, mut level: i32) -> Self {

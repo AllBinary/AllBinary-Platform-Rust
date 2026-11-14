@@ -23,6 +23,7 @@ use crate::admin::taghelpers::InventoryHelperFactory::InventoryHelperFactory;
 use crate::admin::taghelpers::InventoryRequestHelperFactory::InventoryRequestHelperFactory;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontData::StoreFrontData;
 use crate::org::allbinary::logic::communication::http::request::AbResponseHandler::AbResponseHandler;
+use crate::java::lang::Exception::*;
 use super::TableTag::TableTag;
 
 // Borrows the object of a Java reference
@@ -47,8 +48,8 @@ impl InventoryTag {
             storeName: String::new(),
         };
         // super(...) is in the struct literal above
-        this.setTagHelperFactory(InventoryHelperFactory::new());
-        this.setTagRequestHelperFactory(InventoryRequestHelperFactory::new());
+        this.setTagHelperFactory(InventoryHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(InventoryRequestHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 
@@ -64,28 +65,29 @@ impl InventoryTag {
 
     // throws JspTagException
     pub fn doStartTag(&mut self) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if self.isEnabled() {
-                if self.getCommand().is_some() {
-                    if jcall!(self.getCommand()).compareTo(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).GLOBALS2).BACKUP.clone()) != 0 && jcall!(self.getCommand()).compareTo(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).GLOBALS2).RESTORE.clone()) != 0 && jcall!(self.getCommand()).compareTo(jcall!(self.commonStrings).CREATE.clone()) != 0 && jcall!(self.getCommand()).compareTo(jcall!(self.commonStrings).DROP.clone()) != 0 {
+                if true {
+                    if { let java_value = (self.getCommand().cmp(&{ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).GLOBALS2.clone(); java_field }).BACKUP.clone(); java_field }.clone()) as i32); java_value } != 0 && { let java_value = (self.getCommand().cmp(&{ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).GLOBALS2.clone(); java_field }).RESTORE.clone(); java_field }.clone()) as i32); java_value } != 0 && { let java_value = (self.getCommand().cmp(&{ let java_field = jcall!(self.commonStrings).CREATE.clone(); java_field }.clone()) as i32); java_value } != 0 && { let java_value = (self.getCommand().cmp(&{ let java_field = jcall!(self.commonStrings).DROP.clone(); java_field }.clone()) as i32); java_value } != 0 {
                         let mut parentTag: Option<Rc<RefCell<Tag>>> = self.getParent();
                         jcall!(ParentInventoryTagHelper::ParentInventoryTagHelper::getInstance()).isValid(None /* Java this: a &mut self method has no Rc of itself */, parentTag.clone());
-                        jcall!(self.getPropertiesHashMap()).put(AbTagData_PARENT.with(Clone::clone).clone(), parentTag.clone());
-                        jcall!(self.getPropertiesHashMap()).put(jcall!(StoreFrontData::getInstance()).NAME.clone(), self.storeName.clone());
+                        jcall!(self.getPropertiesHashMap()).put(crate::java_into_object(AbTagData_PARENT.with(Clone::clone).clone()), crate::java_into_object(parentTag.clone()));
+                        jcall!(self.getPropertiesHashMap()).put(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(self.storeName.clone()));
                     }
-                    return self.base.doStartTag();
+                    return Some(self.base.doStartTag());
                 }
             }
-            return SKIP_BODY.clone();
+            return Some(SKIP_BODY.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             AbResponseHandler::sendJspTagRedirect(self.pageContext.clone(), e.clone());
             return SKIP_BODY.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for InventoryTag {

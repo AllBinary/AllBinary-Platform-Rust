@@ -16,10 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
-// use crate::java::util::Set::Set;
+use crate::java::util::HashMap::HashMap;
+use crate::java::util::Set::Set;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
@@ -38,13 +37,17 @@ macro_rules! jcall {
 pub struct UploadMediaSingleton {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
-    pub readerFileTypesHashMap: Option<Rc<RefCell<HashMap>>>,
-    pub writerFileTypesHashMap: Option<Rc<RefCell<HashMap>>>,
+    pub readerFileTypesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
+    pub writerFileTypesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 pub static mut UploadMediaSingleton_uploadMedia: std::cell::LazyCell<Option<Rc<RefCell<UploadMediaSingleton>>>> = std::cell::LazyCell::new(|| None);
 
 impl UploadMediaSingleton {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -56,34 +59,34 @@ impl UploadMediaSingleton {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        this.readerFileTypesHashMap = jcall!(StdUtil::getInstance()).createHashMap();
-        this.writerFileTypesHashMap = jcall!(StdUtil::getInstance()).createHashMap();
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = MediaData::toHashMap();
+        this.readerFileTypesHashMap = { let java_value = (jcall!(StdUtil::getInstance()).createHashMap()).clone(); java_value };
+        this.writerFileTypesHashMap = { let java_value = (jcall!(StdUtil::getInstance()).createHashMap()).clone(); java_value };
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = MediaData::toHashMap();
         let mut set: Option<Rc<RefCell<dyn Set>>> = jcall!(hashMap).keySet();
         let mut mediaDataNameArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(set).toArray();
         let mut size: i32 = (mediaDataNameArray.len() as i32).clone();
         for index in (0..size) {
-            let mut mediaDataName: String = (mediaDataNameArray[(index) as usize]).clone() /* as String */;
-            let mut mediaData: Option<Rc<RefCell<MediaData>>> = (jcall!(hashMap).get(mediaDataName.clone())).clone() /* as MediaData */;
-            { let java_receiver = this.readerFileTypesHashMap.clone(); let java_arguments = (jcall!(mediaData).getName(), jcall!(mediaData).getType(),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
+            let mut mediaDataName: String = { let java_object = (mediaDataNameArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut mediaData: Option<Rc<RefCell<MediaData>>> = { let java_object = (jcall!(hashMap).get(crate::java_into_object(mediaDataName.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<MediaData>>>>().expect("ClassCastException").clone()) };
+            { let java_receiver = this.readerFileTypesHashMap.clone(); let java_arguments = (crate::java_into_object(jcall!(mediaData).getName()), crate::java_into_object(jcall!(mediaData).getType()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
         }
         let mut mediaIOUtil: Option<Rc<RefCell<MediaIOUtil>>> = MediaIOUtil::getInstance();
-        let mut RESIZABLE_MEDIA: String = jcall!(MediaTypeData::getInstance()).RESIZABLE_MEDIA.clone();
+        let mut RESIZABLE_MEDIA: String = { let java_field = jcall!(MediaTypeData::getInstance()).RESIZABLE_MEDIA.clone(); java_field }.clone();
         let mut readerFileTypes: Vec<String> = jcall!(mediaIOUtil).getReaderFormatNames();
         for index in (0..(readerFileTypes.len() as i32)) {
-            jcall!(this.readerFileTypesHashMap).put(readerFileTypes[(index) as usize].clone(), RESIZABLE_MEDIA.clone());
+            jcall!(this.readerFileTypesHashMap).put(crate::java_into_object(readerFileTypes[(index) as usize].clone()), crate::java_into_object(RESIZABLE_MEDIA.clone()));
         }
         let mut writerFileTypes: Vec<String> = jcall!(mediaIOUtil).getWriterFormatNames();
         for index in (0..(writerFileTypes.len() as i32)) {
-            jcall!(this.writerFileTypesHashMap).put(writerFileTypes[(index) as usize].clone(), RESIZABLE_MEDIA.clone());
+            jcall!(this.writerFileTypesHashMap).put(crate::java_into_object(writerFileTypes[(index) as usize].clone()), crate::java_into_object(RESIZABLE_MEDIA.clone()));
         }
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).HTTPREQUEST.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).HTTPREQUEST.clone(); java_field }.clone()) {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(String::from("Supported Media Readers: "));
             jcall!(stringBuffer).append(jcall!(this.readerFileTypesHashMap).toString());
             jcall!(stringBuffer).append(String::from(" Writers: "));
             jcall!(stringBuffer).append(jcall!(this.writerFileTypesHashMap).toString());
-            { let java_receiver = this.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = this.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         this
     }
@@ -103,12 +106,12 @@ impl UploadMediaSingleton {
     
 
     pub fn isReaderSupported(&mut self, mut mediaFileType: String) -> bool {
-        return jcall!(self.readerFileTypesHashMap).containsKey(mediaFileType.clone());
+        return jcall!(self.readerFileTypesHashMap).containsKey(crate::java_into_object(mediaFileType.clone()));
     }
     
 
     pub fn isWriterSupported(&mut self, mut mediaFileType: String) -> bool {
-        return jcall!(self.readerFileTypesHashMap).containsKey(mediaFileType.clone());
+        return jcall!(self.readerFileTypesHashMap).containsKey(crate::java_into_object(mediaFileType.clone()));
     }
     
 
@@ -123,19 +126,19 @@ impl UploadMediaSingleton {
     
 
     pub fn isReaderMedia(&mut self, mut mediaFileType: String, mut aMediaType: String) -> bool {
-        return self.isMedia3(mediaFileType.clone(), aMediaType.clone(), self.readerFileTypesHashMap.clone());
+        return { let java_arguments = (mediaFileType.clone(), aMediaType.clone(), self.readerFileTypesHashMap.clone(),); self.isMedia3(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
     
 
     pub fn isWriterMedia(&mut self, mut mediaFileType: String, mut aMediaType: String) -> bool {
-        return self.isMedia3(mediaFileType.clone(), aMediaType.clone(), self.writerFileTypesHashMap.clone());
+        return { let java_arguments = (mediaFileType.clone(), aMediaType.clone(), self.writerFileTypesHashMap.clone(),); self.isMedia3(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn isMedia3(&mut self, mut mediaFileType: String, mut aMediaType: String, mut hashMap: Option<Rc<RefCell<HashMap>>>) -> bool {
-        if jcall!(hashMap).containsKey(mediaFileType.clone()) {
-            let mut mediaType: String = (jcall!(hashMap).get(mediaFileType.clone())).clone() /* as String */;
+    pub fn isMedia3(&mut self, mut mediaFileType: String, mut aMediaType: String, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> bool {
+        if jcall!(hashMap).containsKey(crate::java_into_object(mediaFileType.clone())) {
+            let mut mediaType: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(mediaFileType.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             if (mediaType.cmp(&aMediaType.clone()) as i32) == 0 {
                 return true;
             } else {

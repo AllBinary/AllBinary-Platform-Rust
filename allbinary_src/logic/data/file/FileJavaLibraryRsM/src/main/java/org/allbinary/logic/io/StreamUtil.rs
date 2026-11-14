@@ -18,11 +18,12 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::io::ByteArrayOutputStream::ByteArrayOutputStream;
-// use crate::java::io::Closeable::Closeable;
-// use crate::java::io::InputStream::InputStream;
-// use crate::java::io::OutputStream::OutputStream;
+use crate::java::io::Closeable::Closeable;
+use crate::java::io::InputStream::InputStream;
+use crate::java::io::OutputStream::OutputStream;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,6 +39,10 @@ pub struct StreamUtil {
 thread_local! { pub static StreamUtil_instance: Option<Rc<RefCell<StreamUtil>>> = StreamUtil::new(); }
 
 impl StreamUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<StreamUtil>>> {
@@ -59,56 +64,58 @@ impl StreamUtil {
     
 
     // throws Exception
-    pub fn get(&mut self, mut inputStream: Option<Rc<RefCell<InputStream>>>, mut outputStream: Option<Rc<RefCell<OutputStream>>>, mut buffer: Vec<i8>) -> Option<Rc<RefCell<OutputStream>>> {
+    pub fn get(&mut self, mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>, mut outputStream: Option<Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>>, mut buffer: Vec<i8>) -> Option<Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>> {
         let mut len: i32 = 0;
         while true {
-            len = jcall!(inputStream).read(buffer.clone(), 0, (buffer.len() as i32).clone());
+            len = { let java_value = (jcall!(inputStream).as_InputStream_mut().read3(buffer.clone(), 0, (buffer.len() as i32).clone())).clone(); java_value };
             if len != -1 {
             } else {
                 break;
             }
-            jcall!(outputStream).write(buffer.clone(), 0, len.clone());
+            jcall!(outputStream).as_OutputStream_mut().write3(buffer.clone(), 0, len.clone());
         }
         return outputStream.clone();
     }
     
 
     // throws Exception
-    pub fn getByteArray(&mut self, mut inputStream: Option<Rc<RefCell<InputStream>>>, mut outputStream2: Vec<u8>, mut byteArray: Vec<i8>) -> Vec<i8> {
-        let mut outputStream: Vec<u8> = outputStream2.clone();
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            self.get(inputStream.clone(), outputStream.clone(), byteArray.clone());
-            return jcall!(outputStream).toByteArray();
+    pub fn getByteArray(&mut self, mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>, mut outputStream2: Option<Rc<RefCell<crate::java::io::OutputStream::OutputStream>>>, mut byteArray: Vec<i8>) -> Vec<i8> {
+        let mut outputStream: Option<Rc<RefCell<crate::java::io::OutputStream::OutputStream>>> = outputStream2.clone();
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            self.get(inputStream.clone(), outputStream.clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>), byteArray.clone());
+            return Some(jcall!(outputStream).toByteArray());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };
         { // finally
-            self.close(outputStream.clone());
-        }
+            self.close(outputStream.clone().map(|reference| reference as Rc<RefCell<dyn Closeable>>));
+        }if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
-    pub fn close(&mut self, mut closeable: Option<Rc<RefCell<Closeable>>>) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+    pub fn close(&mut self, mut closeable: Option<Rc<RefCell<dyn Closeable>>>) -> bool {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if closeable.is_some() {
                 jcall!(closeable).close();
             }
-            return true;
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CLOSE.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CLOSE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

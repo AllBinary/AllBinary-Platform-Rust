@@ -17,11 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use crate::Date;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::util::Date::Date;
-// use crate::java::util::HashMap::HashMap;
-// use crate::java::util::Set::Set;
+use crate::java::util::HashMap::HashMap;
+use crate::java::util::Set::Set;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontData::StoreFrontData;
 use crate::org::allbinary::business::entry::EntryData::EntryData;
 use crate::org::allbinary::business::user::UserData::UserData;
@@ -39,6 +38,7 @@ use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::Order::Order;
 use super::OrderHistoryInterface::OrderHistoryInterface;
 
@@ -115,23 +115,23 @@ impl OrderHistory {
             total: None,
         };
         // super(...) is in the struct literal above
-        this.userName = jcall!(orderHistory).getUserName();
-        this.shippingAddress = jcall!(orderHistory).getShippingAddress();
-        this.billingAddress = jcall!(orderHistory).getBillingAddress();
-        this.payment = jcall!(orderHistory).getPaymentInfo();
-        this.shipDate = jcall!(orderHistory).getShipDate();
-        this.orderDate = jcall!(orderHistory).getOrderDate();
-        this.transDate = jcall!(orderHistory).getTransDate();
-        this.cancelDate = jcall!(orderHistory).getCancelDate();
-        this.status = jcall!(orderHistory).getStatus();
-        this.subTotal = jcall!(orderHistory).getSubTotal();
-        this.shippingCost = jcall!(orderHistory).getShippingCost();
-        this.taxes = jcall!(orderHistory).getTaxes();
-        this.total = jcall!(orderHistory).getTotal();
-        this.base.setUserComments((jcall!(orderHistory).getUserComments()).clone() /* as String */);
-        this.base.setUserCancelComments((jcall!(orderHistory).getUserCancelComments()).clone() /* as String */);
-        this.base.setStoreComments((jcall!(orderHistory).getStoreComments()).clone() /* as String */);
-        this.base.setStoreCancelComments((jcall!(orderHistory).getStoreCancelComments()).clone() /* as String */);
+        this.userName = { let java_value = (jcall!(orderHistory).getUserName()).clone(); java_value };
+        this.shippingAddress = { let java_value = (jcall!(orderHistory).getShippingAddress()).clone(); java_value };
+        this.billingAddress = { let java_value = (jcall!(orderHistory).getBillingAddress()).clone(); java_value };
+        this.payment = { let java_value = (jcall!(orderHistory).getPaymentInfo()).clone(); java_value };
+        this.shipDate = { let java_value = (jcall!(orderHistory).getShipDate()).clone(); java_value };
+        this.orderDate = { let java_value = (jcall!(orderHistory).getOrderDate()).clone(); java_value };
+        this.transDate = { let java_value = (jcall!(orderHistory).getTransDate()).clone(); java_value };
+        this.cancelDate = { let java_value = (jcall!(orderHistory).getCancelDate()).clone(); java_value };
+        this.status = { let java_value = (jcall!(orderHistory).getStatus()).clone(); java_value };
+        this.subTotal = { let java_value = (jcall!(orderHistory).getSubTotal()).clone(); java_value };
+        this.shippingCost = { let java_value = (jcall!(orderHistory).getShippingCost()).clone(); java_value };
+        this.taxes = { let java_value = (jcall!(orderHistory).getTaxes()).clone(); java_value };
+        this.total = { let java_value = (jcall!(orderHistory).getTotal()).clone(); java_value };
+        { let java_arguments = ((jcall!(orderHistory).getUserComments()).clone() /* as String */,); this.base.setUserComments(java_arguments.0) };
+        { let java_arguments = ((jcall!(orderHistory).getUserCancelComments()).clone() /* as String */,); this.base.setUserCancelComments(java_arguments.0) };
+        { let java_arguments = ((jcall!(orderHistory).getStoreComments()).clone() /* as String */,); this.base.setStoreComments(java_arguments.0) };
+        { let java_arguments = ((jcall!(orderHistory).getStoreCancelComments()).clone() /* as String */,); this.base.setStoreCancelComments(java_arguments.0) };
         this
     }
 
@@ -140,9 +140,9 @@ impl OrderHistory {
     }
     
 
-    pub fn new_struct2(mut basketInterface: Option<Rc<RefCell<dyn BasketInterface>>>, mut orderHistoryHashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct2_BasketInterface_HashMap(mut basketInterface: Option<Rc<RefCell<dyn BasketInterface>>>, mut orderHistoryHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
-            base: Order::new_struct6((jcall!(orderHistoryHashMap).get(jcall!(StoreFrontData::getInstance()).NAME.clone())).clone() /* as String */, basketInterface.clone(), (jcall!(orderHistoryHashMap).get(OrderData_ID.with(Clone::clone).clone())).clone() /* as String */, (jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::commerce::shipping::ShippingMethodData::ShippingMethodData_NAME.with(Clone::clone).clone())).clone() /* as String */, (jcall!(orderHistoryHashMap).get(jcall!(EntryData::getInstance()).SPECIAL.clone())).clone() /* as String */, (jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::commerce::money::payment::PaymentData::PaymentData_METHOD.with(Clone::clone).clone())).clone() /* as String */),
+            base: Order::new_struct6({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, basketInterface.clone(), { let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(OrderData_ID.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::commerce::shipping::ShippingMethodData::ShippingMethodData_NAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).SPECIAL.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::commerce::money::payment::PaymentData::PaymentData_METHOD.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }),
             userName: String::new(),
             shippingAddress: None,
             billingAddress: None,
@@ -158,28 +158,28 @@ impl OrderHistory {
             total: None,
         };
         // super(...) is in the struct literal above
-        this.shippingAddress = StreetAddress::new6((jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_NAME.with(Clone::clone).clone())).clone() /* as String */, (jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_STREET.with(Clone::clone).clone())).clone() /* as String */, (jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_CITY.with(Clone::clone).clone())).clone() /* as String */, (jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_STATE.with(Clone::clone).clone())).clone() /* as String */, (jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_CODE.with(Clone::clone).clone())).clone() /* as String */, (jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_COUNTRY.with(Clone::clone).clone())).clone() /* as String */);
-        this.billingAddress = StreetAddress::new6((jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_NAME.with(Clone::clone).clone())).clone() /* as String */, (jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_STREET.with(Clone::clone).clone())).clone() /* as String */, (jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_CITY.with(Clone::clone).clone())).clone() /* as String */, (jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_STATE.with(Clone::clone).clone())).clone() /* as String */, (jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_CODE.with(Clone::clone).clone())).clone() /* as String */, (jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_COUNTRY.with(Clone::clone).clone())).clone() /* as String */);
+        this.shippingAddress = { let java_value = (StreetAddress::new6({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_NAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_STREET.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_CITY.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_STATE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_CODE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_COUNTRY.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        this.billingAddress = { let java_value = (StreetAddress::new6({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_NAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_STREET.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_CITY.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_STATE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_CODE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_COUNTRY.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
         this.payment = Payment::new1(orderHistoryHashMap.clone());
-        this.userName = (jcall!(orderHistoryHashMap).get(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone())).clone() /* as String */;
-        this.orderDate = (jcall!(orderHistoryHashMap).get(OrderHistoryData_ORDERDATE.with(Clone::clone).clone())).clone() /* as String */;
-        this.shipDate = (jcall!(orderHistoryHashMap).get(OrderHistoryData_SHIPPEDDATE.with(Clone::clone).clone())).clone() /* as String */;
-        this.transDate = (jcall!(orderHistoryHashMap).get(OrderHistoryData_TRANSDATE.with(Clone::clone).clone())).clone() /* as String */;
-        this.cancelDate = (jcall!(orderHistoryHashMap).get(OrderHistoryData_CANCELDATE.with(Clone::clone).clone())).clone() /* as String */;
-        this.status = (jcall!(orderHistoryHashMap).get(OrderHistoryData_STATUS.with(Clone::clone).clone())).clone() /* as String */;
-        this.subTotal = Money::new1((jcall!(orderHistoryHashMap).get(OrderHistoryData_SUBTOTAL.with(Clone::clone).clone())).clone() /* as String */);
-        this.total = Money::new1((jcall!(orderHistoryHashMap).get(OrderHistoryData_TOTAL.with(Clone::clone).clone())).clone() /* as String */);
-        this.shippingCost = Money::new1((jcall!(orderHistoryHashMap).get(OrderHistoryData_SHIPPINGCOST.with(Clone::clone).clone())).clone() /* as String */);
-        this.taxes = Money::new1((jcall!(orderHistoryHashMap).get(OrderHistoryData_TAX.with(Clone::clone).clone())).clone() /* as String */);
-        this.base.setUserComments((jcall!(orderHistoryHashMap).get(OrderData_CUSTOMERCOMMENT.with(Clone::clone).clone())).clone() /* as String */);
-        this.base.setUserCancelComments((jcall!(orderHistoryHashMap).get(OrderData_CUSTOMERCANCELCOMMENT.with(Clone::clone).clone())).clone() /* as String */);
-        this.base.setStoreComments((jcall!(orderHistoryHashMap).get(OrderData_STORECOMMENT.with(Clone::clone).clone())).clone() /* as String */);
-        this.base.setStoreCancelComments((jcall!(orderHistoryHashMap).get(OrderData_STORECANCELCOMMENT.with(Clone::clone).clone())).clone() /* as String */);
+        this.userName = { let java_value = ({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.orderDate = { let java_value = ({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(OrderHistoryData_ORDERDATE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.shipDate = { let java_value = ({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(OrderHistoryData_SHIPPEDDATE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.transDate = { let java_value = ({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(OrderHistoryData_TRANSDATE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.cancelDate = { let java_value = ({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(OrderHistoryData_CANCELDATE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.status = { let java_value = ({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(OrderHistoryData_STATUS.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.subTotal = { let java_value = (Money::new1_String({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(OrderHistoryData_SUBTOTAL.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        this.total = { let java_value = (Money::new1_String({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(OrderHistoryData_TOTAL.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        this.shippingCost = { let java_value = (Money::new1_String({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(OrderHistoryData_SHIPPINGCOST.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        this.taxes = { let java_value = (Money::new1_String({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(OrderHistoryData_TAX.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        { let java_arguments = ({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(OrderData_CUSTOMERCOMMENT.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); this.base.setUserComments(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(OrderData_CUSTOMERCANCELCOMMENT.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); this.base.setUserCancelComments(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(OrderData_STORECOMMENT.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); this.base.setStoreComments(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(orderHistoryHashMap).get(crate::java_into_object(OrderData_STORECANCELCOMMENT.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); this.base.setStoreCancelComments(java_arguments.0) };
         this
     }
 
-    pub fn new2(mut basketInterface: Option<Rc<RefCell<dyn BasketInterface>>>, mut orderHistoryHashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct2(basketInterface, orderHistoryHashMap))))
+    pub fn new2_BasketInterface_HashMap(mut basketInterface: Option<Rc<RefCell<dyn BasketInterface>>>, mut orderHistoryHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct2_BasketInterface_HashMap(basketInterface, orderHistoryHashMap))))
     }
     
 
@@ -313,34 +313,34 @@ impl OrderHistory {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), self.userName.clone());
-        jcall!(hashMap).put(OrderHistoryData_ORDERDATE.with(Clone::clone).clone(), self.orderDate.clone());
-        jcall!(hashMap).put(OrderHistoryData_SHIPPEDDATE.with(Clone::clone).clone(), self.shipDate.clone());
-        jcall!(hashMap).put(OrderHistoryData_TRANSDATE.with(Clone::clone).clone(), self.transDate.clone());
-        jcall!(hashMap).put(OrderHistoryData_CANCELDATE.with(Clone::clone).clone(), self.cancelDate.clone());
-        jcall!(hashMap).put(OrderHistoryData_ORDERDATEFORMATTED.with(Clone::clone).clone(), jcall!(Date::new(((Some((self.orderDate.clone()) as i64)).unwrap() as i64))).toString());
-        jcall!(hashMap).put(OrderHistoryData_SHIPPEDDATEFORMATTED.with(Clone::clone).clone(), jcall!(Date::new(((Some((self.shipDate.clone()) as i64)).unwrap() as i64))).toString());
-        jcall!(hashMap).put(OrderHistoryData_TRANSDATEFORMATTED.with(Clone::clone).clone(), jcall!(Date::new(((Some((self.transDate.clone()) as i64)).unwrap() as i64))).toString());
-        jcall!(hashMap).put(OrderHistoryData_CANCELDATEFORMATTED.with(Clone::clone).clone(), jcall!(Date::new(((Some((self.cancelDate.clone()) as i64)).unwrap() as i64))).toString());
-        jcall!(hashMap).put(OrderHistoryData_STATUS.with(Clone::clone).clone(), self.status.clone());
-        jcall!(hashMap).put(OrderHistoryData_SUBTOTAL.with(Clone::clone).clone(), jcall!(self.subTotal).toString());
-        jcall!(hashMap).put(OrderHistoryData_TOTAL.with(Clone::clone).clone(), jcall!(self.total).toString());
-        jcall!(hashMap).put(OrderHistoryData_SHIPPINGCOST.with(Clone::clone).clone(), jcall!(self.shippingCost).toString());
-        jcall!(hashMap).put(OrderHistoryData_TAX.with(Clone::clone).clone(), jcall!(self.taxes).toString());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()), crate::java_into_object(self.userName.clone()));
+        jcall!(hashMap).put(crate::java_into_object(OrderHistoryData_ORDERDATE.with(Clone::clone).clone()), crate::java_into_object(self.orderDate.clone()));
+        jcall!(hashMap).put(crate::java_into_object(OrderHistoryData_SHIPPEDDATE.with(Clone::clone).clone()), crate::java_into_object(self.shipDate.clone()));
+        jcall!(hashMap).put(crate::java_into_object(OrderHistoryData_TRANSDATE.with(Clone::clone).clone()), crate::java_into_object(self.transDate.clone()));
+        jcall!(hashMap).put(crate::java_into_object(OrderHistoryData_CANCELDATE.with(Clone::clone).clone()), crate::java_into_object(self.cancelDate.clone()));
+        jcall!(hashMap).put(crate::java_into_object(OrderHistoryData_ORDERDATEFORMATTED.with(Clone::clone).clone()), crate::java_into_object(jcall!(Date::new(((Some((self.orderDate.clone()).trim().parse::<i64>().expect("NumberFormatException"))).unwrap() as i64))).toString()));
+        jcall!(hashMap).put(crate::java_into_object(OrderHistoryData_SHIPPEDDATEFORMATTED.with(Clone::clone).clone()), crate::java_into_object(jcall!(Date::new(((Some((self.shipDate.clone()).trim().parse::<i64>().expect("NumberFormatException"))).unwrap() as i64))).toString()));
+        jcall!(hashMap).put(crate::java_into_object(OrderHistoryData_TRANSDATEFORMATTED.with(Clone::clone).clone()), crate::java_into_object(jcall!(Date::new(((Some((self.transDate.clone()).trim().parse::<i64>().expect("NumberFormatException"))).unwrap() as i64))).toString()));
+        jcall!(hashMap).put(crate::java_into_object(OrderHistoryData_CANCELDATEFORMATTED.with(Clone::clone).clone()), crate::java_into_object(jcall!(Date::new(((Some((self.cancelDate.clone()).trim().parse::<i64>().expect("NumberFormatException"))).unwrap() as i64))).toString()));
+        jcall!(hashMap).put(crate::java_into_object(OrderHistoryData_STATUS.with(Clone::clone).clone()), crate::java_into_object(self.status.clone()));
+        jcall!(hashMap).put(crate::java_into_object(OrderHistoryData_SUBTOTAL.with(Clone::clone).clone()), crate::java_into_object(jcall!(self.subTotal).toString()));
+        jcall!(hashMap).put(crate::java_into_object(OrderHistoryData_TOTAL.with(Clone::clone).clone()), crate::java_into_object(jcall!(self.total).toString()));
+        jcall!(hashMap).put(crate::java_into_object(OrderHistoryData_SHIPPINGCOST.with(Clone::clone).clone()), crate::java_into_object(jcall!(self.shippingCost).toString()));
+        jcall!(hashMap).put(crate::java_into_object(OrderHistoryData_TAX.with(Clone::clone).clone()), crate::java_into_object(jcall!(self.taxes).toString()));
         return hashMap.clone();
     }
     
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = self.toHashMap();
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.toHashMap();
         let mut keySet: Option<Rc<RefCell<dyn Set>>> = jcall!(hashMap).keySet();
         let mut keyArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(keySet).toArray();
         let mut size: i32 = (keyArray.len() as i32).clone();
         let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(OrderHistoryData_ORDERHISTORY.with(Clone::clone).clone());
-        jcall!(node).appendChild(self.base.toXmlNode(document.clone()));
+        jcall!(node).appendChild({ let java_arguments = (document.clone(),); self.base.toXmlNode(java_arguments.0) });
         let mut billingAddressNode: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(crate::org::allbinary::business::user::address::BillingAddressData::BillingAddressData_BILLINGADDRESS.with(Clone::clone).clone());
         jcall!(billingAddressNode).appendChild(jcall!(self.billingAddress).toXmlNode(document.clone()));
         let mut shippingAddressNode: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(crate::org::allbinary::business::user::address::ShippingAddressData::ShippingAddressData_SHIPPINGADDRESS.with(Clone::clone).clone());
@@ -349,9 +349,9 @@ impl OrderHistory {
         jcall!(node).appendChild(shippingAddressNode.clone());
         jcall!(node).appendChild(jcall!(self.payment).toXmlNode(document.clone()));
         for i in (0..size) {
-            let mut name: String = (keyArray[(i) as usize]).clone() /* as String */;
-            let mut value: String = (jcall!(hashMap).get(name.clone())).clone() /* as String */;
-            value = jcall!(StringUtil::getInstance()).getNonNull(value.clone());
+            let mut name: String = { let java_object = (keyArray[(i) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut value: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(name.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            value = { let java_value = (jcall!(StringUtil::getInstance()).getNonNull(value.clone())).clone(); java_value };
             jcall!(node).appendChild(ModDomHelper::createNameValueNodes(document.clone(), name.clone(), value.clone()));
         }
         return node.clone();

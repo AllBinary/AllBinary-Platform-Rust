@@ -35,7 +35,7 @@ pub struct SecondaryThreadPool {
     pub base: ThreadPool,
 }
 
-thread_local! { pub static SecondaryThreadPool_instance: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>> = SecondaryThreadPool::new(String::from("Secondary"), 1, ThreadPool_NORMAL_PRIORITY.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>); }
+thread_local! { pub static SecondaryThreadPool_instance: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>> = SecondaryThreadPool::new(String::from("Secondary"), 1, ThreadPool_NORMAL_PRIORITY.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>); }
 
 impl SecondaryThreadPool {
     
@@ -59,18 +59,18 @@ impl SecondaryThreadPool {
     
 
     pub fn runTask(&mut self, mut task: Option<Rc<RefCell<dyn Runnable>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(task.clone()))).appendlong((((std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64)) as i64)).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.threadPoolStrings).ADD_TASK.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        self.base.runTask(task.clone());
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(task.clone()))).appendlong((((std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64)) as i64)).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.threadPoolStrings).ADD_TASK.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_arguments = (task.clone(),); self.base.runTask(java_arguments.0) };
     }
     
 
     pub fn startTask(&mut self, mut task: Option<Rc<RefCell<dyn Runnable>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.threadPoolStrings).START_TASK.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(task.clone()))).appendlong((((std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64)) as i64)).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.threadPoolStrings).START_TASK.clone(); java_field }.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(task.clone()))).appendlong((((std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64)) as i64)).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
     pub fn completedTask(&mut self, mut task: Option<Rc<RefCell<dyn Runnable>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.threadPoolStrings).COMPLETE_TASK.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(task.clone()))).appendlong((((std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64)) as i64)).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.threadPoolStrings).COMPLETE_TASK.clone(); java_field }.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(task.clone()))).appendlong((((std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64)) as i64)).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
 }
 impl std::ops::Deref for SecondaryThreadPool {

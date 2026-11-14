@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::media::image::comparison::ImageComparisonResult::ImageComparisonResult;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,6 +38,10 @@ pub struct MotionRectangles {
 
 
 impl MotionRectangles {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut name: String, mut imageComparisonResult: Option<Rc<RefCell<ImageComparisonResult>>>) -> Self {
@@ -82,7 +87,7 @@ impl MotionRectangles {
         self.imageComparisonResult = imageComparisonResult.clone();
     }
 }
-pub trait MotionRectanglesDyn {
+pub trait MotionRectanglesDyn: std::any::Any {
     fn as_MotionRectangles(&self) -> &MotionRectangles;
     fn as_MotionRectangles_mut(&mut self) -> &mut MotionRectangles;
     fn getVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { MotionRectangles::getVector(self.as_MotionRectangles_mut()) }

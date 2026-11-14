@@ -27,12 +27,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait AllBinaryObjectFactoryInterface {
+pub trait AllBinaryObjectFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getInstance(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

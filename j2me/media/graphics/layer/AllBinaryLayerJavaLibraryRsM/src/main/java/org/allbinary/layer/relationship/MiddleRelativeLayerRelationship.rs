@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::graphics::PointFactory::PointFactory;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
+use crate::java::lang::Exception::*;
 use super::RelativeLayerRelationship::RelativeLayerRelationship;
 
 // Borrows the object of a Java reference

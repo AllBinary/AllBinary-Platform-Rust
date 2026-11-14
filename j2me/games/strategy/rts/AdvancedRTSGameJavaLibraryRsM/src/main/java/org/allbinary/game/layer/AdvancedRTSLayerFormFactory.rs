@@ -23,6 +23,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionForm;
 use crate::org::allbinary::graphics::form::item::ItemArraySingletonFactoryInterface::ItemArraySingletonFactoryInterface;
+use crate::java::lang::Exception::*;
 use super::RTSLayer::RTSLayer;
 
 // Borrows the object of a Java reference
@@ -52,14 +53,14 @@ impl AdvancedRTSLayerFormFactory {
         let mut scrollSelectionForm: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn>>> = ScrollSelectionForm::getNullScrollSelectionForm();
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut items: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>> = jcall!(itemArrayFactoryInterface).getItems();
-            scrollSelectionForm = RTSScrollSelectionFormFactory::RTSScrollSelectionFormFactory::getInstance(label.clone(), items.clone());
+            scrollSelectionForm = { let java_value = (RTSScrollSelectionFormFactory::RTSScrollSelectionFormFactory::getInstance(label.clone(), items.clone())).clone(); java_value };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(this.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(e.clone()));
+            jcall!(this.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         this.scrollSelectionForm = scrollSelectionForm.clone();

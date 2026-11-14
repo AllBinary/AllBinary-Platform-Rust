@@ -33,6 +33,14 @@ pub struct NoImageComparatorConstraints {
     pub base: ImageComparatorConstraints,
 }
 
+impl crate::org::allbinary::media::image::comparison::ImageComparatorConstraintsInterface::ImageComparatorConstraintsInterface for NoImageComparatorConstraints {
+    fn getMaxNonMatchingPixelDeltas(&mut self) -> i32 { crate::org::allbinary::input::automation::module::ImageComparatorConstraints::ImageComparatorConstraints::getMaxNonMatchingPixelDeltas(crate::org::allbinary::input::automation::module::ImageComparatorConstraints::ImageComparatorConstraintsDyn::as_ImageComparatorConstraints_mut(self)) }
+    fn isCollisionWithAvoidRectangles(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::Rectangle::Rectangle>>>) -> bool { crate::org::allbinary::media::image::comparison::ImageComparatorConstraintsInterface::ImageComparatorConstraintsInterface::isCollisionWithAvoidRectangles(&mut self.base, p1) }
+    fn isCollisionWithAvoidRectangles(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) -> bool { crate::org::allbinary::media::image::comparison::ImageComparatorConstraintsInterface::ImageComparatorConstraintsInterface::isCollisionWithAvoidRectangles(&mut self.base, p1) }
+    fn isColorAllowed(&mut self, mut frame: i32, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut color: Option<Rc<RefCell<Color>>>) -> bool { Self::isColorAllowed(self, frame, point, color) }
+    fn isImageValid(&mut self, mut bufferedImage: Option<Rc<RefCell<BufferedImage>>>) -> bool { Self::isImageValid(self, bufferedImage) }
+    fn isFrameAllowed(&mut self, p1: i32) -> bool { crate::org::allbinary::input::automation::module::ImageComparatorConstraints::ImageComparatorConstraints::isFrameAllowed(crate::org::allbinary::input::automation::module::ImageComparatorConstraints::ImageComparatorConstraintsDyn::as_ImageComparatorConstraints_mut(self), p1) }
+}
 
 impl NoImageComparatorConstraints {
     
@@ -42,7 +50,7 @@ impl NoImageComparatorConstraints {
             base: ImageComparatorConstraints::new_struct(1),
         };
         // super(...) is in the struct literal above
-        this.setMaxNonMatchingPixelDeltas(i32::MAX.clone());
+        { let java_arguments = (i32::MAX.clone(),); this.setMaxNonMatchingPixelDeltas(java_arguments.0) };
         this
     }
 

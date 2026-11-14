@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Font::Font;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactory;
 use crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
@@ -25,6 +25,7 @@ use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::CustomTextAnimation::CustomTextAnimation;
 use super::AdjustCustomTextAnimation::AdjustCustomTextAnimation;
 
@@ -43,7 +44,7 @@ pub struct CustomTextAnimationFactory {
     pub initScaleHeight: i32,
     pub dx: i32,
     pub dy: i32,
-    pub font: Option<Rc<RefCell<Font>>>,
+    pub font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>,
     pub scaleProperties: Option<Rc<RefCell<ScaleProperties>>>,
 }
 
@@ -55,6 +56,10 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 }
 
 impl CustomTextAnimationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn createDXY(mut text: String, mut fontSize: i32, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<CustomTextAnimationFactory>>> {
@@ -78,15 +83,15 @@ impl CustomTextAnimationFactory {
             scaleProperties: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.basicColor = jcall!(BasicColorFactory::getInstance()).BLACK.clone();
+        this.basicColor = { let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone();
         this.dx = 0;
         this.dy = 0;
         this.scaleProperties = ScaleProperties::new();
         this.text = text.clone();
         jcall!(this.scaleProperties).scaleHeight = fontSize - (fontSize / 4);
-        this.initScaleHeight = jcall!(this.scaleProperties).scaleHeight.clone();
+        this.initScaleHeight = { let java_value = ({ let java_field = jcall!(this.scaleProperties).scaleHeight.clone(); java_field }).clone(); java_value }.clone();
         this.animationBehaviorFactory = animationBehaviorFactory.clone();
-        this.font = Font::getFont(unsafe { crate::javax::microedition::lcdui::Font::Font_FACE_SYSTEM.clone() }.clone(), unsafe { crate::javax::microedition::lcdui::Font::Font_STYLE_PLAIN.clone() }.clone(), this.initScaleHeight.clone());
+        this.font = { let java_value = (Font::getFont(crate::javax::microedition::lcdui::Font::Font_FACE_SYSTEM.with(Clone::clone).clone(), crate::javax::microedition::lcdui::Font::Font_STYLE_PLAIN.with(Clone::clone).clone(), this.initScaleHeight.clone())).clone(); java_value };
         this
     }
 
@@ -99,9 +104,9 @@ impl CustomTextAnimationFactory {
     pub fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
         let mut customTextAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::text::CustomTextAnimation::CustomTextAnimationDyn>>> = None;
         if self.dx != 0 || self.dy != 0 {
-            customTextAnimation = AdjustCustomTextAnimation::new(self.text.clone(), jcall!(self.scaleProperties).scaleHeight.clone(), self.dx.clone(), self.dy.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::text::CustomTextAnimation::CustomTextAnimationDyn>>);
+            customTextAnimation = { let java_value = (AdjustCustomTextAnimation::new(self.text.clone(), { let java_field = jcall!(self.scaleProperties).scaleHeight.clone(); java_field }.clone(), self.dx.clone(), self.dy.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::text::CustomTextAnimation::CustomTextAnimationDyn>>)).clone(); java_value };
         } else {
-            customTextAnimation = CustomTextAnimation::new(self.text.clone(), jcall!(self.scaleProperties).scaleHeight.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::text::CustomTextAnimation::CustomTextAnimationDyn>>);
+            customTextAnimation = { let java_value = (CustomTextAnimation::new(self.text.clone(), { let java_field = jcall!(self.scaleProperties).scaleHeight.clone(); java_field }.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::text::CustomTextAnimation::CustomTextAnimationDyn>>)).clone(); java_value };
         }
         jcall!(customTextAnimation).setBasicColorP(self.basicColor.clone());
         return customTextAnimation.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);

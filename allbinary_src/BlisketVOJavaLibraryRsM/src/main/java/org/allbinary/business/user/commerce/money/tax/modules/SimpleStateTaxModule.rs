@@ -38,6 +38,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::TaxModuleInterface::TaxModuleInterface;
 
 // Borrows the object of a Java reference
@@ -64,6 +65,10 @@ impl TaxModuleInterface for SimpleStateTaxModule {
 }
 
 impl SimpleStateTaxModule {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -79,7 +84,7 @@ impl SimpleStateTaxModule {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        this.ALL = jcall!(CommonPhoneStrings::getInstance()).STAR.clone();
+        this.ALL = { let java_field = jcall!(CommonPhoneStrings::getInstance()).STAR.clone(); java_field }.clone();
         this.STATETAXPATH = String::from("/generic/taxes/");
         this.STATETAXFILE = String::from("stateTaxation.xml");
         this
@@ -94,27 +99,27 @@ impl SimpleStateTaxModule {
     pub fn getTaxRate(&mut self, mut streetAddress: Option<Rc<RefCell<StreetAddress>>>, mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>) -> Option<f32> {
         self.streetAddress = streetAddress.clone();
         self.storeFrontInterface = storeFrontInterface.clone();
-        let mut fileAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(format!("{}{}", format!("{}{}", format!("{}{}", URLGLOBALS::getMainPath(), jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH), jcall!(self.storeFrontInterface).getName()), self.STATETAXPATH), self.STATETAXFILE.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-        let mut data: String = jcall!(CryptFileReader::new(jcall!(TransformInfoObjectConfigData::getInstance()).UNCRYPTED_EXTENSION.clone(), jcall!(TransformInfoObjectConfigData::getInstance()).ENCRYPTED_EXTENSION.clone())).get(fileAbPath.clone());
-        self.document = DomDocumentHelper::create1(data.clone());
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).TAX.clone()) {
+        let mut fileAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(format!("{}{}", format!("{}{}", format!("{}{}", URLGLOBALS::getMainPath(), { let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }), jcall!(self.storeFrontInterface).getName()), self.STATETAXPATH), self.STATETAXFILE.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        let mut data: String = jcall!(CryptFileReader::new({ let java_field = jcall!(TransformInfoObjectConfigData::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field }.clone(), { let java_field = jcall!(TransformInfoObjectConfigData::getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone())).get(fileAbPath.clone());
+        self.document = { let java_value = (DomDocumentHelper::create1_String(data.clone())).clone(); java_value };
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).TAX.clone(); java_field }.clone()) {
             { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Tax Doc: "), XmlDocumentHelper::toString(self.document.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getTaxRate"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         let mut state: String = jcall!(self.streetAddress).getState();
         let mut country: String = jcall!(self.streetAddress).getCountry();
-        state = state.to_uppercase();
+        state = { let java_value = (state.to_uppercase()).clone(); java_value };
         let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(self.document).getElementsByTagName(crate::org::allbinary::business::user::commerce::money::tax::components::TaxData::TaxData_NAME.with(Clone::clone).clone());
-        for index in (0..jcall!(nodeList).getLength()) {
+        for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
             let mut node: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
             let mut taxNodeChildren: Option<Rc<RefCell<NodeList>>> = jcall!(node).getChildNodes();
             let mut streetAddressNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(crate::org::allbinary::business::user::address::StreetAddressData::StreetAddressData_NAME.with(Clone::clone).clone(), taxNodeChildren.clone());
             let mut taxableStreetAddress: Option<Rc<RefCell<StreetAddress>>> = StreetAddress::new1(streetAddressNode.clone());
             let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
             if !jcall!(stringValidationUtil).isEmpty(country.clone()) && !jcall!(stringValidationUtil).isEmpty(jcall!(taxableStreetAddress).getCountry()) && (country.cmp(&jcall!(taxableStreetAddress).getCountry()) as i32) == 0 {
-                if true && jcall!(taxableStreetAddress).getState().is_some() && (state.cmp(&jcall!(taxableStreetAddress).getState()) as i32) == 0 {
+                if true && true && (state.cmp(&jcall!(taxableStreetAddress).getState()) as i32) == 0 {
                     let mut rateNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(crate::org::allbinary::business::user::commerce::money::tax::components::TaxData::TaxData_RATE.with(Clone::clone).clone(), taxNodeChildren.clone());
                     let mut taxRate: String = DomNodeHelper::getTextNodeValue(rateNode.clone());
-                    let mut taxRateFloat: Option<f32> = Some((((((Some((taxRate.clone()) as f32)).unwrap() as f32)) as f64) * .01) as f32);
+                    let mut taxRateFloat: Option<f32> = Some((((((Some((taxRate.clone()).trim().parse::<f32>().expect("NumberFormatException"))).unwrap() as f32)) as f64) * .01) as f32);
                     return taxRateFloat.clone();
                 }
             }
@@ -124,23 +129,23 @@ impl SimpleStateTaxModule {
     
 
     pub fn isValid(&mut self, mut streetAddress: Option<Rc<RefCell<StreetAddress>>>, mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>) -> Option<bool> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             self.streetAddress = streetAddress.clone();
             self.storeFrontInterface = storeFrontInterface.clone();
-            let mut fileAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(format!("{}{}", format!("{}{}", format!("{}{}", URLGLOBALS::getMainPath(), jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH), jcall!(self.storeFrontInterface).getName()), self.STATETAXPATH), self.STATETAXFILE.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-            let mut data: String = jcall!(CryptFileReader::new(jcall!(TransformInfoObjectConfigData::getInstance()).UNCRYPTED_EXTENSION.clone(), jcall!(TransformInfoObjectConfigData::getInstance()).ENCRYPTED_EXTENSION.clone())).get(fileAbPath.clone());
-            self.document = DomDocumentHelper::create1(data.clone());
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).TAX.clone()) {
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Tax Doc: "), XmlDocumentHelper::toString(self.document.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            let mut fileAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(format!("{}{}", format!("{}{}", format!("{}{}", URLGLOBALS::getMainPath(), { let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }), jcall!(self.storeFrontInterface).getName()), self.STATETAXPATH), self.STATETAXFILE.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+            let mut data: String = jcall!(CryptFileReader::new({ let java_field = jcall!(TransformInfoObjectConfigData::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field }.clone(), { let java_field = jcall!(TransformInfoObjectConfigData::getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone())).get(fileAbPath.clone());
+            self.document = { let java_value = (DomDocumentHelper::create1_String(data.clone())).clone(); java_value };
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).TAX.clone(); java_field }.clone()) {
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Tax Doc: "), XmlDocumentHelper::toString(self.document.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
             let mut country: String = jcall!(self.streetAddress).getCountry();
-            let mut rootNode: Option<Rc<RefCell<Node>>> = jcall!({ let java_receiver = self.document.clone(); let java_arguments = (jcall!(TransformInfoObjectConfigData::getInstance()).NAME.clone(),); let java_result = jcall!(java_receiver).getElementsByTagName(java_arguments.0); java_result }).item(0);
+            let mut rootNode: Option<Rc<RefCell<Node>>> = jcall!({ let java_receiver = self.document.clone(); let java_arguments = ({ let java_field = jcall!(TransformInfoObjectConfigData::getInstance()).NAME.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).getElementsByTagName(java_arguments.0); java_result }).item(0);
             let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(self.document).getElementsByTagName(crate::org::allbinary::business::user::commerce::money::tax::components::TaxData::TaxData_NAME.with(Clone::clone).clone());
-            for index in (0..jcall!(nodeList).getLength()) {
+            for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
                 let mut node: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
                 let mut taxNodeChildren: Option<Rc<RefCell<NodeList>>> = jcall!(node).getChildNodes();
                 let mut streetAddressNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(crate::org::allbinary::business::user::address::StreetAddressData::StreetAddressData_NAME.with(Clone::clone).clone(), taxNodeChildren.clone());
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).TAX.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).TAX.clone(); java_field }.clone()) {
                     let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                     jcall!(stringBuffer).append(String::from("StreetAddress Node: "));
                     jcall!(stringBuffer).append(jcall!(streetAddressNode).getNodeName());
@@ -148,32 +153,33 @@ impl SimpleStateTaxModule {
                     jcall!(stringBuffer).append(jcall!(streetAddressNode).getNodeValue());
                     jcall!(stringBuffer).append(String::from(" Number Of Children: "));
                     jcall!(stringBuffer).appendint(((jcall!(jcall!(streetAddressNode).getChildNodes()).getLength()) as i32));
-                    { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                    { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
                 let mut taxableStreetAddress: Option<Rc<RefCell<StreetAddress>>> = StreetAddress::new1(streetAddressNode.clone());
                 let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
-                if !jcall!(stringValidationUtil).isEmpty(country.clone()) && !jcall!(stringValidationUtil).isEmpty(jcall!(taxableStreetAddress).getCountry()) && jcall!(jcall!(taxableStreetAddress).getCountry()).compareTo(self.ALL.clone()) == 0 {
-                    return true;
+                if !jcall!(stringValidationUtil).isEmpty(country.clone()) && !jcall!(stringValidationUtil).isEmpty(jcall!(taxableStreetAddress).getCountry()) && (jcall!(taxableStreetAddress).getCountry().cmp(&self.ALL.clone()) as i32) == 0 {
+                    return Some(true);
                 }
                 if !jcall!(stringValidationUtil).isEmpty(country.clone()) && !jcall!(stringValidationUtil).isEmpty(jcall!(taxableStreetAddress).getCountry()) && (country.cmp(&jcall!(taxableStreetAddress).getCountry()) as i32) == 0 {
                     let mut state: String = jcall!(self.streetAddress).getState();
                     if true {
-                        return true;
+                        return Some(true);
                     }
                 }
             }
-            return false;
+            return Some(false);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
-                jcall!(self.logUtil).put(String::from("Failed to validate"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put(String::from("Failed to validate"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

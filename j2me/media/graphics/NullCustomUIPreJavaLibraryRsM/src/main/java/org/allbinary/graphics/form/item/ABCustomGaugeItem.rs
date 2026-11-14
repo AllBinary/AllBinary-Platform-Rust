@@ -21,7 +21,7 @@ pub struct ABCustomGaugeItem {
     pub base: ABCustomItem,
 }
 
-thread_local! { pub static ABCustomGaugeItem_NULL_GAUGE_ITEM: Option<Rc<RefCell<ABCustomGaugeItem>>> = ABCustomGaugeItem::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), 1, 0, jcall!(BasicColorFactory::getInstance()).BLACK.clone(), jcall!(BasicColorFactory::getInstance()).WHITE.clone()); }
+thread_local! { pub static ABCustomGaugeItem_NULL_GAUGE_ITEM: Option<Rc<RefCell<ABCustomGaugeItem>>> = ABCustomGaugeItem::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), 1, 0, { let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone()); }
 
 impl ABCustomGaugeItem {
     

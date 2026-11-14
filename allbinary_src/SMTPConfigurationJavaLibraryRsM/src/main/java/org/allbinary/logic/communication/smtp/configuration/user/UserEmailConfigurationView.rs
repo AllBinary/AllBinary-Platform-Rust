@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::data::tree::dom::DomSearchHelper::DomSearchHelper;
 use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
@@ -30,6 +29,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::UserEmailConfigurationInterface::UserEmailConfigurationInterface;
 use super::UserEmailConfiguration::UserEmailConfiguration;
 use super::UserEmailConfigurationMapping::UserEmailConfigurationMapping;
@@ -52,6 +52,10 @@ impl DomNodeInterface for UserEmailConfigurationView {
 }
 
 impl UserEmailConfigurationView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut node: Option<Rc<RefCell<Node>>>) -> Self {
@@ -62,8 +66,8 @@ impl UserEmailConfigurationView {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).EMAILLOGGING.clone()) {
-            jcall!(this.logUtil).putF(jcall!(this.commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).EMAILLOGGING.clone(); java_field }.clone()) {
+            jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         }
         this.userEmailConfigurationInterface = (UserEmailConfiguration::new()).clone() /* as UserEmailConfigurationInterface */;
         let mut childNodeList: Option<Rc<RefCell<NodeList>>> = jcall!(node).getChildNodes();
@@ -78,7 +82,7 @@ impl UserEmailConfigurationView {
     }
     
 
-    pub fn new_struct1(mut userEmailConfigurationInterface: Option<Rc<RefCell<dyn UserEmailConfigurationInterface>>>) -> Self {
+    pub fn new_struct1_UserEmailConfigurationInterface(mut userEmailConfigurationInterface: Option<Rc<RefCell<dyn UserEmailConfigurationInterface>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -90,8 +94,8 @@ impl UserEmailConfigurationView {
         this
     }
 
-    pub fn new1(mut userEmailConfigurationInterface: Option<Rc<RefCell<dyn UserEmailConfigurationInterface>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(userEmailConfigurationInterface))))
+    pub fn new1_UserEmailConfigurationInterface(mut userEmailConfigurationInterface: Option<Rc<RefCell<dyn UserEmailConfigurationInterface>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_UserEmailConfigurationInterface(userEmailConfigurationInterface))))
     }
     
 
@@ -103,11 +107,11 @@ impl UserEmailConfigurationView {
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
         let mut emailConfigurationMapping: Option<Rc<RefCell<UserEmailConfigurationMapping>>> = UserEmailConfigurationMapping::new(self.userEmailConfigurationInterface.clone());
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(emailConfigurationMapping).toHashMap();
-        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes(document.clone(), UserEmailConfigurationData_NAME.with(Clone::clone).clone(), hashMap.clone());
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(emailConfigurationMapping).toHashMap();
+        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), UserEmailConfigurationData_NAME.with(Clone::clone).clone(), hashMap.clone());
         let mut userEmailConfigurationInterface: Option<Rc<RefCell<dyn UserEmailConfigurationInterface>>> = self.getEmailConfigurationInterface();
         let mut userEmailEventsConfigurationInterface: Option<Rc<RefCell<dyn UserEmailEventsConfigurationInterface>>> = jcall!(userEmailConfigurationInterface).getUserEmailEventsConfigurationInterface();
-        let mut userEmailEventsConfigurationView: Option<Rc<RefCell<UserEmailEventsConfigurationView>>> = UserEmailEventsConfigurationView::new1(userEmailEventsConfigurationInterface.clone());
+        let mut userEmailEventsConfigurationView: Option<Rc<RefCell<UserEmailEventsConfigurationView>>> = UserEmailEventsConfigurationView::new1_UserEmailEventsConfigurationInterface(userEmailEventsConfigurationInterface.clone());
         jcall!(node).appendChild(jcall!(userEmailEventsConfigurationView).toXmlNode(document.clone()));
         return node.clone();
     }

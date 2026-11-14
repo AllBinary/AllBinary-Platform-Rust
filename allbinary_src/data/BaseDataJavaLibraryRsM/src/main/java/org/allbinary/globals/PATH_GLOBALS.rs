@@ -39,6 +39,10 @@ pub struct PATH_GLOBALS {
 thread_local! { pub static PATH_GLOBALS_instance: Option<Rc<RefCell<PATH_GLOBALS>>> = PATH_GLOBALS::new(); }
 
 impl PATH_GLOBALS {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<PATH_GLOBALS>>> {
@@ -57,28 +61,28 @@ impl PATH_GLOBALS {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut abPathData: Option<Rc<RefCell<AbPathData>>> = AbPathData::getInstance();
         jcall!(stringBuffer).append(String::from("data"));
-        jcall!(stringBuffer).append(jcall!(abPathData).SEPARATOR.clone());
-        this.DATA_PATH = jcall!(stringBuffer).toString();
+        jcall!(stringBuffer).append({ let java_field = jcall!(abPathData).SEPARATOR.clone(); java_field }.clone());
+        this.DATA_PATH = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(this.DATA_PATH.clone());
-        jcall!(stringBuffer).append(jcall!(CommonStrings::getInstance()).INIT.clone());
-        jcall!(stringBuffer).append(jcall!(abPathData).SEPARATOR.clone());
-        this.INIT_PATH = jcall!(stringBuffer).toString();
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonStrings::getInstance()).INIT.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(abPathData).SEPARATOR.clone(); java_field }.clone());
+        this.INIT_PATH = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(this.DATA_PATH.clone());
         jcall!(stringBuffer).append(String::from("log"));
-        jcall!(stringBuffer).append(jcall!(abPathData).SEPARATOR.clone());
-        this.LOG_PATH = jcall!(stringBuffer).toString();
+        jcall!(stringBuffer).append({ let java_field = jcall!(abPathData).SEPARATOR.clone(); java_field }.clone());
+        this.LOG_PATH = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(this.DATA_PATH.clone());
         jcall!(stringBuffer).append(String::from("backup"));
-        jcall!(stringBuffer).append(jcall!(abPathData).SEPARATOR.clone());
-        this.BACKUP_PATH = jcall!(stringBuffer).toString();
+        jcall!(stringBuffer).append({ let java_field = jcall!(abPathData).SEPARATOR.clone(); java_field }.clone());
+        this.BACKUP_PATH = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         jcall!(stringBuffer).append(this.INIT_PATH.clone());
         jcall!(stringBuffer).append(String::from("views"));
-        jcall!(stringBuffer).append(jcall!(abPathData).SEPARATOR.clone());
-        this.VIEWS_PATH = jcall!(stringBuffer).toString();
+        jcall!(stringBuffer).append({ let java_field = jcall!(abPathData).SEPARATOR.clone(); java_field }.clone());
+        this.VIEWS_PATH = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
         this
     }
 

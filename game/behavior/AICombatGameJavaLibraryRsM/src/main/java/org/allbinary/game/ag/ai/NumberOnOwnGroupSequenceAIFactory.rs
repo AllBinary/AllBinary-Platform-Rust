@@ -26,6 +26,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::NumberOnOwnGroupSequenceAI::NumberOnOwnGroupSequenceAI;
 
 // Borrows the object of a Java reference
@@ -42,6 +43,10 @@ pub struct NumberOnOwnGroupSequenceAIFactory {
 
 impl NumberOnOwnGroupSequenceAIFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,
@@ -56,11 +61,11 @@ impl NumberOnOwnGroupSequenceAIFactory {
     
 
     // throws Exception
-    pub fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut artificialIntelligenceInterface: Vec<Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> {
-        let mut integerArray: Vec<Option<i32>> = jcall!(NumberInSameGroupSequence::NumberInSameGroupSequence::getInstance()).NUMBER_ON_SAME_TEAM_SEQUENCE.clone();
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+    pub fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut artificialIntelligenceInterface: Vec<Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterface>>> {
+        let mut integerArray: Vec<Option<i32>> = { let java_field = jcall!(NumberInSameGroupSequence::NumberInSameGroupSequence::getInstance()).NUMBER_ON_SAME_TEAM_SEQUENCE.clone(); java_field }.clone();
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         for index in (0..(integerArray.len() as i32)) {
-            let mut integerCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(hashtable).get(crate::java_into_object((integerArray[(index) as usize]).clone() /* as Any */));
+            let mut integerCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(hashtable).get(crate::java_into_object(crate::java_into_object((integerArray[(index) as usize]).clone())));
             if integerCanBeNull.is_none() {
                 break;
             }
@@ -73,7 +78,7 @@ impl NumberOnOwnGroupSequenceAIFactory {
         jcall!(stringBuffer).appendint((artificialIntelligenceInterface.len() as i32).clone());
         jcall!(stringBuffer).append(String::from(" + 1"));
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         if (artificialIntelligenceInterface.len() as i32) - 1 > jcall!(list).size() {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Not enough AI properties."))));
         }
@@ -82,9 +87,9 @@ impl NumberOnOwnGroupSequenceAIFactory {
         }
         let mut numberOnSameTeam: Vec<Option<i32>> = vec![None; (jcall!(list).size()) as usize];
         for index in (0..(numberOnSameTeam.len() as i32)) {
-            numberOnSameTeam[(index) as usize] = { let java_object = jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]; java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
+            numberOnSameTeam[(index) as usize] = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
         }
-        return NumberOnOwnGroupSequenceAI::new(numberOnSameTeam.clone(), artificialIntelligenceInterface.clone(), ownerLayerInterface.clone(), gameInput.clone()).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>);
+        return NumberOnOwnGroupSequenceAI::new(numberOnSameTeam.clone(), artificialIntelligenceInterface.clone(), ownerLayerInterface.clone(), gameInput.clone()).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>).map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceInterface>>);
     }
 }
 

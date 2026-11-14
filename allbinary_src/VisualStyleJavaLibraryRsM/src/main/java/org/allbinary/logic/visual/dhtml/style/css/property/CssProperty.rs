@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::data::tree::dom::DomData::DomData;
 use crate::org::allbinary::data::tree::dom::DomNodeHelper::DomNodeHelper;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
@@ -28,6 +27,7 @@ use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::CssPropertyValues::CssPropertyValues;
 
 // Borrows the object of a Java reference
@@ -48,6 +48,10 @@ impl DomNodeInterface for CssProperty {
 }
 
 impl CssProperty {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut name: String) -> Self {
@@ -67,7 +71,7 @@ impl CssProperty {
     }
     
 
-    pub fn new_struct1(mut node: Option<Rc<RefCell<Node>>>) -> Self {
+    pub fn new_struct1_Node(mut node: Option<Rc<RefCell<Node>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             propertyName: String::new(),
@@ -75,17 +79,17 @@ impl CssProperty {
         };
         this.logUtil = LogUtil::getInstance();
         let mut propertyNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(crate::org::allbinary::data::tree::dom::DomData::DomData_VALUE.with(Clone::clone).clone(), jcall!(node).getChildNodes());
-        this.propertyName = DomNodeHelper::getTextNodeValue(propertyNode.clone());
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).STYLE.clone()) {
+        this.propertyName = { let java_value = (DomNodeHelper::getTextNodeValue(propertyNode.clone())).clone(); java_value };
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).STYLE.clone(); java_field }.clone()) {
             { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Name: "), this.getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("CssProperty()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
-        let mut propertyValuesNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(CssPropertyData::CssPropertyData::getInstance()).VALUES.clone(), jcall!(node).getChildNodes());
+        let mut propertyValuesNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(CssPropertyData::CssPropertyData::getInstance()).VALUES.clone(); java_field }.clone(), jcall!(node).getChildNodes());
         this.cssPropertyValues = CssPropertyValues::new1(propertyValuesNode.clone());
         this
     }
 
-    pub fn new1(mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(node))))
+    pub fn new1_Node(mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_Node(node))))
     }
     
 
@@ -94,20 +98,20 @@ impl CssProperty {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(jcall!(CssPropertyData::CssPropertyData::getInstance()).NAME.clone(), self.propertyName.clone());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(CssPropertyData::CssPropertyData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(self.propertyName.clone()));
         return hashMap.clone();
     }
     
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = self.toHashMap();
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.toHashMap();
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("CssView HashMap: "), jcall!(hashMap).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toXmlNode()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
-        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes(document.clone(), jcall!(CssPropertyData::CssPropertyData::getInstance()).NAME.clone(), self.propertyName.clone());
+        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes(document.clone(), { let java_field = jcall!(CssPropertyData::CssPropertyData::getInstance()).NAME.clone(); java_field }.clone(), self.propertyName.clone());
         jcall!(node).appendChild(jcall!(self.cssPropertyValues).toXmlNode(document.clone()));
         return node.clone();
     }

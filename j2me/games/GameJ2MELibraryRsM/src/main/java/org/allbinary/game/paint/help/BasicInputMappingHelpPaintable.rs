@@ -49,14 +49,14 @@ impl BasicInputMappingHelpPaintable {
 
     pub fn new_struct(mut gameInputMappingArray: Vec<Option<Rc<RefCell<GameInputMapping>>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Self {
         let mut this = Self {
-            base: HelpPaintable::new_struct(String::from("Help Screen"), jcall!(BasicColorFactory::getInstance()).BLACK.clone(), basicColor.clone()),
+            base: HelpPaintable::new_struct(String::from("Help Screen"), { let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone(), basicColor.clone()),
             gameInputMappingArray: Vec::new(),
             NONE: None,
         };
-        this.NONE = jcall!(GameKeyFactory::getInstance()).NONE.clone();
+        this.NONE = { let java_field = jcall!(GameKeyFactory::getInstance()).NONE.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this.gameInputMappingArray = gameInputMappingArray.clone();
-        this.update(this.NONE.clone(), this.NONE.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
+        { let java_arguments = (this.NONE.clone(), this.NONE.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>),); this.update(java_arguments.0, java_arguments.1) };
         this
     }
 
@@ -75,13 +75,13 @@ impl BasicInputMappingHelpPaintable {
         let mut gameKey: Option<Rc<RefCell<GameKey>>> = None;
         let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
         for index in (0..size) {
-            gameInputMapping = self.gameInputMappingArray[(index) as usize].clone();
-            gameKey = jcall!(gameInputMapping).getGameKey();
-            list = jcall!(jcall!(gameKeyMapping).getInputMapping()).getMappedInput(gameKey.clone());
+            gameInputMapping = { let java_value = (self.gameInputMappingArray[(index) as usize]).clone(); java_value }.clone();
+            gameKey = { let java_value = (jcall!(gameInputMapping).getGameKey()).clone(); java_value };
+            list = { let java_value = (jcall!(jcall!(gameKeyMapping).getInputMapping()).getMappedInput(gameKey.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>))).clone(); java_value };
             jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
             keyInfo[(index) as usize] = jcall!(stringMaker).append(jcall!(gameInputMapping).getName()).append(EQUAL.clone()).append(self.get(list.clone())).toString();
         }
-        self.base.setInputInfoP(keyInfo.clone());
+        { let java_arguments = (keyInfo.clone(),); self.base.setInputInfoP(java_arguments.0) };
     }
     
 
@@ -92,17 +92,17 @@ impl BasicInputMappingHelpPaintable {
         let mut key: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>> = None;
         let mut size: i32 = jcall!(keyList).size();
         for index in (0..size) {
-            key = { let java_object = (jcall!(keyList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>>().expect("ClassCastException").clone()) };
+            key = { let java_value = ({ let java_object = (jcall!(keyList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             jcall!(stringBuffer).append(jcall!(key).getName());
             if index + 1 < jcall!(keyList).size() {
                 if jcall!(keyList).size() == 2 {
-                    jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone()).append(AND.clone());
+                    jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone()).append(AND.clone());
                 } else {
                     if index + 2 == jcall!(keyList).size() {
-                        jcall!(stringBuffer).append(jcall!(commonSeps).COMMA_SEP.clone());
+                        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).COMMA_SEP.clone(); java_field }.clone());
                         jcall!(stringBuffer).append(AND.clone());
                     } else {
-                        jcall!(stringBuffer).append(jcall!(commonSeps).COMMA_SEP.clone());
+                        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).COMMA_SEP.clone(); java_field }.clone());
                     }
                 }
             }
@@ -125,6 +125,13 @@ impl crate::org::allbinary::game::paint::help::HelpPaintable::HelpPaintableDyn f
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for BasicInputMappingHelpPaintable {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for BasicInputMappingHelpPaintable {
+    fn updateMeasurement(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::paint::help::HelpPaintable::HelpPaintable::updateMeasurement(crate::org::allbinary::game::paint::help::HelpPaintable::HelpPaintableDyn::as_HelpPaintable_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for BasicInputMappingHelpPaintable {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::paint::help::HelpPaintable::HelpPaintable::paint(crate::org::allbinary::game::paint::help::HelpPaintable::HelpPaintableDyn::as_HelpPaintable_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

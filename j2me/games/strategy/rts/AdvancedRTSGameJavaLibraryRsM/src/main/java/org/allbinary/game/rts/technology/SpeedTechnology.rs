@@ -48,6 +48,10 @@ impl RTSInterface for SpeedTechnology {
 }
 
 impl SpeedTechnology {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut maxLevel: i32) -> Self {
@@ -120,7 +124,7 @@ impl SpeedTechnology {
     pub fn upgrade(&mut self) {
         self.level += 1;
         let mut unitTechnologySingletonFactory: Option<Rc<RefCell<UnitTechnologySingletonFactory>>> = UnitTechnologySingletonFactory::getInstance();
-        jcall!(unitTechnologySingletonFactory).setSpeed(jcall!(unitTechnologySingletonFactory).getSpeed() + (self.getLevel() * 100));
+        jcall!(unitTechnologySingletonFactory).setSpeed({ let java_value = jcall!(unitTechnologySingletonFactory).getSpeed(); java_value } + (self.getLevel() * 100));
     }
     
 

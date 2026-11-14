@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use crate::org::allbinary::graphics::opengles::NullOpenGLProcessorFactory::NullOpenGLProcessorFactory;
 use crate::org::allbinary::graphics::opengles::OpenGLCapabilities::OpenGLCapabilities;
 use crate::org::allbinary::graphics::opengles::OpenGLProcessor::OpenGLProcessor;
@@ -38,7 +38,7 @@ pub struct NullShaderComposite {
     pub base: ShaderComposite,
 }
 
-thread_local! { pub static NullShaderComposite_instance: Option<Rc<RefCell<NullShaderComposite>>> = NullShaderComposite::new(jcall!(OpenGLCapabilities::getInstance()).VERSION_2_0.clone(), vec![Shader::new(), Shader::new()], CompositeShaderUpdater::getInstance(), ShaderInitializer::getInstance(), ModelViewProjection::getInstance(), None, None, NullOpenGLProcessorFactory::getInstance()) /* Java anonymous class body: implement it as a named type
+thread_local! { pub static NullShaderComposite_instance: Option<Rc<RefCell<NullShaderComposite>>> = NullShaderComposite::new({ let java_field = jcall!(OpenGLCapabilities::getInstance()).VERSION_2_0.clone(); java_field }.clone(), vec![Shader::new(), Shader::new()], CompositeShaderUpdater::getInstance(), ShaderInitializer::getInstance(), ModelViewProjection::getInstance(), NullOpenGLProcessorFactory::getInstance(), NullOpenGLProcessorFactory::getInstance(), NullOpenGLProcessorFactory::getInstance()) /* Java anonymous class body: implement it as a named type
         
 
         pub fn init(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) {
@@ -49,7 +49,7 @@ impl NullShaderComposite {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::shader::ShaderComposite::ShaderCompositeDyn>>> {
-        return NullShaderComposite_instance.with(Clone::clone).clone();
+        return NullShaderComposite_instance.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::shader::ShaderComposite::ShaderCompositeDyn>>);
     }
     
 
@@ -58,7 +58,7 @@ impl NullShaderComposite {
             base: ShaderComposite::new_struct(requiresOpenGLVersion.clone(), shaderArray.clone(), compositeShaderUpdater.clone(), shaderInitializer.clone(), modelViewProjection.clone(), colorOpenGLProcessor.clone(), vertexOpenGLProcessor.clone(), disableProgramShaderOpenGLProcessor.clone()),
         };
         // super(...) is in the struct literal above
-        this.useProgramShaderOpenGLProcessor = NullOpenGLProcessorFactory::getInstance();
+        this.useProgramShaderOpenGLProcessor = { let java_value = (NullOpenGLProcessorFactory::getInstance()).clone(); java_value };
         this
     }
 

@@ -43,6 +43,10 @@ pub struct OperatingSystems {
 thread_local! { pub static OperatingSystems_instance: Option<Rc<RefCell<OperatingSystems>>> = OperatingSystems::new(); }
 
 impl OperatingSystems {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

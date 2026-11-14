@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
+use crate::java::lang::RuntimeException::*;
 use super::PickedUpLayerInterfaceFactoryInterface::PickedUpLayerInterfaceFactoryInterface;
 use super::PickedUpLayerType::PickedUpLayerType;
 
@@ -40,6 +41,10 @@ impl PickedUpLayerInterfaceFactoryInterface for PickedUpLayerInterfaceFactoryBas
 }
 
 impl PickedUpLayerInterfaceFactoryBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -66,7 +71,7 @@ impl PickedUpLayerInterfaceFactoryBase {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait PickedUpLayerInterfaceFactoryBaseDyn: crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactoryInterface::PickedUpLayerInterfaceFactoryInterface {
+pub trait PickedUpLayerInterfaceFactoryBaseDyn: std::any::Any + crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactoryInterface::PickedUpLayerInterfaceFactoryInterface {
     fn as_PickedUpLayerInterfaceFactoryBase(&self) -> &PickedUpLayerInterfaceFactoryBase;
     fn as_PickedUpLayerInterfaceFactoryBase_mut(&mut self) -> &mut PickedUpLayerInterfaceFactoryBase;
 }

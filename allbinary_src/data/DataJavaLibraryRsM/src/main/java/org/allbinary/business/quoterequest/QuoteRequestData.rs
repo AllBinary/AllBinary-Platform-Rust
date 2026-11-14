@@ -37,6 +37,10 @@ pub struct QuoteRequestData {
 thread_local! { pub static QuoteRequestData_instance: Option<Rc<RefCell<QuoteRequestData>>> = QuoteRequestData::new(); }
 
 impl QuoteRequestData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<QuoteRequestData>>> {

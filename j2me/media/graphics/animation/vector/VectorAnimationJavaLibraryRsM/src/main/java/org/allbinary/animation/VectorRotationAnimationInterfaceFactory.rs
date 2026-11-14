@@ -21,6 +21,7 @@ use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
 use super::AnimationBehaviorFactory::AnimationBehaviorFactory;
 use super::VectorRotationAnimation::VectorRotationAnimation;
@@ -47,6 +48,10 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 }
 
 impl VectorRotationAnimationInterfaceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut currentPoints: Vec<Vec<Vec<i32>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
@@ -55,8 +60,8 @@ impl VectorRotationAnimationInterfaceFactory {
             basicColor: None,
             animationBehaviorFactory: None,
         };
-        this.currentPoints = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY_ARRAY.clone();
-        this.basicColor = jcall!(BasicColorFactory::getInstance()).WHITE.clone();
+        this.currentPoints = { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY_ARRAY.clone(); java_field }.clone();
+        this.basicColor = { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone();
         this.currentPoints = currentPoints.clone();
         this.setBasicColorP(basicColor.clone());
         this.animationBehaviorFactory = animationBehaviorFactory.clone();
@@ -70,7 +75,7 @@ impl VectorRotationAnimationInterfaceFactory {
 
     // throws Exception
     pub fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
-        return VectorRotationAnimation::new(self.currentPoints.clone(), self.getBasicColorP(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+        return VectorRotationAnimation::new(self.currentPoints.clone(), self.getBasicColorP(), { let java_argument = jcall!(self.animationBehaviorFactory).getOrCreateInstance(); java_argument }).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
     }
     
 

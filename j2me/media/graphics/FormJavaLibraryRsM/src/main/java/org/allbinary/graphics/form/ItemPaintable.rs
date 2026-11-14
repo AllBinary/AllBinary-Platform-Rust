@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,6 +32,10 @@ pub struct ItemPaintable {
 
 impl ItemPaintable {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -43,13 +47,13 @@ impl ItemPaintable {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut currentIndex: i32, mut x: i32, mut y: i32) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut currentIndex: i32, mut x: i32, mut y: i32) {
     }
 }
-pub trait ItemPaintableDyn {
+pub trait ItemPaintableDyn: std::any::Any {
     fn as_ItemPaintable(&self) -> &ItemPaintable;
     fn as_ItemPaintable_mut(&mut self) -> &mut ItemPaintable;
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut currentIndex: i32, mut x: i32, mut y: i32) { ItemPaintable::paint(self.as_ItemPaintable_mut(), graphics, currentIndex, x, y) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut currentIndex: i32, mut x: i32, mut y: i32) { ItemPaintable::paint(self.as_ItemPaintable_mut(), graphics, currentIndex, x, y) }
 }
 impl ItemPaintableDyn for ItemPaintable {
     fn as_ItemPaintable(&self) -> &ItemPaintable { self }

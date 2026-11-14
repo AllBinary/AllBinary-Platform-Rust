@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::CustomMapGeneratorBaseFactory::CustomMapGeneratorBaseFactory;
 use super::CustomMapGenerator::CustomMapGenerator;
 use super::CustomMapGeneratorBase::CustomMapGeneratorBase;
@@ -50,7 +51,7 @@ impl CustomMapGeneratorFactory {
 
     // throws Exception
     pub fn create(&mut self, mut raceTrackGeographicMap: Option<Rc<RefCell<RaceTrackGeographicMap>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::CustomMapGeneratorBase::CustomMapGeneratorBaseDyn>>> {
-        return CustomMapGenerator::new(raceTrackGeographicMap.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::CustomMapGeneratorBase::CustomMapGeneratorBaseDyn>>);
+        return CustomMapGenerator::new(raceTrackGeographicMap.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::CustomMapGeneratorBase::CustomMapGeneratorBaseDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::CustomMapGeneratorBase::CustomMapGeneratorBaseDyn>>);
     }
 }
 impl std::ops::Deref for CustomMapGeneratorFactory {

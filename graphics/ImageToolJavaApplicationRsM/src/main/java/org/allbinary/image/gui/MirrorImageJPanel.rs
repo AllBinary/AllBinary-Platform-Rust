@@ -20,7 +20,7 @@ use super::*;
 // use crate::java::awt::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
 // use crate::java::awt::image::RenderedImage::RenderedImage;
-// use crate::java::io::File::File;
+use crate::java::io::File::File;
 // use crate::javax::imageio::ImageIO::ImageIO;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::media::image::ImageProcessorInput::ImageProcessorInput;
@@ -29,6 +29,7 @@ use crate::org::allbinary::media::image::ImageStrings::ImageStrings;
 use crate::org::allbinary::media::image::MirrorImageUtil::MirrorImageUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -89,7 +90,7 @@ impl MirrorImageJPanel {
         this.commonStrings = CommonStrings::getInstance();
         this.imageStrings = ImageStrings::getInstance();
         // super(...) is in the struct literal above
-        jcall!(this.logUtil).putF(String::from("Starting"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF(String::from("Starting"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this.initComponents();
         this.imageProcessorInput = imageProcessorInput.clone();
         this
@@ -110,26 +111,26 @@ impl MirrorImageJPanel {
                     let mut imageProcessorInput: Option<Rc<RefCell<ImageProcessorInput>>> = self.getImageProcessorInput();
                     let mut bufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>> = jcall!(imageProcessorInput).getBufferedImageArray();
                     for index in (0..(bufferedImageArray.len() as i32)) {
-                        self.result = jcall!(MirrorImageUtil::getInstance()).getImage(bufferedImageArray[(index) as usize].clone(), jcall!(self.verticleJCheckBox).isSelected(), jcall!(self.horizontalJCheckBox).isSelected());
+                        self.result = { let java_value = (jcall!(MirrorImageUtil::getInstance()).getImage(bufferedImageArray[(index) as usize].clone(), jcall!(self.verticleJCheckBox).isSelected(), jcall!(self.horizontalJCheckBox).isSelected())).clone(); java_value };
                         let mut file: Option<Rc<RefCell<File>>> = jcall!(imageProcessorInput).getFiles()[(index) as usize].clone();
                         if jcall!(self.writeOverOriginalJRadioButton).isSelected() {
                         } else if jcall!(self.renameJRadioButton).isSelected() {
                             let mut filePath: String = jcall!(file).getAbsolutePath();
-                            let mut extensionIndex: i32 = filePath.find(&jcall!(self.imageStrings).PNG_EXTENSION.clone()).map(|index| index as i32).unwrap_or(-1);
-                            filePath = format!("{}{}", format!("{}{}", filePath[(0) as usize..(extensionIndex) as usize].to_string(), String::from("_mirror")), jcall!(self.imageStrings).PNG_EXTENSION);
-                            jcall!(logUtil).putF(format!("{}{}", String::from("Renamed File: "), filePath), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
-                            file = File::new(filePath.clone());
+                            let mut extensionIndex: i32 = filePath.find(&{ let java_field = jcall!(self.imageStrings).PNG_EXTENSION.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1);
+                            filePath = { let java_value = (format!("{}{}", format!("{}{}", filePath[(0) as usize..(extensionIndex) as usize].to_string(), String::from("_mirror")), { let java_field = jcall!(self.imageStrings).PNG_EXTENSION.clone(); java_field })).clone(); java_value };
+                            jcall!(logUtil).putF(format!("{}{}", String::from("Renamed File: "), filePath), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
+                            file = File::new1(filePath.clone());
                         }
-                        let mut isWritten: bool = ImageIO::write((self.result).clone() /* as RenderedImage * /, jcall!(self.imageStrings).PNG.clone(), file.clone());
-                        jcall!(logUtil).putF(format!("{}{}", format!("{}{}", format!("{}{}", String::from("File: "), file), String::from(" Wrote: ")), isWritten), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+                        let mut isWritten: bool = ImageIO::write((self.result).clone() / * as RenderedImage * /, { let java_field = jcall!(self.imageStrings).PNG.clone(); java_field }.clone(), file.clone());
+                        jcall!(logUtil).putF(format!("{}{}", format!("{}{}", format!("{}{}", String::from("File: "), file), String::from(" Wrote: ")), isWritten), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
                         jcall!(self.getParent()).repaint();
                     }
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                    jcall!(logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+                    jcall!(logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }
@@ -140,15 +141,15 @@ impl MirrorImageJPanel {
     pub fn initComponents(&mut self) {
         self.jLayeredPane1 = JLayeredPane::new();
         self.buttonGroup = ButtonGroup::new();
-        self.jPanel1 = JPanel::new() /* Java anonymous class body: implement it as a named type
+        self.jPanel1 = { let java_value = (JPanel::new() /* Java anonymous class body: implement it as a named type
             
 
-            pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+            pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
                 if self.result.is_some() {
-                    jcall!(graphics).drawImage(self.result.clone(), 0, 0, jcall!(self.result).getWidth(None), jcall!(self.result).getHeight(None), None);
+                    jcall!(graphics).as_Graphics_mut().drawImage(self.result.clone(), 0, 0, jcall!(self.result).getWidth(None), jcall!(self.result).getHeight(None), None);
                 }
             }
-*/;
+*/).clone(); java_value };
         self.jPanel2 = JPanel::new();
         self.horizontalJCheckBox = JCheckBox::new();
         self.verticleJCheckBox = JCheckBox::new();
@@ -159,8 +160,8 @@ impl MirrorImageJPanel {
         self.jLabel2 = JLabel::new();
         let mut jPanel1Layout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(self.jPanel1.clone());
         jcall!(self.jPanel1).setLayout(jPanel1Layout.clone());
-        jcall!(jPanel1Layout).setHorizontalGroup(jcall!(jcall!(jPanel1Layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(0, 522, i16::MAX.clone()));
-        jcall!(jPanel1Layout).setVerticalGroup(jcall!(jcall!(jPanel1Layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(0, 230, i16::MAX.clone()));
+        jcall!(jPanel1Layout).setHorizontalGroup(jcall!(jcall!(jPanel1Layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add(0, 522, i16::MAX.clone()));
+        jcall!(jPanel1Layout).setVerticalGroup(jcall!(jcall!(jPanel1Layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add(0, 230, i16::MAX.clone()));
         jcall!(self.horizontalJCheckBox).setSelected(true);
         jcall!(self.horizontalJCheckBox).setText(String::from("Horizontal"));
         jcall!(self.horizontalJCheckBox).setEnabled(false);
@@ -185,17 +186,17 @@ impl MirrorImageJPanel {
         jcall!(self.writeOverOriginalJRadioButton).setText(String::from("Write Over Original"));
         let mut jPanel2Layout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(self.jPanel2.clone());
         jcall!(self.jPanel2).setLayout(jPanel2Layout.clone());
-        jcall!(jPanel2Layout).setHorizontalGroup(jcall!(jcall!(jPanel2Layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jPanel2Layout).createSequentialGroup()).addContainerGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), i16::MAX.clone())).add(self.verticleJCheckBox.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).LayoutStyle).UNRELATED.clone())).add(self.horizontalJCheckBox.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).LayoutStyle).RELATED.clone())).add(self.writeOverOriginalJRadioButton.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).LayoutStyle).UNRELATED.clone())).add(self.renameJRadioButton.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).LayoutStyle).RELATED.clone())).add(self.generateJButton.clone())).add(37, 37, 37)));
-        jcall!(jPanel2Layout).setVerticalGroup(jcall!(jcall!(jPanel2Layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(jcall!(jcall!(jcall!(jPanel2Layout).createSequentialGroup()).add(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jPanel2Layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).BASELINE.clone())).add(self.horizontalJCheckBox.clone())).add(self.verticleJCheckBox.clone())).add(self.writeOverOriginalJRadioButton.clone())).add(self.renameJRadioButton.clone())).add(self.generateJButton.clone()))).addContainerGap()));
+        jcall!(jPanel2Layout).setHorizontalGroup(jcall!(jcall!(jPanel2Layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jPanel2Layout).createSequentialGroup()).addContainerGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), i16::MAX.clone())).add(self.verticleJCheckBox.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).LayoutStyle.clone(); java_field }).UNRELATED.clone(); java_field }.clone())).add(self.horizontalJCheckBox.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).LayoutStyle.clone(); java_field }).RELATED.clone(); java_field }.clone())).add(self.writeOverOriginalJRadioButton.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).LayoutStyle.clone(); java_field }).UNRELATED.clone(); java_field }.clone())).add(self.renameJRadioButton.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).LayoutStyle.clone(); java_field }).RELATED.clone(); java_field }.clone())).add(self.generateJButton.clone())).add(37, 37, 37)));
+        jcall!(jPanel2Layout).setVerticalGroup(jcall!(jcall!(jPanel2Layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add(jcall!(jcall!(jcall!(jPanel2Layout).createSequentialGroup()).add(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jPanel2Layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).BASELINE.clone(); java_field }.clone())).add(self.horizontalJCheckBox.clone())).add(self.verticleJCheckBox.clone())).add(self.writeOverOriginalJRadioButton.clone())).add(self.renameJRadioButton.clone())).add(self.generateJButton.clone()))).addContainerGap()));
         jcall!(self.jLabel2).setText(String::from("Results:"));
         let mut jPanel3Layout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(self.jPanel3.clone());
         jcall!(self.jPanel3).setLayout(jPanel3Layout.clone());
-        jcall!(jPanel3Layout).setHorizontalGroup(jcall!(jcall!(jPanel3Layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(jcall!(jcall!(jcall!(jPanel3Layout).createSequentialGroup()).add(self.jLabel2.clone())).addContainerGap(433, i16::MAX.clone())));
-        jcall!(jPanel3Layout).setVerticalGroup(jcall!(jcall!(jPanel3Layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(self.jLabel2.clone()));
+        jcall!(jPanel3Layout).setHorizontalGroup(jcall!(jcall!(jPanel3Layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add(jcall!(jcall!(jcall!(jPanel3Layout).createSequentialGroup()).add(self.jLabel2.clone())).addContainerGap(433, i16::MAX.clone())));
+        jcall!(jPanel3Layout).setVerticalGroup(jcall!(jcall!(jPanel3Layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add(self.jLabel2.clone()));
         let mut layout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(None /* Java this: a &mut self method has no Rc of itself */);
         self.setLayout(layout.clone());
-        jcall!(layout).setHorizontalGroup(jcall!(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).TRAILING.clone(), jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addContainerGap()).add(self.jPanel3.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), i16::MAX.clone())).addContainerGap())).add(self.jPanel1.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), i16::MAX.clone())).add(jcall!(jcall!(jcall!(layout).createSequentialGroup()).add(self.jPanel2.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), i16::MAX.clone())).addContainerGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), i16::MAX.clone())));
-        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).add(self.jPanel2.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone(), 25, jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).LayoutStyle).RELATED.clone())).add(self.jPanel3.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).LayoutStyle).RELATED.clone())).add(self.jPanel1.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), i16::MAX.clone())));
+        jcall!(layout).setHorizontalGroup(jcall!(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).TRAILING.clone(); java_field }.clone(), jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addContainerGap()).add(self.jPanel3.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), i16::MAX.clone())).addContainerGap())).add(self.jPanel1.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), i16::MAX.clone())).add(jcall!(jcall!(jcall!(layout).createSequentialGroup()).add(self.jPanel2.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), i16::MAX.clone())).addContainerGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), i16::MAX.clone())));
+        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).add(self.jPanel2.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), 25, { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).LayoutStyle.clone(); java_field }).RELATED.clone(); java_field }.clone())).add(self.jPanel3.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).LayoutStyle.clone(); java_field }).RELATED.clone(); java_field }.clone())).add(self.jPanel1.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), i16::MAX.clone())));
     }
     
 

@@ -28,6 +28,7 @@ use crate::org::allbinary::logic::communication::smtp::configuration::user::User
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::UserConfigurationInterface::UserConfigurationInterface;
 use super::UserConfiguration::UserConfiguration;
 
@@ -47,6 +48,10 @@ impl DomNodeInterface for UserConfigurationView {
 }
 
 impl UserConfigurationView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut node: Option<Rc<RefCell<Node>>>) -> Self {
@@ -57,13 +62,13 @@ impl UserConfigurationView {
         let mut childNodeList: Option<Rc<RefCell<NodeList>>> = jcall!(node).getChildNodes();
         let mut emailConfigurationNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(crate::org::allbinary::logic::communication::smtp::configuration::user::UserEmailConfigurationData::UserEmailConfigurationData_NAME.with(Clone::clone).clone(), childNodeList.clone());
         let mut userEmailConfigurationView: Option<Rc<RefCell<UserEmailConfigurationView>>> = UserEmailConfigurationView::new1(emailConfigurationNode.clone());
-        let mut userEmailConfigurationInterface: Option<Rc<RefCell<dyn UserEmailConfigurationInterface>>> = (jcall!(userEmailConfigurationView).getEmailConfigurationInterface()).clone() /* as UserEmailConfigurationInterface */;
+        let mut userEmailConfigurationInterface: Option<Rc<RefCell<dyn UserEmailConfigurationInterface>>> = (jcall!(userEmailConfigurationView).getEmailConfigurationInterface()).clone();
         jcall!(this.userConfigurationInterface).setUserEmailConfigurationInterface(userEmailConfigurationInterface.clone());
-        let mut timeCreatedNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(EntryData::getInstance()).TIMECREATED.clone(), childNodeList.clone());
-        let mut timeCreatedView: Option<Rc<RefCell<TimeCreatedView>>> = TimeCreatedView::new1(timeCreatedNode.clone());
+        let mut timeCreatedNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(EntryData::getInstance()).TIMECREATED.clone(); java_field }.clone(), childNodeList.clone());
+        let mut timeCreatedView: Option<Rc<RefCell<TimeCreatedView>>> = TimeCreatedView::new1_Node(timeCreatedNode.clone());
         { let java_receiver = this.userConfigurationInterface.clone(); let java_arguments = (jcall!(timeCreatedView).getTimeCreated(),); jcall!(java_receiver).setTimeCreated(java_arguments.0); };
-        let mut timeLastModifiedNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(EntryData::getInstance()).LASTMODIFIED.clone(), childNodeList.clone());
-        let mut timeLastModifiedView: Option<Rc<RefCell<TimeLastModifiedView>>> = TimeLastModifiedView::new1(timeLastModifiedNode.clone());
+        let mut timeLastModifiedNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone(), childNodeList.clone());
+        let mut timeLastModifiedView: Option<Rc<RefCell<TimeLastModifiedView>>> = TimeLastModifiedView::new1_Node(timeLastModifiedNode.clone());
         { let java_receiver = this.userConfigurationInterface.clone(); let java_arguments = (jcall!(timeLastModifiedView).getTimeLastModified(),); jcall!(java_receiver).setTimeLastModified(java_arguments.0); };
         this
     }
@@ -73,7 +78,7 @@ impl UserConfigurationView {
     }
     
 
-    pub fn new_struct1(mut userConfigurationInterface: Option<Rc<RefCell<dyn UserConfigurationInterface>>>) -> Self {
+    pub fn new_struct1_UserConfigurationInterface(mut userConfigurationInterface: Option<Rc<RefCell<dyn UserConfigurationInterface>>>) -> Self {
         let mut this = Self {
             userConfigurationInterface: None,
         };
@@ -81,8 +86,8 @@ impl UserConfigurationView {
         this
     }
 
-    pub fn new1(mut userConfigurationInterface: Option<Rc<RefCell<dyn UserConfigurationInterface>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(userConfigurationInterface))))
+    pub fn new1_UserConfigurationInterface(mut userConfigurationInterface: Option<Rc<RefCell<dyn UserConfigurationInterface>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_UserConfigurationInterface(userConfigurationInterface))))
     }
     
 

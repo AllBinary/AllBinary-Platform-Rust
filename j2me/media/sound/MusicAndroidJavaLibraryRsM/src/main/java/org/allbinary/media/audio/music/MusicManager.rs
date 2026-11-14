@@ -22,6 +22,7 @@ use crate::org::allbinary::time::GameTickTimeDelayHelperFactory::GameTickTimeDel
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
+use crate::java::lang::Exception::*;
 use super::MusicStrings::MusicStrings;
 
 // Borrows the object of a Java reference
@@ -54,6 +55,10 @@ pub struct MusicManager {
 
 
 impl MusicManager {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut musicServiceClass: &'static str, mut songList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Self {
@@ -88,13 +93,13 @@ impl MusicManager {
         this.gameTickTimeDelayHelper = GameTickTimeDelayHelperFactory::getInstance();
         this.timeDelayHelper = TimeDelayHelper::new(0).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
         this.timeDelayHelper2 = TimeDelayHelper::new(1200).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
-        this.currentSongSound = NoSound::getInstance();
-        this.nextSongSound = NoSound::getInstance();
+        this.currentSongSound = NoSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>);
+        this.nextSongSound = NoSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>);
         this.leftVolume = 100;
         this.rightVolume = 100;
-        PreLogUtil::put(format!("{}{}", jcall!(this.commonStateStrings).CONTEXT, jcall!(this.resourceUtil).getContext()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        PreLogUtil::put(format!("{}{}", { let java_field = jcall!(this.commonStateStrings).CONTEXT.clone(); java_field }, jcall!(this.resourceUtil).getContext()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this.musicServiceClass = musicServiceClass.clone();
-        this.currentIntent = Intent::new(jcall!(this.resourceUtil).getContext(), musicServiceClass.clone());
+        this.currentIntent = { let java_value = (Intent::new(jcall!(this.resourceUtil).getContext(), musicServiceClass.clone())).clone(); java_value };
         this.songList = songList.clone();
         this
     }
@@ -106,7 +111,7 @@ impl MusicManager {
 
     pub fn nextSong(&mut self, mut nextSongSound: Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>, mut leftVolume: i32, mut rightVolume: i32) {
         if nextSongSound.is_none() {
-            nextSongSound = NoSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>);
+            nextSongSound = { let java_value = (NoSound::getInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>);
         }
         self.nextSongSound = nextSongSound.clone();
         self.leftVolume = leftVolume.clone();
@@ -124,11 +129,11 @@ impl MusicManager {
         if jcall!(self.songList).size() == 0 {
             return;
         }
-        if jcall!(self.timeDelayHelper).isTime(jcall!(self.gameTickTimeDelayHelper).startTime.clone()) {
+        if jcall!(self.timeDelayHelper).isTime({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone()) {
             self.startNewSong();
             return;
         }
-        if jcall!(self.timeDelayHelper2).isTime(jcall!(self.gameTickTimeDelayHelper).startTime.clone()) {
+        if jcall!(self.timeDelayHelper2).isTime({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone()) {
             if { let java_receiver = self.androidServicesUtil.clone(); let java_arguments = (self.musicServiceClass.to_string(),); let java_result = jcall!(java_receiver).isServiceRunning(java_arguments.0); java_result } {
             } else {
                 self.startNewSong();
@@ -143,7 +148,7 @@ impl MusicManager {
             while { index -= 1; index } >= 0 {
             let mut sound: Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>> = { let java_object = (jcall!(self.songList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>>().expect("ClassCastException").clone()) };
             let mut duration: i64 = ((jcall!(sound).getDuration()) as i64);
-            PreLogUtil::put(jcall!(StringMaker::new()).append(self.PLAY.clone()).append(jcall!(sound).getResource()).append(self.FOR.clone()).appendlong(duration.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
+            PreLogUtil::put(jcall!(StringMaker::new()).append(self.PLAY.clone()).append(jcall!(sound).as_Sound_mut().getResource()).append(self.FOR.clone()).appendlong(duration.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
             }
         }
     }
@@ -153,28 +158,28 @@ impl MusicManager {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(jcall!(self.resourceUtil).getContext()).stopService(self.currentIntent.clone());
             if match (&self.nextSongSound, &NoSound::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                self.currentSongSound = { let java_object = (jcall!(self.basicArrayListUtil).getRandom(self.songList.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>>().expect("ClassCastException").clone()) };
+                self.currentSongSound = { let java_value = ({ let java_object = (jcall!(self.basicArrayListUtil).getRandom(self.songList.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             } else {
                 self.currentSongSound = self.nextSongSound.clone();
-                self.nextSongSound = NoSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>);
+                self.nextSongSound = { let java_value = (NoSound::getInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>);
             }
             let mut duration: i64 = ((jcall!(self.currentSongSound).getDuration()) as i64);
-            PreLogUtil::put(jcall!(StringMaker::new()).append(self.PLAY.clone()).append(jcall!(self.currentSongSound).getResource()).append(self.FOR.clone()).appendlong(duration.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
+            PreLogUtil::put(jcall!(StringMaker::new()).append(self.PLAY.clone()).append(jcall!(self.currentSongSound).as_Sound_mut().getResource()).append(self.FOR.clone()).appendlong(duration.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
             jcall!(self.timeDelayHelper).as_TimeDelayHelper_mut().delay = ((duration) as i32);
-            { let java_receiver = self.currentIntent.clone(); let java_arguments = (jcall!(self.musicStrings).SONG_EXTRA.clone(), (({ let java_receiver = self.resourceUtil.clone(); let java_arguments = (jcall!(self.currentSongSound).getResource(),); let java_result = jcall!(java_receiver).getResourceId(java_arguments.0); java_result }).unwrap() as i32),); jcall!(java_receiver).putExtra(java_arguments.0, java_arguments.1); };
-            jcall!(self.currentIntent).putExtra(jcall!(self.musicStrings).LEFT_VOLUME.clone(), self.leftVolume.clone());
-            jcall!(self.currentIntent).putExtra(jcall!(self.musicStrings).RIGHT_VOLUME.clone(), self.rightVolume.clone());
+            { let java_receiver = self.currentIntent.clone(); let java_arguments = ({ let java_field = jcall!(self.musicStrings).SONG_EXTRA.clone(); java_field }.clone(), (({ let java_receiver = self.resourceUtil.clone(); let java_arguments = (jcall!(self.currentSongSound).as_Sound_mut().getResource(),); let java_result = jcall!(java_receiver).getResourceId(java_arguments.0); java_result }).unwrap() as i32),); jcall!(java_receiver).putExtra(java_arguments.0, java_arguments.1); };
+            jcall!(self.currentIntent).putExtra({ let java_field = jcall!(self.musicStrings).LEFT_VOLUME.clone(); java_field }.clone(), self.leftVolume.clone());
+            jcall!(self.currentIntent).putExtra({ let java_field = jcall!(self.musicStrings).RIGHT_VOLUME.clone(); java_field }.clone(), self.rightVolume.clone());
             jcall!(jcall!(self.resourceUtil).getContext()).startService(self.currentIntent.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            let mut resource: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            let mut resource: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
             if self.currentSongSound.is_some() {
-                resource = jcall!(self.currentSongSound).getResource();
+                resource = { let java_value = (jcall!(self.currentSongSound).as_Sound_mut().getResource()).clone(); java_value };
             }
-            PreLogUtil::putOE(format!("{}{}", jcall!(self.commonStrings).EXCEPTION_LABEL, resource), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone(), e.clone());
+            PreLogUtil::putOE(format!("{}{}", { let java_field = jcall!(self.commonStrings).EXCEPTION_LABEL.clone(); java_field }, resource), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -189,7 +194,7 @@ impl MusicManager {
     pub fn pause(mut activity: Option<Rc<RefCell<Activity>>>, mut musicServiceClass: &'static str) {
         let mut commonStateStrings: Option<Rc<RefCell<CommonStateStrings>>> = CommonStateStrings::getInstance();
         let mut musicPauseIntent: Option<Rc<RefCell<Intent>>> = Intent::new((activity).clone() /* as Context */, musicServiceClass.clone());
-        jcall!(musicPauseIntent).putExtra(jcall!(commonStateStrings).ON_START_COMMAND.clone(), 1);
+        jcall!(musicPauseIntent).putExtra({ let java_field = jcall!(commonStateStrings).ON_START_COMMAND.clone(); java_field }.clone(), 1);
         jcall!(activity).startService(musicPauseIntent.clone());
     }
     
@@ -198,7 +203,7 @@ impl MusicManager {
         if jcall!(AndroidServicesUtil::getInstance()).isServiceRunning(musicServiceClass.to_string()) {
             let mut commonStateStrings: Option<Rc<RefCell<CommonStateStrings>>> = CommonStateStrings::getInstance();
             let mut musicResumeIntent: Option<Rc<RefCell<Intent>>> = Intent::new(activity.clone(), musicServiceClass.clone());
-            jcall!(musicResumeIntent).putExtra(jcall!(commonStateStrings).ON_START_COMMAND.clone(), 2);
+            jcall!(musicResumeIntent).putExtra({ let java_field = jcall!(commonStateStrings).ON_START_COMMAND.clone(); java_field }.clone(), 2);
             jcall!(activity).startService(musicResumeIntent.clone());
         }
     }

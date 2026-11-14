@@ -28,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait BasicVelocityInterface {
+pub trait BasicVelocityInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getVelocityXBasicDecimalP(&mut self) -> Option<Rc<RefCell<BasicDecimal>>>;
@@ -65,8 +65,6 @@ pub trait BasicVelocityInterface {
     
 
     fn addVelocityi(&mut self, magnitude: i64, angle: i32, otherAngle: i32);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

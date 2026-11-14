@@ -45,6 +45,10 @@ pub struct LogUtil {
 thread_local! { pub static LogUtil_instance: Option<Rc<RefCell<LogUtil>>> = LogUtil::new(); }
 
 impl LogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogUtil>>> {
@@ -79,28 +83,28 @@ impl LogUtil {
     
 
     pub fn putF(&mut self, mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String) {
-        { let java_arguments = (specialMessage.clone(), anyType.clone(), functionName.clone(), jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(),); self.put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3) };
+        { let java_arguments = (specialMessage.clone(), anyType.clone(), functionName.clone(), { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone(),); self.put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3) };
     }
     
 
     pub fn putFS(&mut self, mut specialMessage: String, mut string: String, mut functionName: String) {
-        { let java_arguments = (specialMessage.clone(), string.clone(), functionName.clone(), jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(),); self.putS(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3) };
+        { let java_arguments = (specialMessage.clone(), string.clone(), functionName.clone(), { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone(),); self.putS(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3) };
     }
     
 
     pub fn put(&mut self, mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {
         let mut className: String = self.LABEL.clone();
-        className = jcall!(StringMaker::new()).append(std::any::type_name_of_val(&anyType).to_string()).append(jcall!(self.commonSeps).COLON.clone()).append(format!("{:x}", jcall!(TsUtil::getInstance()).hashCode(crate::java_into_object(anyType.clone())))).toString().clone();
+        className = { let java_value = (jcall!(StringMaker::new()).append(std::any::type_name_of_val(&anyType).to_string()).append({ let java_field = jcall!(self.commonSeps).COLON.clone(); java_field }.clone()).append(format!("{:x}", jcall!(TsUtil::getInstance()).hashCode(crate::java_into_object(anyType.clone())))).toString().clone()).clone(); java_value };
         let mut message: String = jcall!(self.logFormatUtil).get(className.clone(), functionName.clone(), specialMessage.clone(), crate::java_into_object(exception.clone()));
-        jcall!(jcall!(unsafe { android_util.clone() }).Log).i(self.LABEL.clone(), message.clone());
+        jcall!({ let java_field = jcall!(unsafe { android_util.clone() }).Log.clone(); java_field }).i(self.LABEL.clone(), message.clone());
     }
     
 
     pub fn putS(&mut self, mut specialMessage: String, mut string: String, mut functionName: String, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {
         let mut className: String = self.LABEL.clone();
-        className = jcall!(StringMaker::new()).append(string.clone()).append(jcall!(self.commonSeps).COLON.clone()).append(format!("{:x}", jcall!(TsUtil::getInstance()).hashCode(crate::java_into_object(string.clone())))).toString().clone();
+        className = { let java_value = (jcall!(StringMaker::new()).append(string.clone()).append({ let java_field = jcall!(self.commonSeps).COLON.clone(); java_field }.clone()).append(format!("{:x}", jcall!(TsUtil::getInstance()).hashCode(crate::java_into_object(string.clone())))).toString().clone()).clone(); java_value };
         let mut message: String = jcall!(self.logFormatUtil).get(className.clone(), functionName.clone(), specialMessage.clone(), crate::java_into_object(exception.clone()));
-        jcall!(jcall!(unsafe { android_util.clone() }).Log).i(self.LABEL.clone(), message.clone());
+        jcall!({ let java_field = jcall!(unsafe { android_util.clone() }).Log.clone(); java_field }).i(self.LABEL.clone(), message.clone());
     }
 }
 

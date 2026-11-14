@@ -36,6 +36,10 @@ pub struct Grid {
 
 
 impl Grid {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -70,10 +74,10 @@ impl Grid {
         this.isGridPossible = false;
         this.zoom = 3;
         this.isChanged = true;
-        this.grid = jcall!(grid).as_GPoint_mut().grid.clone();
-        this.showGrid(jcall!(grid).as_GPoint_mut().isGridOn.clone());
-        this.isGridPossible = jcall!(grid).as_GPoint_mut().isGridPossible.clone();
-        { let java_arguments = (jcall!(grid).as_GPoint_mut().getZoom(),); this.setZoom(java_arguments.0) };
+        this.grid = { let java_value = ({ let java_field = jcall!(grid).grid.clone(); java_field }).clone(); java_value }.clone();
+        { let java_arguments = ({ let java_field = jcall!(grid).isGridOn.clone(); java_field }.clone(),); this.showGrid(java_arguments.0) };
+        this.isGridPossible = { let java_value = ({ let java_field = jcall!(grid).isGridPossible.clone(); java_field }).clone(); java_value }.clone();
+        { let java_arguments = (jcall!(grid).getZoom(),); this.setZoom(java_arguments.0) };
         this
     }
 

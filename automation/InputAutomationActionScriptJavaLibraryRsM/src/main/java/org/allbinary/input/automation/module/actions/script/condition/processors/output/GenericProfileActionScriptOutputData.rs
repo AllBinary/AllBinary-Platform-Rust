@@ -32,6 +32,10 @@ pub static mut GenericProfileActionScriptOutputData_NAME: std::cell::LazyCell<St
 pub static mut GenericProfileActionScriptOutputData_TYPE: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("GENERIC_CONFIGURATION_PROFILE_ACTION_OUTPUT_TYPE"));
 
 impl GenericProfileActionScriptOutputData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

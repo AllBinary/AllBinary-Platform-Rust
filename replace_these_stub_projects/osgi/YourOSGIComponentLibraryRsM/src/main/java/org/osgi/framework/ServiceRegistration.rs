@@ -14,12 +14,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait ServiceRegistration {
+pub trait ServiceRegistration: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getReference(&mut self) -> Option<Rc<RefCell<dyn ServiceReference>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

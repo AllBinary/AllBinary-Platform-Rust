@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::MyGraphicItemEvent::MyGraphicItemEvent;
 
 // Borrows the object of a Java reference
@@ -26,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait MyGraphicItemEventListener {
+pub trait MyGraphicItemEventListener: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn delete(&mut self, evt: Option<Rc<RefCell<MyGraphicItemEvent>>>);
@@ -43,8 +44,6 @@ pub trait MyGraphicItemEventListener {
     
 
     fn deselect(&mut self, evt: Option<Rc<RefCell<MyGraphicItemEvent>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

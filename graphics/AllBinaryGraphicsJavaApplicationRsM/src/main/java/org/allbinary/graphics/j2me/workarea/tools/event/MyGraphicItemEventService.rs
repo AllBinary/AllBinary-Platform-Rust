@@ -17,13 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::EventListenerList::EventListenerList;
-use super::event::event;
-use super::swing::swing;
-use super::javax::javax;
 use super::EventListener::EventListener;
-use super::util::util;
-use super::java::java;
 use super::MyGraphicItemEventListener::MyGraphicItemEventListener;
 use super::MyGraphicItemEvent::MyGraphicItemEvent;
 
@@ -45,6 +41,10 @@ pub static mut MyGraphicItemEventService_DUPLICATE: std::cell::LazyCell<String> 
 pub static mut MyGraphicItemEventService_ROTATE: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("rotate"));
 
 impl MyGraphicItemEventService {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -76,16 +76,16 @@ impl MyGraphicItemEventService {
         let mut listeners: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(unsafe { MyGraphicItemEventService_listenerList.clone() }).getListenerList();
         for i in (0..(listeners.len() as i32)).step_by((2) as usize) {
             if match (&listeners[(i) as usize], &std::any::type_name_of_val(&listeners[(i + 1) as usize])) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                if jcall!(jcall!(evt).getCommand()).compareTo(unsafe { MyGraphicItemEventService_SELECT.clone() }.clone()) == 0 {
-                    jcall!(((listeners[(i + 1) as usize]).clone() /* as MyGraphicItemEventListener */)).highlight(evt.clone());
-                } else if jcall!(jcall!(evt).getCommand()).compareTo(unsafe { MyGraphicItemEventService_DESELECT.clone() }.clone()) == 0 {
-                    jcall!(((listeners[(i + 1) as usize]).clone() /* as MyGraphicItemEventListener */)).deselect(evt.clone());
-                } else if jcall!(jcall!(evt).getCommand()).compareTo(unsafe { MyGraphicItemEventService_DELETE.clone() }.clone()) == 0 {
-                    jcall!(((listeners[(i + 1) as usize]).clone() /* as MyGraphicItemEventListener */)).delete(evt.clone());
-                } else if jcall!(jcall!(evt).getCommand()).compareTo(unsafe { MyGraphicItemEventService_DUPLICATE.clone() }.clone()) == 0 {
-                    jcall!(((listeners[(i + 1) as usize]).clone() /* as MyGraphicItemEventListener */)).duplicate(evt.clone());
-                } else if jcall!(jcall!(evt).getCommand()).compareTo(unsafe { MyGraphicItemEventService_ROTATE.clone() }.clone()) == 0 {
-                    jcall!(((listeners[(i + 1) as usize]).clone() /* as MyGraphicItemEventListener */)).rotate(evt.clone());
+                if (jcall!(evt).getCommand().cmp(&unsafe { MyGraphicItemEventService_SELECT.clone() }.clone()) as i32) == 0 {
+                    jcall!(({ let java_object = (listeners[(i + 1) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MyGraphicItemEventListener>>>>().expect("ClassCastException").clone()) })).highlight(evt.clone());
+                } else if (jcall!(evt).getCommand().cmp(&unsafe { MyGraphicItemEventService_DESELECT.clone() }.clone()) as i32) == 0 {
+                    jcall!(({ let java_object = (listeners[(i + 1) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MyGraphicItemEventListener>>>>().expect("ClassCastException").clone()) })).deselect(evt.clone());
+                } else if (jcall!(evt).getCommand().cmp(&unsafe { MyGraphicItemEventService_DELETE.clone() }.clone()) as i32) == 0 {
+                    jcall!(({ let java_object = (listeners[(i + 1) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MyGraphicItemEventListener>>>>().expect("ClassCastException").clone()) })).delete(evt.clone());
+                } else if (jcall!(evt).getCommand().cmp(&unsafe { MyGraphicItemEventService_DUPLICATE.clone() }.clone()) as i32) == 0 {
+                    jcall!(({ let java_object = (listeners[(i + 1) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MyGraphicItemEventListener>>>>().expect("ClassCastException").clone()) })).duplicate(evt.clone());
+                } else if (jcall!(evt).getCommand().cmp(&unsafe { MyGraphicItemEventService_ROTATE.clone() }.clone()) as i32) == 0 {
+                    jcall!(({ let java_object = (listeners[(i + 1) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MyGraphicItemEventListener>>>>().expect("ClassCastException").clone()) })).rotate(evt.clone());
                 }
             }
         }

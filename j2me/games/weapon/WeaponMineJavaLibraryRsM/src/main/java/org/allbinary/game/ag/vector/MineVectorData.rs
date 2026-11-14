@@ -31,6 +31,10 @@ pub struct MineVectorData {
 pub static mut MineVectorData_points: std::cell::LazyCell<Vec<Vec<Vec<i32>>>> = std::cell::LazyCell::new(|| vec![vec![vec![10, 5], vec![2, 6], vec![1000, 1000], vec![2, 2], vec![10, 9], vec![1000, 1000], vec![10, 2], vec![2, 9], vec![1000, 1000], vec![2, 5], vec![10, 6], vec![1000, 1000], vec![7, 9], vec![5, 2], vec![1000, 1000], vec![7, 2], vec![5, 9], vec![1000, 1000]]]);
 
 impl MineVectorData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

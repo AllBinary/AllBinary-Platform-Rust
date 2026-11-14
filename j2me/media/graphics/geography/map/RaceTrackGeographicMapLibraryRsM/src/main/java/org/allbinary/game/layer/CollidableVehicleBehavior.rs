@@ -24,6 +24,7 @@ use crate::org::allbinary::game::collision::CollisionType::CollisionType;
 use crate::org::allbinary::game::collision::CollisionTypeFactory::CollisionTypeFactory;
 use crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableBehavior::CollidableDestroyableDamageableBehavior;
 use crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer;
+use crate::java::lang::Exception::*;
 use super::VehiclePropertiesCompositeInterface::VehiclePropertiesCompositeInterface;
 use super::CollidableCompositeLayer::CollidableCompositeLayer;
 use super::VehicleProperties::VehicleProperties;
@@ -43,8 +44,14 @@ pub struct CollidableVehicleBehavior {
     pub halfImpactVelocityY: i64,
 }
 
+impl crate::org::allbinary::game::collision::CollidableInterface::CollidableInterface for CollidableVehicleBehavior {
+    fn isCollidable(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) -> bool { crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehavior::isCollidable(crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn::as_CollidableBaseBehavior_mut(self), p1) }
+    fn isCollision(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, p2: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) -> bool { crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableBehavior::CollidableDestroyableDamageableBehavior::isCollision(crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableBehavior::CollidableDestroyableDamageableBehaviorDyn::as_CollidableDestroyableDamageableBehavior_mut(self), p1, p2) }
+    fn collide(&mut self, mut ownerLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, mut collidableInterfaceCompositeInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) { Self::collide(self, ownerLayer, collidableInterfaceCompositeInterface) }
+    fn getCollisionTypeWith(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> Option<Rc<RefCell<crate::org::allbinary::game::collision::CollisionType::CollisionType>>> { crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehavior::getCollisionTypeWith(crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn::as_CollidableBaseBehavior_mut(self), p1) }
+}
 impl crate::org::allbinary::layer::NamedInterface::NamedInterface for CollidableVehicleBehavior {
-    fn getName(&mut self) -> String { self.base.getName() }
+    fn getName(&mut self) -> String { crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehavior::getName(crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn::as_CollidableBaseBehavior_mut(self)) }
 }
 
 impl CollidableVehicleBehavior {
@@ -70,14 +77,14 @@ impl CollidableVehicleBehavior {
     // throws Exception
     pub fn collide(&mut self, mut ownerLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, mut collidableInterfaceCompositeInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) {
         let mut collisionTypeFactory: Option<Rc<RefCell<CollisionTypeFactory>>> = CollisionTypeFactory::getInstance();
-        let mut collisionType: Option<Rc<RefCell<CollisionType>>> = jcall!(jcall!(collidableInterfaceCompositeInterface).getCollidableInferface()).getCollisionTypeWith(ownerLayer.clone());
-        if match (&collisionType, &jcall!(collisionTypeFactory).PICKUP) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            let mut collidableDestroyableDamageableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = ((ownerLayer).clone() /* as CollidableDestroyableDamageableLayer */);
-            jcall!(jcall!(collidableDestroyableDamageableLayer).getPickupBehavior()).doPickupLayer((collidableInterfaceCompositeInterface).clone() /* as PickedUpLayerInterface */);
-        } else if match (&collisionType, &jcall!(collisionTypeFactory).COLLISION) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            self.base.collide(ownerLayer.clone(), collidableInterfaceCompositeInterface.clone());
+        let mut collisionType: Option<Rc<RefCell<CollisionType>>> = jcall!(jcall!(collidableInterfaceCompositeInterface).as_CollidableCompositeLayer_mut().getCollidableInferface()).getCollisionTypeWith(ownerLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>));
+        if match (&collisionType, &{ let java_field = jcall!(collisionTypeFactory).PICKUP.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            let mut collidableDestroyableDamageableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableCompositeLayer cannot be cast to CollidableDestroyableDamageableLayer") })());
+            jcall!(jcall!(collidableDestroyableDamageableLayer).as_CollidableDestroyableDamageableLayer_mut().getPickupBehavior()).doPickupLayer((|| -> Option<Rc<RefCell<dyn PickedUpLayerInterface>>> { panic!("ClassCastException: a Rust dyn CollidableCompositeLayer cannot be cast to PickedUpLayerInterface") })());
+        } else if match (&collisionType, &{ let java_field = jcall!(collisionTypeFactory).COLLISION.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            { let java_arguments = (ownerLayer.clone(), collidableInterfaceCompositeInterface.clone(),); self.base.collide(java_arguments.0, java_arguments.1) };
         } else {
-            self.collideVehicle(ownerLayer.clone(), (collidableInterfaceCompositeInterface).clone() /* as VehiclePropertiesCompositeInterface */);
+            self.collideVehicle(ownerLayer.clone(), (|| -> Option<Rc<RefCell<dyn VehiclePropertiesCompositeInterface>>> { panic!("ClassCastException: a Rust dyn CollidableCompositeLayer cannot be cast to VehiclePropertiesCompositeInterface") })());
         }
     }
     
@@ -88,7 +95,7 @@ impl CollidableVehicleBehavior {
     
 
     pub fn collideVehicle(&mut self, mut ownerLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>, mut vehiclePropertiesCompositeInterface: Option<Rc<RefCell<dyn VehiclePropertiesCompositeInterface>>>) {
-        let mut ownerVehicleLayerInterface: Option<Rc<RefCell<dyn VehiclePropertiesCompositeInterface>>> = ((ownerLayer).clone() /* as VehiclePropertiesCompositeInterface */);
+        let mut ownerVehicleLayerInterface: Option<Rc<RefCell<dyn VehiclePropertiesCompositeInterface>>> = ((|| -> Option<Rc<RefCell<dyn VehiclePropertiesCompositeInterface>>> { panic!("ClassCastException: a Rust dyn CollidableCompositeLayer cannot be cast to VehiclePropertiesCompositeInterface") })());
         let mut ownerVehicleProperties: Option<Rc<RefCell<VehicleProperties>>> = jcall!(ownerVehicleLayerInterface).getVehicleProperties();
         let mut vehicleProperties: Option<Rc<RefCell<VehicleProperties>>> = jcall!(vehiclePropertiesCompositeInterface).getVehicleProperties();
         let mut impactVelocityX: i64 = jcall!(jcall!(jcall!(ownerVehicleProperties).getVelocityProperties()).getVelocityXBasicDecimalP()).getUnscaled() - jcall!(jcall!(jcall!(vehicleProperties).getVelocityProperties()).getVelocityXBasicDecimalP()).getUnscaled();

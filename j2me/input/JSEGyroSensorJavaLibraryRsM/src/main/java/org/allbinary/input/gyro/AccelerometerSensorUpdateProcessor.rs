@@ -23,6 +23,7 @@ use crate::org::allbinary::game::configuration::feature::SensorFeatureFactory::S
 use crate::org::allbinary::game::input::motion::action::NoCompleteMotionGestureInputEventListener::NoCompleteMotionGestureInputEventListener;
 use crate::org::allbinary::game::input::motion::action::SingleKeyPressGameKeyFromMotionGestureEventListener::SingleKeyPressGameKeyFromMotionGestureEventListener;
 use crate::org::allbinary::input::accelerometer::AccelerometerSensorFactory::AccelerometerSensorFactory;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -53,12 +54,12 @@ impl AccelerometerSensorUpdateProcessor {
     // throws Exception
     pub fn process(&mut self) {
         let mut sensorFeatureFactory: Option<Rc<RefCell<SensorFeatureFactory>>> = SensorFeatureFactory::getInstance();
-        if jcall!(Features::getInstance()).isFeature(jcall!(sensorFeatureFactory).ORIENTATION_SENSORS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            jcall!(AccelerometerSensorFactory::getInstance()).setCompleteMotionGestureInputEventListener(SingleKeyPressGameKeyFromMotionGestureEventListener::new());
-        } else if jcall!(Features::getInstance()).isFeature(jcall!(sensorFeatureFactory).SIMULATED_ORIENTATION_SENSORS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            jcall!(AccelerometerSensorFactory::getInstance()).setCompleteMotionGestureInputEventListener(SingleKeyPressGameKeyFromMotionGestureEventListener::new());
-        } else if jcall!(Features::getInstance()).isFeature(jcall!(sensorFeatureFactory).NO_ORIENTATION.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            jcall!(AccelerometerSensorFactory::getInstance()).setCompleteMotionGestureInputEventListener(NoCompleteMotionGestureInputEventListener::getInstance());
+        if jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(sensorFeatureFactory).ORIENTATION_SENSORS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            jcall!(AccelerometerSensorFactory::getInstance()).setCompleteMotionGestureInputEventListener(SingleKeyPressGameKeyFromMotionGestureEventListener::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEventListenerInterface::CompleteMotionGestureInputEventListenerInterface>>));
+        } else if jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(sensorFeatureFactory).SIMULATED_ORIENTATION_SENSORS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            jcall!(AccelerometerSensorFactory::getInstance()).setCompleteMotionGestureInputEventListener(SingleKeyPressGameKeyFromMotionGestureEventListener::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEventListenerInterface::CompleteMotionGestureInputEventListenerInterface>>));
+        } else if jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(sensorFeatureFactory).NO_ORIENTATION.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            jcall!(AccelerometerSensorFactory::getInstance()).setCompleteMotionGestureInputEventListener(NoCompleteMotionGestureInputEventListener::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEventListenerInterface::CompleteMotionGestureInputEventListenerInterface>>));
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Sensor Feature Not Set"))));
         }

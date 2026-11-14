@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
+use crate::java::lang::Exception::*;
 use super::ArtificialIntelligenceInterface::ArtificialIntelligenceInterface;
 
 // Borrows the object of a Java reference
@@ -40,6 +41,10 @@ impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface f
 }
 
 impl ArtificialIntelligence {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn ArtificialIntelligenceDyn>>> {
@@ -67,7 +72,7 @@ impl ArtificialIntelligence {
         return 1;
     }
 }
-pub trait ArtificialIntelligenceDyn {
+pub trait ArtificialIntelligenceDyn: std::any::Any {
     fn as_ArtificialIntelligence(&self) -> &ArtificialIntelligence;
     fn as_ArtificialIntelligence_mut(&mut self) -> &mut ArtificialIntelligence;
     fn processAI(&mut self, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { ArtificialIntelligence::processAI(self.as_ArtificialIntelligence_mut(), layerManager) }

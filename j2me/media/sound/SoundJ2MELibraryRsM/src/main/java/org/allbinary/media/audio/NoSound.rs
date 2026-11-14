@@ -43,10 +43,10 @@ impl NoSound {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: Sound::new_struct(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()),
+            base: Sound::new_struct({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()),
         };
         // super(...) is in the struct literal above
-        this.setPlayerP(NoPlayer_NO_PLAYER.with(Clone::clone).clone());
+        { let java_arguments = (NoPlayer_NO_PLAYER.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::media::Player::Player>>),); this.setPlayerP(java_arguments.0) };
         this
     }
 
@@ -65,6 +65,11 @@ impl std::ops::DerefMut for NoSound {
 impl crate::org::allbinary::media::audio::Sound::SoundDyn for NoSound {
     fn as_Sound(&self) -> &crate::org::allbinary::media::audio::Sound::Sound { &self.base }
     fn as_Sound_mut(&mut self) -> &mut crate::org::allbinary::media::audio::Sound::Sound { &mut self.base }
+}
+impl crate::org::allbinary::media::audio::SoundInterface::SoundInterface for NoSound {
+    fn getResource(&mut self) -> String { crate::org::allbinary::media::audio::Sound::Sound::getResource(crate::org::allbinary::media::audio::Sound::SoundDyn::as_Sound_mut(self)) }
+    fn getPlayerP(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::media::Player::Player>>> { crate::org::allbinary::media::audio::Sound::Sound::getPlayerP(crate::org::allbinary::media::audio::Sound::SoundDyn::as_Sound_mut(self)) }
+    fn init(&mut self) { crate::org::allbinary::media::audio::Sound::Sound::init(crate::org::allbinary::media::audio::Sound::SoundDyn::as_Sound_mut(self)) }
 }
 impl crate::Runnable for NoSound {
     fn run(&mut self) { crate::org::allbinary::media::audio::Sound::Sound::run(crate::org::allbinary::media::audio::Sound::SoundDyn::as_Sound_mut(self)) }

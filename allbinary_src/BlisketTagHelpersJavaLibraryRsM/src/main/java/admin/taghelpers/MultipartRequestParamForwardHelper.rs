@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
@@ -30,6 +29,7 @@ use crate::org::allbinary::logic::string::StringValidationUtil::StringValidation
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::tags::HelperTag::HelperTag;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -49,6 +49,10 @@ pub struct MultipartRequestParamForwardHelper {
 
 
 impl MultipartRequestParamForwardHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut parentHelperTag: Option<Rc<RefCell<dyn crate::tags::HelperTag::HelperTagDyn>>>, mut page: String, mut command: String, mut paramVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
@@ -65,7 +69,7 @@ impl MultipartRequestParamForwardHelper {
         this.page = page.clone();
         this.command = command.clone();
         this.paramVector = paramVector.clone();
-        this.requestMapInterface = jcall!(InventoryItemViewParentTagHelper::InventoryItemViewParentTagHelper::getInstance()).getRequestMapInterface(parentHelperTag.clone());
+        this.requestMapInterface = { let java_value = (jcall!(InventoryItemViewParentTagHelper::InventoryItemViewParentTagHelper::getInstance()).getRequestMapInterface(parentHelperTag.clone())).clone(); java_value };
         this
     }
 
@@ -87,11 +91,11 @@ impl MultipartRequestParamForwardHelper {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("forward()"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("forward()"), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -100,15 +104,15 @@ impl MultipartRequestParamForwardHelper {
 
     pub fn getParams(&mut self) -> String {
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
-        let mut AMP: String = jcall!(commonSeps).AMPERSAND.clone();
-        let mut QUESTION: String = jcall!(commonSeps).QUESTION.clone();
-        let mut EQUALS: String = jcall!(commonSeps).EQUALS.clone();
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(self.requestMapInterface).getRequestHashMap();
+        let mut AMP: String = { let java_field = jcall!(commonSeps).AMPERSAND.clone(); java_field }.clone();
+        let mut QUESTION: String = { let java_field = jcall!(commonSeps).QUESTION.clone(); java_field }.clone();
+        let mut EQUALS: String = { let java_field = jcall!(commonSeps).EQUALS.clone(); java_field }.clone();
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(self.requestMapInterface).getRequestHashMap();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut size: i32 = jcall!(self.paramVector).size();
         for index in (0..size) {
-            let mut key: String = (jcall!(self.paramVector).get(index.clone())).clone() /* as String */;
-            let mut value: String = (jcall!(hashMap).get(key.clone())).clone() /* as String */;
+            let mut key: String = { let java_object = (jcall!(self.paramVector).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut value: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(key.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             if index != 0 {
                 jcall!(stringBuffer).append(AMP.clone());
             } else {
@@ -123,8 +127,8 @@ impl MultipartRequestParamForwardHelper {
     
 
     pub fn shouldForward(&mut self) -> bool {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(self.requestMapInterface).getRequestHashMap();
-        let mut requestCommand: String = (jcall!(hashMap).get(crate::org::allbinary::globals::GLOBALS2::GLOBALS2_ADMINCOMMAND.with(Clone::clone).clone())).clone() /* as String */;
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(self.requestMapInterface).getRequestHashMap();
+        let mut requestCommand: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(crate::org::allbinary::globals::GLOBALS2::GLOBALS2_ADMINCOMMAND.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if jcall!(StringValidationUtil::getInstance()).isEmpty(self.command.clone()) || (!jcall!(StringValidationUtil::getInstance()).isEmpty(requestCommand.clone()) && (self.command.cmp(&requestCommand.clone()) as i32) == 0) {
             return true;
         }

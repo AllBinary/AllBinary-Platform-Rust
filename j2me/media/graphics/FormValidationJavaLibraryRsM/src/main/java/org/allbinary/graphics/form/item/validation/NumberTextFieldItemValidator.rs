@@ -65,17 +65,17 @@ impl NumberTextFieldItemValidator {
     
 
     pub fn isNumberValid(&mut self, mut value: Option<i32>) -> Option<bool> {
-        return jcall!(BooleanFactory::getInstance()).TRUE.clone();
+        return { let java_field = jcall!(BooleanFactory::getInstance()).TRUE.clone(); java_field }.clone();
     }
     
 
     pub fn toNumberVector(&mut self, mut value: Option<i32>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        return BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        return BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
     }
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        let mut result: Option<bool> = jcall!(BooleanFactory::getInstance()).TRUE.clone();
+        let mut result: Option<bool> = { let java_field = jcall!(BooleanFactory::getInstance()).TRUE.clone(); java_field }.clone();
         let mut string: String = jcall!(self.textFieldItem).getString();
         let mut textLength: i32 = (string.chars().count() as i32);
         if textLength > 0 && textLength < self.maxChars {
@@ -84,16 +84,16 @@ impl NumberTextFieldItemValidator {
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                result = jcall!(BooleanFactory::getInstance()).FALSE.clone();
+                result = { let java_value = ({ let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }).clone(); java_value }.clone();
                 }
             }
         } else {
             if textLength < 1 {
-                result = jcall!(BooleanFactory::getInstance()).FALSE.clone();
+                result = { let java_value = ({ let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }).clone(); java_value }.clone();
             } else if textLength > self.maxChars {
-                result = jcall!(BooleanFactory::getInstance()).FALSE.clone();
+                result = { let java_value = ({ let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }).clone(); java_value }.clone();
             }
         }
         return result.clone();
@@ -101,7 +101,7 @@ impl NumberTextFieldItemValidator {
     
 
     pub fn toList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut string: String = jcall!(self.textFieldItem).getString();
         let mut textLength: i32 = (string.chars().count() as i32);
         let mut label: String = jcall!(self.textFieldItem).getLabel();
@@ -121,7 +121,7 @@ impl NumberTextFieldItemValidator {
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                 jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
                 jcall!(list).add(crate::java_into_object(jcall!(stringMaker).append(name.clone()).append(String::from(" is not a number")).toString()));

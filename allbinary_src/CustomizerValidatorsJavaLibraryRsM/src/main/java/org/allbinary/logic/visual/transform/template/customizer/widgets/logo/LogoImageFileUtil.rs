@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::io::file::FileUtil::FileUtil;
 use crate::org::allbinary::logic::io::file::directory::Directory::Directory;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::apache::commons::fileupload::FileItem::FileItem;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,6 +40,10 @@ pub struct LogoImageFileUtil {
 
 
 impl LogoImageFileUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut imageAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>, mut imageFile: String) -> Self {
@@ -68,7 +73,7 @@ impl LogoImageFileUtil {
         }
         let mut originalImageFile: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFile(format!("{}{}", jcall!(self.imageFileAbPath).toString(), self.fileName));
         jcall!(originalImageFile).createNewFile();
-        jcall!(FileUtil::getInstance()).write(ByteArrayInputStream::new(jcall!(fileItem).get()), originalImageFile.clone());
+        jcall!(FileUtil::getInstance()).write(crate::java::io::InputStream::InputStream::new1(jcall!(fileItem).get()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>), originalImageFile.clone());
     }
 }
 

@@ -33,6 +33,10 @@ thread_local! { pub static ModelViewProjection_instance: Option<Rc<RefCell<Model
 
 impl ModelViewProjection {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -50,7 +54,7 @@ impl ModelViewProjection {
     
 
     pub fn get(&mut self) -> Vec<f32> {
-        return jcall!(NullUtil::getInstance()).NULL_FLOAT_ARRAY.clone();
+        return { let java_field = jcall!(NullUtil::getInstance()).NULL_FLOAT_ARRAY.clone(); java_field }.clone();
     }
 }
 

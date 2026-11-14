@@ -27,9 +27,8 @@ use crate::org::allbinary::input::automation::module::generic::configuration::pr
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::JPanel::JPanel;
-use super::swing::swing;
-use super::javax::javax;
 use super::GenericModuleConfigurationInterface::GenericModuleConfigurationInterface;
 use super::JDialog::JDialog;
 use super::JButton::JButton;
@@ -42,10 +41,7 @@ use super::JList::JList;
 use super::JRadioButton::JRadioButton;
 use super::JCheckBox::JCheckBox;
 use super::Dimension::Dimension;
-use super::awt::awt;
-use super::java::java;
 use super::ActionListener::ActionListener;
-use super::event::event;
 use super::ActionEvent::ActionEvent;
 use super::GroupLayout::GroupLayout;
 use super::GridLayout::GridLayout;
@@ -130,7 +126,7 @@ impl GenericModuleConfigurationJPanel {
         this.stringUtil = StringUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
         this.initComponents();
-        this.setGenericProfiles(GenericProfiles::new(crate::org::allbinary::input::automation::module::generic::configuration::profile::GenericProfiles::GenericProfiles_DEFAULT_FILE.with(Clone::clone).clone()));
+        { let java_arguments = (GenericProfiles::new(crate::org::allbinary::input::automation::module::generic::configuration::profile::GenericProfiles::GenericProfiles_DEFAULT_FILE.with(Clone::clone).clone()),); this.setGenericProfiles(java_arguments.0) };
         this.selectFirstElement();
         this
     }
@@ -174,12 +170,12 @@ impl GenericModuleConfigurationJPanel {
         jcall!(self.newProfileNameJLabel).setText(String::from("New Profile Name"));
         let mut newProfileJDialogLayout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(jcall!(self.newProfileJDialog).getContentPane());
         jcall!(jcall!(self.newProfileJDialog).getContentPane()).setLayout(newProfileJDialogLayout.clone());
-        jcall!(newProfileJDialogLayout).setHorizontalGroup(jcall!(jcall!(newProfileJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(newProfileJDialogLayout).createSequentialGroup()).addGroup(jcall!(jcall!(jcall!(jcall!(newProfileJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(newProfileJDialogLayout).createSequentialGroup()).addGap(80, 80, 80)).addComponent(self.newProfileNameJLabel.clone()))).addGroup(jcall!(jcall!(jcall!(newProfileJDialogLayout).createSequentialGroup()).addGap(30, 30, 30)).addComponent(self.newProfileNameJTextField.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), 180, jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone()))).addGroup(jcall!(jcall!(jcall!(newProfileJDialogLayout).createSequentialGroup()).addGap(100, 100, 100)).addComponent(self.okNewProfileJButton.clone())))).addContainerGap(35, i16::MAX.clone())));
-        jcall!(newProfileJDialogLayout).setVerticalGroup(jcall!(jcall!(newProfileJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(newProfileJDialogLayout).createSequentialGroup()).addGap(10, 10, 10)).addComponent(self.newProfileNameJLabel.clone())).addGap(16, 16, 16)).addComponent(self.newProfileNameJTextField.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone())).addGap(20, 20, 20)).addComponent(self.okNewProfileJButton.clone())));
+        jcall!(newProfileJDialogLayout).setHorizontalGroup(jcall!(jcall!(newProfileJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(newProfileJDialogLayout).createSequentialGroup()).addGroup(jcall!(jcall!(jcall!(jcall!(newProfileJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(newProfileJDialogLayout).createSequentialGroup()).addGap(80, 80, 80)).addComponent(self.newProfileNameJLabel.clone()))).addGroup(jcall!(jcall!(jcall!(newProfileJDialogLayout).createSequentialGroup()).addGap(30, 30, 30)).addComponent(self.newProfileNameJTextField.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), 180, { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone()))).addGroup(jcall!(jcall!(jcall!(newProfileJDialogLayout).createSequentialGroup()).addGap(100, 100, 100)).addComponent(self.okNewProfileJButton.clone())))).addContainerGap(35, i16::MAX.clone())));
+        jcall!(newProfileJDialogLayout).setVerticalGroup(jcall!(jcall!(newProfileJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(newProfileJDialogLayout).createSequentialGroup()).addGap(10, 10, 10)).addComponent(self.newProfileNameJLabel.clone())).addGap(16, 16, 16)).addComponent(self.newProfileNameJTextField.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).addGap(20, 20, 20)).addComponent(self.okNewProfileJButton.clone())));
         self.setLayout(GridLayout::new(1, 0));
         self.setMinimumSize(Dimension::new(400, 300));
         self.setPreferredSize(Dimension::new(700, 700));
-        jcall!(self.genericJTabbedPane).setToolTipText(jcall!(self.stringUtil).EMPTY_STRING.clone());
+        jcall!(self.genericJTabbedPane).setToolTipText({ let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }.clone());
         jcall!(self.genericJTabbedPane).setMinimumSize(Dimension::new(800, 600));
         jcall!(self.genericProfilesJPanel).setMinimumSize(Dimension::new(400, 300));
         jcall!(self.genericProfilesJPanel).setPreferredSize(Dimension::new(0, 0));
@@ -212,7 +208,7 @@ impl GenericModuleConfigurationJPanel {
         jcall!(self.jPanel1).setPreferredSize(Dimension::new(1000, 100));
         jcall!(self.screenCaptureJRadioButton).setText(String::from("Screen Captures"));
         jcall!(self.screenCaptureJRadioButton).setToolTipText(String::from("Records the screen into memory for logical processing"));
-        { let java_receiver = self.screenCaptureJRadioButton.clone(); let java_arguments = (jcall!(jcall!(unsafe { javax_swing.clone() }).BorderFactory).createEmptyBorder(0, 0, 0, 0),); jcall!(java_receiver).setBorder(java_arguments.0); };
+        { let java_receiver = self.screenCaptureJRadioButton.clone(); let java_arguments = (jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).BorderFactory.clone(); java_field }).createEmptyBorder(0, 0, 0, 0),); jcall!(java_receiver).setBorder(java_arguments.0); };
         jcall!(self.screenCaptureJRadioButton).setMargin(Insets::new(0, 0, 0, 0));
         { let java_receiver = self.screenCaptureJRadioButton.clone(); let java_arguments = (ActionListener::new() /* Java anonymous class body: implement it as a named type
             
@@ -225,7 +221,7 @@ impl GenericModuleConfigurationJPanel {
         jcall!(self.jLabel2).setText(String::from("Process From:"));
         jcall!(self.savedCaptureJRadioButton).setText(String::from("Saved Images"));
         jcall!(self.savedCaptureJRadioButton).setToolTipText(String::from("Loads images from files for logical processing.  Usually for debugging your profile actions"));
-        { let java_receiver = self.savedCaptureJRadioButton.clone(); let java_arguments = (jcall!(jcall!(unsafe { javax_swing.clone() }).BorderFactory).createEmptyBorder(0, 0, 0, 0),); jcall!(java_receiver).setBorder(java_arguments.0); };
+        { let java_receiver = self.savedCaptureJRadioButton.clone(); let java_arguments = (jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).BorderFactory.clone(); java_field }).createEmptyBorder(0, 0, 0, 0),); jcall!(java_receiver).setBorder(java_arguments.0); };
         jcall!(self.savedCaptureJRadioButton).setMargin(Insets::new(0, 0, 0, 0));
         { let java_receiver = self.savedCaptureJRadioButton.clone(); let java_arguments = (ActionListener::new() /* Java anonymous class body: implement it as a named type
             
@@ -236,7 +232,7 @@ impl GenericModuleConfigurationJPanel {
 */,); jcall!(java_receiver).addActionListener(java_arguments.0); };
         jcall!(self.captureMotionAnalysisJCheckBox).setText(String::from("Motion Analysis"));
         jcall!(self.captureMotionAnalysisJCheckBox).setToolTipText(String::from("Uses image comparison and contraints to locate moving objects"));
-        { let java_receiver = self.captureMotionAnalysisJCheckBox.clone(); let java_arguments = (jcall!(jcall!(unsafe { javax_swing.clone() }).BorderFactory).createEmptyBorder(0, 0, 0, 0),); jcall!(java_receiver).setBorder(java_arguments.0); };
+        { let java_receiver = self.captureMotionAnalysisJCheckBox.clone(); let java_arguments = (jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).BorderFactory.clone(); java_field }).createEmptyBorder(0, 0, 0, 0),); jcall!(java_receiver).setBorder(java_arguments.0); };
         jcall!(self.captureMotionAnalysisJCheckBox).setMargin(Insets::new(0, 0, 0, 0));
         { let java_receiver = self.captureMotionAnalysisJCheckBox.clone(); let java_arguments = (ActionListener::new() /* Java anonymous class body: implement it as a named type
             
@@ -247,7 +243,7 @@ impl GenericModuleConfigurationJPanel {
 */,); jcall!(java_receiver).addActionListener(java_arguments.0); };
         jcall!(self.captureComparisonJCheckBox).setText(String::from("Comparison"));
         jcall!(self.captureComparisonJCheckBox).setToolTipText(String::from("Compares the last two input images for multi image logic"));
-        { let java_receiver = self.captureComparisonJCheckBox.clone(); let java_arguments = (jcall!(jcall!(unsafe { javax_swing.clone() }).BorderFactory).createEmptyBorder(0, 0, 0, 0),); jcall!(java_receiver).setBorder(java_arguments.0); };
+        { let java_receiver = self.captureComparisonJCheckBox.clone(); let java_arguments = (jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).BorderFactory.clone(); java_field }).createEmptyBorder(0, 0, 0, 0),); jcall!(java_receiver).setBorder(java_arguments.0); };
         jcall!(self.captureComparisonJCheckBox).setMargin(Insets::new(0, 0, 0, 0));
         { let java_receiver = self.captureComparisonJCheckBox.clone(); let java_arguments = (ActionListener::new() /* Java anonymous class body: implement it as a named type
             
@@ -260,19 +256,19 @@ impl GenericModuleConfigurationJPanel {
         jcall!(self.jLabel3).setToolTipText(String::from("Turns on/off various extended image processing"));
         let mut jPanel1Layout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(self.jPanel1.clone());
         jcall!(self.jPanel1).setLayout(jPanel1Layout.clone());
-        jcall!(jPanel1Layout).setHorizontalGroup(jcall!(jcall!(jPanel1Layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(jPanel1Layout).createSequentialGroup()).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jPanel1Layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addComponent(self.screenCaptureJRadioButton.clone())).addComponent(self.jLabel1.clone())).addComponent(self.jLabel2.clone())).addComponent(self.savedCaptureJRadioButton.clone())).addComponent(self.captureMotionAnalysisJCheckBox.clone())).addComponent(self.captureComparisonJCheckBox.clone())).addComponent(self.jLabel3.clone()))).addContainerGap(22, i16::MAX.clone())));
-        jcall!(jPanel1Layout).setVerticalGroup(jcall!(jcall!(jPanel1Layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jPanel1Layout).createSequentialGroup()).addComponent(self.jLabel1.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).LayoutStyle).ComponentPlacement).RELATED.clone())).addComponent(self.jLabel2.clone())).addGap(7, 7, 7)).addComponent(self.screenCaptureJRadioButton.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).LayoutStyle).ComponentPlacement).RELATED.clone())).addComponent(self.savedCaptureJRadioButton.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).LayoutStyle).ComponentPlacement).RELATED.clone())).addComponent(self.jLabel3.clone())).addGap(7, 7, 7)).addComponent(self.captureComparisonJCheckBox.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).LayoutStyle).ComponentPlacement).RELATED.clone())).addComponent(self.captureMotionAnalysisJCheckBox.clone())).addContainerGap(106, i16::MAX.clone())));
+        jcall!(jPanel1Layout).setHorizontalGroup(jcall!(jcall!(jPanel1Layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jPanel1Layout).createSequentialGroup()).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jPanel1Layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addComponent(self.screenCaptureJRadioButton.clone())).addComponent(self.jLabel1.clone())).addComponent(self.jLabel2.clone())).addComponent(self.savedCaptureJRadioButton.clone())).addComponent(self.captureMotionAnalysisJCheckBox.clone())).addComponent(self.captureComparisonJCheckBox.clone())).addComponent(self.jLabel3.clone()))).addContainerGap(22, i16::MAX.clone())));
+        jcall!(jPanel1Layout).setVerticalGroup(jcall!(jcall!(jPanel1Layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jPanel1Layout).createSequentialGroup()).addComponent(self.jLabel1.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).LayoutStyle.clone(); java_field }).ComponentPlacement.clone(); java_field }).RELATED.clone(); java_field }.clone())).addComponent(self.jLabel2.clone())).addGap(7, 7, 7)).addComponent(self.screenCaptureJRadioButton.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).LayoutStyle.clone(); java_field }).ComponentPlacement.clone(); java_field }).RELATED.clone(); java_field }.clone())).addComponent(self.savedCaptureJRadioButton.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).LayoutStyle.clone(); java_field }).ComponentPlacement.clone(); java_field }).RELATED.clone(); java_field }.clone())).addComponent(self.jLabel3.clone())).addGap(7, 7, 7)).addComponent(self.captureComparisonJCheckBox.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).LayoutStyle.clone(); java_field }).ComponentPlacement.clone(); java_field }).RELATED.clone(); java_field }.clone())).addComponent(self.captureMotionAnalysisJCheckBox.clone())).addContainerGap(106, i16::MAX.clone())));
         let mut genericProfilesJPanelLayout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(self.genericProfilesJPanel.clone());
         jcall!(self.genericProfilesJPanel).setLayout(genericProfilesJPanelLayout.clone());
-        jcall!(genericProfilesJPanelLayout).setHorizontalGroup(jcall!(jcall!(genericProfilesJPanelLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(genericProfilesJPanelLayout).createSequentialGroup()).addGroup(jcall!(jcall!(jcall!(genericProfilesJPanelLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(genericProfilesJPanelLayout).createSequentialGroup()).addComponent(self.newProfileJButton.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).LayoutStyle).ComponentPlacement).RELATED.clone())).addComponent(self.deleteProfileJButton.clone()))).addGroup(jcall!(jcall!(jcall!(jcall!(genericProfilesJPanelLayout).createSequentialGroup()).addComponent(self.genericProfilesJScrollPane.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).LayoutStyle).ComponentPlacement).RELATED.clone())).addComponent(self.jPanel1.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), 119, i16::MAX.clone())))).addContainerGap()));
-        jcall!(genericProfilesJPanelLayout).setVerticalGroup(jcall!(jcall!(genericProfilesJPanelLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(genericProfilesJPanelLayout).createSequentialGroup()).addGroup(jcall!(jcall!(jcall!(genericProfilesJPanelLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).BASELINE.clone())).addComponent(self.newProfileJButton.clone())).addComponent(self.deleteProfileJButton.clone()))).addPreferredGap(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).LayoutStyle).ComponentPlacement).RELATED.clone())).addGroup(jcall!(jcall!(jcall!(genericProfilesJPanelLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addComponent(self.jPanel1.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), 246, i16::MAX.clone())).addComponent(self.genericProfilesJScrollPane.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), 246, i16::MAX.clone()))));
+        jcall!(genericProfilesJPanelLayout).setHorizontalGroup(jcall!(jcall!(genericProfilesJPanelLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(genericProfilesJPanelLayout).createSequentialGroup()).addGroup(jcall!(jcall!(jcall!(genericProfilesJPanelLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(genericProfilesJPanelLayout).createSequentialGroup()).addComponent(self.newProfileJButton.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).LayoutStyle.clone(); java_field }).ComponentPlacement.clone(); java_field }).RELATED.clone(); java_field }.clone())).addComponent(self.deleteProfileJButton.clone()))).addGroup(jcall!(jcall!(jcall!(jcall!(genericProfilesJPanelLayout).createSequentialGroup()).addComponent(self.genericProfilesJScrollPane.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).LayoutStyle.clone(); java_field }).ComponentPlacement.clone(); java_field }).RELATED.clone(); java_field }.clone())).addComponent(self.jPanel1.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), 119, i16::MAX.clone())))).addContainerGap()));
+        jcall!(genericProfilesJPanelLayout).setVerticalGroup(jcall!(jcall!(genericProfilesJPanelLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(genericProfilesJPanelLayout).createSequentialGroup()).addGroup(jcall!(jcall!(jcall!(genericProfilesJPanelLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).BASELINE.clone(); java_field }.clone())).addComponent(self.newProfileJButton.clone())).addComponent(self.deleteProfileJButton.clone()))).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).LayoutStyle.clone(); java_field }).ComponentPlacement.clone(); java_field }).RELATED.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(genericProfilesJPanelLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addComponent(self.jPanel1.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), 246, i16::MAX.clone())).addComponent(self.genericProfilesJScrollPane.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), 246, i16::MAX.clone()))));
         jcall!(self.genericJTabbedPane).addTab(String::from("Profiles"), self.genericProfilesJPanel.clone());
         let mut blankGenericProfileActionsJPanelLayout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(self.blankGenericProfileActionsJPanel.clone());
         jcall!(self.blankGenericProfileActionsJPanel).setLayout(blankGenericProfileActionsJPanelLayout.clone());
-        jcall!(blankGenericProfileActionsJPanelLayout).setHorizontalGroup(jcall!(jcall!(blankGenericProfileActionsJPanelLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGap(0, 395, i16::MAX.clone()));
-        jcall!(blankGenericProfileActionsJPanelLayout).setVerticalGroup(jcall!(jcall!(blankGenericProfileActionsJPanelLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGap(0, 275, i16::MAX.clone()));
+        jcall!(blankGenericProfileActionsJPanelLayout).setHorizontalGroup(jcall!(jcall!(blankGenericProfileActionsJPanelLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGap(0, 395, i16::MAX.clone()));
+        jcall!(blankGenericProfileActionsJPanelLayout).setVerticalGroup(jcall!(jcall!(blankGenericProfileActionsJPanelLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGap(0, 275, i16::MAX.clone()));
         jcall!(self.genericJTabbedPane).addTab(String::from("Actions"), self.blankGenericProfileActionsJPanel.clone());
-        self.add(self.genericJTabbedPane.clone());
+        { let java_arguments = (self.genericJTabbedPane.clone(),); self.add(java_arguments.0) };
     }
     
 
@@ -288,9 +284,9 @@ impl GenericModuleConfigurationJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("savedCaptureJRadioButtonActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("savedCaptureJRadioButtonActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -308,9 +304,9 @@ impl GenericModuleConfigurationJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("screenCaptureJRadioButtonActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("screenCaptureJRadioButtonActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -327,9 +323,9 @@ impl GenericModuleConfigurationJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("captureComparisonJCheckBoxActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("captureComparisonJCheckBoxActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -346,9 +342,9 @@ impl GenericModuleConfigurationJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("captureComparisonJCheckBoxActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("captureComparisonJCheckBoxActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -359,13 +355,13 @@ impl GenericModuleConfigurationJPanel {
         jcall!(self.getBlankGenericProfileActionsJPanel()).removeAll();
         if true {
             let mut genericProfileActionsJPanel: Option<Rc<RefCell<GenericProfileActionsJPanel>>> = GenericProfileActionsJPanel::new();
-            { let java_arguments = (jcall!(self.getGenericProfiles()).get(profileNameString.clone()),); self.setSelectedGenericProfile(java_arguments.0) };
+            { let java_arguments = ({ let java_argument = jcall!(self.getGenericProfiles()).get(profileNameString.clone()); java_argument },); self.setSelectedGenericProfile(java_arguments.0) };
             jcall!(self.getSelectedGenericProfile()).setGenericProfileActions(GenericProfileActions::new2(genericProfileActionsJPanel.clone(), profileNameString.clone()));
-            jcall!(genericProfileActionsJPanel).setGenericProfileActions(jcall!(self.getSelectedGenericProfile()).getGenericProfileActions());
+            jcall!(genericProfileActionsJPanel).setGenericProfileActions({ let java_argument = jcall!(self.getSelectedGenericProfile()).getGenericProfileActions(); java_argument });
             jcall!(genericProfileActionsJPanel).selectFirstElement();
             let mut layout: Option<Rc<RefCell<GroupLayout>>> = (jcall!(self.getBlankGenericProfileActionsJPanel()).getLayout()).clone() /* as GroupLayout */;
-            jcall!(layout).setHorizontalGroup(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGap(0, 395, i16::MAX.clone())).addComponent(genericProfileActionsJPanel.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone()));
-            jcall!(layout).setVerticalGroup(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGap(0, 256, i16::MAX.clone())).addComponent(genericProfileActionsJPanel.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone()));
+            jcall!(layout).setHorizontalGroup(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGap(0, 395, i16::MAX.clone())).addComponent(genericProfileActionsJPanel.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone()));
+            jcall!(layout).setVerticalGroup(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGap(0, 256, i16::MAX.clone())).addComponent(genericProfileActionsJPanel.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone()));
             self.updateProfileOptions();
             jcall!(self.logUtil).putF(String::from("Setting Configuration Profile JPanel"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateProfileUI"));
         } else {
@@ -376,7 +372,7 @@ impl GenericModuleConfigurationJPanel {
 
     // throws Exception
     pub fn selectFirstElement(&mut self) {
-        { let java_receiver = self.genericProfilesJList.clone(); let java_arguments = (jcall!(jcall!(self.getGenericProfiles()).getDefaultListModelHelper()).getListModel(),); jcall!(java_receiver).setModel(java_arguments.0); };
+        { let java_receiver = self.genericProfilesJList.clone(); let java_arguments = ({ let java_argument = jcall!(jcall!(self.getGenericProfiles()).getDefaultListModelHelper()).getListModel(); java_argument },); jcall!(java_receiver).setModel(java_arguments.0); };
         if jcall!(jcall!(self.genericProfilesJList).getModel()).getSize() > 0 {
             { let java_receiver = self.genericProfilesJList.clone(); let java_arguments = (jcall!(jcall!(self.genericProfilesJList).getModel()).getElementAt(0), true,); jcall!(java_receiver).setSelectedValue(java_arguments.0, java_arguments.1); };
             { let java_arguments = ((jcall!(jcall!(self.genericProfilesJList).getModel()).getElementAt(0)).clone() /* as String */,); self.updateProfileUI(java_arguments.0) };
@@ -386,7 +382,7 @@ impl GenericModuleConfigurationJPanel {
 
     // throws Exception
     pub fn updateProfileOptions(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateProfileOptions"));
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateProfileOptions"));
         let mut genericProfile: Option<Rc<RefCell<GenericProfile>>> = self.getSelectedGenericProfile();
         let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(genericProfile).getGenericProfileDataWorkerTypeVector();
         jcall!(self.screenCaptureJRadioButton).setSelected(false);
@@ -415,7 +411,7 @@ impl GenericModuleConfigurationJPanel {
             jcall!(self.screenCaptureJRadioButton).setSelected(true);
             jcall!(self.getSelectedGenericProfile()).add(unsafe { crate::org::allbinary::input::automation::module::generic::configuration::profile::GenericProfileDataWorkerType::GenericProfileDataWorkerType_SCREEN_CAPTURE.clone() }.clone());
         }
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).END.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateProfileOptions"));
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).END.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateProfileOptions"));
     }
     
 
@@ -456,9 +452,9 @@ impl GenericModuleConfigurationJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("genericProfilesJListValueChanged"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("genericProfilesJListValueChanged"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -468,16 +464,16 @@ impl GenericModuleConfigurationJPanel {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut anyType: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(self.genericProfilesJList).getSelectedValues();
             for index in (0..(anyType.len() as i32)) {
-                let mut nextSelectedValueString: String = (anyType[(index) as usize]).clone() /* as String */;
+                let mut nextSelectedValueString: String = { let java_object = (anyType[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
                 jcall!(self.getGenericProfiles()).remove(nextSelectedValueString.clone());
             }
             self.selectFirstElement();
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("deleteProfileJButtonActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("deleteProfileJButtonActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -487,16 +483,16 @@ impl GenericModuleConfigurationJPanel {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut newProfileName: String = jcall!(self.newProfileNameJTextField).getText();
             jcall!(self.getGenericProfiles()).add(newProfileName.clone());
-            { let java_receiver = self.genericProfilesJList.clone(); let java_arguments = (jcall!(jcall!(self.getGenericProfiles()).getDefaultListModelHelper()).getListModel(),); jcall!(java_receiver).setModel(java_arguments.0); };
+            { let java_receiver = self.genericProfilesJList.clone(); let java_arguments = ({ let java_argument = jcall!(jcall!(self.getGenericProfiles()).getDefaultListModelHelper()).getListModel(); java_argument },); jcall!(java_receiver).setModel(java_arguments.0); };
             jcall!(self.genericProfilesJList).setSelectedValue(newProfileName.clone(), true);
             jcall!(self.newProfileJDialog).setVisible(false);
             self.updateProfileUI(newProfileName.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("okNewProfileJButtonActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("okNewProfileJButtonActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }

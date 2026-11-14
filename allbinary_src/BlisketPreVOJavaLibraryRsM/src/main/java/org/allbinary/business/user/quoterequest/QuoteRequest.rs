@@ -16,11 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::Calendar;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::Calendar::Calendar;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::Calendar::Calendar;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
@@ -34,6 +32,7 @@ use crate::org::allbinary::logic::communication::sql::AbSqlData::AbSqlData;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -56,6 +55,10 @@ pub struct QuoteRequest {
 
 
 impl QuoteRequest {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct2(mut userName: String, mut request: Option<Rc<RefCell<HttpServletRequest>>>) -> Self {
@@ -73,15 +76,15 @@ impl QuoteRequest {
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
         let mut quoteRequestData: Option<Rc<RefCell<QuoteRequestData>>> = QuoteRequestData::getInstance();
-        this.id = jcall!(QuoteRequestIdGenerator::new()).getNext();
+        this.id = { let java_value = (jcall!(QuoteRequestIdGenerator::new()).getNext()).clone(); java_value };
         this.setUserName(userName.clone());
-        { let java_arguments = ((jcall!(request).getParameter(jcall!(quoteRequestData).PROJECT_INFO.clone())).clone() /* as String */,); this.setProjectInfo(java_arguments.0) };
-        { let java_arguments = ((jcall!(request).getParameter(jcall!(quoteRequestData).CUSTOMER_COMMENTS.clone())).clone() /* as String */,); this.setUserComments(java_arguments.0) };
-        { let java_arguments = ((jcall!(request).getParameter(jcall!(quoteRequestData).BUDGET.clone())).clone() /* as String */,); this.setBudget(java_arguments.0) };
-        { let java_arguments = ((jcall!(request).getParameter(jcall!(quoteRequestData).TIMEFRAME.clone())).clone() /* as String */,); this.setTimeFrame(java_arguments.0) };
-        { let java_arguments = ((jcall!(request).getParameter(jcall!(quoteRequestData).COMMENTS.clone())).clone() /* as String */,); this.setComments(java_arguments.0) };
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).TAGHELPER.clone()) {
-            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Created with: "), this.toHashMap()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_arguments = ((jcall!(request).getParameter({ let java_field = jcall!(quoteRequestData).PROJECT_INFO.clone(); java_field }.clone())).clone() /* as String */,); this.setProjectInfo(java_arguments.0) };
+        { let java_arguments = ((jcall!(request).getParameter({ let java_field = jcall!(quoteRequestData).CUSTOMER_COMMENTS.clone(); java_field }.clone())).clone() /* as String */,); this.setUserComments(java_arguments.0) };
+        { let java_arguments = ((jcall!(request).getParameter({ let java_field = jcall!(quoteRequestData).BUDGET.clone(); java_field }.clone())).clone() /* as String */,); this.setBudget(java_arguments.0) };
+        { let java_arguments = ((jcall!(request).getParameter({ let java_field = jcall!(quoteRequestData).TIMEFRAME.clone(); java_field }.clone())).clone() /* as String */,); this.setTimeFrame(java_arguments.0) };
+        { let java_arguments = ((jcall!(request).getParameter({ let java_field = jcall!(quoteRequestData).COMMENTS.clone(); java_field }.clone())).clone() /* as String */,); this.setComments(java_arguments.0) };
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).TAGHELPER.clone(); java_field }.clone()) {
+            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Created with: "), this.toHashMap()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         this
     }
@@ -91,7 +94,7 @@ impl QuoteRequest {
     }
     
 
-    pub fn new_struct1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -106,62 +109,63 @@ impl QuoteRequest {
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
         let mut quoteRequestData: Option<Rc<RefCell<QuoteRequestData>>> = QuoteRequestData::getInstance();
-        this.id = (jcall!(hashMap).get(jcall!(quoteRequestData).ID.clone())).clone() /* as String */;
-        { let java_arguments = ((jcall!(hashMap).get(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone())).clone() /* as String */,); this.setUserName(java_arguments.0) };
-        { let java_arguments = ((jcall!(hashMap).get(jcall!(quoteRequestData).PROJECT_INFO.clone())).clone() /* as String */,); this.setProjectInfo(java_arguments.0) };
-        { let java_arguments = ((jcall!(hashMap).get(jcall!(quoteRequestData).CUSTOMER_COMMENTS.clone())).clone() /* as String */,); this.setUserComments(java_arguments.0) };
-        { let java_arguments = ((jcall!(hashMap).get(jcall!(quoteRequestData).BUDGET.clone())).clone() /* as String */,); this.setBudget(java_arguments.0) };
-        { let java_arguments = ((jcall!(hashMap).get(jcall!(quoteRequestData).TIMEFRAME.clone())).clone() /* as String */,); this.setTimeFrame(java_arguments.0) };
-        { let java_arguments = ((jcall!(hashMap).get(jcall!(quoteRequestData).COMMENTS.clone())).clone() /* as String */,); this.setComments(java_arguments.0) };
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).TAGHELPER.clone()) {
-            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Created with: "), this.toHashMap()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        this.id = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(quoteRequestData).ID.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); this.setUserName(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(quoteRequestData).PROJECT_INFO.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); this.setProjectInfo(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(quoteRequestData).CUSTOMER_COMMENTS.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); this.setUserComments(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(quoteRequestData).BUDGET.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); this.setBudget(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(quoteRequestData).TIMEFRAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); this.setTimeFrame(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(quoteRequestData).COMMENTS.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); this.setComments(java_arguments.0) };
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).TAGHELPER.clone(); java_field }.clone()) {
+            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Created with: "), this.toHashMap()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         this
     }
 
-    pub fn new1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new1(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct1(hashMap))))
     }
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut valid: Option<bool> = true;
             if false || (self.userName.chars().count() as i32) < 4 || (self.userName.chars().count() as i32) > 250 {
-                valid = false;
+                valid = { let java_value = (false).clone(); java_value }.clone();
             }
             if false || (self.projectInfo.chars().count() as i32) < 0 || (self.projectInfo.chars().count() as i32) > crate::org::allbinary::logic::communication::sql::AbSqlData::AbSqlData_MAXBLOB.with(Clone::clone) {
-                valid = false;
+                valid = { let java_value = (false).clone(); java_value }.clone();
             }
             if false || (self.userComments.chars().count() as i32) < 0 || (self.userComments.chars().count() as i32) > crate::org::allbinary::logic::communication::sql::AbSqlData::AbSqlData_MAXBLOB.with(Clone::clone) {
-                valid = false;
+                valid = { let java_value = (false).clone(); java_value }.clone();
             }
             if false || (self.budget.chars().count() as i32) < 0 || (self.budget.chars().count() as i32) > crate::org::allbinary::logic::communication::sql::AbSqlData::AbSqlData_MAXBLOB.with(Clone::clone) {
-                valid = false;
+                valid = { let java_value = (false).clone(); java_value }.clone();
             }
             if false || (self.timeFrame.chars().count() as i32) < 0 || (self.timeFrame.chars().count() as i32) > crate::org::allbinary::logic::communication::sql::AbSqlData::AbSqlData_MAXBLOB.with(Clone::clone) {
-                valid = false;
+                valid = { let java_value = (false).clone(); java_value }.clone();
             }
             if false || (self.comments.chars().count() as i32) < 0 || (self.comments.chars().count() as i32) > crate::org::allbinary::logic::communication::sql::AbSqlData::AbSqlData_MAXBLOB.with(Clone::clone) {
-                valid = false;
+                valid = { let java_value = (false).clone(); java_value }.clone();
             }
-            return valid.clone();
+            return Some(valid.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
-                jcall!(self.logUtil).put(String::from("Failed to validate form"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put(String::from("Failed to validate form"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn validationInfo(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             if false || (self.userName.chars().count() as i32) < 4 || (self.userName.chars().count() as i32) > 250 {
                 jcall!(stringBuffer).append(String::from("Please enter a User Name with more than 4 characters.<br>"));
@@ -181,23 +185,24 @@ impl QuoteRequest {
             if false || (self.comments.chars().count() as i32) < 0 || (self.comments.chars().count() as i32) > crate::org::allbinary::logic::communication::sql::AbSqlData::AbSqlData_MAXBLOB.with(Clone::clone) {
                 jcall!(stringBuffer).append(format!("{}{}", format!("{}{}", String::from("Please enter comments with less than "), crate::org::allbinary::logic::communication::sql::AbSqlData::AbSqlData_MAXBLOB.with(Clone::clone)), String::from(" characters.<br>")));
             }
-            return jcall!(stringBuffer).toString();
+            return Some(jcall!(stringBuffer).toString());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).put(String::from("Failed to generate validation error info"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("validationInfo()"), crate::java_into_object(e.clone()));
             }
             return String::from("Error Validating Form");
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         jcall!(values).add(crate::java_into_object(self.id.clone()));
         jcall!(values).add(crate::java_into_object(self.userName.clone()));
         jcall!(values).add(crate::java_into_object(self.projectInfo.clone()));
@@ -206,25 +211,25 @@ impl QuoteRequest {
         jcall!(values).add(crate::java_into_object(self.timeFrame.clone()));
         jcall!(values).add(crate::java_into_object(self.comments.clone()));
         let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-        let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString().clone();
+        let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string().clone();
         jcall!(values).add(crate::java_into_object(time.clone()));
         jcall!(values).add(crate::java_into_object(time.clone()));
         return values.clone();
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         let mut quoteRequestData: Option<Rc<RefCell<QuoteRequestData>>> = QuoteRequestData::getInstance();
-        let mut values: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), self.userName.clone());
-        jcall!(values).as_BasicArrayList_mut().put(jcall!(quoteRequestData).PROJECT_INFO.clone(), self.projectInfo.clone());
-        jcall!(values).as_BasicArrayList_mut().put(jcall!(quoteRequestData).CUSTOMER_COMMENTS.clone(), self.userComments.clone());
-        jcall!(values).as_BasicArrayList_mut().put(jcall!(quoteRequestData).BUDGET.clone(), self.budget.clone());
-        jcall!(values).as_BasicArrayList_mut().put(jcall!(quoteRequestData).TIMEFRAME.clone(), self.timeFrame.clone());
-        jcall!(values).as_BasicArrayList_mut().put(jcall!(quoteRequestData).COMMENTS.clone(), self.comments.clone());
+        let mut values: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()), crate::java_into_object(self.userName.clone()));
+        jcall!(values).put(crate::java_into_object({ let java_field = jcall!(quoteRequestData).PROJECT_INFO.clone(); java_field }.clone()), crate::java_into_object(self.projectInfo.clone()));
+        jcall!(values).put(crate::java_into_object({ let java_field = jcall!(quoteRequestData).CUSTOMER_COMMENTS.clone(); java_field }.clone()), crate::java_into_object(self.userComments.clone()));
+        jcall!(values).put(crate::java_into_object({ let java_field = jcall!(quoteRequestData).BUDGET.clone(); java_field }.clone()), crate::java_into_object(self.budget.clone()));
+        jcall!(values).put(crate::java_into_object({ let java_field = jcall!(quoteRequestData).TIMEFRAME.clone(); java_field }.clone()), crate::java_into_object(self.timeFrame.clone()));
+        jcall!(values).put(crate::java_into_object({ let java_field = jcall!(quoteRequestData).COMMENTS.clone(); java_field }.clone()), crate::java_into_object(self.comments.clone()));
         let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-        let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString().clone();
-        jcall!(values).as_BasicArrayList_mut().put(jcall!(EntryData::getInstance()).LASTMODIFIED.clone(), time.clone());
+        let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string().clone();
+        jcall!(values).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone()), crate::java_into_object(time.clone()));
         return values.clone();
     }
     
@@ -258,7 +263,7 @@ impl QuoteRequest {
         self.comments = value.clone();
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
         if false {
-            self.comments = jcall!(stringUtil).EMPTY_STRING.clone();
+            self.comments = { let java_value = ({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }).clone(); java_value }.clone();
         }
     }
     

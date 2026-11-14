@@ -34,6 +34,10 @@ pub struct MyCanvasEventSource {
 
 
 impl MyCanvasEventSource {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct2(mut command: String, mut treeNode: Option<Rc<RefCell<MutableTreeNode>>>) -> Self {

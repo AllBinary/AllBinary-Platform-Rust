@@ -35,6 +35,10 @@ pub static mut KeyboardActionScriptInputData_PRESS: std::cell::LazyCell<String> 
 pub static mut KeyboardActionScriptInputData_RELEASE: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("KEY_ACTION_INPUT_RELEASE"));
 
 impl KeyboardActionScriptInputData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

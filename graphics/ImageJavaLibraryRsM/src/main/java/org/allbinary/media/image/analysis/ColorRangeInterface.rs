@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait ColorRangeInterface {
+pub trait ColorRangeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getMinRed(&mut self) -> i32;
@@ -66,8 +66,6 @@ pub trait ColorRangeInterface {
     
 
     fn isInRange(&mut self, color: Option<Rc<RefCell<Color>>>) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

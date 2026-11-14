@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontInterface::StoreFrontInterface;
@@ -37,6 +36,7 @@ use crate::org::allbinary::logic::system::security::licensing::ServiceClientInfo
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::views::admin::inventory::listings::InventoryViewSearchInterface::InventoryViewSearchInterface;
+use crate::java::lang::Exception::*;
 use super::InventorySearchUtil::InventorySearchUtil;
 
 // Borrows the object of a Java reference
@@ -61,6 +61,10 @@ impl InventoryViewSearchInterface for InventorySearch {
 }
 
 impl InventorySearch {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut searchRequest: Option<Rc<RefCell<SearchRequest>>>) -> Self {
@@ -85,13 +89,13 @@ impl InventorySearch {
 
     // throws Exception
     pub fn searchSingleStaticPage(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut storeFront: Option<Rc<RefCell<dyn StoreFrontInterface>>> = jcall!(self.searchRequest).getStoreFront();
             let mut searchParams: Option<Rc<RefCell<SearchParams>>> = jcall!(self.searchRequest).getParams();
-            let mut columnValueHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(searchParams).get();
-            let mut file: String = jcall!(StaticPagesEntity::new()).getFile(jcall!(storeFront).getName(), jcall!(Replace::new2(String::from("-"), jcall!(CommonSeps::getInstance()).SPACE.clone())).all((jcall!(columnValueHashMap).get(jcall!(self.basicItemData).KEYWORDS.clone())).clone() /* as String */));
+            let mut columnValueHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(searchParams).get();
+            let mut file: String = jcall!(StaticPagesEntity::new()).getFile(jcall!(storeFront).getName(), jcall!(Replace::new2(String::from("-"), { let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone())).all({ let java_object = (jcall!(columnValueHashMap).get(crate::java_into_object({ let java_field = jcall!(self.basicItemData).KEYWORDS.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }));
             if jcall!(StringValidationUtil::getInstance()).isEmpty(file.clone()) {
-                return None;
+                return Some(None);
             } else {
                 let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                 jcall!(stringBuffer).append(jcall!(storeFront).getCurrentHostName());
@@ -99,47 +103,49 @@ impl InventorySearch {
                 jcall!(stringBuffer).append(jcall!(storeFront).getStaticPath());
                 jcall!(stringBuffer).append(file.clone());
                 jcall!(stringBuffer).append(jcall!(jcall!(self.searchRequest).getParams()).getEndPage());
-                jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone());
-                jcall!(stringBuffer).append(jcall!(InputOutputTypeData::getInstance()).DEFAULT.clone());
-                let mut filePath: String = jcall!(Replace::new2(jcall!(CommonSeps::getInstance()).SPACE.clone(), String::from("%20"))).all(jcall!(stringBuffer).toString());
-                return filePath.clone();
-            }
+                jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(); java_field }.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(InputOutputTypeData::getInstance()).DEFAULT.clone(); java_field }.clone());
+                let mut filePath: String = jcall!(Replace::new2({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone(), String::from("%20"))).all(jcall!(stringBuffer).toString());
+                return Some(filePath.clone());
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PRODUCTSEARCHLOGGING.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).FAILURE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("searchSingleStaticPage"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PRODUCTSEARCHLOGGING.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).FAILURE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("searchSingleStaticPage"), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Failed retrieve Single Product Page Static"))));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws Exception
     pub fn searchSingleDynamicPage(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut str: Vec<String> = self.search();
-            return str[(((jcall!(jcall!(self.searchRequest).getParams()).getStartPageInt()).unwrap() as i32)) as usize].clone();
+            return Some(str[(((jcall!(jcall!(self.searchRequest).getParams()).getStartPageInt()).unwrap() as i32)) as usize].clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PRODUCTSEARCHLOGGINGERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).FAILURE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("searchSingleDynamicPage"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PRODUCTSEARCHLOGGINGERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).FAILURE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("searchSingleDynamicPage"), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Failed retrieve Single Product Page Dynamically"))));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws Exception
     pub fn search(&mut self) -> Vec<String> {
-        let mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>> = ServiceClientInformationInterfaceFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn AbeClientInformationInterface>>);
+        let mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>> = ServiceClientInformationInterfaceFactory::getInstance();
         let mut inventorySearchUtil: Option<Rc<RefCell<InventorySearchUtil>>> = InventorySearchUtil::getInstance();
         let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(inventorySearchUtil).getBasicItemIdColumn(self.searchRequest.clone());
         return jcall!(inventorySearchUtil).search(abeClientInformation.clone(), self.searchRequest.clone(), vector.clone());
@@ -148,17 +154,13 @@ impl InventorySearch {
 
     // throws Exception
     pub fn getProduct(&mut self, mut product: String) -> String {
-        let mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>> = ServiceClientInformationInterfaceFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn AbeClientInformationInterface>>);
+        let mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>> = ServiceClientInformationInterfaceFactory::getInstance();
         return jcall!(InventorySearchProductUtil::InventorySearchProductUtil::getInstance()).getProduct(abeClientInformation.clone(), self.searchRequest.clone(), product.clone());
     }
 }
-pub trait InventorySearchDyn {
+pub trait InventorySearchDyn: std::any::Any + crate::views::admin::inventory::listings::InventoryViewSearchInterface::InventoryViewSearchInterface {
     fn as_InventorySearch(&self) -> &InventorySearch;
     fn as_InventorySearch_mut(&mut self) -> &mut InventorySearch;
-    fn searchSingleStaticPage(&mut self) -> String { InventorySearch::searchSingleStaticPage(self.as_InventorySearch_mut()) }
-    fn searchSingleDynamicPage(&mut self) -> String { InventorySearch::searchSingleDynamicPage(self.as_InventorySearch_mut()) }
-    fn search(&mut self) -> Vec<String> { InventorySearch::search(self.as_InventorySearch_mut()) }
-    fn getProduct(&mut self, mut product: String) -> String { InventorySearch::getProduct(self.as_InventorySearch_mut(), product) }
 }
 impl InventorySearchDyn for InventorySearch {
     fn as_InventorySearch(&self) -> &InventorySearch { self }

@@ -34,9 +34,13 @@ macro_rules! jcall {
 pub struct ProgressCanvasFactory {
 }
 
-pub static mut ProgressCanvasFactory_PROGRESS_FORM_SCREEN: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut ProgressCanvasFactory_PROGRESS_FORM_SCREEN: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl ProgressCanvasFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -50,10 +54,10 @@ impl ProgressCanvasFactory {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn>>> {
-        if match (&unsafe { ProgressCanvasFactory_PROGRESS_FORM_SCREEN.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *ProgressCanvasFactory_PROGRESS_FORM_SCREEN = ProgressCanvas::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), jcall!(BasicColorFactory::getInstance()).BLACK.clone(), jcall!(BasicColorFactory::getInstance()).WHITE.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn>>) };
+        if match (&unsafe { ProgressCanvasFactory_PROGRESS_FORM_SCREEN.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *ProgressCanvasFactory_PROGRESS_FORM_SCREEN = crate::java_into_object(ProgressCanvas::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone())) };
         }
-        return (unsafe { ProgressCanvasFactory_PROGRESS_FORM_SCREEN.clone() }).clone() /* as ProgressCanvas */;
+        return { let java_object = (unsafe { ProgressCanvasFactory_PROGRESS_FORM_SCREEN.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 

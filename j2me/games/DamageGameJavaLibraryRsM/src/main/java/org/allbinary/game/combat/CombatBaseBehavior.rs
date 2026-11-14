@@ -36,6 +36,10 @@ pub struct CombatBaseBehavior {
 thread_local! { pub static CombatBaseBehavior_NULL_COMBAT_BEHAVIOR: Option<Rc<RefCell<CombatBaseBehavior>>> = CombatBaseBehavior::new(DamageableBaseBehavior::getInstance(), DestroyableBaseBehavior::getInstance()); }
 
 impl CombatBaseBehavior {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut damageableBaseBehavior: Option<Rc<RefCell<DamageableBaseBehavior>>>, mut destroyableBaseBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::game::combat::destroy::DestroyableBaseBehavior::DestroyableBaseBehaviorDyn>>>) -> Self {

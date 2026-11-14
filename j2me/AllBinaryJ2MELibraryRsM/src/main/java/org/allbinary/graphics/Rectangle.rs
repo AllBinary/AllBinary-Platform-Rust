@@ -98,12 +98,12 @@ impl Rectangle {
 
     pub fn toString(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(jcall!(self.getPoint()).toString());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(CommonLabels::getInstance()).WIDTH_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_argument = jcall!(self.getPoint()).toString(); java_argument });
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonLabels::getInstance()).WIDTH_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.getWidth());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(CommonLabels::getInstance()).HEIGHT_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonLabels::getInstance()).HEIGHT_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.getHeight());
         jcall!(stringBuffer).append(String::from(" MaxX: "));
         jcall!(stringBuffer).appendint(self.getMaxX());

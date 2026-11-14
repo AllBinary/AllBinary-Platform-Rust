@@ -23,6 +23,8 @@ use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::NumberStringHud::NumberStringHud;
 
 // Borrows the object of a Java reference
@@ -36,9 +38,13 @@ pub struct NumberStringHudFactory {
     pub NULL_NUMBER_STRING_HUD: Option<Rc<RefCell<dyn crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn>>>,
 }
 
-pub static mut NumberStringHudFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| NullUtil::getInstance());
+pub static mut NumberStringHudFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| crate::java_into_object(NullUtil::getInstance()));
 
 impl NumberStringHudFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -55,26 +61,27 @@ impl NumberStringHudFactory {
 
     pub fn getInstance() -> Option<Rc<RefCell<NumberStringHudFactory>>> {
         if match (&unsafe { NumberStringHudFactory_instance.clone() }, &NullUtil::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *NumberStringHudFactory_instance = NumberStringHudFactory::new() };
+            unsafe { *NumberStringHudFactory_instance = crate::java_into_object(NumberStringHudFactory::new()) };
         }
-        return (unsafe { NumberStringHudFactory_instance.clone() }).clone() /* as NumberStringHudFactory */;
+        return { let java_object = (unsafe { NumberStringHudFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<NumberStringHudFactory>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn createHud(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            return NumberStringHud::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), 9, jcall!(BasicHudFactory::getInstance()).ABSOLUTE.clone(), 1, 0, jcall!(BasicColorFactory::getInstance()).NULL_COLOR.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn>>);
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            return Some(NumberStringHud::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), 9, { let java_field = jcall!(BasicHudFactory::getInstance()).ABSOLUTE.clone(); java_field }.clone(), 1, 0, { let java_field = jcall!(BasicColorFactory::getInstance()).NULL_COLOR.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::ag::layer::hud::basic::NumberStringHud::NumberStringHudDyn>>));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(e.clone()));
+            jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

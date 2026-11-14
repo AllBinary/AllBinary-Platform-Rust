@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
@@ -41,6 +40,7 @@ use crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpInte
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -76,7 +76,7 @@ impl CategoryPropertiesInterface for RootStoreCategoryProperties {
 impl crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface for RootStoreCategoryProperties {
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getKey(self) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::toVector(self) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::toHashMap(self) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toHashMap(self) }
 }
 impl crate::org::allbinary::logic::control::validate::ValidationInterface::ValidationInterface for RootStoreCategoryProperties {
     fn isValid(&mut self) -> Option<bool> { Self::isValid(self) }
@@ -86,6 +86,10 @@ impl crate::org::allbinary::logic::control::validate::ValidationInterface::Valid
 }
 
 impl RootStoreCategoryProperties {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Self {
@@ -102,8 +106,8 @@ impl RootStoreCategoryProperties {
         this.logUtil = LogUtil::getInstance();
         this.pathData = AbPathData::getInstance();
         this.transformInfoInterface = transformInfoInterface.clone();
-        this.abPath = AbPath::createAbPath();
-        this.category = jcall!(CategoryData::getInstance()).ROOTCATEGORY.clone();
+        this.abPath = { let java_value = (AbPath::createAbPath()).clone(); java_value };
+        this.category = { let java_value = ({ let java_field = jcall!(CategoryData::getInstance()).ROOTCATEGORY.clone(); java_field }).clone(); java_value }.clone();
         this.isRealRoot = true;
         this.initPath();
         this.log();
@@ -130,10 +134,10 @@ impl RootStoreCategoryProperties {
         this.pathData = AbPathData::getInstance();
         this.transformInfoInterface = transformInfoInterface.clone();
         this.abPath = categoryAbPath.clone();
-        this.category = { let java_receiver = this.pathData.clone(); let java_arguments = (jcall!(categoryAbPath).toString(),); let java_result = jcall!(java_receiver).getNameFromPath(java_arguments.0); java_result };
+        this.category = { let java_value = ({ let java_receiver = this.pathData.clone(); let java_arguments = (jcall!(categoryAbPath).toString(),); let java_result = jcall!(java_receiver).getNameFromPath(java_arguments.0); java_result }).clone(); java_value };
         if jcall!(StringValidationUtil::getInstance()).isEmpty(this.category.clone()) {
             this.isRealRoot = true;
-            this.category = jcall!(CategoryData::getInstance()).ROOTCATEGORY.clone();
+            this.category = { let java_value = ({ let java_field = jcall!(CategoryData::getInstance()).ROOTCATEGORY.clone(); java_field }).clone(); java_value }.clone();
         }
         this.initPath();
         this.log();
@@ -145,7 +149,7 @@ impl RootStoreCategoryProperties {
     }
     
 
-    pub fn new_struct2(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut node: Option<Rc<RefCell<Node>>>) -> Self {
+    pub fn new_struct2_TransformInfoInterface_Node(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut node: Option<Rc<RefCell<Node>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             pathData: None,
@@ -160,23 +164,23 @@ impl RootStoreCategoryProperties {
         this.pathData = AbPathData::getInstance();
         this.transformInfoInterface = transformInfoInterface.clone();
         let mut categoryPath: String = CategoryUtil::getNameFromNode(node.clone());
-        this.abPath = AbPath::new(categoryPath.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-        this.category = jcall!(this.pathData).getNameFromPath(categoryPath.clone());
+        this.abPath = { let java_value = (AbPath::new(categoryPath.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
+        this.category = { let java_value = (jcall!(this.pathData).getNameFromPath(categoryPath.clone())).clone(); java_value };
         if jcall!(StringValidationUtil::getInstance()).isEmpty(this.category.clone()) {
             this.isRealRoot = true;
-            this.category = jcall!(CategoryData::getInstance()).ROOTCATEGORY.clone();
+            this.category = { let java_value = ({ let java_field = jcall!(CategoryData::getInstance()).ROOTCATEGORY.clone(); java_field }).clone(); java_value }.clone();
         }
         this.initPath();
         this.log();
         this
     }
 
-    pub fn new2(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct2(transformInfoInterface, node))))
+    pub fn new2_TransformInfoInterface_Node(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct2_TransformInfoInterface_Node(transformInfoInterface, node))))
     }
     
 
-    pub fn new_struct2(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut categoryPropertiesHashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct2_TransformInfoInterface_HashMap(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut categoryPropertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             pathData: None,
@@ -190,31 +194,31 @@ impl RootStoreCategoryProperties {
         this.logUtil = LogUtil::getInstance();
         this.pathData = AbPathData::getInstance();
         this.transformInfoInterface = transformInfoInterface.clone();
-        let mut categoryPath: String = (jcall!(categoryPropertiesHashMap).get(jcall!(CategoryData::getInstance()).NAME.clone())).clone() /* as String */.clone();
-        this.abPath = AbPath::new(categoryPath.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-        this.category = jcall!(this.pathData).getNameFromPath(categoryPath.clone());
+        let mut categoryPath: String = { let java_object = (jcall!(categoryPropertiesHashMap).get(crate::java_into_object({ let java_field = jcall!(CategoryData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }.clone();
+        this.abPath = { let java_value = (AbPath::new(categoryPath.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
+        this.category = { let java_value = (jcall!(this.pathData).getNameFromPath(categoryPath.clone())).clone(); java_value };
         if jcall!(StringValidationUtil::getInstance()).isEmpty(this.category.clone()) {
             this.isRealRoot = true;
-            this.category = jcall!(CategoryData::getInstance()).ROOTCATEGORY.clone();
+            this.category = { let java_value = ({ let java_field = jcall!(CategoryData::getInstance()).ROOTCATEGORY.clone(); java_field }).clone(); java_value }.clone();
         }
         this.initPath();
         this.log();
         this
     }
 
-    pub fn new2(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut categoryPropertiesHashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct2(transformInfoInterface, categoryPropertiesHashMap))))
+    pub fn new2_TransformInfoInterface_HashMap(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut categoryPropertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct2_TransformInfoInterface_HashMap(transformInfoInterface, categoryPropertiesHashMap))))
     }
     
 
     // throws Exception
     pub fn initPath(&mut self) {
-        let mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (self.transformInfoInterface).clone() /* as TransformInfoHttpInterface */;
-        let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(transformInfoHttpStoreInterface).getStoreName());
-        let mut postPath: String = jcall!(storeFrontInterface).getCurrentHostNamePath() + jcall!(storeFrontInterface).getCategoryPath();
+        let mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (|| -> Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> { panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to TransformInfoHttpInterface") })();
+        let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(transformInfoHttpStoreInterface).getStoreName()).map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
+        let mut postPath: String = format!("{}{}", jcall!(storeFrontInterface).getCurrentHostNamePath(), jcall!(storeFrontInterface).getCategoryPath());
         let mut httpServletRequest: Option<Rc<RefCell<HttpServletRequest>>> = (jcall!(jcall!(transformInfoHttpStoreInterface).getPageContext()).getRequest()).clone() /* as HttpServletRequest */;
-        self.webAppAbPath = AbPath::new(format!("{}{}", jcall!(httpServletRequest).getContextPath(), postPath), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-        { let java_arguments = (AbPath::new(format!("{}{}", URLGLOBALS::getMainPath(), postPath), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>),); self.setRootFilePath(java_arguments.0) };
+        self.webAppAbPath = { let java_value = (AbPath::new(format!("{}{}", jcall!(httpServletRequest).getContextPath(), postPath), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
+        { let java_arguments = (AbPath::new(format!("{}{}", URLGLOBALS::getMainPath(), postPath), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>),); self.setRootFilePath(java_arguments.0) };
     }
     
 
@@ -229,7 +233,7 @@ impl RootStoreCategoryProperties {
     
 
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return (self.getValue()).clone() /* as Any */;
+        return crate::java_into_object(crate::java_into_object((self.getValue()).clone()));
     }
     
 
@@ -265,7 +269,7 @@ impl RootStoreCategoryProperties {
     
 
     pub fn getFileName(&mut self) -> String {
-        return format!("{}{}", format!("{}{}", self.getValue(), jcall!(AbPathData::getInstance()).EXTENSION_SEP), jcall!(CategoryData::getInstance()).UNCRYPTED_EXTENSION);
+        return format!("{}{}", format!("{}{}", self.getValue(), { let java_field = jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(); java_field }), { let java_field = jcall!(CategoryData::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field });
     }
     
 
@@ -279,15 +283,15 @@ impl RootStoreCategoryProperties {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut categoryHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(categoryHashMap).put(jcall!(CategoryData::getInstance()).NAME.clone(), self.getValue());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut categoryHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(categoryHashMap).put(crate::java_into_object({ let java_field = jcall!(CategoryData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(self.getValue()));
         return categoryHashMap.clone();
     }
     
 
     pub fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut categoryVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut categoryVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         jcall!(categoryVector).add(crate::java_into_object(self.getValue()));
         return categoryVector.clone();
     }
@@ -312,12 +316,12 @@ impl RootStoreCategoryProperties {
     
 
     pub fn log(&mut self) {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).CATEGORY.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).CATEGORY.clone(); java_field }.clone()) {
             { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("filePath = ")).append(jcall!(self.fileAbPath).toString()).append(String::from("\npath = ")).append(jcall!(self.abPath).toString()).append(String::from("\ncategory = ")).append(self.category.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("log()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
     }
 }
-pub trait RootStoreCategoryPropertiesDyn: crate::org::allbinary::business::category::properties::root::RootCategoryPropertiesInterface::RootCategoryPropertiesInterface {
+pub trait RootStoreCategoryPropertiesDyn: std::any::Any + crate::org::allbinary::business::category::properties::root::RootCategoryPropertiesInterface::RootCategoryPropertiesInterface {
     fn as_RootStoreCategoryProperties(&self) -> &RootStoreCategoryProperties;
     fn as_RootStoreCategoryProperties_mut(&mut self) -> &mut RootStoreCategoryProperties;
     fn initPath(&mut self) { RootStoreCategoryProperties::initPath(self.as_RootStoreCategoryProperties_mut()) }
@@ -331,7 +335,7 @@ pub trait RootStoreCategoryPropertiesDyn: crate::org::allbinary::business::categ
     fn getFileName(&mut self) -> String { RootStoreCategoryProperties::getFileName(self.as_RootStoreCategoryProperties_mut()) }
     fn setValue(&mut self, mut value: String) { RootStoreCategoryProperties::setValue(self.as_RootStoreCategoryProperties_mut(), value) }
     fn isValid(&mut self) -> Option<bool> { RootStoreCategoryProperties::isValid(self.as_RootStoreCategoryProperties_mut()) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { RootStoreCategoryProperties::toHashMap(self.as_RootStoreCategoryProperties_mut()) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { RootStoreCategoryProperties::toHashMap(self.as_RootStoreCategoryProperties_mut()) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { RootStoreCategoryProperties::toVector(self.as_RootStoreCategoryProperties_mut()) }
     fn toValidationInfoDoc(&mut self) -> Option<Rc<RefCell<Document>>> { RootStoreCategoryProperties::toValidationInfoDoc(self.as_RootStoreCategoryProperties_mut()) }
     fn toValidationInfoNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { RootStoreCategoryProperties::toValidationInfoNode(self.as_RootStoreCategoryProperties_mut(), document) }

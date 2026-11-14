@@ -48,6 +48,10 @@ impl RTSInterface for HealthTechnology {
 }
 
 impl HealthTechnology {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut maxLevel: i32) -> Self {
@@ -120,7 +124,7 @@ impl HealthTechnology {
     pub fn upgrade(&mut self) {
         self.level += 1;
         let mut unitTechnologySingletonFactory: Option<Rc<RefCell<UnitTechnologySingletonFactory>>> = UnitTechnologySingletonFactory::getInstance();
-        jcall!(unitTechnologySingletonFactory).setHealth(jcall!(unitTechnologySingletonFactory).getHealth() + (self.getLevel() * 100));
+        jcall!(unitTechnologySingletonFactory).setHealth({ let java_value = jcall!(unitTechnologySingletonFactory).getHealth(); java_value } + (self.getLevel() * 100));
     }
     
 

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::direction::Direction::Direction;
 use crate::org::allbinary::direction::DirectionCompositeInterface::DirectionCompositeInterface;
 use crate::org::allbinary::direction::DirectionFactory::DirectionFactory;
@@ -34,6 +34,7 @@ use crate::org::allbinary::logic::util::event::EventStrings::EventStrings;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::BasePatrolAI::BasePatrolAI;
 
 // Borrows the object of a Java reference
@@ -60,13 +61,13 @@ impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntel
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for PacePatrolAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl PacePatrolAI {
     
 
-    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
+    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
         let mut this = Self {
             base: BasePatrolAI::new_struct(hashtable.clone(), ownerLayerInterface.clone(), gameInput.clone()),
             trackingList: None,
@@ -75,13 +76,13 @@ impl PacePatrolAI {
         };
         this.isFollowLimitedByTerrain = false;
         // super(...) is in the struct literal above
-        this.trackingList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
-    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(hashtable, ownerLayerInterface, gameInput))));
-            jcall!(TrackingEventHandler::getInstance()).addListenerInterface((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(hashtable.clone(), ownerLayerInterface.clone(), gameInput.clone()))));
+            jcall!(TrackingEventHandler::getInstance()).addListenerInterface(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+            jcall!(this).trackingList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
     
@@ -91,24 +92,24 @@ impl PacePatrolAI {
         self.update();
         let mut direction: Option<Rc<RefCell<Direction>>> = self.setFiringDirectionForTargetIfInRange();
         let mut directionFactory: Option<Rc<RefCell<DirectionFactory>>> = DirectionFactory::getInstance();
-        if match (&direction, &jcall!(directionFactory).LEFT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            if !match (&self.lastKeyDirection, &self.base.keyDirection) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || !self.isFollowLimitedByTerrain {
-                self.base.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone());
+        if match (&direction, &{ let java_field = jcall!(directionFactory).LEFT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if self.lastKeyDirection != self.base.keyDirection || !self.isFollowLimitedByTerrain {
+                { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone).clone(),); self.base.processKeyAI(java_arguments.0) };
             }
-            self.base.keyDirection = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone();
+            self.base.keyDirection = { let java_value = (crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone)).clone(); java_value }.clone();
             self.lastKeyDirection = self.base.keyDirection.clone();
             self.base.xTotalDistance = 0;
-            self.base.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }.clone());
-        } else if match (&direction, &jcall!(directionFactory).RIGHT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            if !match (&self.lastKeyDirection, &self.base.keyDirection) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || !self.isFollowLimitedByTerrain {
-                self.base.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone());
+            { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone).clone(),); self.base.processKeyAI(java_arguments.0) };
+        } else if match (&direction, &{ let java_field = jcall!(directionFactory).RIGHT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if self.lastKeyDirection != self.base.keyDirection || !self.isFollowLimitedByTerrain {
+                { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone).clone(),); self.base.processKeyAI(java_arguments.0) };
             }
-            self.base.keyDirection = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone();
+            self.base.keyDirection = { let java_value = (crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone)).clone(); java_value }.clone();
             self.lastKeyDirection = self.base.keyDirection.clone();
             self.base.xTotalDistance = 0;
-            self.base.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }.clone());
+            { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone).clone(),); self.base.processKeyAI(java_arguments.0) };
         } else {
-            self.base.processKeyAI(self.keyDirection.clone());
+            { let java_arguments = (self.keyDirection.clone(),); self.base.processKeyAI(java_arguments.0) };
         }
     }
     
@@ -116,14 +117,14 @@ impl PacePatrolAI {
     pub fn setFiringDirectionForTargetIfInRange(&mut self) -> Option<Rc<RefCell<Direction>>> {
         let mut directionFactory: Option<Rc<RefCell<DirectionFactory>>> = DirectionFactory::getInstance();
         let mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = self.getOwnerLayerInterface();
-        let mut direction: Option<Rc<RefCell<Direction>>> = jcall!(directionFactory).NOT_BORDERED_WITH.clone();
+        let mut direction: Option<Rc<RefCell<Direction>>> = { let java_field = jcall!(directionFactory).NOT_BORDERED_WITH.clone(); java_field }.clone();
         let mut lastTrackingEvent: Option<Rc<RefCell<TrackingEvent>>> = None;
         let mut lastTrackingLayerInterface: Option<Rc<RefCell<dyn LayerInterface>>> = None;
         let mut directionCompositeInterface: Option<Rc<RefCell<dyn DirectionCompositeInterface>>> = None;
         let mut size: i32 = jcall!(self.trackingList).size();
         for index in (0..size) {
-            lastTrackingEvent = { let java_object = (jcall!(self.trackingList).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<TrackingEvent>>>>().expect("ClassCastException").clone()) };
-            lastTrackingLayerInterface = jcall!(lastTrackingEvent).getLayerInterface();
+            lastTrackingEvent = { let java_value = ({ let java_object = (jcall!(self.trackingList).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<TrackingEvent>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            lastTrackingLayerInterface = { let java_value = (jcall!(lastTrackingEvent).getLayerInterface()).clone(); java_value }.map(|_java_reference| -> Rc<RefCell<dyn LayerInterface>> { panic!("ClassCastException: the Rust trait of AllBinaryLayer does not have LayerInterface as a base trait") });
             let mut x: i32 = jcall!(lastTrackingLayerInterface).getXP();
             let mut y: i32 = jcall!(lastTrackingLayerInterface).getYP();
             let mut yDistance: i32 = jcall!(ownerLayerInterface).getYP() - y - jcall!(ownerLayerInterface).getHeight();
@@ -132,11 +133,11 @@ impl PacePatrolAI {
             let mut absYDistance: i32 = (yDistance.clone()).abs();
             if absYDistance <= 100 {
                 if absXDistance < self.getFiringDistance() / 2 {
-                    directionCompositeInterface = (self.getOwnerLayerInterface()).clone() /* as DirectionCompositeInterface */;
-                    if xDistance < 0 && match (&jcall!(directionCompositeInterface).getDirection(), &jcall!(directionFactory).RIGHT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                        direction = jcall!(directionFactory).RIGHT.clone();
-                    } else if xDistance > 0 && match (&jcall!(directionCompositeInterface).getDirection(), &jcall!(directionFactory).LEFT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                        direction = jcall!(directionFactory).LEFT.clone();
+                    directionCompositeInterface = (|| -> Option<Rc<RefCell<dyn DirectionCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to DirectionCompositeInterface") })();
+                    if xDistance < 0 && match (&jcall!(directionCompositeInterface).getDirection(), &{ let java_field = jcall!(directionFactory).RIGHT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                        direction = { let java_value = ({ let java_field = jcall!(directionFactory).RIGHT.clone(); java_field }).clone(); java_value }.clone();
+                    } else if xDistance > 0 && match (&jcall!(directionCompositeInterface).getDirection(), &{ let java_field = jcall!(directionFactory).LEFT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                        direction = { let java_value = ({ let java_field = jcall!(directionFactory).LEFT.clone(); java_field }).clone(); java_value }.clone();
                     }
                 }
             }
@@ -150,7 +151,7 @@ impl PacePatrolAI {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 

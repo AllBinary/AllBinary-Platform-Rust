@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontData::StoreFrontData;
 use crate::org::allbinary::business::entry::EntryData::EntryData;
 use crate::org::allbinary::business::user::UserData::UserData;
@@ -26,6 +25,7 @@ use crate::org::allbinary::logic::string::tokens::Tokenizer::Tokenizer;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::BasicStoreFrontInterface::BasicStoreFrontInterface;
 
 // Borrows the object of a Java reference
@@ -102,6 +102,10 @@ impl BasicStoreFrontInterface for BasicStoreFront {
 }
 
 impl BasicStoreFront {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -143,7 +147,7 @@ impl BasicStoreFront {
     }
     
 
-    pub fn new_struct1(mut storeHashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1(mut storeHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             name: String::new(),
             userName: String::new(),
@@ -175,50 +179,50 @@ impl BasicStoreFront {
             lastModified: String::new(),
         };
         let mut storeFrontData: Option<Rc<RefCell<StoreFrontData>>> = StoreFrontData::getInstance();
-        this.name = (jcall!(storeHashMap).get(jcall!(storeFrontData).NAME.clone())).clone() /* as String */;
-        this.userName = (jcall!(storeHashMap).get(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone())).clone() /* as String */;
-        this.basketName = (jcall!(storeHashMap).get(jcall!(storeFrontData).NAME.clone())).clone() /* as String */;
-        this.homeHostName = (jcall!(storeHashMap).get(jcall!(storeFrontData).HOMEHOSTNAME.clone())).clone() /* as String */;
-        this.homeHostNamePath = (jcall!(storeHashMap).get(jcall!(storeFrontData).HOMEHOSTNAMEPATH.clone())).clone() /* as String */;
-        this.hostName = (jcall!(storeHashMap).get(jcall!(storeFrontData).HOSTNAME.clone())).clone() /* as String */;
-        this.hostNamePath = (jcall!(storeHashMap).get(jcall!(storeFrontData).HOSTNAMEPATH.clone())).clone() /* as String */;
-        this.testHomeHostName = (jcall!(storeHashMap).get(jcall!(storeFrontData).TESTHOMEHOSTNAME.clone())).clone() /* as String */;
-        this.testHomeHostNamePath = (jcall!(storeHashMap).get(jcall!(storeFrontData).TESTHOMEHOSTNAMEPATH.clone())).clone() /* as String */;
-        this.testHostName = (jcall!(storeHashMap).get(jcall!(storeFrontData).TESTHOSTNAME.clone())).clone() /* as String */;
-        this.testHostNamePath = (jcall!(storeHashMap).get(jcall!(storeFrontData).TESTHOSTNAMEPATH.clone())).clone() /* as String */;
-        this.imagePath = (jcall!(storeHashMap).get(jcall!(storeFrontData).IMAGEPATH.clone())).clone() /* as String */;
-        this.staticPath = (jcall!(storeHashMap).get(jcall!(storeFrontData).STATICPATH.clone())).clone() /* as String */;
-        this.categoryPath = (jcall!(storeHashMap).get(jcall!(storeFrontData).CATEGORYPATH.clone())).clone() /* as String */;
-        this.inventoryControl = (jcall!(storeHashMap).get(jcall!(storeFrontData).INVENTORYCONTROL.clone())).clone() /* as String */;
-        this.subStores = (jcall!(storeHashMap).get(jcall!(storeFrontData).SUBSTORES.clone())).clone() /* as String */;
-        this.tagLocation = (jcall!(storeHashMap).get(jcall!(storeFrontData).TAGLOCATION.clone())).clone() /* as String */;
-        this.packageLocation = (jcall!(storeHashMap).get(jcall!(storeFrontData).PACKAGELOCATION.clone())).clone() /* as String */;
-        this.ftp = (jcall!(storeHashMap).get(jcall!(storeFrontData).FTP.clone())).clone() /* as String */;
-        this.ftpPath = (jcall!(storeHashMap).get(jcall!(storeFrontData).FTPPATH.clone())).clone() /* as String */;
-        this.ftpUserName = (jcall!(storeHashMap).get(jcall!(storeFrontData).FTPUSERNAME.clone())).clone() /* as String */;
-        this.ftpPassword = (jcall!(storeHashMap).get(jcall!(storeFrontData).FTPPASSWORD.clone())).clone() /* as String */;
-        this.testFtp = (jcall!(storeHashMap).get(jcall!(storeFrontData).TESTFTP.clone())).clone() /* as String */;
-        this.testFtpPath = (jcall!(storeHashMap).get(jcall!(storeFrontData).TESTFTPPATH.clone())).clone() /* as String */;
-        this.testFtpUserName = (jcall!(storeHashMap).get(jcall!(storeFrontData).TESTFTPUSERNAME.clone())).clone() /* as String */;
-        this.testFtpPassword = (jcall!(storeHashMap).get(jcall!(storeFrontData).TESTFTPPASSWORD.clone())).clone() /* as String */;
-        this.timeCreated = (jcall!(storeHashMap).get(jcall!(EntryData::getInstance()).TIMECREATED.clone())).clone() /* as String */;
-        this.lastModified = (jcall!(storeHashMap).get(jcall!(EntryData::getInstance()).LASTMODIFIED.clone())).clone() /* as String */;
+        this.name = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.userName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.basketName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.homeHostName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).HOMEHOSTNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.homeHostNamePath = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).HOMEHOSTNAMEPATH.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.hostName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).HOSTNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.hostNamePath = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).HOSTNAMEPATH.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.testHomeHostName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTHOMEHOSTNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.testHomeHostNamePath = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTHOMEHOSTNAMEPATH.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.testHostName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTHOSTNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.testHostNamePath = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTHOSTNAMEPATH.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.imagePath = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).IMAGEPATH.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.staticPath = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).STATICPATH.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.categoryPath = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).CATEGORYPATH.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.inventoryControl = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).INVENTORYCONTROL.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.subStores = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).SUBSTORES.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.tagLocation = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TAGLOCATION.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.packageLocation = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).PACKAGELOCATION.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.ftp = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).FTP.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.ftpPath = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).FTPPATH.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.ftpUserName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).FTPUSERNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.ftpPassword = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).FTPPASSWORD.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.testFtp = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTFTP.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.testFtpPath = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTFTPPATH.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.testFtpUserName = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTFTPUSERNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.testFtpPassword = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(storeFrontData).TESTFTPPASSWORD.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.timeCreated = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).TIMECREATED.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.lastModified = { let java_value = ({ let java_object = (jcall!(storeHashMap).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         this
     }
 
-    pub fn new1(mut storeHashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new1(mut storeHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct1(storeHashMap))))
     }
     
 
     pub fn getTestHtmlPath(&mut self) -> String {
-        return jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).URLGLOBALS).getTestHtmlPath() + self.getCurrentHostNamePath();
+        return format!("{}{}", { let java_value = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).URLGLOBALS.clone(); java_field }).getTestHtmlPath(); java_value }, self.getCurrentHostNamePath());
     }
     
 
     pub fn getCurrentHostName(&mut self) -> String {
         let mut location: String = String::new();
-        if jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).URLGLOBALS).isTestingMode() {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).URLGLOBALS.clone(); java_field }).isTestingMode() {
             location = self.getTestHostName();
         } else {
             location = self.getHostName();
@@ -229,7 +233,7 @@ impl BasicStoreFront {
 
     pub fn getCurrentHostNamePath(&mut self) -> String {
         let mut location: String = String::new();
-        if jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).URLGLOBALS).isTestingMode() {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).URLGLOBALS.clone(); java_field }).isTestingMode() {
             location = self.getTestHostNamePath();
         } else {
             location = self.getHostNamePath();
@@ -240,7 +244,7 @@ impl BasicStoreFront {
 
     pub fn getCurrentHomeHostName(&mut self) -> String {
         let mut location: String = String::new();
-        if jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).URLGLOBALS).isTestingMode() {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).URLGLOBALS.clone(); java_field }).isTestingMode() {
             location = self.getTestHomeHostName();
         } else {
             location = self.getHomeHostName();
@@ -251,7 +255,7 @@ impl BasicStoreFront {
 
     pub fn getCurrentHomeHostNamePath(&mut self) -> String {
         let mut location: String = String::new();
-        if jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).URLGLOBALS).isTestingMode() {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).URLGLOBALS.clone(); java_field }).isTestingMode() {
             location = self.getTestHomeHostNamePath();
         } else {
             location = self.getHomeHostNamePath();
@@ -332,18 +336,19 @@ impl BasicStoreFront {
 
     // throws Exception
     pub fn getSubStores(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut tokenizer: Option<Rc<RefCell<Tokenizer>>> = Tokenizer::new(jcall!(CommonSeps::getInstance()).SEMICOLON.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut tokenizer: Option<Rc<RefCell<Tokenizer>>> = Tokenizer::new({ let java_field = jcall!(CommonSeps::getInstance()).SEMICOLON.clone(); java_field }.clone());
             let mut subStoreVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(tokenizer).getTokensFromString(self.subStores.clone(), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
-            return subStoreVector.clone();
+            return Some(subStoreVector.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 

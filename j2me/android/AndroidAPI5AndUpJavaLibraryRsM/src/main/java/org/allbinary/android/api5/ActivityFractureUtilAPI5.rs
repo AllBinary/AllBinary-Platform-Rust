@@ -73,22 +73,22 @@ impl ActivityFractureUtilAPI5 {
         jcall!(touchScreenFactory).setMultiTouchDistinct(self.isMultiTouchDistinct(activity.clone()));
         jcall!(touchScreenTypeFactory).update(activity.clone());
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        PreLogUtil::put(jcall!(touchScreenFactory).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).PROCESS.clone());
+        PreLogUtil::put(jcall!(touchScreenFactory).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).PROCESS.clone(); java_field }.clone());
     }
     
 
     pub fn isTouch(&mut self, mut activity: Option<Rc<RefCell<Activity>>>) -> bool {
-        return self.isFeature(activity.clone(), self.FEATURE_TOUCHSCREEN.clone());
+        return { let java_arguments = (activity.clone(), self.FEATURE_TOUCHSCREEN.clone(),); self.isFeature(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn isMultiTouch(&mut self, mut activity: Option<Rc<RefCell<Activity>>>) -> bool {
-        return self.isFeature(activity.clone(), self.FEATURE_TOUCHSCREEN_MULTITOUCH.clone());
+        return { let java_arguments = (activity.clone(), self.FEATURE_TOUCHSCREEN_MULTITOUCH.clone(),); self.isFeature(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn isMultiTouchDistinct(&mut self, mut activity: Option<Rc<RefCell<Activity>>>) -> bool {
-        return self.isFeature(activity.clone(), self.FEATURE_TOUCHSCREEN_MULTITOUCH_DISTINCT.clone());
+        return { let java_arguments = (activity.clone(), self.FEATURE_TOUCHSCREEN_MULTITOUCH_DISTINCT.clone(),); self.isFeature(java_arguments.0, java_arguments.1) };
     }
     
 

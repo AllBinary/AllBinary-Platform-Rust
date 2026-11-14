@@ -47,7 +47,7 @@ pub struct BasicPlatormGeographicMapCellTypeFactory {
 impl BasicPlatormGeographicMapCellTypeFactory {
     
 
-    pub fn new_struct(mut tileTypeToTileIdsMap: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut maxTileId: i32) -> Self {
+    pub fn new_struct(mut tileTypeToTileIdsMap: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut maxTileId: i32) -> Self {
         let mut this = Self {
             base: GeographicMapCellTypeFactory::new_struct(),
             enumerationUtil: None,
@@ -58,7 +58,7 @@ impl BasicPlatormGeographicMapCellTypeFactory {
         };
         this.enumerationUtil = EnumerationUtil::getInstance();
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(this.logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone());
+        jcall!(this.logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone());
         this.maxTileId = maxTileId.clone();
         GeographicMapCellType::new(0, 0).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>);
         let mut BLOCK_CELL_TYPE: Option<Rc<RefCell<BasicPlatormGeographicMapCellType>>> = BasicPlatormGeographicMapCellType::createType(1);
@@ -72,9 +72,9 @@ impl BasicPlatormGeographicMapCellTypeFactory {
         let mut key: String = String::new();
         let mut basicPlatormGeographicMapCellType: Option<Rc<RefCell<BasicPlatormGeographicMapCellType>>> = None;
         while jcall!(this.enumerationUtil).hasMoreElements(enumeration.clone()) {
-            key = (jcall!(this.enumerationUtil).nextElement(enumeration.clone())).clone() /* as String */;
-            jcall!(this.logUtil).putF(key.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone());
-            idsWithTypeList = { let java_object = (jcall!(tileTypeToTileIdsMap).get(crate::java_into_object(key.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
+            key = { let java_value = ({ let java_object = (jcall!(this.enumerationUtil).nextElement(enumeration.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            jcall!(this.logUtil).putF(key.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone());
+            idsWithTypeList = { let java_value = ({ let java_object = (jcall!(tileTypeToTileIdsMap).get(crate::java_into_object(key.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             basicPlatormGeographicMapCellType = BasicPlatormGeographicMapCellType::new(idsWithTypeList.clone());
             if (key == PLATFORM.clone()) {
                 BLOCK_CELL_TYPE = basicPlatormGeographicMapCellType.clone();
@@ -94,7 +94,7 @@ impl BasicPlatormGeographicMapCellTypeFactory {
         this
     }
 
-    pub fn new(mut tileTypeToTileIdsMap: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut maxTileId: i32) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut tileTypeToTileIdsMap: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut maxTileId: i32) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(tileTypeToTileIdsMap, maxTileId))))
     }
     

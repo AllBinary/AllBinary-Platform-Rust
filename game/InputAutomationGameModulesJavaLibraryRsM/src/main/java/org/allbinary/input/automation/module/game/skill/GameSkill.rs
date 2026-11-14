@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
@@ -44,7 +43,7 @@ pub struct GameSkill {
     pub TIME_LABEL: String,
 }
 
-pub static mut GameSkill_hashMap: std::cell::LazyCell<Option<Rc<RefCell<HashMap>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashMap());
+pub static mut GameSkill_hashMap: std::cell::LazyCell<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashMap());
 
 impl GameSkill {
     
@@ -70,8 +69,8 @@ impl GameSkill {
     }
 
     pub fn new(mut gameSkillType: Option<Rc<RefCell<GameSkillType>>>, mut extra: String, mut time: i32) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(gameSkillType, extra, time))));
-            jcall!(unsafe { GameSkill_hashMap.clone() }).put(jcall!(StringMaker::new()).append(jcall!(this.getGameSkillType()).getName()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(extra.clone()).toString(), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(gameSkillType.clone(), extra.clone(), time.clone()))));
+            jcall!(unsafe { GameSkill_hashMap.clone() }).put({ let java_argument = crate::java_into_object(jcall!(StringMaker::new()).append({ let java_argument = jcall!(jcall!(this).getGameSkillType()).getName(); java_argument }).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(extra.clone()).toString()); java_argument }, (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
         this
     }
     
@@ -117,7 +116,7 @@ impl GameSkill {
     
 
     pub fn getInstance(mut gameSkillType: Option<Rc<RefCell<GameSkillType>>>, mut extra: String) -> Option<Rc<RefCell<dyn GameSkillDyn>>> {
-        return (jcall!(unsafe { GameSkill_hashMap.clone() }).get(jcall!(StringMaker::new()).append(jcall!(gameSkillType).getName()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(extra.clone()).toString())).clone() /* as GameSkill */;
+        return { let java_object = (jcall!(unsafe { GameSkill_hashMap.clone() }).get(crate::java_into_object(jcall!(StringMaker::new()).append(jcall!(gameSkillType).getName()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(extra.clone()).toString()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GameSkillDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -125,17 +124,17 @@ impl GameSkill {
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(self.GAME_SKILL_LABEL.clone());
-        jcall!(stringBuffer).append(jcall!(self.getGameSkillType()).toString());
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_argument = jcall!(self.getGameSkillType()).toString(); java_argument });
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.EXTRA_LABEL.clone());
         jcall!(stringBuffer).append(self.getExtra());
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.TIME_LABEL.clone());
         jcall!(stringBuffer).appendlong(((self.getTime()) as i64));
         return jcall!(stringBuffer).toString();
     }
 }
-pub trait GameSkillDyn {
+pub trait GameSkillDyn: std::any::Any {
     fn as_GameSkill(&self) -> &GameSkill;
     fn as_GameSkill_mut(&mut self) -> &mut GameSkill;
     fn getGameSkillType(&mut self) -> Option<Rc<RefCell<GameSkillType>>> { GameSkill::getGameSkillType(self.as_GameSkill_mut()) }

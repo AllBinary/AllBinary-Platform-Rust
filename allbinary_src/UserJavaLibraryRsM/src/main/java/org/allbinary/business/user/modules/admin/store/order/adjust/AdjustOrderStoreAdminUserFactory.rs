@@ -16,11 +16,11 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::user::UserFactoryInterface::UserFactoryInterface;
 use crate::org::allbinary::business::user::UserInterface::UserInterface;
+use crate::java::lang::Exception::*;
 use super::AdjustOrderStoreAdminUser::AdjustOrderStoreAdminUser;
 
 // Borrows the object of a Java reference
@@ -33,9 +33,15 @@ macro_rules! jcall {
 pub struct AdjustOrderStoreAdminUserFactory {
 }
 
-// impl UserFactoryInterface for AdjustOrderStoreAdminUserFactory with the methods of the trait
+impl UserFactoryInterface for AdjustOrderStoreAdminUserFactory {
+    fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn UserInterface>>> { Self::getInstance1(self, hashMap) }
+}
 
 impl AdjustOrderStoreAdminUserFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -51,14 +57,14 @@ impl AdjustOrderStoreAdminUserFactory {
 
     // throws Exception
     pub fn getInstance(&mut self) -> Option<Rc<RefCell<dyn UserInterface>>> {
-        return AdjustOrderStoreAdminUser::new().map(|reference| reference as Rc<RefCell<dyn UserInterface>>);
+        return AdjustOrderStoreAdminUser::new().map(|reference| reference as Rc<RefCell<dyn UserInterface>>).map(|reference| reference as Rc<RefCell<dyn UserInterface>>);
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn getInstance1(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<dyn UserInterface>>> {
-        return AdjustOrderStoreAdminUser::new1(hashMap.clone()).map(|reference| reference as Rc<RefCell<dyn UserInterface>>);
+    pub fn getInstance1(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn UserInterface>>> {
+        return AdjustOrderStoreAdminUser::new1(hashMap.clone()).map(|reference| reference as Rc<RefCell<dyn UserInterface>>).map(|reference| reference as Rc<RefCell<dyn UserInterface>>);
     }
 }
 

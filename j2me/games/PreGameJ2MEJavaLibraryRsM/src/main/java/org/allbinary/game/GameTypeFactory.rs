@@ -39,6 +39,10 @@ thread_local! { pub static GameTypeFactory_instance: Option<Rc<RefCell<GameTypeF
 
 impl GameTypeFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             NULL_GAME_TYPE_ARRAY: Vec::new(),
@@ -48,7 +52,7 @@ impl GameTypeFactory {
             BOT: None,
         };
         this.NULL_GAME_TYPE_ARRAY = vec![None; (0) as usize];
-        this.NONE = GameType::new(jcall!(StringUtil::getInstance()).NULL_STRING.clone());
+        this.NONE = GameType::new({ let java_field = jcall!(StringUtil::getInstance()).NULL_STRING.clone(); java_field }.clone());
         this.SINGLE_PLAYER = GameType::new(String::from("Single Player"));
         this.MULTI_PLAYER = GameType::new(String::from("Multi Player"));
         this.BOT = GameType::new(String::from("Artificial Player"));

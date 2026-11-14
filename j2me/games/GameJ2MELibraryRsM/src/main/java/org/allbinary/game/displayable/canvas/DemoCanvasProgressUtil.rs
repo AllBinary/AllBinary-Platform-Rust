@@ -36,6 +36,10 @@ pub struct DemoCanvasProgressUtil {
 
 impl DemoCanvasProgressUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -57,9 +61,9 @@ impl DemoCanvasProgressUtil {
         jcall!(progressCanvas).startBackground(background.clone());
         let mut paintableArray: Vec<Option<Rc<RefCell<dyn PaintableInterface>>>> = vec![None; (2) as usize];
         paintableArray[(0) as usize] = progressCanvas.clone().map(|reference| reference as Rc<RefCell<dyn PaintableInterface>>);
-        paintableArray[(1) as usize] = jcall!(demoCanvas).getDefaultPaintableInterface();
+        paintableArray[(1) as usize] = jcall!(demoCanvas).getDefaultPaintableInterface().map(|reference| reference as Rc<RefCell<dyn PaintableInterface>>);
         jcall!(demoCanvas).setDefaultPaintableInterface(PaintableComposite::new(paintableArray.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>));
-        jcall!(demoCanvas).setPaintableInterface(jcall!(demoCanvas).getDefaultPaintableInterface());
+        jcall!(demoCanvas).setPaintableInterface(jcall!(demoCanvas).getDefaultPaintableInterface().map(|reference| reference as Rc<RefCell<dyn PaintableInterface>>));
     }
 }
 

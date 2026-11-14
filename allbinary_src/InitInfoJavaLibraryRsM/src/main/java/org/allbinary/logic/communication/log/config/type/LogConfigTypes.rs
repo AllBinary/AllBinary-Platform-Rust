@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::communication::log::config::LoggingInitInfo::L
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::LogConfigType::LogConfigType;
 
 // Borrows the object of a Java reference
@@ -37,9 +38,13 @@ pub struct LogConfigTypes {
 }
 
 thread_local! { pub static LogConfigTypes_JSP_ERROR_NO_FUNCTION: String = String::from("in JSP Not In Function"); }
-pub static mut LogConfigTypes_LOGGING: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = std::cell::LazyCell::new(|| BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
+pub static mut LogConfigTypes_LOGGING: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = std::cell::LazyCell::new(|| BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
 
 impl LogConfigTypes {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     // Java static initializer: call this once at startup
@@ -62,20 +67,20 @@ impl LogConfigTypes {
     // synchronized
     pub fn init() {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            PreLogUtil::put(String::from("Initialize LogconfigTypes"), String::from("LogConfigTypes"), String::from("init()"));
+            PreLogUtil::put(String::from("Initialize LogconfigTypes"), crate::java_into_object(String::from("LogConfigTypes")), String::from("init()"));
             LogConfigTypeFactory::LogConfigTypeFactory::getInstance();
             let mut loggingInitInfo: Option<Rc<RefCell<LoggingInitInfo>>> = LoggingInitInfo::new();
             let mut logConfigTypeVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(loggingInitInfo).getTypeList();
-            PreLogUtil::put(format!("{}{}", String::from("Number Of Log Configs: "), jcall!(loggingInitInfo).getNumberOfLogConfigs()), String::from("LogConfigTypes"), String::from("init()"));
-            PreLogUtil::put(format!("{}{}", String::from("Number Of Log Config Type Names: "), jcall!(logConfigTypeVector).size()), String::from("LogConfigTypes"), String::from("init()"));
+            PreLogUtil::put(format!("{}{}", String::from("Number Of Log Configs: "), jcall!(loggingInitInfo).getNumberOfLogConfigs()), crate::java_into_object(String::from("LogConfigTypes")), String::from("init()"));
+            PreLogUtil::put(format!("{}{}", String::from("Number Of Log Config Type Names: "), jcall!(logConfigTypeVector).size()), crate::java_into_object(String::from("LogConfigTypes")), String::from("init()"));
             jcall!(unsafe { LogConfigTypes_LOGGING.clone() }).addAllList(logConfigTypeVector.clone());
-            jcall!(unsafe { LogConfigTypes_LOGGING.clone() }).add(crate::java_into_object(jcall!(LogConfigTypeFactory::LogConfigTypeFactory::getInstance()).NETBEANS_MODULE.clone()));
+            jcall!(unsafe { LogConfigTypes_LOGGING.clone() }).add(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::LogConfigTypeFactory::getInstance()).NETBEANS_MODULE.clone(); java_field }.clone()));
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putSE(String::from("Unable to initialize LogConfigTypes"), String::from("LogConfigTypes"), String::from("init()"), e.clone());
+            PreLogUtil::putSE(String::from("Unable to initialize LogConfigTypes"), String::from("LogConfigTypes"), String::from("init()"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -83,9 +88,9 @@ impl LogConfigTypes {
 
     // throws Exception
     pub fn getInstance(mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<LogConfigType>>> {
-        let mut nameValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(LogConfigTypeData::LogConfigTypeData::getInstance()).NAME.clone(), jcall!(node).getChildNodes());
+        let mut nameValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(LogConfigTypeData::LogConfigTypeData::getInstance()).NAME.clone(); java_field }.clone(), jcall!(node).getChildNodes());
         let mut name: String = DomNodeHelper::getTextNodeValue(nameValueNode.clone());
-        let mut descriptionValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNodeNoThrow(jcall!(LogConfigTypeData::LogConfigTypeData::getInstance()).DESCRIPTION.clone(), jcall!(node).getChildNodes());
+        let mut descriptionValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNodeNoThrow({ let java_field = jcall!(LogConfigTypeData::LogConfigTypeData::getInstance()).DESCRIPTION.clone(); java_field }.clone(), jcall!(node).getChildNodes());
         if descriptionValueNode.is_some() {
             let mut description: String = DomNodeHelper::getTextNodeValue(descriptionValueNode.clone());
         }
@@ -93,8 +98,8 @@ impl LogConfigTypes {
         let mut size: i32 = jcall!(availableLogConfigTypes).size();
         let mut logConfigType: Option<Rc<RefCell<LogConfigType>>> = None;
         for index in (0..size) {
-            logConfigType = { let java_object = (jcall!(availableLogConfigTypes).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LogConfigType>>>>().expect("ClassCastException").clone()) };
-            if jcall!(jcall!(logConfigType).getName()).compareTo(name.clone()) == 0 {
+            logConfigType = { let java_value = ({ let java_object = (jcall!(availableLogConfigTypes).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<LogConfigType>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            if (jcall!(logConfigType).getName().cmp(&name.clone()) as i32) == 0 {
                 return logConfigType.clone();
             }
         }

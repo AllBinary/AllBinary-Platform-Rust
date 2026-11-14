@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayer;
 use crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties;
 use crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal;
+use crate::java::lang::Exception::*;
 use super::BasicConstantVelocityMovement::BasicConstantVelocityMovement;
 
 // Borrows the object of a Java reference

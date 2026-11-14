@@ -17,10 +17,11 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImage;
+use crate::java::lang::RuntimeException::*;
 use super::TrueTypeFontUtilBase::TrueTypeFontUtilBase;
 
 // Borrows the object of a Java reference
@@ -70,7 +71,7 @@ impl TrueTypeFontUtil {
     }
     
 
-    pub fn getFontBitmap(&mut self, mut filename: String, mut fontSize: i32, mut cellSize: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Image>>> {
+    pub fn getFontBitmap(&mut self, mut filename: String, mut fontSize: i32, mut cellSize: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     
@@ -79,7 +80,7 @@ impl TrueTypeFontUtil {
     }
     
 
-    pub fn getFontBitmapGL(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut filename: String, mut cellSize: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Image>>> {
+    pub fn getFontBitmapGL(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut filename: String, mut cellSize: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     

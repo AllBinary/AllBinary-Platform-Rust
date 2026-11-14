@@ -5,8 +5,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::InputStream::InputStream;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -20,6 +21,10 @@ pub struct CryptFileReader {
 
 
 impl CryptFileReader {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut decryptedExtension: String, mut encryptedExtension: String) -> Self {
@@ -40,7 +45,7 @@ impl CryptFileReader {
     
 
     // throws Exception
-    pub fn getInputStream(&mut self, mut fileAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>) -> Option<Rc<RefCell<InputStream>>> {
+    pub fn getInputStream(&mut self, mut fileAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
         return None;
     }
 }

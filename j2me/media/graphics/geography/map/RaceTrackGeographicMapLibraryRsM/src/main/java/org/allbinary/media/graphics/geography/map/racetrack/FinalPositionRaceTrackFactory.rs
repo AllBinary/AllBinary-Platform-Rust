@@ -32,6 +32,10 @@ thread_local! { pub static FinalPositionRaceTrackFactory_FIRST_POSITION: i32 = 1
 pub static mut FinalPositionRaceTrackFactory_index: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| FinalPositionRaceTrackFactory_FIRST_POSITION.with(Clone::clone).clone());
 
 impl FinalPositionRaceTrackFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

@@ -22,6 +22,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::jsinterop::annotations::JsMethod;
 use crate::jsinterop::annotations::JsConstructor;
 use crate::jsinterop::annotations::JsProperty;
+use crate::java::lang::Exception::*;
 use super::BaseBasicArrayListCache::BaseBasicArrayListCache;
 use super::CacheInterface::CacheInterface;
 use super::CacheableInterface::CacheableInterface;
@@ -127,16 +128,13 @@ impl std::ops::DerefMut for IndexedBasicArrayListCache {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait IndexedBasicArrayListCacheDyn: crate::org::allbinary::logic::util::cache::BaseBasicArrayListCache::BaseBasicArrayListCacheDyn {
+pub trait IndexedBasicArrayListCacheDyn: crate::org::allbinary::logic::util::cache::BaseBasicArrayListCache::BaseBasicArrayListCacheDyn + crate::org::allbinary::logic::util::cache::CacheInterface::CacheInterface {
     fn as_IndexedBasicArrayListCache(&self) -> &IndexedBasicArrayListCache;
     fn as_IndexedBasicArrayListCache_mut(&mut self) -> &mut IndexedBasicArrayListCache;
     fn init(&mut self, mut size: i32) { IndexedBasicArrayListCache::init(self.as_IndexedBasicArrayListCache_mut(), size) }
     fn getAt(&mut self, mut index: i32) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { IndexedBasicArrayListCache::getAt(self.as_IndexedBasicArrayListCache_mut(), index) }
     fn addDefault(&mut self) { IndexedBasicArrayListCache::addDefault(self.as_IndexedBasicArrayListCache_mut()) }
     fn addObject(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { IndexedBasicArrayListCache::addObject(self.as_IndexedBasicArrayListCache_mut(), anyType) }
-    fn add(&mut self, mut cacheableInterface: Option<Rc<RefCell<dyn CacheableInterface>>>) { IndexedBasicArrayListCache::add(self.as_IndexedBasicArrayListCache_mut(), cacheableInterface) }
-    fn addArray(&mut self, mut cacheableInterfaces: Vec<Option<Rc<RefCell<dyn CacheableInterface>>>>) { IndexedBasicArrayListCache::addArray(self.as_IndexedBasicArrayListCache_mut(), cacheableInterfaces) }
-    fn clear(&mut self) { IndexedBasicArrayListCache::clear(self.as_IndexedBasicArrayListCache_mut()) }
 }
 impl IndexedBasicArrayListCacheDyn for IndexedBasicArrayListCache {
     fn as_IndexedBasicArrayListCache(&self) -> &IndexedBasicArrayListCache { self }

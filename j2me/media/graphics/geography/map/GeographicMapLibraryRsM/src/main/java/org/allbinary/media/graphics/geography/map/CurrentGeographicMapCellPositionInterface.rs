@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait CurrentGeographicMapCellPositionInterface {
+pub trait CurrentGeographicMapCellPositionInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getCurrentGeographicMapCellPosition(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

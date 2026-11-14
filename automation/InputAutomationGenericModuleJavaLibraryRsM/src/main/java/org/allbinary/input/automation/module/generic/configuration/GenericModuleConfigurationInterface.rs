@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait GenericModuleConfigurationInterface {
+pub trait GenericModuleConfigurationInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getSelectedGenericProfile(&mut self) -> Option<Rc<RefCell<GenericProfile>>>;
     
 
     fn setSelectedGenericProfile(&mut self, selectedGenericProfile: Option<Rc<RefCell<GenericProfile>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

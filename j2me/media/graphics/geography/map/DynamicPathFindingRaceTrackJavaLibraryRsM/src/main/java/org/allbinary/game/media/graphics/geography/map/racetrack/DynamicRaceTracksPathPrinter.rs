@@ -27,6 +27,7 @@ use crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrack
 use crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTracksPathPrinter::RaceTracksPathPrinter;
 use crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingInfo::PathFindingInfo;
 use crate::org::allbinary::media::graphics::geography::pathfinding::PathGenerator::PathGenerator;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -60,7 +61,7 @@ impl DynamicRaceTracksPathPrinter {
     pub fn printAllPaths(&mut self, mut raceTrackGeographicMapInterfaceFactoryInterface: Option<Rc<RefCell<dyn RaceTrackGeographicMapInterfaceFactoryInterface>>>, mut pathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>>, mut size: i32) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             for index in (0..size) {
-                let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(raceTrackGeographicMapInterfaceFactoryInterface).getTrackInstance(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(index.clone()));
+                let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(raceTrackGeographicMapInterfaceFactoryInterface).getTrackInstance(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(index.clone())).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>);
                 let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(PathGenerator::getInstance()).createList(geographicMapInterface.clone(), RaceTrackRoadsGeographicMapCellHistoryFactory::getInstance(), pathFindingInfo.clone(), 10);
                 println!("{}", format!("{}{}", String::from("Track "), index));
                 self.printPaths(list.clone());
@@ -68,10 +69,10 @@ impl DynamicRaceTracksPathPrinter {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).PROCESS.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

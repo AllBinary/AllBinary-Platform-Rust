@@ -71,7 +71,7 @@ impl NoHighScoresFactory {
     
 
     pub fn createHighScoresHelper(&mut self) -> Option<Rc<RefCell<dyn HighScoresHelperBaseInterface>>> {
-        return HighScoresHelperBase::new().map(|reference| reference as Rc<RefCell<dyn HighScoresHelperBaseInterface>>);
+        return HighScoresHelperBase::new().map(|reference| reference as Rc<RefCell<dyn HighScoresHelperBaseInterface>>).map(|_java_reference| -> Rc<RefCell<dyn HighScoresHelperBaseInterface>> { panic!("ClassCastException: the Rust trait of HighScoresHelperBase does not have HighScoresHelperBaseInterface as a base trait") });
     }
 }
 impl std::ops::Deref for NoHighScoresFactory {

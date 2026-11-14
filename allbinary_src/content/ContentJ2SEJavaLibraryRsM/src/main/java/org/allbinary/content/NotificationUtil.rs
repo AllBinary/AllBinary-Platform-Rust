@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Command::Command;
 use crate::org::allbinary::data::resource::ResourceUtil::ResourceUtil;
 use crate::org::allbinary::TsUtil::TsUtil;
 use super::NotificationManager::NotificationManager;
@@ -45,6 +45,10 @@ thread_local! { pub static NotificationUtil_SINGLETON: Option<Rc<RefCell<Notific
 
 impl NotificationUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             notificationManager: None,
@@ -63,7 +67,7 @@ impl NotificationUtil {
     }
     
 
-    pub fn notify(&mut self, mut command: Option<Rc<RefCell<Command>>>, mut resource: String, mut message: String) {
+    pub fn notify(&mut self, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut resource: String, mut message: String) {
         let mut context: Option<Rc<RefCell<Context>>> = jcall!(ResourceUtil::getInstance()).getContext();
         let mut intent: Option<Rc<RefCell<Intent>>> = jcall!(CommandUriAction::CommandUriAction::getInstance()).getIntent(command.clone());
         let mut integer: Option<i32> = jcall!(ResourceUtil::getInstance()).getResourceId(resource.clone());

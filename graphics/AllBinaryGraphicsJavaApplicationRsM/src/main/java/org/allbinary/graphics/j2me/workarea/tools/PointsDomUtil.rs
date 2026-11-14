@@ -24,10 +24,8 @@ use crate::org::allbinary::graphics::j2me::workarea::canvas::CanvasDom::CanvasDo
 use crate::org::allbinary::math::PositionStrings::PositionStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::Document::Document;
-use super::dom::dom;
-use super::w3c::w3c;
-use super::org::org;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -48,6 +46,10 @@ pub struct PointsDomUtil {
 thread_local! { pub static PointsDomUtil_instance: Option<Rc<RefCell<PointsDomUtil>>> = PointsDomUtil::new(); }
 
 impl PointsDomUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -88,18 +90,18 @@ impl PointsDomUtil {
         let mut rotatedFirstPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = None;
         let mut index: i32 = 0;
         if index < size && index < size2 {
-            rotatedFirstPoint = { let java_object = (jcall!(tempPointVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) };
-            firstPoint = { let java_object = (jcall!(pointVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) };
+            rotatedFirstPoint = { let java_value = ({ let java_object = (jcall!(tempPointVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            firstPoint = { let java_value = ({ let java_object = (jcall!(pointVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             index += 1;
         }
         while index < size && index < size2 {
             let mut lineNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement(self.LINE.clone())).clone() /* as Node */;
             let mut rotatedSecondPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = { let java_object = (jcall!(tempPointVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) };
             let mut secondPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = { let java_object = (jcall!(pointVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>>().expect("ClassCastException").clone()) };
-            let mut pointOneNode: Option<Rc<RefCell<Node>>> = self.getPointNode(firstPoint.clone(), self.POINTONE.clone());
-            let mut pointTwoNode: Option<Rc<RefCell<Node>>> = self.getPointNode(secondPoint.clone(), self.POINTTWO.clone());
-            let mut rotatedPointOneNode: Option<Rc<RefCell<Node>>> = self.getPointNode(rotatedFirstPoint.clone(), self.ROTATEDPOINTONE.clone());
-            let mut rotatedPointTwoNode: Option<Rc<RefCell<Node>>> = self.getPointNode(rotatedSecondPoint.clone(), self.ROTATEDPOINTTWO.clone());
+            let mut pointOneNode: Option<Rc<RefCell<Node>>> = { let java_arguments = (firstPoint.clone(), self.POINTONE.clone(),); self.getPointNode(java_arguments.0, java_arguments.1) };
+            let mut pointTwoNode: Option<Rc<RefCell<Node>>> = { let java_arguments = (secondPoint.clone(), self.POINTTWO.clone(),); self.getPointNode(java_arguments.0, java_arguments.1) };
+            let mut rotatedPointOneNode: Option<Rc<RefCell<Node>>> = { let java_arguments = (rotatedFirstPoint.clone(), self.ROTATEDPOINTONE.clone(),); self.getPointNode(java_arguments.0, java_arguments.1) };
+            let mut rotatedPointTwoNode: Option<Rc<RefCell<Node>>> = { let java_arguments = (rotatedSecondPoint.clone(), self.ROTATEDPOINTTWO.clone(),); self.getPointNode(java_arguments.0, java_arguments.1) };
             jcall!(lineNode).appendChild(pointOneNode.clone());
             jcall!(lineNode).appendChild(pointTwoNode.clone());
             jcall!(lineNode).appendChild(rotatedPointOneNode.clone());
@@ -116,10 +118,10 @@ impl PointsDomUtil {
     pub fn getPointNode(&mut self, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut pointName: String) -> Option<Rc<RefCell<Node>>> {
         let mut document: Option<Rc<RefCell<Document>>> = WorkAreaJPanel::getDocument();
         let mut pointNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement(pointName.clone())).clone() /* as Node */;
-        let mut xNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement(jcall!(PositionStrings::getInstance()).X.clone())).clone() /* as Node */;
+        let mut xNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement({ let java_field = jcall!(PositionStrings::getInstance()).X.clone(); java_field }.clone())).clone() /* as Node */;
         let mut xTextNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createTextNode((jcall!(point).getX()).to_string())).clone() /* as Node */;
         jcall!(xNode).appendChild(xTextNode.clone());
-        let mut yNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement(jcall!(PositionStrings::getInstance()).Y.clone())).clone() /* as Node */;
+        let mut yNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createElement({ let java_field = jcall!(PositionStrings::getInstance()).Y.clone(); java_field }.clone())).clone() /* as Node */;
         let mut yTextNode: Option<Rc<RefCell<Node>>> = (jcall!(document).createTextNode((jcall!(point).getY()).to_string())).clone() /* as Node */;
         jcall!(yNode).appendChild(yTextNode.clone());
         jcall!(pointNode).appendChild(xNode.clone());

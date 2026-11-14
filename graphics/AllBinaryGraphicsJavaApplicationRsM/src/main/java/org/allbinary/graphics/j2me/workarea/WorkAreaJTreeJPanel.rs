@@ -32,6 +32,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -109,8 +110,8 @@ impl WorkAreaJTreeJPanel {
     
 
     pub fn getNode(&mut self, mut treePathArray: Vec<Option<Rc<RefCell<TreePath>>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut basicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        if treePathArray.is_some() {
+        let mut basicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        if !treePathArray.is_empty() {
             for index in (0..(treePathArray.len() as i32)) {
                 jcall!(basicArrayList).add(crate::java_into_object(self.getNode(treePathArray[(index) as usize].clone())));
             }
@@ -120,10 +121,10 @@ impl WorkAreaJTreeJPanel {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn getNode(&mut self, mut treePath: Option<Rc<RefCell<TreePath>>>) -> Option<Rc<RefCell<DefaultMutableTreeNode>>> {
+    pub fn getNode_TreePath(&mut self, mut treePath: Option<Rc<RefCell<TreePath>>>) -> Option<Rc<RefCell<DefaultMutableTreeNode>>> {
         if treePath.is_some() {
             let mut obj: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(treePath).getPath();
-            if obj.is_some() {
+            if !obj.is_empty() {
                 let mut node: Option<Rc<RefCell<DefaultMutableTreeNode>>> = (obj[((obj.len() as i32) - 1) as usize]).clone() /* as DefaultMutableTreeNode */;
                 return node.clone();
             }
@@ -138,7 +139,7 @@ impl WorkAreaJTreeJPanel {
         jcall!(self.logUtil).putF(format!("{}{}", String::from("size: "), size), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("deselectAll"));
         for index in (0..size) {
             let mut node: Option<Rc<RefCell<DefaultMutableTreeNode>>> = (jcall!(self.highlightedBasicArrayList).get(index.clone())).clone() /* as DefaultMutableTreeNode */;
-            MyGraphicItemEventService::fire(MyGraphicItemEvent::new((MyGraphicItemEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::tools::event::MyGraphicItemEventService::MyGraphicItemEventService_DESELECT.clone() }.clone(), node.clone())).clone() /* as Any */));
+            MyGraphicItemEventService::fire(MyGraphicItemEvent::new(crate::java_into_object(crate::java_into_object((MyGraphicItemEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::tools::event::MyGraphicItemEventService::MyGraphicItemEventService_DESELECT.clone() }.clone(), node.clone())).clone()))));
         }
         jcall!(self.highlightedBasicArrayList).clear();
     }
@@ -147,25 +148,25 @@ impl WorkAreaJTreeJPanel {
     // throws Exception
     pub fn selectGraphicItem(&mut self, mut node: Option<Rc<RefCell<DefaultMutableTreeNode>>>) {
         jcall!(self.highlightedBasicArrayList).add(crate::java_into_object(node.clone()));
-        MyGraphicItemEventService::fire(MyGraphicItemEvent::new((MyGraphicItemEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::tools::event::MyGraphicItemEventService::MyGraphicItemEventService_SELECT.clone() }.clone(), node.clone())).clone() /* as Any */));
+        MyGraphicItemEventService::fire(MyGraphicItemEvent::new(crate::java_into_object(crate::java_into_object((MyGraphicItemEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::tools::event::MyGraphicItemEventService::MyGraphicItemEventService_SELECT.clone() }.clone(), node.clone())).clone()))));
     }
     
 
     // throws Exception
     pub fn removeGraphicItem(&mut self, mut node: Option<Rc<RefCell<DefaultMutableTreeNode>>>) {
-        MyGraphicItemEventService::fire(MyGraphicItemEvent::new((MyGraphicItemEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::tools::event::MyGraphicItemEventService::MyGraphicItemEventService_DELETE.clone() }.clone(), node.clone())).clone() /* as Any */));
+        MyGraphicItemEventService::fire(MyGraphicItemEvent::new(crate::java_into_object(crate::java_into_object((MyGraphicItemEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::tools::event::MyGraphicItemEventService::MyGraphicItemEventService_DELETE.clone() }.clone(), node.clone())).clone()))));
     }
     
 
     // throws Exception
     pub fn removeCanvas(&mut self, mut node: Option<Rc<RefCell<DefaultMutableTreeNode>>>) {
-        MyCanvasEventService::fire(MyCanvasEvent::new((MyCanvasEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::canvas::event::MyCanvasEventService::MyCanvasEventService_DELETE.clone() }.clone(), node.clone())).clone() /* as Any */));
+        MyCanvasEventService::fire(MyCanvasEvent::new(crate::java_into_object(crate::java_into_object((MyCanvasEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::canvas::event::MyCanvasEventService::MyCanvasEventService_DELETE.clone() }.clone(), node.clone())).clone()))));
     }
     
 
     // throws Exception
     pub fn remove(&mut self, mut treePath: Option<Rc<RefCell<TreePath>>>) {
-        let mut node: Option<Rc<RefCell<DefaultMutableTreeNode>>> = self.getNode(treePath.clone());
+        let mut node: Option<Rc<RefCell<DefaultMutableTreeNode>>> = self.getNode_TreePath(treePath.clone());
         if node.is_some() {
             if (jcall!(node).getUserObject()).is_some() /* instanceof CanvasTreeLabel */ {
                 self.removeCanvas(node.clone());
@@ -191,12 +192,12 @@ impl WorkAreaJTreeJPanel {
     // throws Exception
     // Java overloaded method: Rust needs a different name
     pub fn copy1(&mut self, mut treePath: Option<Rc<RefCell<TreePath>>>) {
-        let mut node: Option<Rc<RefCell<DefaultMutableTreeNode>>> = self.getNode(treePath.clone());
+        let mut node: Option<Rc<RefCell<DefaultMutableTreeNode>>> = self.getNode_TreePath(treePath.clone());
         if node.is_some() {
             if (jcall!(node).getUserObject()).is_some() /* instanceof CanvasTreeLabel */ {
-                MyCanvasEventService::fire(MyCanvasEvent::new((MyCanvasEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::canvas::event::MyCanvasEventService::MyCanvasEventService_DUPLICATE.clone() }.clone(), node.clone())).clone() /* as Any */));
+                MyCanvasEventService::fire(MyCanvasEvent::new(crate::java_into_object(crate::java_into_object((MyCanvasEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::canvas::event::MyCanvasEventService::MyCanvasEventService_DUPLICATE.clone() }.clone(), node.clone())).clone()))));
             } else {
-                MyGraphicItemEventService::fire(MyGraphicItemEvent::new((MyGraphicItemEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::tools::event::MyGraphicItemEventService::MyGraphicItemEventService_DUPLICATE.clone() }.clone(), node.clone())).clone() /* as Any */));
+                MyGraphicItemEventService::fire(MyGraphicItemEvent::new(crate::java_into_object(crate::java_into_object((MyGraphicItemEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::tools::event::MyGraphicItemEventService::MyGraphicItemEventService_DUPLICATE.clone() }.clone(), node.clone())).clone()))));
             }
         }
     }
@@ -204,12 +205,12 @@ impl WorkAreaJTreeJPanel {
 
     // throws Exception
     pub fn rotate(&mut self, mut treePath: Option<Rc<RefCell<TreePath>>>, mut angle: f64) {
-        let mut node: Option<Rc<RefCell<DefaultMutableTreeNode>>> = self.getNode(treePath.clone());
+        let mut node: Option<Rc<RefCell<DefaultMutableTreeNode>>> = self.getNode_TreePath(treePath.clone());
         if node.is_some() {
             if (jcall!(node).getUserObject()).is_some() /* instanceof CanvasTreeLabel */ {
-                MyCanvasEventService::fire(MyCanvasEvent::new((MyCanvasEventSource::new3(unsafe { crate::org::allbinary::graphics::j2me::workarea::canvas::event::MyCanvasEventService::MyCanvasEventService_ROTATE.clone() }.clone(), angle.clone(), node.clone())).clone() /* as Any */));
+                MyCanvasEventService::fire(MyCanvasEvent::new(crate::java_into_object(crate::java_into_object((MyCanvasEventSource::new3(unsafe { crate::org::allbinary::graphics::j2me::workarea::canvas::event::MyCanvasEventService::MyCanvasEventService_ROTATE.clone() }.clone(), angle.clone(), node.clone())).clone()))));
             } else {
-                MyGraphicItemEventService::fire(MyGraphicItemEvent::new((MyGraphicItemEventSource::new3(unsafe { crate::org::allbinary::graphics::j2me::workarea::tools::event::MyGraphicItemEventService::MyGraphicItemEventService_ROTATE.clone() }.clone(), angle.clone(), node.clone())).clone() /* as Any */));
+                MyGraphicItemEventService::fire(MyGraphicItemEvent::new(crate::java_into_object(crate::java_into_object((MyGraphicItemEventSource::new3(unsafe { crate::org::allbinary::graphics::j2me::workarea::tools::event::MyGraphicItemEventService::MyGraphicItemEventService_ROTATE.clone() }.clone(), angle.clone(), node.clone())).clone()))));
             }
         }
     }
@@ -292,7 +293,7 @@ impl WorkAreaJTreeJPanel {
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
         jcall!(self.workAreaPropertiesJPanel).setLayout(GridLayout::new(1, 0));
         jcall!(self.itemJScrollPane1).setViewportView(self.workAreaPropertiesJPanel.clone());
-        self.add(self.itemJScrollPane1.clone());
+        { let java_arguments = (self.itemJScrollPane1.clone(),); self.add(java_arguments.0) };
     }
     
 
@@ -306,9 +307,9 @@ impl WorkAreaJTreeJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("rotateJMenuItemMousePressed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("rotateJMenuItemMousePressed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -319,7 +320,7 @@ impl WorkAreaJTreeJPanel {
             let mut selectedTreePathArray: Vec<Option<Rc<RefCell<TreePath>>>> = jcall!(self.workAreaJTree).getSelectionPaths();
             let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getNode(selectedTreePathArray.clone());
             if jcall!(list).size() > 0 {
-                if match (&(jcall!(evt).getModifiers() & jcall!(evt).BUTTON3_MASK), &jcall!(evt).BUTTON3_MASK) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                if match (&(jcall!(evt).getModifiers() & { let java_field = jcall!(evt).BUTTON3_MASK.clone(); java_field }), &{ let java_field = jcall!(evt).BUTTON3_MASK.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                     for index in (0..(selectedTreePathArray.len() as i32)) {
                         let mut defaultMutableTreeNode: Option<Rc<RefCell<DefaultMutableTreeNode>>> = (jcall!(list).get(index.clone())).clone() /* as DefaultMutableTreeNode */;
                         if (jcall!(defaultMutableTreeNode).getUserObject()).is_some() /* instanceof CanvasTreeLabel */ {
@@ -329,12 +330,12 @@ impl WorkAreaJTreeJPanel {
                         }
                     }
                 }
-                if match (&(jcall!(evt).getModifiers() & jcall!(evt).BUTTON1_MASK), &jcall!(evt).BUTTON1_MASK) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                if match (&(jcall!(evt).getModifiers() & { let java_field = jcall!(evt).BUTTON1_MASK.clone(); java_field }), &{ let java_field = jcall!(evt).BUTTON1_MASK.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                     self.deselectAll();
                     for index in (0..(selectedTreePathArray.len() as i32)) {
                         let mut defaultMutableTreeNode: Option<Rc<RefCell<DefaultMutableTreeNode>>> = (jcall!(list).get(index.clone())).clone() /* as DefaultMutableTreeNode */;
                         if (jcall!(defaultMutableTreeNode).getUserObject()).is_some() /* instanceof CanvasTreeLabel */ {
-                            MyCanvasEventService::fire(MyCanvasEvent::new((MyCanvasEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::canvas::event::MyCanvasEventService::MyCanvasEventService_SELECT.clone() }.clone(), defaultMutableTreeNode.clone())).clone() /* as Any */));
+                            MyCanvasEventService::fire(MyCanvasEvent::new(crate::java_into_object(crate::java_into_object((MyCanvasEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::canvas::event::MyCanvasEventService::MyCanvasEventService_SELECT.clone() }.clone(), defaultMutableTreeNode.clone())).clone()))));
                         } else {
                             self.selectGraphicItem(defaultMutableTreeNode.clone());
                         }
@@ -344,9 +345,9 @@ impl WorkAreaJTreeJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("workAreaJTreeMousePressed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("workAreaJTreeMousePressed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -366,9 +367,9 @@ impl WorkAreaJTreeJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("copyJMenuItemMousePressed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("copyJMenuItemMousePressed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -387,9 +388,9 @@ impl WorkAreaJTreeJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("deleteJMenuItemMousePressed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("deleteJMenuItemMousePressed"), crate::java_into_object(e.clone()));
             }
         }
     }

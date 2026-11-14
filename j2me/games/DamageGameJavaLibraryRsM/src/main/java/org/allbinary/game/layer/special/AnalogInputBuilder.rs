@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessor;
 use super::SpecialUpGameInputProcessor::SpecialUpGameInputProcessor;
 use super::SpecialDownGameInputProcessor::SpecialDownGameInputProcessor;
@@ -47,6 +47,10 @@ thread_local! { pub static AnalogInputBuilder_instance: Option<Rc<RefCell<Analog
 
 impl AnalogInputBuilder {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -64,22 +68,22 @@ impl AnalogInputBuilder {
     
 
     pub fn disable(&mut self, mut inputProcessorArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>>>, mut collidableDestroyableDamageableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>>) {
-        inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() }) as usize] = SpecialUpGameInputProcessor::new(collidableDestroyableDamageableLayer.clone());
-        inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.clone() }) as usize] = SpecialDownGameInputProcessor::new(collidableDestroyableDamageableLayer.clone());
-        inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }) as usize] = SpecialRightGameInputProcessor::new(collidableDestroyableDamageableLayer.clone());
-        inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }) as usize] = SpecialLeftGameInputProcessor::new(collidableDestroyableDamageableLayer.clone());
-        inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM0.clone() }) as usize] = Special1GameInputProcessor::new(collidableDestroyableDamageableLayer.clone());
-        inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM5.clone() }) as usize] = Special3GameInputProcessor::new(collidableDestroyableDamageableLayer.clone());
+        inputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone)) as usize] = SpecialUpGameInputProcessor::new(collidableDestroyableDamageableLayer.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>);
+        inputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.with(Clone::clone)) as usize] = SpecialDownGameInputProcessor::new(collidableDestroyableDamageableLayer.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>);
+        inputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone)) as usize] = SpecialRightGameInputProcessor::new(collidableDestroyableDamageableLayer.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>);
+        inputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone)) as usize] = SpecialLeftGameInputProcessor::new(collidableDestroyableDamageableLayer.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>);
+        inputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM0.with(Clone::clone)) as usize] = Special1GameInputProcessor::new(collidableDestroyableDamageableLayer.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>);
+        inputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM5.with(Clone::clone)) as usize] = Special3GameInputProcessor::new(collidableDestroyableDamageableLayer.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>);
     }
     
 
     pub fn enable(&mut self, mut inputProcessorArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>>>, mut collidableDestroyableDamageableLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>>) {
-        inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() }) as usize] = SpecialAnalogUpGameInputProcessor::new(collidableDestroyableDamageableLayer.clone());
-        inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.clone() }) as usize] = SpecialAnalogDownGameInputProcessor::new(collidableDestroyableDamageableLayer.clone());
-        inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }) as usize] = SpecialAnalogRightGameInputProcessor::new(collidableDestroyableDamageableLayer.clone());
-        inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }) as usize] = SpecialAnalogLeftGameInputProcessor::new(collidableDestroyableDamageableLayer.clone());
-        inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM0.clone() }) as usize] = SpecialAnalogLeftTriggerGameInputProcessor::new(collidableDestroyableDamageableLayer.clone());
-        inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM5.clone() }) as usize] = SpecialAnalogRightTriggerGameInputProcessor::new(collidableDestroyableDamageableLayer.clone());
+        inputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone)) as usize] = SpecialAnalogUpGameInputProcessor::new(collidableDestroyableDamageableLayer.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>);
+        inputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.with(Clone::clone)) as usize] = SpecialAnalogDownGameInputProcessor::new(collidableDestroyableDamageableLayer.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>);
+        inputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone)) as usize] = SpecialAnalogRightGameInputProcessor::new(collidableDestroyableDamageableLayer.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>);
+        inputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone)) as usize] = SpecialAnalogLeftGameInputProcessor::new(collidableDestroyableDamageableLayer.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>);
+        inputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM0.with(Clone::clone)) as usize] = SpecialAnalogLeftTriggerGameInputProcessor::new(collidableDestroyableDamageableLayer.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>);
+        inputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM5.with(Clone::clone)) as usize] = SpecialAnalogRightTriggerGameInputProcessor::new(collidableDestroyableDamageableLayer.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>);
     }
 }
 

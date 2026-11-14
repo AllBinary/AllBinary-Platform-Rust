@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
 use crate::org::allbinary::animation::FeaturedAnimationInterfaceFactoryInterfaceFactory::FeaturedAnimationInterfaceFactoryInterfaceFactory;
 use crate::org::allbinary::game::configuration::GameConfigurationCentral::GameConfigurationCentral;
 use crate::org::allbinary::game::configuration::event::ChangedGameFeatureListener::ChangedGameFeatureListener;
@@ -35,6 +35,7 @@ use crate::org::allbinary::input::motion::CompleteMotionGestureInputToGameMotion
 use crate::org::allbinary::input::motion::button::BasicTouchInputFactory::BasicTouchInputFactory;
 use crate::org::allbinary::input::motion::button::CancelTouchButtonInputFactory::CancelTouchButtonInputFactory;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
+use crate::java::lang::Exception::*;
 use super::GameInitializationInterface::GameInitializationInterface;
 
 // Borrows the object of a Java reference
@@ -58,10 +59,14 @@ pub struct BaseGameInitialization {
 
 thread_local! { pub static BaseGameInitialization_NULL_BASE_GAME_INITIALIZATION: Option<Rc<RefCell<dyn BaseGameInitializationDyn>>> = BaseGameInitialization::new(vec![None; (0) as usize], 0).map(|reference| reference as Rc<RefCell<dyn BaseGameInitializationDyn>>); }
 impl GameInitializationInterface for BaseGameInitialization {
-    fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut commandListener: Option<Rc<RefCell<CommandListener>>>, mut level: i32) { Self::init(self, abeClientInformation, commandListener, level) }
+    fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut commandListener: Option<Rc<RefCell<dyn CommandListener>>>, mut level: i32) { Self::init(self, abeClientInformation, commandListener, level) }
 }
 
 impl BaseGameInitialization {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut resourceInitializationArray: Vec<Option<Rc<RefCell<ResourceInitialization>>>>, mut portion: i32) -> Self {
@@ -97,20 +102,20 @@ impl BaseGameInitialization {
 
     // throws Exception
     pub fn initKeyMapping(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut portion: i32) {
-        if jcall!(ChangedGameFeatureListener::getInstance()).isChangedFeature(jcall!(InputFeatureFactory::getInstance()).INPUT_MAPPING.clone()) {
+        if jcall!(ChangedGameFeatureListener::getInstance()).isChangedFeature({ let java_field = jcall!(InputFeatureFactory::getInstance()).INPUT_MAPPING.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             jcall!(jcall!(PlatformInputMappingFactory::getInstance()).getPersistentInputMappingInstance()).init(abeClientInformation.clone());
             jcall!(ProgressCanvasFactory::getInstance()).addNormalPortion(50, String::from("Game Keys"));
-            jcall!(ChangedGameFeatureListener::getInstance()).remove(jcall!(InputFeatureFactory::getInstance()).INPUT_MAPPING.clone());
+            jcall!(ChangedGameFeatureListener::getInstance()).remove({ let java_field = jcall!(InputFeatureFactory::getInstance()).INPUT_MAPPING.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
         }
     }
     
 
     // throws Exception
-    pub fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut commandListener: Option<Rc<RefCell<CommandListener>>>, mut level: i32) {
+    pub fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut commandListener: Option<Rc<RefCell<dyn CommandListener>>>, mut level: i32) {
         let mut resourceLoadingLevelFactory: Option<Rc<RefCell<ResourceLoadingLevelFactory>>> = ResourceLoadingLevelFactory::getInstance();
-        if !self.isInitialized() && (level == jcall!(jcall!(resourceLoadingLevelFactory).LOAD_ALL).getLevel() || level == jcall!(jcall!(resourceLoadingLevelFactory).LOAD_EARLY).getLevel()) {
+        if !self.isInitialized() && (level == jcall!({ let java_field = jcall!(resourceLoadingLevelFactory).LOAD_ALL.clone(); java_field }).getLevel() || level == jcall!({ let java_field = jcall!(resourceLoadingLevelFactory).LOAD_EARLY.clone(); java_field }).getLevel()) {
             let mut localPortion: i32 = 40;
-            if level == jcall!(jcall!(resourceLoadingLevelFactory).LOAD_EARLY).getLevel() {
+            if level == jcall!({ let java_field = jcall!(resourceLoadingLevelFactory).LOAD_EARLY.clone(); java_field }).getLevel() {
                 localPortion = 8;
             }
             self.setInitialized(true);
@@ -134,11 +139,11 @@ impl BaseGameInitialization {
     // throws Exception
     pub fn resourceInitialization(&mut self, mut level: i32) {
         let mut resourceLoadingLevelFactory: Option<Rc<RefCell<ResourceLoadingLevelFactory>>> = ResourceLoadingLevelFactory::getInstance();
-        if self.resourceAnimationChange() && level == jcall!(jcall!(resourceLoadingLevelFactory).LOAD_EARLY).getLevel() {
+        if self.resourceAnimationChange() && level == jcall!({ let java_field = jcall!(resourceLoadingLevelFactory).LOAD_EARLY.clone(); java_field }).getLevel() {
             self.clearResources();
             jcall!(self.resourceInitializationArray[(self.EARLY_CHANGABLE_RESOURCES) as usize]).init();
         }
-        if self.resourceAnimationChange() && level == jcall!(jcall!(resourceLoadingLevelFactory).LOAD_ALL).getLevel() {
+        if self.resourceAnimationChange() && level == jcall!({ let java_field = jcall!(resourceLoadingLevelFactory).LOAD_ALL.clone(); java_field }).getLevel() {
             if self.allLoaded {
                 self.clearResources();
             }
@@ -154,10 +159,10 @@ impl BaseGameInitialization {
     pub fn resourceAnimationChange(&mut self) -> bool {
         let mut changedGameFeatureListener: Option<Rc<RefCell<ChangedGameFeatureListener>>> = ChangedGameFeatureListener::getInstance();
         let mut gameConfigurationCentral: Option<Rc<RefCell<GameConfigurationCentral>>> = GameConfigurationCentral::getInstance();
-        if jcall!(changedGameFeatureListener).isChangedGameConfiguration(jcall!(gameConfigurationCentral).SCALE.clone()) {
+        if jcall!(changedGameFeatureListener).isChangedGameConfiguration({ let java_field = jcall!(gameConfigurationCentral).SCALE.clone(); java_field }.clone()) {
             return true;
         }
-        if jcall!(ChangedGameFeatureListener::getInstance()).isChangedFeature(jcall!(MainFeatureFactory::getInstance()).STATIC.clone()) {
+        if jcall!(ChangedGameFeatureListener::getInstance()).isChangedFeature({ let java_field = jcall!(MainFeatureFactory::getInstance()).STATIC.clone(); java_field }.clone()) {
             return true;
         }
         return false;
@@ -197,12 +202,11 @@ impl BaseGameInitialization {
         return self.initialized.clone();
     }
 }
-pub trait BaseGameInitializationDyn {
+pub trait BaseGameInitializationDyn: std::any::Any + crate::org::allbinary::game::init::GameInitializationInterface::GameInitializationInterface {
     fn as_BaseGameInitialization(&self) -> &BaseGameInitialization;
     fn as_BaseGameInitialization_mut(&mut self) -> &mut BaseGameInitialization;
     fn initKey(&mut self, mut portion: i32) { BaseGameInitialization::initKey(self.as_BaseGameInitialization_mut(), portion) }
     fn initKeyMapping(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut portion: i32) { BaseGameInitialization::initKeyMapping(self.as_BaseGameInitialization_mut(), abeClientInformation, portion) }
-    fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut commandListener: Option<Rc<RefCell<CommandListener>>>, mut level: i32) { BaseGameInitialization::init(self.as_BaseGameInitialization_mut(), abeClientInformation, commandListener, level) }
     fn resourceInitialization(&mut self, mut level: i32) { BaseGameInitialization::resourceInitialization(self.as_BaseGameInitialization_mut(), level) }
     fn resourceAnimationChange(&mut self) -> bool { BaseGameInitialization::resourceAnimationChange(self.as_BaseGameInitialization_mut()) }
     fn clearResources(&mut self) { BaseGameInitialization::clearResources(self.as_BaseGameInitialization_mut()) }

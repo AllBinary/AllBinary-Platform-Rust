@@ -30,6 +30,7 @@ use crate::org::allbinary::logic::communication::smtp::event::UserEmailEventName
 use crate::org::allbinary::logic::communication::smtp::event::modules::log::LogUserEmailEventListenerModule::LogUserEmailEventListenerModule;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
+use crate::java::lang::Exception::*;
 use super::UserEmailEventHandler::UserEmailEventHandler;
 
 // Borrows the object of a Java reference
@@ -46,6 +47,10 @@ pub struct EmailEventHandlerUtil {
 thread_local! { pub static EmailEventHandlerUtil_instance: Option<Rc<RefCell<EmailEventHandlerUtil>>> = EmailEventHandlerUtil::new(); }
 
 impl EmailEventHandlerUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<EmailEventHandlerUtil>>> {
@@ -68,7 +73,7 @@ impl EmailEventHandlerUtil {
 
     // throws Exception
     pub fn getEventHandler(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut userEmailEventNameData: Option<Rc<RefCell<UserEmailEventNameData>>>, mut userVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Option<Rc<RefCell<UserEmailEventHandler>>> {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).EMAILLOGGING.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).EMAILLOGGING.clone(); java_field }.clone()) {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(String::from("Returning UserEmailEventHandler for "));
             jcall!(stringBuffer).appendint(jcall!(userVector).size());
@@ -79,7 +84,7 @@ impl EmailEventHandlerUtil {
         jcall!(userEmailEventHandler).addListener(LogUserEmailEventListenerModule::new());
         let mut size: i32 = jcall!(userVector).size();
         for index in (0..size) {
-            let mut userInterface: Option<Rc<RefCell<dyn UserInterface>>> = { let java_object = jcall!(userVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn UserInterface>>>>().expect("ClassCastException").clone()) };
+            let mut userInterface: Option<Rc<RefCell<dyn UserInterface>>> = { let java_object = (jcall!(userVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn UserInterface>>>>().expect("ClassCastException").clone()) };
             let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = EmailEventHandlerUtil::getUserEmailEventListenerVector(abeClientInformation.clone(), userEmailEventNameData.clone(), userInterface.clone());
             jcall!(userEmailEventHandler).addListener(vector.clone());
         }
@@ -93,7 +98,7 @@ impl EmailEventHandlerUtil {
         let mut userEmailConfigurationInterface: Option<Rc<RefCell<dyn UserEmailConfigurationInterface>>> = jcall!(userConfigurationInterface).getUserEmailConfigurationInterface();
         let mut userEmailEventsConfigurationInterface: Option<Rc<RefCell<dyn UserEmailEventsConfigurationInterface>>> = jcall!(userEmailConfigurationInterface).getUserEmailEventsConfigurationInterface();
         let mut userEmailEventListenerInterface: Option<Rc<RefCell<dyn UserEmailEventListenerInterface>>> = jcall!(userEmailEventsConfigurationInterface).getEventListener(abeClientInformation.clone(), userEmailEventNameData.clone(), userInterface.clone());
-        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         jcall!(vector).add(crate::java_into_object(userEmailEventListenerInterface.clone()));
         return vector.clone();
     }

@@ -36,6 +36,10 @@ thread_local! { pub static NameSpaceRequestParamData_PROPERTIESSEPARATOR: String
 thread_local! { pub static NameSpaceRequestParamData_DOCUMENT: String = String::from("NAMESPACE_REQUESTDATA_DOCUMENT"); }
 
 impl NameSpaceRequestParamData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

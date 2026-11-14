@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait PathFindingNodeCostInfoFactoryBaseInterface {
+pub trait PathFindingNodeCostInfoFactoryBaseInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
@@ -36,8 +37,6 @@ pub trait PathFindingNodeCostInfoFactoryBaseInterface {
 
     // throws Exception
     fn getTotalCost(&mut self, geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, comingFromGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>, geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> i64;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

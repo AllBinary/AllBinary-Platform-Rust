@@ -18,6 +18,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::TransformInfoObjectConfigGeneratorInterface::TransformInfoObjectConfigGeneratorInterface;
 
 // Borrows the object of a Java reference
@@ -37,6 +39,10 @@ impl TransformInfoObjectConfigGeneratorInterface for TransformInfoObjectConfigGe
 
 impl TransformInfoObjectConfigGenerator {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             commonStrings: None,
@@ -55,7 +61,7 @@ impl TransformInfoObjectConfigGenerator {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait TransformInfoObjectConfigGeneratorDyn: crate::org::allbinary::logic::visual::transform::info::objectConfig::generator::TransformInfoObjectConfigGeneratorInterface::TransformInfoObjectConfigGeneratorInterface {
+pub trait TransformInfoObjectConfigGeneratorDyn: std::any::Any + crate::org::allbinary::logic::visual::transform::info::objectConfig::generator::TransformInfoObjectConfigGeneratorInterface::TransformInfoObjectConfigGeneratorInterface {
     fn as_TransformInfoObjectConfigGenerator(&self) -> &TransformInfoObjectConfigGenerator;
     fn as_TransformInfoObjectConfigGenerator_mut(&mut self) -> &mut TransformInfoObjectConfigGenerator;
 }

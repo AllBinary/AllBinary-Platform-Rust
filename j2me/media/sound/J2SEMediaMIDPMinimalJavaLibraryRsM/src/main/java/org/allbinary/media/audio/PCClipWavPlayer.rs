@@ -19,10 +19,10 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::thread::ARunnable::ARunnable;
 // use crate::java::io::ByteArrayInputStream::ByteArrayInputStream;
-// use crate::java::io::InputStream::InputStream;
-// use crate::javax::microedition::media::Control::Control;
-// use crate::javax::microedition::media::MediaException::MediaException;
-// use crate::javax::microedition::media::PlayerListener::PlayerListener;
+use crate::java::io::InputStream::InputStream;
+use crate::javax::microedition::media::Control::Control;
+use crate::javax::microedition::media::MediaException::MediaException;
+use crate::javax::microedition::media::PlayerListener::PlayerListener;
 // use crate::javax::sound::sampled::AudioInputStream::AudioInputStream;
 // use crate::javax::sound::sampled::AudioSystem::AudioSystem;
 // use crate::javax::sound::sampled::Clip::Clip;
@@ -34,6 +34,8 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::thread::MusicThreadPool::MusicThreadPool;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::BasicPlayer::BasicPlayer;
 use super::NullClip::NullClip;
 use super::NullControl::NullControl;
@@ -53,11 +55,31 @@ pub struct PCClipWavPlayer {
 }
 
 // impl LineListener for PCClipWavPlayer with the methods of the trait
+impl crate::javax::microedition::media::Controllable::Controllable for PCClipWavPlayer {
+    fn getControls(&mut self) -> Vec<Option<Rc<RefCell<dyn Control>>>> { Self::getControls(self) }
+    fn getControl(&mut self, mut controlType: String) -> Option<Rc<RefCell<dyn Control>>> { Self::getControl(self, controlType) }
+}
+impl crate::javax::microedition::media::Player::Player for PCClipWavPlayer {
+    fn realize(&mut self) { crate::org::allbinary::media::audio::BasicPlayer::BasicPlayer::realize(crate::org::allbinary::media::audio::BasicPlayer::BasicPlayerDyn::as_BasicPlayer_mut(self)) }
+    fn prefetch(&mut self) { crate::org::allbinary::media::audio::BasicPlayer::BasicPlayer::prefetch(crate::org::allbinary::media::audio::BasicPlayer::BasicPlayerDyn::as_BasicPlayer_mut(self)) }
+    fn start(&mut self) { Self::start(self) }
+    fn stop(&mut self) { Self::stop(self) }
+    fn deallocate(&mut self) { crate::org::allbinary::media::audio::BasicPlayer::BasicPlayer::deallocate(crate::org::allbinary::media::audio::BasicPlayer::BasicPlayerDyn::as_BasicPlayer_mut(self)) }
+    fn close(&mut self) { Self::close(self) }
+    fn setMediaTime(&mut self, p1: i64) -> i64 { crate::org::allbinary::media::audio::BasicPlayer::BasicPlayer::setMediaTime(crate::org::allbinary::media::audio::BasicPlayer::BasicPlayerDyn::as_BasicPlayer_mut(self), p1) }
+    fn getMediaTime(&mut self) -> i64 { crate::org::allbinary::media::audio::BasicPlayer::BasicPlayer::getMediaTime(crate::org::allbinary::media::audio::BasicPlayer::BasicPlayerDyn::as_BasicPlayer_mut(self)) }
+    fn getState(&mut self) -> i32 { crate::org::allbinary::media::audio::BasicPlayer::BasicPlayer::getState(crate::org::allbinary::media::audio::BasicPlayer::BasicPlayerDyn::as_BasicPlayer_mut(self)) }
+    fn getDuration(&mut self) -> i64 { Self::getDuration(self) }
+    fn getContentType(&mut self) -> String { Self::getContentType(self) }
+    fn setLoopCount(&mut self, p1: i32) { crate::org::allbinary::media::audio::BasicPlayer::BasicPlayer::setLoopCount(crate::org::allbinary::media::audio::BasicPlayer::BasicPlayerDyn::as_BasicPlayer_mut(self), p1) }
+    fn addPlayerListener(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::media::PlayerListener::PlayerListener>>>) { crate::org::allbinary::media::audio::BasicPlayer::BasicPlayer::addPlayerListener(crate::org::allbinary::media::audio::BasicPlayer::BasicPlayerDyn::as_BasicPlayer_mut(self), p1) }
+    fn removePlayerListener(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::media::PlayerListener::PlayerListener>>>) { crate::org::allbinary::media::audio::BasicPlayer::BasicPlayer::removePlayerListener(crate::org::allbinary::media::audio::BasicPlayer::BasicPlayerDyn::as_BasicPlayer_mut(self), p1) }
+}
 
 impl PCClipWavPlayer {
     
 
-    pub fn new_struct(mut inputStream: Option<Rc<RefCell<InputStream>>>) -> Self {
+    pub fn new_struct(mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>) -> Self {
         let mut this = Self {
             base: BasicPlayer::new_struct(),
             logUtil: None,
@@ -65,21 +87,21 @@ impl PCClipWavPlayer {
             clip: None,
         };
         this.logUtil = LogUtil::getInstance();
-        let mut audioInputStream: Option<Rc<RefCell<AudioInputStream>>> = AudioInputStream::new(ByteArrayInputStream::new(jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone()), NullAudioFormat_NULL_AUDIO_FORMAT.with(Clone::clone).clone(), 0);
+        let mut audioInputStream: Option<Rc<RefCell<AudioInputStream>>> = AudioInputStream::new(crate::java::io::InputStream::InputStream::new1({ let java_field = jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>), NullAudioFormat_NULL_AUDIO_FORMAT.with(Clone::clone).clone(), 0);
         let mut clip: Option<Rc<RefCell<Clip>>> = NullClip::new();
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            audioInputStream = AudioSystem::getAudioInputStream(inputStream.clone());
+            audioInputStream = { let java_value = (AudioSystem::getAudioInputStream(inputStream.clone())).clone(); java_value };
             clip = this.create(audioInputStream.clone());
             if clip.is_none() {
-                jcall!(this.logUtil).put(String::from("Clip was null"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(format!("{}: {:?}", "Exception", ())));
+                jcall!(this.logUtil).put(String::from("Clip was null"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(format!("{}: {:?}", "Exception", ())));
                 panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(this.logUtil).put(jcall!(this.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(e.clone()));
+            jcall!(this.logUtil).put({ let java_field = jcall!(this.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         this.audioInputStream = audioInputStream.clone();
@@ -87,7 +109,7 @@ impl PCClipWavPlayer {
         this
     }
 
-    pub fn new(mut inputStream: Option<Rc<RefCell<InputStream>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(inputStream))))
     }
     
@@ -102,13 +124,13 @@ impl PCClipWavPlayer {
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                    PreLogUtil::putOE(jcall!(self.base.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.base.commonStrings).PROCESS.clone(), e.clone());
+                    PreLogUtil::putOE({ let java_field = jcall!(self.base.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.base.commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }
-*/);
+*/.map(|reference| reference as Rc<RefCell<dyn crate::Runnable>>));
     }
     
 
@@ -121,7 +143,7 @@ impl PCClipWavPlayer {
     
 
     pub fn getContentType(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 
@@ -137,13 +159,13 @@ impl PCClipWavPlayer {
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                    PreLogUtil::putOE(jcall!(self.base.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.base.commonStrings).PROCESS.clone(), e.clone());
+                    PreLogUtil::putOE({ let java_field = jcall!(self.base.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.base.commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }
-*/);
+*/.map(|reference| reference as Rc<RefCell<dyn crate::Runnable>>));
     }
     
 
@@ -177,13 +199,13 @@ impl PCClipWavPlayer {
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                    PreLogUtil::putOE(jcall!(self.base.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.base.commonStrings).PROCESS.clone(), e.clone());
+                    PreLogUtil::putOE({ let java_field = jcall!(self.base.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.base.commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }
-*/);
+*/.map(|reference| reference as Rc<RefCell<dyn crate::Runnable>>));
     }
     
 
@@ -194,12 +216,12 @@ impl PCClipWavPlayer {
     }
     
 
-    pub fn getControl(&mut self, mut controlType: String) -> Option<Rc<RefCell<Control>>> {
-        return NullControl::new();
+    pub fn getControl(&mut self, mut controlType: String) -> Option<Rc<RefCell<dyn Control>>> {
+        return NullControl::new().map(|reference| reference as Rc<RefCell<dyn Control>>).map(|reference| reference as Rc<RefCell<dyn Control>>);
     }
     
 
-    pub fn getControls(&mut self) -> Vec<Option<Rc<RefCell<Control>>>> {
+    pub fn getControls(&mut self) -> Vec<Option<Rc<RefCell<dyn Control>>>> {
         return vec![None; (0) as usize];
     }
     
@@ -210,7 +232,7 @@ impl PCClipWavPlayer {
     
 
     pub fn getVolume(&mut self) -> f32 {
-        let mut masterGainFloatControl: Option<Rc<RefCell<FloatControl>>> = (jcall!(self.clip).getControl(jcall!(unsafe { crate::javax::sound::sampled::FloatControl::FloatControl_Type.clone() }).MASTER_GAIN.clone())).clone() /* as FloatControl */;
+        let mut masterGainFloatControl: Option<Rc<RefCell<FloatControl>>> = (jcall!(self.clip).getControl({ let java_field = jcall!(unsafe { crate::javax::sound::sampled::FloatControl::FloatControl_Type.clone() }).MASTER_GAIN.clone(); java_field }.clone())).clone() /* as FloatControl */;
         return ((((10.0_f32) as f64).powf((jcall!(masterGainFloatControl).getValue() / 20.0_f32) as f64)) as f32);
     }
     
@@ -219,7 +241,7 @@ impl PCClipWavPlayer {
         if volume < 0.0_f32 || volume > 1.0_f32 {
             panic!("{:?}", format!("{}: {:?}", "IllegalArgumentException", (format!("{}{}", String::from("Volume: "), volume))));
         }
-        let mut masterGainFloatControl: Option<Rc<RefCell<FloatControl>>> = (jcall!(self.clip).getControl(jcall!(unsafe { crate::javax::sound::sampled::FloatControl::FloatControl_Type.clone() }).MASTER_GAIN.clone())).clone() /* as FloatControl */;
+        let mut masterGainFloatControl: Option<Rc<RefCell<FloatControl>>> = (jcall!(self.clip).getControl({ let java_field = jcall!(unsafe { crate::javax::sound::sampled::FloatControl::FloatControl_Type.clone() }).MASTER_GAIN.clone(); java_field }.clone())).clone() /* as FloatControl */;
         jcall!(masterGainFloatControl).setValue(20.0_f32 * ((((volume.clone()) as f64).log10()) as f32));
     }
     
@@ -230,11 +252,11 @@ impl PCClipWavPlayer {
     
 
     pub fn update(&mut self, mut event: Option<Rc<RefCell<LineEvent>>>) {
-        if jcall!(jcall!(event).getType()).equals(jcall!(unsafe { crate::javax::sound::sampled::LineEvent::LineEvent_Type.clone() }).STOP.clone()) {
+        if jcall!(jcall!(event).getType()).equals({ let java_field = jcall!(unsafe { crate::javax::sound::sampled::LineEvent::LineEvent_Type.clone() }).STOP.clone(); java_field }.clone()) {
             let mut size: i32 = jcall!(self.listenersList).size();
             for index in (0..size) {
-                let mut listener: Option<Rc<RefCell<PlayerListener>>> = (jcall!(self.listenersList).get(size.clone())).clone() /* as PlayerListener */;
-                jcall!(listener).playerUpdate(None /* Java this: a &mut self method has no Rc of itself */, unsafe { crate::javax::microedition::media::PlayerListener::PlayerListener_END_OF_MEDIA.clone() }.clone(), None);
+                let mut listener: Option<Rc<RefCell<dyn PlayerListener>>> = { let java_object = (jcall!(self.listenersList).get(size.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn PlayerListener>>>>().expect("ClassCastException").clone()) };
+                jcall!(listener).playerUpdate(None /* Java this: a &mut self method has no Rc of itself */, crate::javax::microedition::media::PlayerListener::PlayerListener_END_OF_MEDIA.with(Clone::clone).clone(), None);
             }
         }
     }
@@ -251,8 +273,8 @@ impl crate::org::allbinary::media::audio::BasicPlayer::BasicPlayerDyn for PCClip
     fn as_BasicPlayer(&self) -> &crate::org::allbinary::media::audio::BasicPlayer::BasicPlayer { &self.base }
     fn as_BasicPlayer_mut(&mut self) -> &mut crate::org::allbinary::media::audio::BasicPlayer::BasicPlayer { &mut self.base }
     fn getContentType(&mut self) -> String { Self::getContentType(self) }
-    fn getControl(&mut self, mut controlType: String) -> Option<Rc<RefCell<Control>>> { Self::getControl(self, controlType) }
-    fn getControls(&mut self) -> Vec<Option<Rc<RefCell<Control>>>> { Self::getControls(self) }
+    fn getControl(&mut self, mut controlType: String) -> Option<Rc<RefCell<dyn Control>>> { Self::getControl(self, controlType) }
+    fn getControls(&mut self) -> Vec<Option<Rc<RefCell<dyn Control>>>> { Self::getControls(self) }
     fn close(&mut self) { Self::close(self) }
     fn getDuration(&mut self) -> i64 { Self::getDuration(self) }
     fn start(&mut self) { Self::start(self) }

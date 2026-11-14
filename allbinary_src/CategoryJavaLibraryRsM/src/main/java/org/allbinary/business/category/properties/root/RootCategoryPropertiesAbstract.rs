@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::category::CategoryData::CategoryData;
@@ -28,6 +27,8 @@ use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::logic::io::path::AbPathData::AbPathData;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::RootCategoryPropertiesInterface::RootCategoryPropertiesInterface;
 
 // Borrows the object of a Java reference
@@ -45,6 +46,10 @@ pub struct RootCategoryPropertiesAbstract {
 // impl RootCategoryPropertiesInterface for RootCategoryPropertiesAbstract with the methods of the trait
 
 impl RootCategoryPropertiesAbstract {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -52,8 +57,8 @@ impl RootCategoryPropertiesAbstract {
             category: String::new(),
             fileName: String::new(),
         };
-        this.category = jcall!(CategoryData::getInstance()).ROOTCATEGORY.clone();
-        this.fileName = format!("{}{}", format!("{}{}", this.category, jcall!(AbPathData::getInstance()).EXTENSION_SEP), jcall!(CategoryData::getInstance()).UNCRYPTED_EXTENSION);
+        this.category = { let java_field = jcall!(CategoryData::getInstance()).ROOTCATEGORY.clone(); java_field }.clone();
+        this.fileName = format!("{}{}", format!("{}{}", this.category, { let java_field = jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(); java_field }), { let java_field = jcall!(CategoryData::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field });
         this
     }
 
@@ -63,7 +68,7 @@ impl RootCategoryPropertiesAbstract {
     
 
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return (self.getValue()).clone() /* as Any */;
+        return crate::java_into_object(crate::java_into_object((self.getValue()).clone()));
     }
     
 
@@ -86,7 +91,7 @@ impl RootCategoryPropertiesAbstract {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn setRootFilePath(&mut self, mut value: String) {
+    pub fn setRootFilePath_String(&mut self, mut value: String) {
         panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("No Value Allowed"))));
     }
     
@@ -130,15 +135,15 @@ impl RootCategoryPropertiesAbstract {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut categoryHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(categoryHashMap).put(jcall!(CategoryData::getInstance()).NAME.clone(), self.category.clone());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut categoryHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(categoryHashMap).put(crate::java_into_object({ let java_field = jcall!(CategoryData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(self.category.clone()));
         return categoryHashMap.clone();
     }
     
 
     pub fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut categoryVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut categoryVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         jcall!(categoryVector).add(crate::java_into_object(self.category.clone()));
         return categoryVector.clone();
     }

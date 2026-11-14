@@ -39,7 +39,7 @@ impl PlayerOwnedRTSLayers {
         let mut this = Self {
             rtsLayerList: None,
         };
-        this.rtsLayerList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.rtsLayerList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -55,7 +55,7 @@ impl PlayerOwnedRTSLayers {
         return jcall!(stringBuffer).toString();
     }
 }
-pub trait PlayerOwnedRTSLayersDyn {
+pub trait PlayerOwnedRTSLayersDyn: std::any::Any {
     fn as_PlayerOwnedRTSLayers(&self) -> &PlayerOwnedRTSLayers;
     fn as_PlayerOwnedRTSLayers_mut(&mut self) -> &mut PlayerOwnedRTSLayers;
     fn toString(&mut self) -> String { PlayerOwnedRTSLayers::toString(self.as_PlayerOwnedRTSLayers_mut()) }

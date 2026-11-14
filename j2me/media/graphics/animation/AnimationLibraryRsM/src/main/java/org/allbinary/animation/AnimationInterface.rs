@@ -17,8 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,7 +35,7 @@ pub trait AnimationInterface: LocationPaintableInterface {
     fn nextFrame(&mut self);
     
 
-    fn paintThreedXYZ(&mut self, graphics: Option<Rc<RefCell<Graphics>>>, x: i32, y: i32, z: i32);
+    fn paintThreedXYZ(&mut self, graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, x: i32, y: i32, z: i32);
 }
 
 

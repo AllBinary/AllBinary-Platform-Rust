@@ -31,6 +31,10 @@ pub struct GlobalsData {
 thread_local! { pub static GlobalsData_NAME: String = String::from("GLOBALS_NAME"); }
 
 impl GlobalsData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

@@ -27,6 +27,7 @@ use crate::org::allbinary::game::layer::unit::UnitWaypointBehavior::UnitWaypoint
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -44,13 +45,17 @@ thread_local! { pub static AssignWaypointsUtil_instance: Option<Rc<RefCell<Assig
 
 impl AssignWaypointsUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,
             WAYPOINT_EVENT: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.WAYPOINT_EVENT = RTSLayerEvent::new(crate::org::allbinary::game::layer::NullPathFindingLayer::NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone());
+        this.WAYPOINT_EVENT = RTSLayerEvent::new(crate::org::allbinary::game::layer::NullPathFindingLayer::NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of NullPathFindingLayer does not have PathFindingLayerInterface as a base trait") }));
         this
     }
 
@@ -67,24 +72,24 @@ impl AssignWaypointsUtil {
     pub fn set(&mut self, mut unitLayer: Option<Rc<RefCell<UnitLayer>>>, mut ownerAdvancedRTSGameLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(jcall!(ownerAdvancedRTSGameLayer).getWaypointBehavior()).getOwnedWaypointList();
-            let mut unitWaypointBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::unit::UnitWaypointBehavior::UnitWaypointBehaviorDyn>>> = (jcall!(unitLayer).getWaypointBehavior()).clone() /* as UnitWaypointBehavior */;
-            for index in (0..=jcall!(list).size() - 1).rev() {
+            let mut unitWaypointBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::unit::UnitWaypointBehavior::UnitWaypointBehaviorDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::unit::UnitWaypointBehavior::UnitWaypointBehaviorDyn>>> { panic!("ClassCastException: a Rust dyn WaypointBehaviorBase cannot be cast to UnitWaypointBehavior") })();
+            for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
                 let mut waypointLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = { let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>>().expect("ClassCastException").clone()) };
-                jcall!(self.WAYPOINT_EVENT).setRtsLayer(waypointLayer.clone().map(|reference| reference as Rc<RefCell<dyn PathFindingLayerInterface>>));
+                jcall!(self.WAYPOINT_EVENT).setRtsLayer(waypointLayer.clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of RTSLayer does not have PathFindingLayerInterface as a base trait") }));
                 jcall!(unitWaypointBehavior).onWaypointEvent(self.WAYPOINT_EVENT.clone());
             }
             let mut waypointLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>> = jcall!(PrimaryWaypointHelper::PrimaryWaypointHelper::getInstance()).getWaypointLayer();
             if !match (&waypointLayer, &crate::org::allbinary::game::layer::NullPathFindingLayer::NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                jcall!(self.WAYPOINT_EVENT).setRtsLayer(waypointLayer.clone().map(|reference| reference as Rc<RefCell<dyn PathFindingLayerInterface>>));
+                jcall!(self.WAYPOINT_EVENT).setRtsLayer(waypointLayer.clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of RTSLayer does not have PathFindingLayerInterface as a base trait") }));
                 jcall!(unitWaypointBehavior).onWaypointEvent(self.WAYPOINT_EVENT.clone());
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("set"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("set"), crate::java_into_object(e.clone()));
             }
         }
     }

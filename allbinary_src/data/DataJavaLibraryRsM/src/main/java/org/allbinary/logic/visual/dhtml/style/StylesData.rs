@@ -32,6 +32,10 @@ pub struct StylesData {
 thread_local! { pub static StylesData_instance: Option<Rc<RefCell<StylesData>>> = StylesData::new(); }
 
 impl StylesData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<StylesData>>> {

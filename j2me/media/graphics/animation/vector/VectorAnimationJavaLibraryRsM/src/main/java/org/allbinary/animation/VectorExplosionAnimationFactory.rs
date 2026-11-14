@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
+use crate::java::lang::Exception::*;
 use super::ProceduralAnimationInterfaceFactoryInterface::ProceduralAnimationInterfaceFactoryInterface;
 use super::VectorExplosionGenerator::VectorExplosionGenerator;
 use super::AnimationBehaviorFactory::AnimationBehaviorFactory;
@@ -46,6 +47,10 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 }
 
 impl VectorExplosionAnimationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
@@ -55,7 +60,7 @@ impl VectorExplosionAnimationFactory {
             animationBehaviorFactory: None,
         };
         this.vectorExplosionGenerator = VectorExplosionGenerator::getInstance();
-        this.basicColor = jcall!(BasicColorFactory::getInstance()).WHITE.clone();
+        this.basicColor = { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone();
         this.animationBehaviorFactory = animationBehaviorFactory.clone();
         this.setBasicColorP(basicColor.clone());
         this
@@ -68,11 +73,11 @@ impl VectorExplosionAnimationFactory {
 
     // throws Exception
     pub fn getInstanceAnimation(&mut self, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
-        let mut vectorRotationAnimationInterface: Option<Rc<RefCell<dyn VectorAnimationInterface>>> = (animationInterface).clone() /* as VectorAnimationInterface */;
+        let mut vectorRotationAnimationInterface: Option<Rc<RefCell<dyn VectorAnimationInterface>>> = (|| -> Option<Rc<RefCell<dyn VectorAnimationInterface>>> { panic!("ClassCastException: a Rust dyn Animation cannot be cast to VectorAnimationInterface") })();
         let mut frame: i32 = jcall!(vectorRotationAnimationInterface).getFrame();
         let mut framePoints: Vec<Vec<i32>> = jcall!(vectorRotationAnimationInterface).getPoints(frame.clone());
-        let mut points: Vec<Vec<Vec<i32>>> = jcall!(self.vectorExplosionGenerator).getInstance3(framePoints.clone(), 6, jcall!(self.vectorExplosionGenerator).ROTATION.clone());
-        return VectorRotationAnimation::new(points.clone(), self.getBasicColorP(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+        let mut points: Vec<Vec<Vec<i32>>> = jcall!(self.vectorExplosionGenerator).getInstance3(framePoints.clone(), 6, { let java_field = jcall!(self.vectorExplosionGenerator).ROTATION.clone(); java_field }.clone());
+        return VectorRotationAnimation::new(points.clone(), self.getBasicColorP(), { let java_argument = jcall!(self.animationBehaviorFactory).getOrCreateInstance(); java_argument }).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
     }
     
 

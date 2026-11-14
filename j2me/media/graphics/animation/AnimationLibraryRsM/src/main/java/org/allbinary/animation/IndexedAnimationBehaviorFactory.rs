@@ -55,7 +55,7 @@ impl IndexedAnimationBehaviorFactory {
     
 
     pub fn getOrCreateInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>> {
-        return IndexedAnimationBehavior::new(self.loopTotal.clone(), self.frameDelayTime.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>);
+        return IndexedAnimationBehavior::new(self.loopTotal.clone(), self.frameDelayTime.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>);
     }
 }
 impl std::ops::Deref for IndexedAnimationBehaviorFactory {

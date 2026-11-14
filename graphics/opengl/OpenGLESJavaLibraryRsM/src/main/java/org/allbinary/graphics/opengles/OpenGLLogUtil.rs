@@ -5,8 +5,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::image::opengles::OpenGLStrings::OpenGLStrings;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::communication::log::ForcedLogUtil::ForcedLogUtil;
@@ -28,6 +28,10 @@ pub struct OpenGLLogUtil {
 thread_local! { pub static OpenGLLogUtil_instance: Option<Rc<RefCell<OpenGLLogUtil>>> = OpenGLLogUtil::new(); }
 
 impl OpenGLLogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -53,18 +57,18 @@ impl OpenGLLogUtil {
 
     pub fn logError(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) {
         let mut error: i32 = jcall!(gl).glGetError();
-        if error != unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_NO_ERROR.clone() } {
+        if error != crate::javax::microedition::khronos::opengles::GL10::GL10_GL_NO_ERROR.with(Clone::clone) {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-            jcall!(stringBuffer).append(jcall!(OpenGLStrings::getInstance()).GL_ERROR_LABEL.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(OpenGLStrings::getInstance()).GL_ERROR_LABEL.clone(); java_field }.clone());
             jcall!(stringBuffer).appendint(error.clone());
             if error == 1281 {
                 jcall!(stringBuffer).append(self.MAX_TEXTURE.clone());
                 let mut maxTextureSize: Vec<i32> = vec![0; (1) as usize];
-                jcall!(gl).glGetIntegerv(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_MAX_TEXTURE_SIZE.clone() }.clone(), maxTextureSize.clone(), 0);
+                jcall!(gl).glGetIntegerv3(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_MAX_TEXTURE_SIZE.with(Clone::clone).clone(), maxTextureSize.clone(), 0);
                 jcall!(stringBuffer).appendint(maxTextureSize[(0) as usize].clone());
             }
             if error == 1280 {
-                PreLogUtil::put(jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(OpenGLStrings::getInstance()).SET.clone());
+                PreLogUtil::put(jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(OpenGLStrings::getInstance()).SET.clone(); java_field }.clone());
             } else {
                 ForcedLogUtil::log(jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
             }
@@ -73,20 +77,20 @@ impl OpenGLLogUtil {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn logError2(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut image: Option<Rc<RefCell<Image>>>) {
+    pub fn logError2(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) {
         let mut error: i32 = jcall!(gl).glGetError();
-        if error != unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_NO_ERROR.clone() } {
+        if error != crate::javax::microedition::khronos::opengles::GL10::GL10_GL_NO_ERROR.with(Clone::clone) {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-            jcall!(stringBuffer).append(jcall!(OpenGLStrings::getInstance()).GL_ERROR_LABEL.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(OpenGLStrings::getInstance()).GL_ERROR_LABEL.clone(); java_field }.clone());
             jcall!(stringBuffer).appendint(error.clone());
             if error == 1281 {
                 jcall!(stringBuffer).append(self.MAX_TEXTURE.clone());
                 let mut maxTextureSize: Vec<i32> = vec![0; (1) as usize];
-                jcall!(gl).glGetIntegerv(unsafe { crate::javax::microedition::khronos::opengles::GL10::GL10_GL_MAX_TEXTURE_SIZE.clone() }.clone(), maxTextureSize.clone(), 0);
+                jcall!(gl).glGetIntegerv3(crate::javax::microedition::khronos::opengles::GL10::GL10_GL_MAX_TEXTURE_SIZE.with(Clone::clone).clone(), maxTextureSize.clone(), 0);
                 jcall!(stringBuffer).appendint(maxTextureSize[(0) as usize].clone());
             }
             jcall!(stringBuffer).append(self.IMAGE.clone());
-            jcall!(stringBuffer).append(jcall!(image).toString());
+            jcall!(stringBuffer).append(jcall!(image).as_Image_mut().toString());
             PreLogUtil::put(jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.LOG_ERROR.clone());
         }
     }

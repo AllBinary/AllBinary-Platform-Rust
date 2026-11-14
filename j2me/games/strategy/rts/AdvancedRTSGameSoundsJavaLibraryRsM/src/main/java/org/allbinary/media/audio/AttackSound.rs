@@ -30,7 +30,7 @@ pub struct AttackSound {
     pub base: CompositeSound,
 }
 
-pub static mut AttackSound_soundInterface: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>> = std::cell::LazyCell::new(|| AttackSound::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
+pub static mut AttackSound_soundInterface: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>> = std::cell::LazyCell::new(|| AttackSound::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
 
 impl AttackSound {
     
@@ -67,6 +67,10 @@ impl crate::org::allbinary::media::audio::CompositeSound::CompositeSoundDyn for 
 impl crate::org::allbinary::media::audio::Sound::SoundDyn for AttackSound {
     fn as_Sound(&self) -> &crate::org::allbinary::media::audio::Sound::Sound { &self.base.base }
     fn as_Sound_mut(&mut self) -> &mut crate::org::allbinary::media::audio::Sound::Sound { &mut self.base.base }
+}
+impl crate::org::allbinary::media::audio::SoundInterface::SoundInterface for AttackSound {
+    fn getResource(&mut self) -> String { crate::org::allbinary::media::audio::Sound::Sound::getResource(crate::org::allbinary::media::audio::Sound::SoundDyn::as_Sound_mut(self)) }
+    fn getPlayerP(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::media::Player::Player>>> { crate::org::allbinary::media::audio::Sound::Sound::getPlayerP(crate::org::allbinary::media::audio::Sound::SoundDyn::as_Sound_mut(self)) }
     fn init(&mut self) { crate::org::allbinary::media::audio::CompositeSound::CompositeSound::init(crate::org::allbinary::media::audio::CompositeSound::CompositeSoundDyn::as_CompositeSound_mut(self)) }
 }
 impl crate::Runnable for AttackSound {

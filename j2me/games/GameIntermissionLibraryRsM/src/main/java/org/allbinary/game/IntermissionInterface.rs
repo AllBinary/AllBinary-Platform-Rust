@@ -27,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait IntermissionInterface {
+pub trait IntermissionInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getTimeDelayHelper(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>>;
@@ -40,8 +40,6 @@ pub trait IntermissionInterface {
     
 
     fn setListener(&mut self, enableListener: Option<Rc<RefCell<dyn IntermissionEnableListenerInterface>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

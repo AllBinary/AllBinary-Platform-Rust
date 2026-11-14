@@ -17,13 +17,14 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::BufferedReader::BufferedReader;
-// use crate::java::io::BufferedWriter::BufferedWriter;
-// use crate::java::io::FileReader::FileReader;
-// use crate::java::io::FileWriter::FileWriter;
+use crate::java::io::BufferedReader::BufferedReader;
+use crate::java::io::BufferedWriter::BufferedWriter;
+use crate::java::io::FileReader::FileReader;
+use crate::java::io::FileWriter::FileWriter;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::logic::io::file::AbFileNativeUtil::AbFileNativeUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,6 +39,10 @@ pub struct BufferedIOUtil {
 
 impl BufferedIOUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -51,15 +56,12 @@ impl BufferedIOUtil {
 
     // throws Exception
     pub fn copy(mut backupFile: Option<Rc<RefCell<AbFile>>>, mut backupFileBak: Option<Rc<RefCell<AbFile>>>) {
-        let mut line: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        let mut tmpOut: Option<Rc<RefCell<BufferedWriter>>> = BufferedWriter::new(FileWriter::new(AbFileNativeUtil::get(backupFileBak.clone())));
+        let mut line: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        let mut tmpOut: Option<Rc<RefCell<BufferedWriter>>> = BufferedWriter::new(FileWriter::new1(AbFileNativeUtil::get(backupFileBak.clone())));
         let mut tmpIn: Option<Rc<RefCell<BufferedReader>>> = BufferedReader::new(FileReader::new(AbFileNativeUtil::get(backupFile.clone())));
-        while true {
-            line = jcall!(tmpIn).readLine();
-            if false {
-                break;
-            }
-            jcall!(tmpOut).write(line.clone(), 0, (line.chars().count() as i32));
+        while jcall!(tmpIn).ready() {
+            line = { let java_value = (jcall!(tmpIn).readLine()).clone(); java_value };
+            jcall!(tmpOut).write3(line.clone(), 0, (line.chars().count() as i32));
             jcall!(tmpOut).newLine();
         }
         jcall!(tmpOut).flush();

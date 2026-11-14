@@ -29,10 +29,14 @@ macro_rules! jcall {
 pub struct RectangleFactory {
 }
 
-thread_local! { pub static RectangleFactory_SINGLETON: Option<Rc<RefCell<Rectangle>>> = Rectangle::new(jcall!(PointFactory::PointFactory::getInstance()).ZERO_ZERO.clone(), 0, 0); }
+thread_local! { pub static RectangleFactory_SINGLETON: Option<Rc<RefCell<Rectangle>>> = Rectangle::new({ let java_field = jcall!(PointFactory::PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone(), 0, 0); }
 thread_local! { pub static RectangleFactory_ARRAY_OF_ARRAYS: Vec<Vec<Option<Rc<RefCell<Rectangle>>>>> = vec![vec![None; (0) as usize]; (0) as usize]; }
 
 impl RectangleFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

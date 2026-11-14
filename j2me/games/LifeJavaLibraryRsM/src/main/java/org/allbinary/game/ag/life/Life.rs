@@ -17,6 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::LifeInterface::LifeInterface;
 
 // Borrows the object of a Java reference
@@ -44,19 +46,24 @@ impl LifeInterface for Life {
 }
 
 impl Life {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn createLife() -> Option<Rc<RefCell<Life>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            return Life::new(((0) as i16), ((0) as i16));
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            return Some(Life::new(((0) as i16), ((0) as i16)));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 

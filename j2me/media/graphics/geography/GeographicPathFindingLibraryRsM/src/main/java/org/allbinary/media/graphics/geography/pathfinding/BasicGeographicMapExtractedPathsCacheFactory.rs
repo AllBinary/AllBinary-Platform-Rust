@@ -61,13 +61,13 @@ impl BasicGeographicMapExtractedPathsCacheFactory {
         if jcall!(self.list).size() > 0 {
             return { let java_object = (jcall!(self.list).removeAt(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
         } else {
-            return BasicArrayListS::new(self.maxPaths.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            return BasicArrayListS::new(self.maxPaths.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         }
     }
     
 
     pub fn release(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
-        for index in (0..=jcall!(list).size() - 1).rev() {
+        for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
             jcall!(BasicGeographicMapExtractedPathCacheFactory::BasicGeographicMapExtractedPathCacheFactory::getInstance()).release({ let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) });
         }
         jcall!(list).clear();

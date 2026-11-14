@@ -43,6 +43,10 @@ impl DebugInterface for AndroidDebug {
 
 impl AndroidDebug {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             startTime: 0_i64,
@@ -68,7 +72,7 @@ impl AndroidDebug {
     
 
     pub fn stop(&mut self) {
-        self.startTime = i64::MAX.clone();
+        self.startTime = { let java_value = (i64::MAX).clone(); java_value }.clone();
         Debug::stopMethodTracing();
         self.setRunning(false);
     }

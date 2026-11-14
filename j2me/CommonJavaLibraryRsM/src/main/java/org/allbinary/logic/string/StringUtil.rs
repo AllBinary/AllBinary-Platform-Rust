@@ -34,6 +34,7 @@ pub struct StringUtil {
     pub NULL_STRING: String,
     pub EMPTY_STRING: String,
     pub ONE_EMPTY_STRING_ARRAY: Vec<String>,
+    pub ONE_EMPTY_STRING_ARRAY_OF_ARRAYS: Vec<Vec<String>>,
     pub stringArray: Vec<String>,
 }
 
@@ -53,12 +54,14 @@ impl StringUtil {
             NULL_STRING: String::new(),
             EMPTY_STRING: String::new(),
             ONE_EMPTY_STRING_ARRAY: Vec::new(),
+            ONE_EMPTY_STRING_ARRAY_OF_ARRAYS: Vec::new(),
             stringArray: Vec::new(),
         };
         this.INIT_STRING = String::from("").clone();
         this.NULL_STRING = String::from("null");
         this.EMPTY_STRING = String::from("");
         this.ONE_EMPTY_STRING_ARRAY = vec![this.EMPTY_STRING.clone()];
+        this.ONE_EMPTY_STRING_ARRAY_OF_ARRAYS = vec![vec![String::new(); (0) as usize]; (0) as usize];
         this.stringArray = vec![String::new(); (0) as usize];
         this
     }
@@ -69,11 +72,7 @@ impl StringUtil {
     
 
     pub fn getNonNull(&mut self, mut string: String) -> String {
-        if false {
-            return self.EMPTY_STRING.clone();
-        } else {
-            return string.clone();
-        }
+        return string.clone();
     }
     
 
@@ -96,7 +95,7 @@ impl StringUtil {
 
     pub fn toString(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> String {
         if anyType.is_some() {
-            return { let value = jcall!(anyType); value.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", value.as_ref().type_id())) };
+            return { let java_object = (anyType).clone(); let value = jcall!(java_object); value.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", value.as_ref().type_id())) };
         } else {
             return self.NULL_STRING.clone();
         }

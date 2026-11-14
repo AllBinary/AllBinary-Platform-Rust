@@ -45,9 +45,9 @@ impl CharacterFrictionProperties {
             AIR_FRICTION_NOMINATOR: 0,
             COLLISION_FRICTION_NOMINATOR: 0,
         };
-        this.AIR_FRICTION_NOMINATOR = FrictionData::getFrictionDenominator() - airFriction;
-        this.COLLISION_FRICTION_NOMINATOR = FrictionData::getFrictionDenominator() - collisionFriction;
-        this.WATER_FRICTION_NOMINATOR = FrictionData::getFrictionDenominator() - waterFriction;
+        this.AIR_FRICTION_NOMINATOR = { let java_value = (FrictionData::getFrictionDenominator() - airFriction).clone(); java_value };
+        this.COLLISION_FRICTION_NOMINATOR = { let java_value = (FrictionData::getFrictionDenominator() - collisionFriction).clone(); java_value };
+        this.WATER_FRICTION_NOMINATOR = { let java_value = (FrictionData::getFrictionDenominator() - waterFriction).clone(); java_value };
         this
     }
 
@@ -78,5 +78,9 @@ impl std::ops::DerefMut for CharacterFrictionProperties {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::org::allbinary::game::physics::FrictionProperties::FrictionPropertiesDyn for CharacterFrictionProperties {
+    fn as_FrictionProperties(&self) -> &crate::org::allbinary::game::physics::FrictionProperties::FrictionProperties { &self.base }
+    fn as_FrictionProperties_mut(&mut self) -> &mut crate::org::allbinary::game::physics::FrictionProperties::FrictionProperties { &mut self.base }
+}
 
 

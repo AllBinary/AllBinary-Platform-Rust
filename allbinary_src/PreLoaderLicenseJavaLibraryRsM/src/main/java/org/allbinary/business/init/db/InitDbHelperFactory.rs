@@ -35,6 +35,10 @@ pub struct InitDbHelperFactory {
 thread_local! { pub static InitDbHelperFactory_CLASSNAME: String = String::from("org.allbinary.business.installer.InitDbCrypted"); }
 
 impl InitDbHelperFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -53,8 +57,8 @@ impl InitDbHelperFactory {
         let mut params: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = vec![None; (1) as usize];
         let mut classes: Vec<&'static str> = vec![""; (1) as usize];
         classes[(0) as usize] = std::any::type_name::<DatabaseConnectionInfoInterface>();
-        params[(0) as usize] = crate::java_into_object((databaseConnectionInfoInterface).clone() /* as Any */);
-        let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(AbeFactory::getInstance()).getInstance4(abeClientInformation.clone(), InitDbHelperFactory_CLASSNAME.with(Clone::clone).clone(), classes.clone(), params.clone());
+        params[(0) as usize] = crate::java_into_object(crate::java_into_object((databaseConnectionInfoInterface).clone()));
+        let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = crate::java_into_object(jcall!(AbeFactory::getInstance()).getInstance4(abeClientInformation.clone(), InitDbHelperFactory_CLASSNAME.with(Clone::clone).clone(), classes.clone(), params.clone()));
         return anyType.clone();
     }
     
@@ -62,7 +66,7 @@ impl InitDbHelperFactory {
     // throws LicensingException
     // Java overloaded method: Rust needs a different name
     pub fn getInstance(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(AbeFactory::getInstance()).getInstance4(abeClientInformation.clone(), InitDbHelperFactory_CLASSNAME.with(Clone::clone).clone(), None, None);
+        let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = crate::java_into_object(jcall!(AbeFactory::getInstance()).getInstance4(abeClientInformation.clone(), InitDbHelperFactory_CLASSNAME.with(Clone::clone).clone(), None, None));
         return anyType.clone();
     }
 }

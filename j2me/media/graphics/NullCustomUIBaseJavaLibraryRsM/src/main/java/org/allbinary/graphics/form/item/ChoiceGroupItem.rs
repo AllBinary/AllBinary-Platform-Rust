@@ -19,6 +19,10 @@ pub struct ChoiceGroupItem {
 
 impl ChoiceGroupItem {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -29,7 +33,7 @@ impl ChoiceGroupItem {
         Some(Rc::new(RefCell::new(Self::new_struct())))
     }
 }
-pub trait ChoiceGroupItemDyn {
+pub trait ChoiceGroupItemDyn: std::any::Any {
     fn as_ChoiceGroupItem(&self) -> &ChoiceGroupItem;
     fn as_ChoiceGroupItem_mut(&mut self) -> &mut ChoiceGroupItem;
 }

@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AdvertisementProductInterface {
+pub trait AdvertisementProductInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getType(&mut self) -> String;
@@ -39,8 +39,6 @@ pub trait AdvertisementProductInterface {
     
 
     fn getTwoDimensionalConstraint(&mut self) -> Option<Rc<RefCell<dyn TwoDimensionalConstraintInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

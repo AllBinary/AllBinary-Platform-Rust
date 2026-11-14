@@ -31,6 +31,10 @@ pub struct UsersData {
 thread_local! { pub static UsersData_NAME: String = String::from("USERS_NAME"); }
 
 impl UsersData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

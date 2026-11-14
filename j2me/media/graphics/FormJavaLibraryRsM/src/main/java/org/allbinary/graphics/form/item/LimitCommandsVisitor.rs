@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Command::Command;
 use crate::org::allbinary::game::commands::GameCommandsFactory::GameCommandsFactory;
 use crate::org::allbinary::graphics::displayable::DisplayInfoSingleton::DisplayInfoSingleton;
 use crate::org::allbinary::graphics::form::ScreenInfo::ScreenInfo;
@@ -46,7 +46,7 @@ impl LimitCommandsVisitor {
             isNotSmallDisplay: false,
         };
         let mut displayInfo: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
-        this.isNotSmallDisplay = (jcall!(displayInfo).isPortrait() && jcall!(displayInfo).getLastHeight() > jcall!(ScreenInfo::getInstance()).SMALL_WIDTH) || (!jcall!(displayInfo).isPortrait() && jcall!(displayInfo).getLastHeight() > jcall!(ScreenInfo::getInstance()).SMALL_HEIGHT);
+        this.isNotSmallDisplay = { let java_value = ((jcall!(displayInfo).isPortrait() && jcall!(displayInfo).getLastHeight() > { let java_field = jcall!(ScreenInfo::getInstance()).SMALL_WIDTH.clone(); java_field }) || (!jcall!(displayInfo).isPortrait() && jcall!(displayInfo).getLastHeight() > { let java_field = jcall!(ScreenInfo::getInstance()).SMALL_HEIGHT.clone(); java_field })).clone(); java_value };
         this
     }
 
@@ -56,12 +56,12 @@ impl LimitCommandsVisitor {
     
 
     pub fn visit(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        let mut command: Option<Rc<RefCell<Command>>> = (anyType).clone() /* as Command */;
+        let mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>> = { let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>>().expect("ClassCastException").clone()) };
         let mut booleanFactory: Option<Rc<RefCell<BooleanFactory>>> = BooleanFactory::getInstance();
-        if self.isNotSmallDisplay || jcall!(command).getPriority() == 1 || match (&command, &jcall!(GameCommandsFactory::getInstance()).EXIT_COMMAND) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&command, &jcall!(GameCommandsFactory::getInstance()).EXIT_WITHOUT_PROGRESS_COMMAND) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            return jcall!(booleanFactory).TRUE.clone();
+        if self.isNotSmallDisplay || jcall!(command).getPriority() == 1 || match (&command, &{ let java_field = jcall!(GameCommandsFactory::getInstance()).EXIT_COMMAND.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&command, &{ let java_field = jcall!(GameCommandsFactory::getInstance()).EXIT_WITHOUT_PROGRESS_COMMAND.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            return crate::java_into_object({ let java_field = jcall!(booleanFactory).TRUE.clone(); java_field }.clone());
         } else {
-            return jcall!(booleanFactory).FALSE.clone();
+            return crate::java_into_object({ let java_field = jcall!(booleanFactory).FALSE.clone(); java_field }.clone());
         }
     }
 }

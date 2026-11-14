@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Command::Command;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait MyCommandInterface {
+pub trait MyCommandInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
-    fn addCommand(&mut self, command: Option<Rc<RefCell<Command>>>);
+    fn addCommand(&mut self, command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>);
     
 
     fn removeAllCommands(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

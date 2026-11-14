@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::identification::Group::Group;
 use crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItem;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,13 +28,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait GroupItemArrayFactoryInterface {
+pub trait GroupItemArrayFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn getInstance(&mut self, groupInterface: Option<Rc<RefCell<Group>>>) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

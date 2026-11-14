@@ -20,6 +20,7 @@ use super::*;
 // use crate::java::awt::*;
 // use crate::javax::swing::*;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,6 +37,10 @@ pub struct GuiLog {
 thread_local! { pub static GuiLog_instance: Option<Rc<RefCell<GuiLog>>> = GuiLog::new(); }
 
 impl GuiLog {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GuiLog>>> {
@@ -89,47 +94,49 @@ impl GuiLog {
     // Java overloaded method: Rust needs a different name
     // synchronized
     pub fn put4(&mut self, mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String, mut exception: String) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut data: String = { let java_receiver = self.logFormatUtil.clone(); let java_arguments = (specialMessage.clone(), std::any::type_name_of_val(&anyType).to_string(), functionName.clone(), crate::java_into_object(exception.clone()),); let java_result = jcall!(java_receiver).get(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); java_result };
             self.showDialog(data.clone());
             println!("{}", data.clone());
-            return data.clone();
+            return Some(data.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::PreLogUtil::putOE(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("put"), e.clone());
+            PreLogUtil::PreLogUtil::putOE({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("put"), crate::java_into_object(e.clone()));
             return String::from("Logging Error");
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // Java overloaded method: Rust needs a different name
     // synchronized
-    pub fn put(&mut self, mut specialMessage: String, mut className: String, mut functionName: String) -> String {
-        return self.put4(specialMessage.clone(), className.clone(), functionName.clone(), None);
+    pub fn put_String_String_String(&mut self, mut specialMessage: String, mut className: String, mut functionName: String) -> String {
+        return self.put4_String_String_String_Exception(specialMessage.clone(), className.clone(), functionName.clone(), None);
     }
     
 
     // Java overloaded method: Rust needs a different name
     // synchronized
-    pub fn put4(&mut self, mut specialMessage: String, mut className: String, mut functionName: String, mut exception: String) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+    pub fn put4_String_String_String_Exception(&mut self, mut specialMessage: String, mut className: String, mut functionName: String, mut exception: String) -> String {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut data: String = jcall!(self.logFormatUtil).get(specialMessage.clone(), className.clone(), functionName.clone(), crate::java_into_object(exception.clone()));
             self.showDialog(data.clone());
             println!("{}", data.clone());
-            return data.clone();
+            return Some(data.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::PreLogUtil::putOE(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("put"), e.clone());
+            PreLogUtil::PreLogUtil::putOE({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("put"), crate::java_into_object(e.clone()));
             return String::from("Logging Error");
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

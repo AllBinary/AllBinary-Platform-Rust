@@ -17,11 +17,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::InputStream::InputStream;
 // use crate::java::io::StringBufferInputStream::StringBufferInputStream;
 // use crate::javax::xml::parsers::DocumentBuilder::DocumentBuilder;
 // use crate::javax::xml::parsers::DocumentBuilderFactory::DocumentBuilderFactory;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -35,6 +36,10 @@ pub struct DomDocumentHelper {
 
 
 impl DomDocumentHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -59,57 +64,60 @@ impl DomDocumentHelper {
     
 
     pub fn create() -> Option<Rc<RefCell<Document>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut factory: Option<Rc<RefCell<DocumentBuilderFactory>>> = DocumentBuilderFactory::newInstance();
             let mut builder: Option<Rc<RefCell<DocumentBuilder>>> = jcall!(factory).newDocumentBuilder();
             let mut document: Option<Rc<RefCell<Document>>> = jcall!(builder).newDocument();
-            return document.clone();
+            return Some(document.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return None;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn create1(mut inputStream: Option<Rc<RefCell<InputStream>>>) -> Option<Rc<RefCell<Document>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+    pub fn create1(mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>) -> Option<Rc<RefCell<Document>>> {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut factory: Option<Rc<RefCell<DocumentBuilderFactory>>> = DocumentBuilderFactory::newInstance();
             let mut builder: Option<Rc<RefCell<DocumentBuilder>>> = jcall!(factory).newDocumentBuilder();
             let mut document: Option<Rc<RefCell<Document>>> = jcall!(builder).parse(inputStream.clone());
-            return document.clone();
+            return Some(document.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn create1(mut xmlString: String) -> Option<Rc<RefCell<Document>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+    pub fn create1_String(mut xmlString: String) -> Option<Rc<RefCell<Document>>> {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut factory: Option<Rc<RefCell<DocumentBuilderFactory>>> = DocumentBuilderFactory::newInstance();
             let mut builder: Option<Rc<RefCell<DocumentBuilder>>> = jcall!(factory).newDocumentBuilder();
             let mut document: Option<Rc<RefCell<Document>>> = jcall!(builder).parse(StringBufferInputStream::new(xmlString.clone()));
-            return document.clone();
+            return Some(document.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

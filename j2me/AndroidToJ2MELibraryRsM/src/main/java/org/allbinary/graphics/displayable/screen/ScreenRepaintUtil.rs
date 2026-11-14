@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
-// use crate::javax::microedition::lcdui::Displayable::Displayable;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Displayable::Displayable;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +33,10 @@ pub struct ScreenRepaintUtil {
 
 impl ScreenRepaintUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -44,8 +48,8 @@ impl ScreenRepaintUtil {
     }
     
 
-    pub fn repaint(mut displayable: Option<Rc<RefCell<Displayable>>>) {
-        let mut canvas: Option<Rc<RefCell<Canvas>>> = (displayable).clone() /* as Canvas */;
+    pub fn repaint(mut displayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) {
+        let mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>> { panic!("ClassCastException: a Rust dyn Displayable cannot be cast to Canvas") })();
         jcall!(canvas).repaint();
     }
 }

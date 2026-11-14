@@ -37,6 +37,7 @@ use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -48,7 +49,7 @@ macro_rules! jcall {
 pub struct RTSFormInput {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub groupCommonFactory: Option<Rc<RefCell<GroupCommonFactory>>>,
-    pub hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
     pub newUnconstructedRTSLayerInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>>>,
     pub groupInterfaceArray: Vec<Option<Rc<RefCell<Group>>>>,
     pub selectedGeographicCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>,
@@ -59,6 +60,10 @@ pub struct RTSFormInput {
 
 
 impl RTSFormInput {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut groupInterfaceArray: Vec<Option<Rc<RefCell<Group>>>>) -> Self {
@@ -81,12 +86,12 @@ impl RTSFormInput {
         this.selectedStickyItem = ABCustomItem::getNullInstance();
         let mut size: i32 = (this.newUnconstructedRTSLayerInterfaceArray.len() as i32).clone();
         for index in (0..size) {
-            this.newUnconstructedRTSLayerInterfaceArray[(index) as usize] = CollidableDestroyableDamageableLayer::getNullInstance();
+            { let java_index = (index) as usize; this.newUnconstructedRTSLayerInterfaceArray[java_index] = CollidableDestroyableDamageableLayer::getNullInstance(); };
         }
         this.groupInterfaceArray = groupInterfaceArray.clone();
-        { let java_receiver = this.hashtable.clone(); let java_arguments = (crate::java_into_object(jcall!(DirectionFactory::getInstance()).NAME.clone()), crate::java_into_object(jcall!(DirectionFactory::getInstance()).DOWN.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
-        if groupInterfaceArray.is_some() {
-            jcall!(this.hashtable).put(crate::java_into_object(jcall!(this.groupCommonFactory).ID.clone()), crate::java_into_object(groupInterfaceArray.clone()));
+        { let java_receiver = this.hashtable.clone(); let java_arguments = (crate::java_into_object({ let java_field = jcall!(DirectionFactory::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(DirectionFactory::getInstance()).DOWN.clone(); java_field }.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
+        if !groupInterfaceArray.is_empty() {
+            jcall!(this.hashtable).put(crate::java_into_object({ let java_field = jcall!(this.groupCommonFactory).ID.clone(); java_field }.clone()), crate::java_into_object(groupInterfaceArray.clone()));
         }
         this
     }
@@ -108,7 +113,7 @@ impl RTSFormInput {
             return;
         }
         let mut scrollSelectionForm: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn>>> = jcall!(rtsPlayerLayerInterface).getCurrentScrollSelectionForm();
-        let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>> = jcall!(scrollSelectionForm).as_ScrollSelectionForm_mut().get(index.clone());
+        let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>> = jcall!(scrollSelectionForm).get(index.clone());
         if item.is_none() {
             return;
         }
@@ -118,7 +123,7 @@ impl RTSFormInput {
 
     // throws Exception
     pub fn process(&mut self, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) {
-        self.setAllBinaryGameLayerManager((layerManager).clone() /* as AllBinaryGameLayerManager */);
+        self.setAllBinaryGameLayerManager((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayerManager cannot be cast to AllBinaryGameLayerManager") })());
     }
     
 
@@ -134,7 +139,7 @@ impl RTSFormInput {
             return false;
         }
         let mut scrollSelectionForm: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn>>> = jcall!(rtsPlayerLayerInterface).getCurrentScrollSelectionForm();
-        let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>> = jcall!(scrollSelectionForm).as_ScrollSelectionForm_mut().get(index.clone());
+        let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>> = jcall!(scrollSelectionForm).get(index.clone());
         if item.is_none() {
             return false;
         }
@@ -166,12 +171,12 @@ impl RTSFormInput {
 
     // throws Exception
     pub fn getInstance(&mut self, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut aItem: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> {
-        let mut item: Option<Rc<RefCell<LayerInterfaceFactoryImageItem>>> = (aItem).clone() /* as LayerInterfaceFactoryImageItem */;
-        let mut layerInterfaceFactoryInterface: Option<Rc<RefCell<dyn LayerInterfaceFactoryInterface>>> = jcall!(item).as_ABCustomItem_mut().getLayerInterfaceFactoryInterface();
+        let mut item: Option<Rc<RefCell<LayerInterfaceFactoryImageItem>>> = (aItem).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<LayerInterfaceFactoryImageItem>() }, "ClassCastException: not a LayerInterfaceFactoryImageItem"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<LayerInterfaceFactoryImageItem>) } });
+        let mut layerInterfaceFactoryInterface: Option<Rc<RefCell<dyn LayerInterfaceFactoryInterface>>> = jcall!(item).getLayerInterfaceFactoryInterface();
         let mut cellPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(geographicMapCellPosition).getPoint();
         if layerInterfaceFactoryInterface.is_some() {
             jcall!(self.hashtable).put(crate::java_into_object(crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManager_ID.with(Clone::clone).clone()), crate::java_into_object(layerManager.clone()));
-            return (jcall!(layerInterfaceFactoryInterface).getNextInstance(self.getHashtable(), jcall!(cellPoint).getX(), jcall!(cellPoint).getY(), jcall!(cellPoint).getZ())).clone() /* as RTSLayer */;
+            return (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to RTSLayer") })();
         }
         return CollidableDestroyableDamageableLayer::getNullInstance();
     }
@@ -218,11 +223,11 @@ impl RTSFormInput {
     }
     
 
-    pub fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
         return self.hashtable.clone();
     }
 }
-pub trait RTSFormInputDyn {
+pub trait RTSFormInputDyn: std::any::Any {
     fn as_RTSFormInput(&self) -> &RTSFormInput;
     fn as_RTSFormInput_mut(&mut self) -> &mut RTSFormInput;
     fn setAllBinaryGameLayerManager(&mut self, mut allBinaryGameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>) { RTSFormInput::setAllBinaryGameLayerManager(self.as_RTSFormInput_mut(), allBinaryGameLayerManager) }
@@ -242,7 +247,7 @@ pub trait RTSFormInputDyn {
     fn setSelectedStickyItem(&mut self, mut selectedStickyItem: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) { RTSFormInput::setSelectedStickyItem(self.as_RTSFormInput_mut(), selectedStickyItem) }
     fn getSelectedStickyItemIndex(&mut self) -> i32 { RTSFormInput::getSelectedStickyItemIndex(self.as_RTSFormInput_mut()) }
     fn setSelectedStickyItemIndex(&mut self, mut selectedStickyItemIndex: i32) { RTSFormInput::setSelectedStickyItemIndex(self.as_RTSFormInput_mut(), selectedStickyItemIndex) }
-    fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { RTSFormInput::getHashtable(self.as_RTSFormInput_mut()) }
+    fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { RTSFormInput::getHashtable(self.as_RTSFormInput_mut()) }
 }
 impl RTSFormInputDyn for RTSFormInput {
     fn as_RTSFormInput(&self) -> &RTSFormInput { self }

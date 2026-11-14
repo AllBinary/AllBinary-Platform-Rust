@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::control::validate::ValidationComponentInterfac
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::BillingAddressView::BillingAddressView;
 
 // Borrows the object of a Java reference
@@ -38,6 +39,9 @@ pub struct EditValidationView {
 }
 
 // impl ValidationComponentInterface for EditValidationView with the methods of the trait
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for EditValidationView {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }
+}
 
 impl EditValidationView {
     
@@ -48,7 +52,7 @@ impl EditValidationView {
             value: String::new(),
         };
         // super(...) is in the struct literal above
-        this.value = jcall!(jcall!(this.getPageContext()).getRequest()).getParameter(crate::org::allbinary::business::user::address::StreetAddressData::StreetAddressData_ID.with(Clone::clone).clone());
+        this.value = { let java_value = (jcall!(jcall!(this.getPageContext()).getRequest()).getParameter(crate::org::allbinary::business::user::address::StreetAddressData::StreetAddressData_ID.with(Clone::clone).clone())).clone(); java_value };
         this
     }
 
@@ -58,11 +62,11 @@ impl EditValidationView {
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        if jcall!(self.getWeblisketSession()).getUserName().is_some() {
+        if { let java_value = jcall!(self.getWeblisketSession()).getUserName(); java_value }.is_some() {
             return false;
         }
-        let mut billingAddressesEntity: Option<Rc<RefCell<BillingAddressesEntity>>> = BillingAddressesEntity::new(jcall!(self.getWeblisketSession()).getUserName());
-        self.streetAddress = jcall!(billingAddressesEntity).get1(Some((self.value.clone()) as i32));
+        let mut billingAddressesEntity: Option<Rc<RefCell<BillingAddressesEntity>>> = BillingAddressesEntity::new({ let java_argument = jcall!(self.getWeblisketSession()).getUserName(); java_argument });
+        self.streetAddress = { let java_value = (jcall!(billingAddressesEntity).get1(Some((self.value.clone()).trim().parse::<i32>().expect("NumberFormatException")))).clone(); java_value };
         if self.streetAddress.is_none() {
             return false;
         }
@@ -95,6 +99,10 @@ impl std::ops::DerefMut for EditValidationView {
 impl crate::views::generic::address::billing::BillingAddressView::BillingAddressViewDyn for EditValidationView {
     fn as_BillingAddressView(&self) -> &crate::views::generic::address::billing::BillingAddressView::BillingAddressView { &self.base }
     fn as_BillingAddressView_mut(&mut self) -> &mut crate::views::generic::address::billing::BillingAddressView::BillingAddressView { &mut self.base }
+}
+impl crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn for EditValidationView {
+    fn as_TransformInfoHttpComposite(&self) -> &crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &self.base.base.base.base }
+    fn as_TransformInfoHttpComposite_mut(&mut self) -> &mut crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &mut self.base.base.base.base }
 }
 impl crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentViewDyn for EditValidationView {
     fn as_HttpStoreComponentView(&self) -> &crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &self.base.base }

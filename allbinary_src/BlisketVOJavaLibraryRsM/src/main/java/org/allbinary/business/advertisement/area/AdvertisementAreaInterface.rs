@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AdvertisementAreaInterface {
+pub trait AdvertisementAreaInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getName(&mut self) -> String;
@@ -57,8 +57,6 @@ pub trait AdvertisementAreaInterface {
     
 
     fn setCampaign(&mut self, campaign: String);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -20,6 +20,7 @@ use super::*;
 // use crate::java::lang::reflect::Method::Method;
 use crate::org::allbinary::business::init::db::DbConnectionInfo::DbConnectionInfo;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -41,6 +42,10 @@ pub struct InitDb {
 
 
 impl InitDb {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -102,107 +107,113 @@ impl InitDb {
     
 
     pub fn getHostName(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut dynamicClass: &'static str = std::any::type_name_of_val(&self.anyType);
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(dynamicClass).getMethod(self.METHOD_CALL_GET_HOST_NAME.clone(), None);
             let mut result: String = (jcall!(method).invoke(self.anyType.clone(), None)).clone() /* as String */;
-            return result.clone();
+            return Some(result.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return None;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn addUsers(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut dynamicClass: &'static str = std::any::type_name_of_val(&self.anyType);
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(dynamicClass).getMethod(self.METHOD_CALL_ADD_USERS.clone(), None);
             let mut result: Option<bool> = (jcall!(method).invoke(self.anyType.clone(), None)).clone() /* as Boolean */;
-            return result.unwrap();
+            return Some(result.unwrap());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn addDatabases(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut dynamicClass: &'static str = std::any::type_name_of_val(&self.anyType);
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(dynamicClass).getMethod(self.METHOD_CALL_ADD_DATABASES.clone(), None);
             let mut result: Option<bool> = (jcall!(method).invoke(self.anyType.clone(), None)).clone() /* as Boolean */;
-            return result.unwrap();
+            return Some(result.unwrap());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn addTables(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut dynamicClass: &'static str = std::any::type_name_of_val(&self.anyType);
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(dynamicClass).getMethod(self.METHOD_CALL_ADD_TABLES.clone(), None);
             let mut result: Option<bool> = (jcall!(method).invoke(self.anyType.clone(), None)).clone() /* as Boolean */;
-            return result.unwrap();
+            return Some(result.unwrap());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn useTemporaryMainPath(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut dynamicClass: &'static str = std::any::type_name_of_val(&self.anyType);
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(dynamicClass).getMethod(self.METHOD_CALL_TEMP_MAIN_PATH.clone(), None);
             let mut result: Option<bool> = (jcall!(method).invoke(self.anyType.clone(), None)).clone() /* as Boolean */;
-            return result.unwrap();
+            return Some(result.unwrap());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn useNormalMainPath(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut dynamicClass: &'static str = std::any::type_name_of_val(&self.anyType);
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(dynamicClass).getMethod(self.METHOD_CALL_MAIN_PATH.clone(), None);
             let mut result: Option<bool> = (jcall!(method).invoke(self.anyType.clone(), None)).clone() /* as Boolean */;
-            return result.unwrap();
+            return Some(result.unwrap());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
-pub trait InitDbDyn {
+pub trait InitDbDyn: std::any::Any {
     fn as_InitDb(&self) -> &InitDb;
     fn as_InitDb_mut(&mut self) -> &mut InitDb;
     fn setHelper(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { InitDb::setHelper(self.as_InitDb_mut(), anyType) }

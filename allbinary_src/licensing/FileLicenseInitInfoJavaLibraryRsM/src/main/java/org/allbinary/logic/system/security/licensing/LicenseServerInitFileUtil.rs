@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::InputStream::InputStream;
-// use crate::java::io::OutputStream::OutputStream;
+use crate::java::io::InputStream::InputStream;
+use crate::java::io::OutputStream::OutputStream;
 use crate::org::allbinary::business::init::LicenseInitInfoUtil::LicenseInitInfoUtil;
 use crate::org::allbinary::data::resource::ResourceUtil::ResourceUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
@@ -28,6 +28,7 @@ use crate::org::allbinary::logic::io::file::FileFactory::FileFactory;
 use crate::org::allbinary::logic::io::file::SimpleFileUtil::SimpleFileUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,11 +40,15 @@ macro_rules! jcall {
 pub struct LicenseServerInitFileUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
-    pub NULL_OUTPUT_STREAM: Option<Rc<RefCell<OutputStream>>>,
+    pub NULL_OUTPUT_STREAM: Option<Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>>,
 }
 
 
 impl LicenseServerInitFileUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -64,55 +69,55 @@ impl LicenseServerInitFileUtil {
 
     pub fn init(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut filePath: String = jcall!(LicenseInitInfoUtil::getInstance()).INITFILENAME.clone();
-            jcall!(LicenseInitInfoUtil::getInstance()).setFilePath(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone());
+            let mut filePath: String = { let java_field = jcall!(LicenseInitInfoUtil::getInstance()).INITFILENAME.clone(); java_field }.clone();
+            jcall!(LicenseInitInfoUtil::getInstance()).setFilePath({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
             if jcall!(FileFactory::getInstance()).isFile(filePath.clone()) {
-                jcall!(self.logUtil).putF(String::from("Using Existing License File"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone());
+                jcall!(self.logUtil).putF(String::from("Using Existing License File"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
             } else {
                 self.write();
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
     pub fn write(&mut self) {
-        let mut fileOutputStream: Option<Rc<RefCell<OutputStream>>> = self.NULL_OUTPUT_STREAM.clone();
+        let mut fileOutputStream: Option<Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>> = self.NULL_OUTPUT_STREAM.clone();
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut resourceUtil: Option<Rc<RefCell<ResourceUtil>>> = ResourceUtil::getInstance();
-            let mut filePath: String = jcall!(LicenseInitInfoUtil::getInstance()).INITFILENAME.clone();
-            let mut inputStream: Option<Rc<RefCell<InputStream>>> = jcall!(resourceUtil).getResourceAsStream(filePath.clone());
-            jcall!(self.logUtil).putF(String::from("Writing Default License File"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone());
+            let mut filePath: String = { let java_field = jcall!(LicenseInitInfoUtil::getInstance()).INITFILENAME.clone(); java_field }.clone();
+            let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = jcall!(resourceUtil).getResourceAsStream(filePath.clone());
+            jcall!(self.logUtil).putF(String::from("Writing Default License File"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
             let mut fileStreamFactory: Option<Rc<RefCell<FileStreamFactory>>> = FileStreamFactory::getInstance();
-            fileOutputStream = jcall!(fileStreamFactory).getFileOutputStreamInstance(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), filePath.clone());
+            fileOutputStream = { let java_value = (jcall!(fileStreamFactory).getFileOutputStreamInstance({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), filePath.clone())).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>);
             let mut b: i32 = 0;
             let mut index: i32 = 0;
             while true {
-                b = jcall!(inputStream).read();
+                b = { let java_value = (jcall!(inputStream).as_InputStream_mut().read()).clone(); java_value };
                 if b == -1 {
                     break;
                 }
-                jcall!(fileOutputStream).write(b.clone());
+                jcall!(fileOutputStream).as_OutputStream_mut().write(b.clone());
                 index += 1;
             }
-            jcall!(self.logUtil).putF(format!("{}{}", String::from("Wrote Bytes: "), index), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone());
-            jcall!(fileOutputStream).flush();
+            jcall!(self.logUtil).putF(format!("{}{}", String::from("Wrote Bytes: "), index), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
+            jcall!(fileOutputStream).as_OutputStream_mut().flush();
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         { // finally
-            jcall!(StreamUtil::getInstance()).close(fileOutputStream.clone());
+            jcall!(StreamUtil::getInstance()).close(fileOutputStream.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::java::io::Closeable::Closeable>> { panic!("ClassCastException: the Rust trait of OutputStream does not have Closeable as a base trait") }));
         }
     }
 }

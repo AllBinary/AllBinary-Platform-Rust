@@ -35,6 +35,10 @@ thread_local! { pub static DisplayInBrowserContraintsData_QUICKFRAMEABLE: String
 thread_local! { pub static DisplayInBrowserContraintsData_MOUNTABLELINK: String = String::from("DISPLAYBROWSERCONSTRAINTS_MOUNTABLELINK"); }
 
 impl DisplayInBrowserContraintsData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

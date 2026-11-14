@@ -37,6 +37,10 @@ impl GameInitializationInterfaceFactoryInterface for BasicBuildGameInitializerFa
 
 impl BasicBuildGameInitializerFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -49,7 +53,7 @@ impl BasicBuildGameInitializerFactory {
     
 
     pub fn getInstance(&mut self) -> Option<Rc<RefCell<dyn GameInitializationInterface>>> {
-        return BaseGameInitialization_NULL_BASE_GAME_INITIALIZATION.with(Clone::clone).clone();
+        return BaseGameInitialization_NULL_BASE_GAME_INITIALIZATION.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn GameInitializationInterface>>);
     }
 }
 

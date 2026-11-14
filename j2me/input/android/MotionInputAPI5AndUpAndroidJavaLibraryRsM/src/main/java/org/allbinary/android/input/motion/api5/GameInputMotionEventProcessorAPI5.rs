@@ -26,6 +26,7 @@ use crate::org::allbinary::input::motion::MotionRecognizer::MotionRecognizer;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::communication::log::ForcedLogUtil::ForcedLogUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -42,16 +43,16 @@ pub struct GameInputMotionEventProcessorAPI5 {
     pub TOTAL_MINUS_ONE: i32,
 }
 
-pub static mut GameInputMotionEventProcessorAPI5_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut GameInputMotionEventProcessorAPI5_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl GameInputMotionEventProcessorAPI5 {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GameInputMotionEventProcessorAPI5>>> {
-        if match (&unsafe { GameInputMotionEventProcessorAPI5_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *GameInputMotionEventProcessorAPI5_instance = GameInputMotionEventProcessorAPI5::new() };
+        if match (&unsafe { GameInputMotionEventProcessorAPI5_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *GameInputMotionEventProcessorAPI5_instance = crate::java_into_object(GameInputMotionEventProcessorAPI5::new()) };
         }
-        return (unsafe { GameInputMotionEventProcessorAPI5_instance.clone() }).clone() /* as GameInputMotionEventProcessorAPI5 */;
+        return { let java_object = (unsafe { GameInputMotionEventProcessorAPI5_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameInputMotionEventProcessorAPI5>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -65,11 +66,11 @@ impl GameInputMotionEventProcessorAPI5 {
         };
         this.logUtil = LogUtil::getInstance();
         this.displayInfo = DisplayInfoSingleton::getInstance();
-        let mut size: i32 = jcall!(GameInputMotionInfoAPI5::GameInputMotionInfoAPI5::getInstance()).MAX_POINTERS.clone();
+        let mut size: i32 = { let java_field = jcall!(GameInputMotionInfoAPI5::GameInputMotionInfoAPI5::getInstance()).MAX_POINTERS.clone(); java_field }.clone();
         this.motionRecognizerArray = vec![None; (size) as usize];
         this.TOTAL_MINUS_ONE = size.clone();
         for index in (0..size) {
-            this.motionRecognizerArray[(index) as usize] = AllMotionRecognizer::new();
+            { let java_index = (index) as usize; this.motionRecognizerArray[java_index] = AllMotionRecognizer::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::MotionRecognizer::MotionRecognizerDyn>>); };
         }
         this
     }
@@ -95,7 +96,7 @@ impl GameInputMotionEventProcessorAPI5 {
             let mut action: i32 = jcall!(motionEvent).getAction();
             let mut total: i32 = (self.motionRecognizerArray.len() as i32).clone();
             if total > jcall!(motionEvent).getPointerCount() {
-                total = jcall!(motionEvent).getPointerCount();
+                total = { let java_value = (jcall!(motionEvent).getPointerCount()).clone(); java_value };
             } else {
                 let mut message: String = String::from("Log that Android has more pointers than I have expected so increase it motionEvent.getPointerCount(): ");
                 ForcedLogUtil::log(format!("{}{}", message, jcall!(motionEvent).getPointerCount()), crate::java_into_object(String::from(std::any::type_name::<Self>())));
@@ -108,7 +109,7 @@ impl GameInputMotionEventProcessorAPI5 {
                         let mut scalableListener: Option<Rc<RefCell<dyn ScalableListener>>> = jcall!(self.displayInfo).getScalableListener();
                         let mut x: i32 = ((((jcall!(motionEvent).getX(pointerIndex.clone()) - jcall!(self.displayInfo).getLeft()) / jcall!(scalableListener).getRatio(jcall!(self.displayInfo).getRatio()))) as i32);
                         let mut y: i32 = ((((jcall!(motionEvent).getY(pointerIndex.clone()) - jcall!(self.displayInfo).getTop()) / jcall!(scalableListener).getRatio(jcall!(self.displayInfo).getRatio()))) as i32);
-                        jcall!(self.motionRecognizerArray[(pointerId) as usize]).processStartMotionEvent(x.clone(), y.clone(), jcall!(motionEvent).getDeviceId(), 0);
+                        { let java_receiver = self.motionRecognizerArray[(pointerId) as usize].clone(); let java_arguments = (x.clone(), y.clone(), jcall!(motionEvent).getDeviceId(), 0,); jcall!(java_receiver).processStartMotionEvent(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
                     }
                 }
             } else if action == unsafe { crate::android::view::MotionEvent::MotionEvent_ACTION_UP.clone() } || action == unsafe { crate::android::view::MotionEvent::MotionEvent_ACTION_CANCEL.clone() } {
@@ -118,7 +119,7 @@ impl GameInputMotionEventProcessorAPI5 {
                         let mut scalableListener: Option<Rc<RefCell<dyn ScalableListener>>> = jcall!(self.displayInfo).getScalableListener();
                         let mut x: i32 = ((((jcall!(motionEvent).getX(pointerIndex.clone()) - jcall!(self.displayInfo).getLeft()) / jcall!(scalableListener).getRatio(jcall!(self.displayInfo).getRatio()))) as i32);
                         let mut y: i32 = ((((jcall!(motionEvent).getY(pointerIndex.clone()) - jcall!(self.displayInfo).getTop()) / jcall!(scalableListener).getRatio(jcall!(self.displayInfo).getRatio()))) as i32);
-                        jcall!(self.motionRecognizerArray[(pointerId) as usize]).processEndMotionEvent(x.clone(), y.clone(), jcall!(motionEvent).getDeviceId(), 0);
+                        { let java_receiver = self.motionRecognizerArray[(pointerId) as usize].clone(); let java_arguments = (x.clone(), y.clone(), jcall!(motionEvent).getDeviceId(), 0,); jcall!(java_receiver).processEndMotionEvent(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
                     }
                 }
             } else if action == unsafe { crate::android::view::MotionEvent::MotionEvent_ACTION_MOVE.clone() } {
@@ -128,16 +129,16 @@ impl GameInputMotionEventProcessorAPI5 {
                         let mut scalableListener: Option<Rc<RefCell<dyn ScalableListener>>> = jcall!(self.displayInfo).getScalableListener();
                         let mut x: i32 = ((((jcall!(motionEvent).getX(pointerIndex.clone()) - jcall!(self.displayInfo).getLeft()) / jcall!(scalableListener).getRatio(jcall!(self.displayInfo).getRatio()))) as i32);
                         let mut y: i32 = ((((jcall!(motionEvent).getY(pointerIndex.clone()) - jcall!(self.displayInfo).getTop()) / jcall!(scalableListener).getRatio(jcall!(self.displayInfo).getRatio()))) as i32);
-                        jcall!(self.motionRecognizerArray[(pointerId) as usize]).processDraggedMotionEvent(x.clone(), y.clone(), jcall!(motionEvent).getDeviceId(), 0);
+                        { let java_receiver = self.motionRecognizerArray[(pointerId) as usize].clone(); let java_arguments = (x.clone(), y.clone(), jcall!(motionEvent).getDeviceId(), 0,); jcall!(java_receiver).processDraggedMotionEvent(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
                     }
                 }
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

@@ -38,6 +38,10 @@ thread_local! { pub static AuthorizeNetAimData_X_DRIVERS_LICENSE_STATE: String =
 thread_local! { pub static AuthorizeNetAimData_X_DRIVERS_LICENSE_DOB: String = String::from("x_drivers_license_dob"); }
 
 impl AuthorizeNetAimData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

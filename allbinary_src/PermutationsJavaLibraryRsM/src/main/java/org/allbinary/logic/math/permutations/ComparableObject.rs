@@ -18,7 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::TsUtil::TsUtil;
-use super::Comparable::Comparable;
+use crate::java::lang::Comparable::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,6 +37,10 @@ pub struct ComparableObject {
 // impl Comparable for ComparableObject with the methods of the trait
 
 impl ComparableObject {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

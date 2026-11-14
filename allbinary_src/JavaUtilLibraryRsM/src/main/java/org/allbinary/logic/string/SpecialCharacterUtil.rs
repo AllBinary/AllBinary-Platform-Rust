@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::io::path::AbPathData::AbPathData;
 use crate::org::allbinary::logic::math::MathData::MathData;
@@ -39,6 +38,10 @@ pub struct SpecialCharacterUtil {
 
 impl SpecialCharacterUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -50,35 +53,35 @@ impl SpecialCharacterUtil {
     }
     
 
-    pub fn getHashMap() -> Option<Rc<RefCell<HashMap>>> {
+    pub fn getHashMap() -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
         let mut commonPhoneStrings: Option<Rc<RefCell<CommonPhoneStrings>>> = CommonPhoneStrings::getInstance();
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(String::from("!"), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(String::from("@"), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(jcall!(commonPhoneStrings).POUND.clone(), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(String::from("$"), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(String::from("%"), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(String::from("^"), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(jcall!(commonSeps).AMPERSAND.clone(), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(jcall!(commonPhoneStrings).STAR.clone(), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(jcall!(commonSeps).PARENTHESIS_OPEN.clone(), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(jcall!(commonSeps).PARENTHESIS_CLOSE.clone(), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(jcall!(commonSeps).DASH.clone(), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(jcall!(commonSeps).UNDERSCORE.clone(), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(jcall!(MathData::getInstance()).PLUS.clone(), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(jcall!(commonSeps).EQUALS.clone(), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(String::from("\\"), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(String::from("|"), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(String::from(","), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(String::from("<"), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(String::from(">"), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(String::from("?"), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(jcall!(AbPathData::getInstance()).SEPARATOR.clone(), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(String::from("~"), jcall!(stringUtil).EMPTY_STRING.clone());
-        jcall!(hashMap).put(String::from("`"), jcall!(stringUtil).EMPTY_STRING.clone());
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object(String::from("!")), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object(String::from("@")), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(commonPhoneStrings).POUND.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object(String::from("$")), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object(String::from("%")), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object(String::from("^")), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(commonSeps).AMPERSAND.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(commonPhoneStrings).STAR.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(commonSeps).PARENTHESIS_OPEN.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(commonSeps).PARENTHESIS_CLOSE.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(commonSeps).DASH.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(commonSeps).UNDERSCORE.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(MathData::getInstance()).PLUS.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(commonSeps).EQUALS.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object(String::from("\\")), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object(String::from("|")), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object(String::from(",")), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object(String::from("<")), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object(String::from(">")), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object(String::from("?")), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object(String::from("~")), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
+        jcall!(hashMap).put(crate::java_into_object(String::from("`")), crate::java_into_object({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()));
         return hashMap.clone();
     }
 }

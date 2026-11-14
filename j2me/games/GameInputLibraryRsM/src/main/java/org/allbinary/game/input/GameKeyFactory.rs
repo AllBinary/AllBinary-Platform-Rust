@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::string::CommonPhoneStrings::CommonPhoneStrings;
 use super::GameKey::GameKey;
@@ -56,9 +56,13 @@ pub struct GameKeyFactory {
     pub LEVEL_UP: Option<Rc<RefCell<GameKey>>>,
 }
 
-pub static mut GameKeyFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut GameKeyFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl GameKeyFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -87,30 +91,30 @@ impl GameKeyFactory {
             LEVEL_DOWN: None,
             LEVEL_UP: None,
         };
-        this.NONE = GameKey::new(jcall!(InputFactory::InputFactory::getInstance()).MAX - 1, String::from("None"));
-        this.UP = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).UP.clone());
-        this.DOWN = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).DOWN.clone());
-        this.LEFT = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).LEFT.clone());
-        this.RIGHT = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).RIGHT.clone());
-        this.KEY_POUND = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_POUND.clone() }.clone(), String::from("POUND"));
-        this.KEY_STAR = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_STAR.clone() }.clone(), String::from("STAR"));
-        this.KEY_NUM0 = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM0.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).ZERO.clone());
-        this.KEY_NUM1 = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).ONE.clone());
-        this.KEY_NUM2 = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM2.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).TWO.clone());
-        this.KEY_NUM3 = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM3.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).THREE.clone());
-        this.KEY_NUM4 = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM4.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).FOUR.clone());
-        this.KEY_NUM5 = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM5.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).FIVE.clone());
-        this.KEY_NUM6 = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM6.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).SIX.clone());
-        this.KEY_NUM7 = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM7.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).SEVEN.clone());
-        this.KEY_NUM8 = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM8.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).EIGHT.clone());
-        this.KEY_NUM9 = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM9.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).NINE.clone());
-        this.GAME_A = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_GAME_A.clone() }.clone(), String::from("Game A"));
-        this.GAME_B = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_GAME_B.clone() }.clone(), String::from("Game B"));
-        this.GAME_C = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_GAME_C.clone() }.clone(), String::from("Game C"));
-        this.GAME_D = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_GAME_D.clone() }.clone(), String::from("Game D"));
-        this.FIRE = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_FIRE.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).FIRE.clone());
-        this.LEVEL_DOWN = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM9.clone() } + 1, String::from("Cheat Level Up"));
-        this.LEVEL_UP = GameKey::new(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM9.clone() } + 2, String::from("Cheat Level Down"));
+        this.NONE = GameKey::new({ let java_field = jcall!(InputFactory::InputFactory::getInstance()).MAX.clone(); java_field } - 1, String::from("None"));
+        this.UP = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).UP.clone(); java_field }.clone());
+        this.DOWN = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).DOWN.clone(); java_field }.clone());
+        this.LEFT = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).LEFT.clone(); java_field }.clone());
+        this.RIGHT = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).RIGHT.clone(); java_field }.clone());
+        this.KEY_POUND = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_POUND.with(Clone::clone).clone(), String::from("POUND"));
+        this.KEY_STAR = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_STAR.with(Clone::clone).clone(), String::from("STAR"));
+        this.KEY_NUM0 = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM0.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).ZERO.clone(); java_field }.clone());
+        this.KEY_NUM1 = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).ONE.clone(); java_field }.clone());
+        this.KEY_NUM2 = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM2.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).TWO.clone(); java_field }.clone());
+        this.KEY_NUM3 = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM3.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).THREE.clone(); java_field }.clone());
+        this.KEY_NUM4 = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM4.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).FOUR.clone(); java_field }.clone());
+        this.KEY_NUM5 = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM5.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).FIVE.clone(); java_field }.clone());
+        this.KEY_NUM6 = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM6.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).SIX.clone(); java_field }.clone());
+        this.KEY_NUM7 = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM7.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).SEVEN.clone(); java_field }.clone());
+        this.KEY_NUM8 = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM8.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).EIGHT.clone(); java_field }.clone());
+        this.KEY_NUM9 = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM9.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).NINE.clone(); java_field }.clone());
+        this.GAME_A = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_GAME_A.with(Clone::clone).clone(), String::from("Game A"));
+        this.GAME_B = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_GAME_B.with(Clone::clone).clone(), String::from("Game B"));
+        this.GAME_C = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_GAME_C.with(Clone::clone).clone(), String::from("Game C"));
+        this.GAME_D = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_GAME_D.with(Clone::clone).clone(), String::from("Game D"));
+        this.FIRE = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_FIRE.with(Clone::clone).clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).FIRE.clone(); java_field }.clone());
+        this.LEVEL_DOWN = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM9.with(Clone::clone) + 1, String::from("Cheat Level Up"));
+        this.LEVEL_UP = GameKey::new(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM9.with(Clone::clone) + 2, String::from("Cheat Level Down"));
         this
     }
 
@@ -120,10 +124,10 @@ impl GameKeyFactory {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GameKeyFactory>>> {
-        if match (&unsafe { GameKeyFactory_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *GameKeyFactory_instance = GameKeyFactory::new() };
+        if match (&unsafe { GameKeyFactory_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *GameKeyFactory_instance = crate::java_into_object(GameKeyFactory::new()) };
         }
-        return (unsafe { GameKeyFactory_instance.clone() }).clone() /* as GameKeyFactory */;
+        return { let java_object = (unsafe { GameKeyFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameKeyFactory>>>>().expect("ClassCastException").clone()) };
     }
 }
 

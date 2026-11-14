@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
+use crate::java::lang::Exception::*;
 use super::PathFindingNodeCostInfoFactoryBase::PathFindingNodeCostInfoFactoryBase;
 use super::PathFindingNodeCostInfo::PathFindingNodeCostInfo;
 
@@ -64,7 +65,7 @@ impl PathFindingNodeCostInfoFactory {
         if pathFindingNodeCostInfo.is_none() {
             pathFindingNodeCostInfo = PathFindingNodeCostInfo::new(costFromStart.clone(), costToEnd.clone());
             jcall!(pathFindingNodeCostInfo).setCalculatedTotalCost();
-            self.pathFindingNodeCostInfoAdjacencyList[(jcall!(geographicMapCellPosition).getId()) as usize][(jcall!(goingToGeographicMapCellPosition).getId()) as usize] = pathFindingNodeCostInfo.clone();
+            { let java_index = (jcall!(goingToGeographicMapCellPosition).getId()) as usize; self.pathFindingNodeCostInfoAdjacencyList[(jcall!(geographicMapCellPosition).getId()) as usize][java_index] = pathFindingNodeCostInfo.clone(); };
         } else {
             jcall!(pathFindingNodeCostInfo).setCostFromStart(costFromStart.clone());
             jcall!(pathFindingNodeCostInfo).setCostToEnd(costToEnd.clone());
@@ -81,7 +82,7 @@ impl PathFindingNodeCostInfoFactory {
     
 
     pub fn getTotalCost(&mut self, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, mut comingFromGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> i64 {
-        return jcall!(self.getInstance(comingFromGeographicMapCellPosition.clone(), geographicMapCellPosition.clone())).totalCostP.clone();
+        return { let java_field = jcall!(self.getInstance(comingFromGeographicMapCellPosition.clone(), geographicMapCellPosition.clone())).totalCostP.clone(); java_field }.clone();
     }
 }
 impl std::ops::Deref for PathFindingNodeCostInfoFactory {

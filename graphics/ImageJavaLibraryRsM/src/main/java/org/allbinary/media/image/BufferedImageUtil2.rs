@@ -23,6 +23,10 @@ thread_local! { pub static BufferedImageUtil2_instance: Option<Rc<RefCell<Buffer
 
 impl BufferedImageUtil2 {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             imageUtil: None,
@@ -46,9 +50,9 @@ impl BufferedImageUtil2 {
         let mut max: i32 = columns.clone();
         let mut rows: i32 = 0;
         if (bufferedImageArray.len() as i32) < columns {
-            columns = (bufferedImageArray.len() as i32).clone();
+            columns = { let java_value = ((bufferedImageArray.len() as i32)).clone(); java_value }.clone();
         }
-        rows = ((bufferedImageArray.len() as i32) / columns);
+        rows = { let java_value = (((bufferedImageArray.len() as i32) / columns)).clone(); java_value };
         if (bufferedImageArray.len() as i32) % columns != 0 {
             rows += 1;
         }

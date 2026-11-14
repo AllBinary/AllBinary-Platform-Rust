@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,6 +34,10 @@ thread_local! { pub static MyFontProcessor_instance: Option<Rc<RefCell<dyn MyFon
 
 impl MyFontProcessor {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -45,12 +49,12 @@ impl MyFontProcessor {
     }
     
 
-    pub fn defaultCharWidth(mut font: Option<Rc<RefCell<Font>>>) -> i32 {
+    pub fn defaultCharWidth(mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>) -> i32 {
         return jcall!(font).charWidth('C');
     }
     
 
-    pub fn defaultStringWidth(mut font: Option<Rc<RefCell<Font>>>, mut size: i32) -> i32 {
+    pub fn defaultStringWidth(mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, mut size: i32) -> i32 {
         return MyFontProcessor::defaultCharWidth(font.clone()) * size;
     }
     
@@ -60,13 +64,13 @@ impl MyFontProcessor {
     }
     
 
-    pub fn process(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn process(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
 }
-pub trait MyFontProcessorDyn {
+pub trait MyFontProcessorDyn: std::any::Any {
     fn as_MyFontProcessor(&self) -> &MyFontProcessor;
     fn as_MyFontProcessor_mut(&mut self) -> &mut MyFontProcessor;
-    fn process(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { MyFontProcessor::process(self.as_MyFontProcessor_mut(), graphics) }
+    fn process(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { MyFontProcessor::process(self.as_MyFontProcessor_mut(), graphics) }
 }
 impl MyFontProcessorDyn for MyFontProcessor {
     fn as_MyFontProcessor(&self) -> &MyFontProcessor { self }

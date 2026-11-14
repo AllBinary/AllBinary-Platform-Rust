@@ -34,6 +34,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::EnumerationUtil::EnumerationUtil;
+use crate::java::lang::Exception::*;
 use super::InputToGameKeyMapping::InputToGameKeyMapping;
 
 // Borrows the object of a Java reference
@@ -54,16 +55,20 @@ pub struct PersistentInputMapping {
     pub inputMappingEvent: Option<Rc<RefCell<InputMappingEvent>>>,
 }
 
-pub static mut PersistentInputMapping_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut PersistentInputMapping_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl PersistentInputMapping {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getNullInstance() -> Option<Rc<RefCell<dyn PersistentInputMappingDyn>>> {
-        if match (&unsafe { PersistentInputMapping_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *PersistentInputMapping_instance = PersistentInputMapping::new(jcall!(GamePersistanceStrings::getInstance()).SAVED_INPUT_CONFIGURATION_RECORD_ID.clone()).map(|reference| reference as Rc<RefCell<dyn PersistentInputMappingDyn>>) };
+        if match (&unsafe { PersistentInputMapping_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *PersistentInputMapping_instance = crate::java_into_object(PersistentInputMapping::new({ let java_field = jcall!(GamePersistanceStrings::getInstance()).SAVED_INPUT_CONFIGURATION_RECORD_ID.clone(); java_field }.clone())) };
         }
-        return (unsafe { PersistentInputMapping_instance.clone() }).clone() /* as PersistentInputMapping */;
+        return { let java_object = (unsafe { PersistentInputMapping_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn PersistentInputMappingDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -81,14 +86,15 @@ impl PersistentInputMapping {
         this.commonStrings = CommonStrings::getInstance();
         this.enumerationUtil = EnumerationUtil::getInstance();
         this.inputMapping = InputToGameKeyMapping::new();
-        this.inputMappingEventListenerInterface = crate::org::allbinary::game::input::mapping::event::NullInputMappingEventListener::NullInputMappingEventListener_NULL_INPUT_MAPPING_EVENT_LISTENER.with(Clone::clone).clone();
-        this.inputMappingEvent = InputMappingEvent::new(this);
+        this.inputMappingEventListenerInterface = crate::org::allbinary::game::input::mapping::event::NullInputMappingEventListener::NullInputMappingEventListener_NULL_INPUT_MAPPING_EVENT_LISTENER.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn InputMappingEventListenerInterface>>);
         this.inputPersistance = InputPersistance::new(name.clone());
         this
     }
 
     pub fn new(mut name: String) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(name))))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(name.clone()))));
+        jcall!(this).inputMappingEvent = InputMappingEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        this
     }
     
 
@@ -124,7 +130,7 @@ impl PersistentInputMapping {
 
     // throws Exception
     pub fn save(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>) {
-        { let java_receiver = self.inputPersistance.clone(); let java_arguments = (abeClientInformation.clone(), jcall!(self.getInputMapping()).getHashtable(),); jcall!(java_receiver).save(java_arguments.0, java_arguments.1); };
+        { let java_receiver = self.inputPersistance.clone(); let java_arguments = (abeClientInformation.clone(), { let java_argument = jcall!(self.getInputMapping()).getHashtable(); java_argument },); jcall!(java_receiver).save(java_arguments.0, java_arguments.1); };
         { let java_receiver = self.inputMappingEvent.clone(); let java_arguments = (self.getInputMapping(),); jcall!(java_receiver).setInputToGameKeyMapping(java_arguments.0); };
         if self.getInputMappingEventListenerInterface().is_some() {
             jcall!(self.getInputMappingEventListenerInterface()).onInputMappingEvent(self.inputMappingEvent.clone());
@@ -134,15 +140,15 @@ impl PersistentInputMapping {
 
     // throws Exception
     pub fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(self.inputPersistance).loadAll(abeClientInformation.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putOE(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(), e.clone());
+            PreLogUtil::putOE({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             jcall!(self.inputPersistance).deleteRecoreStore(abeClientInformation.clone());
             self.setDefault(abeClientInformation.clone());
             jcall!(self.inputPersistance).loadAll(abeClientInformation.clone());
@@ -151,16 +157,16 @@ impl PersistentInputMapping {
         let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(self.inputPersistance).getList();
         let mut totalMappedTo: i32 = 0;
         let mut size: i32 = jcall!(list).size();
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = None;
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = None;
         let mut enumeration: Option<Rc<RefCell<dyn Enumeration>>> = None;
         let mut mappedToInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>> = None;
         let mut gameActionInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>> = None;
         for index in (0..size) {
-            hashtable = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ABHashtable>>>>().expect("ClassCastException").clone()) };
-            enumeration = jcall!(hashtable).keys();
+            hashtable = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            enumeration = { let java_value = (jcall!(hashtable).keys()).clone(); java_value };
             while jcall!(self.enumerationUtil).hasMoreElements(enumeration.clone()) {
-                mappedToInput = { let java_object = (jcall!(self.enumerationUtil).nextElement(enumeration.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>>().expect("ClassCastException").clone()) };
-                gameActionInput = { let java_object = (jcall!(hashtable).get(crate::java_into_object(mappedToInput.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>>().expect("ClassCastException").clone()) };
+                mappedToInput = { let java_value = ({ let java_object = (jcall!(self.enumerationUtil).nextElement(enumeration.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+                gameActionInput = { let java_value = ({ let java_object = (jcall!(hashtable).get(crate::java_into_object(mappedToInput.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 totalMappedTo += 1;
                 jcall!(self.getInputMapping()).add(gameActionInput.clone(), mappedToInput.clone());
             }
@@ -170,7 +176,7 @@ impl PersistentInputMapping {
         jcall!(stringBuffer).appendint(self.getTotalMapped());
         jcall!(stringBuffer).append(String::from(" to: "));
         jcall!(stringBuffer).appendint(totalMappedTo.clone());
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
@@ -191,16 +197,16 @@ impl PersistentInputMapping {
 
     // throws Exception
     pub fn isDelete(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
     // throws Exception
     pub fn isSystemInput(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
 }
-pub trait PersistentInputMappingDyn {
+pub trait PersistentInputMappingDyn: std::any::Any {
     fn as_PersistentInputMapping(&self) -> &PersistentInputMapping;
     fn as_PersistentInputMapping_mut(&mut self) -> &mut PersistentInputMapping;
     fn getTotalMapped(&mut self) -> i32 { PersistentInputMapping::getTotalMapped(self.as_PersistentInputMapping_mut()) }

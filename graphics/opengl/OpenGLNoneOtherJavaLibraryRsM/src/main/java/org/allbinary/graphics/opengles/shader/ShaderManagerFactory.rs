@@ -33,6 +33,10 @@ thread_local! { pub static ShaderManagerFactory_instance: Option<Rc<RefCell<Shad
 
 impl ShaderManagerFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };

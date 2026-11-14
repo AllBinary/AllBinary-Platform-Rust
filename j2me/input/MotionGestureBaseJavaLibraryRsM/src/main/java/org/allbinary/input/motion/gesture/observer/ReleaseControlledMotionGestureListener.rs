@@ -27,6 +27,7 @@ use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEv
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::MotionGestureEventListener::MotionGestureEventListener;
 use super::CompleteMotionGestureListenerInterface::CompleteMotionGestureListenerInterface;
 use super::MotionGestureEvent::MotionGestureEvent;
@@ -47,9 +48,31 @@ pub struct ReleaseControlledMotionGestureListener {
     pub signed: Option<Rc<RefCell<dyn CompleteMotionGestureListenerInterface>>>,
 }
 
-// impl MotionGestureEventListener for ReleaseControlledMotionGestureListener with the methods of the trait
+impl MotionGestureEventListener for ReleaseControlledMotionGestureListener {
+    fn onPressedMotionGestureEvent(&mut self, mut ev: Option<Rc<RefCell<MotionGestureEvent>>>) { Self::onPressedMotionGestureEvent(self, ev) }
+    fn onUpMotionGestureEvent(&mut self, mut ev: Option<Rc<RefCell<MotionGestureEvent>>>) { Self::onUpMotionGestureEvent(self, ev) }
+    fn onDownMotionGestureEvent(&mut self, mut ev: Option<Rc<RefCell<MotionGestureEvent>>>) { Self::onDownMotionGestureEvent(self, ev) }
+    fn onLeftMotionGestureEvent(&mut self, mut ev: Option<Rc<RefCell<MotionGestureEvent>>>) { Self::onLeftMotionGestureEvent(self, ev) }
+    fn onRightMotionGestureEvent(&mut self, mut ev: Option<Rc<RefCell<MotionGestureEvent>>>) { Self::onRightMotionGestureEvent(self, ev) }
+    fn onDiagonalDownRightMotionGestureEvent(&mut self, mut ev: Option<Rc<RefCell<MotionGestureEvent>>>) { Self::onDiagonalDownRightMotionGestureEvent(self, ev) }
+    fn onDiagonalDownLeftMotionGestureEvent(&mut self, mut ev: Option<Rc<RefCell<MotionGestureEvent>>>) { Self::onDiagonalDownLeftMotionGestureEvent(self, ev) }
+    fn onDiagonalUpRightMotionGestureEvent(&mut self, mut ev: Option<Rc<RefCell<MotionGestureEvent>>>) { Self::onDiagonalUpRightMotionGestureEvent(self, ev) }
+    fn onDiagonalUpLeftMotionGestureEvent(&mut self, mut ev: Option<Rc<RefCell<MotionGestureEvent>>>) { Self::onDiagonalUpLeftMotionGestureEvent(self, ev) }
+    fn released(&mut self, mut ev: Option<Rc<RefCell<MotionGestureEvent>>>) { Self::released(self, ev) }
+}
+impl crate::org::allbinary::input::motion::gesture::observer::BaseMotionGestureEventListener::BaseMotionGestureEventListener for ReleaseControlledMotionGestureListener {
+    fn onMotionGestureEvent(&mut self, mut ev: Option<Rc<RefCell<MotionGestureEvent>>>) { Self::onMotionGestureEvent(self, ev) }
+    fn onScrolledMotionGestureEvent(&mut self, mut motionGestureEvent: Option<Rc<RefCell<MotionGestureEvent>>>) { Self::onScrolledMotionGestureEvent(self, motionGestureEvent) }
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for ReleaseControlledMotionGestureListener {
+    fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, eventObject) }
+}
 
 impl ReleaseControlledMotionGestureListener {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut signed: Option<Rc<RefCell<dyn CompleteMotionGestureListenerInterface>>>) -> Self {
@@ -63,10 +86,10 @@ impl ReleaseControlledMotionGestureListener {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        this.currentMotionGesture = jcall!(TouchMotionGestureFactory::getInstance()).NO_MOTION.clone();
+        this.currentMotionGesture = { let java_field = jcall!(TouchMotionGestureFactory::getInstance()).NO_MOTION.clone(); java_field }.clone();
         this.isMouseGestureOccurring = false;
-        this.motionGestureCollection = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        this.motionGestureCollection = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this.signed = signed.clone();
         this
     }
@@ -77,7 +100,7 @@ impl ReleaseControlledMotionGestureListener {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
@@ -123,7 +146,7 @@ impl ReleaseControlledMotionGestureListener {
 
     pub fn onPressedMotionGestureEvent(&mut self, mut ev: Option<Rc<RefCell<MotionGestureEvent>>>) {
         self.isMouseGestureOccurring = true;
-        self.currentMotionGesture = jcall!(TouchMotionGestureFactory::getInstance()).NO_MOTION.clone();
+        self.currentMotionGesture = { let java_value = ({ let java_field = jcall!(TouchMotionGestureFactory::getInstance()).NO_MOTION.clone(); java_field }).clone(); java_value }.clone();
         self.onMotionGestureEvent(ev.clone());
     }
     
@@ -143,9 +166,9 @@ impl ReleaseControlledMotionGestureListener {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.commonStrings).EXCEPTION_LABEL.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(jcall!(ev).getMotionGesture()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("release"), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.commonStrings).EXCEPTION_LABEL.clone(); java_field }.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(jcall!(ev).getMotionGesture()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("release"), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
             }
         }
     }
@@ -156,9 +179,9 @@ impl ReleaseControlledMotionGestureListener {
             return;
         }
         let mut motionGestureInput: Option<Rc<RefCell<MotionGestureInput>>> = jcall!(ev).getMotionGesture();
-        if match (&motionGestureInput, &jcall!(TouchMotionGestureFactory::getInstance()).PRESSED) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&motionGestureInput, &{ let java_field = jcall!(TouchMotionGestureFactory::getInstance()).PRESSED.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             self.onPressedMotionGestureEvent(ev.clone());
-        } else if match (&motionGestureInput, &jcall!(TouchMotionGestureFactory::getInstance()).RELEASED) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        } else if match (&motionGestureInput, &{ let java_field = jcall!(TouchMotionGestureFactory::getInstance()).RELEASED.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             self.released(ev.clone());
         } else {
             if !match (&self.currentMotionGesture, &motionGestureInput) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {

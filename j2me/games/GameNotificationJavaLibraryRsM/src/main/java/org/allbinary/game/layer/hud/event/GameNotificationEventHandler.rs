@@ -22,6 +22,7 @@ use crate::org::allbinary::logic::util::event::EventListenerInterface::EventList
 use crate::org::allbinary::logic::util::event::NullEventListener::NullEventListener;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::GameNotificationListenerInterface::GameNotificationListenerInterface;
 use super::GameNotificationEvent::GameNotificationEvent;
 
@@ -58,10 +59,10 @@ impl GameNotificationEventHandler {
 
     // synchronized
     pub fn removeAllListeners(&mut self) {
-        let mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>> = crate::org::allbinary::logic::util::event::NullEventListener::NullEventListener_NULL_EVENT_LISTENER.with(Clone::clone).clone();
+        let mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>> = crate::org::allbinary::logic::util::event::NullEventListener::NullEventListener_NULL_EVENT_LISTENER.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn EventListenerInterface>>);
         let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.eventListenerInterfaceList.clone();
         if jcall!(list).size() > 0 {
-            eventListenerInterface = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(0) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EventListenerInterface>>>>().expect("ClassCastException").clone()) };
+            eventListenerInterface = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(0) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EventListenerInterface>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
         }
         self.base.removeAllListeners();
         if !match (&eventListenerInterface, &crate::org::allbinary::logic::util::event::NullEventListener::NullEventListener_NULL_EVENT_LISTENER.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
@@ -80,8 +81,8 @@ impl GameNotificationEventHandler {
         if !self.enabled {
             return;
         }
-        let mut gameNotificationListenerInterface: Option<Rc<RefCell<dyn GameNotificationListenerInterface>>> = panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn GameNotificationListenerInterface");
-        jcall!(gameNotificationListenerInterface).onGameNotificationEvent((eventObject).clone() /* as GameNotificationEvent */);
+        let mut gameNotificationListenerInterface: Option<Rc<RefCell<dyn GameNotificationListenerInterface>>> = (|| -> Option<Rc<RefCell<dyn GameNotificationListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn GameNotificationListenerInterface") })();
+        jcall!(gameNotificationListenerInterface).onGameNotificationEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<GameNotificationEvent>() }, "ClassCastException: not a GameNotificationEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<GameNotificationEvent>) } }));
     }
 }
 impl std::ops::Deref for GameNotificationEventHandler {

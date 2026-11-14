@@ -44,6 +44,10 @@ pub struct LogUtil {
 thread_local! { pub static LogUtil_instance: Option<Rc<RefCell<LogUtil>>> = LogUtil::new(); }
 
 impl LogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogUtil>>> {
@@ -76,9 +80,9 @@ impl LogUtil {
     
 
     pub fn putF(&mut self, mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String) {
-        let mut className: String = jcall!(CommonStrings::getInstance()).EMPTY.clone();
+        let mut className: String = { let java_field = jcall!(CommonStrings::getInstance()).EMPTY.clone(); java_field }.clone();
         if true {
-            className = jcall!(StringMaker::new()).append(std::any::type_name_of_val(&anyType).to_string()).append(jcall!(CommonSeps::getInstance()).COLON.clone()).append(format!("{:x}", jcall!(TsUtil::getInstance()).hashCode(crate::java_into_object(anyType.clone())))).toString().clone();
+            className = { let java_value = (jcall!(StringMaker::new()).append(std::any::type_name_of_val(&anyType).to_string()).append({ let java_field = jcall!(CommonSeps::getInstance()).COLON.clone(); java_field }.clone()).append(format!("{:x}", jcall!(TsUtil::getInstance()).hashCode(crate::java_into_object(anyType.clone())))).toString().clone()).clone(); java_value };
         }
         let mut message: String = jcall!(self.logFormatUtil).getS(className.clone(), functionName.clone(), specialMessage.clone());
         print!("{}", self.LOG_SUCCESS.clone());
@@ -94,11 +98,11 @@ impl LogUtil {
     
 
     pub fn put(&mut self, mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {
-        let mut className: String = jcall!(CommonStrings::getInstance()).EMPTY.clone();
+        let mut className: String = { let java_field = jcall!(CommonStrings::getInstance()).EMPTY.clone(); java_field }.clone();
         if true {
             let mut hashCodeValue: i32 = jcall!(TsUtil::getInstance()).hashCode(crate::java_into_object(anyType.clone()));
             let mut hexString: String = format!("{:x}", hashCodeValue.clone());
-            className = jcall!(StringMaker::new()).append(std::any::type_name_of_val(&anyType).to_string()).append(jcall!(CommonSeps::getInstance()).COLON.clone()).append(hexString.clone()).toString().clone();
+            className = { let java_value = (jcall!(StringMaker::new()).append(std::any::type_name_of_val(&anyType).to_string()).append({ let java_field = jcall!(CommonSeps::getInstance()).COLON.clone(); java_field }.clone()).append(hexString.clone()).toString().clone()).clone(); java_value };
         }
         let mut message: String = jcall!(self.logFormatUtil).get(className.clone(), functionName.clone(), specialMessage.clone(), crate::java_into_object(exception.clone()));
         print!("{}", self.LOG_SUCCESS.clone());

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +33,10 @@ thread_local! { pub static GameKeyUtil_instance: Option<Rc<RefCell<GameKeyUtil>>
 
 impl GameKeyUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -45,7 +49,7 @@ impl GameKeyUtil {
     
 
     pub fn isDirectionKey(&mut self, mut key: i32) -> bool {
-        if key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() } || key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.clone() } || key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() } || key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() } {
+        if key == crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone) || key == crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.with(Clone::clone) || key == crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone) || key == crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone) {
             return true;
         } else {
             return false;

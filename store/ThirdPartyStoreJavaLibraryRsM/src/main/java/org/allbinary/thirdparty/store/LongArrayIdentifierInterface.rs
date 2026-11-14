@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait LongArrayIdentifierInterface {
+pub trait LongArrayIdentifierInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getLongArrayIdentifier(&mut self) -> Vec<i64>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

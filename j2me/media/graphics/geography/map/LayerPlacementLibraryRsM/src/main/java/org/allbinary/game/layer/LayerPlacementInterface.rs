@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::LayerPlacementType::LayerPlacementType;
 
 // Borrows the object of a Java reference
@@ -27,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait LayerPlacementInterface {
+pub trait LayerPlacementInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getWidth(&mut self) -> i32;
@@ -40,9 +41,7 @@ pub trait LayerPlacementInterface {
     
 
     // throws Exception
-    fn getInstance(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn getInstance(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>;
 }
 
 

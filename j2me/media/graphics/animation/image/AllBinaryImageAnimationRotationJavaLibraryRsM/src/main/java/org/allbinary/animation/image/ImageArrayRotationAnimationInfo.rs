@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::math::AngleInfo::AngleInfo;
 
 // Borrows the object of a Java reference
@@ -28,7 +28,7 @@ macro_rules! jcall {
 }
 
 pub struct ImageArrayRotationAnimationInfo {
-    pub imageArray: Vec<Option<Rc<RefCell<Image>>>>,
+    pub imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>,
     pub angleIncrement: i32,
     pub totalAngle: i32,
     pub dx: i32,
@@ -37,9 +37,13 @@ pub struct ImageArrayRotationAnimationInfo {
 
 
 impl ImageArrayRotationAnimationInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct(mut imageArray: Vec<Option<Rc<RefCell<Image>>>>, mut angleIncrement: i32, mut totalAngle: i32, mut dx: i32, mut dy: i32) -> Self {
+    pub fn new_struct(mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut angleIncrement: i32, mut totalAngle: i32, mut dx: i32, mut dy: i32) -> Self {
         let mut this = Self {
             imageArray: Vec::new(),
             angleIncrement: 0,
@@ -55,17 +59,17 @@ impl ImageArrayRotationAnimationInfo {
         this
     }
 
-    pub fn new(mut imageArray: Vec<Option<Rc<RefCell<Image>>>>, mut angleIncrement: i32, mut totalAngle: i32, mut dx: i32, mut dy: i32) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut angleIncrement: i32, mut totalAngle: i32, mut dx: i32, mut dy: i32) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(imageArray, angleIncrement, totalAngle, dx, dy))))
     }
     
 
-    pub fn setImageArray(&mut self, mut imageArray: Vec<Option<Rc<RefCell<Image>>>>) {
+    pub fn setImageArray(&mut self, mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>) {
         self.imageArray = imageArray.clone();
     }
     
 
-    pub fn getImageArray(&mut self) -> Vec<Option<Rc<RefCell<Image>>>> {
+    pub fn getImageArray(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> {
         return self.imageArray.clone();
     }
     

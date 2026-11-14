@@ -32,6 +32,10 @@ pub struct ImageUnifierCell {
 
 
 impl ImageUnifierCell {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut width: Option<i32>, mut height: Option<i32>) -> Self {

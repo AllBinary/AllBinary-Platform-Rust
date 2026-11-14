@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
@@ -34,6 +34,7 @@ use crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessor;
 use crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface;
 use crate::org::allbinary::graphics::font::UpdateMyFontProcessor::UpdateMyFontProcessor;
 use crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal;
+use crate::java::lang::Exception::*;
 use super::GeographicMapCellPosition::GeographicMapCellPosition;
 use super::BasicGeographicMap::BasicGeographicMap;
 
@@ -60,10 +61,14 @@ pub struct GeographicMapCellHistory {
 
 thread_local! { pub static GeographicMapCellHistory_NULL_GEOGRPAHIC_MAP_HISTORY_ARRAY: Vec<Option<Rc<RefCell<GeographicMapCellHistory>>>> = vec![None; (0) as usize]; }
 impl UpdateMyFontInterface for GeographicMapCellHistory {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 impl GeographicMapCellHistory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -83,11 +88,10 @@ impl GeographicMapCellHistory {
         this.logUtil = LogUtil::getInstance();
         this.booleanFactory = BooleanFactory::getInstance();
         this.MISSED_INFO = String::from("Missed");
-        this.animation = TextAnimation::new(this.MISSED_INFO.clone(), AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
-        this.myFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this.animation = TextAnimation::new(this.MISSED_INFO.clone(), AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
         this.halfWidth = 0;
         this.fontHeight = 0;
-        this.RED = jcall!(jcall!(BasicColorFactory::getInstance()).RED).intValue();
+        this.RED = jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }).intValue();
         this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.visitedList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.init();
@@ -95,14 +99,16 @@ impl GeographicMapCellHistory {
     }
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct())))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct())));
+        jcall!(this).myFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.fontHeight = jcall!(font).getHeight();
-        self.myFontProcessor = MyFontProcessor::getInstance();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.fontHeight = { let java_value = (jcall!(font).getHeight()).clone(); java_value };
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
@@ -127,7 +133,7 @@ impl GeographicMapCellHistory {
         jcall!(self.visitedList).ensureCapacity(size.clone());
         let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = None;
         for index in (0..size) {
-            geographicMapCellPosition = { let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) };
+            geographicMapCellPosition = { let java_value = ({ let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             self.track(geographicMapCellPosition.clone());
         }
     }
@@ -136,7 +142,7 @@ impl GeographicMapCellHistory {
     pub fn track(&mut self, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) {
         if !jcall!(self.list).contains(crate::java_into_object(geographicMapCellPosition.clone())) {
             jcall!(self.list).add(crate::java_into_object(geographicMapCellPosition.clone()));
-            jcall!(self.visitedList).add(crate::java_into_object(jcall!(self.booleanFactory).FALSE.clone()));
+            jcall!(self.visitedList).add(crate::java_into_object({ let java_field = jcall!(self.booleanFactory).FALSE.clone(); java_field }.clone()));
         }
     }
     
@@ -167,8 +173,8 @@ impl GeographicMapCellHistory {
         let mut size: i32 = jcall!(localVisitedList).size();
         let mut value: Option<bool> = None;
         for index in (0..size) {
-            value = { let java_object = jcall!(self.visitedList).get(index.clone()); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) };
-            if match (&value, &jcall!(self.booleanFactory).FALSE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            value = { let java_value = ({ let java_object = (jcall!(self.visitedList).get(index.clone())).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) }).clone(); java_value };
+            if value == { let java_field = jcall!(self.booleanFactory).FALSE.clone(); java_field } {
                 return { let java_object = (jcall!(localList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) };
             }
         }
@@ -181,8 +187,8 @@ impl GeographicMapCellHistory {
         let mut size: i32 = jcall!(localVisitedList).size();
         let mut value: Option<bool> = None;
         for index in (0..size) {
-            value = { let java_object = jcall!(self.visitedList).get(index.clone()); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) };
-            if match (&value, &jcall!(self.booleanFactory).FALSE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            value = { let java_value = ({ let java_object = (jcall!(self.visitedList).get(index.clone())).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) }).clone(); java_value };
+            if value == { let java_field = jcall!(self.booleanFactory).FALSE.clone(); java_field } {
                 return index.clone();
             }
         }
@@ -191,12 +197,12 @@ impl GeographicMapCellHistory {
     
 
     pub fn getInPathButNotTracked(&mut self, mut pathList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut inPathButNotTrackedList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut inPathButNotTrackedList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut localList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.list.clone();
         let mut size: i32 = jcall!(pathList).size();
         let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = None;
         for index in (0..size) {
-            geographicMapCellPosition = { let java_object = (jcall!(pathList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) };
+            geographicMapCellPosition = { let java_value = ({ let java_object = (jcall!(pathList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             if !jcall!(localList).contains(crate::java_into_object(geographicMapCellPosition.clone())) {
                 jcall!(inPathButNotTrackedList).add(crate::java_into_object(geographicMapCellPosition.clone()));
             }
@@ -208,8 +214,8 @@ impl GeographicMapCellHistory {
     pub fn isVisited(&mut self, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> bool {
         let mut index: i32 = jcall!(self.list).indexOf(crate::java_into_object(geographicMapCellPosition.clone()));
         if index != -1 {
-            let mut value: Option<bool> = { let java_object = jcall!(self.visitedList).get(index.clone()); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) };
-            if match (&value, &jcall!(self.booleanFactory).TRUE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            let mut value: Option<bool> = { let java_object = (jcall!(self.visitedList).get(index.clone())).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) };
+            if value == { let java_field = jcall!(self.booleanFactory).TRUE.clone(); java_field } {
                 return true;
             }
         } else {
@@ -222,9 +228,9 @@ impl GeographicMapCellHistory {
         let mut index: i32 = jcall!(self.list).indexOf(crate::java_into_object(geographicMapCellPosition.clone()));
         let mut value: Option<bool> = None;
         if index != -1 {
-            value = { let java_object = jcall!(self.visitedList).get(index.clone()); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) };
-            let mut TRUE: Option<bool> = jcall!(self.booleanFactory).TRUE.clone();
-            if !match (&value, &TRUE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            value = { let java_value = ({ let java_object = (jcall!(self.visitedList).get(index.clone())).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) }).clone(); java_value };
+            let mut TRUE: Option<bool> = { let java_field = jcall!(self.booleanFactory).TRUE.clone(); java_field }.clone();
+            if value != TRUE {
                 jcall!(self.visitedList).set(index.clone(), crate::java_into_object((TRUE.clone()).expect("NullPointerException")));
                 self.totalVisited += 1;
                 return true;
@@ -271,7 +277,7 @@ impl GeographicMapCellHistory {
     // throws Exception
     pub fn reset(&mut self) {
         let mut localVisitedList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.visitedList.clone();
-        let mut localFalseBoolean: Option<bool> = jcall!(self.booleanFactory).FALSE.clone();
+        let mut localFalseBoolean: Option<bool> = { let java_field = jcall!(self.booleanFactory).FALSE.clone(); java_field }.clone();
         let mut size: i32 = jcall!(localVisitedList).size();
         for index in (0..=size - 1).rev() {
             jcall!(localVisitedList).set(index.clone(), crate::java_into_object((localFalseBoolean.clone()).expect("NullPointerException")));
@@ -280,18 +286,18 @@ impl GeographicMapCellHistory {
     }
     
 
-    pub fn paintNotVisitedRelativeToPoint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>>, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) {
+    pub fn paintNotVisitedRelativeToPoint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>>, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) {
         let mut x: i32 = jcall!(point).getX() - jcall!(tiledLayer).getXP();
         let mut y: i32 = jcall!(point).getY() - jcall!(tiledLayer).getYP();
         if self.halfWidth == 0 {
-            self.halfWidth = (jcall!(jcall!(graphics).getFont()).stringWidth(self.MISSED_INFO.clone()) >> 1);
+            self.halfWidth = { let java_value = ((jcall!(jcall!(graphics).getFont()).stringWidth(self.MISSED_INFO.clone()) >> 1)).clone(); java_value };
         }
         let mut height: i32 = 2 * self.fontHeight;
         jcall!(self.animation).paintXY(graphics.clone(), x + self.halfWidth, y + (height));
     }
     
 
-    pub fn paintNotVisited(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>) {
+    pub fn paintNotVisited(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(self.myFontProcessor).process(graphics.clone());
             jcall!(graphics).setColor(self.RED.clone());
@@ -302,8 +308,8 @@ impl GeographicMapCellHistory {
             {
                 let mut index: i32 = size.clone();
                 while { index -= 1; index } >= 0 {
-                geographicMapCellPosition = { let java_object = (jcall!(self.list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) };
-                isCellVisitedBoolean = { let java_object = jcall!(localVisitedList).get(index.clone()); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) };
+                geographicMapCellPosition = { let java_value = ({ let java_object = (jcall!(self.list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+                isCellVisitedBoolean = { let java_value = ({ let java_object = (jcall!(localVisitedList).get(index.clone())).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) }).clone(); java_value };
                 if !isCellVisitedBoolean.unwrap() {
                     { let java_arguments = (graphics.clone(), jcall!(geographicMapInterface).getAllBinaryTiledLayer(), jcall!(geographicMapCellPosition).getPoint(),); self.paintNotVisitedRelativeToPoint(java_arguments.0, java_arguments.1, java_arguments.2) };
                 }
@@ -312,10 +318,10 @@ impl GeographicMapCellHistory {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("paintNotVisited"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("paintNotVisited"), crate::java_into_object(e.clone()));
             }
         }
     }

@@ -16,10 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,7 +34,7 @@ pub struct MediaData {
     pub extension: String,
 }
 
-pub static mut MediaData_hashMap: std::cell::LazyCell<Option<Rc<RefCell<HashMap>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashMap());
+pub static mut MediaData_hashMap: std::cell::LazyCell<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashMap());
 
 impl MediaData {
     
@@ -47,13 +47,13 @@ impl MediaData {
         };
         this.name = a_Name.clone();
         this.extension = format!("{}{}", String::from("."), this.name);
-        this.r#type = jcall!(MediaTypeData::MediaTypeData::getInstance()).NOT_RESIZABLE_MEDIA.clone();
+        this.r#type = { let java_value = ({ let java_field = jcall!(MediaTypeData::MediaTypeData::getInstance()).NOT_RESIZABLE_MEDIA.clone(); java_field }).clone(); java_value }.clone();
         this
     }
 
     pub fn new(mut a_Name: String) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(a_Name))));
-            jcall!(unsafe { MediaData_hashMap.clone() }).put(a_Name.clone(), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(a_Name.clone()))));
+            jcall!(unsafe { MediaData_hashMap.clone() }).put(crate::java_into_object(a_Name.clone()), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
         this
     }
     
@@ -74,7 +74,7 @@ impl MediaData {
     
 
     pub fn isConvertableTo(&mut self, mut mediaData: Option<Rc<RefCell<MediaData>>>) -> bool {
-        if match &(jcall!(MediaDataFactory::MediaDataFactory::getInstance()).GIF) { Some(reference) => std::ptr::addr_eq(&*self as *const Self, reference.as_ptr()), None => false } && match (&mediaData, &jcall!(MediaDataFactory::MediaDataFactory::getInstance()).JPG) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match &({ let java_field = jcall!(MediaDataFactory::MediaDataFactory::getInstance()).GIF.clone(); java_field }) { Some(reference) => std::ptr::addr_eq(&*self as *const Self, reference.as_ptr()), None => false } && match (&mediaData, &{ let java_field = jcall!(MediaDataFactory::MediaDataFactory::getInstance()).JPG.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }
         return false;
@@ -88,7 +88,7 @@ impl MediaData {
 
     // throws Exception
     pub fn get(mut a_Name: String) -> Option<Rc<RefCell<MediaData>>> {
-        let mut mediaData: Option<Rc<RefCell<MediaData>>> = (jcall!(unsafe { MediaData_hashMap.clone() }).get(a_Name.clone())).clone() /* as MediaData */;
+        let mut mediaData: Option<Rc<RefCell<MediaData>>> = { let java_object = (jcall!(unsafe { MediaData_hashMap.clone() }).get(crate::java_into_object(a_Name.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<MediaData>>>>().expect("ClassCastException").clone()) };
         if mediaData.is_some() {
             return mediaData.clone();
         } else {
@@ -98,11 +98,11 @@ impl MediaData {
     
 
     pub fn getDefault() -> Option<Rc<RefCell<MediaData>>> {
-        return jcall!(MediaDataFactory::MediaDataFactory::getInstance()).JPG.clone();
+        return { let java_field = jcall!(MediaDataFactory::MediaDataFactory::getInstance()).JPG.clone(); java_field }.clone();
     }
     
 
-    pub fn toHashMap() -> Option<Rc<RefCell<HashMap>>> {
+    pub fn toHashMap() -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return unsafe { MediaData_hashMap.clone() }.clone();
     }
 }

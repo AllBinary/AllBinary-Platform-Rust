@@ -26,6 +26,7 @@ use crate::org::allbinary::game::input::event::GameKeyEventFactory::GameKeyEvent
 use crate::org::allbinary::game::input::mapping::InputToGameKeyMapping::InputToGameKeyMapping;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -59,7 +60,7 @@ impl TouchButtonInput {
         };
         this.logUtil = LogUtil::getInstance();
         this.gameKeyEventFactory = GameKeyEventFactory::getInstance();
-        this.TOUCH_BUTTON_SOURCE_ID = jcall!(this.gameKeyEventFactory).TOUCH_BUTTON_SOURCE_ID.clone();
+        this.TOUCH_BUTTON_SOURCE_ID = { let java_field = jcall!(this.gameKeyEventFactory).TOUCH_BUTTON_SOURCE_ID.clone(); java_field }.clone();
         this.gameKeyEvent = crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent_NONE.with(Clone::clone).clone();
         // super(...) is in the struct literal above
         let mut inputFactory: Option<Rc<RefCell<InputFactory>>> = InputFactory::getInstance();
@@ -67,8 +68,9 @@ impl TouchButtonInput {
     }
 
     pub fn new(mut id: i32, mut name: String) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(id, name))));
-            jcall!(inputFactory).add(this.getId(), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(id.clone(), name.clone()))));
+            let mut inputFactory: Option<Rc<RefCell<InputFactory>>> = InputFactory::getInstance();
+            jcall!(inputFactory).add(jcall!(this).getId(), this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
         this
     }
     
@@ -76,14 +78,14 @@ impl TouchButtonInput {
     pub fn update(&mut self, mut inputToGameKeyMapping: Option<Rc<RefCell<InputToGameKeyMapping>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut gameKey: Option<Rc<RefCell<GameKey>>> = jcall!(inputToGameKeyMapping).getInstance(self.getId());
-            self.gameKeyEvent = jcall!(self.gameKeyEventFactory).getInstanceForInput(None /* Java this: a &mut self method has no Rc of itself */, gameKey.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
+            self.gameKeyEvent = { let java_value = (jcall!(self.gameKeyEventFactory).getInstanceForInput(None /* Java this: a &mut self method has no Rc of itself */, gameKey.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>))).clone(); java_value };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).UPDATE.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).UPDATE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

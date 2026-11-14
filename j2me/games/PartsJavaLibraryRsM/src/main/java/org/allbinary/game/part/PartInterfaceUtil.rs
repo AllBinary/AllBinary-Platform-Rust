@@ -33,6 +33,10 @@ thread_local! { pub static PartInterfaceUtil_SINGLETON: Vec<Option<Rc<RefCell<dy
 
 impl PartInterfaceUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };

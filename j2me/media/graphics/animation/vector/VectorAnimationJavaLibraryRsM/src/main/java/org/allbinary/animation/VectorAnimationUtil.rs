@@ -33,6 +33,10 @@ pub struct VectorAnimationUtil {
 thread_local! { pub static VectorAnimationUtil_instance: Option<Rc<RefCell<VectorAnimationUtil>>> = VectorAnimationUtil::new(); }
 
 impl VectorAnimationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<VectorAnimationUtil>>> {
@@ -57,11 +61,11 @@ impl VectorAnimationUtil {
         let mut nextBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
         let mut framePoints: Vec<Vec<i32>> = Vec::new();
         for index in (0..size) {
-            nextBasicArrayList = { let java_object = (jcall!(vector).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
+            nextBasicArrayList = { let java_value = ({ let java_object = (jcall!(vector).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             framePoints = self.toFrameArrayFromPointBasicArrayList(nextBasicArrayList.clone());
             for pointIndex in (0..(framePoints.len() as i32)) {
-                points[(index) as usize][(pointIndex) as usize][(0) as usize] = framePoints[(pointIndex) as usize][(0) as usize].clone();
-                points[(index) as usize][(pointIndex) as usize][(1) as usize] = framePoints[(pointIndex) as usize][(1) as usize].clone();
+                points[(index) as usize][(pointIndex) as usize][(0) as usize] = { let java_value = (framePoints[(pointIndex) as usize][(0) as usize]).clone(); java_value }.clone();
+                points[(index) as usize][(pointIndex) as usize][(1) as usize] = { let java_value = (framePoints[(pointIndex) as usize][(1) as usize]).clone(); java_value }.clone();
             }
         }
         return points.clone();
@@ -74,12 +78,12 @@ impl VectorAnimationUtil {
         let mut nextBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
         let mut framePoints: Vec<Vec<i32>> = Vec::new();
         for index in (0..size) {
-            nextBasicArrayList = { let java_object = (jcall!(vector).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
+            nextBasicArrayList = { let java_value = ({ let java_object = (jcall!(vector).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             framePoints = self.toFrameArrayFromPointBasicArrayList(nextBasicArrayList.clone());
             points[(index) as usize] = vec![vec![0; (2) as usize]; ((framePoints.len() as i32)) as usize];
             for pointIndex in (0..(framePoints.len() as i32)) {
-                points[(index) as usize][(pointIndex) as usize][(0) as usize] = framePoints[(pointIndex) as usize][(0) as usize].clone();
-                points[(index) as usize][(pointIndex) as usize][(1) as usize] = framePoints[(pointIndex) as usize][(1) as usize].clone();
+                points[(index) as usize][(pointIndex) as usize][(0) as usize] = { let java_value = (framePoints[(pointIndex) as usize][(0) as usize]).clone(); java_value }.clone();
+                points[(index) as usize][(pointIndex) as usize][(1) as usize] = { let java_value = (framePoints[(pointIndex) as usize][(1) as usize]).clone(); java_value }.clone();
             }
         }
         return points.clone();

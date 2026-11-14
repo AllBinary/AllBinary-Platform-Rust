@@ -31,6 +31,7 @@ use crate::org::allbinary::logic::io::file::FileUtil::FileUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -47,6 +48,10 @@ pub struct ZipFileUtil {
 thread_local! { pub static ZipFileUtil_instance: Option<Rc<RefCell<ZipFileUtil>>> = ZipFileUtil::new(); }
 
 impl ZipFileUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -92,15 +97,15 @@ impl ZipFileUtil {
                     jcall!(stringBuffer).append(jcall!(file).getPath());
                     { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("create()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                     match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                        fileInputStream = AbFileInputStream::new1(file.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStreamDyn>>);
+                        fileInputStream = AbFileInputStream::new(file.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStreamDyn>>);
                         jcall!(outputStream).putNextEntry(ZipEntry::new(jcall!(file).getPath()));
-                        jcall!(streamUtil).get(fileInputStream.clone(), outputStream.clone(), byteArray.clone());
+                        jcall!(streamUtil).get(fileInputStream.clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>), outputStream.clone(), byteArray.clone());
                         jcall!(outputStream).closeEntry();
-                        jcall!(streamUtil).close(fileInputStream.clone());
+                        jcall!(streamUtil).close(fileInputStream.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::java::io::Closeable::Closeable>> { panic!("ClassCastException: the Rust trait of AbFileInputStream does not have Closeable as a base trait") }));
                     })) {
                         Ok(_) => {}
                         Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                         { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Skipping File (Probably Local): "), jcall!(file).getPath()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("create()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                         }
@@ -112,9 +117,9 @@ impl ZipFileUtil {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("create"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("create"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -125,11 +130,11 @@ impl ZipFileUtil {
         let mut buffer: Vec<i8> = vec![0; (16384) as usize];
         let mut inputStream: Option<Rc<RefCell<ZipInputStream>>> = None;
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            inputStream = ZipInputStream::new(AbFileInputStream::new1(zipFile.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStreamDyn>>));
+            inputStream = ZipInputStream::new(AbFileInputStream::new(zipFile.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStreamDyn>>));
             let mut zipEntry: Option<Rc<RefCell<ZipEntry>>> = None;
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             let mut fileUtil: Option<Rc<RefCell<FileUtil>>> = FileUtil::getInstance();
-            while ({ zipEntry = jcall!(inputStream).getNextEntry(); zipEntry.clone() }).is_some() {
+            while ({ zipEntry = { let java_value = (jcall!(inputStream).getNextEntry()).clone(); java_value }; zipEntry.clone() }).is_some() {
                 let mut entryName: String = jcall!(zipEntry).getName();
                 if jcall!(zipEntry).isDirectory() {
                 } else {

@@ -18,23 +18,15 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::thread::ARunnable::ARunnable;
-// use crate::java::io::File::File;
+use crate::java::io::File::File;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use super::JDialog::JDialog;
-use super::swing::swing;
-use super::javax::javax;
 use super::FileJDialogListenerInterface::FileJDialogListenerInterface;
 use super::Frame::Frame;
-use super::awt::awt;
-use super::java::java;
 use super::JFileChooser::JFileChooser;
 use super::ActionListener::ActionListener;
-use super::event::event;
 use super::ActionEvent::ActionEvent;
 use super::GroupLayout::GroupLayout;
-use super::layout::layout;
-use super::jdesktop::jdesktop;
-use super::org::org;
 use super::JFrame::JFrame;
 
 // Borrows the object of a Java reference
@@ -100,7 +92,7 @@ impl FileJDialog {
 
     pub fn initComponents(&mut self) {
         self.jFileChooser1 = JFileChooser::new();
-        self.setDefaultCloseOperation(jcall!(jcall!(unsafe { javax_swing.clone() }).WindowConstants).DISPOSE_ON_CLOSE.clone());
+        { let java_arguments = ({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).WindowConstants.clone(); java_field }).DISPOSE_ON_CLOSE.clone(); java_field }.clone(),); self.setDefaultCloseOperation(java_arguments.0) };
         { let java_receiver = self.jFileChooser1.clone(); let java_arguments = (ActionListener::new() /* Java anonymous class body: implement it as a named type
             
 
@@ -110,8 +102,8 @@ impl FileJDialog {
 */,); jcall!(java_receiver).addActionListener(java_arguments.0); };
         let mut layout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(self.getContentPane());
         jcall!(self.getContentPane()).setLayout(layout.clone());
-        jcall!(layout).setHorizontalGroup(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).TRAILING.clone(), jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addContainerGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), i16::MAX.clone())).add(self.jFileChooser1.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone())).addContainerGap()));
-        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).LEADING.clone())).add(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addContainerGap()).add(self.jFileChooser1.clone(), jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone(), 357, jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).PREFERRED_SIZE.clone())).addContainerGap(jcall!(jcall!(jcall!(unsafe { org_jdesktop.clone() }).layout).GroupLayout).DEFAULT_SIZE.clone(), i16::MAX.clone())));
+        jcall!(layout).setHorizontalGroup(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).TRAILING.clone(); java_field }.clone(), jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addContainerGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), i16::MAX.clone())).add(self.jFileChooser1.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).addContainerGap()));
+        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).LEADING.clone(); java_field }.clone())).add(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addContainerGap()).add(self.jFileChooser1.clone(), { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), 357, { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).addContainerGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_jdesktop.clone() }).layout.clone(); java_field }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), i16::MAX.clone())));
         self.pack();
     }
     
@@ -119,11 +111,11 @@ impl FileJDialog {
     pub fn jFileChooser1ActionPerformed(&mut self, mut evt: Option<Rc<RefCell<ActionEvent>>>) {
         { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Starting Action Command: "), jcall!(evt).getActionCommand()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("ActionPerformed"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut files: Vec<Option<Rc<RefCell<File>>>> = jcall!(self.getJFileChooser1()).getSelectedFiles();
-        if match (&jcall!(evt).getActionCommand(), &jcall!(self.getJFileChooser1()).CANCEL_SELECTION) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&{ let java_value = jcall!(evt).getActionCommand(); java_value }, &{ let java_field = jcall!(self.getJFileChooser1()).CANCEL_SELECTION.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             self.setVisible(false);
         }
-        if match (&jcall!(evt).getActionCommand(), &jcall!(self.getJFileChooser1()).APPROVE_SELECTION) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            if files.is_some() && (files.len() as i32) > 0 {
+        if match (&{ let java_value = jcall!(evt).getActionCommand(); java_value }, &{ let java_field = jcall!(self.getJFileChooser1()).APPROVE_SELECTION.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if !files.is_empty() && (files.len() as i32) > 0 {
                 jcall!(self.finishedListenerInterface).onFiles(files.clone());
             }
         }
@@ -131,7 +123,7 @@ impl FileJDialog {
     
 
     pub fn main(mut args: Vec<String>) {
-        jcall!(jcall!(unsafe { java_awt.clone() }).EventQueue).invokeLater(ARunnable::new() /* Java anonymous class body: implement it as a named type
+        jcall!({ let java_field = jcall!(unsafe { java_awt.clone() }).EventQueue.clone(); java_field }).invokeLater(ARunnable::new() /* Java anonymous class body: implement it as a named type
             
 
             pub fn run(&mut self) {

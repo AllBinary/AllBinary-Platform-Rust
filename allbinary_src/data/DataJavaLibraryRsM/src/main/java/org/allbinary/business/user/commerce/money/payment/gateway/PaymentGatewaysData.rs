@@ -31,6 +31,10 @@ pub struct PaymentGatewaysData {
 pub static mut PaymentGatewaysData_NAME: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("PAYMENTGATEWAYS_NAME"));
 
 impl PaymentGatewaysData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

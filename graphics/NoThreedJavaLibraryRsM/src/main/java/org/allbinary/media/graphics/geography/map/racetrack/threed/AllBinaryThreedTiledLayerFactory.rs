@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayer;
 use crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackData::RaceTrackData;
 use crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackInfo::RaceTrackInfo;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,6 +35,10 @@ pub struct AllBinaryThreedTiledLayerFactory {
 thread_local! { pub static AllBinaryThreedTiledLayerFactory_instance: Option<Rc<RefCell<AllBinaryThreedTiledLayerFactory>>> = AllBinaryThreedTiledLayerFactory::new(); }
 
 impl AllBinaryThreedTiledLayerFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

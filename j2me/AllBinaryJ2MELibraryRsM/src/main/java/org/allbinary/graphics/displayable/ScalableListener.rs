@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait ScalableListener {
+pub trait ScalableListener: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getRatio(&mut self, ratio: f32) -> f32;
@@ -38,8 +38,6 @@ pub trait ScalableListener {
     
 
     fn scale(&mut self, ratio: f32);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

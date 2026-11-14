@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::graphics::CustomGPoint::CustomGPoint;
 use crate::org::allbinary::graphics::GPointCircularPool::GPointCircularPool;
 use crate::org::allbinary::input::motion::gesture::MotionGestureRecognizer::MotionGestureRecognizer;
+use crate::java::lang::Exception::*;
 use super::MotionRecognizer::MotionRecognizer;
 
 // Borrows the object of a Java reference
@@ -47,7 +48,7 @@ impl GestureOnlyMotionRecognizer {
             motionGestureRecognizer: None,
             id: 0,
         };
-        this.id = unsafe { let value = GestureOnlyMotionRecognizer_index.clone(); *GestureOnlyMotionRecognizer_index += 1; value };
+        this.id = { let java_value = (unsafe { let value = GestureOnlyMotionRecognizer_index.clone(); *GestureOnlyMotionRecognizer_index += 1; value }).clone(); java_value };
         this.motionGestureRecognizer = MotionGestureRecognizer::new(this.id.clone());
         this
     }

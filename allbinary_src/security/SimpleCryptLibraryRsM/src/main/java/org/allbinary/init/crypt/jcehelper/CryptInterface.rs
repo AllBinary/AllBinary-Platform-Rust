@@ -25,15 +25,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait CryptInterface {
+pub trait CryptInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn encrypt(&mut self, array: Vec<i8>) -> Vec<i8>;
     
 
     fn decrypt(&mut self, array: Vec<i8>) -> Vec<i8>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

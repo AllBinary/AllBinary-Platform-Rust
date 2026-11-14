@@ -19,6 +19,10 @@ pub struct CustomDisplayable {
 
 impl CustomDisplayable {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -33,7 +37,7 @@ impl CustomDisplayable {
     pub fn setTitle(&mut self, mut title: String) {
     }
 }
-pub trait CustomDisplayableDyn {
+pub trait CustomDisplayableDyn: std::any::Any {
     fn as_CustomDisplayable(&self) -> &CustomDisplayable;
     fn as_CustomDisplayable_mut(&mut self) -> &mut CustomDisplayable;
     fn setTitle(&mut self, mut title: String) { CustomDisplayable::setTitle(self.as_CustomDisplayable_mut(), title) }

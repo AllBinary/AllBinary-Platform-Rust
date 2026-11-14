@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::io::ByteArrayOutputStream::ByteArrayOutputStream;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -35,6 +36,10 @@ pub struct ExceptionUtil {
 thread_local! { pub static ExceptionUtil_instance: Option<Rc<RefCell<ExceptionUtil>>> = ExceptionUtil::new(); }
 
 impl ExceptionUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ExceptionUtil>>> {
@@ -58,13 +63,10 @@ impl ExceptionUtil {
     
 
     pub fn getStackTrace(&mut self, mut e: String) -> String {
-        let mut bs: Vec<u8> = Vec::new();
+        let mut bs: Option<Rc<RefCell<crate::java::io::OutputStream::OutputStream>>> = crate::java::io::OutputStream::OutputStream::new();
         eprintln!("{:?}", e);
-        let mut output: String = String::from_utf8_lossy(&bs).into_owned();
-        if true {
-            return output.clone().clone();
-        }
-        return self.NONE.clone();
+        let mut output: String = jcall!(bs).toString();
+        return output.clone().clone();
     }
 }
 

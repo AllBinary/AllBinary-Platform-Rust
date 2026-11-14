@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::game::ai::BasicAI::BasicAI;
 use crate::org::allbinary::game::ag::ai::InputProbability::InputProbability;
 use crate::org::allbinary::game::input::GameInput::GameInput;
@@ -26,6 +26,7 @@ use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::logic::util::visitor::Visitor::Visitor;
 use crate::org::allbinary::time::GameTickTimeDelayHelperFactory::GameTickTimeDelayHelperFactory;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -47,7 +48,7 @@ impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntel
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for BasicRandomAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl BasicRandomAI {
@@ -63,7 +64,7 @@ impl BasicRandomAI {
             myRandomFactory: None,
         };
         this.i_random = 0;
-        this.keyArray = vec![unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() }.clone(), unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.clone() }.clone(), unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone(), unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone(), unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }.clone(), unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM7.clone() }.clone(), unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM9.clone() }.clone()];
+        this.keyArray = vec![crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone).clone(), crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.with(Clone::clone).clone(), crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone).clone(), crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone).clone(), crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone).clone(), crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM7.with(Clone::clone).clone(), crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM9.with(Clone::clone).clone()];
         this.myRandomFactory = MyRandomFactory::getInstance();
         // super(...) is in the struct literal above
         this.inputProbability = inputProbability.clone();
@@ -78,21 +79,21 @@ impl BasicRandomAI {
 
     // throws Exception
     pub fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) {
-        if jcall!(jcall!(self.inputProbability).getTimeDelayHelper()).isTime(jcall!(GameTickTimeDelayHelperFactory::getInstance()).startTime.clone()) {
-            self.i_random = { let java_receiver = self.myRandomFactory.clone(); let java_arguments = (jcall!(self.inputProbability).getMax(),); let java_result = jcall!(java_receiver).getAbsoluteNextInt(java_arguments.0); java_result };
+        if jcall!(jcall!(self.inputProbability).getTimeDelayHelper()).isTime({ let java_field = jcall!(GameTickTimeDelayHelperFactory::getInstance()).startTime.clone(); java_field }.clone()) {
+            self.i_random = { let java_value = ({ let java_receiver = self.myRandomFactory.clone(); let java_arguments = (jcall!(self.inputProbability).getMax(),); let java_result = jcall!(java_receiver).getAbsoluteNextInt(java_arguments.0); java_result }).clone(); java_value };
             let mut repeat: bool = false;
             let mut repeatLikelyhoodIntegerArray: Vec<Option<i32>> = jcall!(self.inputProbability).getRepeatLikelyhoodIntegerArray();
-            if self.getLastKey() != -1 && ((repeatLikelyhoodIntegerArray[(self.getLastKey()) as usize]).unwrap() as i32) >= self.i_random {
+            if self.getLastKey() != -1 && { let java_value = (({ let java_index = self.getLastKey(); repeatLikelyhoodIntegerArray[(java_index) as usize].clone() }).unwrap() as i32); java_value } >= self.i_random {
                 repeat = true;
             }
             if !repeat {
                 let mut likelyhoodIntegerArray: Vec<Vec<Option<i32>>> = jcall!(self.inputProbability).getLikelyhoodIntegerArray();
-                self.i_random = { let java_receiver = self.myRandomFactory.clone(); let java_arguments = (jcall!(self.inputProbability).getMax(),); let java_result = jcall!(java_receiver).getAbsoluteNextInt(java_arguments.0); java_result };
+                self.i_random = { let java_value = ({ let java_receiver = self.myRandomFactory.clone(); let java_arguments = (jcall!(self.inputProbability).getMax(),); let java_result = jcall!(java_receiver).getAbsoluteNextInt(java_arguments.0); java_result }).clone(); java_value };
                 let mut size: i32 = (self.keyArray.len() as i32).clone();
                 let mut likelyhoodIntegerKeyArray: Vec<Option<i32>> = Vec::new();
                 for index in (0..size) {
                     let mut key: i32 = self.keyArray[(index) as usize].clone();
-                    likelyhoodIntegerKeyArray = likelyhoodIntegerArray[(key) as usize].clone();
+                    likelyhoodIntegerKeyArray = { let java_value = (likelyhoodIntegerArray[(key) as usize]).clone(); java_value }.clone();
                     if (likelyhoodIntegerArray.len() as i32) >= key && likelyhoodIntegerKeyArray[(0) as usize].is_some() {
                         if self.i_random >= ((likelyhoodIntegerKeyArray[(0) as usize]).unwrap() as i32) && self.i_random < ((likelyhoodIntegerKeyArray[(1) as usize]).unwrap() as i32) {
                             self.setLastKey(key.clone());
@@ -101,7 +102,7 @@ impl BasicRandomAI {
                     }
                 }
             }
-            jcall!(self.visitor).visit(None /* Java this: a &mut self method has no Rc of itself */);
+            jcall!(self.visitor).as_Visitor_mut().visit(None /* Java this: a &mut self method has no Rc of itself */);
         }
     }
 }

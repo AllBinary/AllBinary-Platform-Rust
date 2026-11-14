@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::java::bool::BooleanUtil::BooleanUtil;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::LogConfigData::LogConfigData;
 
 // Borrows the object of a Java reference
@@ -43,6 +44,10 @@ pub struct LogConfig {
 
 
 impl LogConfig {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct4(mut aName: String, mut aDescription: String, mut aPath: String, mut aFileName: String) -> Self {
@@ -74,16 +79,16 @@ impl LogConfig {
             path: String::new(),
             fileName: String::new(),
         };
-        let mut enabledValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(EntryData::getInstance()).ENABLE.clone(), jcall!(node).getChildNodes());
+        let mut enabledValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(EntryData::getInstance()).ENABLE.clone(); java_field }.clone(), jcall!(node).getChildNodes());
         let mut isEnabledString: String = DomNodeHelper::getTextNodeValue(enabledValueNode.clone());
-        this.isEnabled = jcall!(BooleanUtil::getInstance()).getFromString(isEnabledString.clone());
+        this.isEnabled = { let java_value = (jcall!(BooleanUtil::getInstance()).getFromString(isEnabledString.clone())).clone(); java_value };
         let mut logConfigData: Option<Rc<RefCell<LogConfigData>>> = LogConfigData::getInstance();
-        let mut nameValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(logConfigData).NAME.clone(), jcall!(node).getChildNodes());
-        this.name = DomNodeHelper::getTextNodeValue(nameValueNode.clone());
-        let mut descriptionValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(logConfigData).DESCRIPTION.clone(), jcall!(node).getChildNodes());
-        this.description = DomNodeHelper::getTextNodeValue(descriptionValueNode.clone());
-        let mut fileValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(logConfigData).FILE.clone(), jcall!(node).getChildNodes());
-        this.fileName = DomNodeHelper::getTextNodeValue(fileValueNode.clone());
+        let mut nameValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(logConfigData).NAME.clone(); java_field }.clone(), jcall!(node).getChildNodes());
+        this.name = { let java_value = (DomNodeHelper::getTextNodeValue(nameValueNode.clone())).clone(); java_value };
+        let mut descriptionValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(logConfigData).DESCRIPTION.clone(); java_field }.clone(), jcall!(node).getChildNodes());
+        this.description = { let java_value = (DomNodeHelper::getTextNodeValue(descriptionValueNode.clone())).clone(); java_value };
+        let mut fileValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(logConfigData).FILE.clone(); java_field }.clone(), jcall!(node).getChildNodes());
+        this.fileName = { let java_value = (DomNodeHelper::getTextNodeValue(fileValueNode.clone())).clone(); java_value };
         this
     }
 
@@ -144,7 +149,7 @@ impl LogConfig {
 
     // throws Exception
     pub fn getTypeVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut logKeyVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut logKeyVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         return logKeyVector.clone();
     }
 }

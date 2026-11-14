@@ -25,9 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait HardwareFactoryInterface {
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+pub trait HardwareFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
 }
 
 

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::game::ai::BasicAI::BasicAI;
 use crate::org::allbinary::game::identification::BasicGroupFactory::BasicGroupFactory;
 use crate::org::allbinary::game::input::GameInput::GameInput;
@@ -28,6 +28,7 @@ use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::logic::math::MathUtil::MathUtil;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -45,24 +46,24 @@ impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntel
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for FlockingAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl FlockingAI {
     
 
-    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
+    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
         let mut this = Self {
             base: BasicAI::new_struct(ownerLayerInterface.clone(), gameInput.clone()),
             allowedDistance: 0,
         };
         // super(...) is in the struct literal above
-        let mut allowedDistance: Option<i32> = { let java_object = jcall!(hashtable).get(crate::java_into_object(BasePatrolAI_MAX_DISTANCE.with(Clone::clone).clone())); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
-        this.allowedDistance = ((allowedDistance).unwrap() as i32);
+        let mut allowedDistance: Option<i32> = { let java_object = (jcall!(hashtable).get(crate::java_into_object(BasePatrolAI_MAX_DISTANCE.with(Clone::clone).clone()))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
+        this.allowedDistance = { let java_value = (((allowedDistance).unwrap() as i32)).clone(); java_value };
         this
     }
 
-    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(hashtable, ownerLayerInterface, gameInput))))
     }
     
@@ -72,12 +73,12 @@ impl FlockingAI {
         let mut maxDistance: i32 = 0;
         let mut farAllbinaryLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone).clone();
         let mut groupLayerManagerListener: Option<Rc<RefCell<GroupLayerManagerListener>>> = GroupLayerManagerListener::getInstance();
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(groupLayerManagerListener).getList(jcall!(BasicGroupFactory::getInstance()).ENEMY.clone());
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(groupLayerManagerListener).getList({ let java_field = jcall!(BasicGroupFactory::getInstance()).ENEMY.clone(); java_field }.clone());
         let mut size: i32 = jcall!(list).size();
         let mut allBinaryLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = None;
         let mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = None;
         for index in (0..size) {
-            allBinaryLayer = { let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>>().expect("ClassCastException").clone()) };
+            allBinaryLayer = { let java_value = ({ let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             if jcall!(allBinaryLayer).getType() != WeaponLayer::getStaticType() {
                 let mut distance: i32 = self.getXYDistance(allBinaryLayer.clone());
                 if distance > maxDistance {
@@ -93,13 +94,13 @@ impl FlockingAI {
             if !match (&farAllbinaryLayer, &crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 ownerLayerInterface = self.getOwnerLayerInterface();
                 if jcall!(farAllbinaryLayer).getXP() < jcall!(ownerLayerInterface).getXP() {
-                    self.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone());
+                    { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone).clone(),); self.processKeyAI(java_arguments.0) };
                 } else if jcall!(farAllbinaryLayer).getXP() > jcall!(ownerLayerInterface).getXP() {
-                    self.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone());
+                    { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone).clone(),); self.processKeyAI(java_arguments.0) };
                 } else if jcall!(farAllbinaryLayer).getYP() > jcall!(ownerLayerInterface).getYP() {
-                    self.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() }.clone());
+                    { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone).clone(),); self.processKeyAI(java_arguments.0) };
                 } else if jcall!(farAllbinaryLayer).getYP() < jcall!(ownerLayerInterface).getYP() {
-                    self.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.clone() }.clone());
+                    { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.with(Clone::clone).clone(),); self.processKeyAI(java_arguments.0) };
                 }
             }
         }

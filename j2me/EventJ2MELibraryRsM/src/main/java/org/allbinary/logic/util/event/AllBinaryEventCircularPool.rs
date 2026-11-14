@@ -41,7 +41,7 @@ impl AllBinaryEventCircularPool {
             base: BaseCircularPool::new_struct(),
         };
         this.OBJECT_ARRAY = vec![None; (max) as usize];
-        this.circularIndexUtil = CircularIndexUtil::createInstance(max.clone());
+        this.circularIndexUtil = { let java_value = (CircularIndexUtil::createInstance(max.clone())).clone(); java_value };
         this
     }
 
@@ -54,7 +54,7 @@ impl AllBinaryEventCircularPool {
         jcall!(self.circularIndexUtil).setIndex(0);
         let mut size: i32 = jcall!(self.circularIndexUtil).getSize();
         for index in (0..size) {
-            self.OBJECT_ARRAY[(index) as usize] = crate::java_into_object(jcall!(allBinaryEventObjectFactoryInterface).getInstance());
+            { let java_index = (index) as usize; self.OBJECT_ARRAY[java_index] = crate::java_into_object(jcall!(allBinaryEventObjectFactoryInterface).getInstance()); };
         }
     }
 }

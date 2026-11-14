@@ -41,7 +41,7 @@ impl Input {
             id: 0,
             name: String::new(),
         };
-        this.name = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.name = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.setId(id.clone());
         this.setName(name.clone());
         this
@@ -81,7 +81,7 @@ impl Input {
         return jcall!(stringBuffer).toString();
     }
 }
-pub trait InputDyn {
+pub trait InputDyn: std::any::Any {
     fn as_Input(&self) -> &Input;
     fn as_Input_mut(&mut self) -> &mut Input;
     fn getId(&mut self) -> i32 { Input::getId(self.as_Input_mut()) }

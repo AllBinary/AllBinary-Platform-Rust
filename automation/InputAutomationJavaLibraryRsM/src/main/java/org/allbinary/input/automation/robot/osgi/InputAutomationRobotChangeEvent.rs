@@ -32,6 +32,10 @@ pub struct InputAutomationRobotChangeEvent {
 
 
 impl InputAutomationRobotChangeEvent {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut inputAutomationRobotInterfaceWrapper: Option<Rc<RefCell<InputAutomationRobotInterfaceWrapper>>>) -> Self {

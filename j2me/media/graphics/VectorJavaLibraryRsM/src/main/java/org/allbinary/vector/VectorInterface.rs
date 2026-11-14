@@ -25,15 +25,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait VectorInterface {
+pub trait VectorInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getPoints(&mut self, frame: i32) -> Vec<Vec<i32>>;
     
 
     fn setPoints(&mut self, currentPoints: Vec<Vec<Vec<i32>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

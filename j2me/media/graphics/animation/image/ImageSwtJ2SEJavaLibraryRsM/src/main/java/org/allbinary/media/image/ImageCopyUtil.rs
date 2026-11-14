@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::game::configuration::feature::GameFeatureFactory::GameFeatureFactory;
 use crate::org::allbinary::graphics::displayable::DisplayInfoSingleton::DisplayInfoSingleton;
@@ -35,10 +35,7 @@ use crate::org::microemu::device::swt::PostLoadSwtImmutableImageProcessor::PostL
 use crate::org::microemu::device::swt::PostLoadSwtMutableImageProcessor::PostLoadSwtMutableImageProcessor;
 use crate::org::microemu::device::swt::SwtImmutableImage::SwtImmutableImage;
 use crate::org::microemu::device::swt::SwtMutableImage::SwtMutableImage;
-use super::graphics::graphics;
-use super::swt::swt;
-use super::eclipse::eclipse;
-use super::org::org;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -64,6 +61,10 @@ pub struct ImageCopyUtil {
 thread_local! { pub static ImageCopyUtil_instance: Option<Rc<RefCell<ImageCopyUtil>>> = ImageCopyUtil::new(); }
 
 impl ImageCopyUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ImageCopyUtil>>> {
@@ -105,10 +106,10 @@ impl ImageCopyUtil {
     
 
     // throws Exception
-    pub fn createImageForRotation(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>) -> Option<Rc<RefCell<Image>>> {
-        if jcall!(self.features).isFeature(jcall!(self.openGLFeatureFactory).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            let mut image: Option<Rc<RefCell<Image>>> = originalImage.clone();
-            image = jcall!(self.openGLUtil).addImage(image.clone());
+    pub fn createImageForRotation(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        if jcall!(self.features).isFeature({ let java_field = jcall!(self.openGLFeatureFactory).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = originalImage.clone();
+            image = { let java_value = (jcall!(self.openGLUtil).addImage(image.clone())).clone(); java_value };
             return image.clone();
         } else {
             return self.createImage(originalImage.clone());
@@ -117,168 +118,168 @@ impl ImageCopyUtil {
     
 
     // throws Exception
-    pub fn createImage(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>) -> Option<Rc<RefCell<Image>>> {
-        if !jcall!(self.features).isFeature(jcall!(self.gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone()) {
-            jcall!(self.logUtil).putF(self.NO_COPY.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone());
+    pub fn createImage(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        if !jcall!(self.features).isFeature({ let java_field = jcall!(self.gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone(); java_field }.clone()) {
+            jcall!(self.logUtil).putF(self.NO_COPY.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
             return originalImage.clone();
         }
-        let mut originalImage2: Option<Rc<RefCell<Image>>> = originalImage.clone();
-        if jcall!(self.features).isFeature(jcall!(self.openGLFeatureFactory).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        let mut originalImage2: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = originalImage.clone();
+        if jcall!(self.features).isFeature({ let java_field = jcall!(self.openGLFeatureFactory).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             if jcall!(originalImage).getType() >= crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImage_TYPE.with(Clone::clone) {
-                let mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> = ((originalImage).clone() /* as OpenGLESImage */);
-                originalImage2 = jcall!(jcall!(openGLESImage).as_OpenGLESImage_mut().openGLBitmap).getImage();
+                let mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> { panic!("ClassCastException: a Rust dyn Image cannot be cast to OpenGLESImage") })());
+                originalImage2 = { let java_value = (jcall!({ let java_field = jcall!(openGLESImage).as_OpenGLESImage_mut().openGLBitmap.clone(); java_field }).getImage()).clone(); java_value };
             }
         }
-        let mut image: Option<Rc<RefCell<Image>>> = None;
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = None;
         if jcall!(originalImage2).isMutable() {
-            let mut originalMutableImage: Option<Rc<RefCell<SwtMutableImage>>> = (originalImage2).clone() /* as SwtMutableImage */;
-            image = SwtMutableImage::new(SwtDeviceComponent::createImage(jcall!(jcall!(originalMutableImage).image).getImageData()));
+            let mut originalMutableImage: Option<Rc<RefCell<SwtMutableImage>>> = (originalImage2).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<SwtMutableImage>() }, "ClassCastException: not a SwtMutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<SwtMutableImage>) } });
+            image = { let java_value = (SwtMutableImage::new1(SwtDeviceComponent::createImage(jcall!({ let java_field = jcall!(originalMutableImage).image.clone(); java_field }).as_Image_mut().getImageData())).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>)).clone(); java_value };
         } else {
-            let mut originalImmutableImage: Option<Rc<RefCell<SwtImmutableImage>>> = (originalImage2).clone() /* as SwtImmutableImage */;
-            image = SwtMutableImage::new(SwtDeviceComponent::createImage(jcall!(jcall!(originalImmutableImage).image).getImageData()));
+            let mut originalImmutableImage: Option<Rc<RefCell<SwtImmutableImage>>> = (originalImage2).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<SwtImmutableImage>() }, "ClassCastException: not a SwtImmutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<SwtImmutableImage>) } });
+            image = { let java_value = (SwtMutableImage::new1(SwtDeviceComponent::createImage(jcall!({ let java_field = jcall!(originalImmutableImage).image.clone(); java_field }).as_Image_mut().getImageData())).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>)).clone(); java_value };
         }
-        image = jcall!(self.openGLUtil).addImage(image.clone());
+        image = { let java_value = (jcall!(self.openGLUtil).addImage(image.clone())).clone(); java_value };
         return image.clone();
     }
     
 
     // throws Exception
-    pub fn createImageWH(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut width: i32, mut height: i32, mut mutable: bool) -> Option<Rc<RefCell<Image>>> {
-        let mut originalImage2: Option<Rc<RefCell<Image>>> = originalImage.clone();
-        if !jcall!(self.features).isFeature(jcall!(self.gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone()) {
-            jcall!(self.logUtil).putF(self.NO_COPY.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone());
+    pub fn createImageWH(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut width: i32, mut height: i32, mut mutable: bool) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut originalImage2: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = originalImage.clone();
+        if !jcall!(self.features).isFeature({ let java_field = jcall!(self.gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone(); java_field }.clone()) {
+            jcall!(self.logUtil).putF(self.NO_COPY.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
             return originalImage.clone();
         }
-        if jcall!(self.features).isFeature(jcall!(self.openGLFeatureFactory).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        if jcall!(self.features).isFeature({ let java_field = jcall!(self.openGLFeatureFactory).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             if jcall!(self.openGLESImageExclusionUtil).isCustomScaling(originalImage.clone()) {
                 return self.createImage2(originalImage.clone(), width.clone(), height.clone(), mutable.clone());
             }
             if jcall!(originalImage).getType() >= crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImage_TYPE.with(Clone::clone) {
-                let mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> = ((originalImage).clone() /* as OpenGLESImage */);
-                originalImage2 = jcall!(jcall!(openGLESImage).as_OpenGLESImage_mut().openGLBitmap).getImage();
+                let mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> { panic!("ClassCastException: a Rust dyn Image cannot be cast to OpenGLESImage") })());
+                originalImage2 = { let java_value = (jcall!({ let java_field = jcall!(openGLESImage).as_OpenGLESImage_mut().openGLBitmap.clone(); java_field }).getImage()).clone(); java_value };
             }
         }
-        let mut image: Option<Rc<RefCell<Image>>> = None;
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = None;
         if jcall!(originalImage2).isMutable() && mutable {
-            let mut originalMutableImage: Option<Rc<RefCell<SwtMutableImage>>> = (originalImage2).clone() /* as SwtMutableImage */;
+            let mut originalMutableImage: Option<Rc<RefCell<SwtMutableImage>>> = (originalImage2).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<SwtMutableImage>() }, "ClassCastException: not a SwtMutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<SwtMutableImage>) } });
             if jcall!(originalMutableImage).getImage().is_some() {
-                let mut imageData2: Option<Rc<RefCell<ImageData>>> = jcall!(jcall!(originalMutableImage).image).getImageData();
+                let mut imageData2: Option<Rc<RefCell<ImageData>>> = jcall!({ let java_field = jcall!(originalMutableImage).image.clone(); java_field }).as_Image_mut().getImageData();
                 let mut imageData: Option<Rc<RefCell<ImageData>>> = jcall!(imageData2).scaledTo(width.clone(), height.clone());
-                image = SwtMutableImage::new(SwtDeviceComponent::createImage(imageData.clone()));
+                image = { let java_value = (SwtMutableImage::new1(SwtDeviceComponent::createImage_ImageData(imageData.clone())).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>)).clone(); java_value };
             } else {
-                image = SwtMutableImage::new(jcall!(originalMutableImage).getName(), PostLoadSwtMutableImageProcessor::new(originalMutableImage.clone()));
+                image = { let java_value = (SwtMutableImage::new2(jcall!(originalMutableImage).getName(), PostLoadSwtMutableImageProcessor::new(originalMutableImage.clone())).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>)).clone(); java_value };
             }
         } else {
-            let mut originalImmutableImage: Option<Rc<RefCell<SwtImmutableImage>>> = (originalImage2).clone() /* as SwtImmutableImage */;
+            let mut originalImmutableImage: Option<Rc<RefCell<SwtImmutableImage>>> = (originalImage2).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<SwtImmutableImage>() }, "ClassCastException: not a SwtImmutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<SwtImmutableImage>) } });
             if jcall!(originalImmutableImage).getImage().is_some() {
-                let mut imageData2: Option<Rc<RefCell<ImageData>>> = jcall!(jcall!(originalImmutableImage).image).getImageData();
+                let mut imageData2: Option<Rc<RefCell<ImageData>>> = jcall!({ let java_field = jcall!(originalImmutableImage).image.clone(); java_field }).as_Image_mut().getImageData();
                 if width > 0 && height > 0 {
                     let mut imageData: Option<Rc<RefCell<ImageData>>> = jcall!(imageData2).scaledTo(width.clone(), height.clone());
-                    image = SwtImmutableImage::new(jcall!(originalImage).getName(), SwtDeviceComponent::createImage(imageData.clone()));
+                    image = { let java_value = (SwtImmutableImage::new2(jcall!(originalImage).getName(), SwtDeviceComponent::createImage_ImageData(imageData.clone())).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>)).clone(); java_value };
                 } else {
-                    jcall!(self.logUtil).putF(self.UNABLE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone());
-                    image = SwtImmutableImage::new(jcall!(originalImmutableImage).getName(), PostLoadSwtImmutableImageProcessor::new(originalImmutableImage.clone()));
+                    jcall!(self.logUtil).putF(self.UNABLE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
+                    image = { let java_value = (SwtImmutableImage::new2(jcall!(originalImmutableImage).getName(), PostLoadSwtImmutableImageProcessor::new(originalImmutableImage.clone())).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>)).clone(); java_value };
                 }
             } else {
-                image = SwtImmutableImage::new(jcall!(originalImmutableImage).getName(), PostLoadSwtImmutableImageProcessor::new(originalImmutableImage.clone()));
+                image = { let java_value = (SwtImmutableImage::new2(jcall!(originalImmutableImage).getName(), PostLoadSwtImmutableImageProcessor::new(originalImmutableImage.clone())).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>)).clone(); java_value };
             }
         }
-        image = jcall!(self.openGLUtil).addImage(image.clone());
+        image = { let java_value = (jcall!(self.openGLUtil).addImage(image.clone())).clone(); java_value };
         return image.clone();
     }
     
 
     // throws Exception
-    pub fn createImage2(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut width: i32, mut height: i32, mut mutable: bool) -> Option<Rc<RefCell<Image>>> {
-        let mut originalImage2: Option<Rc<RefCell<Image>>> = originalImage.clone();
-        if !jcall!(self.features).isFeature(jcall!(self.gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone()) {
-            jcall!(self.logUtil).putF(self.NO_COPY.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone());
+    pub fn createImage2(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut width: i32, mut height: i32, mut mutable: bool) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut originalImage2: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = originalImage.clone();
+        if !jcall!(self.features).isFeature({ let java_field = jcall!(self.gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone(); java_field }.clone()) {
+            jcall!(self.logUtil).putF(self.NO_COPY.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
             return originalImage.clone();
         }
-        let mut image: Option<Rc<RefCell<Image>>> = None;
-        if jcall!(self.features).isFeature(jcall!(self.openGLFeatureFactory).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = None;
+        if jcall!(self.features).isFeature({ let java_field = jcall!(self.openGLFeatureFactory).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             let mut displayInfoSingleton: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
             if jcall!(originalImage).getType() >= crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImage_TYPE.with(Clone::clone) {
-                let mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> = ((originalImage).clone() /* as OpenGLESImage */);
-                let mut openGLESImageProperties: Option<Rc<RefCell<OpenGLESImageProperties>>> = jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageProperties.clone();
-                let mut openGLWidth: i32 = jcall!(jcall!(openGLESImage).as_OpenGLESImage_mut().openGLBitmap).getWidth();
-                let mut openGLHeight: i32 = jcall!(jcall!(openGLESImage).as_OpenGLESImage_mut().openGLBitmap).getHeight();
+                let mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> { panic!("ClassCastException: a Rust dyn Image cannot be cast to OpenGLESImage") })());
+                let mut openGLESImageProperties: Option<Rc<RefCell<OpenGLESImageProperties>>> = { let java_field = jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageProperties.clone(); java_field }.clone();
+                let mut openGLWidth: i32 = jcall!({ let java_field = jcall!(openGLESImage).as_OpenGLESImage_mut().openGLBitmap.clone(); java_field }).getWidth();
+                let mut openGLHeight: i32 = jcall!({ let java_field = jcall!(openGLESImage).as_OpenGLESImage_mut().openGLBitmap.clone(); java_field }).getHeight();
                 jcall!(openGLESImageProperties).scaleX2 = ((((width) as f32)) / ((openGLWidth) as f32));
                 jcall!(openGLESImageProperties).scaleX = jcall!(openGLESImageProperties).scaleX2;
                 jcall!(openGLESImageProperties).scaleY2 = ((((height) as f32)) / ((openGLHeight) as f32));
                 jcall!(openGLESImageProperties).scaleY = jcall!(openGLESImageProperties).scaleY2;
-                jcall!(openGLESImageProperties).scaleX = jcall!(openGLESImageProperties).scaleX * 0.75_f32;
-                jcall!(openGLESImageProperties).scaleY = jcall!(openGLESImageProperties).scaleY * 0.75_f32;
+                jcall!(openGLESImageProperties).scaleX = { let java_field = jcall!(openGLESImageProperties).scaleX.clone(); java_field } * 0.75_f32;
+                jcall!(openGLESImageProperties).scaleY = { let java_field = jcall!(openGLESImageProperties).scaleY.clone(); java_field } * 0.75_f32;
                 if jcall!(originalImage).getHeight() % 2 != 0 {
                     jcall!(openGLESImageProperties).scaleX2 += 1.0_f32 / ((openGLWidth) as f32);
                     jcall!(openGLESImageProperties).scaleY2 += 1.0_f32 / ((openGLHeight) as f32);
                 }
-                image = openGLESImage.clone();
+                image = openGLESImage.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>);
             } else {
                 image = originalImage.clone();
-                let mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> = (jcall!(self.openGLUtil).addImage(image.clone())).clone() /* as OpenGLESImage */;
-                let mut openGLESImageProperties: Option<Rc<RefCell<OpenGLESImageProperties>>> = jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageProperties.clone();
-                jcall!(openGLESImageProperties).scaleX2 = ((((((width) as f32)) / jcall!(openGLESImage).as_OpenGLESImage_mut().getWidth())) as f32);
+                let mut openGLESImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> { panic!("ClassCastException: a Rust dyn Image cannot be cast to OpenGLESImage") })();
+                let mut openGLESImageProperties: Option<Rc<RefCell<OpenGLESImageProperties>>> = { let java_field = jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageProperties.clone(); java_field }.clone();
+                jcall!(openGLESImageProperties).scaleX2 = ((((width) as f32)) / ((jcall!(openGLESImage).getWidth()) as f32));
                 jcall!(openGLESImageProperties).scaleX = jcall!(openGLESImageProperties).scaleX2;
-                jcall!(openGLESImageProperties).scaleY2 = ((((((height) as f32)) / jcall!(openGLESImage).as_OpenGLESImage_mut().getHeight())) as f32);
+                jcall!(openGLESImageProperties).scaleY2 = ((((height) as f32)) / ((jcall!(openGLESImage).getHeight()) as f32));
                 jcall!(openGLESImageProperties).scaleY = jcall!(openGLESImageProperties).scaleY2;
-                if jcall!(jcall!(image).getName()).startsWith(self.INFORMATION.clone()) {
-                    jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageTranslate = OpenGLESDeviceImageTranslate::new();
-                    let mut openGLESDeviceImageTranslate: Option<Rc<RefCell<OpenGLESDeviceImageTranslate>>> = (jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageTranslate).clone() /* as OpenGLESDeviceImageTranslate */;
-                    jcall!(openGLESDeviceImageTranslate).translateX = ((jcall!(displayInfoSingleton).getLastWidth()) as f32) / 1.4_f32 / jcall!(openGLESImageProperties).scaleX;
-                    jcall!(openGLESDeviceImageTranslate).translateY = ((jcall!(displayInfoSingleton).getLastHeight() / 4) as f32) / jcall!(openGLESImageProperties).scaleY;
-                    jcall!(openGLESImageProperties).scaleX = jcall!(openGLESImageProperties).scaleX * 0.25_f32;
-                    jcall!(openGLESImageProperties).scaleY = jcall!(openGLESImageProperties).scaleY * 0.25_f32;
+                if jcall!(image).getName().starts_with(&self.INFORMATION.clone()) {
+                    jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageTranslate = OpenGLESDeviceImageTranslate::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImageTranslate::OpenGLESImageTranslateDyn>>);
+                    let mut openGLESDeviceImageTranslate: Option<Rc<RefCell<OpenGLESDeviceImageTranslate>>> = ({ let java_field = jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageTranslate.clone(); java_field }).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<OpenGLESDeviceImageTranslate>() }, "ClassCastException: not a OpenGLESDeviceImageTranslate"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<OpenGLESDeviceImageTranslate>) } });
+                    jcall!(openGLESDeviceImageTranslate).translateX = ((jcall!(displayInfoSingleton).getLastWidth()) as f32) / 1.4_f32 / { let java_field = jcall!(openGLESImageProperties).scaleX.clone(); java_field };
+                    jcall!(openGLESDeviceImageTranslate).translateY = ((jcall!(displayInfoSingleton).getLastHeight() / 4) as f32) / { let java_field = jcall!(openGLESImageProperties).scaleY.clone(); java_field };
+                    jcall!(openGLESImageProperties).scaleX = { let java_field = jcall!(openGLESImageProperties).scaleX.clone(); java_field } * 0.25_f32;
+                    jcall!(openGLESImageProperties).scaleY = { let java_field = jcall!(openGLESImageProperties).scaleY.clone(); java_field } * 0.25_f32;
                 } else {
-                    jcall!(openGLESImageProperties).scaleX = jcall!(openGLESImageProperties).scaleX * 0.75_f32;
-                    jcall!(openGLESImageProperties).scaleY = jcall!(openGLESImageProperties).scaleY * 0.75_f32;
-                    if jcall!(jcall!(image).getName()).startsWith(self.LEADERBOARD.clone()) {
-                        jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageTranslate = OpenGLESDeviceImageTranslate::new();
-                        let mut openGLESDeviceImageTranslate: Option<Rc<RefCell<OpenGLESDeviceImageTranslate>>> = (jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageTranslate).clone() /* as OpenGLESDeviceImageTranslate */;
-                        jcall!(openGLESDeviceImageTranslate).translateX = ((-jcall!(displayInfoSingleton).getLastWidth() / 40) as f32) / jcall!(openGLESImageProperties).scaleX;
+                    jcall!(openGLESImageProperties).scaleX = { let java_field = jcall!(openGLESImageProperties).scaleX.clone(); java_field } * 0.75_f32;
+                    jcall!(openGLESImageProperties).scaleY = { let java_field = jcall!(openGLESImageProperties).scaleY.clone(); java_field } * 0.75_f32;
+                    if jcall!(image).getName().starts_with(&self.LEADERBOARD.clone()) {
+                        jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageTranslate = OpenGLESDeviceImageTranslate::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImageTranslate::OpenGLESImageTranslateDyn>>);
+                        let mut openGLESDeviceImageTranslate: Option<Rc<RefCell<OpenGLESDeviceImageTranslate>>> = ({ let java_field = jcall!(openGLESImage).as_OpenGLESImage_mut().openGLESImageTranslate.clone(); java_field }).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<OpenGLESDeviceImageTranslate>() }, "ClassCastException: not a OpenGLESDeviceImageTranslate"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<OpenGLESDeviceImageTranslate>) } });
+                        jcall!(openGLESDeviceImageTranslate).translateX = ((-jcall!(displayInfoSingleton).getLastWidth() / 40) as f32) / { let java_field = jcall!(openGLESImageProperties).scaleX.clone(); java_field };
                     }
-                    if jcall!(jcall!(image).getName()).startsWith(self.LEADERBOARD.clone()) {
+                    if jcall!(image).getName().starts_with(&self.LEADERBOARD.clone()) {
                     } else {
                         jcall!(openGLESImageProperties).scaleX = 1.0_f32;
                         jcall!(openGLESImageProperties).scaleY = 1.0_f32;
                     }
                 }
-                image = openGLESImage.clone();
+                image = openGLESImage.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>);
             }
         } else {
             if jcall!(originalImage2).isMutable() && mutable {
-                let mut originalMutableImage: Option<Rc<RefCell<SwtMutableImage>>> = (originalImage2).clone() /* as SwtMutableImage */;
+                let mut originalMutableImage: Option<Rc<RefCell<SwtMutableImage>>> = (originalImage2).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<SwtMutableImage>() }, "ClassCastException: not a SwtMutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<SwtMutableImage>) } });
                 if jcall!(originalMutableImage).getImage().is_some() {
-                    let mut imageData2: Option<Rc<RefCell<ImageData>>> = jcall!(jcall!(originalMutableImage).image).getImageData();
+                    let mut imageData2: Option<Rc<RefCell<ImageData>>> = jcall!({ let java_field = jcall!(originalMutableImage).image.clone(); java_field }).as_Image_mut().getImageData();
                     let mut imageData: Option<Rc<RefCell<ImageData>>> = jcall!(imageData2).scaledTo(width.clone(), height.clone());
-                    image = SwtMutableImage::new(SwtDeviceComponent::createImage(imageData.clone()));
+                    image = { let java_value = (SwtMutableImage::new1(SwtDeviceComponent::createImage_ImageData(imageData.clone())).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>)).clone(); java_value };
                 } else {
-                    image = SwtMutableImage::new(jcall!(originalMutableImage).getName(), PostLoadSwtMutableImageProcessor::new(originalMutableImage.clone()));
+                    image = { let java_value = (SwtMutableImage::new2(jcall!(originalMutableImage).getName(), PostLoadSwtMutableImageProcessor::new(originalMutableImage.clone())).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>)).clone(); java_value };
                 }
             } else {
-                let mut originalImmutableImage: Option<Rc<RefCell<SwtImmutableImage>>> = (originalImage2).clone() /* as SwtImmutableImage */;
+                let mut originalImmutableImage: Option<Rc<RefCell<SwtImmutableImage>>> = (originalImage2).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<SwtImmutableImage>() }, "ClassCastException: not a SwtImmutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<SwtImmutableImage>) } });
                 if jcall!(originalImmutableImage).getImage().is_some() {
-                    let mut imageData2: Option<Rc<RefCell<ImageData>>> = jcall!(jcall!(originalImmutableImage).image).getImageData();
+                    let mut imageData2: Option<Rc<RefCell<ImageData>>> = jcall!({ let java_field = jcall!(originalImmutableImage).image.clone(); java_field }).as_Image_mut().getImageData();
                     let mut imageData: Option<Rc<RefCell<ImageData>>> = jcall!(imageData2).scaledTo(width.clone(), height.clone());
-                    image = SwtImmutableImage::new(jcall!(originalImage).getName(), SwtDeviceComponent::createImage(imageData.clone()));
+                    image = { let java_value = (SwtImmutableImage::new2(jcall!(originalImage).getName(), SwtDeviceComponent::createImage_ImageData(imageData.clone())).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>)).clone(); java_value };
                 } else {
-                    image = SwtImmutableImage::new(jcall!(originalImmutableImage).getName(), PostLoadSwtImmutableImageProcessor::new(originalImmutableImage.clone()));
+                    image = { let java_value = (SwtImmutableImage::new2(jcall!(originalImmutableImage).getName(), PostLoadSwtImmutableImageProcessor::new(originalImmutableImage.clone())).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>)).clone(); java_value };
                 }
             }
-            image = jcall!(self.openGLUtil).addImage(image.clone());
+            image = { let java_value = (jcall!(self.openGLUtil).addImage(image.clone())).clone(); java_value };
         }
         return image.clone();
     }
     
 
     // throws Exception
-    pub fn createImageScale(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut canvasScale: f32, mut resize: bool) -> Option<Rc<RefCell<Image>>> {
-        if !jcall!(self.features).isFeature(jcall!(self.gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone()) {
-            jcall!(self.logUtil).putF(self.NO_COPY.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone());
+    pub fn createImageScale(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut canvasScale: f32, mut resize: bool) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        if !jcall!(self.features).isFeature({ let java_field = jcall!(self.gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone(); java_field }.clone()) {
+            jcall!(self.logUtil).putF(self.NO_COPY.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
             return originalImage.clone();
         }
-        let mut newWidth: i32 = (((jcall!(originalImage).getWidth() * canvasScale)) as i32);
-        let mut newHeight: i32 = (((jcall!(originalImage).getHeight() * canvasScale)) as i32);
+        let mut newWidth: i32 = (((((jcall!(originalImage).getWidth()) as f32) * canvasScale)) as i32);
+        let mut newHeight: i32 = (((((jcall!(originalImage).getHeight()) as f32) * canvasScale)) as i32);
         if resize {
             if newWidth < newHeight {
                 newWidth = newHeight.clone();
@@ -287,10 +288,10 @@ impl ImageCopyUtil {
                 newHeight = newWidth.clone();
             }
         }
-        let mut image: Option<Rc<RefCell<Image>>> = self.createImageWH(originalImage.clone(), newWidth.clone(), newHeight.clone(), true);
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = self.createImageWH(originalImage.clone(), newWidth.clone(), newHeight.clone(), true);
         if jcall!(image).isMutable() {
-            let mut originalImageData: Option<Rc<RefCell<ImageData>>> = jcall!(((jcall!(originalImage).getImage()).clone() /* as Image */)).getImageData();
-            let mut mutableImage2: Option<Rc<RefCell<SwtMutableImage>>> = (image).clone() /* as SwtMutableImage */;
+            let mut originalImageData: Option<Rc<RefCell<ImageData>>> = jcall!(({ let java_object = (jcall!(originalImage).getImage()).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>().expect("ClassCastException").clone()) })).as_Image_mut().getImageData();
+            let mut mutableImage2: Option<Rc<RefCell<SwtMutableImage>>> = (image).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<SwtMutableImage>() }, "ClassCastException: not a SwtMutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<SwtMutableImage>) } });
             let mut halfWidthDelta: i32 = (newWidth - jcall!(originalImage).getWidth()) / 2;
             let mut halfHeightDelta: i32 = (newHeight - jcall!(originalImage).getHeight()) / 2;
             let mut originalPixelArray: Vec<i32> = vec![0; (jcall!(originalImage).getWidth() * jcall!(originalImage).getHeight()) as usize];
@@ -302,14 +303,14 @@ impl ImageCopyUtil {
             }
             for index in (halfWidthDelta..width) {
                 for index2 in (halfHeightDelta..height) {
-                    newPixelArray[(index + (index2 * width)) as usize] = originalPixelArray[((index - halfWidthDelta) + ((index2 - halfHeightDelta) * width)) as usize].clone();
+                    newPixelArray[(index + (index2 * width)) as usize] = { let java_value = (originalPixelArray[((index - halfWidthDelta) + ((index2 - halfHeightDelta) * width)) as usize]).clone(); java_value }.clone();
                 }
             }
-            jcall!(jcall!(((jcall!(mutableImage2).getImage()).clone() /* as Image */)).getImageData()).setPixels(0, 0, jcall!(image).getWidth(), newPixelArray.clone(), 0);
+            jcall!(jcall!(({ let java_object = (jcall!(mutableImage2).getImage()).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>().expect("ClassCastException").clone()) })).as_Image_mut().getImageData()).setPixels(0, 0, jcall!(image).getWidth(), newPixelArray.clone(), 0);
             return image.clone();
         } else {
-            let mut originalImmutableImage: Option<Rc<RefCell<SwtImmutableImage>>> = (image).clone() /* as SwtImmutableImage */;
-            let mut originalImageData: Option<Rc<RefCell<ImageData>>> = jcall!(((jcall!(originalImage).getImage()).clone() /* as Image */)).getImageData();
+            let mut originalImmutableImage: Option<Rc<RefCell<SwtImmutableImage>>> = (image).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<SwtImmutableImage>() }, "ClassCastException: not a SwtImmutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<SwtImmutableImage>) } });
+            let mut originalImageData: Option<Rc<RefCell<ImageData>>> = jcall!(({ let java_object = (jcall!(originalImage).getImage()).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>().expect("ClassCastException").clone()) })).as_Image_mut().getImageData();
             let mut halfWidthDelta: i32 = (newWidth - jcall!(originalImage).getWidth()) / 2;
             let mut halfHeightDelta: i32 = (newHeight - jcall!(originalImage).getHeight()) / 2;
             let mut originalPixelArray: Vec<i32> = vec![0; (jcall!(originalImage).getWidth() * jcall!(originalImage).getHeight()) as usize];
@@ -321,10 +322,10 @@ impl ImageCopyUtil {
             }
             for index in (halfWidthDelta..width) {
                 for index2 in (halfHeightDelta..height) {
-                    newPixelArray[(index + (index2 * width)) as usize] = originalPixelArray[((index - halfWidthDelta) + ((index2 - halfHeightDelta) * width)) as usize].clone();
+                    newPixelArray[(index + (index2 * width)) as usize] = { let java_value = (originalPixelArray[((index - halfWidthDelta) + ((index2 - halfHeightDelta) * width)) as usize]).clone(); java_value }.clone();
                 }
             }
-            jcall!(jcall!(((jcall!(originalImmutableImage).getImage()).clone() /* as Image */)).getImageData()).setPixels(0, 0, jcall!(image).getWidth(), newPixelArray.clone(), 0);
+            jcall!(jcall!(({ let java_object = (jcall!(originalImmutableImage).getImage()).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>().expect("ClassCastException").clone()) })).as_Image_mut().getImageData()).setPixels(0, 0, jcall!(image).getWidth(), newPixelArray.clone(), 0);
             return image.clone();
         }
     }

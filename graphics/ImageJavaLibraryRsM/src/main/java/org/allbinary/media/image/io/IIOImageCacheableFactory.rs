@@ -36,6 +36,10 @@ impl CacheableInterfaceFactoryInterface for IIOImageCacheableFactory {
 }
 
 impl IIOImageCacheableFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -50,7 +54,7 @@ impl IIOImageCacheableFactory {
     
 
     pub fn getInstance(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn CacheableInterface>>> {
-        return IIOImageCacheable::new((key).clone() /* as String */).map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>);
+        return IIOImageCacheable::new({ let java_object = (key).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>).map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>);
     }
 }
 

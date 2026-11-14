@@ -42,10 +42,10 @@ impl GeographicMapCellPositionEvent {
 
     pub fn new_struct(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(anyType.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(anyType.clone())),
             geographicMapCellPosition: None,
         };
-        this.geographicMapCellPosition = jcall!(CellPositionFactory::getInstance()).NONE.clone();
+        this.geographicMapCellPosition = { let java_field = jcall!(CellPositionFactory::getInstance()).NONE.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this.geographicMapCellPosition = geographicMapCellPosition.clone();
         this
@@ -62,12 +62,12 @@ impl GeographicMapCellPositionEvent {
     
 
     pub fn setGeographicMapCellPosition(&mut self, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) {
-        self.geographicMapCellPosition = geographicMapCellPosition.clone();
+        self.geographicMapCellPosition = geographicMapCellPosition.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>);
     }
     
 
     pub fn getGeographicMapCellPosition(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> {
-        return (self.geographicMapCellPosition).clone() /* as GeographicMapCellPosition */;
+        return (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> { panic!("ClassCastException: a Rust dyn CellPosition cannot be cast to GeographicMapCellPosition") })();
     }
     
 
@@ -75,7 +75,7 @@ impl GeographicMapCellPositionEvent {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(String::from("CellPositionEvent: "));
         jcall!(stringBuffer).append(String::from("\nGeographicMapCellPosition: "));
-        jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getGeographicMapCellPosition())));
+        jcall!(stringBuffer).append({ let java_argument = jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getGeographicMapCellPosition())); java_argument });
         return jcall!(stringBuffer).toString();
     }
 }

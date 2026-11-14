@@ -40,11 +40,11 @@ impl GameInitializedEvent {
 
     pub fn new_struct(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(anyType.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(anyType.clone())),
             resourceLoadingLevel: None,
             level: 0,
         };
-        this.resourceLoadingLevel = jcall!(ResourceLoadingLevelFactory::getInstance()).LEVEL.clone();
+        this.resourceLoadingLevel = { let java_field = jcall!(ResourceLoadingLevelFactory::getInstance()).LEVEL.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this
     }
@@ -56,7 +56,7 @@ impl GameInitializedEvent {
 
     pub fn setLevel(&mut self, mut level: i32) {
         self.level = level.clone();
-        self.resourceLoadingLevel = jcall!(ResourceLoadingLevelFactory::getInstance()).LEVEL.clone();
+        self.resourceLoadingLevel = { let java_value = ({ let java_field = jcall!(ResourceLoadingLevelFactory::getInstance()).LEVEL.clone(); java_field }).clone(); java_value }.clone();
     }
     
 
@@ -67,7 +67,7 @@ impl GameInitializedEvent {
 
     pub fn setResourceLoadingLevel(&mut self, mut resourceLoadingLevel: Option<Rc<RefCell<ResourceLoadingLevel>>>) {
         self.resourceLoadingLevel = resourceLoadingLevel.clone();
-        self.level = jcall!(self.resourceLoadingLevel).getLevel();
+        self.level = { let java_value = (jcall!(self.resourceLoadingLevel).getLevel()).clone(); java_value };
     }
     
 

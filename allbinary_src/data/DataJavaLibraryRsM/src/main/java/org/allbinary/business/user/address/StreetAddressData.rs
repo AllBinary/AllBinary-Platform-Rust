@@ -44,6 +44,10 @@ thread_local! { pub static StreetAddressData_CODE: String = String::from("STREET
 thread_local! { pub static StreetAddressData_COUNTRY: String = String::from("STREETADDRESS_COUNTRY"); }
 
 impl StreetAddressData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

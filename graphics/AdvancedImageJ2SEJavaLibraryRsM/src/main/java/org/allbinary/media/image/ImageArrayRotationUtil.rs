@@ -18,7 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
-// use crate::java::io::IOException::IOException;
+use crate::java::io::IOException::IOException;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use super::ImageProcessorInput::ImageProcessorInput;
@@ -40,6 +40,10 @@ pub struct ImageArrayRotationUtil {
 thread_local! { pub static ImageArrayRotationUtil_instance: Option<Rc<RefCell<ImageArrayRotationUtil>>> = ImageArrayRotationUtil::new(); }
 
 impl ImageArrayRotationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -66,18 +70,18 @@ impl ImageArrayRotationUtil {
     // throws IOException
     pub fn process(&mut self, mut imageProcessorInput: Option<Rc<RefCell<ImageProcessorInput>>>, mut input: String, mut visitor: Option<Rc<RefCell<dyn ImageProcessedVisitor>>>) {
         let mut totalAngle: Option<i32> = None;
-        if input == jcall!(self.commonStrings).UP {
-            totalAngle = (-90).to_string();
-        } else if input == jcall!(self.commonStrings).DOWN {
-            totalAngle = (90).to_string();
+        if input == { let java_field = jcall!(self.commonStrings).UP.clone(); java_field } {
+            totalAngle = { let java_value = (Some((-90) as i32)).clone(); java_value };
+        } else if input == { let java_field = jcall!(self.commonStrings).DOWN.clone(); java_field } {
+            totalAngle = { let java_value = (Some((90) as i32)).clone(); java_value };
         } else {
-            totalAngle = (input.clone()).to_string();
+            totalAngle = { let java_value = (Some((input.clone()).trim().parse::<i32>().expect("NumberFormatException"))).clone(); java_value };
         }
         let mut generatedBufferedImage: Option<Rc<RefCell<BufferedImage>>> = None;
         let mut bufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>> = jcall!(imageProcessorInput).getBufferedImageArray();
         for index in (0..(bufferedImageArray.len() as i32)) {
-            jcall!(self.logUtil).putF(format!("{}{}", self.TOTAL_ANGLE, totalAngle), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
-            generatedBufferedImage = jcall!(ImageJ2SERotationUtil::ImageJ2SERotationUtil::getInstance()).getRotatedImage(bufferedImageArray[(index) as usize].clone(), ((totalAngle).unwrap() as i32));
+            jcall!(self.logUtil).putF(format!("{}{}", self.TOTAL_ANGLE, totalAngle), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
+            generatedBufferedImage = { let java_value = (jcall!(ImageJ2SERotationUtil::ImageJ2SERotationUtil::getInstance()).getRotatedImage(bufferedImageArray[(index) as usize].clone(), ((totalAngle).unwrap() as i32))).clone(); java_value };
             jcall!(visitor).visit(generatedBufferedImage.clone(), input.clone(), index.clone());
         }
     }

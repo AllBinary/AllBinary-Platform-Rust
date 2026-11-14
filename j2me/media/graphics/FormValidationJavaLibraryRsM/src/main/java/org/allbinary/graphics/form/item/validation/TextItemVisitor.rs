@@ -48,11 +48,11 @@ impl TextItemVisitor {
     
 
     pub fn visit(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        let mut value: String = (anyType).clone() /* as String */;
+        let mut value: String = { let java_object = (anyType).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if (value.chars().count() as i32) < 2 {
-            return jcall!(BooleanFactory::getInstance()).TRUE.clone();
+            return crate::java_into_object({ let java_field = jcall!(BooleanFactory::getInstance()).TRUE.clone(); java_field }.clone());
         } else {
-            return jcall!(BooleanFactory::getInstance()).FALSE.clone();
+            return crate::java_into_object({ let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone());
         }
     }
 }

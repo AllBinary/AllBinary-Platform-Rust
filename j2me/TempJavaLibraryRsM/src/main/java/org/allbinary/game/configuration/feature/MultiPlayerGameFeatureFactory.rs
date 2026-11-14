@@ -19,6 +19,10 @@ pub struct MultiPlayerGameFeatureFactory {
 thread_local! { pub static MultiPlayerGameFeatureFactory_instance: Option<Rc<RefCell<MultiPlayerGameFeatureFactory>>> = MultiPlayerGameFeatureFactory::new(); }
 
 impl MultiPlayerGameFeatureFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<MultiPlayerGameFeatureFactory>>> {

@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::category::CategoryData::CategoryData;
@@ -50,6 +49,7 @@ use crate::org::allbinary::logic::visual::transform::template::customizer::inclu
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::ThemeInterface::ThemeInterface;
 use super::ThemeData::ThemeData;
 
@@ -81,7 +81,7 @@ impl ThemeInterface for ThemeValidation {
 impl crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface for ThemeValidation {
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getKey(self) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::toVector(self) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::toHashMap(self) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toHashMap(self) }
 }
 impl ValidationInterface for ThemeValidation {
     fn isValid(&mut self) -> Option<bool> { Self::isValid(self) }
@@ -97,6 +97,10 @@ impl CompositeTransformInfoInterface for ThemeValidation {
 }
 
 impl ThemeValidation {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct3(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut cssStyleValidation: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::template::customizer::includes::style::css::template::retail::CssStyleValidation::CssStyleValidationDyn>>>, mut categoryThemePath: String) -> Self {
@@ -116,9 +120,9 @@ impl ThemeValidation {
         this.transformInfoInterface = transformInfoInterface.clone();
         let mut pathData: Option<Rc<RefCell<AbPathData>>> = AbPathData::getInstance();
         let mut pathUtil: Option<Rc<RefCell<PathUtil>>> = PathUtil::getInstance();
-        this.categoryAbPath = jcall!(pathUtil).removeNameFromPath(categoryThemePath.clone());
-        this.themeName = jcall!(pathData).getNameFromPath(categoryThemePath.clone());
-        this.styleValidationInterface = cssStyleValidation.clone().map(|reference| reference as Rc<RefCell<dyn ValidationInterface>>);
+        this.categoryAbPath = { let java_value = (jcall!(pathUtil).removeNameFromPath(categoryThemePath.clone())).clone(); java_value };
+        this.themeName = { let java_value = (jcall!(pathData).getNameFromPath(categoryThemePath.clone())).clone(); java_value };
+        this.styleValidationInterface = cssStyleValidation.clone().map(|_java_reference| -> Rc<RefCell<dyn ValidationInterface>> { panic!("ClassCastException: the Rust trait of CssStyleValidation does not have ValidationInterface as a base trait") });
         this.init();
         this
     }
@@ -128,7 +132,7 @@ impl ThemeValidation {
     }
     
 
-    pub fn new_struct2(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct2(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -143,12 +147,12 @@ impl ThemeValidation {
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
         this.transformInfoInterface = transformInfoInterface.clone();
-        let mut categoryThemeAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new((jcall!(hashMap).get(jcall!(ThemeData::getInstance()).PATH.clone())).clone() /* as String */, jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        let mut categoryThemeAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(ThemeData::getInstance()).PATH.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
         let mut pathData: Option<Rc<RefCell<AbPathData>>> = AbPathData::getInstance();
         let mut pathUtil: Option<Rc<RefCell<PathUtil>>> = PathUtil::getInstance();
-        this.categoryAbPath = jcall!(pathUtil).removeNameFromPath(jcall!(categoryThemeAbPath).toString());
-        this.themeName = jcall!(pathData).getNameFromPath(jcall!(categoryThemeAbPath).toString());
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        this.categoryAbPath = { let java_value = (jcall!(pathUtil).removeNameFromPath(jcall!(categoryThemeAbPath).toString())).clone(); java_value };
+        this.themeName = { let java_value = (jcall!(pathData).getNameFromPath(jcall!(categoryThemeAbPath).toString())).clone(); java_value };
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(String::from("CategoryThemePath: "));
             jcall!(stringBuffer).append(jcall!(categoryThemeAbPath).toString());
@@ -162,12 +166,12 @@ impl ThemeValidation {
         this
     }
 
-    pub fn new2(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new2(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct2(transformInfoInterface, hashMap))))
     }
     
 
-    pub fn new_struct2(mut storeThemeCategoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>>, mut node: Option<Rc<RefCell<Node>>>) -> Self {
+    pub fn new_struct2_StoreThemeCategoryInterface_Node(mut storeThemeCategoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>>, mut node: Option<Rc<RefCell<Node>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -181,29 +185,29 @@ impl ThemeValidation {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        this.transformInfoInterface = jcall!(storeThemeCategoryInterface).getTransformInfoInterface();
-        this.categoryAbPath = jcall!(storeThemeCategoryInterface).getPath();
-        let mut themeNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(ThemeData::getInstance()).NAME.clone(), jcall!(node).getChildNodes());
+        this.transformInfoInterface = { let java_value = (jcall!(storeThemeCategoryInterface).getTransformInfoInterface()).clone(); java_value };
+        this.categoryAbPath = { let java_value = (jcall!(storeThemeCategoryInterface).getPath()).clone(); java_value };
+        let mut themeNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(ThemeData::getInstance()).NAME.clone(); java_field }.clone(), jcall!(node).getChildNodes());
         let mut valueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(crate::org::allbinary::data::tree::dom::DomData::DomData_VALUE.with(Clone::clone).clone(), jcall!(themeNameNode).getChildNodes());
-        this.themeName = DomNodeHelper::getTextNodeValue(valueNode.clone());
-        let mut previewImageNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(ThemeData::getInstance()).PREVIEW_IMAGE_NAME.clone(), jcall!(node).getChildNodes());
+        this.themeName = { let java_value = (DomNodeHelper::getTextNodeValue(valueNode.clone())).clone(); java_value };
+        let mut previewImageNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(ThemeData::getInstance()).PREVIEW_IMAGE_NAME.clone(); java_field }.clone(), jcall!(node).getChildNodes());
         let mut previewImageNameValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(crate::org::allbinary::data::tree::dom::DomData::DomData_VALUE.with(Clone::clone).clone(), jcall!(previewImageNameNode).getChildNodes());
-        this.themePreviewImageName = DomNodeHelper::getTextNodeValue(previewImageNameValueNode.clone());
-        this.webAppAbPath = jcall!(storeThemeCategoryInterface).getWebAppPath();
+        this.themePreviewImageName = { let java_value = (DomNodeHelper::getTextNodeValue(previewImageNameValueNode.clone())).clone(); java_value };
+        this.webAppAbPath = { let java_value = (jcall!(storeThemeCategoryInterface).getWebAppPath()).clone(); java_value };
         this.init1(storeThemeCategoryInterface.clone());
         this
     }
 
-    pub fn new2(mut storeThemeCategoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>>, mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct2(storeThemeCategoryInterface, node))))
+    pub fn new2_StoreThemeCategoryInterface_Node(mut storeThemeCategoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>>, mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct2_StoreThemeCategoryInterface_Node(storeThemeCategoryInterface, node))))
     }
     
 
     // throws Exception
     pub fn init(&mut self) {
-        let mut categoryFactoryInterface: Option<Rc<RefCell<dyn CategoryFactoryInterface>>> = StoreThemeCategoryFactory::new(self.getTransformInfoInterface()).map(|reference| reference as Rc<RefCell<dyn CategoryFactoryInterface>>);
+        let mut categoryFactoryInterface: Option<Rc<RefCell<dyn CategoryFactoryInterface>>> = StoreThemeCategoryFactory::new(self.getTransformInfoInterface()).map(|reference| reference as Rc<RefCell<dyn CategoryFactoryInterface>>).map(|reference| reference as Rc<RefCell<dyn CategoryFactoryInterface>>);
         let mut categoryLoaderInterface: Option<Rc<RefCell<dyn CategoryLoaderInterface>>> = CategoryLoaderFactory::getInstance(categoryFactoryInterface.clone());
-        let mut rootStoreThemeCategoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>> = (jcall!(categoryFactoryInterface).getRootInstance()).clone() /* as StoreThemeCategoryInterface */;
+        let mut rootStoreThemeCategoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>> = (|| -> Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>> { panic!("ClassCastException: a Rust dyn CategoryInterface cannot be cast to dyn StoreThemeCategoryInterface") })();
         self.init1(rootStoreThemeCategoryInterface.clone());
     }
     
@@ -211,8 +215,8 @@ impl ThemeValidation {
     // throws Exception
     // Java overloaded method: Rust needs a different name
     pub fn init1(&mut self, mut storeThemeCategoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>>) {
-        self.fileAbPath = AbPath::new(format!("{}{}", jcall!(jcall!(storeThemeCategoryInterface).getRootFilePath()).toString(), jcall!(self.categoryAbPath).toString()), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-        self.webAppAbPath = jcall!(storeThemeCategoryInterface).getWebAppPath();
+        self.fileAbPath = { let java_value = (AbPath::new(format!("{}{}", jcall!(jcall!(storeThemeCategoryInterface).getRootFilePath()).toString(), jcall!(self.categoryAbPath).toString()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
+        self.webAppAbPath = { let java_value = (jcall!(storeThemeCategoryInterface).getWebAppPath()).clone(); java_value };
     }
     
 
@@ -245,64 +249,66 @@ impl ThemeValidation {
     // throws Exception
     pub fn getCssStyleValidation(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::template::customizer::includes::style::css::template::retail::CssStyleValidation::CssStyleValidationDyn>>> {
         if self.styleValidationInterface.is_none() {
-            let mut cssStyleFileAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(self.fileAbPath).toString(), format!("{}{}", format!("{}{}", self.themeName, jcall!(AbPathData::getInstance()).EXTENSION_SEP), jcall!(CategoryData::getInstance()).UNCRYPTED_EXTENSION)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-            let mut cryptFileReader: Option<Rc<RefCell<CryptFileReader>>> = CryptFileReader::new(jcall!(CategoryData::getInstance()).UNCRYPTED_EXTENSION.clone(), jcall!(CategoryData::getInstance()).ENCRYPTED_EXTENSION.clone());
+            let mut cssStyleFileAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(self.fileAbPath).toString(), format!("{}{}", format!("{}{}", self.themeName, { let java_field = jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(); java_field }), { let java_field = jcall!(CategoryData::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field })).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+            let mut cryptFileReader: Option<Rc<RefCell<CryptFileReader>>> = CryptFileReader::new({ let java_field = jcall!(CategoryData::getInstance()).UNCRYPTED_EXTENSION.clone(); java_field }.clone(), { let java_field = jcall!(CategoryData::getInstance()).ENCRYPTED_EXTENSION.clone(); java_field }.clone());
             let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1(jcall!(cryptFileReader).get(cssStyleFileAbPath.clone()));
             self.styleValidationInterface = CssStyleValidation::new1(document.clone()).map(|reference| reference as Rc<RefCell<dyn ValidationInterface>>);
         }
-        return (self.styleValidationInterface).clone() /* as CssStyleValidation */;
+        return (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::template::customizer::includes::style::css::template::retail::CssStyleValidation::CssStyleValidationDyn>>> { panic!("ClassCastException: a Rust dyn ValidationInterface cannot be cast to CssStyleValidation") })();
     }
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut isValid: Option<bool> = true;
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
-                jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone());
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone());
             }
             if !jcall!(StringValidationUtil::getInstance()).isValidRequired(jcall!(self.categoryAbPath).toString(), crate::org::allbinary::logic::communication::sql::AbSqlData::AbSqlData_MINSTRING.with(Clone::clone).clone(), crate::org::allbinary::logic::communication::sql::AbSqlData::AbSqlData_MAXSTRING.with(Clone::clone).clone()) {
-                isValid = false;
+                isValid = { let java_value = (false).clone(); java_value }.clone();
             }
             if !jcall!(StringValidationUtil::getInstance()).isValidRequired(self.themeName.clone(), crate::org::allbinary::logic::communication::sql::AbSqlData::AbSqlData_MINSTRING.with(Clone::clone).clone(), crate::org::allbinary::logic::communication::sql::AbSqlData::AbSqlData_MAXSTRING.with(Clone::clone).clone()) {
-                isValid = false;
+                isValid = { let java_value = (false).clone(); java_value }.clone();
             }
             if !jcall!(self.getCssStyleValidation()).isValid().unwrap() {
-                isValid = false;
+                isValid = { let java_value = (false).clone(); java_value }.clone();
             }
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
-                jcall!(self.logUtil).putF(format!("{}{}", String::from("End: "), isValid), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone());
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).putF(format!("{}{}", String::from("End: "), isValid), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone());
             }
-            return isValid.clone();
+            return Some(isValid.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
-                jcall!(self.logUtil).put(String::from("Failed to validate form"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put(String::from("Failed to validate form"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn validationInfo(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(String::from("Theme Validation Error"));
-            return jcall!(stringBuffer).toString();
+            return Some(jcall!(stringBuffer).toString());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).put(String::from("Failed to generate validation error info"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("validationInfo()"), crate::java_into_object(e.clone()));
             }
             return String::from("Error Validating Form");
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -317,12 +323,12 @@ impl ThemeValidation {
     
 
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return (self.getName()).clone() /* as Any */;
+        return crate::java_into_object(crate::java_into_object((self.getName()).clone()));
     }
     
 
     pub fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         jcall!(vector).add(crate::java_into_object(self.getName()));
         jcall!(vector).add(crate::java_into_object(self.getPath()));
         jcall!(vector).add(crate::java_into_object(self.getPreviewImageName()));
@@ -331,21 +337,21 @@ impl ThemeValidation {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         let mut themeData: Option<Rc<RefCell<ThemeData>>> = ThemeData::getInstance();
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(jcall!(themeData).NAME.clone(), self.getName());
-        jcall!(hashMap).put(jcall!(themeData).PATH.clone(), self.getPath());
-        jcall!(hashMap).put(jcall!(themeData).PREVIEW_IMAGE_NAME.clone(), self.getPreviewImageName());
-        jcall!(hashMap).put(jcall!(themeData).PREVIEW_IMAGE_PATH.clone(), self.getPreviewImagePath());
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(themeData).NAME.clone(); java_field }.clone()), crate::java_into_object(self.getName()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(themeData).PATH.clone(); java_field }.clone()), crate::java_into_object(self.getPath()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(themeData).PREVIEW_IMAGE_NAME.clone(); java_field }.clone()), crate::java_into_object(self.getPreviewImageName()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(themeData).PREVIEW_IMAGE_PATH.clone(); java_field }.clone()), crate::java_into_object(self.getPreviewImagePath()));
         return hashMap.clone();
     }
     
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes(document.clone(), jcall!(ThemeData::getInstance()).NAME.clone(), self.toHashMap());
-        let mut domNodeInterface: Option<Rc<RefCell<dyn DomNodeInterface>>> = (self.getCssStyleValidation()).clone() /* as DomNodeInterface */;
+        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), { let java_field = jcall!(ThemeData::getInstance()).NAME.clone(); java_field }.clone(), self.toHashMap());
+        let mut domNodeInterface: Option<Rc<RefCell<dyn DomNodeInterface>>> = (|| -> Option<Rc<RefCell<dyn DomNodeInterface>>> { panic!("ClassCastException: a Rust dyn CssStyleValidation cannot be cast to DomNodeInterface") })();
         jcall!(node).appendChild(jcall!(domNodeInterface).toXmlNode(document.clone()));
         return node.clone();
     }

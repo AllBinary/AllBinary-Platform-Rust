@@ -17,10 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::File::File;
-// use crate::java::io::IOException::IOException;
+use crate::java::io::File::File;
+use crate::java::io::IOException::IOException;
 // use crate::java::nio::charset::StandardCharsets::StandardCharsets;
-// use crate::java::util::ArrayList::ArrayList;
+use crate::java::util::ArrayList::ArrayList;
 // use crate::java::util::List::List;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
@@ -28,6 +28,7 @@ use crate::org::allbinary::logic::io::file::AbFileNativeUtil::AbFileNativeUtil;
 use crate::org::allbinary::logic::io::file::directory::TrackedStrings::TrackedStrings;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::ProcessBuilder::ProcessBuilder;
 use super::Process::Process;
 
@@ -46,6 +47,10 @@ pub struct GitProcessHelper {
 thread_local! { pub static GitProcessHelper_instance: Option<Rc<RefCell<GitProcessHelper>>> = GitProcessHelper::new(); }
 
 impl GitProcessHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GitProcessHelper>>> {
@@ -61,7 +66,7 @@ impl GitProcessHelper {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
         let mut THIS_IS_SLOW: String = String::from("This is slow consider path exclusion instead");
-        jcall!(logUtil).putF(THIS_IS_SLOW.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone());
+        jcall!(logUtil).putF(THIS_IS_SLOW.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this
     }
 
@@ -79,7 +84,7 @@ impl GitProcessHelper {
     // throws IOException, InterruptedException
     // Java overloaded method: Rust needs a different name
     pub fn trackedFiles3(&mut self, mut rootAsString: String, mut pathspec: String, mut suffix: String) -> Option<Rc<RefCell<dyn List<String>>>> {
-        let mut process: Option<Rc<RefCell<Process>>> = jcall!(jcall!(ProcessBuilder::new(jcall!(self.trackedStrings).GIT_COMMAND.clone(), jcall!(self.trackedStrings).CHANGE_DIRECTORY_OPTION.clone(), rootAsString.clone(), jcall!(self.trackedStrings).LIST_FILES_COMMAND.clone(), jcall!(self.trackedStrings).SEP_BY_NULL_CHAR_INSTEAD_OF_NEW_LINE.clone(), jcall!(self.trackedStrings).PATHSPEC_SEPARATOR.clone(), pathspec.clone())).redirectError(jcall!(unsafe { ProcessBuilder_Redirect.clone() }).INHERIT.clone())).start();
+        let mut process: Option<Rc<RefCell<Process>>> = jcall!(jcall!(ProcessBuilder::new({ let java_field = jcall!(self.trackedStrings).GIT_COMMAND.clone(); java_field }.clone(), { let java_field = jcall!(self.trackedStrings).CHANGE_DIRECTORY_OPTION.clone(); java_field }.clone(), rootAsString.clone(), { let java_field = jcall!(self.trackedStrings).LIST_FILES_COMMAND.clone(); java_field }.clone(), { let java_field = jcall!(self.trackedStrings).SEP_BY_NULL_CHAR_INSTEAD_OF_NEW_LINE.clone(); java_field }.clone(), { let java_field = jcall!(self.trackedStrings).PATHSPEC_SEPARATOR.clone(); java_field }.clone(), pathspec.clone())).redirectError({ let java_field = jcall!(unsafe { ProcessBuilder_Redirect.clone() }).INHERIT.clone(); java_field }.clone())).start();
         let mut output: Vec<i8> = jcall!(jcall!(process).getInputStream()).readAllBytes();
         let mut exitCode: i32 = jcall!(process).waitFor();
         if exitCode != 0 {
@@ -90,7 +95,7 @@ impl GitProcessHelper {
         let mut relativePath: String = String::new();
         for index in (0..(output.len() as i32)) {
             if ((output[(index) as usize]) as i32) == 0 {
-                relativePath = String::new(output.clone(), start.clone(), index - start, unsafe { crate::java::nio::charset::StandardCharsets::StandardCharsets_UTF_8.clone() }.clone());
+                relativePath = { let java_value = (String::new(output.clone(), start.clone(), index - start, unsafe { crate::java::nio::charset::StandardCharsets::StandardCharsets_UTF_8.clone() }.clone())).clone(); java_value };
                 if relativePath.ends_with(&suffix.clone()) {
                     jcall!(files).add(relativePath.clone());
                 }
@@ -102,20 +107,21 @@ impl GitProcessHelper {
     
 
     pub fn isTracked(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut nativeFile: Option<Rc<RefCell<File>>> = AbFileNativeUtil::get(file.clone());
             let mut parentFile: Option<Rc<RefCell<File>>> = jcall!(nativeFile).getParentFile();
-            let mut process: Option<Rc<RefCell<Process>>> = jcall!(jcall!(ProcessBuilder::new(jcall!(self.trackedStrings).GIT_COMMAND.clone(), jcall!(self.trackedStrings).CHANGE_DIRECTORY_OPTION.clone(), jcall!(parentFile).getPath(), jcall!(self.trackedStrings).LIST_FILES_COMMAND.clone(), jcall!(self.trackedStrings).ERROR_UNMATCH_OPTION.clone(), jcall!(self.trackedStrings).PATHSPEC_SEPARATOR.clone(), jcall!(nativeFile).getName())).redirectErrorStream(true)).start();
+            let mut process: Option<Rc<RefCell<Process>>> = jcall!(jcall!(ProcessBuilder::new({ let java_field = jcall!(self.trackedStrings).GIT_COMMAND.clone(); java_field }.clone(), { let java_field = jcall!(self.trackedStrings).CHANGE_DIRECTORY_OPTION.clone(); java_field }.clone(), jcall!(parentFile).getPath(), { let java_field = jcall!(self.trackedStrings).LIST_FILES_COMMAND.clone(); java_field }.clone(), { let java_field = jcall!(self.trackedStrings).ERROR_UNMATCH_OPTION.clone(); java_field }.clone(), { let java_field = jcall!(self.trackedStrings).PATHSPEC_SEPARATOR.clone(); java_field }.clone(), jcall!(nativeFile).getName())).redirectErrorStream(true)).start();
             jcall!(jcall!(process).getInputStream()).readAllBytes();
-            return jcall!(process).waitFor() == 0;
+            return Some(jcall!(process).waitFor() == 0);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

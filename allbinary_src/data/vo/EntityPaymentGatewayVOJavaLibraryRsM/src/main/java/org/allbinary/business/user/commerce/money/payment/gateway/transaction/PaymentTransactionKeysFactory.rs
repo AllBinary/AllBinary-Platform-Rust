@@ -114,6 +114,10 @@ thread_local! { pub static PaymentTransactionKeysFactory_instance: Option<Rc<Ref
 
 impl PaymentTransactionKeysFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             TRXTYPE: None,

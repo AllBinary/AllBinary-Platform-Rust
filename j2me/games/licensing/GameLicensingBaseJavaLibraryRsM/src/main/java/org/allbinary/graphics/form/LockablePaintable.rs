@@ -17,11 +17,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::FeaturedAnimationInterfaceFactoryInterfaceFactory::FeaturedAnimationInterfaceFactoryInterfaceFactory;
 use crate::org::allbinary::logic::system::security::licensing::LockedResources::LockedResources;
 use crate::org::allbinary::logic::system::security::licensing::LockedUtil::LockedUtil;
+use crate::java::lang::Exception::*;
 use super::ItemPaintable::ItemPaintable;
 
 // Borrows the object of a Java reference
@@ -47,7 +48,7 @@ impl LockablePaintable {
             animation: None,
             lockedIndex: 0,
         };
-        this.animation = jcall!(jcall!(FeaturedAnimationInterfaceFactoryInterfaceFactory::getInstance()).get(jcall!(LockedResources::getInstance()).LOCKED_DEMO_GAME_FEATURE_RESOURCE.clone())).getInstance(0);
+        this.animation = jcall!(jcall!(FeaturedAnimationInterfaceFactoryInterfaceFactory::getInstance()).get({ let java_field = jcall!(LockedResources::getInstance()).LOCKED_DEMO_GAME_FEATURE_RESOURCE.clone(); java_field }.clone())).getInstance(0);
         this.lockedIndex = lockedIndex.clone();
         this
     }
@@ -57,8 +58,8 @@ impl LockablePaintable {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut currentIndex: i32, mut x: i32, mut y: i32) {
-        if jcall!(LockedUtil::getInstance()).isLocked() && currentIndex >= self.getLockedIndex() {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut currentIndex: i32, mut x: i32, mut y: i32) {
+        if { let java_value = jcall!(LockedUtil::getInstance()).isLocked(); java_value } && currentIndex >= self.getLockedIndex() {
             jcall!(self.getAnimation()).paintXY(graphics.clone(), x.clone(), y.clone());
         }
     }
@@ -95,7 +96,7 @@ impl LockablePaintableDyn for LockablePaintable {
 impl crate::org::allbinary::graphics::form::ItemPaintable::ItemPaintableDyn for LockablePaintable {
     fn as_ItemPaintable(&self) -> &crate::org::allbinary::graphics::form::ItemPaintable::ItemPaintable { &self.base }
     fn as_ItemPaintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::ItemPaintable::ItemPaintable { &mut self.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut currentIndex: i32, mut x: i32, mut y: i32) { Self::paint(self, graphics, currentIndex, x, y) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut currentIndex: i32, mut x: i32, mut y: i32) { Self::paint(self, graphics, currentIndex, x, y) }
 }
 
 

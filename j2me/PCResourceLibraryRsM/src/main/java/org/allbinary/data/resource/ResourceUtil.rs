@@ -19,13 +19,14 @@ use std::rc::Rc;
 use super::*;
 // use crate::java::io::ByteArrayInputStream::ByteArrayInputStream;
 // use crate::java::io::ByteArrayOutputStream::ByteArrayOutputStream;
-// use crate::java::io::FileInputStream::FileInputStream;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::FileInputStream::FileInputStream;
+use crate::java::io::InputStream::InputStream;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::io::StreamUtil::StreamUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
-use super::ClassLoader::ClassLoader;
+use crate::java::lang::Exception::*;
+use crate::java::lang::ClassLoader::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -44,6 +45,10 @@ pub struct ResourceUtil {
 thread_local! { pub static ResourceUtil_instance: Option<Rc<RefCell<ResourceUtil>>> = ResourceUtil::new(); }
 
 impl ResourceUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ResourceUtil>>> {
@@ -58,8 +63,8 @@ impl ResourceUtil {
             ext: String::new(),
         };
         this.logUtil = LogUtil::getInstance();
-        this.path = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.ext = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.path = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.ext = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this
     }
 
@@ -79,8 +84,8 @@ impl ResourceUtil {
     
 
     // throws Exception
-    pub fn getResourceAsStream(&mut self, mut resource: String) -> Option<Rc<RefCell<InputStream>>> {
-        let mut inputStream: Option<Rc<RefCell<InputStream>>> = self.getResourceAsStreamAtStart(resource.clone(), 2);
+    pub fn getResourceAsStream(&mut self, mut resource: String) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
+        let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = self.getResourceAsStreamAtStart(resource.clone(), 2);
         if inputStream.is_none() {
             inputStream = self.getResourceAsStreamAtStart(resource.clone(), 1);
             if inputStream.is_none() {
@@ -92,12 +97,12 @@ impl ResourceUtil {
     
 
     // throws Exception
-    pub fn getResourceAsStreamAtStart(&mut self, mut resource: String, mut startIndex: i32) -> Option<Rc<RefCell<InputStream>>> {
-        let mut inputStream: Option<Rc<RefCell<InputStream>>> = FileInputStream::new(jcall!(StringMaker::new()).append(self.path.clone()).append(resource.clone()).append(self.ext.clone()).toString());
+    pub fn getResourceAsStreamAtStart(&mut self, mut resource: String, mut startIndex: i32) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
+        let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = FileInputStream::new(jcall!(StringMaker::new()).append(self.path.clone()).append(resource.clone()).append(self.ext.clone()).toString()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>);
         if inputStream.is_some() {
-            let mut byteArray: Vec<i8> = vec![0; (jcall!(inputStream).available()) as usize];
-            jcall!(StreamUtil::getInstance()).getByteArray(inputStream.clone(), Vec::new(), byteArray.clone());
-            return ByteArrayInputStream::new(byteArray.clone());
+            let mut byteArray: Vec<i8> = vec![0; (jcall!(inputStream).as_InputStream_mut().available()) as usize];
+            jcall!(StreamUtil::getInstance()).getByteArray(inputStream.clone(), crate::java::io::OutputStream::OutputStream::new(), byteArray.clone());
+            return crate::java::io::InputStream::InputStream::new1(byteArray.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>);
         }
         return inputStream.clone();
     }

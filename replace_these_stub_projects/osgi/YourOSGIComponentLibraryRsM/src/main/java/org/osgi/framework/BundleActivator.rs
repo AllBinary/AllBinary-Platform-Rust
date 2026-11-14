@@ -13,9 +13,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait BundleActivator {
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+pub trait BundleActivator: std::any::Any + crate::java::lang::Object::JavaObjectToString {
 }
 
 

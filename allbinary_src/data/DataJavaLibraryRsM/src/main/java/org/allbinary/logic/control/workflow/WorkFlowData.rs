@@ -35,6 +35,10 @@ pub struct WorkFlowData {
 thread_local! { pub static WorkFlowData_instance: Option<Rc<RefCell<WorkFlowData>>> = WorkFlowData::new(); }
 
 impl WorkFlowData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<WorkFlowData>>> {

@@ -17,7 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Item::Item;
+use crate::javax::microedition::lcdui::Item::Item;
+use crate::org::allbinary::MIDPUtil::MIDPUtil;
 use crate::org::allbinary::graphics::displayable::screen::CommandForm::CommandForm;
 
 // Borrows the object of a Java reference
@@ -35,6 +36,10 @@ thread_local! { pub static MEUtil_instance: Option<Rc<RefCell<MEUtil>>> = MEUtil
 
 impl MEUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -51,8 +56,8 @@ impl MEUtil {
     }
     
 
-    pub fn appendItem(&mut self, mut form: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::screen::CommandForm::CommandFormDyn>>>, mut item: Option<Rc<RefCell<Item>>>) {
-        jcall!(form).as_CommandForm_mut().append(item.clone());
+    pub fn appendItem(&mut self, mut form: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::screen::CommandForm::CommandFormDyn>>>, mut item: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Item::ItemDyn>>>) {
+        jcall!(MIDPUtil::getInstance()).appendItem(form.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Form::FormDyn>>), item.clone());
     }
 }
 

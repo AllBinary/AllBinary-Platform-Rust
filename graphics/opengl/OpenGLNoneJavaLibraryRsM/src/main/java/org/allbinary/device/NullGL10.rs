@@ -17,10 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
-// use crate::java::nio::Buffer::Buffer;
-// use crate::java::nio::FloatBuffer::FloatBuffer;
-// use crate::java::nio::IntBuffer::IntBuffer;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::java::nio::Buffer::Buffer;
+use crate::java::nio::FloatBuffer::FloatBuffer;
+use crate::java::nio::IntBuffer::IntBuffer;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 
 // Borrows the object of a Java reference
@@ -134,6 +134,10 @@ impl crate::javax::microedition::khronos::opengles::GL::GL for NullGL10 {
 }
 
 impl NullGL10 {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -351,7 +355,7 @@ impl NullGL10 {
     
 
     pub fn glGetString(&mut self, mut name: i32) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 

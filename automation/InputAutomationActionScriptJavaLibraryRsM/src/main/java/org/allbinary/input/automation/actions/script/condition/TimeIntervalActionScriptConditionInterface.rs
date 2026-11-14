@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait TimeIntervalActionScriptConditionInterface {
+pub trait TimeIntervalActionScriptConditionInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getTimeDelayHelper(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>>;
     
 
     fn log(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

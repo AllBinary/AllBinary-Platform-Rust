@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait PingInfoCompositeInterface {
+pub trait PingInfoCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn setPingInfo(&mut self, show: bool);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

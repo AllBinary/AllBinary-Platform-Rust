@@ -24,6 +24,7 @@ use crate::org::allbinary::graphics::paint::NullPaintable::NullPaintable;
 use crate::org::allbinary::graphics::paint::Paintable::Paintable;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::BuildingPropertiesFactory::BuildingPropertiesFactory;
 use super::BuildingLayer::BuildingLayer;
 
@@ -73,17 +74,17 @@ impl SimulatedBuildingPropertiesFactory {
 
     // throws Exception
     pub fn getHealthBar(&mut self, mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>> {
-        return NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>);
+        return NullPaintable::getInstance();
     }
     
 
-    pub fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        return jcall!(StdUtil::getInstance()).NULL_TABLE.clone();
+    pub fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        return { let java_field = jcall!(StdUtil::getInstance()).NULL_TABLE.clone(); java_field }.clone();
     }
     
 
     pub fn getTrackingEvent(&mut self, mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>>) -> Option<Rc<RefCell<TrackingEvent>>> {
-        return TrackingEvent::new(TrackingEventHandler::getInstance());
+        return TrackingEvent::new(crate::java_into_object(TrackingEventHandler::getInstance()));
     }
 }
 impl std::ops::Deref for SimulatedBuildingPropertiesFactory {
@@ -100,7 +101,7 @@ impl crate::org::allbinary::game::layer::building::BuildingPropertiesFactory::Bu
     fn getEfficiencyPerLevel(&mut self, mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>>) -> i32 { Self::getEfficiencyPerLevel(self, buildingLayer) }
     fn getDamageFloaters(&mut self, mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::combat::damage::DamageFloaters::DamageFloatersDyn>>> { Self::getDamageFloaters(self, buildingLayer) }
     fn getHealthBar(&mut self, mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>> { Self::getHealthBar(self, buildingLayer) }
-    fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { Self::getHashtable(self) }
+    fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { Self::getHashtable(self) }
     fn getTrackingEvent(&mut self, mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>>) -> Option<Rc<RefCell<TrackingEvent>>> { Self::getTrackingEvent(self, buildingLayer) }
 }
 

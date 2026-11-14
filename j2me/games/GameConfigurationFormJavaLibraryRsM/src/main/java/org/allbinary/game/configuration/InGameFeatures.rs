@@ -56,26 +56,26 @@ impl InGameFeatures {
     pub fn init(&mut self) {
         let mut LABEL: String = String::from("Screen Buttons");
         let mut orientationData: Option<Rc<RefCell<OrientationData>>> = OrientationData::getInstance();
-        let mut exclusiveOrientationSensorVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = (jcall!(jcall!(GameFeatureChoiceGroups::getExclusiveInstance()).get()).get((jcall!(orientationData).ORIENTATION_SENSOR_INPUT).clone() /* as Any */)).clone() /* as BasicArrayList */;
+        let mut exclusiveOrientationSensorVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_object = (jcall!(jcall!(GameFeatureChoiceGroups::getExclusiveInstance()).get()).get(crate::java_into_object(crate::java_into_object(({ let java_field = jcall!(orientationData).ORIENTATION_SENSOR_INPUT.clone(); java_field }).clone())))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
         let mut inGameFeatureChoiceGroups: Option<Rc<RefCell<InGameFeatureChoiceGroups>>> = InGameFeatureChoiceGroups::getExclusiveInstance();
         if exclusiveOrientationSensorVector.is_some() {
-            let mut inGameExclusiveOrientationSensorVectorCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(jcall!(inGameFeatureChoiceGroups).get()).get((jcall!(orientationData).ORIENTATION_SENSOR_INPUT).clone() /* as Any */);
+            let mut inGameExclusiveOrientationSensorVectorCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(jcall!(inGameFeatureChoiceGroups).get()).get(crate::java_into_object(crate::java_into_object(({ let java_field = jcall!(orientationData).ORIENTATION_SENSOR_INPUT.clone(); java_field }).clone())));
             if inGameExclusiveOrientationSensorVectorCanBeNull.is_none() {
                 self.addToInGameMenu();
             } else {
-                let mut inGameExclusiveOrientationSensorVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = (inGameExclusiveOrientationSensorVectorCanBeNull).clone() /* as BasicArrayList */;
+                let mut inGameExclusiveOrientationSensorVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_object = (inGameExclusiveOrientationSensorVectorCanBeNull).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
                 if jcall!(inGameExclusiveOrientationSensorVector).size() == 0 {
                     self.addToInGameMenu();
                 }
             }
         }
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
-        if jcall!(features).isFeature(jcall!(TouchFeatureFactory::getInstance()).SHOW_SCREEN_BUTTONS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(features).isFeature(jcall!(TouchFeatureFactory::getInstance()).AUTO_HIDE_SHOW_SCREEN_BUTTONS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(features).isFeature(jcall!(TouchFeatureFactory::getInstance()).HIDE_SCREEN_BUTTONS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            let mut exclusiveScreenButtonsVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        if jcall!(features).isFeature({ let java_field = jcall!(TouchFeatureFactory::getInstance()).SHOW_SCREEN_BUTTONS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(features).isFeature({ let java_field = jcall!(TouchFeatureFactory::getInstance()).AUTO_HIDE_SHOW_SCREEN_BUTTONS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(features).isFeature({ let java_field = jcall!(TouchFeatureFactory::getInstance()).HIDE_SCREEN_BUTTONS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            let mut exclusiveScreenButtonsVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
             let mut touchFeatureFactory: Option<Rc<RefCell<TouchFeatureFactory>>> = TouchFeatureFactory::getInstance();
-            jcall!(exclusiveScreenButtonsVector).add(crate::java_into_object(jcall!(touchFeatureFactory).AUTO_HIDE_SHOW_SCREEN_BUTTONS.clone()));
-            jcall!(exclusiveScreenButtonsVector).add(crate::java_into_object(jcall!(touchFeatureFactory).SHOW_SCREEN_BUTTONS.clone()));
-            jcall!(exclusiveScreenButtonsVector).add(crate::java_into_object(jcall!(touchFeatureFactory).HIDE_SCREEN_BUTTONS.clone()));
+            jcall!(exclusiveScreenButtonsVector).add(crate::java_into_object({ let java_field = jcall!(touchFeatureFactory).AUTO_HIDE_SHOW_SCREEN_BUTTONS.clone(); java_field }.clone()));
+            jcall!(exclusiveScreenButtonsVector).add(crate::java_into_object({ let java_field = jcall!(touchFeatureFactory).SHOW_SCREEN_BUTTONS.clone(); java_field }.clone()));
+            jcall!(exclusiveScreenButtonsVector).add(crate::java_into_object({ let java_field = jcall!(touchFeatureFactory).HIDE_SCREEN_BUTTONS.clone(); java_field }.clone()));
             jcall!(inGameFeatureChoiceGroups).add(LABEL.clone(), exclusiveScreenButtonsVector.clone());
         }
     }
@@ -83,20 +83,20 @@ impl InGameFeatures {
 
     pub fn addToInGameMenu(&mut self) {
         let mut orientationData: Option<Rc<RefCell<OrientationData>>> = OrientationData::getInstance();
-        let mut inGameExclusiveOrientationSensorVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        jcall!(inGameExclusiveOrientationSensorVector).add(crate::java_into_object(jcall!(SensorFeatureFactory::getInstance()).ORIENTATION_SENSORS.clone()));
-        jcall!(inGameExclusiveOrientationSensorVector).add(crate::java_into_object(jcall!(SensorFeatureFactory::getInstance()).NO_ORIENTATION.clone()));
-        jcall!(InGameFeatureChoiceGroups::getExclusiveInstance()).add(jcall!(orientationData).ORIENTATION_SENSOR_INPUT.clone(), inGameExclusiveOrientationSensorVector.clone());
+        let mut inGameExclusiveOrientationSensorVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        jcall!(inGameExclusiveOrientationSensorVector).add(crate::java_into_object({ let java_field = jcall!(SensorFeatureFactory::getInstance()).ORIENTATION_SENSORS.clone(); java_field }.clone()));
+        jcall!(inGameExclusiveOrientationSensorVector).add(crate::java_into_object({ let java_field = jcall!(SensorFeatureFactory::getInstance()).NO_ORIENTATION.clone(); java_field }.clone()));
+        jcall!(InGameFeatureChoiceGroups::getExclusiveInstance()).add({ let java_field = jcall!(orientationData).ORIENTATION_SENSOR_INPUT.clone(); java_field }.clone(), inGameExclusiveOrientationSensorVector.clone());
     }
     
 
     pub fn isAny(&mut self) -> bool {
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
         let mut touchFeatureFactory: Option<Rc<RefCell<TouchFeatureFactory>>> = TouchFeatureFactory::getInstance();
-        if jcall!(features).isFeature(jcall!(touchFeatureFactory).SHOW_SCREEN_BUTTONS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(features).isFeature(jcall!(touchFeatureFactory).AUTO_HIDE_SHOW_SCREEN_BUTTONS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(features).isFeature(jcall!(touchFeatureFactory).HIDE_SCREEN_BUTTONS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        if jcall!(features).isFeature({ let java_field = jcall!(touchFeatureFactory).SHOW_SCREEN_BUTTONS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(features).isFeature({ let java_field = jcall!(touchFeatureFactory).AUTO_HIDE_SHOW_SCREEN_BUTTONS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(features).isFeature({ let java_field = jcall!(touchFeatureFactory).HIDE_SCREEN_BUTTONS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             return true;
         }
-        let mut exclusiveOrientationSensorVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = (jcall!(jcall!(GameFeatureChoiceGroups::getExclusiveInstance()).get()).get((jcall!(OrientationData::getInstance()).ORIENTATION_SENSOR_INPUT).clone() /* as Any */)).clone() /* as BasicArrayList */;
+        let mut exclusiveOrientationSensorVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_object = (jcall!(jcall!(GameFeatureChoiceGroups::getExclusiveInstance()).get()).get(crate::java_into_object(crate::java_into_object(({ let java_field = jcall!(OrientationData::getInstance()).ORIENTATION_SENSOR_INPUT.clone(); java_field }).clone())))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
         if exclusiveOrientationSensorVector.is_some() {
             return true;
         }

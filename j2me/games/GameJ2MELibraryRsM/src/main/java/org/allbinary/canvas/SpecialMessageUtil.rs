@@ -37,6 +37,10 @@ thread_local! { pub static SpecialMessageUtil_SINGLETON: Option<Rc<RefCell<Speci
 
 impl SpecialMessageUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -56,14 +60,14 @@ impl SpecialMessageUtil {
     pub fn get(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(Memory::getInfo());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(GameStatisticsFactory::GameStatisticsFactory::getInstance()).toString());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from(" Option: "));
-        if jcall!(Features::getInstance()).isDefault(jcall!(OpenGLFeatureFactory::getInstance()).OPENGL_AUTO_SELECT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            jcall!(stringBuffer).append(jcall!(jcall!(OpenGLFeatureFactory::getInstance()).OPENGL_AUTO_SELECT).getName());
+        if jcall!(Features::getInstance()).isDefault({ let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL_AUTO_SELECT.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            jcall!(stringBuffer).append(jcall!({ let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL_AUTO_SELECT.clone(); java_field }).getName());
         } else {
-            jcall!(stringBuffer).append(jcall!(jcall!(OpenGLFeatureFactory::getInstance()).OPENGL_MINIMUM).getName());
+            jcall!(stringBuffer).append(jcall!({ let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL_MINIMUM.clone(); java_field }).getName());
         }
         return jcall!(stringBuffer).toString();
     }

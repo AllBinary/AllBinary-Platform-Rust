@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -25,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait PopupMenuInterface {
+pub trait PopupMenuInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
@@ -37,8 +38,6 @@ pub trait PopupMenuInterface {
 
     // throws Exception
     fn toggleMenu(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

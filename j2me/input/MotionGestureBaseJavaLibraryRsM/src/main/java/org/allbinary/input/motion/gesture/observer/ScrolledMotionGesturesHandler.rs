@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
+use crate::java::lang::Exception::*;
 use super::BaseMotionGestureEventListener::BaseMotionGestureEventListener;
 use super::MotionGestureEvent::MotionGestureEvent;
 
@@ -58,8 +59,8 @@ impl ScrolledMotionGesturesHandler {
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut baseMotionGestureEventListener: Option<Rc<RefCell<dyn BaseMotionGestureEventListener>>> = panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn BaseMotionGestureEventListener");
-        jcall!(baseMotionGestureEventListener).onScrolledMotionGestureEvent((eventObject).clone() /* as MotionGestureEvent */);
+        let mut baseMotionGestureEventListener: Option<Rc<RefCell<dyn BaseMotionGestureEventListener>>> = (|| -> Option<Rc<RefCell<dyn BaseMotionGestureEventListener>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn BaseMotionGestureEventListener") })();
+        jcall!(baseMotionGestureEventListener).onScrolledMotionGestureEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<MotionGestureEvent>() }, "ClassCastException: not a MotionGestureEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<MotionGestureEvent>) } }));
     }
 }
 impl std::ops::Deref for ScrolledMotionGesturesHandler {

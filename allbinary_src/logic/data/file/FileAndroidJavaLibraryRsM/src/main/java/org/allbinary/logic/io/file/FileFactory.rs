@@ -20,6 +20,7 @@ use super::*;
 // use crate::java::io::FileNotFoundException::FileNotFoundException;
 use crate::android::content::Context::Context;
 use crate::org::allbinary::data::resource::ResourceUtil::ResourceUtil;
+use crate::java::lang::Exception::*;
 use super::AbFile::AbFile;
 
 // Borrows the object of a Java reference
@@ -36,6 +37,10 @@ pub struct FileFactory {
 thread_local! { pub static FileFactory_SINGLETON: Option<Rc<RefCell<FileFactory>>> = FileFactory::new(jcall!(ResourceUtil::getInstance()).getContext()); }
 
 impl FileFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut context: Option<Rc<RefCell<Context>>>) -> Self {
@@ -58,17 +63,18 @@ impl FileFactory {
 
     // throws Exception
     pub fn isFile(&mut self, mut path: String) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(self.context).openFileInput(path.clone());
-            return true;
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 

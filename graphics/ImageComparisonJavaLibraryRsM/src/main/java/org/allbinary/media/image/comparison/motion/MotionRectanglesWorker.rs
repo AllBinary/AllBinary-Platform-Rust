@@ -29,6 +29,7 @@ use crate::org::allbinary::media::image::comparison::ImageComparisonResultsListe
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
+use crate::java::lang::Exception::*;
 use super::MotionRectangleConstraintsInterface::MotionRectangleConstraintsInterface;
 use super::AllMotionRectangles::AllMotionRectangles;
 use super::MotionRectanglesResultsFrameCacheable::MotionRectanglesResultsFrameCacheable;
@@ -54,7 +55,14 @@ pub struct MotionRectanglesWorker {
     pub running: bool,
 }
 
-// impl ImageComparisonResultsListener for MotionRectanglesWorker with the methods of the trait
+impl ImageComparisonResultsListener for MotionRectanglesWorker {
+    fn onImageComparisonResultsEvent(&mut self, mut imageComparisonResultsEvent: Option<Rc<RefCell<ImageComparisonResultsEvent>>>) { Self::onImageComparisonResultsEvent(self, imageComparisonResultsEvent) }
+}
+impl crate::org::allbinary::logic::util::event::BasicEventListenerInterface::BasicEventListenerInterface for MotionRectanglesWorker {
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for MotionRectanglesWorker {
+    fn onEvent(&mut self, mut allBinaryEventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, allBinaryEventObject) }
+}
 
 impl MotionRectanglesWorker {
     
@@ -71,7 +79,7 @@ impl MotionRectanglesWorker {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        this.imageComparisonInfoVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.imageComparisonInfoVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.motionRectangleConstraintsInterface = motionRectangleConstraintsInterface.clone();
         this
     }
@@ -88,7 +96,7 @@ impl MotionRectanglesWorker {
     
 
     pub fn onEvent(&mut self, mut allBinaryEventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        self.onImageComparisonResultsEvent((allBinaryEventObject).clone() /* as ImageComparisonResultsEvent */);
+        self.onImageComparisonResultsEvent((allBinaryEventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<ImageComparisonResultsEvent>() }, "ClassCastException: not a ImageComparisonResultsEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<ImageComparisonResultsEvent>) } }));
     }
     
 
@@ -106,32 +114,32 @@ impl MotionRectanglesWorker {
 
     pub fn run(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
             self.setRunning(true);
             let mut timeHelper: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>> = TimeDelayHelper::new(1000).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
             jcall!(timeHelper).setStartTimeTNT();
             let mut imageComparisonResultsEvent: Option<Rc<RefCell<ImageComparisonResultsEvent>>> = { let java_object = (jcall!(self.imageComparisonInfoVector).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ImageComparisonResultsEvent>>>>().expect("ClassCastException").clone()) };
-            let mut imageComparisonInfo: Option<Rc<RefCell<ImageComparisonResult>>> = (jcall!(imageComparisonResultsEvent).getImageComparisonResult()).clone() /* as ImageComparisonResult */;
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(imageComparisonInfo).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            let mut imageComparisonInfo: Option<Rc<RefCell<ImageComparisonResult>>> = (jcall!(imageComparisonResultsEvent).getImageComparisonResult()).clone();
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(imageComparisonInfo).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             let mut allMotionRectangles: Option<Rc<RefCell<AllMotionRectangles>>> = AllMotionRectangles::new(imageComparisonInfo.clone());
-            jcall!(AllMotionRectanglesResultsCacheSingleton::AllMotionRectanglesResultsCacheSingleton::getInstance()).add(MotionRectanglesResultsFrameCacheable::new(allMotionRectangles.clone(), jcall!(imageComparisonInfo).getFrameTwo()));
-            let mut consolidatedMotionRectangles: Option<Rc<RefCell<ConsolidateMotionRectangles>>> = ConsolidateMotionRectangles::new(allMotionRectangles.clone());
-            jcall!(ConsolidatedMotionRectanglesResultsCacheSingleton::ConsolidatedMotionRectanglesResultsCacheSingleton::getInstance()).add(MotionRectanglesResultsFrameCacheable::new(consolidatedMotionRectangles.clone(), jcall!(imageComparisonInfo).getFrameTwo()));
-            let mut constrainedMotionRectangles: Option<Rc<RefCell<ConstrainedMotionRectangles>>> = ConstrainedMotionRectangles::new(self.motionRectangleConstraintsInterface.clone(), consolidatedMotionRectangles.clone());
+            jcall!(AllMotionRectanglesResultsCacheSingleton::AllMotionRectanglesResultsCacheSingleton::getInstance()).add(MotionRectanglesResultsFrameCacheable::new(allMotionRectangles.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::image::comparison::motion::MotionRectangles::MotionRectanglesDyn>>), jcall!(imageComparisonInfo).getFrameTwo()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::cache::CacheableInterface::CacheableInterface>>));
+            let mut consolidatedMotionRectangles: Option<Rc<RefCell<ConsolidateMotionRectangles>>> = ConsolidateMotionRectangles::new(allMotionRectangles.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::image::comparison::motion::MotionRectangles::MotionRectanglesDyn>>));
+            jcall!(ConsolidatedMotionRectanglesResultsCacheSingleton::ConsolidatedMotionRectanglesResultsCacheSingleton::getInstance()).add(MotionRectanglesResultsFrameCacheable::new(consolidatedMotionRectangles.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::image::comparison::motion::MotionRectangles::MotionRectanglesDyn>>), jcall!(imageComparisonInfo).getFrameTwo()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::cache::CacheableInterface::CacheableInterface>>));
+            let mut constrainedMotionRectangles: Option<Rc<RefCell<ConstrainedMotionRectangles>>> = ConstrainedMotionRectangles::new(self.motionRectangleConstraintsInterface.clone(), consolidatedMotionRectangles.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::image::comparison::motion::MotionRectangles::MotionRectanglesDyn>>));
             jcall!(constrainedMotionRectangles).applyMotionRectangleConstraints(consolidatedMotionRectangles.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::image::comparison::motion::MotionRectangles::MotionRectanglesDyn>>));
-            jcall!(ConstrainedMotionRectanglesResultsCacheSingleton::ConstrainedMotionRectanglesResultsCacheSingleton::getInstance()).add(MotionRectanglesResultsFrameCacheable::new(constrainedMotionRectangles.clone(), jcall!(imageComparisonInfo).getFrameTwo()));
-            { let java_arguments = (MotionRectanglesResultsEvent::new(None /* Java this: a &mut self method has no Rc of itself */, jcall!(imageComparisonInfo).getFrameTwo(), (constrainedMotionRectangles).clone() /* as MotionRectangles */),); self.fireEvent(java_arguments.0) };
+            jcall!(ConstrainedMotionRectanglesResultsCacheSingleton::ConstrainedMotionRectanglesResultsCacheSingleton::getInstance()).add(MotionRectanglesResultsFrameCacheable::new(constrainedMotionRectangles.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::image::comparison::motion::MotionRectangles::MotionRectanglesDyn>>), jcall!(imageComparisonInfo).getFrameTwo()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::cache::CacheableInterface::CacheableInterface>>));
+            { let java_arguments = (MotionRectanglesResultsEvent::new(None /* Java this: a &mut self method has no Rc of itself */, jcall!(imageComparisonInfo).getFrameTwo(), (constrainedMotionRectangles).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::image::comparison::motion::MotionRectangles::MotionRectanglesDyn>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>),); self.fireEvent(java_arguments.0) };
             jcall!(self.imageComparisonInfoVector).remove(crate::java_into_object(imageComparisonResultsEvent.clone()));
             self.index += 1;
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", jcall!(CommonLabels::getInstance()).ELAPSED, jcall!(timeHelper).getElapsedTNT()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).ELAPSED.clone(); java_field }, jcall!(timeHelper).getElapsedTNT()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             self.setRunning(false);
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).END.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).END.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

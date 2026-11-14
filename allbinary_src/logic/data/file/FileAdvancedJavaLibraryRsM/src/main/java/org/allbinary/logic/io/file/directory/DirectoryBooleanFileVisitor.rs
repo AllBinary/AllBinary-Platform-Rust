@@ -33,6 +33,10 @@ pub struct DirectoryBooleanFileVisitor {
 // impl VisitorInterface for DirectoryBooleanFileVisitor with the methods of the trait
 
 impl DirectoryBooleanFileVisitor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -47,12 +51,12 @@ impl DirectoryBooleanFileVisitor {
     
 
     pub fn visit(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return (self.visit((anyType).clone() /* as AbFile */)).clone() /* as Any */;
+        return crate::java_into_object(crate::java_into_object((self.visit_AbFile({ let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AbFile>>>>().expect("ClassCastException").clone()) })).clone()));
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn visit(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<bool> {
+    pub fn visit_AbFile(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<bool> {
         if jcall!(file).isDirectory() {
             return true;
         }

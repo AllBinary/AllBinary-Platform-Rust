@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use super::ABTextItem::ABTextItem;
 use super::ABStringComponent::ABStringComponent;
@@ -55,11 +55,11 @@ impl SelectableTextItem {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         let mut stringComponent: Option<Rc<RefCell<ABStringComponent>>> = self.getLabelStringComponent();
         if stringComponent.is_some() {
-            jcall!(graphics).setColor(((jcall!(stringComponent).getForegroundBasicColor()).unwrap() as i32));
+            jcall!(graphics).setColor(jcall!(jcall!(stringComponent).getForegroundBasicColor()).intValue());
         }
         jcall!(graphics).drawString(self.getLabel(), x + 2, y.clone(), 0);
     }
@@ -83,8 +83,22 @@ impl crate::org::allbinary::graphics::form::item::CustomCustomItem::CustomCustom
 impl crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn for SelectableTextItem {
     fn as_ABCustomItem(&self) -> &crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItem { &self.base.base.base }
     fn as_ABCustomItem_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItem { &mut self.base.base.base }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintUnselected(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::paintUnselected(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self), p1, p2, p3) }
     fn isFocusable(&mut self) -> bool { Self::isFocusable(self) }
+    fn getLabel(&mut self) -> String { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::getLabel(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self)) }
+    fn getMinimumWidth(&mut self) -> i32 { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::getMinimumWidth(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self)) }
+    fn getMinimumHeight(&mut self) -> i32 { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::getMinimumHeight(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self)) }
+}
+impl crate::org::allbinary::graphics::form::item::ABCustomItemInterface::ABCustomItemInterface for SelectableTextItem {
+    fn getMinimumWidth(&mut self) -> i32 { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::getMinimumWidth(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self)) }
+    fn getMinimumHeight(&mut self) -> i32 { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::getMinimumHeight(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self)) }
+    fn getLabel(&mut self) -> String { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::getLabel(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self)) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintUnselected(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItem::paintUnselected(crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn::as_ABTextItem_mut(self), p1, p2, p3) }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for SelectableTextItem {
+    fn updateMeasurement(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::form::item::CustomCustomItem::CustomCustomItem::updateMeasurement(crate::org::allbinary::graphics::form::item::CustomCustomItem::CustomCustomItemDyn::as_CustomCustomItem_mut(self), p1) }
 }
 
 

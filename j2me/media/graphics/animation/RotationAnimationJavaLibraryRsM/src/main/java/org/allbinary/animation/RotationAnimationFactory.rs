@@ -21,6 +21,7 @@ use crate::org::allbinary::game::configuration::GameConfigurationCentral::GameCo
 use crate::org::allbinary::math::AngleFactory::AngleFactory;
 use crate::org::allbinary::math::AngleInfo::AngleInfo;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
 use super::ProceduralAnimationInterfaceFactoryInterface::ProceduralAnimationInterfaceFactoryInterface;
 use super::Animation::Animation;
@@ -46,14 +47,16 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 impl ProceduralAnimationInterfaceFactoryInterface for RotationAnimationFactory {
     fn getInstanceAnimation(&mut self, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { Self::getInstanceAnimation(self, animationInterface) }
 }
-impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface for RotationAnimationFactory {
-}
 
 impl RotationAnimationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn createFactory() -> Option<Rc<RefCell<RotationAnimationFactory>>> {
-        let mut totalAngle: i16 = jcall!(AngleFactory::getInstance()).TOTAL_ANGLE.clone();
+        let mut totalAngle: i16 = { let java_field = jcall!(AngleFactory::getInstance()).TOTAL_ANGLE.clone(); java_field }.clone();
         return RotationAnimationFactory::new(totalAngle.clone(), (((((totalAngle) as i32) / jcall!(GameConfigurationCentral::getInstance()).getGameControlFidelity())) as i16));
     }
     
@@ -75,13 +78,13 @@ impl RotationAnimationFactory {
 
     // throws Exception
     pub fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
-        return NullRotationAnimation::NullRotationAnimation::createTotalAngle(AngleInfo::getInstance(self.angleIncrement.clone()), self.totalAngle.clone(), AnimationBehavior::AnimationBehavior::getInstance());
+        return NullRotationAnimation::NullRotationAnimation::createTotalAngle(AngleInfo::getInstance(self.angleIncrement.clone()), self.totalAngle.clone(), AnimationBehavior::AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
     }
     
 
     // throws Exception
     pub fn getInstanceAnimation(&mut self, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
-        return NullRotationAnimation::NullRotationAnimation::createTotalAngle(AngleInfo::getInstance(self.angleIncrement.clone()), self.totalAngle.clone(), AnimationBehavior::AnimationBehavior::getInstance());
+        return NullRotationAnimation::NullRotationAnimation::createTotalAngle(AngleInfo::getInstance(self.angleIncrement.clone()), self.totalAngle.clone(), AnimationBehavior::AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
     }
     
 

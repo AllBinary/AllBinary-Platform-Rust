@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait HealthVisitorInterface {
+pub trait HealthVisitorInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn visit(&mut self, healthInterface: Option<Rc<RefCell<dyn HealthInterface>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

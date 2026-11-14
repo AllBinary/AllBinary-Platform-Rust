@@ -31,6 +31,10 @@ pub struct ScreenCapture {
 
 impl ScreenCapture {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -53,7 +57,7 @@ impl ScreenCapture {
     pub fn endRecording(&mut self) {
     }
 }
-pub trait ScreenCaptureDyn {
+pub trait ScreenCaptureDyn: std::any::Any {
     fn as_ScreenCapture(&self) -> &ScreenCapture;
     fn as_ScreenCapture_mut(&mut self) -> &mut ScreenCapture;
     fn saveFrame(&mut self) { ScreenCapture::saveFrame(self.as_ScreenCapture_mut()) }

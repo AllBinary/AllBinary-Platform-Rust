@@ -53,6 +53,10 @@ thread_local! { pub static SqlTypeStrings_instance: Option<Rc<RefCell<SqlTypeStr
 
 impl SqlTypeStrings {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             CHAR_COLUMN: String::new(),
@@ -98,13 +102,13 @@ impl SqlTypeStrings {
         this.SIX_SIZE = String::from("(6)");
         this.ELEVEN_SIZE = String::from("(11)");
         this.TWELVE_SIZE = String::from("(12)");
-        this.ONE_KB_CHAR_COLUMN = jcall!(StringMaker::new()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(this.CHAR_COLUMN.clone()).append(String::from("(1024)")).append(jcall!(CommonSeps::getInstance()).COMMA_SEP.clone()).toString();
-        this.MAX_CHAR_COLUMN = jcall!(StringMaker::new()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(this.CHAR_COLUMN.clone()).append(this.MAX_SIZE.clone()).append(jcall!(CommonSeps::getInstance()).COMMA_SEP.clone()).toString();
-        this.MAX_CHAR_COLUMN_NOT_NULL = jcall!(StringMaker::new()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(this.CHAR_COLUMN.clone()).append(this.MAX_SIZE.clone()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(this.NOT_NULL.clone()).append(jcall!(CommonSeps::getInstance()).COMMA_SEP.clone()).toString();
-        this.SIXTY_CHAR_COLUMN_NOT_NULL = jcall!(StringMaker::new()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(this.CHAR_COLUMN.clone()).append(this.SIXTY_SIZE.clone()).append(this.NOT_NULL.clone()).append(jcall!(CommonSeps::getInstance()).COMMA_SEP.clone()).toString();
-        this.ONE_CHAR_COLUMN_NOT_NULL = jcall!(StringMaker::new()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(this.CHAR_COLUMN.clone()).append(this.ONE_SIZE.clone()).append(this.NOT_NULL.clone()).append(jcall!(CommonSeps::getInstance()).COMMA_SEP.clone()).toString();
-        this.SIX_CHAR_COLUMN_NOT_NULL = jcall!(StringMaker::new()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(this.CHAR_COLUMN.clone()).append(this.SIX_SIZE.clone()).append(this.NOT_NULL.clone()).append(jcall!(CommonSeps::getInstance()).COMMA_SEP.clone()).toString();
-        this.TWELVE_CHAR_COLUMN_NOT_NULL = jcall!(StringMaker::new()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(this.CHAR_COLUMN.clone()).append(this.TWELVE_SIZE.clone()).append(this.NOT_NULL.clone()).append(jcall!(CommonSeps::getInstance()).COMMA_SEP.clone()).toString();
+        this.ONE_KB_CHAR_COLUMN = jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(this.CHAR_COLUMN.clone()).append(String::from("(1024)")).append({ let java_field = jcall!(CommonSeps::getInstance()).COMMA_SEP.clone(); java_field }.clone()).toString();
+        this.MAX_CHAR_COLUMN = jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(this.CHAR_COLUMN.clone()).append(this.MAX_SIZE.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).COMMA_SEP.clone(); java_field }.clone()).toString();
+        this.MAX_CHAR_COLUMN_NOT_NULL = jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(this.CHAR_COLUMN.clone()).append(this.MAX_SIZE.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(this.NOT_NULL.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).COMMA_SEP.clone(); java_field }.clone()).toString();
+        this.SIXTY_CHAR_COLUMN_NOT_NULL = jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(this.CHAR_COLUMN.clone()).append(this.SIXTY_SIZE.clone()).append(this.NOT_NULL.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).COMMA_SEP.clone(); java_field }.clone()).toString();
+        this.ONE_CHAR_COLUMN_NOT_NULL = jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(this.CHAR_COLUMN.clone()).append(this.ONE_SIZE.clone()).append(this.NOT_NULL.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).COMMA_SEP.clone(); java_field }.clone()).toString();
+        this.SIX_CHAR_COLUMN_NOT_NULL = jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(this.CHAR_COLUMN.clone()).append(this.SIX_SIZE.clone()).append(this.NOT_NULL.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).COMMA_SEP.clone(); java_field }.clone()).toString();
+        this.TWELVE_CHAR_COLUMN_NOT_NULL = jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(this.CHAR_COLUMN.clone()).append(this.TWELVE_SIZE.clone()).append(this.NOT_NULL.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).COMMA_SEP.clone(); java_field }.clone()).toString();
         this.TWO_INT_NOT_NULL = String::from(" INT(2) NOT NULL, ");
         this.THREE_INT_NOT_NULL = String::from(" INT(3) NOT NULL, ");
         this.FOUR_INT_NOT_NULL = String::from(" INT(4) NOT NULL, ");

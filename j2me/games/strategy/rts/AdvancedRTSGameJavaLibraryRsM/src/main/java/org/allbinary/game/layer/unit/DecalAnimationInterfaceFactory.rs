@@ -23,6 +23,7 @@ use crate::org::allbinary::animation::FeaturedAnimationInterfaceFactoryInterface
 use crate::org::allbinary::animation::NullRotationAnimationFactory::NullRotationAnimationFactory;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,6 +38,10 @@ pub struct DecalAnimationInterfaceFactory {
 thread_local! { pub static DecalAnimationInterfaceFactory_instance: Option<Rc<RefCell<DecalAnimationInterfaceFactory>>> = DecalAnimationInterfaceFactory::new(); }
 
 impl DecalAnimationInterfaceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -57,10 +62,10 @@ impl DecalAnimationInterfaceFactory {
     // throws Exception
     pub fn getAnimationFactory(&mut self, mut basicGameResources: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResourcesDyn>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<dyn AnimationInterfaceFactoryInterface>>> {
         let mut animationInterfaceFactoryInterface: Option<Rc<RefCell<dyn AnimationInterfaceFactoryInterface>>> = None;
-        if match (&basicColor, &jcall!(BasicColorFactory::getInstance()).RED) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            animationInterfaceFactoryInterface = jcall!(FeaturedAnimationInterfaceFactoryInterfaceFactory::getInstance()).get(jcall!(basicGameResources).as_BasicGameResources_mut().RESOURCE.clone());
+        if match (&basicColor, &{ let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            animationInterfaceFactoryInterface = { let java_value = (jcall!(FeaturedAnimationInterfaceFactoryInterfaceFactory::getInstance()).get({ let java_field = jcall!(basicGameResources).as_BasicGameResources_mut().RESOURCE.clone(); java_field }.clone())).clone(); java_value };
         } else {
-            animationInterfaceFactoryInterface = NullRotationAnimationFactory::getFactoryInstance();
+            animationInterfaceFactoryInterface = { let java_value = (NullRotationAnimationFactory::getFactoryInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn AnimationInterfaceFactoryInterface>>);
         }
         return animationInterfaceFactoryInterface.clone();
     }

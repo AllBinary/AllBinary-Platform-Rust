@@ -35,6 +35,10 @@ thread_local! { pub static ServletStrings_instance: Option<Rc<RefCell<ServletStr
 
 impl ServletStrings {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             DOPOST: String::new(),

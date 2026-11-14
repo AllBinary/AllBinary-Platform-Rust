@@ -16,10 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
-// use crate::java::util::Set::Set;
+use crate::java::util::HashMap::HashMap;
+use crate::java::util::Set::Set;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorker;
@@ -32,6 +31,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::util::cache::J2SECacheInterface::J2SECacheInterface;
 use crate::org::allbinary::media::image::comparison::ImageComparatorConstraintsInterface::ImageComparatorConstraintsInterface;
 use crate::org::allbinary::media::image::comparison::motion::MotionRectangleConstraintsInterface::MotionRectangleConstraintsInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -50,8 +50,13 @@ pub struct TestInputAutomationCaptureWorker {
     pub IMAGE_NOT_AVAILABLE: String,
 }
 
+impl crate::org::allbinary::thread::RunnableInterface::RunnableInterface for TestInputAutomationCaptureWorker {
+    fn isRunning(&mut self) -> bool { crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorker::isRunning(crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorkerDyn::as_AbstractInputAutomationWorker_mut(self)) }
+    fn setRunning(&mut self, p1: bool) { crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorker::setRunning(crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorkerDyn::as_AbstractInputAutomationWorker_mut(self), p1) }
+    fn setThread(&mut self, p1: Option<Rc<RefCell<crate::java::lang::Thread::Thread>>>) { crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorker::setThread(crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorkerDyn::as_AbstractInputAutomationWorker_mut(self), p1) }
+}
 impl crate::Runnable for TestInputAutomationCaptureWorker {
-    fn run(&mut self) { self.base.run() }
+    fn run(&mut self) { crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorker::run(crate::org::allbinary::input::automation::module::AbstractInputAutomationWorker::AbstractInputAutomationWorkerDyn::as_AbstractInputAutomationWorker_mut(self)) }
 }
 
 impl TestInputAutomationCaptureWorker {
@@ -73,7 +78,7 @@ impl TestInputAutomationCaptureWorker {
         this.IMAGE_AVAILABLE_SO_PROCESSING = String::from("Image Available so processing");
         this.IMAGE_NOT_AVAILABLE = String::from("Image Not Available");
         // super(...) is in the struct literal above
-        jcall!(this.logUtil).putF(this.MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF(this.MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this.setGenericProfileActions(genericProfileActions.clone());
         this
     }
@@ -85,17 +90,17 @@ impl TestInputAutomationCaptureWorker {
 
     // throws Exception
     pub fn processDataWorkerResults(&mut self) {
-        let mut cacheInterface: Option<Rc<RefCell<dyn J2SECacheInterface>>> = (CapturedBufferedImagesCacheSingleton::getInstance()).clone() /* as J2SECacheInterface */;
+        let mut cacheInterface: Option<Rc<RefCell<dyn J2SECacheInterface>>> = (|| -> Option<Rc<RefCell<dyn J2SECacheInterface>>> { panic!("ClassCastException: a Rust dyn CacheInterface cannot be cast to dyn J2SECacheInterface") })();
         if jcall!(jcall!(cacheInterface).keySet()).size() > 0 {
             jcall!(self.logUtil).putF(self.IMAGE_AVAILABLE_SO_PROCESSING.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.PROCESS_DATA_WORKER_RESULTS.clone());
-            let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(jcall!(cacheInterface).keySet()).toArray()[(0) as usize].clone();
-            let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(self.getGenericProfileActions()).getHashMap();
+            let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = crate::java_into_object(jcall!(jcall!(cacheInterface).keySet()).toArray()[(0) as usize].clone());
+            let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(self.getGenericProfileActions()).getHashMap();
             let mut set: Option<Rc<RefCell<dyn Set>>> = jcall!(hashMap).keySet();
             let mut actionNameArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(set).toArray();
             let mut size: i32 = (actionNameArray.len() as i32).clone();
             for index in (0..size) {
-                let mut actionNameString: String = (actionNameArray[(index) as usize]).clone() /* as String */;
-                let mut genericProfileAction: Option<Rc<RefCell<GenericProfileAction>>> = (jcall!(hashMap).get(actionNameString.clone())).clone() /* as GenericProfileAction */;
+                let mut actionNameString: String = { let java_object = (actionNameArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+                let mut genericProfileAction: Option<Rc<RefCell<GenericProfileAction>>> = { let java_object = (jcall!(hashMap).get(crate::java_into_object(actionNameString.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GenericProfileAction>>>>().expect("ClassCastException").clone()) };
                 let mut genericProfileActionScript: Option<Rc<RefCell<GenericProfileActionScript>>> = jcall!(genericProfileAction).getGenericProfileActionScript();
                 let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(genericProfileActionScript).getProfileActionConditionInterfaceVector();
             }
@@ -108,7 +113,7 @@ impl TestInputAutomationCaptureWorker {
 
     // throws Exception
     pub fn process(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
         self.startDataWorkers();
         self.processDataWorkerResults();
     }

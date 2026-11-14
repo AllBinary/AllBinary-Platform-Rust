@@ -105,7 +105,7 @@ impl TopViewGameLayerBehavior {
     
 
     pub fn inputFrames(&mut self, mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>>) {
-        if self.gravityActionIndex > 0 && jcall!(jcall!(velocityProperties).getVelocityYBasicDecimalP()).getUnscaled() > 0 {
+        if self.gravityActionIndex > 0 && jcall!(jcall!(velocityProperties).getVelocityYBasicDecimalP()).getUnscaled() > 0_i64 {
             self.isJumpOver = true;
         }
     }
@@ -118,7 +118,7 @@ impl std::ops::DerefMut for TopViewGameLayerBehavior {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait TopViewGameLayerBehaviorDyn {
+pub trait TopViewGameLayerBehaviorDyn: crate::org::allbinary::game::layer::behavior::GameLayerBehavior::GameLayerBehaviorDyn {
     fn as_TopViewGameLayerBehavior(&self) -> &TopViewGameLayerBehavior;
     fn as_TopViewGameLayerBehavior_mut(&mut self) -> &mut TopViewGameLayerBehavior;
     fn gravity(&mut self) { TopViewGameLayerBehavior::gravity(self.as_TopViewGameLayerBehavior_mut()) }
@@ -132,5 +132,9 @@ impl TopViewGameLayerBehaviorDyn for TopViewGameLayerBehavior {
     fn as_TopViewGameLayerBehavior_mut(&mut self) -> &mut TopViewGameLayerBehavior { self }
 }
 
+impl crate::org::allbinary::game::layer::behavior::GameLayerBehavior::GameLayerBehaviorDyn for TopViewGameLayerBehavior {
+    fn as_GameLayerBehavior(&self) -> &crate::org::allbinary::game::layer::behavior::GameLayerBehavior::GameLayerBehavior { &self.base }
+    fn as_GameLayerBehavior_mut(&mut self) -> &mut crate::org::allbinary::game::layer::behavior::GameLayerBehavior::GameLayerBehavior { &mut self.base }
+}
 
 

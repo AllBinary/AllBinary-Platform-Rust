@@ -17,7 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,6 +33,10 @@ pub struct ImageCompleteUtil {
 thread_local! { pub static ImageCompleteUtil_instance: Option<Rc<RefCell<dyn ImageCompleteUtilDyn>>> = ImageCompleteUtil::new().map(|reference| reference as Rc<RefCell<dyn ImageCompleteUtilDyn>>); }
 
 impl ImageCompleteUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -50,13 +55,13 @@ impl ImageCompleteUtil {
     
 
     // throws Exception
-    pub fn waitForImage(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut name: String) {
+    pub fn waitForImage(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut name: String) {
     }
 }
-pub trait ImageCompleteUtilDyn {
+pub trait ImageCompleteUtilDyn: std::any::Any {
     fn as_ImageCompleteUtil(&self) -> &ImageCompleteUtil;
     fn as_ImageCompleteUtil_mut(&mut self) -> &mut ImageCompleteUtil;
-    fn waitForImage(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut name: String) { ImageCompleteUtil::waitForImage(self.as_ImageCompleteUtil_mut(), image, name) }
+    fn waitForImage(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut name: String) { ImageCompleteUtil::waitForImage(self.as_ImageCompleteUtil_mut(), image, name) }
 }
 impl ImageCompleteUtilDyn for ImageCompleteUtil {
     fn as_ImageCompleteUtil(&self) -> &ImageCompleteUtil { self }

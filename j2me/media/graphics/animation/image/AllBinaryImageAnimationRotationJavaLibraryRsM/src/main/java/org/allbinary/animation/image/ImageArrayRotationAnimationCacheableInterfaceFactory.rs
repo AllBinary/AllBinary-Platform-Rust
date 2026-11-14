@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::logic::util::cache::CacheableInterface::CacheableInterface;
 use crate::org::allbinary::logic::util::cache::CacheableInterfaceFactoryInterface::CacheableInterfaceFactoryInterface;
+use crate::java::lang::Exception::*;
 use super::ImageArrayRotationAnimationCacheable::ImageArrayRotationAnimationCacheable;
 
 // Borrows the object of a Java reference
@@ -38,6 +39,10 @@ impl CacheableInterfaceFactoryInterface for ImageArrayRotationAnimationCacheable
 
 impl ImageArrayRotationAnimationCacheableInterfaceFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -51,7 +56,7 @@ impl ImageArrayRotationAnimationCacheableInterfaceFactory {
 
     // throws Exception
     pub fn getInstance(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn CacheableInterface>>> {
-        return ImageArrayRotationAnimationCacheable::new(key.clone(), AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>);
+        return ImageArrayRotationAnimationCacheable::new(crate::java_into_object(key.clone()), AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>).map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>);
     }
 }
 

@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::layer::weapon::WeaponLayerCircularPool::WeaponLayerCircularPool;
 use crate::org::allbinary::view::ViewPositionFactoryInterface::ViewPositionFactoryInterface;
+use crate::java::lang::Exception::*;
 use super::MineLayerFactory::MineLayerFactory;
 
 // Borrows the object of a Java reference
@@ -35,6 +36,10 @@ pub static mut MineLayerCircularStaticPool_WEAPON_LAYER_CIRCULAR_STATIC_POOL: st
 
 impl MineLayerCircularStaticPool {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -49,7 +54,7 @@ impl MineLayerCircularStaticPool {
     // throws Exception
     pub fn init(mut viewPositionFactoryInterface: Option<Rc<RefCell<dyn ViewPositionFactoryInterface>>>) {
         MineCountedPickedUpLayerInterfaceFactory::MineCountedPickedUpLayerInterfaceFactory::init();
-        jcall!(unsafe { MineLayerCircularStaticPool_WEAPON_LAYER_CIRCULAR_STATIC_POOL.clone() }).initAllBinaryLayerCircularPool(MineLayerFactory::new(viewPositionFactoryInterface.clone()), 20);
+        jcall!(unsafe { MineLayerCircularStaticPool_WEAPON_LAYER_CIRCULAR_STATIC_POOL.clone() }).initAllBinaryLayerCircularPool(MineLayerFactory::new(viewPositionFactoryInterface.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerFactoryInterface::AllBinaryLayerFactoryInterface>>), 20);
     }
     
 

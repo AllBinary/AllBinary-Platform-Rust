@@ -19,6 +19,7 @@ use std::rc::Rc;
 use crate::Runnable;
 use super::*;
 use crate::android::view::View::View;
+use crate::java::lang::RuntimeException::*;
 use super::KeyInputViewCompositeInterface::KeyInputViewCompositeInterface;
 
 // Borrows the object of a Java reference
@@ -42,6 +43,10 @@ impl crate::org::allbinary::android::activity::ViewCompositeInterface::ViewCompo
 }
 
 impl NullKeyInputViewComposite {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

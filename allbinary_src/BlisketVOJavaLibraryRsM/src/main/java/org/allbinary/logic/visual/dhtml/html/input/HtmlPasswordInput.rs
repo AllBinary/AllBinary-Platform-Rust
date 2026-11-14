@@ -36,7 +36,7 @@ impl HtmlPasswordInput {
 
     pub fn new_struct(mut before: String, mut name: String, mut value: String, mut after: String) -> Self {
         let mut this = Self {
-            base: HtmlLengthInput::new_struct(before.clone(), jcall!(HtmlInputData::HtmlInputData::getInstance()).PASSWORD.clone(), name.clone(), value.clone(), after.clone()),
+            base: HtmlLengthInput::new_struct(before.clone(), { let java_field = jcall!(HtmlInputData::HtmlInputData::getInstance()).PASSWORD.clone(); java_field }.clone(), name.clone(), value.clone(), after.clone()),
         };
         // super(...) is in the struct literal above
         this.setSize(Some((32) as i32));

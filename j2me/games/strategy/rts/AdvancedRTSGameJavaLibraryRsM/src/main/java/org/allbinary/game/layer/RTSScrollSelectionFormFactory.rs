@@ -27,6 +27,7 @@ use crate::org::allbinary::graphics::form::MultipleScrollSelectionHorizontalForm
 use crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionForm;
 use crate::org::allbinary::input::motion::button::CommonButtons::CommonButtons;
 use crate::org::allbinary::input::motion::button::TouchButtonLocationHelper::TouchButtonLocationHelper;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,6 +41,10 @@ pub struct RTSScrollSelectionFormFactory {
 
 
 impl RTSScrollSelectionFormFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -57,10 +62,10 @@ impl RTSScrollSelectionFormFactory {
         let mut basicColorFactory: Option<Rc<RefCell<BasicColorFactory>>> = BasicColorFactory::getInstance();
         let mut touchButtonLocationHelper: Option<Rc<RefCell<TouchButtonLocationHelper>>> = TouchButtonLocationHelper::new();
         let mut displayInfo: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
-        let mut menuX: i32 = jcall!(CommonButtons::getInstance()).STANDARD_BUTTON_SIZE + jcall!(touchButtonLocationHelper).getColumnsRemainderHalf();
+        let mut menuX: i32 = { let java_field = jcall!(CommonButtons::getInstance()).STANDARD_BUTTON_SIZE.clone(); java_field } + jcall!(touchButtonLocationHelper).getColumnsRemainderHalf();
         let mut width: i32 = jcall!(displayInfo).getLastWidth() - (menuX * 2);
-        let mut menuRectangle: Option<Rc<RefCell<Rectangle>>> = Rectangle::new(jcall!(PointFactory::getInstance()).createXY(menuX.clone(), 16), width.clone(), jcall!(CommonButtons::getInstance()).STANDARD_BUTTON_SIZE.clone());
-        return MultipleScrollSelectionHorizontalForm::createForm(formLabel.clone(), items.clone(), menuRectangle.clone(), jcall!(FormTypeFactory::getInstance()).HORIZONTAL_FORM.clone(), 0, jcall!(basicColorFactory).BLACK.clone(), jcall!(basicColorFactory).WHITE.clone());
+        let mut menuRectangle: Option<Rc<RefCell<Rectangle>>> = Rectangle::new(jcall!(PointFactory::getInstance()).createXY(menuX.clone(), 16), width.clone(), { let java_field = jcall!(CommonButtons::getInstance()).STANDARD_BUTTON_SIZE.clone(); java_field }.clone());
+        return MultipleScrollSelectionHorizontalForm::createForm(formLabel.clone(), items.clone(), menuRectangle.clone(), { let java_field = jcall!(FormTypeFactory::getInstance()).HORIZONTAL_FORM.clone(); java_field }.clone(), 0, { let java_field = jcall!(basicColorFactory).BLACK.clone(); java_field }.clone(), { let java_field = jcall!(basicColorFactory).WHITE.clone(); java_field }.clone());
     }
 }
 

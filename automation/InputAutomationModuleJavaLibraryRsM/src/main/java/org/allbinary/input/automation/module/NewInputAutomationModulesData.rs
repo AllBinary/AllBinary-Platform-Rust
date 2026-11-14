@@ -31,6 +31,10 @@ pub struct NewInputAutomationModulesData {
 pub static mut NewInputAutomationModulesData_NAME: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("NEW_INPUT_AUTOMATION_MODULES"));
 
 impl NewInputAutomationModulesData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

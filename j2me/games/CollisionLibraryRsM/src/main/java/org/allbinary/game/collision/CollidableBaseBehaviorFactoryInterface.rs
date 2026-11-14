@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait CollidableBaseBehaviorFactoryInterface {
+pub trait CollidableBaseBehaviorFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn createBehavior(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::collision::CollidableBaseBehavior::CollidableBaseBehaviorDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

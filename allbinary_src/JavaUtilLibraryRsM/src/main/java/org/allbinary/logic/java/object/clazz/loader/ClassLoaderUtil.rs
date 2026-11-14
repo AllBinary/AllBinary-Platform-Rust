@@ -17,7 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-use super::ClassLoader::ClassLoader;
+use crate::java::lang::Exception::*;
+use crate::java::lang::ClassLoader::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,6 +32,10 @@ pub struct ClassLoaderUtil {
 
 
 impl ClassLoaderUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

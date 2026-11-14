@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::AndroidUtil::AndroidUtil;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use super::CircleAnimation::CircleAnimation;
@@ -35,8 +35,18 @@ pub struct AdjustedCircleAnimation {
     pub yAdjustment: i32,
 }
 
+impl crate::org::allbinary::graphics::color::BasicColorCompositeSetterInterface::BasicColorCompositeSetterInterface for AdjustedCircleAnimation {
+    fn setBasicColorP(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::animation::vector::CircleAnimation::CircleAnimation::setBasicColorP(crate::org::allbinary::animation::vector::CircleAnimation::CircleAnimationDyn::as_CircleAnimation_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::color::ColorCompositeInterface::ColorCompositeInterface for AdjustedCircleAnimation {
+    fn getBasicColorP(&mut self) -> Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>> { crate::org::allbinary::animation::vector::CircleAnimation::CircleAnimation::getBasicColorP(crate::org::allbinary::animation::vector::CircleAnimation::CircleAnimationDyn::as_CircleAnimation_mut(self)) }
+}
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for AdjustedCircleAnimation {
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::vector::CircleAnimation::CircleAnimation::nextFrame(crate::org::allbinary::animation::vector::CircleAnimation::CircleAnimationDyn::as_CircleAnimation_mut(self)) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
+}
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for AdjustedCircleAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 impl AdjustedCircleAnimation {
@@ -89,7 +99,7 @@ impl AdjustedCircleAnimation {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         { let java_receiver = self.basicSetColorUtil.clone(); let java_arguments = (graphics.clone(), self.getBasicColorP(), self.getColor(),); jcall!(java_receiver).setBasicColorP3(java_arguments.0, java_arguments.1, java_arguments.2); };
         jcall!(graphics).drawArc(x + self.xAdjustment, y + self.yAdjustment, self.width.clone(), self.height.clone(), 0, self.TOTAL_ANGLE.clone());
     }
@@ -110,7 +120,9 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for AdjustedCircl
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base }
     fn nextFrame(&mut self) { crate::org::allbinary::animation::vector::CircleAnimation::CircleAnimation::nextFrame(crate::org::allbinary::animation::vector::CircleAnimation::CircleAnimationDyn::as_CircleAnimation_mut(self)) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn getBasicColorP(&mut self) -> Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>> { crate::org::allbinary::animation::vector::CircleAnimation::CircleAnimation::getBasicColorP(crate::org::allbinary::animation::vector::CircleAnimation::CircleAnimationDyn::as_CircleAnimation_mut(self)) }
+    fn setBasicColorP(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::animation::vector::CircleAnimation::CircleAnimation::setBasicColorP(crate::org::allbinary::animation::vector::CircleAnimation::CircleAnimationDyn::as_CircleAnimation_mut(self), p1) }
 }
 impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface for AdjustedCircleAnimation {
     fn set(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::khronos::opengles::GL::GL>>>) { crate::org::allbinary::animation::Animation::Animation::set(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1) }

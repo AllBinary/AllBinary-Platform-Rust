@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayer;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::layer::Layer::Layer;
+use crate::java::lang::Exception::*;
 use super::GeographicMapCellPosition::GeographicMapCellPosition;
 use super::GeographicMapCellType::GeographicMapCellType;
 use super::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactory;
@@ -32,7 +33,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait GeographicMapInterface {
+pub trait GeographicMapInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getId(&mut self) -> Option<i32>;
@@ -80,8 +81,6 @@ pub trait GeographicMapInterface {
     
 
     fn getBackgroundBasicColor(&mut self) -> Option<Rc<RefCell<BasicColor>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

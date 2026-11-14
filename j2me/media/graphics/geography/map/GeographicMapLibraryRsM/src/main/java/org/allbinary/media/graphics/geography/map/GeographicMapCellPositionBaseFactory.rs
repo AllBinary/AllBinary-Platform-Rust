@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactory;
 use super::BasicGeographicMap::BasicGeographicMap;
 
@@ -32,6 +33,10 @@ pub struct GeographicMapCellPositionBaseFactory {
 
 
 impl GeographicMapCellPositionBaseFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -49,7 +54,7 @@ impl GeographicMapCellPositionBaseFactory {
         return BasicGeographicMapCellPositionFactory::new(geographicMapInterface.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactoryDyn>>);
     }
 }
-pub trait GeographicMapCellPositionBaseFactoryDyn {
+pub trait GeographicMapCellPositionBaseFactoryDyn: std::any::Any {
     fn as_GeographicMapCellPositionBaseFactory(&self) -> &GeographicMapCellPositionBaseFactory;
     fn as_GeographicMapCellPositionBaseFactory_mut(&mut self) -> &mut GeographicMapCellPositionBaseFactory;
     fn getInstance(&mut self, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCellPositionFactory::BasicGeographicMapCellPositionFactoryDyn>>> { GeographicMapCellPositionBaseFactory::getInstance(self.as_GeographicMapCellPositionBaseFactory_mut(), geographicMapInterface) }

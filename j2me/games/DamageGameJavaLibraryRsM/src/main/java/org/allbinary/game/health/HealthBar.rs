@@ -17,9 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::paint::Paintable::Paintable;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
+use crate::java::lang::Exception::*;
 use super::HealthListenerInterface::HealthListenerInterface;
 use super::HealthBarAnimation::HealthBarAnimation;
 use super::HealthInterface::HealthInterface;
@@ -42,10 +43,6 @@ pub struct HealthBar {
 impl HealthListenerInterface for HealthBar {
     fn onHealthChange(&mut self) { Self::onHealthChange(self) }
 }
-impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for HealthBar {
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
-}
 
 impl HealthBar {
     
@@ -59,14 +56,14 @@ impl HealthBar {
         };
         this.allbinaryLayer = layerInterface.clone();
         this.animationInterface = animationInterface.clone();
-        this.healthInterface = healthInterface.clone();
-        this.onHealthChange();
+        this.healthInterface = healthInterface.clone().map(|reference| reference as Rc<RefCell<dyn HealthInterface>>);
         this
     }
 
     pub fn new(mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut healthInterface: Option<Rc<RefCell<Health>>>, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::health::HealthBarAnimation::HealthBarAnimationDyn>>>, mut direction: i32) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(layerInterface, healthInterface, animationInterface, direction))));
-            jcall!(this.healthInterface).addListener((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(layerInterface.clone(), healthInterface.clone(), animationInterface.clone(), direction.clone()))));
+            jcall!(jcall!(this).healthInterface).addListener(this.clone().map(|reference| reference as Rc<RefCell<dyn HealthListenerInterface>>));
+            jcall!(this).onHealthChange();
         this
     }
     
@@ -76,12 +73,12 @@ impl HealthBar {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.animationInterface).paintXY(graphics.clone(), 0, 0);
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.animationInterface).paintThreedXYZ(graphics.clone(), 0, 0, 0);
     }
 }
@@ -96,8 +93,10 @@ impl std::ops::DerefMut for HealthBar {
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for HealthBar {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for HealthBar {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paintThreed(self, graphics) }
 }
 
 

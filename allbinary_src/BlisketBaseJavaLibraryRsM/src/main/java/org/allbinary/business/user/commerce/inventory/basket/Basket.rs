@@ -16,11 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::io::Serializable::Serializable;
-// use crate::java::util::HashMap::HashMap;
-// use crate::java::util::Set::Set;
+use crate::java::util::HashMap::HashMap;
+use crate::java::util::Set::Set;
 use crate::org::allbinary::business::user::commerce::inventory::item::ItemInterface::ItemInterface;
 use crate::org::allbinary::business::user::commerce::money::Money::Money;
 use crate::org::allbinary::business::user::commerce::money::MoneyException::MoneyException;
@@ -37,7 +36,7 @@ macro_rules! jcall {
 }
 
 pub struct Basket {
-    pub items: Option<Rc<RefCell<HashMap>>>,
+    pub items: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 impl BasketInterface for Basket {
@@ -47,13 +46,17 @@ impl BasketInterface for Basket {
     fn getTotalWeight(&mut self) -> String { Self::getTotalWeight(self) }
     fn getNumberOfItems(&mut self) -> Option<i32> { Self::getNumberOfItems(self) }
     fn getIds(&mut self) -> Option<Rc<RefCell<dyn Set>>> { Self::getIds(self) }
-    fn getItems(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::getItems(self) }
+    fn getItems(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::getItems(self) }
     fn getNumberOf(&mut self, mut product: String) -> Option<i32> { Self::getNumberOf(self, product) }
     fn getSubTotal(&mut self) -> Option<Rc<RefCell<Money>>> { Self::getSubTotal(self) }
 }
 // impl Serializable for Basket with the methods of the trait
 
 impl Basket {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -70,34 +73,34 @@ impl Basket {
     
 
     pub fn addItem(&mut self, mut id: String, mut num: String) {
-        if jcall!(self.items).containsKey(id.clone()) {
-            let mut oldNumStr: String = (jcall!(self.items).get(id.clone())).clone() /* as String */.clone();
-            let mut oldNumInt: Option<i32> = (oldNumStr.clone()).to_string();
-            let mut numInt: Option<i32> = (num.clone()).to_string();
+        if jcall!(self.items).containsKey(crate::java_into_object(id.clone())) {
+            let mut oldNumStr: String = { let java_object = (jcall!(self.items).get(crate::java_into_object(id.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }.clone();
+            let mut oldNumInt: Option<i32> = Some((oldNumStr.clone()).trim().parse::<i32>().expect("NumberFormatException"));
+            let mut numInt: Option<i32> = Some((num.clone()).trim().parse::<i32>().expect("NumberFormatException"));
             let mut newNumInt: Option<i32> = Some((((oldNumInt).unwrap() as i32) + ((numInt).unwrap() as i32)) as i32);
-            { let java_receiver = self.items.clone(); let java_arguments = (id.clone(), (newNumInt).expect("NullPointerException").to_string(),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
+            { let java_receiver = self.items.clone(); let java_arguments = (crate::java_into_object(id.clone()), crate::java_into_object((newNumInt).expect("NullPointerException").to_string()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
         } else {
-            jcall!(self.items).put(id.clone(), num.clone());
+            jcall!(self.items).put(crate::java_into_object(id.clone()), crate::java_into_object(num.clone()));
         }
     }
     
 
     pub fn removeItem(&mut self, mut id: String) {
-        jcall!(self.items).remove(id.clone());
+        jcall!(self.items).remove(crate::java_into_object(id.clone()));
     }
     
 
     pub fn adjustItem(&mut self, mut id: String, mut num: String) {
-        if (((num.clone()).to_string()).unwrap() as i32) > 0 {
-            jcall!(self.items).put(id.clone(), num.clone());
+        if ((Some((num.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32) > 0 {
+            jcall!(self.items).put(crate::java_into_object(id.clone()), crate::java_into_object(num.clone()));
         } else {
-            jcall!(self.items).remove(id.clone());
+            jcall!(self.items).remove(crate::java_into_object(id.clone()));
         }
     }
     
 
     pub fn getTotalWeight(&mut self) -> String {
-        let mut itemsAndNumberInBasket: Option<Rc<RefCell<HashMap>>> = self.getItems();
+        let mut itemsAndNumberInBasket: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.getItems();
         let mut totalWeight: Option<Rc<RefCell<Money>>> = Money::new();
         if jcall!(itemsAndNumberInBasket).size() > 0 {
             let mut items: Option<Rc<RefCell<dyn Set>>> = jcall!(itemsAndNumberInBasket).keySet();
@@ -106,9 +109,9 @@ impl Basket {
             let mut itemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(items).toArray();
             let mut size: i32 = (itemArray.len() as i32).clone();
             for index in (0..size) {
-                product = (itemArray[(index) as usize]).clone() /* as String */.clone();
-                weightFloat = Some((jcall!(InventoryEntity::new()).getWeight(product.clone())) as f32);
-                weightFloat = Some((((self.getNumberOf(product.clone())).unwrap() as f32) * ((weightFloat).unwrap() as f32)) as f32);
+                product = { let java_object = (itemArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }.clone();
+                weightFloat = { let java_value = (Some((jcall!(InventoryEntity::new()).getWeight(product.clone())) as f32)).clone(); java_value };
+                weightFloat = { let java_value = (Some(({ let java_value = ((self.getNumberOf(product.clone())).unwrap() as f32); java_value } * { let java_value = ((weightFloat).unwrap() as f32); java_value }) as f32)).clone(); java_value };
                 jcall!(totalWeight).add((weightFloat).expect("NullPointerException").to_string());
             }
         }
@@ -127,32 +130,32 @@ impl Basket {
     }
     
 
-    pub fn getItems(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn getItems(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return self.items.clone();
     }
     
 
     pub fn getNumberOf(&mut self, mut product: String) -> Option<i32> {
-        let mut numStr: String = (jcall!(self.items).get(product.clone())).clone() /* as String */;
-        return (numStr.clone()).to_string();
+        let mut numStr: String = { let java_object = (jcall!(self.items).get(crate::java_into_object(product.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+        return Some((numStr.clone()).trim().parse::<i32>().expect("NumberFormatException"));
     }
     
 
     // throws MoneyException
     pub fn getSubTotal(&mut self) -> Option<Rc<RefCell<Money>>> {
-        let mut itemsAndNumberInBasket: Option<Rc<RefCell<HashMap>>> = self.getItems();
+        let mut itemsAndNumberInBasket: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.getItems();
         let mut subTotal: Option<Rc<RefCell<Money>>> = Money::new();
         if jcall!(itemsAndNumberInBasket).size() > 0 {
             let mut items: Option<Rc<RefCell<dyn Set>>> = jcall!(itemsAndNumberInBasket).keySet();
             let mut inventoryEntityFactory: Option<Rc<RefCell<InventoryEntityFactory>>> = InventoryEntityFactory::getInstance();
-            let mut inventoryEntity: Option<Rc<RefCell<InventoryEntity>>> = (jcall!(inventoryEntityFactory).getInventoryEntityInstance()).clone() /* as InventoryEntity */;
+            let mut inventoryEntity: Option<Rc<RefCell<InventoryEntity>>> = (jcall!(inventoryEntityFactory).getInventoryEntityInstance()).clone();
             let mut itemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(items).toArray();
             let mut size: i32 = (itemArray.len() as i32).clone();
             for index in (0..size) {
-                let mut product: String = (itemArray[(index) as usize]).clone() /* as String */.clone();
+                let mut product: String = { let java_object = (itemArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }.clone();
                 let mut itemInterface: Option<Rc<RefCell<dyn ItemInterface>>> = jcall!(inventoryEntity).getItem(product.clone());
                 let mut productTotal: Option<Rc<RefCell<Money>>> = jcall!(itemInterface).getPrice();
-                jcall!(productTotal).multiply(((self.getNumberOf(product.clone())).unwrap() as i32));
+                jcall!(productTotal).multiply_int({ let java_argument = ((self.getNumberOf(product.clone())).unwrap() as i32); java_argument });
                 jcall!(subTotal).add(jcall!(productTotal).toString());
             }
         }

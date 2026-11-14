@@ -23,6 +23,7 @@ use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::TimeLastModified::TimeLastModified;
 
 // Borrows the object of a Java reference
@@ -41,6 +42,10 @@ impl DomNodeInterface for TimeLastModifiedView {
 }
 
 impl TimeLastModifiedView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut timeLastModified: Option<Rc<RefCell<TimeLastModified>>>) -> Self {
@@ -56,7 +61,7 @@ impl TimeLastModifiedView {
     }
     
 
-    pub fn new_struct1(mut node: Option<Rc<RefCell<Node>>>) -> Self {
+    pub fn new_struct1_Node(mut node: Option<Rc<RefCell<Node>>>) -> Self {
         let mut this = Self {
             timeLastModified: None,
         };
@@ -64,14 +69,14 @@ impl TimeLastModifiedView {
         this
     }
 
-    pub fn new1(mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(node))))
+    pub fn new1_Node(mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_Node(node))))
     }
     
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        return ModDomHelper::createTextNode(document.clone(), jcall!(EntryData::getInstance()).TIMECREATED.clone(), jcall!(self.getTimeLastModified()).toString());
+        return ModDomHelper::createTextNode(document.clone(), { let java_field = jcall!(EntryData::getInstance()).TIMECREATED.clone(); java_field }.clone(), { let java_argument = jcall!(self.getTimeLastModified()).toString(); java_argument });
     }
     
 

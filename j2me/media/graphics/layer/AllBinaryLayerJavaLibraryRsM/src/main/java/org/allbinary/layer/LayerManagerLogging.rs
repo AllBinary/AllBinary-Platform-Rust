@@ -22,6 +22,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
+use crate::java::lang::Exception::*;
 use super::LayerManagerLoggingBase::LayerManagerLoggingBase;
 use super::AllBinaryLayer::AllBinaryLayer;
 use super::LayerManager::LayerManager;
@@ -96,23 +97,23 @@ impl LayerManagerLogging {
     // throws Exception
     pub fn append(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) {
         { let java_receiver = self.stringBuilder.clone(); let java_arguments = (0, jcall!(self.stringBuilder).length(),); jcall!(java_receiver).delete(java_arguments.0, java_arguments.1); };
-        { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_receiver = self.stringBuilder.clone(); let java_arguments = (jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */),); let java_result = jcall!(java_receiver).appendint(java_arguments.0); java_result }.append(self.APPEND_.clone()).append(jcall!(layerInterface).getName()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.APPEND.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.stringBuilder).appendint(jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */)).append(self.APPEND_.clone()).append(jcall!(layerInterface).getName()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.APPEND.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
     pub fn appendAt(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut index: i32) {
         { let java_receiver = self.stringBuilder.clone(); let java_arguments = (0, jcall!(self.stringBuilder).length(),); jcall!(java_receiver).delete(java_arguments.0, java_arguments.1); };
-        { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_receiver = self.stringBuilder.clone(); let java_arguments = (jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */),); let java_result = jcall!(java_receiver).appendint(java_arguments.0); java_result }.append(self.APPEND_.clone()).append(jcall!(layerInterface).getName()).append(self._AT_.clone()).appendint(index.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.APPEND.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.stringBuilder).appendint(jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */)).append(self.APPEND_.clone()).append(jcall!(layerInterface).getName()).append(self._AT_.clone()).appendint(index.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.APPEND.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
     pub fn remove(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) {
         if layerInterface.is_none() {
             { let java_receiver = self.stringBuilder.clone(); let java_arguments = (0, jcall!(self.stringBuilder).length(),); jcall!(java_receiver).delete(java_arguments.0, java_arguments.1); };
-            { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_receiver = self.stringBuilder.clone(); let java_arguments = (jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */),); let java_result = jcall!(java_receiver).appendint(java_arguments.0); java_result }.append(self.ATTEMPT_REMOVE_.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(layerInterface.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.REMOVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.stringBuilder).appendint(jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */)).append(self.ATTEMPT_REMOVE_.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(layerInterface.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.REMOVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         } else {
             { let java_receiver = self.stringBuilder.clone(); let java_arguments = (0, jcall!(self.stringBuilder).length(),); jcall!(java_receiver).delete(java_arguments.0, java_arguments.1); };
-            { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_receiver = self.stringBuilder.clone(); let java_arguments = (jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */),); let java_result = jcall!(java_receiver).appendint(java_arguments.0); java_result }.append(self.ATTEMPT_REMOVE_.clone()).append(jcall!(layerInterface).getName()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.REMOVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.stringBuilder).appendint(jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */)).append(self.ATTEMPT_REMOVE_.clone()).append(jcall!(layerInterface).getName()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.REMOVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
     }
     
@@ -120,15 +121,15 @@ impl LayerManagerLogging {
     pub fn removeResult(&mut self, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut result: bool) {
         if layerInterface.is_none() {
             { let java_receiver = self.stringBuilder.clone(); let java_arguments = (0, jcall!(self.stringBuilder).length(),); jcall!(java_receiver).delete(java_arguments.0, java_arguments.1); };
-            { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_receiver = self.stringBuilder.clone(); let java_arguments = (jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */),); let java_result = jcall!(java_receiver).appendint(java_arguments.0); java_result }.append(self.REMOVE_.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(layerInterface.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.REMOVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.stringBuilder).appendint(jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */)).append(self.REMOVE_.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(layerInterface.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.REMOVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         } else if result {
             if unsafe { LayerManagerLogging_removeFailed.clone() } {
                 { let java_receiver = self.stringBuilder.clone(); let java_arguments = (0, jcall!(self.stringBuilder).length(),); jcall!(java_receiver).delete(java_arguments.0, java_arguments.1); };
-                { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_receiver = self.stringBuilder.clone(); let java_arguments = (jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */),); let java_result = jcall!(java_receiver).appendint(java_arguments.0); java_result }.append(self.REMOVE_.clone()).append(jcall!(layerInterface).getName()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.REMOVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.stringBuilder).appendint(jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */)).append(self.REMOVE_.clone()).append(jcall!(layerInterface).getName()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.REMOVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
         } else {
             { let java_receiver = self.stringBuilder.clone(); let java_arguments = (0, jcall!(self.stringBuilder).length(),); jcall!(java_receiver).delete(java_arguments.0, java_arguments.1); };
-            { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_receiver = self.stringBuilder.clone(); let java_arguments = (jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */),); let java_result = jcall!(java_receiver).appendint(java_arguments.0); java_result }.append(self.DID_NOT_REMOVE.clone()).append(jcall!(layerInterface).getName()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.REMOVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.stringBuilder).appendint(jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */)).append(self.DID_NOT_REMOVE.clone()).append(jcall!(layerInterface).getName()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.REMOVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             unsafe { *LayerManagerLogging_removeFailed = true };
         }
     }
@@ -138,12 +139,12 @@ impl LayerManagerLogging {
         { let java_receiver = self.stringBuilder.clone(); let java_arguments = (0, jcall!(self.stringBuilder).length(),); jcall!(java_receiver).delete(java_arguments.0, java_arguments.1); };
         let mut size: i32 = jcall!(layerManager).getSize();
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
-        { let java_receiver = self.stringBuilder.clone(); let java_arguments = (format!("{:x}", jcall!(TsUtil::getInstance()).hashCode(crate::java_into_object(layerManager.clone()))),); let java_result = jcall!(java_receiver).append(java_arguments.0); java_result }.append(jcall!(commonSeps).COLON_SEP.clone());
-        jcall!(self.stringBuilder).appendint(size.clone()).append(jcall!(commonSeps).COLON_SEP.clone());
+        jcall!(self.stringBuilder).append(format!("{:x}", jcall!(TsUtil::getInstance()).hashCode(crate::java_into_object(layerManager.clone())))).append({ let java_field = jcall!(commonSeps).COLON_SEP.clone(); java_field }.clone());
+        jcall!(self.stringBuilder).appendint(size.clone()).append({ let java_field = jcall!(commonSeps).COLON_SEP.clone(); java_field }.clone());
         let mut allBinaryLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = None;
         for index in (0..size) {
-            allBinaryLayer = ((jcall!(layerManager).getLayerAt(index.clone())).clone() /* as AllBinaryLayer */);
-            { let java_receiver = self.stringBuilder.clone(); let java_arguments = (jcall!(allBinaryLayer).getName(),); let java_result = jcall!(java_receiver).append(java_arguments.0); java_result }.append(jcall!(commonSeps).COMMA.clone());
+            allBinaryLayer = { let java_value = (((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> { panic!("ClassCastException: a Rust dyn Layer cannot be cast to AllBinaryLayer") })())).clone(); java_value };
+            jcall!(self.stringBuilder).append(jcall!(allBinaryLayer).getName()).append({ let java_field = jcall!(commonSeps).COMMA.clone(); java_field }.clone());
         }
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.stringBuilder).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.REMOVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
@@ -151,7 +152,7 @@ impl LayerManagerLogging {
 
     pub fn clear(&mut self) {
         { let java_receiver = self.stringBuilder.clone(); let java_arguments = (0, jcall!(self.stringBuilder).length(),); jcall!(java_receiver).delete(java_arguments.0, java_arguments.1); };
-        { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_receiver = self.stringBuilder.clone(); let java_arguments = (jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */),); let java_result = jcall!(java_receiver).appendint(java_arguments.0); java_result }.append(self.CLEAR.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.CLEAR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.stringBuilder).appendint(jcall!(TsUtil::getInstance()).hashCode(None /* Java this: a &mut self method has no Rc of itself */)).append(self.CLEAR.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.CLEAR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
 }
 impl std::ops::Deref for LayerManagerLogging {

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::util::Set::Set;
+use crate::java::util::Set::Set;
 use super::AutomaticCacheInterface::AutomaticCacheInterface;
 
 // Borrows the object of a Java reference
@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub trait J2SECacheInterface: AutomaticCacheInterface {
     
 
-    fn keySet(&mut self) -> Option<Rc<RefCell<dyn Set<Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>;
+    fn keySet(&mut self) -> Option<Rc<RefCell<dyn Set<crate::JavaObject>>>>;
 }
 
 

@@ -39,11 +39,15 @@ thread_local! { pub static ValidatorBase_instance: Option<Rc<RefCell<dyn Validat
 impl ValidatorBaseInterface for ValidatorBase {
     fn isValid(&mut self) -> Option<bool> { Self::isValid(self) }
     fn validationInfo(&mut self) -> String { Self::validationInfo(self) }
-    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { Self::toHashtable(self) }
+    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { Self::toHashtable(self) }
     fn toList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::toList(self) }
 }
 
 impl ValidatorBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn ValidatorBaseDyn>>> {
@@ -63,17 +67,17 @@ impl ValidatorBase {
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        return jcall!(BooleanFactory::getInstance()).TRUE.clone();
+        return { let java_field = jcall!(BooleanFactory::getInstance()).TRUE.clone(); java_field }.clone();
     }
     
 
     pub fn validationInfo(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 
-    pub fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        return jcall!(StdUtil::getInstance()).NULL_TABLE.clone();
+    pub fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        return { let java_field = jcall!(StdUtil::getInstance()).NULL_TABLE.clone(); java_field }.clone();
     }
     
 
@@ -81,12 +85,12 @@ impl ValidatorBase {
         return jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance();
     }
 }
-pub trait ValidatorBaseDyn {
+pub trait ValidatorBaseDyn: std::any::Any {
     fn as_ValidatorBase(&self) -> &ValidatorBase;
     fn as_ValidatorBase_mut(&mut self) -> &mut ValidatorBase;
     fn isValid(&mut self) -> Option<bool> { ValidatorBase::isValid(self.as_ValidatorBase_mut()) }
     fn validationInfo(&mut self) -> String { ValidatorBase::validationInfo(self.as_ValidatorBase_mut()) }
-    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { ValidatorBase::toHashtable(self.as_ValidatorBase_mut()) }
+    fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { ValidatorBase::toHashtable(self.as_ValidatorBase_mut()) }
     fn toList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { ValidatorBase::toList(self.as_ValidatorBase_mut()) }
 }
 impl ValidatorBaseDyn for ValidatorBase {

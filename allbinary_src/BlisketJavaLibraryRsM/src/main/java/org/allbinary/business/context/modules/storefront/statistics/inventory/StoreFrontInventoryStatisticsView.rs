@@ -16,13 +16,13 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::StoreFrontInventoryStatisticsInterface::StoreFrontInventoryStatisticsInterface;
 
 // Borrows the object of a Java reference
@@ -41,6 +41,10 @@ impl DomNodeInterface for StoreFrontInventoryStatisticsView {
 }
 
 impl StoreFrontInventoryStatisticsView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut storeFrontInventoryStatisticsInterface: Option<Rc<RefCell<dyn StoreFrontInventoryStatisticsInterface>>>) -> Self {
@@ -58,8 +62,8 @@ impl StoreFrontInventoryStatisticsView {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(self.storeFrontInventoryStatisticsInterface).toHashMap();
-        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes(document.clone(), jcall!(StoreFrontInventoryStatisticsData::StoreFrontInventoryStatisticsData::getInstance()).NAME.clone(), hashMap.clone());
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(self.storeFrontInventoryStatisticsInterface).toHashMap();
+        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), { let java_field = jcall!(StoreFrontInventoryStatisticsData::StoreFrontInventoryStatisticsData::getInstance()).NAME.clone(); java_field }.clone(), hashMap.clone());
         return node.clone();
     }
 }

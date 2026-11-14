@@ -18,7 +18,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
-// use crate::java::io::File::File;
+use crate::java::io::File::File;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,6 +35,10 @@ pub struct ImageProcessorInput {
 
 
 impl ImageProcessorInput {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut files: Vec<Option<Rc<RefCell<File>>>>, mut bufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>>) -> Self {

@@ -7,6 +7,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -15,13 +16,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait XmlRpcHandler {
+pub trait XmlRpcHandler: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn execute(&mut self, method: String, params: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -42,8 +42,8 @@ impl NoMotionRectangleConstraints {
         };
         this.setMinDimension(Dimension::new(0, 0));
         this.setMinArea(0);
-        this.setMaxDimension(Dimension::new(i32::MAX.clone(), i32::MAX.clone()));
-        this.setMaxMotionRectangles(i32::MAX.clone());
+        { let java_arguments = (Dimension::new(i32::MAX.clone(), i32::MAX.clone()),); this.setMaxDimension(java_arguments.0) };
+        { let java_arguments = (i32::MAX.clone(),); this.setMaxMotionRectangles(java_arguments.0) };
         this
     }
 

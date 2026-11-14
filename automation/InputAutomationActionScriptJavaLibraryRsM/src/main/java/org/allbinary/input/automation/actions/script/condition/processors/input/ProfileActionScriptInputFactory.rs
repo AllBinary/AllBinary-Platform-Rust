@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::data::tree::dom::DomSearchHelper::DomSearchHelper;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::ProfileActionScriptInputInterface::ProfileActionScriptInputInterface;
 use super::MouseActionScriptInput::MouseActionScriptInput;
 use super::KeyboardActionScriptInput::KeyboardActionScriptInput;
@@ -35,6 +36,10 @@ pub struct ProfileActionScriptInputFactory {
 
 
 impl ProfileActionScriptInputFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

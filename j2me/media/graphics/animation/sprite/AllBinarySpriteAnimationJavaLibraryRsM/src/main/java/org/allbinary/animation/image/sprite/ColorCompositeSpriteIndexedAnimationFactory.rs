@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::game::Sprite::Sprite;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::game::Sprite::Sprite;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactory;
 use crate::org::allbinary::animation::ProceduralAnimationInterfaceFactoryInterface::ProceduralAnimationInterfaceFactoryInterface;
@@ -26,6 +26,7 @@ use crate::org::allbinary::animation::image::BaseImageAnimationFactory::BaseImag
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::image::sprite::AnimationFactorySpriteScaleUtil::AnimationFactorySpriteScaleUtil;
 use crate::org::allbinary::logic::math::PrimitiveIntUtil::PrimitiveIntUtil;
+use crate::java::lang::Exception::*;
 use super::SpriteIndexedAnimation::SpriteIndexedAnimation;
 
 // Borrows the object of a Java reference
@@ -46,11 +47,15 @@ impl ProceduralAnimationInterfaceFactoryInterface for ColorCompositeSpriteIndexe
 }
 impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface for ColorCompositeSpriteIndexedAnimationFactory {
 }
+impl crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface for ColorCompositeSpriteIndexedAnimationFactory {
+    fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { Self::getInstance(self, instanceId) }
+    fn setInitialScale(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::media::ScaleProperties::ScaleProperties>>>) { crate::org::allbinary::animation::image::BaseImageAnimationFactory::BaseImageAnimationFactory::setInitialScale(crate::org::allbinary::animation::image::BaseImageAnimationFactory::BaseImageAnimationFactoryDyn::as_BaseImageAnimationFactory_mut(self), p1) }
+}
 
 impl ColorCompositeSpriteIndexedAnimationFactory {
     
 
-    pub fn new_struct(mut image: Option<Rc<RefCell<Image>>>, mut basicColorArray: Vec<Option<Rc<RefCell<BasicColor>>>>, mut width: i32, mut height: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
+    pub fn new_struct(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut basicColorArray: Vec<Option<Rc<RefCell<BasicColor>>>>, mut width: i32, mut height: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
         let mut this = Self {
             base: BaseImageAnimationFactory::new_struct(image.clone(), PrimitiveIntUtil::getArrayInstance(), width.clone(), height.clone(), 0, 0, animationBehaviorFactory.clone()),
             animationFactorySpriteScaleUtil: None,
@@ -62,15 +67,15 @@ impl ColorCompositeSpriteIndexedAnimationFactory {
         this
     }
 
-    pub fn new(mut image: Option<Rc<RefCell<Image>>>, mut basicColorArray: Vec<Option<Rc<RefCell<BasicColor>>>>, mut width: i32, mut height: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut basicColorArray: Vec<Option<Rc<RefCell<BasicColor>>>>, mut width: i32, mut height: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(image, basicColorArray, width, height, animationBehaviorFactory))))
     }
     
 
     // throws Exception
     pub fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
-        let mut sprite: Option<Rc<RefCell<Sprite>>> = { let java_receiver = self.animationFactorySpriteScaleUtil.clone(); let java_arguments = (self.getImage(), jcall!(self.animationFactoryInitializationVisitor).width.clone(), jcall!(self.animationFactoryInitializationVisitor).height.clone(), jcall!(self.scaleProperties).scaleWidth.clone(), jcall!(self.scaleProperties).scaleHeight.clone(),); let java_result = jcall!(java_receiver).createImage(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4); java_result };
-        return SpriteIndexedAnimation::new(sprite.clone(), self.getImage(), self.basicColorArray.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+        let mut sprite: Option<Rc<RefCell<Sprite>>> = { let java_receiver = self.animationFactorySpriteScaleUtil.clone(); let java_arguments = (self.getImage(), { let java_field = jcall!(self.animationFactoryInitializationVisitor).width.clone(); java_field }.clone(), { let java_field = jcall!(self.animationFactoryInitializationVisitor).height.clone(); java_field }.clone(), { let java_field = jcall!(self.scaleProperties).scaleWidth.clone(); java_field }.clone(), { let java_field = jcall!(self.scaleProperties).scaleHeight.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).createImage(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4); java_result };
+        return SpriteIndexedAnimation::new(sprite.clone(), self.getImage(), self.basicColorArray.clone(), { let java_argument = jcall!(self.animationBehaviorFactory).getOrCreateInstance(); java_argument }).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
     }
     
 

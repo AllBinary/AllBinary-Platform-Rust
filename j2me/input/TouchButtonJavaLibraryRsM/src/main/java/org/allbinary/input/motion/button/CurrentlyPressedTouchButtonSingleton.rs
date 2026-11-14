@@ -35,6 +35,10 @@ pub struct CurrentlyPressedTouchButtonSingleton {
 thread_local! { pub static CurrentlyPressedTouchButtonSingleton_instance: Option<Rc<RefCell<dyn CurrentlyPressedTouchButtonSingletonDyn>>> = CurrentlyPressedTouchButtonSingleton::new().map(|reference| reference as Rc<RefCell<dyn CurrentlyPressedTouchButtonSingletonDyn>>); }
 
 impl CurrentlyPressedTouchButtonSingleton {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn CurrentlyPressedTouchButtonSingletonDyn>>> {
@@ -46,7 +50,7 @@ impl CurrentlyPressedTouchButtonSingleton {
         let mut this = Self {
             list: None,
         };
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -84,7 +88,7 @@ impl CurrentlyPressedTouchButtonSingleton {
         jcall!(self.list).add(crate::java_into_object(touchButtonInput.clone()));
     }
 }
-pub trait CurrentlyPressedTouchButtonSingletonDyn {
+pub trait CurrentlyPressedTouchButtonSingletonDyn: std::any::Any {
     fn as_CurrentlyPressedTouchButtonSingleton(&self) -> &CurrentlyPressedTouchButtonSingleton;
     fn as_CurrentlyPressedTouchButtonSingleton_mut(&mut self) -> &mut CurrentlyPressedTouchButtonSingleton;
     fn size(&mut self) -> i32 { CurrentlyPressedTouchButtonSingleton::size(self.as_CurrentlyPressedTouchButtonSingleton_mut()) }

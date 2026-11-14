@@ -16,13 +16,13 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::user::role::UserRole::UserRole;
 use crate::org::allbinary::business::user::role::UserRoleB::UserRoleB;
 use crate::org::allbinary::business::user::role::UserRoleData::UserRoleData;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
+use crate::java::lang::Exception::*;
 use super::UserInterface::UserInterface;
 
 // Borrows the object of a Java reference
@@ -37,6 +37,10 @@ pub struct CreateUserFactory {
 
 
 impl CreateUserFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -51,9 +55,9 @@ impl CreateUserFactory {
     
 
     // throws Exception
-    pub fn getInstance(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<dyn UserInterface>>> {
+    pub fn getInstance(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn UserInterface>>> {
         if hashMap.is_some() {
-            let mut roleString: String = (jcall!(hashMap).get(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone())).clone() /* as String */;
+            let mut roleString: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             if !jcall!(StringValidationUtil::getInstance()).isEmpty(roleString.clone()) {
                 let mut role: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::role::UserRole::UserRoleDyn>>> = UserRoleB::getRole(roleString.clone());
                 return jcall!(jcall!(role).getUserFactory()).getInstance(hashMap.clone());

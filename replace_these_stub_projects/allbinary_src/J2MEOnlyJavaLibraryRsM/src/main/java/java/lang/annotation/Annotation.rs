@@ -13,12 +13,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait Annotation {
+pub trait Annotation: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn annotationType(&mut self) -> &'static str;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

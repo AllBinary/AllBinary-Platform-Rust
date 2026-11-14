@@ -41,6 +41,10 @@ impl ServiceFactory for InputAutomationServiceFactory {
 }
 
 impl InputAutomationServiceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -64,8 +68,8 @@ impl InputAutomationServiceFactory {
     
 
     pub fn getService(&mut self, mut bundle: Option<Rc<RefCell<dyn Bundle>>>, mut registration: Option<Rc<RefCell<dyn ServiceRegistration>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getService"));
-        return InputAutomationJFrame::getInstance();
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getService"));
+        return (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(InputAutomationJFrame::getInstance());
     }
     
 

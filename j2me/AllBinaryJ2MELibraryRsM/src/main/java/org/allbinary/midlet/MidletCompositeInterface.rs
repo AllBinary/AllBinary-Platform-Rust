@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Displayable::Displayable;
-// use crate::javax::microedition::midlet::MIDlet::MIDlet;
+use crate::javax::microedition::lcdui::Displayable::Displayable;
+use crate::javax::microedition::midlet::MIDlet::MIDlet;
 use super::AllBinaryMidlet::AllBinaryMidlet;
 
 // Borrows the object of a Java reference
@@ -28,18 +28,16 @@ macro_rules! jcall {
     };
 }
 
-pub trait MidletCompositeInterface {
+pub trait MidletCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
-    fn setMidlet(&mut self, midlet: Option<Rc<RefCell<MIDlet>>>);
+    fn setMidlet(&mut self, midlet: Option<Rc<RefCell<dyn crate::javax::microedition::midlet::MIDlet::MIDletDyn>>>);
     
 
     fn getMidlet(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::midlet::AllBinaryMidlet::AllBinaryMidletDyn>>>;
     
 
-    fn getDisplayable(&mut self) -> Option<Rc<RefCell<Displayable>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn getDisplayable(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>;
 }
 
 

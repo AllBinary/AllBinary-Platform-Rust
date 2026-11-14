@@ -27,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait HardwareInterface {
+pub trait HardwareInterface: std::any::Any {
     
 
     fn getComponent(&mut self, index: i32) -> Option<Rc<RefCell<dyn HardwareComponentInterface>>>;
@@ -39,7 +39,7 @@ pub trait HardwareInterface {
     fn compareTo(&mut self, hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> bool;
     
 
-    fn difference(&mut self, hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>;
+    fn difference(&mut self, hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>;
 }
 
 

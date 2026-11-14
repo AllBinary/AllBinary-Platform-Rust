@@ -21,6 +21,7 @@ use crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas;
 use crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionForm;
 use crate::org::allbinary::input::motion::gesture::observer::MotionGestureEvent::MotionGestureEvent;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::CommandFormInputProcessor::CommandFormInputProcessor;
 use super::PopupMenuInputProcessor::PopupMenuInputProcessor;
 
@@ -35,7 +36,23 @@ pub struct PopupCommandFormInputProcessor {
     pub base: CommandFormInputProcessor,
 }
 
+impl crate::org::allbinary::game::input::event::DownGameKeyEventListenerInterface::DownGameKeyEventListenerInterface for PopupCommandFormInputProcessor {
+    fn onDownGameKeyEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onDownGameKeyEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
+}
 impl crate::org::allbinary::game::input::event::GameKeyEventListenerInterface::GameKeyEventListenerInterface for PopupCommandFormInputProcessor {
+}
+impl crate::org::allbinary::game::input::event::PressGameKeyEventListenerInterface::PressGameKeyEventListenerInterface for PopupCommandFormInputProcessor {
+    fn onPressGameKeyEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onPressGameKeyEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
+}
+impl crate::org::allbinary::game::input::event::UpGameKeyEventListenerInterface::UpGameKeyEventListenerInterface for PopupCommandFormInputProcessor {
+    fn onUpGameKeyEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onUpGameKeyEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
+}
+impl crate::org::allbinary::input::motion::gesture::observer::BaseMotionGestureEventListener::BaseMotionGestureEventListener for PopupCommandFormInputProcessor {
+    fn onMotionGestureEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::input::motion::gesture::observer::MotionGestureEvent::MotionGestureEvent>>>) { crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessor::onMotionGestureEvent(crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn::as_BasicMenuInputProcessor_mut(self), p1) }
+    fn onScrolledMotionGestureEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::input::motion::gesture::observer::MotionGestureEvent::MotionGestureEvent>>>) { crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessor::onScrolledMotionGestureEvent(crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn::as_BasicMenuInputProcessor_mut(self), p1) }
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for PopupCommandFormInputProcessor {
+    fn onEvent(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
 }
 
 impl PopupCommandFormInputProcessor {
@@ -56,13 +73,13 @@ impl PopupCommandFormInputProcessor {
 
     // throws Exception
     pub fn processInput(&mut self, mut key: i32) -> i32 {
-        return self.base.processInput(key.clone());
+        return { let java_arguments = (key.clone(),); self.base.processInput(java_arguments.0) };
     }
     
 
     // throws Exception
     pub fn processMotionInput(&mut self, mut motionGestureEvent: Option<Rc<RefCell<MotionGestureEvent>>>) {
-        self.base.processMotionInput(motionGestureEvent.clone());
+        { let java_arguments = (motionGestureEvent.clone(),); self.base.processMotionInput(java_arguments.0) };
     }
 }
 impl std::ops::Deref for PopupCommandFormInputProcessor {

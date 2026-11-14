@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait OrderInterface {
+pub trait OrderInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn setShippingMethod(&mut self, shippingType: String);
@@ -81,8 +81,6 @@ pub trait OrderInterface {
     
 
     fn getStoreCancelComments(&mut self) -> String;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

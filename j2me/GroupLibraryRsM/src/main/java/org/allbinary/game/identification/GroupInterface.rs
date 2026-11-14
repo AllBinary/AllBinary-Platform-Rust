@@ -25,15 +25,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait GroupInterface {
+pub trait GroupInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getGroupName(&mut self) -> String;
     
 
     fn getGroupId(&mut self) -> i16;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

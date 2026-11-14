@@ -30,9 +30,13 @@ macro_rules! jcall {
 pub struct NullRTSFormInputFactory {
 }
 
-thread_local! { pub static NullRTSFormInputFactory_SINGLETON: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::form::RTSFormInput::RTSFormInputDyn>>> = RTSFormInput::new(jcall!(BasicGroupFactory::getInstance()).NONE_ARRAY.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::form::RTSFormInput::RTSFormInputDyn>>); }
+thread_local! { pub static NullRTSFormInputFactory_SINGLETON: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::form::RTSFormInput::RTSFormInputDyn>>> = RTSFormInput::new({ let java_field = jcall!(BasicGroupFactory::getInstance()).NONE_ARRAY.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::form::RTSFormInput::RTSFormInputDyn>>); }
 
 impl NullRTSFormInputFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

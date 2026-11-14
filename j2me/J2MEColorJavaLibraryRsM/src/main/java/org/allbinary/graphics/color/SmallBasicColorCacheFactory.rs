@@ -37,6 +37,10 @@ pub struct SmallBasicColorCacheFactory {
 thread_local! { pub static SmallBasicColorCacheFactory_instance: Option<Rc<RefCell<SmallBasicColorCacheFactory>>> = SmallBasicColorCacheFactory::new(); }
 
 impl SmallBasicColorCacheFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<SmallBasicColorCacheFactory>>> {
@@ -64,8 +68,8 @@ impl SmallBasicColorCacheFactory {
     
 
     pub fn add(&mut self, mut basicDefaultColor: Option<Rc<RefCell<BasicColor>>>) {
-        self.BASIC_COLOR_ARRAY[(self.colorIndex) as usize] = basicDefaultColor.clone();
-        self.INDEX_TO_COLOR[(self.colorIndex) as usize] = jcall!(basicDefaultColor).intValue();
+        { let java_index = (self.colorIndex) as usize; self.BASIC_COLOR_ARRAY[java_index] = basicDefaultColor.clone(); };
+        { let java_index = (self.colorIndex) as usize; self.INDEX_TO_COLOR[java_index] = jcall!(basicDefaultColor).intValue(); };
         self.colorIndex += 1;
     }
     
@@ -78,7 +82,7 @@ impl SmallBasicColorCacheFactory {
             }
         }
         let mut ALPHA_MASK: i32 = 0xFF000000_u32 as i32;
-        basicColor = jcall!(BasicColorFactory::BasicColorFactory::getInstance()).createInstanceAN(colorAsInt & ALPHA_MASK, colorAsInt & 0x00FFFFFF_u32 as i32, jcall!(StringUtil::getInstance()).EMPTY_STRING.clone());
+        basicColor = { let java_value = (jcall!(BasicColorFactory::BasicColorFactory::getInstance()).createInstanceAN(colorAsInt & ALPHA_MASK, colorAsInt & 0x00FFFFFF, { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone())).clone(); java_value };
         self.add(basicColor.clone());
         return basicColor.clone();
     }

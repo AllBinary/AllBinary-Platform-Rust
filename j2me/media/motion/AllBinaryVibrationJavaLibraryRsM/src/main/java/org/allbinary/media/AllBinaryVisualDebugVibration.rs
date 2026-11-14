@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::Anchor::Anchor;
 use crate::org::allbinary::graphics::displayable::DisplayInfoSingleton::DisplayInfoSingleton;
 use crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessor;
@@ -45,7 +45,7 @@ pub struct AllBinaryVisualDebugVibration {
 }
 
 impl UpdateMyFontInterface for AllBinaryVisualDebugVibration {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 impl AllBinaryVisualDebugVibration {
@@ -63,7 +63,6 @@ impl AllBinaryVisualDebugVibration {
         this.displayInfoSingleton = DisplayInfoSingleton::getInstance();
         this.timeDelayHelper = TimeDelayHelper::new(i32::MAX.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
         this.VIBRATING = String::from("Vibrating");
-        this.myFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
         this.anchor = unsafe { crate::org::allbinary::graphics::Anchor::Anchor_TOP_LEFT.clone() }.clone();
         this
     }
@@ -73,10 +72,10 @@ impl AllBinaryVisualDebugVibration {
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.width = jcall!(font).stringWidth(self.VIBRATING.clone());
-        self.myFontProcessor = MyFontProcessor::getInstance();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.width = { let java_value = (jcall!(font).stringWidth(self.VIBRATING.clone())).clone(); java_value };
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
@@ -85,7 +84,7 @@ impl AllBinaryVisualDebugVibration {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         if jcall!(self.timeDelayHelper).isTimeTNT() {
             jcall!(self.timeDelayHelper).as_TimeDelayHelper_mut().delay = i32::MAX.clone();
             jcall!(self.myFontProcessor).process(graphics.clone());

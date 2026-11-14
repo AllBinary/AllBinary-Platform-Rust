@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::util::event::EventStrings::EventStrings;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::UpKeyEventListenerInterface::UpKeyEventListenerInterface;
 
 // Borrows the object of a Java reference
@@ -49,7 +50,7 @@ impl UpKeyEventHandlerBase {
             base: BasicEventHandler::new_struct(),
             list: None,
         };
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -73,14 +74,14 @@ impl UpKeyEventHandlerBase {
 
     pub fn removeListenerSingleThreaded(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
         jcall!(self.list).remove(crate::java_into_object(eventListenerInterface.clone()));
-        self.base.removeListenerSingleThreaded(eventListenerInterface.clone());
+        { let java_arguments = (eventListenerInterface.clone(),); self.base.removeListenerSingleThreaded(java_arguments.0) };
     }
     
 
     // synchronized
     pub fn removeListener(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
         jcall!(self.list).remove(crate::java_into_object(eventListenerInterface.clone()));
-        self.base.removeListener(eventListenerInterface.clone());
+        { let java_arguments = (eventListenerInterface.clone(),); self.base.removeListener(java_arguments.0) };
     }
     
 
@@ -95,9 +96,9 @@ impl UpKeyEventHandlerBase {
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
                 }
             }
             }
@@ -106,14 +107,14 @@ impl UpKeyEventHandlerBase {
         let mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>> = None;
         while index < jcall!(self.eventListenerInterfaceList).size() {
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                eventListenerInterface = { let java_object = jcall!(self.eventListenerInterfaceList).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EventListenerInterface>>>>().expect("ClassCastException").clone()) };
+                eventListenerInterface = { let java_value = ({ let java_object = (jcall!(self.eventListenerInterfaceList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EventListenerInterface>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 self.processForInteger(eventObject.clone(), eventListenerInterface.clone());
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
                 }
             }
             index += 1;
@@ -123,7 +124,7 @@ impl UpKeyEventHandlerBase {
 
     // throws Exception
     pub fn processForInteger(&mut self, mut eventObject: Option<i32>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut upKeyEventListenerInterface: Option<Rc<RefCell<dyn UpKeyEventListenerInterface>>> = panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn UpKeyEventListenerInterface");
+        let mut upKeyEventListenerInterface: Option<Rc<RefCell<dyn UpKeyEventListenerInterface>>> = (|| -> Option<Rc<RefCell<dyn UpKeyEventListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn UpKeyEventListenerInterface") })();
         jcall!(upKeyEventListenerInterface).onUpKeyEvent(eventObject.clone());
     }
     
@@ -133,17 +134,17 @@ impl UpKeyEventHandlerBase {
         jcall!(stringBuffer).append(self.base.toString());
         jcall!(stringBuffer).append(UpKeyEventHandlerBase_TOTAL_LISTENERS.with(Clone::clone).clone());
         jcall!(stringBuffer).appendint(jcall!(self.list).size());
-        for index in (0..jcall!(self.list).size()) {
+        for index in (0..{ let java_bound = jcall!(self.list).size(); java_bound }) {
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                let mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>> = { let java_object = jcall!(self.list).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EventListenerInterface>>>>().expect("ClassCastException").clone()) };
+                let mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>> = { let java_object = (jcall!(self.list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EventListenerInterface>>>>().expect("ClassCastException").clone()) };
                 jcall!(stringBuffer).append(UpKeyEventHandlerBase_LISTENER_LABEL.with(Clone::clone).clone());
                 jcall!(stringBuffer).append(jcall!(eventListenerInterface).toString());
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).TOSTRING.clone(), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).TOSTRING.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                 }
             }
         }

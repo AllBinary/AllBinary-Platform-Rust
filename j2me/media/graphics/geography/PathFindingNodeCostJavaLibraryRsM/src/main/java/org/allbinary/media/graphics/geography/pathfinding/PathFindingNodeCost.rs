@@ -21,8 +21,9 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
+use crate::java::lang::Exception::*;
+use crate::java::lang::Comparable::*;
 use super::PathFindingNode::PathFindingNode;
-use super::Comparable::Comparable;
 use super::PathFindingNodeCostInfo::PathFindingNodeCostInfo;
 
 // Borrows the object of a Java reference
@@ -46,7 +47,7 @@ impl PathFindingNodeCost {
 
     pub fn new_struct(mut parent: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>, mut pathFindingNodeCostInfo: Option<Rc<RefCell<PathFindingNodeCostInfo>>>) -> Self {
         let mut this = Self {
-            base: PathFindingNode::new_struct(parent.clone(), geographicMapCellPosition.clone()),
+            base: PathFindingNode::new_struct(crate::java_into_object(parent.clone()), geographicMapCellPosition.clone()),
             commonSeps: None,
             pathFindingNodeCostInfoP: None,
         };
@@ -78,22 +79,22 @@ impl PathFindingNodeCost {
     
 
     pub fn compareTo(&mut self, mut pathFindingNodeCost: Option<Rc<RefCell<PathFindingNodeCost>>>) -> i32 {
-        return jcall!(self.pathFindingNodeCostInfoP).compareTo(jcall!(pathFindingNodeCost).pathFindingNodeCostInfoP.clone());
+        return jcall!(self.pathFindingNodeCostInfoP).compareTo({ let java_field = jcall!(pathFindingNodeCost).pathFindingNodeCostInfoP.clone(); java_field }.clone());
     }
     
 
     pub fn toString(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(std::any::type_name_of_val(&self).to_string());
-        jcall!(stringBuffer).append(jcall!(CommonLabels::getInstance()).COLON_SEP.clone());
-        jcall!(stringBuffer).append(jcall!(self.getPathFindingNodeCostInfo()).toString());
+        jcall!(stringBuffer).append({ let java_argument = std::any::type_name_of_val(&self).to_string(); java_argument });
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonLabels::getInstance()).COLON_SEP.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_argument = jcall!(self.getPathFindingNodeCostInfo()).toString(); java_argument });
         jcall!(stringBuffer).append(String::from(" Path: "));
         jcall!(stringBuffer).append(jcall!(self.geographicMapCellPosition).toString());
-        let mut pathFindingNode: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>> = (self.parent).clone() /* as PathFindingNode */;
+        let mut pathFindingNode: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>> = { let java_object = (self.parent).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>>>().expect("ClassCastException").clone()) };
         while pathFindingNode.is_some() {
-            jcall!(stringBuffer).append(jcall!(jcall!(pathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition).toString());
-            jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
-            pathFindingNode = (jcall!(pathFindingNode).as_PathFindingNode_mut().parent).clone() /* as PathFindingNode */;
+            jcall!(stringBuffer).append(jcall!({ let java_field = jcall!(pathFindingNode).as_PathFindingNode_mut().geographicMapCellPosition.clone(); java_field }).toString());
+            jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
+            pathFindingNode = { let java_value = ({ let java_object = ({ let java_field = jcall!(pathFindingNode).as_PathFindingNode_mut().parent.clone(); java_field }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
         }
         return jcall!(stringBuffer).toString();
     }

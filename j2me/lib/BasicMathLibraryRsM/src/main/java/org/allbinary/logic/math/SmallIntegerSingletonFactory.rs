@@ -21,6 +21,7 @@ use crate::org::allbinary::AndroidUtil::AndroidUtil;
 use crate::org::allbinary::J2MEUtil::J2MEUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -42,6 +43,10 @@ pub struct SmallIntegerSingletonFactory {
 thread_local! { pub static SmallIntegerSingletonFactory_instance: Option<Rc<RefCell<SmallIntegerSingletonFactory>>> = SmallIntegerSingletonFactory::new(); }
 
 impl SmallIntegerSingletonFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<SmallIntegerSingletonFactory>>> {
@@ -56,11 +61,11 @@ impl SmallIntegerSingletonFactory {
             } else if AndroidUtil::isAndroid() {
                 let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
                 jcall!(logUtil).putF(jcall!(StringMaker::new()).append(String::from("Android InputFactory was initialized before GameMidlet: ")).appendint(self.MIN.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getMin"));
-                self.initWithRange(0x291_u32 as i32, 6);
+                self.initWithRange(0x291, 6);
             } else {
                 let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
                 jcall!(logUtil).putF(jcall!(StringMaker::new()).append(String::from("InputFactory was initialized before GameMidlet or KeyFactoryInitializer - Currently this is occurs on JS build by TouchMotionGestureFactory constructor: ")).appendint(self.MIN.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getMin"));
-                self.initWithRange(0x2D0_u32 as i32, 6);
+                self.initWithRange(0x2D0, 6);
             }
         }
         if self.MIN <= minAllowed {
@@ -76,7 +81,7 @@ impl SmallIntegerSingletonFactory {
             return 0;
         } else {
             if AndroidUtil::isAndroid() {
-                return 0x101_u32 as i32;
+                return 0x101;
             } else {
                 return 23;
             }
@@ -86,10 +91,10 @@ impl SmallIntegerSingletonFactory {
 
     pub fn initWithRange(&mut self, mut value: i32, mut negativeValue: i32) {
         for index in (self.lastMin..=value - 1).rev() {
-            self.INTEGER_ARRAY[(index + self.NEGATIVE_MAX) as usize] = Some((index.clone()) as i32);
+            { let java_index = (index + self.NEGATIVE_MAX) as usize; self.INTEGER_ARRAY[java_index] = Some((index.clone()) as i32); };
         }
         for index in (self.lastNegativeMin..=negativeValue - 1).rev() {
-            self.INTEGER_ARRAY[(index) as usize] = Some((-index) as i32);
+            { let java_index = (index) as usize; self.INTEGER_ARRAY[java_index] = Some((-index) as i32); };
         }
         if self.lastMin < value {
             self.lastMin = value.clone();
@@ -104,10 +109,10 @@ impl SmallIntegerSingletonFactory {
     pub fn init(&mut self) {
         if self.lastMin < self.POSITIVE_MAX || self.lastNegativeMin < self.NEGATIVE_MAX {
             for index in (self.lastMin..=self.POSITIVE_MAX - 1).rev() {
-                self.INTEGER_ARRAY[(index + self.NEGATIVE_MAX) as usize] = Some((index.clone()) as i32);
+                { let java_index = (index + self.NEGATIVE_MAX) as usize; self.INTEGER_ARRAY[java_index] = Some((index.clone()) as i32); };
             }
             for index in (self.lastNegativeMin..=self.NEGATIVE_MAX - 1).rev() {
-                self.INTEGER_ARRAY[(index) as usize] = Some((-index) as i32);
+                { let java_index = (index) as usize; self.INTEGER_ARRAY[java_index] = Some((-index) as i32); };
             }
             self.lastMin = self.POSITIVE_MAX.clone();
             self.MIN = self.lastMin.clone();
@@ -127,7 +132,7 @@ impl SmallIntegerSingletonFactory {
             lastNegativeMin: 0,
         };
         this.NEGATIVE_MAX = 500;
-        this.POSITIVE_MAX = 0x2D1_u32 as i32;
+        this.POSITIVE_MAX = 0x2D1;
         this.INTEGER_ARRAY = vec![None; (this.NEGATIVE_MAX + this.POSITIVE_MAX) as usize];
         this.STRING_ARRAY = vec![String::new(); (this.NEGATIVE_MAX + this.POSITIVE_MAX) as usize];
         this.MIN = 0;
@@ -167,7 +172,7 @@ impl SmallIntegerSingletonFactory {
     pub fn getString(&mut self, mut index: i32) -> String {
         let mut i: i32 = index + self.NEGATIVE_MAX;
         if self.STRING_ARRAY[(i) as usize].is_empty() {
-            self.STRING_ARRAY[(i) as usize] = (self.INTEGER_ARRAY[(i) as usize]).expect("NullPointerException").to_string();
+            { let java_index = (i) as usize; self.STRING_ARRAY[java_index] = (self.INTEGER_ARRAY[(i) as usize]).expect("NullPointerException").to_string(); };
         }
         return self.STRING_ARRAY[(i) as usize].clone();
     }

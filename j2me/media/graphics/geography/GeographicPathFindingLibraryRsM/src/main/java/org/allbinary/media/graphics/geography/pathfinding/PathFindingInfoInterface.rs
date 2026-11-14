@@ -27,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait PathFindingInfoInterface {
+pub trait PathFindingInfoInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getStartPathFindingNodeList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>;
@@ -37,8 +37,6 @@ pub trait PathFindingInfoInterface {
     
 
     fn getPathFinder(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::GeographicPathFinderBase::GeographicPathFinderBaseDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

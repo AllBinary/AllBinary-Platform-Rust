@@ -43,6 +43,10 @@ impl AdvertisementCampaignsInterface for AdvertisementCampaigns {
 }
 
 impl AdvertisementCampaigns {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Self {
@@ -64,7 +68,7 @@ impl AdvertisementCampaigns {
     
 
     pub fn get(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn AdvertisementInterface>>> {
-        return { let java_object = jcall!(self.advertisementsVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn AdvertisementInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.advertisementsVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn AdvertisementInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 

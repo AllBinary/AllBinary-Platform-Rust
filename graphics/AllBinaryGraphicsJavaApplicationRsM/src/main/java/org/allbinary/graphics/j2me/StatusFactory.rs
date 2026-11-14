@@ -36,6 +36,10 @@ thread_local! { pub static StatusFactory_instance: Option<Rc<RefCell<StatusFacto
 
 impl StatusFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,

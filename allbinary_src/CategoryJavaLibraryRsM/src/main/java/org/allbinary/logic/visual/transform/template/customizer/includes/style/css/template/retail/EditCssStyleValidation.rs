@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::logic::control::validate::ValidationInterface::ValidationInterface;
 use crate::org::allbinary::logic::visual::dhtml::style::StyleData::StyleData;
@@ -26,6 +25,7 @@ use crate::org::allbinary::logic::visual::dhtml::style::StylesData::StylesData;
 use crate::org::allbinary::logic::visual::dhtml::style::color::ColorsView::ColorsView;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::CssStyleValidation::CssStyleValidation;
 
 // Borrows the object of a Java reference
@@ -77,16 +77,16 @@ impl EditCssStyleValidation {
     }
     
 
-    pub fn new_struct1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1_HashMap(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
-            base: CssStyleValidation::new_struct1(hashMap.clone()),
+            base: CssStyleValidation::new_struct1_HashMap(hashMap.clone()),
         };
         // super(...) is in the struct literal above
         this
     }
 
-    pub fn new1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(hashMap))))
+    pub fn new1_HashMap(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_HashMap(hashMap))))
     }
     
 
@@ -112,13 +112,13 @@ impl EditCssStyleValidation {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(jcall!(StylesData::getInstance()).NAME.clone());
-        let mut styleNode: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(jcall!(StyleData::getInstance()).NAME.clone());
+        let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement({ let java_field = jcall!(StylesData::getInstance()).NAME.clone(); java_field }.clone());
+        let mut styleNode: Option<Rc<RefCell<Node>>> = jcall!(document).createElement({ let java_field = jcall!(StyleData::getInstance()).NAME.clone(); java_field }.clone());
         jcall!(node).appendChild(styleNode.clone());
         jcall!(styleNode).appendChild(jcall!(ColorsView::new()).toXmlNode(document.clone()));
         let mut size: i32 = jcall!(self.cssStyleElementVector).size();
         for i in (0..size) {
-            let mut styleDomNodeInterface: Option<Rc<RefCell<dyn DomNodeInterface>>> = { let java_object = jcall!(self.base.cssStyleElementVector).get(i.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn DomNodeInterface>>>>().expect("ClassCastException").clone()) };
+            let mut styleDomNodeInterface: Option<Rc<RefCell<dyn DomNodeInterface>>> = { let java_object = (jcall!(self.base.cssStyleElementVector).get(i.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn DomNodeInterface>>>>().expect("ClassCastException").clone()) };
             jcall!(styleNode).appendChild(jcall!(styleDomNodeInterface).toXmlNode(document.clone()));
         }
         return node.clone();

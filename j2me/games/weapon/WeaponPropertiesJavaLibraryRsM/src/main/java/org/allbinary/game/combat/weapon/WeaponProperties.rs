@@ -64,7 +64,7 @@ impl WeaponProperties {
         if speed < this.MAX && speed != 0_i64 && !unsafe { WeaponProperties_messageSent.clone() } {
             let mut MESSAGE: String = String::from("Danger Danger Danger: Speed probably to slow if using 1 degree calculations as velocity for a single axis could be below 1024: ");
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            PreLogUtil::put(jcall!(StringMaker::new()).append(MESSAGE.clone()).appendlong(speed.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone());
+            PreLogUtil::put(jcall!(StringMaker::new()).append(MESSAGE.clone()).appendlong(speed.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
             unsafe { *WeaponProperties_messageSent = true };
         }
         this.setReloadTime(reloadTime.clone());
@@ -117,7 +117,7 @@ impl WeaponProperties {
     
 
     pub fn getDamageI(&mut self, mut range: i32) -> i32 {
-        return self.getDamage() - ((self.getDissipation() * range) / jcall!(self.speed).getScaled());
+        return self.getDamage() - ((((self.getDissipation()) as i32) * range) / { let java_value = jcall!(self.speed).getScaled(); java_value });
     }
     
 
@@ -125,9 +125,9 @@ impl WeaponProperties {
         let mut index: i32 = 0;
         let mut stringArray: Vec<String> = vec![String::new(); (3) as usize];
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        stringArray[({ let value = index; index += 1; value }) as usize] = jcall!(stringBuffer).append(WeaponProperties_DAMAGE.with(Clone::clone).clone()).appendint(((self.getDamage()) as i32)).toString();
+        stringArray[({ let value = index; index += 1; value }) as usize] = jcall!(stringBuffer).append(WeaponProperties_DAMAGE.with(Clone::clone).clone()).appendint(self.getDamage()).toString();
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
-        stringArray[({ let value = index; index += 1; value }) as usize] = jcall!(stringBuffer).append(WeaponProperties_RANGE.with(Clone::clone).clone()).appendint(((self.getRange()) as i32)).toString();
+        stringArray[({ let value = index; index += 1; value }) as usize] = jcall!(stringBuffer).append(WeaponProperties_RANGE.with(Clone::clone).clone()).appendint(self.getRange()).toString();
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
         stringArray[({ let value = index; index += 1; value }) as usize] = jcall!(stringBuffer).append(WeaponProperties_RELOAD.with(Clone::clone).clone()).appendlong(self.getReloadTime()).toString();
         return stringArray.clone();
@@ -136,10 +136,10 @@ impl WeaponProperties {
 
     pub fn toString(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(WeaponProperties_DAMAGE.with(Clone::clone).clone()).appendint(((self.getDamage()) as i32));
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-        jcall!(stringBuffer).append(WeaponProperties_RANGE.with(Clone::clone).clone()).appendint(((self.getRange()) as i32));
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
+        jcall!(stringBuffer).append(WeaponProperties_DAMAGE.with(Clone::clone).clone()).appendint(self.getDamage());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append(WeaponProperties_RANGE.with(Clone::clone).clone()).appendint(self.getRange());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(WeaponProperties_RELOAD.with(Clone::clone).clone()).appendlong(self.getReloadTime());
         return jcall!(stringBuffer).toString();
     }

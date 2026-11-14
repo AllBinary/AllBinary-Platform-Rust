@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::input::automation::robot::InputRobotInterface::InputRobotInterface;
+use crate::java::lang::Exception::*;
 use super::InputAutomationRobotInterfaceWrapper::InputAutomationRobotInterfaceWrapper;
 use super::InputAutomationRobotChangeEvent::InputAutomationRobotChangeEvent;
 
@@ -33,6 +34,10 @@ pub struct InputAutomationRobotUtil {
 
 
 impl InputAutomationRobotUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

@@ -21,6 +21,7 @@ use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 use super::TransformInfoObjectConfigInterface::TransformInfoObjectConfigInterface;
 
 // Borrows the object of a Java reference
@@ -30,7 +31,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait TransformInfoObjectConfigAndManipulatorFactoryInterface {
+pub trait TransformInfoObjectConfigAndManipulatorFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
@@ -44,9 +45,7 @@ pub trait TransformInfoObjectConfigAndManipulatorFactoryInterface {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    fn getInstance3(&mut self, abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<dyn TransformInfoObjectConfigInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn getInstance3_AbeClientInformationInterface_TransformInfoInterface_Document(&mut self, abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<dyn TransformInfoObjectConfigInterface>>>;
 }
 
 

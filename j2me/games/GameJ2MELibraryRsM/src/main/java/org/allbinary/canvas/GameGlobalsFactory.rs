@@ -37,6 +37,10 @@ thread_local! { pub static GameGlobalsFactory_instance: Option<Rc<RefCell<GameGl
 
 impl GameGlobalsFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             newCanvas: false,
@@ -45,7 +49,7 @@ impl GameGlobalsFactory {
         };
         this.newCanvas = true;
         this.newDisplaybleTime = ((i32::MIN) as i64);
-        this.point = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone();
+        this.point = { let java_field = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone();
         this
     }
 

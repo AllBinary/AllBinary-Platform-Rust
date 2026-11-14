@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::UrlGlobalsInterface::UrlGlobalsInterface;
 
 // Borrows the object of a Java reference
@@ -29,9 +30,13 @@ macro_rules! jcall {
 pub struct URLGLOBALS {
 }
 
-pub static mut URLGLOBALS_urlGlobalsInterface: std::cell::LazyCell<Option<Rc<RefCell<dyn UrlGlobalsInterface>>>> = std::cell::LazyCell::new(|| AppUrlGlobals_NULL_APP_URL_GLOBALS.with(Clone::clone).clone());
+pub static mut URLGLOBALS_urlGlobalsInterface: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::globals::UrlGlobalsInterface::UrlGlobalsInterfaceDyn>>>> = std::cell::LazyCell::new(|| AppUrlGlobals_NULL_APP_URL_GLOBALS.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::globals::UrlGlobalsInterface::UrlGlobalsInterfaceDyn>>));
 
 impl URLGLOBALS {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -44,7 +49,7 @@ impl URLGLOBALS {
     }
     
 
-    pub fn init(mut urlGlobalsInterface: Option<Rc<RefCell<dyn UrlGlobalsInterface>>>) {
+    pub fn init(mut urlGlobalsInterface: Option<Rc<RefCell<dyn crate::org::allbinary::globals::UrlGlobalsInterface::UrlGlobalsInterfaceDyn>>>) {
         unsafe { *URLGLOBALS_urlGlobalsInterface = urlGlobalsInterface.clone() };
     }
     

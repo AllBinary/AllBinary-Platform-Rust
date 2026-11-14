@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::PickupProcessorInterface::PickupProcessorInterface;
 use super::PickedUpLayerInterface::PickedUpLayerInterface;
 
@@ -27,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait PickupBehaviorInterface {
+pub trait PickupBehaviorInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
@@ -35,8 +36,6 @@ pub trait PickupBehaviorInterface {
     
 
     fn doPickupLayer(&mut self, pickupLayerInterface: Option<Rc<RefCell<dyn PickedUpLayerInterface>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

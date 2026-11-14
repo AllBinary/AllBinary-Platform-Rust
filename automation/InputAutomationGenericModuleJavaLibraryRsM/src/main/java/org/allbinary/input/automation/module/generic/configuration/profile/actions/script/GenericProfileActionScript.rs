@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 // use crate::javax::swing::tree::DefaultMutableTreeNode::DefaultMutableTreeNode;
@@ -34,6 +33,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -51,7 +51,13 @@ pub struct GenericProfileActionScript {
 }
 
 thread_local! { pub static GenericProfileActionScript_NAME: String = String::from("Root"); }
-// impl ProfileActionScriptNodeInterface for GenericProfileActionScript with the methods of the trait
+impl ProfileActionScriptNodeInterface for GenericProfileActionScript {
+    fn addCondition(&mut self, mut profileActionScriptNodeInterface: Option<Rc<RefCell<dyn ProfileActionScriptNodeInterface>>>) { Self::addCondition(self, profileActionScriptNodeInterface) }
+    fn removeCondition(&mut self, mut profileActionScriptNodeInterface: Option<Rc<RefCell<dyn ProfileActionScriptNodeInterface>>>) { Self::removeCondition(self, profileActionScriptNodeInterface) }
+}
+impl crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface for GenericProfileActionScript {
+    fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { Self::toXmlNode(self, document) }
+}
 
 impl GenericProfileActionScript {
     
@@ -72,10 +78,10 @@ impl GenericProfileActionScript {
         let mut actionScriptNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(unsafe { crate::org::allbinary::input::automation::module::generic::configuration::profile::actions::GenericProfileActionData::GenericProfileActionData_SCRIPT.clone() }.clone(), jcall!(node).getChildNodes());
         if actionScriptNode.is_some() {
             let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(actionScriptNode).getChildNodes();
-            for index in (0..jcall!(nodeList).getLength()) {
+            for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
                 let mut actionConditionNode: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
                 if match (&jcall!(actionConditionNode).getNodeType(), &unsafe { crate::org::w3c::dom::Node::Node_ELEMENT_NODE.clone() }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                    { let java_arguments = (ProfileActionScriptConditionFactory::getInstance(actionConditionNode.clone()),); this.addCondition(java_arguments.0) };
+                    { let java_arguments = (ProfileActionScriptConditionFactory::getInstance(actionConditionNode.clone()).map(|reference| reference as Rc<RefCell<dyn ProfileActionScriptNodeInterface>>),); this.addCondition(java_arguments.0) };
                 }
             }
         } else {
@@ -110,21 +116,21 @@ impl GenericProfileActionScript {
     
 
     pub fn addCondition(&mut self, mut profileActionScriptNodeInterface: Option<Rc<RefCell<dyn ProfileActionScriptNodeInterface>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addCondition"));
-        jcall!(self.getProfileActionConditionInterfaceVector()).add(profileActionScriptNodeInterface.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addCondition"));
+        jcall!(self.getProfileActionConditionInterfaceVector()).add(crate::java_into_object(profileActionScriptNodeInterface.clone()));
         self.add(profileActionScriptNodeInterface.clone());
     }
     
 
     pub fn removeCondition(&mut self, mut profileActionScriptNodeInterface: Option<Rc<RefCell<dyn ProfileActionScriptNodeInterface>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeCondition"));
-        jcall!(self.getProfileActionConditionInterfaceVector()).remove(profileActionScriptNodeInterface.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeCondition"));
+        jcall!(self.getProfileActionConditionInterfaceVector()).remove(crate::java_into_object(profileActionScriptNodeInterface.clone()));
         self.remove(profileActionScriptNodeInterface.clone());
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
         { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("HashMap: "), jcall!(hashMap).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toHashMap()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         return hashMap.clone();
     }
@@ -146,7 +152,7 @@ impl GenericProfileActionScript {
         let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getProfileActionConditionInterfaceVector();
         let mut size: i32 = jcall!(vector).size();
         for index in (0..size) {
-            let mut profileActionConditionInterface: Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>> = { let java_object = jcall!(vector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>>>().expect("ClassCastException").clone()) };
+            let mut profileActionConditionInterface: Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>> = { let java_object = (jcall!(vector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ProfileActionScriptConditionInterface>>>>().expect("ClassCastException").clone()) };
             jcall!(node).appendChild(jcall!(profileActionConditionInterface).toXmlNode(document.clone()));
         }
         return node.clone();

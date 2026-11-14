@@ -41,7 +41,7 @@ impl LayerManagerEvent {
 
     pub fn new_struct(mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>>, mut crud: String) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(layerManager.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(layerManager.clone())),
             layerInterface: None,
             crud: String::new(),
         };
@@ -70,7 +70,7 @@ impl LayerManagerEvent {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(String::from("LayerManagerEvent: \n"));
         jcall!(stringBuffer).append(String::from("LayerInterface: "));
-        jcall!(stringBuffer).append(jcall!(self.getLayerInterface()).toString());
+        jcall!(stringBuffer).append({ let java_argument = jcall!(self.getLayerInterface()).toString(); java_argument });
         jcall!(stringBuffer).append(String::from("\nCRUD: "));
         jcall!(stringBuffer).append(self.crud.clone());
         return jcall!(stringBuffer).toString();

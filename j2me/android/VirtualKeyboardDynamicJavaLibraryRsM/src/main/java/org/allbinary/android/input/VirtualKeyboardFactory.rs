@@ -37,6 +37,10 @@ pub static mut VirtualKeyboardFactory_virtualKeyboard: std::cell::LazyCell<Optio
 
 impl VirtualKeyboardFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -51,9 +55,9 @@ impl VirtualKeyboardFactory {
     pub fn init(mut activity: Option<Rc<RefCell<Activity>>>) {
         let mut SDK_VERSION: i32 = jcall!(AndroidInfoFactory::getInstance()).getVersion();
         if SDK_VERSION <= 2 {
-            unsafe { *VirtualKeyboardFactory_virtualKeyboard = VirtualKeyboardAPI1::new(activity.clone()) };
+            unsafe { *VirtualKeyboardFactory_virtualKeyboard = VirtualKeyboardAPI1::new(activity.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::android::input::VirtualKeyboard::VirtualKeyboardDyn>>) };
         } else {
-            unsafe { *VirtualKeyboardFactory_virtualKeyboard = VirtualKeyboardAPI3::new(activity.clone()) };
+            unsafe { *VirtualKeyboardFactory_virtualKeyboard = VirtualKeyboardAPI3::new(activity.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::android::input::VirtualKeyboard::VirtualKeyboardDyn>>) };
         }
     }
     

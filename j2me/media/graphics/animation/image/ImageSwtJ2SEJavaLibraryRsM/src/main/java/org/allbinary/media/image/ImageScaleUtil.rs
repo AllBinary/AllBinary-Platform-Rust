@@ -17,12 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::game::configuration::feature::GameFeatureFactory::GameFeatureFactory;
 use crate::org::allbinary::image::ImageCache::ImageCache;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::ImageCopyUtil::ImageCopyUtil;
 
 // Borrows the object of a Java reference
@@ -44,6 +45,10 @@ pub struct ImageScaleUtil {
 thread_local! { pub static ImageScaleUtil_instance: Option<Rc<RefCell<ImageScaleUtil>>> = ImageScaleUtil::new(); }
 
 impl ImageScaleUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ImageScaleUtil>>> {
@@ -75,37 +80,37 @@ impl ImageScaleUtil {
     
 
     // throws Exception
-    pub fn createImage2(&mut self, mut imageCache: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut scaleNominatorX: f32, mut scaleDenominatorX: f32, mut scaleNominatorY: f32, mut scaleDenominatorY: f32, mut cached: bool) -> Option<Rc<RefCell<Image>>> {
+    pub fn createImage2(&mut self, mut imageCache: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut scaleNominatorX: f32, mut scaleDenominatorX: f32, mut scaleNominatorY: f32, mut scaleDenominatorY: f32, mut cached: bool) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return self.createImage3(imageCache.clone(), originalImage.clone(), scaleNominatorX.clone(), scaleDenominatorX.clone(), scaleNominatorY.clone(), scaleDenominatorY.clone(), cached.clone(), true);
     }
     
 
     // throws Exception
-    pub fn createImage3(&mut self, mut imageCache: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut scaleNominatorX: f32, mut scaleDenominatorX: f32, mut scaleNominatorY: f32, mut scaleDenominatorY: f32, mut cached: bool, mut mutable: bool) -> Option<Rc<RefCell<Image>>> {
-        if !jcall!(self.features).isFeature(jcall!(self.gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone()) {
-            jcall!(self.logUtil).putF(self.NO_COPY.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone());
+    pub fn createImage3(&mut self, mut imageCache: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut scaleNominatorX: f32, mut scaleDenominatorX: f32, mut scaleNominatorY: f32, mut scaleDenominatorY: f32, mut cached: bool, mut mutable: bool) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        if !jcall!(self.features).isFeature({ let java_field = jcall!(self.gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone(); java_field }.clone()) {
+            jcall!(self.logUtil).putF(self.NO_COPY.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
             return originalImage.clone();
         }
         let mut width: i32 = jcall!(originalImage).getWidth();
         let mut height: i32 = jcall!(originalImage).getHeight();
         let mut scaleX: f32 = scaleNominatorX / scaleDenominatorX;
         let mut scaleY: f32 = scaleNominatorY / scaleDenominatorY;
-        let mut scaledImage: Option<Rc<RefCell<Image>>> = jcall!(self.imageCopyUtil).createImageWH(originalImage.clone(), (((scaleX * ((width) as f32))) as i32), (((scaleY * ((height) as f32))) as i32), mutable.clone());
+        let mut scaledImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(self.imageCopyUtil).createImageWH(originalImage.clone(), (((scaleX * ((width) as f32))) as i32), (((scaleY * ((height) as f32))) as i32), mutable.clone());
         return scaledImage.clone();
     }
     
 
     // throws Exception
-    pub fn scale2(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut originalImageArray: Vec<Option<Rc<RefCell<Image>>>>, mut ximageToShowArray: Vec<Option<Rc<RefCell<Image>>>>, mut unused: i32, mut scaleX: f32, mut scaleY: f32, mut maxScaleX: f32, mut maxScaleY: f32) {
+    pub fn scale2(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut originalImageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut ximageToShowArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut unused: i32, mut scaleX: f32, mut scaleY: f32, mut maxScaleX: f32, mut maxScaleY: f32) {
         self.scale(originalImage.clone(), originalImageArray.clone(), ximageToShowArray.clone(), unused.clone(), scaleX.clone(), scaleY.clone(), maxScaleX.clone(), maxScaleY.clone(), true);
     }
     
 
     // throws Exception
-    pub fn scale(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut originalImageArray: Vec<Option<Rc<RefCell<Image>>>>, mut ximageToShowArray: Vec<Option<Rc<RefCell<Image>>>>, mut unused: i32, mut scaleX: f32, mut scaleY: f32, mut maxScaleX: f32, mut maxScaleY: f32, mut mutable: bool) {
+    pub fn scale(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut originalImageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut ximageToShowArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut unused: i32, mut scaleX: f32, mut scaleY: f32, mut maxScaleX: f32, mut maxScaleY: f32, mut mutable: bool) {
         let mut width: i32 = jcall!(originalImage).getWidth();
         let mut height: i32 = jcall!(originalImage).getHeight();
-        let mut scaledImage: Option<Rc<RefCell<Image>>> = jcall!(self.imageCopyUtil).createImageWH(originalImage.clone(), (((scaleX * ((width) as f32))) as i32), (((scaleY * ((height) as f32))) as i32), mutable.clone());
+        let mut scaledImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(self.imageCopyUtil).createImageWH(originalImage.clone(), (((scaleX * ((width) as f32))) as i32), (((scaleY * ((height) as f32))) as i32), mutable.clone());
         originalImageArray[(0) as usize] = scaledImage.clone();
     }
 }

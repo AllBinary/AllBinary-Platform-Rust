@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait GameKeyEventSourceInterface {
+pub trait GameKeyEventSourceInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getSourceId(&mut self) -> i32;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

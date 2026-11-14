@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::media::Player::Player;
+use crate::javax::microedition::media::Player::Player;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 
 // Borrows the object of a Java reference
@@ -39,6 +39,10 @@ pub struct PlayerStateUtil {
 thread_local! { pub static PlayerStateUtil_instance: Option<Rc<RefCell<PlayerStateUtil>>> = PlayerStateUtil::new(); }
 
 impl PlayerStateUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -69,18 +73,18 @@ impl PlayerStateUtil {
     
 
     pub fn convert(&mut self, mut state: i32) -> String {
-        if state == unsafe { crate::javax::microedition::media::Player::Player_UNREALIZED.clone() } {
+        if state == crate::javax::microedition::media::Player::Player_UNREALIZED.with(Clone::clone) {
             return self.UNREALIZED.clone();
-        } else if state == unsafe { crate::javax::microedition::media::Player::Player_REALIZED.clone() } {
+        } else if state == crate::javax::microedition::media::Player::Player_REALIZED.with(Clone::clone) {
             return self.REALIZED.clone();
-        } else if state == unsafe { crate::javax::microedition::media::Player::Player_PREFETCHED.clone() } {
+        } else if state == crate::javax::microedition::media::Player::Player_PREFETCHED.with(Clone::clone) {
             return self.PREFETCHED.clone();
-        } else if state == unsafe { crate::javax::microedition::media::Player::Player_STARTED.clone() } {
+        } else if state == crate::javax::microedition::media::Player::Player_STARTED.with(Clone::clone) {
             return self.STARTED.clone();
-        } else if state == unsafe { crate::javax::microedition::media::Player::Player_CLOSED.clone() } {
+        } else if state == crate::javax::microedition::media::Player::Player_CLOSED.with(Clone::clone) {
             return self.CLOSED.clone();
         }
-        return jcall!(self.commonStrings).UNKNOWN.clone();
+        return { let java_field = jcall!(self.commonStrings).UNKNOWN.clone(); java_field }.clone();
     }
 }
 

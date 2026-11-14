@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListS::BasicArrayListS;
+use crate::java::lang::Exception::*;
 use super::VectorAnimationUtil::VectorAnimationUtil;
 
 // Borrows the object of a Java reference
@@ -41,6 +42,10 @@ pub struct VectorMirrorGenerator {
 thread_local! { pub static VectorMirrorGenerator_instance: Option<Rc<RefCell<VectorMirrorGenerator>>> = VectorMirrorGenerator::new(); }
 
 impl VectorMirrorGenerator {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<VectorMirrorGenerator>>> {
@@ -65,16 +70,16 @@ impl VectorMirrorGenerator {
 
     // Java overloaded method: Rust needs a different name
     pub fn getInstance2(&mut self, mut points: Vec<Vec<Vec<i32>>>, mut width: i32) -> Vec<Vec<Vec<i32>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut pointFactory: Option<Rc<RefCell<PointFactory>>> = PointFactory::getInstance();
             let mut pointBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
             let mut nextPoints: Vec<Vec<i32>> = Vec::new();
             let mut size2: i32 = 0;
             let mut size: i32 = (points.len() as i32).clone();
-            let mut pointsBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListS::new(size.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            let mut pointsBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListS::new(size.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
             for frame in (0..size) {
-                nextPoints = points[(frame) as usize].clone();
-                size2 = (nextPoints.len() as i32).clone();
+                nextPoints = { let java_value = (points[(frame) as usize]).clone(); java_value }.clone();
+                size2 = { let java_value = ((nextPoints.len() as i32)).clone(); java_value }.clone();
                 pointBasicArrayList = BasicArrayListS::new(size2.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
                 for index in (0..size2) {
                     jcall!(pointBasicArrayList).add(crate::java_into_object(jcall!(pointFactory).createXY(nextPoints[(index) as usize][(0) as usize].clone(), nextPoints[(index) as usize][(1) as usize].clone())));
@@ -82,26 +87,27 @@ impl VectorMirrorGenerator {
                 jcall!(pointsBasicArrayList).add(crate::java_into_object(pointBasicArrayList.clone()));
             }
             for index in (0..(points.len() as i32)) {
-                jcall!(pointsBasicArrayList).add(crate::java_into_object(self.getInstance2({ let java_object = (jcall!(pointsBasicArrayList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) }, width.clone())));
+                jcall!(pointsBasicArrayList).add(crate::java_into_object({ let java_arguments = ({ let java_object = (jcall!(pointsBasicArrayList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) }, width.clone(),); self.getInstance2_BasicArrayList_int(java_arguments.0, java_arguments.1) }));
             }
             let mut newPoints: Vec<Vec<Vec<i32>>> = jcall!(self.vectorAnimationUtil).toAnimationArrayFromListOfPointList(pointsBasicArrayList.clone());
-            return newPoints.clone();
+            return Some(newPoints.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
-            return jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY_ARRAY.clone();
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
+            return { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY_ARRAY.clone(); java_field }.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn getInstance2(&mut self, mut pointBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut width: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+    pub fn getInstance2_BasicArrayList_int(&mut self, mut pointBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut width: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
         let mut graphicsPipe: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::pipeline::BasicGraphicsPipeline::BasicGraphicsPipelineDyn>>> = BasicGraphicsPipeline::new(pointBasicArrayList.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::pipeline::BasicGraphicsPipeline::BasicGraphicsPipelineDyn>>);
         jcall!(graphicsPipe).createMatrix();
         jcall!(graphicsPipe).mirror(width.clone());

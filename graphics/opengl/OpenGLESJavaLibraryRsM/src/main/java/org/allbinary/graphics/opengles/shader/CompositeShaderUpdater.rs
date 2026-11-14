@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::egl::EGLConfig::EGLConfig;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::egl::EGLConfig::EGLConfig;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
@@ -44,7 +44,7 @@ pub struct CompositeShaderUpdater {
     pub attributeArray: Vec<String>,
 }
 
-thread_local! { pub static CompositeShaderUpdater_instanceC: Option<Rc<RefCell<dyn CompositeShaderUpdaterDyn>>> = CompositeShaderUpdater::new(jcall!(StringUtil::getInstance()).getArrayInstance(), jcall!(StringUtil::getInstance()).getArrayInstance(), jcall!(StringUtil::getInstance()).getArrayInstance(), jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone()).map(|reference| reference as Rc<RefCell<dyn CompositeShaderUpdaterDyn>>); }
+thread_local! { pub static CompositeShaderUpdater_instanceC: Option<Rc<RefCell<dyn CompositeShaderUpdaterDyn>>> = CompositeShaderUpdater::new(jcall!(StringUtil::getInstance()).getArrayInstance(), jcall!(StringUtil::getInstance()).getArrayInstance(), jcall!(StringUtil::getInstance()).getArrayInstance(), { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn CompositeShaderUpdaterDyn>>); }
 
 impl CompositeShaderUpdater {
     
@@ -69,9 +69,9 @@ impl CompositeShaderUpdater {
         this.commonSeps = CommonSeps::getInstance();
         this.shaderStrings = ShaderStrings::getInstance();
         this.uniformBlockArray = uniformBlockArray.clone();
-        this.uniformBlockHandleArray = vec![0; ((this.uniformBlockArray.len() as i32)) as usize];
+        this.uniformBlockHandleArray = { let java_value = (vec![0; ((this.uniformBlockArray.len() as i32)) as usize]).clone(); java_value };
         this.uniformArray = uniformArray.clone();
-        this.uniformHandleArray = vec![0; ((this.uniformArray.len() as i32)) as usize];
+        this.uniformHandleArray = { let java_value = (vec![0; ((this.uniformArray.len() as i32)) as usize]).clone(); java_value };
         this.attributeArray = attributeArray.clone();
         this.attributeHandleArray = attributeHandleArray.clone();
         this
@@ -100,8 +100,6 @@ impl std::ops::DerefMut for CompositeShaderUpdater {
 pub trait CompositeShaderUpdaterDyn: crate::org::allbinary::graphics::opengles::shader::ShaderUpdater::ShaderUpdaterDyn {
     fn as_CompositeShaderUpdater(&self) -> &CompositeShaderUpdater;
     fn as_CompositeShaderUpdater_mut(&mut self) -> &mut CompositeShaderUpdater;
-    fn onSurfaceCreated(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut eglConfig: Option<Rc<RefCell<EGLConfig>>>, mut programHandle: i32) { CompositeShaderUpdater::onSurfaceCreated(self.as_CompositeShaderUpdater_mut(), gl, eglConfig, programHandle) }
-    fn onSurfaceDestroyed(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) { CompositeShaderUpdater::onSurfaceDestroyed(self.as_CompositeShaderUpdater_mut(), gl) }
     fn onSurfaceCreated(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut eglConfig: Option<Rc<RefCell<EGLConfig>>>, mut programHandle: i32) { CompositeShaderUpdater::onSurfaceCreated(self.as_CompositeShaderUpdater_mut(), gl, eglConfig, programHandle) }
     fn onSurfaceDestroyed(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) { CompositeShaderUpdater::onSurfaceDestroyed(self.as_CompositeShaderUpdater_mut(), gl) }
 }

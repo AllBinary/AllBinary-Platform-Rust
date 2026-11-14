@@ -42,13 +42,17 @@ thread_local! { pub static AcceptableResponseUtil_instance: Option<Rc<RefCell<Ac
 
 impl AcceptableResponseUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             candidateVector: None,
             tagNameVector: None,
         };
-        this.candidateVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.tagNameVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.candidateVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.tagNameVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -64,17 +68,17 @@ impl AcceptableResponseUtil {
 
     // Java static initializer: call this once at startup
     pub fn static_init() {
-        jcall!(TsUtil::getInstance()).hashCode(crate::java_into_object(jcall!(AcceptableResponseFactory::AcceptableResponseFactory::getInstance()).HTML.clone()));
+        jcall!(TsUtil::getInstance()).hashCode(crate::java_into_object({ let java_field = jcall!(AcceptableResponseFactory::AcceptableResponseFactory::getInstance()).HTML.clone(); java_field }.clone()));
     }
     
 
     pub fn get(&mut self, mut index: i32) -> String {
-        return (jcall!(self.candidateVector).get(index.clone())).clone() /* as String */;
+        return { let java_object = (jcall!(self.candidateVector).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
     }
     
 
     pub fn getTagName(&mut self, mut index: i32) -> String {
-        return (jcall!(self.tagNameVector).get(index.clone())).clone() /* as String */;
+        return { let java_object = (jcall!(self.tagNameVector).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
     }
     
 

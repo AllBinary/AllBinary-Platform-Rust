@@ -60,10 +60,10 @@ impl AllBinaryVibration {
     
 
     pub fn init() {
-        if ((jcall!(jcall!(GameConfigurationCentral::getInstance()).VIBRATION).getValue()).unwrap() as i32) == 0 {
+        if ((jcall!({ let java_field = jcall!(GameConfigurationCentral::getInstance()).VIBRATION.clone(); java_field }).getValue()).unwrap() as i32) == 0 {
             unsafe { *AllBinaryVibration_VIBRATION = unsafe { AllBinaryNoVibration_NO_VIBRATION.clone() }.clone() };
         } else {
-            unsafe { *AllBinaryVibration_VIBRATION = AllBinaryVibration::new() };
+            unsafe { *AllBinaryVibration_VIBRATION = AllBinaryVibration::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::AllBinaryVibrationME::AllBinaryVibrationMEDyn>>) };
         }
     }
     

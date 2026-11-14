@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::awt::event::KeyEvent::KeyEvent;
+use crate::java::awt::event::KeyEvent::KeyEvent;
 use crate::jsinterop::annotations::JsType;
 
 // Borrows the object of a Java reference
@@ -222,6 +222,10 @@ pub struct ABKeyEventWrapper {
 thread_local! { pub static ABKeyEventWrapper_instance: Option<Rc<RefCell<ABKeyEventWrapper>>> = ABKeyEventWrapper::new(); }
 
 impl ABKeyEventWrapper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

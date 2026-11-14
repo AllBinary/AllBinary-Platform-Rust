@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::rms::RecordFilter::RecordFilter;
+use crate::javax::microedition::rms::RecordFilter::RecordFilter;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -30,9 +30,15 @@ pub struct NullRecordFilter {
 }
 
 pub static mut NullRecordFilter_NULL_RECORD_FILTER: std::cell::LazyCell<Option<Rc<RefCell<NullRecordFilter>>>> = std::cell::LazyCell::new(|| NullRecordFilter::new());
-// impl RecordFilter for NullRecordFilter with the methods of the trait
+impl RecordFilter for NullRecordFilter {
+    fn matches(&mut self, mut candidate: Vec<i8>) -> bool { Self::matches(self, candidate) }
+}
 
 impl NullRecordFilter {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

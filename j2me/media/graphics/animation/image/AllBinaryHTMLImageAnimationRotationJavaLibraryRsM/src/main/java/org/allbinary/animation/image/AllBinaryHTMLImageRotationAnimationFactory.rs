@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactory;
 use crate::org::allbinary::game::configuration::GameConfigurationCentral::GameConfigurationCentral;
@@ -25,6 +25,7 @@ use crate::org::allbinary::logic::math::PrimitiveIntUtil::PrimitiveIntUtil;
 use crate::org::allbinary::media::image::ImageCopyUtil::ImageCopyUtil;
 use crate::org::allbinary::math::AngleFactory::AngleFactory;
 use crate::org::allbinary::math::AngleInfo::AngleInfo;
+use crate::java::lang::Exception::*;
 use super::BaseImageAnimationFactory::BaseImageAnimationFactory;
 use super::AllBinaryHTMLImageRotationAnimation::AllBinaryHTMLImageRotationAnimation;
 use super::AllBinaryAdjustedHTMLImageRotationAnimation::AllBinaryAdjustedHTMLImageRotationAnimation;
@@ -41,6 +42,10 @@ pub struct AllBinaryHTMLImageRotationAnimationFactory {
     pub angleIncrement: i16,
 }
 
+impl crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface for AllBinaryHTMLImageRotationAnimationFactory {
+    fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { Self::getInstance(self, instanceId) }
+    fn setInitialScale(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::media::ScaleProperties::ScaleProperties>>>) { crate::org::allbinary::animation::image::BaseImageAnimationFactory::BaseImageAnimationFactory::setInitialScale(crate::org::allbinary::animation::image::BaseImageAnimationFactory::BaseImageAnimationFactoryDyn::as_BaseImageAnimationFactory_mut(self), p1) }
+}
 impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface for AllBinaryHTMLImageRotationAnimationFactory {
 }
 
@@ -48,14 +53,14 @@ impl AllBinaryHTMLImageRotationAnimationFactory {
     
 
     // throws Exception
-    pub fn createFactoryADXY(mut image: Option<Rc<RefCell<Image>>>, mut width: i32, mut height: i32, mut dx: i32, mut dy: i32, mut angleIncrement: i16, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<AllBinaryHTMLImageRotationAnimationFactory>>> {
+    pub fn createFactoryADXY(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut width: i32, mut height: i32, mut dx: i32, mut dy: i32, mut angleIncrement: i16, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<AllBinaryHTMLImageRotationAnimationFactory>>> {
         let mut htmlImageRotationAnimationFactory: Option<Rc<RefCell<AllBinaryHTMLImageRotationAnimationFactory>>> = AllBinaryHTMLImageRotationAnimationFactory::new(image.clone(), width.clone(), height.clone(), angleIncrement.clone(), animationBehaviorFactory.clone());
         jcall!(htmlImageRotationAnimationFactory).init(dx.clone(), dy.clone());
         return htmlImageRotationAnimationFactory.clone();
     }
     
 
-    pub fn new_struct(mut image: Option<Rc<RefCell<Image>>>, mut width: i32, mut height: i32, mut angleIncrement: i16, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
+    pub fn new_struct(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut width: i32, mut height: i32, mut angleIncrement: i16, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
         let mut this = Self {
             base: BaseImageAnimationFactory::new_struct(image.clone(), PrimitiveIntUtil::getArrayInstance(), width.clone(), height.clone(), 0, 0, animationBehaviorFactory.clone()),
             angleIncrement: 0,
@@ -65,7 +70,7 @@ impl AllBinaryHTMLImageRotationAnimationFactory {
         this
     }
 
-    pub fn new(mut image: Option<Rc<RefCell<Image>>>, mut width: i32, mut height: i32, mut angleIncrement: i16, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut width: i32, mut height: i32, mut angleIncrement: i16, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(image, width, height, angleIncrement, animationBehaviorFactory))))
     }
     
@@ -80,13 +85,13 @@ impl AllBinaryHTMLImageRotationAnimationFactory {
 
     // throws Exception
     pub fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
-        let mut scaledImage: Option<Rc<RefCell<Image>>> = { let java_receiver = self.animationFactoryImageScaleUtil.clone(); let java_arguments = (self.getImage(), jcall!(self.animationFactoryInitializationVisitor).width.clone(), jcall!(self.animationFactoryInitializationVisitor).height.clone(), jcall!(self.scaleProperties).scaleWidth.clone(), jcall!(self.scaleProperties).scaleHeight.clone(),); let java_result = jcall!(java_receiver).createImage(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4); java_result };
-        let mut copyOfScaledImage: Option<Rc<RefCell<Image>>> = jcall!(ImageCopyUtil::getInstance()).createImage(scaledImage.clone());
-        if jcall!(self.animationFactoryInitializationVisitor).dx != 0 || jcall!(self.animationFactoryInitializationVisitor).dy != 0 {
+        let mut scaledImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = { let java_receiver = self.animationFactoryImageScaleUtil.clone(); let java_arguments = (self.getImage(), { let java_field = jcall!(self.animationFactoryInitializationVisitor).width.clone(); java_field }.clone(), { let java_field = jcall!(self.animationFactoryInitializationVisitor).height.clone(); java_field }.clone(), { let java_field = jcall!(self.scaleProperties).scaleWidth.clone(); java_field }.clone(), { let java_field = jcall!(self.scaleProperties).scaleHeight.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).createImage(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4); java_result };
+        let mut copyOfScaledImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(ImageCopyUtil::getInstance()).createImage(scaledImage.clone());
+        if { let java_field = jcall!(self.animationFactoryInitializationVisitor).dx.clone(); java_field } != 0 || { let java_field = jcall!(self.animationFactoryInitializationVisitor).dy.clone(); java_field } != 0 {
             jcall!(self.animationFactoryImageScaleUtil).processAdjust(None /* Java this: a &mut self method has no Rc of itself */);
-            return AllBinaryAdjustedHTMLImageRotationAnimation::new(scaledImage.clone(), copyOfScaledImage.clone(), AngleInfo::getInstance(self.getAngleIncrement()), jcall!(AngleFactory::getInstance()).TOTAL_ANGLE.clone(), jcall!(self.animationFactoryInitializationVisitor).dx.clone(), jcall!(self.animationFactoryInitializationVisitor).dy.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+            return AllBinaryAdjustedHTMLImageRotationAnimation::new(scaledImage.clone(), copyOfScaledImage.clone(), { let java_argument = AngleInfo::getInstance(self.getAngleIncrement()); java_argument }, { let java_field = jcall!(AngleFactory::getInstance()).TOTAL_ANGLE.clone(); java_field }.clone(), { let java_field = jcall!(self.animationFactoryInitializationVisitor).dx.clone(); java_field }.clone(), { let java_field = jcall!(self.animationFactoryInitializationVisitor).dy.clone(); java_field }.clone(), { let java_argument = jcall!(self.animationBehaviorFactory).getOrCreateInstance(); java_argument }).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
         } else {
-            return AllBinaryHTMLImageRotationAnimation::new(scaledImage.clone(), copyOfScaledImage.clone(), AngleInfo::getInstance(self.angleIncrement.clone()), jcall!(AngleFactory::getInstance()).TOTAL_ANGLE.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+            return AllBinaryHTMLImageRotationAnimation::new(scaledImage.clone(), copyOfScaledImage.clone(), AngleInfo::getInstance(self.angleIncrement.clone()), { let java_field = jcall!(AngleFactory::getInstance()).TOTAL_ANGLE.clone(); java_field }.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
         }
     }
     

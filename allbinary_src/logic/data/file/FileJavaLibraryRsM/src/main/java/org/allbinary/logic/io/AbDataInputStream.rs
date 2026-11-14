@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::DataInputStream::DataInputStream;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::DataInputStream::DataInputStream;
+use crate::java::io::InputStream::InputStream;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,19 +31,22 @@ pub struct AbDataInputStream {
     pub base: DataInputStream,
 }
 
+impl crate::java::io::Closeable::Closeable for AbDataInputStream {
+    fn close(&mut self) { self.base.close() }
+}
 
 impl AbDataInputStream {
     
 
-    pub fn new_struct(mut out: Option<Rc<RefCell<InputStream>>>) -> Self {
+    pub fn new_struct(mut out: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>) -> Self {
         let mut this = Self {
-            base: DataInputStream::new_struct1(out.clone()),
+            base: DataInputStream::new_struct(out.clone()),
         };
         // super(...) is in the struct literal above
         this
     }
 
-    pub fn new(mut out: Option<Rc<RefCell<InputStream>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut out: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(out))))
     }
 }
@@ -55,5 +58,9 @@ impl std::ops::DerefMut for AbDataInputStream {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::java::io::InputStream::InputStreamDyn for AbDataInputStream {
+    fn as_InputStream(&self) -> &crate::java::io::InputStream::InputStream { &self.base.base }
+    fn as_InputStream_mut(&mut self) -> &mut crate::java::io::InputStream::InputStream { &mut self.base.base }
+}
 
 

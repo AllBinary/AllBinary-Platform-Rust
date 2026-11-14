@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Command::Command;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 
 // Borrows the object of a Java reference
@@ -28,14 +28,18 @@ macro_rules! jcall {
 }
 
 pub struct HighScoreCommands {
-    pub DISPLAY: Option<Rc<RefCell<Command>>>,
-    pub PERSONAL: Option<Rc<RefCell<Command>>>,
-    pub WORLD: Option<Rc<RefCell<Command>>>,
+    pub DISPLAY: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub PERSONAL: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub WORLD: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
 }
 
 thread_local! { pub static HighScoreCommands_instance: Option<Rc<RefCell<HighScoreCommands>>> = HighScoreCommands::new(); }
 
 impl HighScoreCommands {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -43,9 +47,9 @@ impl HighScoreCommands {
             PERSONAL: None,
             WORLD: None,
         };
-        this.DISPLAY = Command::new(String::from("Scores"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.PERSONAL = Command::new(String::from("Personal"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.WORLD = Command::new(String::from("World"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
+        this.DISPLAY = Command::new4(String::from("Scores"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.PERSONAL = Command::new4(String::from("Personal"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.WORLD = Command::new4(String::from("World"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
         this
     }
 

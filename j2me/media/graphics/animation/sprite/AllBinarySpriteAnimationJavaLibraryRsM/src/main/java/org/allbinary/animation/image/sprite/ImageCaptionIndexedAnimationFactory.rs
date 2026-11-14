@@ -17,9 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::game::Sprite::Sprite;
-// use crate::javax::microedition::media::Player::Player;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::game::Sprite::Sprite;
+use crate::javax::microedition::media::Player::Player;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactory;
 use crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
@@ -32,6 +32,7 @@ use crate::org::allbinary::image::sprite::AnimationFactorySpriteScaleUtil::Anima
 use crate::org::allbinary::logic::communication::log::ForcedLogUtil::ForcedLogUtil;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
 use crate::org::allbinary::media::audio::Sound::Sound;
+use crate::java::lang::Exception::*;
 use super::SpriteIndexedAnimation::SpriteIndexedAnimation;
 
 // Borrows the object of a Java reference
@@ -44,8 +45,8 @@ macro_rules! jcall {
 pub struct ImageCaptionIndexedAnimationFactory {
     pub animationFactoryImageScaleUtil: Option<Rc<RefCell<AnimationFactoryImageScaleUtil>>>,
     pub animationFactorySpriteScaleUtil: Option<Rc<RefCell<AnimationFactorySpriteScaleUtil>>>,
-    pub captionImage: Option<Rc<RefCell<Image>>>,
-    pub spriteMovieImage: Option<Rc<RefCell<Image>>>,
+    pub captionImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
+    pub spriteMovieImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
     pub frameWidth: i32,
     pub frameHeight: i32,
     pub captionDx: i32,
@@ -66,9 +67,13 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 }
 
 impl ImageCaptionIndexedAnimationFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct(mut captionImage: Option<Rc<RefCell<Image>>>, mut spriteMovieImage: Option<Rc<RefCell<Image>>>, mut soundInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>, mut frameWidth: i32, mut frameHeight: i32, mut captionDx: i32, mut captionDy: i32, mut dx: i32, mut dy: i32, mut time: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
+    pub fn new_struct(mut captionImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut spriteMovieImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut soundInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>, mut frameWidth: i32, mut frameHeight: i32, mut captionDx: i32, mut captionDy: i32, mut dx: i32, mut dy: i32, mut time: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
         let mut this = Self {
             animationFactoryImageScaleUtil: None,
             animationFactorySpriteScaleUtil: None,
@@ -105,22 +110,22 @@ impl ImageCaptionIndexedAnimationFactory {
         this
     }
 
-    pub fn new(mut captionImage: Option<Rc<RefCell<Image>>>, mut spriteMovieImage: Option<Rc<RefCell<Image>>>, mut soundInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>, mut frameWidth: i32, mut frameHeight: i32, mut captionDx: i32, mut captionDy: i32, mut dx: i32, mut dy: i32, mut time: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut captionImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut spriteMovieImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut soundInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>, mut frameWidth: i32, mut frameHeight: i32, mut captionDx: i32, mut captionDy: i32, mut dx: i32, mut dy: i32, mut time: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(captionImage, spriteMovieImage, soundInterface, frameWidth, frameHeight, captionDx, captionDy, dx, dy, time, animationBehaviorFactory))))
     }
     
 
     // throws Exception
     pub fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
-        let mut scaledImage: Option<Rc<RefCell<Image>>> = { let java_receiver = self.animationFactoryImageScaleUtil.clone(); let java_arguments = (self.captionImage.clone(), jcall!(self.captionImage).getWidth(), jcall!(self.captionImage).getHeight(), jcall!(self.scaleProperties).scaleWidth.clone(), jcall!(self.scaleProperties).scaleHeight.clone(),); let java_result = jcall!(java_receiver).createImage(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4); java_result };
-        let mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> = ImageAnimation::new(scaledImage.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
-        let mut sprite: Option<Rc<RefCell<Sprite>>> = jcall!(self.animationFactorySpriteScaleUtil).createImage(self.spriteMovieImage.clone(), self.frameWidth.clone(), self.frameHeight.clone(), jcall!(self.scaleProperties).scaleWidth.clone(), jcall!(self.scaleProperties).scaleHeight.clone());
-        let mut movieIndexedAnimationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> = SpriteIndexedAnimation::new(sprite.clone(), self.spriteMovieImage.clone(), jcall!(BasicColorUtil::getInstance()).ZERO_ARRAY.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>);
-        let mut player: Option<Rc<RefCell<Player>>> = jcall!(self.soundInterface).getPlayerP();
+        let mut scaledImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = { let java_receiver = self.animationFactoryImageScaleUtil.clone(); let java_arguments = (self.captionImage.clone(), jcall!(self.captionImage).getWidth(), jcall!(self.captionImage).getHeight(), { let java_field = jcall!(self.scaleProperties).scaleWidth.clone(); java_field }.clone(), { let java_field = jcall!(self.scaleProperties).scaleHeight.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).createImage(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4); java_result };
+        let mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> = ImageAnimation::new(scaledImage.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+        let mut sprite: Option<Rc<RefCell<Sprite>>> = jcall!(self.animationFactorySpriteScaleUtil).createImage(self.spriteMovieImage.clone(), self.frameWidth.clone(), self.frameHeight.clone(), { let java_field = jcall!(self.scaleProperties).scaleWidth.clone(); java_field }.clone(), { let java_field = jcall!(self.scaleProperties).scaleHeight.clone(); java_field }.clone());
+        let mut movieIndexedAnimationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> = SpriteIndexedAnimation::new(sprite.clone(), self.spriteMovieImage.clone(), { let java_field = jcall!(BasicColorUtil::getInstance()).ZERO_ARRAY.clone(); java_field }.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>);
+        let mut player: Option<Rc<RefCell<dyn Player>>> = jcall!(self.soundInterface).as_Sound_mut().getPlayerP();
         if player.is_none() {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Sound Was not Initialized"))));
         }
-        return CaptionIndexedAnimation::new(animationInterface.clone(), movieIndexedAnimationInterface.clone(), player.clone(), self.captionDx.clone(), self.captionDy.clone(), self.dx.clone(), self.dy.clone(), self.time.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+        return CaptionIndexedAnimation::new(animationInterface.clone(), movieIndexedAnimationInterface.clone(), player.clone(), self.captionDx.clone(), self.captionDy.clone(), self.dx.clone(), self.dy.clone(), self.time.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
     }
     
 

@@ -32,6 +32,7 @@ use crate::org::allbinary::logic::visual::transform::data::TransformStoreDocumen
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpSearch::TransformInfoHttpSearch;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -49,6 +50,10 @@ pub struct InventorySearchProductUtil {
 thread_local! { pub static InventorySearchProductUtil_instance: Option<Rc<RefCell<InventorySearchProductUtil>>> = InventorySearchProductUtil::new(); }
 
 impl InventorySearchProductUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -74,29 +79,30 @@ impl InventorySearchProductUtil {
 
     // throws Exception
     pub fn getProduct(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut searchRequest: Option<Rc<RefCell<SearchRequest>>>, mut product: String) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut inventoryEntityInterface: Option<Rc<RefCell<InventoryEntity>>> = jcall!(InventoryEntityFactory::getInstance()).getInventoryEntityInstance();
             let mut itemInterface: Option<Rc<RefCell<dyn ItemInterface>>> = jcall!(inventoryEntityInterface).getItem(product.clone());
             if itemInterface.is_some() {
                 let mut viewDocumentInterface: Option<Rc<RefCell<dyn TransformDocumentInterface>>> = TransformStoreDocumentFactory::getInstance(searchRequest.clone());
-                jcall!(jcall!(viewDocumentInterface).getBaseNode()).appendChild(jcall!(BasicItemView::new(itemInterface.clone(), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>))).toXmlNode(jcall!(viewDocumentInterface).getDoc()));
+                jcall!(jcall!(viewDocumentInterface).getBaseNode()).appendChild(jcall!(BasicItemView::new(itemInterface.clone(), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>))).toXmlNode(jcall!(viewDocumentInterface).getDoc()));
                 let mut success: String = XmlDocumentHelper::toString(jcall!(viewDocumentInterface).getDoc());
                 let mut outputStr: String = jcall!(StoreTransformer::new(abeClientInformation.clone(), (TransformInfoHttpSearch::new(searchRequest.clone())).clone() /* as TransformInfoInterface */)).translate(success.clone());
-                return outputStr.clone();
+                return Some(outputStr.clone());
             } else {
-                return self.ITEM_NOT_FOUND.clone();
-            }
+                return Some(self.ITEM_NOT_FOUND.clone());
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PRODUCTSEARCHLOGGINGERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).FAILURE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getProduct"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PRODUCTSEARCHLOGGINGERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).FAILURE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getProduct"), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Failed to getProduct"))));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

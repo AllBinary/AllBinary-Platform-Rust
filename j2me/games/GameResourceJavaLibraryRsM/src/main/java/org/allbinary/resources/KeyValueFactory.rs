@@ -28,12 +28,16 @@ macro_rules! jcall {
 }
 
 pub struct KeyValueFactory {
-    pub MAP: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub MAP: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 thread_local! { pub static KeyValueFactory_instance: Option<Rc<RefCell<KeyValueFactory>>> = KeyValueFactory::new(); }
 
 impl KeyValueFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -54,11 +58,10 @@ impl KeyValueFactory {
     
 
     pub fn get(&mut self, mut key: String) -> String {
-        let mut value: String = (jcall!(self.MAP).get(crate::java_into_object((key).clone() /* as Any */))).clone() /* as String */;
-        if false {
+        if !jcall!(self.MAP).containsKey(crate::java_into_object(crate::java_into_object((key).clone()))) {
             return key.clone();
         }
-        return value.clone();
+        return { let java_object = (jcall!(self.MAP).get(crate::java_into_object(crate::java_into_object((key).clone())))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
     }
 }
 

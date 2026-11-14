@@ -24,6 +24,7 @@ use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellHistory::GeographicMapCellHistory;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::WaypointLogHelper::WaypointLogHelper;
 use super::Waypoint2LogHelper::Waypoint2LogHelper;
 use super::WaypointRunnableLogHelper::WaypointRunnableLogHelper;
@@ -35,7 +36,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait WaypointLayerInterface {
+pub trait WaypointLayerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
@@ -111,8 +112,6 @@ pub trait WaypointLayerInterface {
     
 
     fn getWaypointRunnableLogHelper(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointRunnableLogHelper::WaypointRunnableLogHelperDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

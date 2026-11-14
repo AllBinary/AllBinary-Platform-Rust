@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::NullImage::NullImage;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::NullImage::NullImage;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +33,10 @@ pub struct PlatformBitmapBase {
 
 impl PlatformBitmapBase {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -44,14 +48,14 @@ impl PlatformBitmapBase {
     }
     
 
-    pub fn getImage(&mut self) -> Option<Rc<RefCell<Image>>> {
+    pub fn getImage(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone).clone();
     }
 }
-pub trait PlatformBitmapBaseDyn {
+pub trait PlatformBitmapBaseDyn: std::any::Any {
     fn as_PlatformBitmapBase(&self) -> &PlatformBitmapBase;
     fn as_PlatformBitmapBase_mut(&mut self) -> &mut PlatformBitmapBase;
-    fn getImage(&mut self) -> Option<Rc<RefCell<Image>>> { PlatformBitmapBase::getImage(self.as_PlatformBitmapBase_mut()) }
+    fn getImage(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { PlatformBitmapBase::getImage(self.as_PlatformBitmapBase_mut()) }
 }
 impl PlatformBitmapBaseDyn for PlatformBitmapBase {
     fn as_PlatformBitmapBase(&self) -> &PlatformBitmapBase { self }

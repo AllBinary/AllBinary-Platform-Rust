@@ -36,6 +36,10 @@ pub struct CompoundRotationAnimationInterfaceFactory {
     pub base: CompoundAnimationInterfaceFactory,
 }
 
+impl AnimationInterfaceFactoryInterface for CompoundRotationAnimationInterfaceFactory {
+    fn getInstance(&mut self, p1: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { crate::org::allbinary::animation::compound::CompoundAnimationInterfaceFactory::CompoundAnimationInterfaceFactory::getInstance(crate::org::allbinary::animation::compound::CompoundAnimationInterfaceFactory::CompoundAnimationInterfaceFactoryDyn::as_CompoundAnimationInterfaceFactory_mut(self), p1) }
+    fn setInitialScale(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::media::ScaleProperties::ScaleProperties>>>) { crate::org::allbinary::animation::compound::CompoundAnimationInterfaceFactory::CompoundAnimationInterfaceFactory::setInitialScale(crate::org::allbinary::animation::compound::CompoundAnimationInterfaceFactory::CompoundAnimationInterfaceFactoryDyn::as_CompoundAnimationInterfaceFactory_mut(self), p1) }
+}
 impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface for CompoundRotationAnimationInterfaceFactory {
 }
 
@@ -64,7 +68,7 @@ impl CompoundRotationAnimationInterfaceFactory {
     
 
     pub fn createAnimation(&mut self, mut animationInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
-        return CompoundRotationAnimation::new((animationInterfaceArray).clone() /* as  */, jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+        return CompoundRotationAnimation::new((animationInterfaceArray).clone().into_iter().map(|java_element| java_element.map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn>> { panic!("ClassCastException: a Rust trait object of Animation cannot be cast to RotationAnimation") })).collect::<Vec<_>>(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
     }
 }
 impl std::ops::Deref for CompoundRotationAnimationInterfaceFactory {

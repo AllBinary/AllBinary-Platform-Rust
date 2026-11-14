@@ -36,6 +36,10 @@ impl TagHelperInterface for TagHelper {
 
 impl TagHelper {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             commonStrings: None,
@@ -48,7 +52,7 @@ impl TagHelper {
         Some(Rc::new(RefCell::new(Self::new_struct())))
     }
 }
-pub trait TagHelperDyn: crate::admin::taghelpers::TagHelperInterface::TagHelperInterface {
+pub trait TagHelperDyn: std::any::Any + crate::admin::taghelpers::TagHelperInterface::TagHelperInterface {
     fn as_TagHelper(&self) -> &TagHelper;
     fn as_TagHelper_mut(&mut self) -> &mut TagHelper;
 }

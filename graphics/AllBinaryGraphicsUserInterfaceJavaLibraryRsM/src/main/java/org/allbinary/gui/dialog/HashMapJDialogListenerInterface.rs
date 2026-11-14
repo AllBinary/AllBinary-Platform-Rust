@@ -16,9 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,13 +27,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait HashMapJDialogListenerInterface {
+pub trait HashMapJDialogListenerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
-    fn onHashMap(&mut self, hashMap: Option<Rc<RefCell<HashMap>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn onHashMap(&mut self, hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>);
 }
 
 

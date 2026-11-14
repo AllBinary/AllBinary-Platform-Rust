@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait DatabaseConnectionInfoInterface {
+pub trait DatabaseConnectionInfoInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getUrl(&mut self) -> String;
@@ -80,8 +80,6 @@ pub trait DatabaseConnectionInfoInterface {
     
 
     fn getPasswordKey(&mut self) -> String;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

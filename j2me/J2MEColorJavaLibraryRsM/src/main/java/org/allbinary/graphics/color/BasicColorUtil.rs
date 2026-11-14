@@ -37,6 +37,10 @@ thread_local! { pub static BasicColorUtil_instance: Option<Rc<RefCell<BasicColor
 
 impl BasicColorUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             ZERO_ARRAY: Vec::new(),
@@ -76,7 +80,7 @@ impl BasicColorUtil {
     
 
     pub fn getARGB(&mut self, mut alphaValue: i32, mut r: i32, mut g: i32, mut b: i32) -> i32 {
-        return ((alphaValue << 24) & self.ALPHA) + ((r << 16) & 0x00FF0000_u32 as i32) + ((g << 8) & 0x0000FF00_u32 as i32) + (b & 0x000000FF_u32 as i32);
+        return ((alphaValue << 24) & self.ALPHA) + ((r << 16) & 0x00FF0000) + ((g << 8) & 0x0000FF00) + (b & 0x000000FF);
     }
     
 
@@ -86,7 +90,7 @@ impl BasicColorUtil {
     
 
     pub fn invert(&mut self, mut color: i32) -> i32 {
-        return (0xFFFFFF_u32 as i32 - color) | self.ALPHA;
+        return (0xFFFFFF - color) | self.ALPHA;
     }
 }
 

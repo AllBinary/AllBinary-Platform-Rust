@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::NullAnimationFactory::NullAnimationFactory;
 use crate::org::allbinary::game::combat::weapon::WeaponProperties::WeaponProperties;
@@ -29,6 +29,7 @@ use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::view::ViewPositionBase::ViewPositionBase;
+use crate::java::lang::Exception::*;
 use super::SalvoInterface::SalvoInterface;
 
 // Borrows the object of a Java reference
@@ -53,8 +54,8 @@ impl crate::org::allbinary::animation::AnimationInterfaceCompositeInterface::Ani
     fn getAnimationInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { Self::getAnimationInterface(self) }
 }
 impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for BasicWeaponPart {
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paintThreed(self, graphics) }
 }
 impl SalvoInterface for BasicWeaponPart {
     fn process(&mut self, mut allbinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut angle: i16, mut otherAngle: i16) { Self::process(self, allbinaryLayerManager, angle, otherAngle) }
@@ -62,10 +63,14 @@ impl SalvoInterface for BasicWeaponPart {
 }
 
 impl BasicWeaponPart {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn createBasicWeaponPart(mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<dyn BasicWeaponPartDyn>>> {
-        return BasicWeaponPart::new(animationInterface.clone(), crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone).clone(), crate::org::allbinary::game::combat::weapon::WeaponProperties::WeaponProperties_NULL_WEAPON_PROPERTIES.with(Clone::clone).clone(), NoScoreable::getInstance(), crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationship_NULL_RELATIVE_RELATIONSHIP.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn BasicWeaponPartDyn>>);
+        return BasicWeaponPart::new(animationInterface.clone(), crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone).clone(), crate::org::allbinary::game::combat::weapon::WeaponProperties::WeaponProperties_NULL_WEAPON_PROPERTIES.with(Clone::clone).clone(), NoScoreable::getInstance().map(|reference| reference as Rc<RefCell<dyn ScoreableInterface>>), crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationship_NULL_RELATIVE_RELATIONSHIP.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn BasicWeaponPartDyn>>);
     }
     
 
@@ -80,7 +85,7 @@ impl BasicWeaponPart {
         this.animationInterface = jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0);
         this.ownerLayerInterface = crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone).clone();
         this.weaponProperties = crate::org::allbinary::game::combat::weapon::WeaponProperties::WeaponProperties_NULL_WEAPON_PROPERTIES.with(Clone::clone).clone();
-        this.scoreableInterface = NoScoreable::getInstance();
+        this.scoreableInterface = NoScoreable::getInstance().map(|reference| reference as Rc<RefCell<dyn ScoreableInterface>>);
         this.relativeRelationship = crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationship_NULL_RELATIVE_RELATIONSHIP.with(Clone::clone).clone();
         this.init(sourceLayerInterface.clone(), weaponProperties.clone(), scoreableInterface.clone(), relativeRelationship.clone());
         this.setAnimationInterface(animationInterface.clone());
@@ -108,7 +113,7 @@ impl BasicWeaponPart {
 
     // throws Exception
     pub fn processScore(&mut self, mut allbinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut angle: i16, mut otherAngle: i16, mut weaponProperties: Option<Rc<RefCell<WeaponProperties>>>, mut scoreableInterface: Option<Rc<RefCell<dyn ScoreableInterface>>>) {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
@@ -132,7 +137,7 @@ impl BasicWeaponPart {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         let mut viewPosition: Option<Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>> = jcall!(self.getOwnerLayerInterface()).getViewPosition();
         let mut viewX: i32 = jcall!(viewPosition).getX();
         let mut viewY: i32 = jcall!(viewPosition).getY();
@@ -140,7 +145,7 @@ impl BasicWeaponPart {
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 
@@ -153,7 +158,7 @@ impl BasicWeaponPart {
         self.weaponProperties = weaponProperties.clone();
     }
 }
-pub trait BasicWeaponPartDyn: crate::org::allbinary::game::part::weapon::SalvoInterface::SalvoInterface {
+pub trait BasicWeaponPartDyn: std::any::Any + crate::org::allbinary::game::part::weapon::SalvoInterface::SalvoInterface {
     fn as_BasicWeaponPart(&self) -> &BasicWeaponPart;
     fn as_BasicWeaponPart_mut(&mut self) -> &mut BasicWeaponPart;
     fn init(&mut self, mut sourceLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut weaponProperties: Option<Rc<RefCell<WeaponProperties>>>, mut scoreableInterface: Option<Rc<RefCell<dyn ScoreableInterface>>>, mut relativeRelationship: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationshipDyn>>>) { BasicWeaponPart::init(self.as_BasicWeaponPart_mut(), sourceLayerInterface, weaponProperties, scoreableInterface, relativeRelationship) }
@@ -161,8 +166,8 @@ pub trait BasicWeaponPartDyn: crate::org::allbinary::game::part::weapon::SalvoIn
     fn setOwnerLayerInterface(&mut self, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) { BasicWeaponPart::setOwnerLayerInterface(self.as_BasicWeaponPart_mut(), ownerLayerInterface) }
     fn getAnimationInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { BasicWeaponPart::getAnimationInterface(self.as_BasicWeaponPart_mut()) }
     fn setAnimationInterface(&mut self, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) { BasicWeaponPart::setAnimationInterface(self.as_BasicWeaponPart_mut(), animationInterface) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { BasicWeaponPart::paint(self.as_BasicWeaponPart_mut(), graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { BasicWeaponPart::paintThreed(self.as_BasicWeaponPart_mut(), graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { BasicWeaponPart::paint(self.as_BasicWeaponPart_mut(), graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { BasicWeaponPart::paintThreed(self.as_BasicWeaponPart_mut(), graphics) }
     fn getWeaponProperties(&mut self) -> Option<Rc<RefCell<WeaponProperties>>> { BasicWeaponPart::getWeaponProperties(self.as_BasicWeaponPart_mut()) }
     fn setWeaponProperties(&mut self, mut weaponProperties: Option<Rc<RefCell<WeaponProperties>>>) { BasicWeaponPart::setWeaponProperties(self.as_BasicWeaponPart_mut(), weaponProperties) }
 }

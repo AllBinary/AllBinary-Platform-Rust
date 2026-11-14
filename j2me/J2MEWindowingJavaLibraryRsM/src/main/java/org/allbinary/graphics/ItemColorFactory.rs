@@ -35,6 +35,10 @@ thread_local! { pub static ItemColorFactory_instance: Option<Rc<RefCell<ItemColo
 
 impl ItemColorFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             INVERT_PAINT: 0,
@@ -43,7 +47,7 @@ impl ItemColorFactory {
         };
         this.INVERT_PAINT = 0xFF000000_u32 as i32;
         this.PAINT = 0xFFe07718_u32 as i32;
-        this.TEXT_FIELD_NO_FOCUS = 0x7F7F7F_u32 as i32;
+        this.TEXT_FIELD_NO_FOCUS = 0x7F7F7F;
         this
     }
 

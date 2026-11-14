@@ -17,14 +17,15 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::game::Sprite::Sprite;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::game::Sprite::Sprite;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::animation::RotationAnimation::RotationAnimation;
 use crate::org::allbinary::logic::math::PrimitiveIntUtil::PrimitiveIntUtil;
 use crate::org::allbinary::math::AngleInfo::AngleInfo;
 use crate::org::allbinary::util::CircularIndexUtil::CircularIndexUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,28 +37,29 @@ macro_rules! jcall {
 pub struct HackRotationSpriteIndexedAnimation {
     pub base: RotationAnimation,
     pub sprite: Option<Rc<RefCell<Sprite>>>,
-    pub image: Option<Rc<RefCell<Image>>>,
+    pub image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
 }
 
-impl crate::org::allbinary::animation::IndexedAnimationInterface::IndexedAnimationInterface for HackRotationSpriteIndexedAnimation {
-    fn reset(&mut self) { self.base.reset() }
-    fn setFrame(&mut self, mut frame: i32) { Self::setFrame(self, frame) }
-    fn getFrame(&mut self) -> i32 { Self::getFrame(self) }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for HackRotationSpriteIndexedAnimation {
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::Animation::Animation::nextFrame(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self)) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
 }
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for HackRotationSpriteIndexedAnimation {
-    fn getSize(&mut self) -> i32 { Self::getSize(self) }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
+impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterface for HackRotationSpriteIndexedAnimation {
+    fn setFrameByDirection(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameByDirection(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn setFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrame(&mut self, p1: i16) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrame(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for HackRotationSpriteIndexedAnimation {
-    fn paintXY(&mut self, mut g: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, g, x, y) }
+    fn paintXY(&mut self, mut g: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, g, x, y) }
 }
 
 impl HackRotationSpriteIndexedAnimation {
     
 
-    pub fn new_struct(mut sprite: Option<Rc<RefCell<Sprite>>>, mut image: Option<Rc<RefCell<Image>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
+    pub fn new_struct(mut sprite: Option<Rc<RefCell<Sprite>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
         let mut this = Self {
-            base: RotationAnimation::new_struct(angleInfo.clone(), CircularIndexUtil::createInstance(360 / jcall!(jcall!(angleInfo).getAngleIncrementInfo()).getAngleIncrement()), animationBehavior.clone()),
+            base: RotationAnimation::new_struct(angleInfo.clone(), CircularIndexUtil::createInstance(360 / ((jcall!(jcall!(angleInfo).getAngleIncrementInfo()).getAngleIncrement()) as i32)), animationBehavior.clone()),
             sprite: None,
             image: None,
         };
@@ -67,7 +69,7 @@ impl HackRotationSpriteIndexedAnimation {
         this
     }
 
-    pub fn new(mut sprite: Option<Rc<RefCell<Sprite>>>, mut image: Option<Rc<RefCell<Image>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut sprite: Option<Rc<RefCell<Sprite>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(sprite, image, angleInfo, animationBehavior))))
     }
     
@@ -78,19 +80,19 @@ impl HackRotationSpriteIndexedAnimation {
     }
     
 
-    pub fn paintFrame(&mut self, mut g: Option<Rc<RefCell<Graphics>>>, mut frame: i32, mut x: i32, mut y: i32) {
+    pub fn paintFrame(&mut self, mut g: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut frame: i32, mut x: i32, mut y: i32) {
         self.setFrame(frame.clone());
         self.paintXY(g.clone(), x.clone(), y.clone());
     }
     
 
-    pub fn paintXY(&mut self, mut g: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut g: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         jcall!(self.sprite).setPosition(x.clone(), y.clone());
         self.paint(g.clone());
     }
     
 
-    pub fn paint(&mut self, mut g: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut g: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.sprite).paint(g.clone());
     }
     
@@ -139,8 +141,8 @@ impl std::ops::DerefMut for HackRotationSpriteIndexedAnimation {
 pub trait HackRotationSpriteIndexedAnimationDyn: crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn {
     fn as_HackRotationSpriteIndexedAnimation(&self) -> &HackRotationSpriteIndexedAnimation;
     fn as_HackRotationSpriteIndexedAnimation_mut(&mut self) -> &mut HackRotationSpriteIndexedAnimation;
-    fn paintFrame(&mut self, mut g: Option<Rc<RefCell<Graphics>>>, mut frame: i32, mut x: i32, mut y: i32) { HackRotationSpriteIndexedAnimation::paintFrame(self.as_HackRotationSpriteIndexedAnimation_mut(), g, frame, x, y) }
-    fn paint(&mut self, mut g: Option<Rc<RefCell<Graphics>>>) { HackRotationSpriteIndexedAnimation::paint(self.as_HackRotationSpriteIndexedAnimation_mut(), g) }
+    fn paintFrame(&mut self, mut g: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut frame: i32, mut x: i32, mut y: i32) { HackRotationSpriteIndexedAnimation::paintFrame(self.as_HackRotationSpriteIndexedAnimation_mut(), g, frame, x, y) }
+    fn paint(&mut self, mut g: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { HackRotationSpriteIndexedAnimation::paint(self.as_HackRotationSpriteIndexedAnimation_mut(), g) }
 }
 impl HackRotationSpriteIndexedAnimationDyn for HackRotationSpriteIndexedAnimation {
     fn as_HackRotationSpriteIndexedAnimation(&self) -> &HackRotationSpriteIndexedAnimation { self }
@@ -150,7 +152,7 @@ impl HackRotationSpriteIndexedAnimationDyn for HackRotationSpriteIndexedAnimatio
 impl crate::org::allbinary::animation::Animation::AnimationDyn for HackRotationSpriteIndexedAnimation {
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base.base }
-    fn paintXY(&mut self, mut g: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, g, x, y) }
+    fn paintXY(&mut self, mut g: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, g, x, y) }
 }
 impl crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn for HackRotationSpriteIndexedAnimation {
     fn as_IndexedAnimation(&self) -> &crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &self.base.base }

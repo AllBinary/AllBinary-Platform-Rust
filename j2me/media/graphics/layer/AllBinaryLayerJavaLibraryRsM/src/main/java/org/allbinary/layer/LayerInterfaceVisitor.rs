@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::AllBinaryLayer::AllBinaryLayer;
 
 // Borrows the object of a Java reference
@@ -26,13 +27,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait LayerInterfaceVisitor {
+pub trait LayerInterfaceVisitor: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn visit(&mut self, layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

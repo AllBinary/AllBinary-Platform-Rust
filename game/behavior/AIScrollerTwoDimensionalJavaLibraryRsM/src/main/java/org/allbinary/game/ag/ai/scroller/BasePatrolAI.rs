@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::game::ai::BasicAI::BasicAI;
 use crate::org::allbinary::game::input::GameInput::GameInput;
 use crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityProperties;
@@ -26,6 +26,7 @@ use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::logic::math::MathUtil::MathUtil;
 use crate::org::allbinary::logic::math::SmallIntegerSingletonFactory::SmallIntegerSingletonFactory;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -47,14 +48,17 @@ thread_local! { pub static BasePatrolAI_MAX_DISTANCE: Option<i32> = jcall!(Small
 thread_local! { pub static BasePatrolAI_DIRECTION_ARRAY: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(3); }
 thread_local! { pub static BasePatrolAI_FIRING_DISTANCE: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(4); }
 pub static mut BasePatrolAI_SPEED: std::cell::LazyCell<Option<i32>> = std::cell::LazyCell::new(|| jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(5));
+impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntelligenceInterface for BasePatrolAI {
+    fn processAI(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { crate::org::allbinary::game::ai::BasicAI::BasicAI::processAI(crate::org::allbinary::game::ai::BasicAI::BasicAIDyn::as_BasicAI_mut(self), p1) }
+}
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for BasePatrolAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl BasePatrolAI {
     
 
-    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
+    pub fn new_struct(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Self {
         let mut this = Self {
             base: BasicAI::new_struct(ownerLayerInterface.clone(), gameInput.clone()),
             maxDistance: None,
@@ -63,15 +67,15 @@ impl BasePatrolAI {
             lastKeyDirection: 0,
             keyDirection: 0,
         };
-        this.lastKeyDirection = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone();
-        this.keyDirection = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone();
+        this.lastKeyDirection = crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone).clone();
+        this.keyDirection = crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone).clone();
         // super(...) is in the struct literal above
-        this.maxDistance = { let java_object = jcall!(hashtable).get(crate::java_into_object(BasePatrolAI_MAX_DISTANCE.with(Clone::clone).clone())); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
-        this.currentDistance = ((this.maxDistance).unwrap() as i32);
+        this.maxDistance = { let java_value = ({ let java_object = (jcall!(hashtable).get(crate::java_into_object(BasePatrolAI_MAX_DISTANCE.with(Clone::clone).clone()))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) }).clone(); java_value };
+        this.currentDistance = { let java_value = (((this.maxDistance).unwrap() as i32)).clone(); java_value };
         this
     }
 
-    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut gameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInput::GameInputDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(hashtable, ownerLayerInterface, gameInput))))
     }
     
@@ -83,9 +87,9 @@ impl BasePatrolAI {
     
 
     pub fn updateTotalDistance(&mut self) {
-        let mut velocityInterfaceCompositeInterface: Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> = (self.getOwnerLayerInterface()).clone() /* as VelocityInterfaceCompositeInterface */;
+        let mut velocityInterfaceCompositeInterface: Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to VelocityInterfaceCompositeInterface") })();
         let mut velocityProperties: Option<Rc<RefCell<dyn crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn>>> = jcall!(velocityInterfaceCompositeInterface).getVelocityProperties();
-        self.xTotalDistance += jcall!(jcall!(velocityProperties).getVelocityXBasicDecimalP()).getScaled();
+        self.xTotalDistance += jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityXBasicDecimalP()).getScaled();
     }
     
 
@@ -99,12 +103,12 @@ impl BasePatrolAI {
     
 
     pub fn nextDirection(&mut self) {
-        if self.lastKeyDirection == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() } {
-            self.keyDirection = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone();
+        if self.lastKeyDirection == crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone) {
+            self.keyDirection = { let java_value = (crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone)).clone(); java_value }.clone();
             self.lastKeyDirection = self.keyDirection.clone();
             self.xTotalDistance = 0;
-        } else if self.lastKeyDirection == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() } {
-            self.keyDirection = unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone();
+        } else if self.lastKeyDirection == crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone) {
+            self.keyDirection = { let java_value = (crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone)).clone(); java_value }.clone();
             self.lastKeyDirection = self.keyDirection.clone();
             self.xTotalDistance = 0;
         }

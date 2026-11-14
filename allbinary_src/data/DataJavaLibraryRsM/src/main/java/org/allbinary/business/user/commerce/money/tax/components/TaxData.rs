@@ -32,6 +32,10 @@ thread_local! { pub static TaxData_NAME: String = String::from("TAX_NAME"); }
 thread_local! { pub static TaxData_RATE: String = String::from("TAX_RATE"); }
 
 impl TaxData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

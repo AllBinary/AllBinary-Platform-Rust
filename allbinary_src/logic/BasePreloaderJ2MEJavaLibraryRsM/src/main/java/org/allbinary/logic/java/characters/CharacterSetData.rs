@@ -37,6 +37,10 @@ pub struct CharacterSetData {
 thread_local! { pub static CharacterSetData_instance: Option<Rc<RefCell<CharacterSetData>>> = CharacterSetData::new(); }
 
 impl CharacterSetData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<CharacterSetData>>> {

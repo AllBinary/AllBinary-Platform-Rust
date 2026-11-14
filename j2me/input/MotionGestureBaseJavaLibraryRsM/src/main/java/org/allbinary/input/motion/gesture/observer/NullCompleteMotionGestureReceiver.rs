@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::CompleteMotionGestureListenerInterface::CompleteMotionGestureListenerInterface;
 
 // Borrows the object of a Java reference
@@ -38,6 +39,10 @@ impl CompleteMotionGestureListenerInterface for NullCompleteMotionGestureReceive
 }
 
 impl NullCompleteMotionGestureReceiver {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -46,7 +51,7 @@ impl NullCompleteMotionGestureReceiver {
         };
         this.logUtil = LogUtil::getInstance();
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(this.logUtil).putF(String::from("Null Gesture Reciever"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF(String::from("Null Gesture Reciever"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this
     }
 

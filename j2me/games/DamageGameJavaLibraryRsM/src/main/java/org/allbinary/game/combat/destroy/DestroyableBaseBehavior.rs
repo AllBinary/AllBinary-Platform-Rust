@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::DestroyableInterface::DestroyableInterface;
 
 // Borrows the object of a Java reference
@@ -39,6 +40,10 @@ impl crate::org::allbinary::layer::NamedInterface::NamedInterface for Destroyabl
 }
 
 impl DestroyableBaseBehavior {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -63,14 +68,14 @@ impl DestroyableBaseBehavior {
 
     // throws Exception
     pub fn isDestroyed(&mut self) -> bool {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
     pub fn setDestroyed(&mut self, mut destroyed: bool) {
     }
 }
-pub trait DestroyableBaseBehaviorDyn {
+pub trait DestroyableBaseBehaviorDyn: std::any::Any {
     fn as_DestroyableBaseBehavior(&self) -> &DestroyableBaseBehavior;
     fn as_DestroyableBaseBehavior_mut(&mut self) -> &mut DestroyableBaseBehavior;
     fn getName(&mut self) -> String { DestroyableBaseBehavior::getName(self.as_DestroyableBaseBehavior_mut()) }

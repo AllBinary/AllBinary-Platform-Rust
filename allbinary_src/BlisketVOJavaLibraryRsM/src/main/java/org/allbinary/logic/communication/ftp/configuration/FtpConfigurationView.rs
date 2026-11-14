@@ -16,15 +16,15 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::data::tree::dom::DomNodeHelper::DomNodeHelper;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::FtpConfigurationInterface::FtpConfigurationInterface;
 use super::FtpConfiguration::FtpConfiguration;
 use super::FtpConfigurationMapping::FtpConfigurationMapping;
@@ -45,6 +45,10 @@ impl DomNodeInterface for FtpConfigurationView {
 }
 
 impl FtpConfigurationView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut node: Option<Rc<RefCell<Node>>>) -> Self {
@@ -69,7 +73,7 @@ impl FtpConfigurationView {
     }
     
 
-    pub fn new_struct1(mut ftpConfigurationInterface: Option<Rc<RefCell<dyn FtpConfigurationInterface>>>) -> Self {
+    pub fn new_struct1_FtpConfigurationInterface(mut ftpConfigurationInterface: Option<Rc<RefCell<dyn FtpConfigurationInterface>>>) -> Self {
         let mut this = Self {
             ftpConfigurationInterface: None,
         };
@@ -77,16 +81,16 @@ impl FtpConfigurationView {
         this
     }
 
-    pub fn new1(mut ftpConfigurationInterface: Option<Rc<RefCell<dyn FtpConfigurationInterface>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(ftpConfigurationInterface))))
+    pub fn new1_FtpConfigurationInterface(mut ftpConfigurationInterface: Option<Rc<RefCell<dyn FtpConfigurationInterface>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_FtpConfigurationInterface(ftpConfigurationInterface))))
     }
     
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
         let mut ftpConfigurationMapping: Option<Rc<RefCell<FtpConfigurationMapping>>> = FtpConfigurationMapping::new(self.getFtpConfigurationInterface());
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(ftpConfigurationMapping).toHashMap();
-        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes(document.clone(), FtpConfigurationData_NAME.with(Clone::clone).clone(), hashMap.clone());
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(ftpConfigurationMapping).toHashMap();
+        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), FtpConfigurationData_NAME.with(Clone::clone).clone(), hashMap.clone());
         return node.clone();
     }
     

@@ -6,8 +6,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use crate::Runnable;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::device::LoadTextures::LoadTextures;
 use crate::org::allbinary::device::OpenGLESGraphics::OpenGLESGraphics;
 use crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvas;
@@ -26,6 +26,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::thread::SynchObject::SynchObject;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -53,6 +54,10 @@ thread_local! { pub static OpenGLUtil_instance: Option<Rc<RefCell<OpenGLUtil>>> 
 
 impl OpenGLUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,
@@ -76,8 +81,8 @@ impl OpenGLUtil {
         this.preResourceImageUtil = PreResourceImageUtil::getInstance();
         this.lockObject = SynchObject::new();
         this.anyType = SynchObject::new();
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.runnableList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.runnableList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.created = false;
         this.surfaceCreatedAndInitialized = false;
         this
@@ -97,14 +102,14 @@ impl OpenGLUtil {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if !self.created {
                 self.created = true;
-                PreLogUtil::put(format!("{}{}", jcall!(CommonLabels::getInstance()).START_LABEL, jcall!(OpenGLCapabilities::OpenGLCapabilities::getInstance()).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.renderStrings).ON_SURFACE_CREATED.clone());
+                PreLogUtil::put(format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).START_LABEL.clone(); java_field }, jcall!(OpenGLCapabilities::OpenGLCapabilities::getInstance()).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.renderStrings).ON_SURFACE_CREATED.clone(); java_field }.clone());
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.renderStrings).ON_SURFACE_CREATED.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.renderStrings).ON_SURFACE_CREATED.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -118,9 +123,9 @@ impl OpenGLUtil {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.renderStrings).ON_SURFACE_CREATED.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.renderStrings).ON_SURFACE_CREATED.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -134,15 +139,15 @@ impl OpenGLUtil {
         }
         jcall!(graphics).update();
         let mut progressCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn>>> = ProgressCanvasFactory::getInstance();
-        jcall!(progressCanvas).update(graphics.clone());
-        jcall!(((OpenGLImageCacheFactory::getInstance()).clone() /* as OpenGLImageCache */)).update(gl.clone());
+        jcall!(progressCanvas).update(graphics.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>));
+        jcall!(((OpenGLImageCacheFactory::getInstance()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<OpenGLImageCache>() }, "ClassCastException: not a OpenGLImageCache"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<OpenGLImageCache>) } }))).update(gl.clone());
         self.processRunnables();
         self.set(gl.clone());
     }
     
 
-    pub fn addImage(&mut self, mut image: Option<Rc<RefCell<Image>>>) -> Option<Rc<RefCell<Image>>> {
-        let mut encapsulateImage: Option<Rc<RefCell<Image>>> = jcall!(self.preResourceImageUtil).encapsulate(image.clone());
+    pub fn addImage(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut encapsulateImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(self.preResourceImageUtil).encapsulate(image.clone());
         if !match (&encapsulateImage, &image) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             { // synchronized (self.anyType)
                 jcall!(self.list).add(crate::java_into_object(encapsulateImage.clone()));
@@ -164,7 +169,7 @@ impl OpenGLUtil {
         { // synchronized (self.lockObject)
             if !jcall!(self.runnableList).contains(crate::java_into_object(runnable.clone())) {
                 jcall!(self.runnableList).add(crate::java_into_object(runnable.clone()));
-                jcall!(self.displayInfoSingleton).add(jcall!(self.canvasStrings).SCALED_IMAGES.clone());
+                jcall!(self.displayInfoSingleton).add({ let java_field = jcall!(self.canvasStrings).SCALED_IMAGES.clone(); java_field }.clone());
             }
         }
     }
@@ -175,7 +180,7 @@ impl OpenGLUtil {
             let mut runnable: Option<Rc<RefCell<dyn Runnable>>> = None;
             let mut size: i32 = jcall!(self.runnableList).size();
             for index in (0..size) {
-                runnable = { let java_object = jcall!(self.runnableList).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn Runnable>>>>().expect("ClassCastException").clone()) };
+                runnable = { let java_value = ({ let java_object = (jcall!(self.runnableList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn Runnable>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 jcall!(runnable).run();
             }
             jcall!(self.runnableList).clear();
@@ -186,10 +191,10 @@ impl OpenGLUtil {
     // throws Exception
     pub fn set(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) {
         let mut size: i32 = jcall!(self.list).size();
-        let mut image: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = None;
+        let mut image: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>> = None;
         for index2 in (0..size) {
-            image = jcall!(self.list).get(index2.clone());
-            jcall!(((image).clone() /* as OpenGLESImage */)).set(gl.clone());
+            image = { let java_value = ({ let java_object = (jcall!(self.list).get(index2.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            jcall!(image).as_OpenGLESImage_mut().set(gl.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::khronos::opengles::GL::GL>>));
         }
     }
 }

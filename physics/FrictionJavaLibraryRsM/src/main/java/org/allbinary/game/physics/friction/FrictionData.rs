@@ -31,6 +31,10 @@ pub struct FrictionData {
 thread_local! { pub static FrictionData_FRICTION_DENOMINATOR: i32 = 100; }
 
 impl FrictionData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

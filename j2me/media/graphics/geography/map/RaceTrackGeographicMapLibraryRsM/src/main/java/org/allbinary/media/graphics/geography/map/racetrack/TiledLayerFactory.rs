@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::game::TiledLayer::TiledLayer;
+use crate::javax::microedition::lcdui::game::TiledLayer::TiledLayer;
 use super::RaceTrackData::RaceTrackData;
 
 // Borrows the object of a Java reference
@@ -32,6 +32,10 @@ pub struct TiledLayerFactory {
 
 
 impl TiledLayerFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

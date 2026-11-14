@@ -21,6 +21,7 @@ use crate::org::allbinary::graphics::GPoint::GPoint;
 use crate::org::allbinary::graphics::PointFactory::PointFactory;
 use crate::org::allbinary::input::motion::gesture::observer::MotionEventCircularPool::MotionEventCircularPool;
 use crate::org::allbinary::input::motion::gesture::observer::MotionGestureEvent::MotionGestureEvent;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,13 +37,17 @@ pub struct MirrorMotionGestureEventUtil {
 thread_local! { pub static MirrorMotionGestureEventUtil_instance: Option<Rc<RefCell<MirrorMotionGestureEventUtil>>> = MirrorMotionGestureEventUtil::new(); }
 
 impl MirrorMotionGestureEventUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
         let mut this = Self {
             motionEventCircularPool: None,
         };
-        this.motionEventCircularPool = MotionEventCircularPool::createPool(i32::MAX.clone());
+        this.motionEventCircularPool = { let java_value = (MotionEventCircularPool::createPool(i32::MAX.clone())).clone(); java_value };
         this
     }
 

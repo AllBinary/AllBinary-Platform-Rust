@@ -25,6 +25,10 @@ pub struct InApplicationPurchaseFactory {
 thread_local! { pub static InApplicationPurchaseFactory_instance: Option<Rc<RefCell<InApplicationPurchaseFactory>>> = InApplicationPurchaseFactory::new(); }
 
 impl InApplicationPurchaseFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<InApplicationPurchaseFactory>>> {
@@ -85,7 +89,7 @@ impl InApplicationPurchaseFactory {
     
 
     pub fn getUserName(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 

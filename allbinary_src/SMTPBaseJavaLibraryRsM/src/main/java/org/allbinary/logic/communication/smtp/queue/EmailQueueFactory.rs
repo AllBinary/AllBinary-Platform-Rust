@@ -29,9 +29,13 @@ macro_rules! jcall {
 pub struct EmailQueueFactory {
 }
 
-pub static mut EmailQueueFactory_emailQueueInterface: std::cell::LazyCell<Option<Rc<RefCell<dyn EmailQueueInterface>>>> = std::cell::LazyCell::new(|| (BasicEmailQueue::BasicEmailQueue::getInstance()).clone() /* as EmailQueueInterface */);
+pub static mut EmailQueueFactory_emailQueueInterface: std::cell::LazyCell<Option<Rc<RefCell<dyn EmailQueueInterface>>>> = std::cell::LazyCell::new(|| (BasicEmailQueue::BasicEmailQueue::getInstance()).clone().map(|reference| reference as Rc<RefCell<dyn EmailQueueInterface>>));
 
 impl EmailQueueFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

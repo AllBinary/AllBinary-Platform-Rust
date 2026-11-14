@@ -32,6 +32,10 @@ pub struct InputTypeData {
 thread_local! { pub static InputTypeData_instance: Option<Rc<RefCell<InputTypeData>>> = InputTypeData::new(); }
 
 impl InputTypeData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<InputTypeData>>> {

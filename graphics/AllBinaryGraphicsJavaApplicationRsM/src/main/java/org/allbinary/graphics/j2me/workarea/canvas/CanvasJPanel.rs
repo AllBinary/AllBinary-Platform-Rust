@@ -16,10 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::awt::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::swing::tree::DefaultMutableTreeNode::DefaultMutableTreeNode;
 // use crate::javax::swing::tree::MutableTreeNode::MutableTreeNode;
 use crate::org::allbinary::animation::VectorExplosionGenerator::VectorExplosionGenerator;
@@ -53,6 +52,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -67,7 +67,7 @@ pub struct CanvasJPanel {
     pub guiLog: Option<Rc<RefCell<GuiLog>>>,
     pub gameInputStrings: Option<Rc<RefCell<GameInputStrings>>>,
     pub selectedTool: Option<Rc<RefCell<dyn GraphicItemInterface>>>,
-    pub graphicItemHashMap: Option<Rc<RefCell<HashMap>>>,
+    pub graphicItemHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
     pub canvasDimension: Option<Rc<RefCell<IntegerDimension>>>,
     pub angle: f64,
     pub canvasTreeNode: Option<Rc<RefCell<DefaultMutableTreeNode>>>,
@@ -77,8 +77,8 @@ pub struct CanvasJPanel {
 }
 
 pub static mut CanvasJPanel_frame: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 0);
-thread_local! { pub static CanvasJPanel_gridColor: Option<Rc<RefCell<Color>>> = Color::new(jcall!(jcall!(BasicColorFactory::getInstance()).WHITE).intValue()); }
-thread_local! { pub static CanvasJPanel_backgroundColor: Option<Rc<RefCell<Color>>> = Color::new(jcall!(jcall!(BasicColorFactory::getInstance()).CLEAR_COLOR).intValue()); }
+thread_local! { pub static CanvasJPanel_gridColor: Option<Rc<RefCell<Color>>> = Color::new(jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }).intValue()); }
+thread_local! { pub static CanvasJPanel_backgroundColor: Option<Rc<RefCell<Color>>> = Color::new(jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).CLEAR_COLOR.clone(); java_field }).intValue()); }
 // impl MouseListener for CanvasJPanel with the methods of the trait
 // impl MouseMotionListener for CanvasJPanel with the methods of the trait
 // impl KeyListener for CanvasJPanel with the methods of the trait
@@ -123,10 +123,10 @@ impl CanvasJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             if LOGGING::contains(crate::org::allbinary::log::LOGGING::LOGGING_GRAPHICSCREATION.with(Clone::clone).clone()) {
-                jcall!(this.guiLog).put4(String::from("Constructor Error"), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), String::from("contructor"), e.clone());
+                jcall!(this.guiLog).put4_String_String_String_Exception(String::from("Constructor Error"), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), String::from("contructor"), e.clone());
             }
             }
         }
@@ -158,14 +158,14 @@ impl CanvasJPanel {
         this.gameInputStrings = GameInputStrings::getInstance();
         this.selectedTool = None;
         this.angle = 0.0;
-        this.grid = Grid::new1(jcall!(canvasDom).getGrid());
+        this.grid = { let java_value = (Grid::new1(jcall!(canvasDom).getGrid())).clone(); java_value };
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             this.workAreaJTreeJPanel = workAreaJTreeJPanel.clone();
             this.initComponents();
             this.initMyComponents();
             this.setSize(dimension.clone());
             { let java_arguments = (jcall!(jcall!(canvasDom).getDimension()).getWidth(), jcall!(jcall!(canvasDom).getDimension()).getHeight(),); this.setCanvasSize(java_arguments.0, java_arguments.1) };
-            this.graphicItemHashMap = jcall!(canvasDom).getGraphicItemHashMap();
+            this.graphicItemHashMap = { let java_value = (jcall!(canvasDom).getGraphicItemHashMap()).clone(); java_value };
             let mut graphicItemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(this.graphicItemHashMap).keySet()).toArray();
             let mut size: i32 = (graphicItemArray.len() as i32).clone();
             for index in (0..size) {
@@ -180,10 +180,10 @@ impl CanvasJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             if LOGGING::contains(crate::org::allbinary::log::LOGGING::LOGGING_GRAPHICSCREATION.with(Clone::clone).clone()) {
-                jcall!(this.guiLog).put4(String::from("Constructor Error"), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), String::from("contructor"), e.clone());
+                jcall!(this.guiLog).put4_String_String_String_Exception(String::from("Constructor Error"), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), String::from("contructor"), e.clone());
             }
             }
         }
@@ -197,11 +197,11 @@ impl CanvasJPanel {
 
     // throws Exception
     pub fn initMyComponents(&mut self) {
-        self.frameLabel = CanvasTreeLabel::new(format!("{}{}", String::from("FrameLabel"), jcall!(Some((unsafe { CanvasJPanel_frame.clone() }.clone()) as i32)).toString()));
+        self.frameLabel = { let java_value = (CanvasTreeLabel::new(format!("{}{}", String::from("FrameLabel"), (Some((unsafe { CanvasJPanel_frame.clone() }.clone()) as i32)).expect("NullPointerException").to_string()))).clone(); java_value };
         self.canvasTreeNode = DefaultMutableTreeNode::new(self.frameLabel.clone());
         unsafe { *CanvasJPanel_frame += 1 };
         { let java_receiver = self.workAreaJTreeJPanel.clone(); let java_arguments = (self.getTreeNode(),); jcall!(java_receiver).add(java_arguments.0); };
-        self.graphicItemHashMap = jcall!(StdUtil::getInstance()).createHashMap();
+        self.graphicItemHashMap = { let java_value = (jcall!(StdUtil::getInstance()).createHashMap()).clone(); java_value };
         jcall!(self.grid).grid = jcall!(PointFactory::getInstance()).createXY(0, 0);
         self.setCanvasDimension(IntegerDimension::new(0, 0));
         self.selectedTool = None;
@@ -252,18 +252,18 @@ impl CanvasJPanel {
     // Java overloaded method: Rust needs a different name
     pub fn setGrid2(&mut self, mut xSize: i32, mut ySize: i32) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            if xSize >= jcall!(self.getCanvasDimension()).getWidth() / 2 || xSize < 1 {
-                panic!("{:?}", format!("{}: {:?}", "GraphicsException", (format!("{}{}", format!("{}{}", format!("{}{}", String::from("X Size Error: "), xSize), String::from(" WorkArea X: ")), jcall!(self.getCanvasDimension()).getWidth()), None /* Java this: a &mut self method has no Rc of itself */, String::from("setGrid"))));
+            if xSize >= { let java_value = jcall!(self.getCanvasDimension()).getWidth(); java_value } / 2 || xSize < 1 {
+                panic!("{:?}", format!("{}: {:?}", "GraphicsException", (format!("{}{}", format!("{}{}", format!("{}{}", String::from("X Size Error: "), xSize), String::from(" WorkArea X: ")), { let java_value = jcall!(self.getCanvasDimension()).getWidth(); java_value }), None /* Java this: a &mut self method has no Rc of itself */, String::from("setGrid"))));
             }
-            if ySize >= jcall!(self.getCanvasDimension()).getHeight() / 2 || ySize < 1 {
-                panic!("{:?}", format!("{}: {:?}", "GraphicsException", (format!("{}{}", format!("{}{}", format!("{}{}", String::from("Y Size Error"), ySize), String::from(" WorkArea Y: ")), jcall!(self.getCanvasDimension()).getHeight()), None /* Java this: a &mut self method has no Rc of itself */, String::from("setGrid"))));
+            if ySize >= { let java_value = jcall!(self.getCanvasDimension()).getHeight(); java_value } / 2 || ySize < 1 {
+                panic!("{:?}", format!("{}: {:?}", "GraphicsException", (format!("{}{}", format!("{}{}", format!("{}{}", String::from("Y Size Error"), ySize), String::from(" WorkArea Y: ")), { let java_value = jcall!(self.getCanvasDimension()).getHeight(); java_value }), None /* Java this: a &mut self method has no Rc of itself */, String::from("setGrid"))));
             }
             jcall!(self.grid).grid = jcall!(PointFactory::getInstance()).createXY(xSize.clone(), ySize.clone());
             jcall!(self.grid).isChanged = true;
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             }
         }
@@ -272,8 +272,8 @@ impl CanvasJPanel {
 
     // throws Exception
     pub fn setDefaultGrid(&mut self) {
-        let mut xPixelsPerWorkAreaPixel: i32 = self.getWidth() / jcall!(self.getCanvasDimension()).getWidth();
-        let mut yPixelsPerWorkAreaPixel: i32 = self.getHeight() / jcall!(self.getCanvasDimension()).getHeight();
+        let mut xPixelsPerWorkAreaPixel: i32 = self.getWidth() / { let java_value = jcall!(self.getCanvasDimension()).getWidth(); java_value };
+        let mut yPixelsPerWorkAreaPixel: i32 = self.getHeight() / { let java_value = jcall!(self.getCanvasDimension()).getHeight(); java_value };
         self.setGrid2(1, 1);
         jcall!(self.grid).isChanged = true;
     }
@@ -290,17 +290,17 @@ impl CanvasJPanel {
     
 
     pub fn addAngle(&mut self, mut angle: f64) {
-        self.setAngle(self.angle + angle);
+        { let java_arguments = (self.angle + angle,); self.setAngle(java_arguments.0) };
     }
     
 
     pub fn explodeAll(&mut self) {
-        let mut newPoints: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut newPoints: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut graphicItemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(self.getGraphicItemHashMap()).keySet()).toArray();
         let mut size: i32 = (graphicItemArray.len() as i32).clone();
         for index in (0..size) {
             let mut graphicItemNode: Option<Rc<RefCell<MutableTreeNode>>> = (graphicItemArray[(index) as usize]).clone() /* as MutableTreeNode */;
-            let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = (jcall!(self.getGraphicItemHashMap()).get(graphicItemNode.clone())).clone() /* as GraphicItemInterface */;
+            let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(self.getGraphicItemHashMap()).get(crate::java_into_object(graphicItemNode.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
             if jcall!(graphicItem).getName() == LinesGraphicItem::getStaticName() {
                 while jcall!(jcall!(graphicItem).getPointsInterface()).getSize() > 2 {
                     let mut newGraphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = jcall!(jcall!(GraphicItemFactory::getInstance()).getInstance1(jcall!(graphicItem).getName())).getInstance(None /* Java this: a &mut self method has no Rc of itself */);
@@ -316,9 +316,9 @@ impl CanvasJPanel {
         }
         let mut size2: i32 = jcall!(newPoints).size();
         for index in (0..size2) {
-            let mut newGraphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = jcall!(newPoints).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
+            let mut newGraphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(newPoints).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
             { let java_receiver = self.canvasTreeNode.clone(); let java_arguments = (jcall!(newGraphicItem).getTreeNode(),); jcall!(java_receiver).add(java_arguments.0); };
-            jcall!(self.getGraphicItemHashMap()).put(jcall!(newGraphicItem).getTreeNode(), newGraphicItem.clone());
+            jcall!(self.getGraphicItemHashMap()).put(crate::java_into_object(jcall!(newGraphicItem).getTreeNode()), crate::java_into_object(newGraphicItem.clone()));
         }
         jcall!(self.workAreaJTreeJPanel).updateTree();
         jcall!(self.workAreaJTreeJPanel).expand();
@@ -331,10 +331,10 @@ impl CanvasJPanel {
         let mut graphicItemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(self.getGraphicItemHashMap()).keySet()).toArray();
         let mut size: i32 = (graphicItemArray.len() as i32).clone();
         for index in (0..size) {
-            let mut item: Option<Rc<RefCell<dyn GraphicItemInterface>>> = (jcall!(self.getGraphicItemHashMap()).get(graphicItemArray[(index) as usize].clone())).clone() /* as GraphicItemInterface */;
-            let mut basicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(VectorExplosionGenerator::getInstance()).createList(jcall!(jcall!(item).getPointsInterface()).getPoints(), howMuch.clone(), jcall!(VectorExplosionGenerator::getInstance()).RANDOM.clone());
+            let mut item: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(self.getGraphicItemHashMap()).get(graphicItemArray[(index) as usize].clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
+            let mut basicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(VectorExplosionGenerator::getInstance()).createList(jcall!(jcall!(item).getPointsInterface()).getPoints(), howMuch.clone(), { let java_field = jcall!(VectorExplosionGenerator::getInstance()).RANDOM.clone(); java_field }.clone());
             let mut newPoints: Option<Rc<RefCell<Points>>> = Points::new();
-            jcall!(newPoints).as_BasicArrayList_mut().addPoints(basicArrayList.clone());
+            jcall!(newPoints).addPoints(basicArrayList.clone());
             jcall!(item).setPointsInterface(newPoints.clone());
             let mut angleDelta: i32 = jcall!(RandomRotationFactory::getInstance()).getNextRandomAngle(howMuch.clone());
             jcall!(item).setAngle(angleDelta.clone());
@@ -349,10 +349,10 @@ impl CanvasJPanel {
         let mut graphicItemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(self.getGraphicItemHashMap()).keySet()).toArray();
         let mut size: i32 = (graphicItemArray.len() as i32).clone();
         for index in (0..size) {
-            let mut item: Option<Rc<RefCell<dyn GraphicItemInterface>>> = (jcall!(self.getGraphicItemHashMap()).get(graphicItemArray[(index) as usize].clone())).clone() /* as GraphicItemInterface */;
-            let mut basicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(VectorMirrorGenerator::getInstance()).getInstance2(jcall!(jcall!(item).getPointsInterface()).getPoints(), width.clone());
+            let mut item: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(self.getGraphicItemHashMap()).get(graphicItemArray[(index) as usize].clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
+            let mut basicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(VectorMirrorGenerator::getInstance()).getInstance2_BasicArrayList_int(jcall!(jcall!(item).getPointsInterface()).getPoints(), width.clone());
             let mut newPoints: Option<Rc<RefCell<Points>>> = Points::new();
-            jcall!(newPoints).as_BasicArrayList_mut().addPoints(basicArrayList.clone());
+            jcall!(newPoints).addPoints(basicArrayList.clone());
             jcall!(item).setPointsInterface(newPoints.clone());
         }
         self.repaint();
@@ -369,9 +369,9 @@ impl CanvasJPanel {
     pub fn setNewTool(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(StatusFactory::getInstance()).setStatus(String::from("Tool Selected"));
-            self.selectedTool = jcall!(jcall!(ToolFactory::getInstance()).getSelectedToolFactory()).getInstance(None /* Java this: a &mut self method has no Rc of itself */);
+            self.selectedTool = { let java_value = (jcall!(jcall!(ToolFactory::getInstance()).getSelectedToolFactory()).getInstance(None /* Java this: a &mut self method has no Rc of itself */)).clone(); java_value };
             let mut newNode: Option<Rc<RefCell<MutableTreeNode>>> = jcall!(self.selectedTool).getTreeNode();
-            jcall!(self.getGraphicItemHashMap()).put(newNode.clone(), self.selectedTool.clone());
+            jcall!(self.getGraphicItemHashMap()).put(crate::java_into_object(newNode.clone()), crate::java_into_object(self.selectedTool.clone()));
             jcall!(self.canvasTreeNode).add(newNode.clone());
             if self.getSelectedTool().is_none() {
                 panic!("{:?}", format!("{}: {:?}", "GraphicsException", (String::from("No Tool Selected"), None /* Java this: a &mut self method has no Rc of itself */, String::from("setSelectedTool"))));
@@ -379,7 +379,7 @@ impl CanvasJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             }
         }
@@ -389,31 +389,31 @@ impl CanvasJPanel {
     // throws Exception
     pub fn duplicateGraphicItem(&mut self, mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>>) {
         let mut graphicItemClone: Option<Rc<RefCell<dyn GraphicItemInterface>>> = jcall!(graphicItem).duplicate();
-        jcall!(self.getGraphicItemHashMap()).put(jcall!(graphicItemClone).getTreeNode(), graphicItemClone.clone());
+        jcall!(self.getGraphicItemHashMap()).put(crate::java_into_object(jcall!(graphicItemClone).getTreeNode()), crate::java_into_object(graphicItemClone.clone()));
         { let java_receiver = self.canvasTreeNode.clone(); let java_arguments = (jcall!(graphicItemClone).getTreeNode(),); jcall!(java_receiver).add(java_arguments.0); };
     }
     
 
     // throws Exception
-    pub fn duplicateGraphicItemHashMap(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) {
+    pub fn duplicateGraphicItemHashMap(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
         let mut mutableTreeNodeArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(hashMap).keySet()).toArray();
         let mut size: i32 = (mutableTreeNodeArray.len() as i32).clone();
         for index in (0..size) {
             let mut treeNode: Option<Rc<RefCell<MutableTreeNode>>> = (mutableTreeNodeArray[(index) as usize]).clone() /* as MutableTreeNode */;
-            let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = (jcall!(hashMap).get(treeNode.clone())).clone() /* as GraphicItemInterface */;
+            let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(hashMap).get(crate::java_into_object(treeNode.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
             self.duplicateGraphicItem(graphicItem.clone());
         }
     }
     
 
-    pub fn getGraphicItemHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn getGraphicItemHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return self.graphicItemHashMap.clone();
     }
     
 
     pub fn getXPixelsPerWorkAreaPixel(&mut self) -> i32 {
-        let mut x: i32 = jcall!(jcall!(self.getGrid()).grid).getX() * (self.getWidth() - 10) / jcall!(self.getCanvasDimension()).getWidth();
-        if jcall!(self.getGrid()).getZoom() == 1 {
+        let mut x: i32 = { let java_value = jcall!({ let java_field = jcall!(self.getGrid()).grid.clone(); java_field }).getX(); java_value } * (self.getWidth() - 10) / { let java_value = jcall!(self.getCanvasDimension()).getWidth(); java_value };
+        if { let java_value = jcall!(self.getGrid()).getZoom(); java_value } == 1 {
             return 1;
         } else {
             return x.clone();
@@ -422,8 +422,8 @@ impl CanvasJPanel {
     
 
     pub fn getYPixelsPerWorkAreaPixel(&mut self) -> i32 {
-        let mut y: i32 = jcall!(jcall!(self.getGrid()).grid).getY() * (self.getHeight() - 10) / jcall!(self.getCanvasDimension()).getHeight();
-        if jcall!(self.getGrid()).getZoom() == 1 {
+        let mut y: i32 = { let java_value = jcall!({ let java_field = jcall!(self.getGrid()).grid.clone(); java_field }).getY(); java_value } * (self.getHeight() - 10) / { let java_value = jcall!(self.getCanvasDimension()).getHeight(); java_value };
+        if { let java_value = jcall!(self.getGrid()).getZoom(); java_value } == 1 {
             return 1;
         } else {
             return y.clone();
@@ -436,18 +436,18 @@ impl CanvasJPanel {
     }
     
 
-    pub fn drawItems(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn drawItems(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         let mut angleDouble: Option<f64> = Some((self.angle.clone()) as f64);
         let mut graphicItemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(self.getGraphicItemHashMap()).keySet()).toArray();
         let mut size: i32 = (graphicItemArray.len() as i32).clone();
         for index in (0..size) {
-            let mut item: Option<Rc<RefCell<dyn GraphicItemInterface>>> = (jcall!(self.getGraphicItemHashMap()).get(graphicItemArray[(index) as usize].clone())).clone() /* as GraphicItemInterface */;
+            let mut item: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(self.getGraphicItemHashMap()).get(graphicItemArray[(index) as usize].clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
             jcall!(item).paint(graphics.clone(), angleDouble.clone(), self.getCanvasDimension(), self.getXPixelsPerWorkAreaPixel(), self.getYPixelsPerWorkAreaPixel());
         }
     }
     
 
-    pub fn drawGrid(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn drawGrid(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         let mut xAdjust: i32 = (self.getWidth() % self.getXPixelsPerWorkAreaPixel()) / 2;
         let mut yAdjust: i32 = (self.getHeight() % self.getYPixelsPerWorkAreaPixel()) / 2;
         let mut xLeft: i32 = xAdjust.clone();
@@ -464,23 +464,23 @@ impl CanvasJPanel {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            if jcall!(self.getGrid()).isChanged {
+            if { let java_field = jcall!(self.getGrid()).isChanged.clone(); java_field } {
                 jcall!(graphics).setColor(CanvasJPanel_backgroundColor.with(Clone::clone).clone());
                 jcall!(graphics).fillRect(0, 0, self.getWidth(), self.getHeight());
-                if jcall!(self.getGrid()).getZoom() > 2 && jcall!(self.getGrid()).isGridOn && jcall!(self.getGrid()).isGridPossible {
+                if { let java_value = jcall!(self.getGrid()).getZoom(); java_value } > 2 && { let java_field = jcall!(self.getGrid()).isGridOn.clone(); java_field } && { let java_field = jcall!(self.getGrid()).isGridPossible.clone(); java_field } {
                     self.setDefaultGrid();
                     self.drawGrid(graphics.clone());
                 }
                 self.drawItems(graphics.clone());
-                jcall!(graphics).drawString(jcall!(Some((self.getAngle()) as f64)).toString(), self.getWidth() - 75, self.getHeight() - 15);
+                jcall!(graphics).as_Graphics_mut().drawString({ let java_argument = (Some((self.getAngle()) as f64)).expect("NullPointerException").to_string(); java_argument }, self.getWidth() - 75, self.getHeight() - 15);
                 jcall!(self.grid).isChanged = false;
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             }
         }
@@ -507,8 +507,8 @@ impl CanvasJPanel {
     
 
     pub fn mouseClicked(&mut self, mut mouseEvent: Option<Rc<RefCell<MouseEvent>>>) {
-        jcall!(StatusFactory::getInstance()).setStatusNoLog(format!("{}{}", jcall!(MouseStrings::getInstance()).MOUSE_CLICKED_LABEL, self.logMouseEvent(mouseEvent.clone())));
-        if self.getSelectedTool().is_some() && jcall!(self.getSelectedTool()).isActive() {
+        jcall!(StatusFactory::getInstance()).setStatusNoLog(format!("{}{}", { let java_field = jcall!(MouseStrings::getInstance()).MOUSE_CLICKED_LABEL.clone(); java_field }, self.logMouseEvent(mouseEvent.clone())));
+        if self.getSelectedTool().is_some() && { let java_value = jcall!(self.getSelectedTool()).isActive(); java_value } {
             let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = self.getSelectedTool();
             jcall!(graphicItem).mouseClicked(mouseEvent.clone(), self.getXPixelsPerWorkAreaPixel(), self.getYPixelsPerWorkAreaPixel());
         } else {
@@ -537,7 +537,7 @@ impl CanvasJPanel {
     
 
     pub fn mousePressed(&mut self, mut mouseEvent: Option<Rc<RefCell<MouseEvent>>>) {
-        jcall!(StatusFactory::getInstance()).setStatusNoLog(format!("{}{}", jcall!(MouseStrings::getInstance()).MOUSE_PRESSED_LABEL, self.logMouseEvent(mouseEvent.clone())));
+        jcall!(StatusFactory::getInstance()).setStatusNoLog(format!("{}{}", { let java_field = jcall!(MouseStrings::getInstance()).MOUSE_PRESSED_LABEL.clone(); java_field }, self.logMouseEvent(mouseEvent.clone())));
         if self.getSelectedTool().is_some() {
             let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = self.getSelectedTool();
             jcall!(graphicItem).mousePressed(mouseEvent.clone(), self.getXPixelsPerWorkAreaPixel(), self.getYPixelsPerWorkAreaPixel());
@@ -549,7 +549,7 @@ impl CanvasJPanel {
     
 
     pub fn mouseReleased(&mut self, mut mouseEvent: Option<Rc<RefCell<MouseEvent>>>) {
-        jcall!(StatusFactory::getInstance()).setStatusNoLog(format!("{}{}", jcall!(MouseStrings::getInstance()).MOUSE_RELEASED_LABEL, self.logMouseEvent(mouseEvent.clone())));
+        jcall!(StatusFactory::getInstance()).setStatusNoLog(format!("{}{}", { let java_field = jcall!(MouseStrings::getInstance()).MOUSE_RELEASED_LABEL.clone(); java_field }, self.logMouseEvent(mouseEvent.clone())));
         let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = self.getSelectedTool();
         if graphicItem.is_some() {
             jcall!(graphicItem).mouseReleased(mouseEvent.clone(), self.getXPixelsPerWorkAreaPixel(), self.getYPixelsPerWorkAreaPixel());
@@ -561,7 +561,7 @@ impl CanvasJPanel {
     
 
     pub fn mouseDragged(&mut self, mut mouseEvent: Option<Rc<RefCell<MouseEvent>>>) {
-        jcall!(StatusFactory::getInstance()).setStatusNoLog(format!("{}{}", jcall!(MouseStrings::getInstance()).MOUSE_DRAGGED_LABEL, self.logMouseEvent(mouseEvent.clone())));
+        jcall!(StatusFactory::getInstance()).setStatusNoLog(format!("{}{}", { let java_field = jcall!(MouseStrings::getInstance()).MOUSE_DRAGGED_LABEL.clone(); java_field }, self.logMouseEvent(mouseEvent.clone())));
         let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = self.getSelectedTool();
         if graphicItem.is_some() {
             jcall!(graphicItem).mouseDragged(mouseEvent.clone(), self.getXPixelsPerWorkAreaPixel(), self.getYPixelsPerWorkAreaPixel());
@@ -573,8 +573,8 @@ impl CanvasJPanel {
     
 
     pub fn mouseMoved(&mut self, mut mouseEvent: Option<Rc<RefCell<MouseEvent>>>) {
-        jcall!(StatusFactory::getInstance()).setStatusNoLog(format!("{}{}", jcall!(MouseStrings::getInstance()).MOUSE_MOVED_LABEL, self.logMouseEvent(mouseEvent.clone())));
-        if self.getSelectedTool().is_some() && jcall!(self.getSelectedTool()).isActive() {
+        jcall!(StatusFactory::getInstance()).setStatusNoLog(format!("{}{}", { let java_field = jcall!(MouseStrings::getInstance()).MOUSE_MOVED_LABEL.clone(); java_field }, self.logMouseEvent(mouseEvent.clone())));
+        if self.getSelectedTool().is_some() && { let java_value = jcall!(self.getSelectedTool()).isActive(); java_value } {
             let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = self.getSelectedTool();
             jcall!(graphicItem).mouseMoved(mouseEvent.clone(), self.getXPixelsPerWorkAreaPixel(), self.getYPixelsPerWorkAreaPixel());
         }
@@ -586,11 +586,11 @@ impl CanvasJPanel {
 
     pub fn logMouseEvent(&mut self, mut mouseEvent: Option<Rc<RefCell<MouseEvent>>>) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(jcall!(PositionStrings::getInstance()).X_LABEL.clone());
-        jcall!(stringBuffer).appendint(((jcall!(mouseEvent).getX() / self.getXPixelsPerWorkAreaPixel()) as i32));
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(PositionStrings::getInstance()).Y_LABEL.clone());
-        jcall!(stringBuffer).appendint(((jcall!(mouseEvent).getY() / self.getYPixelsPerWorkAreaPixel()) as i32));
+        jcall!(stringBuffer).append({ let java_field = jcall!(PositionStrings::getInstance()).X_LABEL.clone(); java_field }.clone());
+        jcall!(stringBuffer).appendint((({ let java_value = jcall!(mouseEvent).getX(); java_value } / self.getXPixelsPerWorkAreaPixel()) as i32));
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(PositionStrings::getInstance()).Y_LABEL.clone(); java_field }.clone());
+        jcall!(stringBuffer).appendint((({ let java_value = jcall!(mouseEvent).getY(); java_value } / self.getYPixelsPerWorkAreaPixel()) as i32));
         return jcall!(stringBuffer).toString();
     }
     
@@ -601,16 +601,16 @@ impl CanvasJPanel {
             let mut graphicItemArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(self.graphicItemHashMap).keySet()).toArray();
             let mut size: i32 = (graphicItemArray.len() as i32).clone();
             for index in (0..size) {
-                let mut graphicItemInterface: Option<Rc<RefCell<dyn GraphicItemInterface>>> = (jcall!(self.graphicItemHashMap).get(graphicItemArray[(index) as usize].clone())).clone() /* as GraphicItemInterface */;
+                let mut graphicItemInterface: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(self.graphicItemHashMap).get(graphicItemArray[(index) as usize].clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
                 let mut keyCode: i32 = jcall!(keyEvent).getKeyCode();
                 if jcall!(graphicItemInterface).isActive() {
-                    if keyCode == jcall!(keyEvent).VK_UP {
+                    if keyCode == { let java_field = jcall!(keyEvent).VK_UP.clone(); java_field } {
                         jcall!(graphicItemInterface).translate(0, -1);
-                    } else if keyCode == jcall!(keyEvent).VK_DOWN {
+                    } else if keyCode == { let java_field = jcall!(keyEvent).VK_DOWN.clone(); java_field } {
                         jcall!(graphicItemInterface).translate(0, 1);
-                    } else if keyCode == jcall!(keyEvent).VK_LEFT {
+                    } else if keyCode == { let java_field = jcall!(keyEvent).VK_LEFT.clone(); java_field } {
                         jcall!(graphicItemInterface).translate(-1, 0);
-                    } else if keyCode == jcall!(keyEvent).VK_RIGHT {
+                    } else if keyCode == { let java_field = jcall!(keyEvent).VK_RIGHT.clone(); java_field } {
                         jcall!(graphicItemInterface).translate(1, 0);
                     }
                 }
@@ -618,13 +618,13 @@ impl CanvasJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).KEY_PRESSED.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).KEY_PRESSED.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
-        if self.getSelectedTool().is_some() && jcall!(self.getSelectedTool()).isActive() {
+        if self.getSelectedTool().is_some() && { let java_value = jcall!(self.getSelectedTool()).isActive(); java_value } {
             jcall!(StatusFactory::getInstance()).setStatus(String::from("Key Pressed for Tool"));
             let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = self.getSelectedTool();
             jcall!(graphicItem).keyPressed(keyEvent.clone());
@@ -645,7 +645,7 @@ impl CanvasJPanel {
     
 
     pub fn delete(&mut self, mut evt: Option<Rc<RefCell<MyGraphicItemEvent>>>) {
-        jcall!(self.getGraphicItemHashMap()).remove(jcall!(evt).getTreeNode());
+        jcall!(self.getGraphicItemHashMap()).remove(crate::java_into_object(jcall!(evt).getTreeNode()));
         jcall!(self.workAreaJTreeJPanel).updateTree();
         jcall!(self.workAreaJTreeJPanel).expand();
         jcall!(self.workAreaJTreeJPanel).repaint();
@@ -653,7 +653,7 @@ impl CanvasJPanel {
     
 
     pub fn deselect(&mut self, mut evt: Option<Rc<RefCell<MyGraphicItemEvent>>>) {
-        let mut graphicItemInterface: Option<Rc<RefCell<dyn GraphicItemInterface>>> = (jcall!(self.getGraphicItemHashMap()).get(jcall!(evt).getTreeNode())).clone() /* as GraphicItemInterface */;
+        let mut graphicItemInterface: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(self.getGraphicItemHashMap()).get(crate::java_into_object(jcall!(evt).getTreeNode()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
         if graphicItemInterface.is_some() {
             jcall!(graphicItemInterface).setColor(unsafe { Color_WHITE.clone() }.clone());
             jcall!(graphicItemInterface).deactivate();
@@ -663,7 +663,7 @@ impl CanvasJPanel {
     
 
     pub fn highlight(&mut self, mut evt: Option<Rc<RefCell<MyGraphicItemEvent>>>) {
-        let mut graphicItemInterface: Option<Rc<RefCell<dyn GraphicItemInterface>>> = (jcall!(self.getGraphicItemHashMap()).get(jcall!(evt).getTreeNode())).clone() /* as GraphicItemInterface */;
+        let mut graphicItemInterface: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(self.getGraphicItemHashMap()).get(crate::java_into_object(jcall!(evt).getTreeNode()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
         if graphicItemInterface.is_some() {
             jcall!(graphicItemInterface).setColor(unsafe { Color_YELLOW.clone() }.clone());
             jcall!(graphicItemInterface).activate();
@@ -674,8 +674,8 @@ impl CanvasJPanel {
 
     // throws Exception
     pub fn duplicate(&mut self) -> Option<Rc<RefCell<CanvasJPanel>>> {
-        let mut newCanvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = CanvasJPanel::new4(self.workAreaJTreeJPanel.clone(), self.getSize(), jcall!(self.getCanvasDimension()).getWidth(), jcall!(self.getCanvasDimension()).getHeight());
-        jcall!(newCanvasJPanel).setGrid(jcall!(self.getGrid()).getGrid());
+        let mut newCanvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = CanvasJPanel::new4(self.workAreaJTreeJPanel.clone(), self.getSize(), { let java_argument = jcall!(self.getCanvasDimension()).getWidth(); java_argument }, { let java_argument = jcall!(self.getCanvasDimension()).getHeight(); java_argument });
+        jcall!(newCanvasJPanel).setGrid({ let java_argument = jcall!(self.getGrid()).getGrid(); java_argument });
         jcall!(newCanvasJPanel).setAngle(self.getAngle());
         jcall!(newCanvasJPanel).duplicateGraphicItemHashMap(self.getGraphicItemHashMap());
         jcall!(self.workAreaJTreeJPanel).updateTree();
@@ -689,7 +689,7 @@ impl CanvasJPanel {
     // Java overloaded method: Rust needs a different name
     pub fn duplicate1(&mut self, mut event: Option<Rc<RefCell<MyGraphicItemEvent>>>) {
         let mut treeNode: Option<Rc<RefCell<MutableTreeNode>>> = jcall!(event).getTreeNode();
-        let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = (jcall!(self.getGraphicItemHashMap()).get(treeNode.clone())).clone() /* as GraphicItemInterface */;
+        let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(self.getGraphicItemHashMap()).get(crate::java_into_object(treeNode.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
         if graphicItem.is_some() {
             self.duplicateGraphicItem(graphicItem.clone());
             jcall!(self.workAreaJTreeJPanel).updateTree();
@@ -701,7 +701,7 @@ impl CanvasJPanel {
 
     pub fn rotate(&mut self, mut event: Option<Rc<RefCell<MyGraphicItemEvent>>>) {
         let mut treeNode: Option<Rc<RefCell<MutableTreeNode>>> = jcall!(event).getTreeNode();
-        let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = (jcall!(self.getGraphicItemHashMap()).get(treeNode.clone())).clone() /* as GraphicItemInterface */;
+        let mut graphicItem: Option<Rc<RefCell<dyn GraphicItemInterface>>> = { let java_object = (jcall!(self.getGraphicItemHashMap()).get(crate::java_into_object(treeNode.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GraphicItemInterface>>>>().expect("ClassCastException").clone()) };
         if graphicItem.is_some() {
             jcall!(graphicItem).addAngle(jcall!(event).getAngle());
         }

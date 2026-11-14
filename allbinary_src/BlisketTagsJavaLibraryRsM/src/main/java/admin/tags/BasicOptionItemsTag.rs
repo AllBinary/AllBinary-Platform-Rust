@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::admin::taghelpers::BasicOptionItemsHelperFactory::BasicOptionItemsHelperFactory;
 use crate::admin::taghelpers::BasicOptionItemsRequestHelperFactory::BasicOptionItemsRequestHelperFactory;
 use super::TableTag::TableTag;
@@ -32,7 +31,7 @@ macro_rules! jcall {
 
 pub struct BasicOptionItemsTag {
     pub base: TableTag,
-    pub propertiesHashMap: Option<Rc<RefCell<HashMap>>>,
+    pub propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 
@@ -44,8 +43,8 @@ impl BasicOptionItemsTag {
             base: TableTag::new_struct(),
             propertiesHashMap: None,
         };
-        this.setTagHelperFactory(BasicOptionItemsHelperFactory::new());
-        this.setTagRequestHelperFactory(BasicOptionItemsRequestHelperFactory::new());
+        this.setTagHelperFactory(BasicOptionItemsHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(BasicOptionItemsRequestHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 

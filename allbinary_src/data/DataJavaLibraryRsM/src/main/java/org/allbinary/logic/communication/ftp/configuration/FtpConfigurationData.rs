@@ -35,6 +35,10 @@ thread_local! { pub static FtpConfigurationData_USERNAME: String = String::from(
 thread_local! { pub static FtpConfigurationData_PASSWORD: String = String::from("FTP_PASSWORD"); }
 
 impl FtpConfigurationData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

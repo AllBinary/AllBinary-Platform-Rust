@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Command::Command;
 use crate::org::allbinary::graphics::displayable::CanvasStrings::CanvasStrings;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
@@ -31,45 +31,49 @@ macro_rules! jcall {
 }
 
 pub struct GameCommandsFactory {
-    pub TOGGLE_FULLSCREEN: Option<Rc<RefCell<Command>>>,
-    pub TOGGLE_KEYBOARD: Option<Rc<RefCell<Command>>>,
-    pub SET_MENU_DISPLAYABLE: Option<Rc<RefCell<Command>>>,
-    pub APPLICATION_UPDATE: Option<Rc<RefCell<Command>>>,
-    pub DISPLAY_ABOUT: Option<Rc<RefCell<Command>>>,
-    pub OPEN_WEB_URL: Option<Rc<RefCell<Command>>>,
-    pub CLOSE_OPTIONS: Option<Rc<RefCell<Command>>>,
-    pub DISPLAY_OPTIONS: Option<Rc<RefCell<Command>>>,
-    pub START_TRACE: Option<Rc<RefCell<Command>>>,
-    pub STOP_TRACE: Option<Rc<RefCell<Command>>>,
-    pub DEFAULT_OPTIONS: Option<Rc<RefCell<Command>>>,
-    pub SHOW_GAME_CANVAS: Option<Rc<RefCell<Command>>>,
-    pub CLOSE_AND_SHOW_GAME_CANVAS: Option<Rc<RefCell<Command>>>,
-    pub QUIT_COMMAND: Option<Rc<RefCell<Command>>>,
-    pub RESTART_COMMAND: Option<Rc<RefCell<Command>>>,
-    pub DISPLAY_SAVE_FORM: Option<Rc<RefCell<Command>>>,
-    pub SAVE: Option<Rc<RefCell<Command>>>,
-    pub DISPLAY_LOAD_FORM: Option<Rc<RefCell<Command>>>,
-    pub LOAD_FILE: Option<Rc<RefCell<Command>>>,
-    pub DELETE_FILE: Option<Rc<RefCell<Command>>>,
-    pub EXIT_COMMAND: Option<Rc<RefCell<Command>>>,
-    pub EXIT_WITHOUT_PROGRESS_COMMAND: Option<Rc<RefCell<Command>>>,
-    pub START_COMMAND: Option<Rc<RefCell<Command>>>,
-    pub CONTINUE_COMMAND: Option<Rc<RefCell<Command>>>,
-    pub SELECT_COMMAND: Option<Rc<RefCell<Command>>>,
-    pub FEATURE_UPDATE: Option<Rc<RefCell<Command>>>,
-    pub BUY_COMMAND: Option<Rc<RefCell<Command>>>,
+    pub TOGGLE_FULLSCREEN: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub TOGGLE_KEYBOARD: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub SET_MENU_DISPLAYABLE: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub APPLICATION_UPDATE: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub DISPLAY_ABOUT: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub OPEN_WEB_URL: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub CLOSE_OPTIONS: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub DISPLAY_OPTIONS: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub START_TRACE: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub STOP_TRACE: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub DEFAULT_OPTIONS: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub SHOW_GAME_CANVAS: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub CLOSE_AND_SHOW_GAME_CANVAS: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub QUIT_COMMAND: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub RESTART_COMMAND: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub DISPLAY_SAVE_FORM: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub SAVE: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub DISPLAY_LOAD_FORM: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub LOAD_FILE: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub DELETE_FILE: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub EXIT_COMMAND: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub EXIT_WITHOUT_PROGRESS_COMMAND: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub START_COMMAND: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub CONTINUE_COMMAND: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub SELECT_COMMAND: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub FEATURE_UPDATE: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub BUY_COMMAND: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
 }
 
-pub static mut GameCommandsFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut GameCommandsFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl GameCommandsFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GameCommandsFactory>>> {
-        if match (&unsafe { GameCommandsFactory_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *GameCommandsFactory_instance = GameCommandsFactory::new() };
+        if match (&unsafe { GameCommandsFactory_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *GameCommandsFactory_instance = crate::java_into_object(GameCommandsFactory::new()) };
         }
-        return (unsafe { GameCommandsFactory_instance.clone() }).clone() /* as GameCommandsFactory */;
+        return { let java_object = (unsafe { GameCommandsFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameCommandsFactory>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -103,33 +107,33 @@ impl GameCommandsFactory {
             FEATURE_UPDATE: None,
             BUY_COMMAND: None,
         };
-        this.TOGGLE_FULLSCREEN = Command::new(String::from("Toggle FullScreen"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.TOGGLE_KEYBOARD = Command::new(String::from("Keyboard"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.SET_MENU_DISPLAYABLE = Command::new(String::from("Set Menu Displayable"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.APPLICATION_UPDATE = Command::new(jcall!(CommonStrings::getInstance()).UPDATE.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.DISPLAY_ABOUT = Command::new(jcall!(CanvasStrings::getInstance()).ABOUT.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 2);
-        this.OPEN_WEB_URL = Command::new(String::from("Open Web URL"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 2);
-        this.CLOSE_OPTIONS = Command::new(String::from("Back"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.DISPLAY_OPTIONS = Command::new(jcall!(CanvasStrings::getInstance()).OPTIONS.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 2);
-        this.START_TRACE = Command::new(String::from("Start Trace"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.STOP_TRACE = Command::new(String::from("Stop Trace"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.DEFAULT_OPTIONS = Command::new(String::from("Default"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.SHOW_GAME_CANVAS = Command::new(String::from("Back to Game"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.CLOSE_AND_SHOW_GAME_CANVAS = Command::new(String::from("Back"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.QUIT_COMMAND = Command::new(String::from("Quit"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_STOP.clone() }.clone(), 1);
-        this.RESTART_COMMAND = Command::new(String::from("Restart"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 0);
-        this.DISPLAY_SAVE_FORM = Command::new(String::from("Save To"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 3);
-        this.SAVE = Command::new(String::from("Save"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 3);
-        this.DISPLAY_LOAD_FORM = Command::new(String::from("Load"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 3);
-        this.LOAD_FILE = Command::new(String::from("Load File"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 3);
-        this.DELETE_FILE = Command::new(String::from("Delete File"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.EXIT_COMMAND = Command::new(String::from("Exit"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_EXIT.clone() }.clone(), 2);
-        this.EXIT_WITHOUT_PROGRESS_COMMAND = Command::new(String::from("Exit Without Progress"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_EXIT.clone() }.clone(), 2);
-        this.START_COMMAND = Command::new(jcall!(CommonStrings::getInstance()).START.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.CONTINUE_COMMAND = Command::new(String::from("Continue"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.SELECT_COMMAND = Command::new(String::from("Select"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.FEATURE_UPDATE = Command::new(String::from("Feature Update"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
-        this.BUY_COMMAND = Command::new(String::from("BUY"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 1);
+        this.TOGGLE_FULLSCREEN = Command::new4(String::from("Toggle FullScreen"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.TOGGLE_KEYBOARD = Command::new4(String::from("Keyboard"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.SET_MENU_DISPLAYABLE = Command::new4(String::from("Set Menu Displayable"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.APPLICATION_UPDATE = Command::new4({ let java_field = jcall!(CommonStrings::getInstance()).UPDATE.clone(); java_field }.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.DISPLAY_ABOUT = Command::new4({ let java_field = jcall!(CanvasStrings::getInstance()).ABOUT.clone(); java_field }.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 2).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.OPEN_WEB_URL = Command::new4(String::from("Open Web URL"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 2).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.CLOSE_OPTIONS = Command::new4(String::from("Back"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.DISPLAY_OPTIONS = Command::new4({ let java_field = jcall!(CanvasStrings::getInstance()).OPTIONS.clone(); java_field }.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 2).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.START_TRACE = Command::new4(String::from("Start Trace"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.STOP_TRACE = Command::new4(String::from("Stop Trace"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.DEFAULT_OPTIONS = Command::new4(String::from("Default"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.SHOW_GAME_CANVAS = Command::new4(String::from("Back to Game"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.CLOSE_AND_SHOW_GAME_CANVAS = Command::new4(String::from("Back"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.QUIT_COMMAND = Command::new4(String::from("Quit"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_STOP.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.RESTART_COMMAND = Command::new4(String::from("Restart"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 0).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.DISPLAY_SAVE_FORM = Command::new4(String::from("Save To"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 3).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.SAVE = Command::new4(String::from("Save"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 3).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.DISPLAY_LOAD_FORM = Command::new4(String::from("Load"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 3).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.LOAD_FILE = Command::new4(String::from("Load File"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 3).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.DELETE_FILE = Command::new4(String::from("Delete File"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.EXIT_COMMAND = Command::new4(String::from("Exit"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_EXIT.with(Clone::clone).clone(), 2).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.EXIT_WITHOUT_PROGRESS_COMMAND = Command::new4(String::from("Exit Without Progress"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_EXIT.with(Clone::clone).clone(), 2).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.START_COMMAND = Command::new4({ let java_field = jcall!(CommonStrings::getInstance()).START.clone(); java_field }.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.CONTINUE_COMMAND = Command::new4(String::from("Continue"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.SELECT_COMMAND = Command::new4(String::from("Select"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.FEATURE_UPDATE = Command::new4(String::from("Feature Update"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.BUY_COMMAND = Command::new4(String::from("BUY"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
         this
     }
 

@@ -27,6 +27,8 @@ use crate::org::allbinary::input::automation::robot::InputRobotInterface::InputR
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::osgi::OSGIActivatorUtil::OSGIActivatorUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::InputAutomationRobotChangeEvent::InputAutomationRobotChangeEvent;
 
 // Borrows the object of a Java reference
@@ -47,6 +49,10 @@ impl BundleActivator for InputAutomationRobotBundleActivator {
 }
 
 impl InputAutomationRobotBundleActivator {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -75,7 +81,7 @@ impl InputAutomationRobotBundleActivator {
 
     // throws Exception
     pub fn registerAsService(&mut self, mut bundleContext: Option<Rc<RefCell<dyn BundleContext>>>) {
-        OSGIActivatorUtil::registerAsService(bundleContext.clone(), self.getServiceFactory(), jcall!(std::any::type_name::<InputAutomationRobotServiceInterface>()).getName());
+        OSGIActivatorUtil::registerAsService(bundleContext.clone(), crate::java_into_object(self.getServiceFactory()), { let java_argument = jcall!(std::any::type_name::<InputAutomationRobotServiceInterface>()).getName(); java_argument });
     }
     
 
@@ -83,7 +89,7 @@ impl InputAutomationRobotBundleActivator {
     pub fn getInputAutomationRobotChangeListener(&mut self, mut context: Option<Rc<RefCell<dyn BundleContext>>>) -> Option<Rc<RefCell<dyn InputAutomationRobotChangeListener>>> {
         let mut serviceReference: Option<Rc<RefCell<dyn ServiceReference>>> = jcall!(context).getServiceReference(jcall!(std::any::type_name::<InputAutomationRobotChangeListener>()).getName());
         if serviceReference.is_some() {
-            let mut inputAutomationRobotChangeListener: Option<Rc<RefCell<dyn InputAutomationRobotChangeListener>>> = { let java_object = jcall!(context).getService(serviceReference.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn InputAutomationRobotChangeListener>>>>().expect("ClassCastException").clone()) };
+            let mut inputAutomationRobotChangeListener: Option<Rc<RefCell<dyn InputAutomationRobotChangeListener>>> = { let java_object = (jcall!(context).getService(serviceReference.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn InputAutomationRobotChangeListener>>>>().expect("ClassCastException").clone()) };
             if inputAutomationRobotChangeListener.is_none() {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("No Service For ServiceReference"))));
             }
@@ -97,7 +103,7 @@ impl InputAutomationRobotBundleActivator {
 
     pub fn addRobots(&mut self, mut context: Option<Rc<RefCell<dyn BundleContext>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addRobots"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addRobots"));
             let mut inputAutomationRobotChangeListener: Option<Rc<RefCell<dyn InputAutomationRobotChangeListener>>> = self.getInputAutomationRobotChangeListener(context.clone());
             if inputAutomationRobotChangeListener.is_some() {
                 for index in (0..(self.getInputRobotInterface().len() as i32)) {
@@ -108,9 +114,9 @@ impl InputAutomationRobotBundleActivator {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addModules"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addModules"));
             }
         }
     }
@@ -118,7 +124,7 @@ impl InputAutomationRobotBundleActivator {
 
     pub fn removeRobots(&mut self, mut context: Option<Rc<RefCell<dyn BundleContext>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeRobots"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeRobots"));
             let mut inputAutomationRobotChangeListener: Option<Rc<RefCell<dyn InputAutomationRobotChangeListener>>> = self.getInputAutomationRobotChangeListener(context.clone());
             if inputAutomationRobotChangeListener.is_some() {
                 for index in (0..(self.getInputRobotInterface().len() as i32)) {
@@ -129,9 +135,9 @@ impl InputAutomationRobotBundleActivator {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeRobots"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeRobots"));
             }
         }
     }
@@ -139,7 +145,7 @@ impl InputAutomationRobotBundleActivator {
 
     // throws Exception
     pub fn start(&mut self, mut context: Option<Rc<RefCell<dyn BundleContext>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).START.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone());
         self.addRobots(context.clone());
         self.registerAsService(context.clone());
     }
@@ -147,13 +153,13 @@ impl InputAutomationRobotBundleActivator {
 
     // throws Exception
     pub fn stop(&mut self, mut context: Option<Rc<RefCell<dyn BundleContext>>>) {
-        jcall!(self.logUtil).putF(String::from("Stop"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).START.clone());
+        jcall!(self.logUtil).putF(String::from("Stop"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone());
         self.removeRobots(context.clone());
     }
     
 
     pub fn getServiceFactory(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return self.serviceFactory.clone();
+        return (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(self.serviceFactory.clone());
     }
     
 
@@ -171,7 +177,7 @@ impl InputAutomationRobotBundleActivator {
         self.inputRobotInterface = inputRobotInterface.clone();
     }
 }
-pub trait InputAutomationRobotBundleActivatorDyn: crate::org::osgi::framework::BundleActivator::BundleActivator {
+pub trait InputAutomationRobotBundleActivatorDyn: std::any::Any + crate::org::osgi::framework::BundleActivator::BundleActivator {
     fn as_InputAutomationRobotBundleActivator(&self) -> &InputAutomationRobotBundleActivator;
     fn as_InputAutomationRobotBundleActivator_mut(&mut self) -> &mut InputAutomationRobotBundleActivator;
     fn init(&mut self) { InputAutomationRobotBundleActivator::init(self.as_InputAutomationRobotBundleActivator_mut()) }

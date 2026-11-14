@@ -20,6 +20,7 @@ use crate::org::allbinary::game::layer::RTSLayerEvent::RTSLayerEvent;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
+use crate::java::lang::Exception::*;
 use super::WaypointEventListenerInterface::WaypointEventListenerInterface;
 
 // Borrows the object of a Java reference
@@ -51,8 +52,8 @@ impl WaypointEventHandler {
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut waypointEventListenerInterface: Option<Rc<RefCell<dyn WaypointEventListenerInterface>>> = (panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn WaypointEventListenerInterface"));
-        jcall!(waypointEventListenerInterface).onWaypointEvent((eventObject).clone() /* as RTSLayerEvent */);
+        let mut waypointEventListenerInterface: Option<Rc<RefCell<dyn WaypointEventListenerInterface>>> = ((|| -> Option<Rc<RefCell<dyn WaypointEventListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn WaypointEventListenerInterface") })());
+        jcall!(waypointEventListenerInterface).onWaypointEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<RTSLayerEvent>() }, "ClassCastException: not a RTSLayerEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<RTSLayerEvent>) } }));
     }
 }
 impl std::ops::Deref for WaypointEventHandler {

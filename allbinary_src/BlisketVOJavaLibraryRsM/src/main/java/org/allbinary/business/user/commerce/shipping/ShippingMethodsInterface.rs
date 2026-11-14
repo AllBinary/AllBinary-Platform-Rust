@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::user::commerce::shipping::modules::ShippingInterface::ShippingInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -28,7 +29,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait ShippingMethodsInterface {
+pub trait ShippingMethodsInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn get(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>;
@@ -40,8 +41,6 @@ pub trait ShippingMethodsInterface {
 
     // throws Exception
     fn getDefault(&mut self) -> Option<Rc<RefCell<dyn ShippingInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

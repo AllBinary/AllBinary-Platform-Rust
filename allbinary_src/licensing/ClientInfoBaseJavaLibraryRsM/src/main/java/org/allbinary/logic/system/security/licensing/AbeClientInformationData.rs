@@ -47,6 +47,10 @@ pub struct AbeClientInformationData {
 thread_local! { pub static AbeClientInformationData_instance: Option<Rc<RefCell<AbeClientInformationData>>> = AbeClientInformationData::new(); }
 
 impl AbeClientInformationData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AbeClientInformationData>>> {

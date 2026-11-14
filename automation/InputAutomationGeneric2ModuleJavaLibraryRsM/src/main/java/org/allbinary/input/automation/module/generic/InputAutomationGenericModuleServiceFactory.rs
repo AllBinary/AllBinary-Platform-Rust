@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterface;
 use crate::org::allbinary::input::automation::module::osgi::InputAutomationModuleServiceFactory::InputAutomationModuleServiceFactory;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 use super::GenericModuleFactory::GenericModuleFactory;
 
 // Borrows the object of a Java reference
@@ -46,15 +47,15 @@ impl InputAutomationGenericModuleServiceFactory {
         };
         this.logUtil = LogUtil::getInstance();
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>> = vec![None; (1) as usize];
-            inputAutomationModuleInterfaceArray[(0) as usize] = GenericModuleFactory::new();
+            let mut inputAutomationModuleInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>> = vec![None; (1) as usize];
+            inputAutomationModuleInterfaceArray[(0) as usize] = GenericModuleFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>);
             this.setInputAutomationModuleInterfaceArray(inputAutomationModuleInterfaceArray.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(this.logUtil).put(jcall!(this.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(e.clone()));
+            jcall!(this.logUtil).put({ let java_field = jcall!(this.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         this

@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::ThreadObjectUtil::ThreadObjectUtil;
 use super::ThreadPool::ThreadPool;
 
@@ -63,7 +64,7 @@ impl PooledThread {
         this.threadObjectUtil = ThreadObjectUtil::getInstance();
         this.INTERRUPT_EXCEPTION = String::from("Exit InterruptedException");
         // super(...) is in the struct literal above
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this.threadPool = threadPool.clone();
         this
     }
@@ -76,22 +77,22 @@ impl PooledThread {
     pub fn run(&mut self) {
         jcall!(self.threadPool).threadStarted();
         while true {
-            let mut task2: Option<Rc<RefCell<dyn Runnable>>> = jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone().map(|reference| reference as Rc<RefCell<dyn Runnable>>);
+            let mut task2: Option<Rc<RefCell<dyn Runnable>>> = { let java_field = jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn Runnable>>);
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                task2 = jcall!(self.threadPool).getTask();
+                task2 = { let java_value = (jcall!(self.threadPool).getTask()).clone(); java_value };
                 jcall!(self.threadPool).as_ThreadPool_mut().runningTask = true;
                 jcall!(self.threadPool).startTask(task2.clone());
             })) {
                 Ok(_) => {}
                 Err(ex) => {
-            let ex: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(ex as Box<dyn std::any::Any>)));
+            let ex: String = crate::java::lang::Exception::java_panic_message(&ex);
 
                 let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-                jcall!(logUtil).putF(self.INTERRUPT_EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+                jcall!(logUtil).putF(self.INTERRUPT_EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
                 break;
                 }
             }
-            if match (&task2, &jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if match (&task2, &{ let java_field = jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 break;
             }
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
@@ -101,10 +102,10 @@ impl PooledThread {
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                 let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-                jcall!(logUtil).put(jcall!(StringMaker::new()).append(jcall!(self.commonStrings).EXCEPTION_LABEL.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(task2.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+                jcall!(logUtil).put(jcall!(StringMaker::new()).append({ let java_field = jcall!(self.commonStrings).EXCEPTION_LABEL.clone(); java_field }.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(task2.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                 }
             }
         }

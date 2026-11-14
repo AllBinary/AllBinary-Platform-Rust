@@ -20,9 +20,6 @@ use super::*;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use super::ValidatorBase::ValidatorBase;
-use super::dom::dom;
-use super::w3c::w3c;
-use super::org::org;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

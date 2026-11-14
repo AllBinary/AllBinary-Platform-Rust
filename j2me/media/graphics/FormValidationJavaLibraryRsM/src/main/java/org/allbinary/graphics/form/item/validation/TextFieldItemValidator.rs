@@ -65,15 +65,15 @@ impl TextFieldItemValidator {
 
     pub fn isValid(&mut self) -> Option<bool> {
         let mut booleanFactory: Option<Rc<RefCell<BooleanFactory>>> = BooleanFactory::getInstance();
-        let mut result: Option<bool> = jcall!(booleanFactory).TRUE.clone();
+        let mut result: Option<bool> = { let java_field = jcall!(booleanFactory).TRUE.clone(); java_field }.clone();
         let mut string: String = jcall!(self.textFieldItem).getString();
         let mut textLength: i32 = (string.chars().count() as i32);
         if (textLength == 0 && self.allowOnEmpty) || textLength > self.min && textLength < self.max {
         } else {
             if textLength < self.min {
-                result = jcall!(booleanFactory).FALSE.clone();
+                result = { let java_value = ({ let java_field = jcall!(booleanFactory).FALSE.clone(); java_field }).clone(); java_value }.clone();
             } else if textLength > self.max {
-                result = jcall!(booleanFactory).FALSE.clone();
+                result = { let java_value = ({ let java_field = jcall!(booleanFactory).FALSE.clone(); java_field }).clone(); java_value }.clone();
             }
         }
         return result.clone();
@@ -81,7 +81,7 @@ impl TextFieldItemValidator {
     
 
     pub fn toList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut string: String = jcall!(self.textFieldItem).getString();
         let mut textLength: i32 = (string.chars().count() as i32);
         if textLength > self.min && textLength < self.max {

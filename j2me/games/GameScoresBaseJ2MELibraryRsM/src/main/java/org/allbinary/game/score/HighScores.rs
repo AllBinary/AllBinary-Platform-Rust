@@ -22,6 +22,7 @@ use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::HighScoresInterface::HighScoresInterface;
 use super::HighScore::HighScore;
 
@@ -58,7 +59,7 @@ impl HighScores {
             columnOneHeading: String::new(),
             columnTwoHeading: String::new(),
         };
-        this.orderedHighScoresList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.orderedHighScoresList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.columnOneHeading = String::from("Name");
         this.name = name.clone();
         this.heading = heading.clone();
@@ -121,13 +122,13 @@ impl HighScores {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(String::from("HighScores: "));
         jcall!(stringBuffer).append(self.heading.clone());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(CommonLabels::getInstance()).TOTAL_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonLabels::getInstance()).TOTAL_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(jcall!(self.orderedHighScoresList).size());
         return jcall!(stringBuffer).toString();
     }
 }
-pub trait HighScoresDyn: crate::org::allbinary::game::score::HighScoresInterface::HighScoresInterface {
+pub trait HighScoresDyn: std::any::Any + crate::org::allbinary::game::score::HighScoresInterface::HighScoresInterface {
     fn as_HighScores(&self) -> &HighScores;
     fn as_HighScores_mut(&mut self) -> &mut HighScores;
     fn setList(&mut self, mut orderedHighScoresList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) { HighScores::setList(self.as_HighScores_mut(), orderedHighScoresList) }

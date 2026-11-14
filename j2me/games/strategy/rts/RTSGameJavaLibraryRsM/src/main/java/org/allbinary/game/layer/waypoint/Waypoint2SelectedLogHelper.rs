@@ -93,7 +93,7 @@ impl Waypoint2SelectedLogHelper {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::Waypoint2LogHelper::Waypoint2LogHelperDyn>>> {
-        return Waypoint2SelectedLogHelper_instanceC.with(Clone::clone).clone();
+        return Waypoint2SelectedLogHelper_instanceC.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::Waypoint2LogHelper::Waypoint2LogHelperDyn>>);
     }
     
 
@@ -109,7 +109,7 @@ impl Waypoint2SelectedLogHelper {
     
 
     pub fn processPossibleTarget(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut waypointBehaviorBase: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut anotherTargetDistance: i32, mut isShorterThanCurrentTargetDistance: bool, mut isCurrentTargetDestroyed: bool) {
-        if jcall!(waypointBehaviorBase).isWaypointListEmptyOrOnlyTargets() && jcall!(waypointBehaviorBase).isInSensorRange((layerInterface).clone() /* as CollidableDestroyableDamageableLayer */, anotherTargetDistance.clone()) {
+        if jcall!(waypointBehaviorBase).isWaypointListEmptyOrOnlyTargets() && jcall!(waypointBehaviorBase).isInSensorRange((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> { panic!("ClassCastException: a Rust dyn PathFindingLayerInterface cannot be cast to CollidableDestroyableDamageableLayer") })(), anotherTargetDistance.clone()) {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
             jcall!(stringBuffer).append(self.ONLY_TARGETS.clone());
@@ -128,7 +128,7 @@ impl Waypoint2SelectedLogHelper {
     pub fn processSetTarget(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut waypointBehaviorBase: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut anotherTargetDistance: i32) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(waypointBehaviorBase).getCurrentTargetingStateString());
         jcall!(stringBuffer).append(self.ENEMY_POSSIBLE_TARGET.clone());
         jcall!(stringBuffer).append(jcall!(layerInterface).getName());
@@ -141,7 +141,7 @@ impl Waypoint2SelectedLogHelper {
     pub fn processPossibleTargetCloser(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut waypointBehaviorBase: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut anotherTargetDistance: i32) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(waypointBehaviorBase).getCurrentTargetingStateString());
         jcall!(stringBuffer).append(self.ENEMY_POSSIBLE_TARGET.clone());
         jcall!(stringBuffer).append(jcall!(layerInterface).getName());
@@ -154,7 +154,7 @@ impl Waypoint2SelectedLogHelper {
     pub fn setTarget(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut waypointBehaviorBase: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut anotherTargetDistance: i32) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(waypointBehaviorBase).getName());
         jcall!(stringBuffer).append(String::from(" targeting: "));
         jcall!(stringBuffer).append(jcall!(layerInterface).getName());
@@ -176,7 +176,7 @@ impl Waypoint2SelectedLogHelper {
         jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
         jcall!(stringBuffer).append(String::from(" Set Path To Target: "));
         jcall!(stringBuffer).append(jcall!(jcall!(waypointBehaviorBase).getCurrentTargetLayerInterface()).getName());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append({ let java_receiver = self.stringUtil.clone(); let java_arguments = (crate::java_into_object(jcall!(waypointBehaviorBase).getCurrentTargetLayerInterface()),); let java_result = jcall!(java_receiver).toString(java_arguments.0); java_result });
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("selected: setTargetPath"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
@@ -239,11 +239,11 @@ impl Waypoint2SelectedLogHelper {
     pub fn processTargeting(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut dx: i32, mut dy: i32) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(self.positionStrings).DX_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.positionStrings).DX_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(dx.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(self.positionStrings).DY_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.positionStrings).DY_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(dy.clone());
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("selected: processTargeting"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
@@ -253,10 +253,10 @@ impl Waypoint2SelectedLogHelper {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
         jcall!(stringBuffer).append(String::from(" Targeting Non Waypoint "));
-        jcall!(stringBuffer).append(jcall!(self.positionStrings).DX_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.positionStrings).DX_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(dx.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(self.positionStrings).DY_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.positionStrings).DY_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(dy.clone());
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("selected: processTargeting"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
@@ -265,7 +265,7 @@ impl Waypoint2SelectedLogHelper {
     pub fn removeWaypoint(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut unitWaypointBehavior2: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>>, mut waypointLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut reason: String) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(unitWaypointBehavior2).getName());
         jcall!(stringBuffer).append(String::from(" remove: "));
         jcall!(stringBuffer).append(jcall!(waypointLayer).getName());
@@ -278,7 +278,7 @@ impl Waypoint2SelectedLogHelper {
     pub fn removeWaypointList(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut unitWaypointBehavior2: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>>, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(unitWaypointBehavior2).getName());
         jcall!(stringBuffer).append(String::from(" Waypoints: "));
         jcall!(stringBuffer).append(jcall!(self.stringUtil).toString(crate::java_into_object(list.clone())));

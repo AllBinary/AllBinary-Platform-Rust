@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontInterface::StoreFrontInterface;
 use crate::org::allbinary::business::user::address::StreetAddress::StreetAddress;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait TaxModuleInterface {
+pub trait TaxModuleInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
@@ -36,8 +37,6 @@ pub trait TaxModuleInterface {
 
     // throws Exception
     fn isValid(&mut self, streetAddress: Option<Rc<RefCell<StreetAddress>>>, storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>) -> Option<bool>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

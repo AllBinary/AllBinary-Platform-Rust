@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::DynamicObjectData::DynamicObjectData;
 use crate::org::allbinary::business::advertisement::AdvertisementsInterface::AdvertisementsInterface;
 use crate::org::allbinary::business::advertisement::search::AdvertisementSearchInterface::AdvertisementSearchInterface;
@@ -32,7 +31,7 @@ macro_rules! jcall {
 }
 
 pub struct AdvertisementCampaign {
-    pub hashMap: Option<Rc<RefCell<HashMap>>>,
+    pub hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 impl AdvertisementCampaignInterface for AdvertisementCampaign {
@@ -44,9 +43,13 @@ impl AdvertisementCampaignInterface for AdvertisementCampaign {
 }
 
 impl AdvertisementCampaign {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             hashMap: None,
         };
@@ -54,7 +57,7 @@ impl AdvertisementCampaign {
         this
     }
 
-    pub fn new(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(hashMap))))
     }
     
@@ -65,17 +68,17 @@ impl AdvertisementCampaign {
     
 
     pub fn getName(&mut self) -> String {
-        return ({ let java_receiver = self.hashMap.clone(); let java_arguments = (jcall!(AdvertisementCampaignData::AdvertisementCampaignData::getInstance()).NAME.clone(),); let java_result = jcall!(java_receiver).get(java_arguments.0); java_result }).clone() /* as String */;
+        return { let java_object = ({ let java_receiver = self.hashMap.clone(); let java_arguments = (crate::java_into_object({ let java_field = jcall!(AdvertisementCampaignData::AdvertisementCampaignData::getInstance()).NAME.clone(); java_field }.clone()),); let java_result = jcall!(java_receiver).get(java_arguments.0); java_result }).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
     }
     
 
     pub fn setComponentName(&mut self, mut name: String) {
-        jcall!(self.hashMap).put(crate::org::allbinary::business::DynamicObjectData::DynamicObjectData_NAME.with(Clone::clone).clone(), name.clone());
+        jcall!(self.hashMap).put(crate::java_into_object(crate::org::allbinary::business::DynamicObjectData::DynamicObjectData_NAME.with(Clone::clone).clone()), crate::java_into_object(name.clone()));
     }
     
 
     pub fn setName(&mut self, mut name: String) {
-        { let java_receiver = self.hashMap.clone(); let java_arguments = (jcall!(AdvertisementCampaignData::AdvertisementCampaignData::getInstance()).NAME.clone(), name.clone(),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
+        { let java_receiver = self.hashMap.clone(); let java_arguments = (crate::java_into_object({ let java_field = jcall!(AdvertisementCampaignData::AdvertisementCampaignData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(name.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1); };
     }
     
 

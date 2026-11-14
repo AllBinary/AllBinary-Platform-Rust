@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::communication::smtp::EmailInterface::EmailInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -26,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait EmailQueueInterface {
+pub trait EmailQueueInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
@@ -35,8 +36,6 @@ pub trait EmailQueueInterface {
 
     // throws Exception
     fn remove(&mut self) -> Option<Rc<RefCell<dyn EmailInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

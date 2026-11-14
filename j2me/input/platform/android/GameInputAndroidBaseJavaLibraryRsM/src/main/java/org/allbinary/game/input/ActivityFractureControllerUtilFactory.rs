@@ -21,6 +21,10 @@ pub struct ActivityFractureControllerUtilFactory {
 
 impl ActivityFractureControllerUtilFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -39,7 +43,7 @@ impl ActivityFractureControllerUtilFactory {
         } else if SDK_VERSION <= 11 {
             return AndroidAPI9KeyFactory::AndroidAPI9KeyFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::AndroidKeyFactory::AndroidKeyFactoryDyn>>);
         } else {
-            return AndroidAPI12KeyFactory::AndroidAPI12KeyFactory::getAPI12Instance();
+            return AndroidAPI12KeyFactory::AndroidAPI12KeyFactory::getAPI12Instance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::AndroidKeyFactory::AndroidKeyFactoryDyn>>);
         }
     }
 }

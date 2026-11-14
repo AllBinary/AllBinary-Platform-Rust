@@ -19,7 +19,8 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
-use super::Comparable::Comparable;
+use crate::java::lang::Exception::*;
+use crate::java::lang::Comparable::*;
 use super::PathFindingNodeCostInfoData::PathFindingNodeCostInfoData;
 
 // Borrows the object of a Java reference
@@ -73,7 +74,7 @@ impl PathFindingNodeCostInfo {
     // throws Exception
     pub fn setCalculatedTotalCost(&mut self) {
         self.totalCostP = self.costFromStartP + self.costToEndP;
-        if self.totalCostP > ((jcall!(self.pathFindingNodeCostInfoData).MAX_NODE_COST) as i64) {
+        if self.totalCostP > (({ let java_field = jcall!(self.pathFindingNodeCostInfoData).MAX_NODE_COST.clone(); java_field }) as i64) {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Max Cost Exceeded"))));
         }
     }
@@ -90,14 +91,14 @@ impl PathFindingNodeCostInfo {
     
 
     pub fn compareTo(&mut self, mut pathFindingNodeCostInfo: Option<Rc<RefCell<PathFindingNodeCostInfo>>>) -> i32 {
-        return jcall!(jcall!(unsafe { java_lang.clone() }).Long).compare(self.totalCostP.clone(), jcall!(pathFindingNodeCostInfo).totalCostP.clone());
+        return jcall!({ let java_field = jcall!(unsafe { java_lang.clone() }).Long.clone(); java_field }).compare(self.totalCostP.clone(), { let java_field = jcall!(pathFindingNodeCostInfo).totalCostP.clone(); java_field }.clone());
     }
     
 
     pub fn toString(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(std::any::type_name_of_val(&self).to_string());
-        jcall!(stringBuffer).append(jcall!(CommonLabels::getInstance()).COLON_SEP.clone());
+        jcall!(stringBuffer).append({ let java_argument = std::any::type_name_of_val(&self).to_string(); java_argument });
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonLabels::getInstance()).COLON_SEP.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("CostFromStart: "));
         jcall!(stringBuffer).appendlong(self.costFromStartP.clone());
         jcall!(stringBuffer).append(String::from(" CostToEnd: "));

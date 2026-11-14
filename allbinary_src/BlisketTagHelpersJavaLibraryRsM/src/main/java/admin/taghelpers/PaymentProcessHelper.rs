@@ -16,13 +16,13 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpFactory::TransformInfoHttpFactory;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpInterface::TransformInfoHttpInterface;
 use crate::views::admin::payment::PaymentProcessorComponent::PaymentProcessorComponent;
+use crate::java::lang::Exception::*;
 use super::TagHelper::TagHelper;
 
 // Borrows the object of a Java reference
@@ -41,17 +41,17 @@ pub struct PaymentProcessHelper {
 impl PaymentProcessHelper {
     
 
-    pub fn new_struct(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
+    pub fn new_struct(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
         let mut this = Self {
             base: TagHelper::new_struct(),
             paymentProcessorComponent: None,
         };
-        let mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (TransformInfoHttpFactory::getInstance(propertiesHashMap.clone(), pageContext.clone())).clone() /* as TransformInfoHttpInterface */;
-        this.paymentProcessorComponent = PaymentProcessorComponent::new(transformInfoInterface.clone());
+        let mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (|| -> Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> { panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpInterface") })();
+        this.paymentProcessorComponent = PaymentProcessorComponent::new(transformInfoInterface.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>));
         this
     }
 
-    pub fn new(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(propertiesHashMap, pageContext))))
     }
     

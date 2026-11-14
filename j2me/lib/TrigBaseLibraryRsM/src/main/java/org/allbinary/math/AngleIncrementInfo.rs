@@ -60,10 +60,10 @@ impl AngleIncrementInfo {
         this.angleIncrement = angleIncrement.clone();
         let mut angleFactory: Option<Rc<RefCell<AngleFactory>>> = AngleFactory::getInstance();
         let mut smallIntegerSingletonFactory: Option<Rc<RefCell<SmallIntegerSingletonFactory>>> = SmallIntegerSingletonFactory::getInstance();
-        this.DOWN_FRAME = jcall!(smallIntegerSingletonFactory).getAt(((jcall!(jcall!(angleFactory).DOWN).getValue()) as i32) / ((this.angleIncrement) as i32));
-        this.UP_FRAME = jcall!(smallIntegerSingletonFactory).getAt(((jcall!(jcall!(angleFactory).UP).getValue()) as i32));
-        this.LEFT_FRAME = jcall!(smallIntegerSingletonFactory).getAt(((jcall!(jcall!(angleFactory).LEFT).getValue()) as i32) / ((this.angleIncrement) as i32));
-        this.RIGHT_FRAME = jcall!(smallIntegerSingletonFactory).getAt(((jcall!(jcall!(angleFactory).RIGHT).getValue()) as i32) / ((this.angleIncrement) as i32));
+        this.DOWN_FRAME = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(((jcall!({ let java_field = jcall!(angleFactory).DOWN.clone(); java_field }).getValue()) as i32) / ((this.angleIncrement) as i32))).clone(); java_value };
+        this.UP_FRAME = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(((jcall!({ let java_field = jcall!(angleFactory).UP.clone(); java_field }).getValue()) as i32))).clone(); java_value };
+        this.LEFT_FRAME = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(((jcall!({ let java_field = jcall!(angleFactory).LEFT.clone(); java_field }).getValue()) as i32) / ((this.angleIncrement) as i32))).clone(); java_value };
+        this.RIGHT_FRAME = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(((jcall!({ let java_field = jcall!(angleFactory).RIGHT.clone(); java_field }).getValue()) as i32) / ((this.angleIncrement) as i32))).clone(); java_value };
         this
     }
 

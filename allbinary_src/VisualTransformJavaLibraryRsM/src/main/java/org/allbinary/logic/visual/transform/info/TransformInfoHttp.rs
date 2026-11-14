@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::business::context::AbContext::AbContext;
@@ -32,6 +31,7 @@ use crate::org::allbinary::logic::communication::sql::AbSqlData::AbSqlData;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
 use crate::org::allbinary::logic::visual::transform::info::objectConfig::TransformInfoObjectConfig::TransformInfoObjectConfig;
+use crate::java::lang::Exception::*;
 use super::TransformInfo::TransformInfo;
 use super::TransformInfoHttpInterface::TransformInfoHttpInterface;
 use super::TransformInfoData::TransformInfoData;
@@ -54,7 +54,7 @@ pub struct TransformInfoHttp {
 impl TransformInfoHttp {
     
 
-    pub fn new_struct3(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>, mut crud: bool) -> Self {
+    pub fn new_struct3(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>, mut crud: bool) -> Self {
         let mut this = Self {
             base: TransformInfo::new_struct(),
             logUtil: None,
@@ -63,19 +63,19 @@ impl TransformInfoHttp {
         this.logUtil = LogUtil::getInstance();
         // super(...) is in the struct literal above
         this.abContext = AbContext::new(propertiesHashMap.clone(), pageContext.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::context::AbContext::AbContextDyn>>);
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Properties HashMap: "), jcall!(propertiesHashMap).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Constructor(HashMap, PageContext, boolean)"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         this.r#override(propertiesHashMap.clone());
         this
     }
 
-    pub fn new3(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>, mut crud: bool) -> Option<Rc<RefCell<Self>>> {
+    pub fn new3(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>, mut crud: bool) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct3(propertiesHashMap, pageContext, crud))))
     }
     
 
-    pub fn new_struct3(mut request: Option<Rc<RefCell<HttpServletRequest>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
+    pub fn new_struct3_HttpServletRequest_HashMap_PageContext(mut request: Option<Rc<RefCell<HttpServletRequest>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
         let mut this = Self {
             base: TransformInfo::new_struct(),
             logUtil: None,
@@ -84,7 +84,7 @@ impl TransformInfoHttp {
         this.logUtil = LogUtil::getInstance();
         // super(...) is in the struct literal above
         this.abContext = AbContext::new(propertiesHashMap.clone(), pageContext.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::context::AbContext::AbContextDyn>>);
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Properties HashMap: "), jcall!(propertiesHashMap).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Constructor(HttpServletRequest, HashMap, PageContext)"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         { let java_arguments = (jcall!(RequestParams::new1((request).clone() /* as HttpServletRequest */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParamsDyn>>)).toHashMap(),); this.set(java_arguments.0) };
@@ -92,12 +92,12 @@ impl TransformInfoHttp {
         this
     }
 
-    pub fn new3(mut request: Option<Rc<RefCell<HttpServletRequest>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct3(request, propertiesHashMap, pageContext))))
+    pub fn new3_HttpServletRequest_HashMap_PageContext(mut request: Option<Rc<RefCell<HttpServletRequest>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct3_HttpServletRequest_HashMap_PageContext(request, propertiesHashMap, pageContext))))
     }
     
 
-    pub fn new_struct3(mut databaseHashMap: Option<Rc<RefCell<HashMap>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
+    pub fn new_struct3_HashMap_HashMap_PageContext(mut databaseHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
         let mut this = Self {
             base: TransformInfo::new_struct(),
             logUtil: None,
@@ -106,19 +106,19 @@ impl TransformInfoHttp {
         this.logUtil = LogUtil::getInstance();
         // super(...) is in the struct literal above
         this.abContext = AbContext::new(propertiesHashMap.clone(), pageContext.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::context::AbContext::AbContextDyn>>);
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Properties HashMap: "), jcall!(propertiesHashMap).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Constructor(HashMap, HashMap, PageContext)"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         this.set(databaseHashMap.clone());
         this
     }
 
-    pub fn new3(mut databaseHashMap: Option<Rc<RefCell<HashMap>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct3(databaseHashMap, propertiesHashMap, pageContext))))
+    pub fn new3_HashMap_HashMap_PageContext(mut databaseHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct3_HashMap_HashMap_PageContext(databaseHashMap, propertiesHashMap, pageContext))))
     }
     
 
-    pub fn new_struct2(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
+    pub fn new_struct2(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
         let mut this = Self {
             base: TransformInfo::new_struct(),
             logUtil: None,
@@ -127,14 +127,14 @@ impl TransformInfoHttp {
         this.logUtil = LogUtil::getInstance();
         // super(...) is in the struct literal above
         this.abContext = AbContext::new(propertiesHashMap.clone(), pageContext.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::context::AbContext::AbContextDyn>>);
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Properties HashMap: "), jcall!(propertiesHashMap).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Constructor(HashMap, PageContext)"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         this.set(propertiesHashMap.clone());
         this
     }
 
-    pub fn new2(mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new2(mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct2(propertiesHashMap, pageContext))))
     }
     
@@ -147,7 +147,7 @@ impl TransformInfoHttp {
         };
         this.logUtil = LogUtil::getInstance();
         // super(...) is in the struct literal above
-        this.abContext = AbContext::new(jcall!(parentViewOfThisTransformInfoInterface).getPropertiesHashMap(), jcall!(parentViewOfThisTransformInfoInterface).getPageContext()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::context::AbContext::AbContextDyn>>);
+        this.abContext = { let java_value = (AbContext::new(jcall!(parentViewOfThisTransformInfoInterface).getPropertiesHashMap(), jcall!(parentViewOfThisTransformInfoInterface).getPageContext()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::context::AbContext::AbContextDyn>>)).clone(); java_value };
         this
     }
 
@@ -157,30 +157,30 @@ impl TransformInfoHttp {
     
 
     // throws Exception
-    pub fn set(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+    pub fn set(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Properties HashMap: "), jcall!(hashMap).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("set()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         let mut transformInfoData: Option<Rc<RefCell<TransformInfoData>>> = TransformInfoData::getInstance();
-        { let java_arguments = ((jcall!(hashMap).get(jcall!(transformInfoData).NAME.clone())).clone() /* as String */,); self.setName(java_arguments.0) };
-        { let java_arguments = ((jcall!(hashMap).get(jcall!(StoreFrontData::getInstance()).NAME.clone())).clone() /* as String */,); self.setStoreName(java_arguments.0) };
-        { let java_arguments = ((jcall!(hashMap).get(jcall!(transformInfoData).OBJECTFILENAME.clone())).clone() /* as String */,); self.setObjectFile(java_arguments.0) };
-        { let java_arguments = ((jcall!(hashMap).get(jcall!(transformInfoData).OBJECT.clone())).clone() /* as String */,); self.setObject(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setName(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setStoreName(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).OBJECTFILENAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setObjectFile(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).OBJECT.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setObject(java_arguments.0) };
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
-        let mut objectConfigString: String = (jcall!(hashMap).get(jcall!(transformInfoData).OBJECTCONFIG.clone())).clone() /* as String */;
+        let mut objectConfigString: String = { let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).OBJECTCONFIG.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if jcall!(stringValidationUtil).isValidRequired(objectConfigString.clone(), 10, crate::org::allbinary::logic::communication::sql::AbSqlData::AbSqlData_MAXBLOB.with(Clone::clone).clone()) {
             self.setObjectConfig(objectConfigString.clone());
         } else {
             { let java_arguments = (jcall!(TransformInfoObjectConfig::new1(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::objectConfig::TransformInfoObjectConfig::TransformInfoObjectConfigDyn>>)).toString(),); self.setObjectConfig(java_arguments.0) };
         }
-        if !jcall!(stringValidationUtil).isEmpty((jcall!(hashMap).get(jcall!(transformInfoData).OBJECTCONFIGFILENAME.clone())).clone() /* as String */) {
-            { let java_arguments = ((jcall!(hashMap).get(jcall!(transformInfoData).OBJECTCONFIGFILENAME.clone())).clone() /* as String */,); self.setObjectConfigFile(java_arguments.0) };
+        if !jcall!(stringValidationUtil).isEmpty({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).OBJECTCONFIGFILENAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }) {
+            { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).OBJECTCONFIGFILENAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setObjectConfigFile(java_arguments.0) };
         }
-        { let java_arguments = ((jcall!(hashMap).get(jcall!(transformInfoData).TEMPLATEFILENAME.clone())).clone() /* as String */,); self.setTemplateFile(java_arguments.0) };
-        { let java_arguments = ((jcall!(hashMap).get(jcall!(transformInfoData).TEMPLATE.clone())).clone() /* as String */,); self.setTemplate(java_arguments.0) };
-        { let java_arguments = ((jcall!(hashMap).get(jcall!(transformInfoData).DATAFILENAME.clone())).clone() /* as String */,); self.setDataFile(java_arguments.0) };
-        { let java_arguments = ((jcall!(hashMap).get(jcall!(transformInfoData).DATA.clone())).clone() /* as String */,); self.setData(java_arguments.0) };
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).TAGHELPERFACTORY.clone()) {
+        { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).TEMPLATEFILENAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setTemplateFile(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).TEMPLATE.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setTemplate(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).DATAFILENAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setDataFile(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(transformInfoData).DATA.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() },); self.setData(java_arguments.0) };
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).TAGHELPERFACTORY.clone(); java_field }.clone()) {
             { let java_receiver = self.logUtil.clone(); let java_arguments = (self.log(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("set()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
     }
@@ -196,26 +196,26 @@ impl TransformInfoHttp {
     }
     
 
-    pub fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return jcall!(self.abContext).getPropertiesHashMap();
     }
     
 
     // throws Exception
     pub fn getTemplateFilePath(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> {
-        return AbPath::new(format!("{}{}", URLGLOBALS::getMainPath(), jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH), self.getTemplateFile()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        return AbPath::new(format!("{}{}", URLGLOBALS::getMainPath(), { let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }), self.getTemplateFile()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
     }
     
 
     // throws Exception
     pub fn getObjectConfigFilePath(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> {
-        return AbPath::new(format!("{}{}", URLGLOBALS::getMainPath(), jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH), self.getObjectConfigFile()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        return AbPath::new(format!("{}{}", URLGLOBALS::getMainPath(), { let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }), self.getObjectConfigFile()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
     }
     
 
     // throws Exception
     pub fn getDataFilePath(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> {
-        return AbPath::new(format!("{}{}", URLGLOBALS::getMainPath(), jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH), self.getDataFile()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        return AbPath::new(format!("{}{}", URLGLOBALS::getMainPath(), { let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }), self.getDataFile()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
     }
 }
 impl std::ops::Deref for TransformInfoHttp {
@@ -229,10 +229,10 @@ impl std::ops::DerefMut for TransformInfoHttp {
 pub trait TransformInfoHttpDyn: crate::org::allbinary::logic::visual::transform::info::TransformInfo::TransformInfoDyn {
     fn as_TransformInfoHttp(&self) -> &TransformInfoHttp;
     fn as_TransformInfoHttp_mut(&mut self) -> &mut TransformInfoHttp;
-    fn set(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) { TransformInfoHttp::set(self.as_TransformInfoHttp_mut(), hashMap) }
+    fn set(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) { TransformInfoHttp::set(self.as_TransformInfoHttp_mut(), hashMap) }
     fn getWeblisketSession(&mut self) -> Option<Rc<RefCell<dyn WeblisketSessionInterface>>> { TransformInfoHttp::getWeblisketSession(self.as_TransformInfoHttp_mut()) }
     fn getPageContext(&mut self) -> Option<Rc<RefCell<PageContext>>> { TransformInfoHttp::getPageContext(self.as_TransformInfoHttp_mut()) }
-    fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { TransformInfoHttp::getPropertiesHashMap(self.as_TransformInfoHttp_mut()) }
+    fn getPropertiesHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { TransformInfoHttp::getPropertiesHashMap(self.as_TransformInfoHttp_mut()) }
 }
 impl TransformInfoHttpDyn for TransformInfoHttp {
     fn as_TransformInfoHttp(&self) -> &TransformInfoHttp { self }

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::logic::java::character::CharArrayFactory::CharArrayFactory;
 use crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessor;
 use crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface;
@@ -40,10 +40,14 @@ pub struct KeyValueDrawCharArray {
 }
 
 impl UpdateMyFontInterface for KeyValueDrawCharArray {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 impl KeyValueDrawCharArray {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut label: String, mut x: i32) -> Self {
@@ -55,7 +59,6 @@ impl KeyValueDrawCharArray {
             value: Vec::new(),
             len: 0,
         };
-        this.myFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
         this.value = jcall!(CharArrayFactory::getInstance()).getZeroCharArray();
         this.LABEL = label.clone();
         this.labelX = x.clone();
@@ -63,18 +66,20 @@ impl KeyValueDrawCharArray {
     }
 
     pub fn new(mut label: String, mut x: i32) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(label, x))))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(label.clone(), x.clone()))));
+        jcall!(this).myFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         let mut labelWidth: i32 = jcall!(jcall!(graphics).getFont()).stringWidth(self.LABEL.clone()) - (self.LABEL.chars().count() as i32);
         self.valueX = labelWidth + self.labelX;
-        self.myFontProcessor = MyFontProcessor::getInstance();
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut y: i32) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut y: i32) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         jcall!(graphics).drawString(self.LABEL.clone(), self.labelX.clone(), y.clone(), 0);
         jcall!(graphics).drawChars(self.value.clone(), 0, self.len.clone(), self.valueX.clone(), y.clone(), 0);

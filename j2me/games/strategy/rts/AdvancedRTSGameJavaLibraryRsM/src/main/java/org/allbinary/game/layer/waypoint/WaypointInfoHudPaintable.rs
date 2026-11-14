@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::layer::NullPathFindingLayer::NullPathFindingLayer;
 use crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface;
 use crate::org::allbinary::game::layer::RTSLayer::RTSLayer;
@@ -41,8 +41,11 @@ pub struct WaypointInfoHudPaintable {
 
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintableInterface::InitUpdatePaintableInterface for WaypointInfoHudPaintable {
 }
-impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for WaypointInfoHudPaintable {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+impl crate::org::allbinary::init::InitInterface::InitInterface for WaypointInfoHudPaintable {
+    fn init(&mut self) { crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintable::init(crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn::as_InitUpdatePaintable_mut(self)) }
+}
+impl crate::org::allbinary::init::UpdateInterface::UpdateInterface for WaypointInfoHudPaintable {
+    fn update(&mut self) { crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable::update(crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn::as_SelectionHudPaintable_mut(self)) }
 }
 
 impl WaypointInfoHudPaintable {
@@ -55,7 +58,7 @@ impl WaypointInfoHudPaintable {
             rtsLayerP: None,
             textLine2Y: 0,
         };
-        this.rtsLayerP = crate::org::allbinary::game::layer::NullPathFindingLayer::NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone();
+        this.rtsLayerP = crate::org::allbinary::game::layer::NullPathFindingLayer::NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of NullPathFindingLayer does not have PathFindingLayerInterface as a base trait") });
         this.keyvalueDrawString = KeyValueDrawString::new(String::from("Owner: "), this.textX.clone());
         this
     }
@@ -65,15 +68,15 @@ impl WaypointInfoHudPaintable {
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.updateMeasurement(graphics.clone());
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.textLine2Y = (self.y + jcall!(font).getHeight());
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(),); self.base.updateMeasurement(java_arguments.0) };
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.textLine2Y = { let java_value = ((self.y + jcall!(font).getHeight())).clone(); java_value };
     }
     
 
     pub fn updateSelectionInfo(&mut self) {
-        let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = (self.rtsLayerP).clone() /* as RTSLayer */;
+        let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> { panic!("ClassCastException: a Rust dyn PathFindingLayerInterface cannot be cast to RTSLayer") })();
         { let java_arguments = (jcall!(rtsLayer).getName(),); self.setName(java_arguments.0) };
         { let java_arguments = (jcall!(rtsLayer).getVerticleBuildAnimationInterface(),); self.setAnimationInterface(java_arguments.0) };
         { let java_receiver = self.keyvalueDrawString.clone(); let java_arguments = (jcall!(jcall!(rtsLayer).getParentLayer()).getName(),); jcall!(java_receiver).update(java_arguments.0); };
@@ -81,7 +84,7 @@ impl WaypointInfoHudPaintable {
     
 
     pub fn setRtsLayer(&mut self, mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>) {
-        self.rtsLayerP = rtsLayer.clone().map(|reference| reference as Rc<RefCell<dyn PathFindingLayerInterface>>);
+        self.rtsLayerP = rtsLayer.clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of RTSLayer does not have PathFindingLayerInterface as a base trait") });
     }
     
 
@@ -90,8 +93,8 @@ impl WaypointInfoHudPaintable {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.paint(graphics.clone());
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(),); self.base.paint(java_arguments.0) };
         jcall!(self.keyvalueDrawString).paint(graphics.clone(), self.textLine2Y.clone());
         jcall!(self.getAnimationInterface()).paintXY(graphics.clone(), self.imageX.clone(), self.y.clone());
     }
@@ -118,7 +121,6 @@ impl WaypointInfoHudPaintableDyn for WaypointInfoHudPaintable {
 impl crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn for WaypointInfoHudPaintable {
     fn as_SelectionHudPaintable(&self) -> &crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable { &self.base }
     fn as_SelectionHudPaintable_mut(&mut self) -> &mut crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable { &mut self.base }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
     fn updateSelectionInfo(&mut self) { Self::updateSelectionInfo(self) }
 }
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn for WaypointInfoHudPaintable {
@@ -130,7 +132,13 @@ impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for Waypoin
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base.base }
     fn setBasicColorP(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable::setBasicColorP(crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn::as_SelectionHudPaintable_mut(self), p1) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for WaypointInfoHudPaintable {
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for WaypointInfoHudPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

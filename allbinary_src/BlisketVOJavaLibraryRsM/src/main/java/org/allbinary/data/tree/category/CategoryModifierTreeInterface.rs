@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait CategoryModifierTreeInterface {
+pub trait CategoryModifierTreeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn insert(&mut self, parentCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, newChildCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>);
     
 
     fn delete(&mut self, parentCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, newChildCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -34,6 +34,10 @@ pub struct Angle {
 
 
 impl Angle {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut angle: i16) -> Self {
@@ -53,7 +57,7 @@ impl Angle {
         return self.value.clone();
     }
 }
-pub trait AngleDyn {
+pub trait AngleDyn: std::any::Any {
     fn as_Angle(&self) -> &Angle;
     fn as_Angle_mut(&mut self) -> &mut Angle;
     fn getValue(&mut self) -> i16 { Angle::getValue(self.as_Angle_mut()) }

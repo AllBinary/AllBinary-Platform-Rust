@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::SoundsFactoryInterface::SoundsFactoryInterface;
 
 // Borrows the object of a Java reference
@@ -35,6 +36,10 @@ thread_local! { pub static AllBinaryMediaManagerShutdown_instance: Option<Rc<Ref
 
 impl AllBinaryMediaManagerShutdown {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -50,7 +55,7 @@ impl AllBinaryMediaManagerShutdown {
     pub fn shutdown(mut soundsFactoryInterface: Option<Rc<RefCell<dyn SoundsFactoryInterface>>>) {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(AllBinaryMediaManagerShutdown_instance.with(Clone::clone).clone()), String::from("shutdown"));
+        jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(AllBinaryMediaManagerShutdown_instance.with(Clone::clone).clone()), String::from("shutdown"));
         AllBinaryMediaManager::AllBinaryMediaManager::shutdown(soundsFactoryInterface.clone());
     }
 }

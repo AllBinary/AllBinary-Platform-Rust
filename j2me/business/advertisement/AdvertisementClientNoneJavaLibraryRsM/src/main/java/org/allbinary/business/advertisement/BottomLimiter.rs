@@ -37,6 +37,10 @@ pub struct BottomLimiter {
 thread_local! { pub static BottomLimiter_instance: Option<Rc<RefCell<BottomLimiter>>> = BottomLimiter::new(); }
 
 impl BottomLimiter {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<BottomLimiter>>> {
@@ -73,7 +77,7 @@ impl BottomLimiter {
         } else {
             self.deltaY = self.lower.clone();
         }
-        self.bottom = jcall!(displayInfo).getLastHeight() - self.deltaY;
+        self.bottom = { let java_value = (jcall!(displayInfo).getLastHeight() - self.deltaY).clone(); java_value };
     }
     
 

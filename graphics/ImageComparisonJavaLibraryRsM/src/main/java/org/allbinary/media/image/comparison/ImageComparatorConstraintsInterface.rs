@@ -20,6 +20,7 @@ use super::*;
 // use crate::java::awt::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
 use crate::org::allbinary::graphics::GPoint::GPoint;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -28,7 +29,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait ImageComparatorConstraintsInterface {
+pub trait ImageComparatorConstraintsInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getMaxNonMatchingPixelDeltas(&mut self) -> i32;
@@ -38,7 +39,7 @@ pub trait ImageComparatorConstraintsInterface {
     
 
     // Java overloaded method: Rust needs a different name
-    fn isCollisionWithAvoidRectangles(&mut self, point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) -> bool;
+    fn isCollisionWithAvoidRectangles_GPoint(&mut self, point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) -> bool;
     
 
     fn isColorAllowed(&mut self, frame: i32, point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, color: Option<Rc<RefCell<Color>>>) -> bool;
@@ -49,8 +50,6 @@ pub trait ImageComparatorConstraintsInterface {
     
 
     fn isFrameAllowed(&mut self, frame: i32) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

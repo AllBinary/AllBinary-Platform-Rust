@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait LifeInterface {
+pub trait LifeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn get(&mut self) -> i16;
@@ -47,8 +47,6 @@ pub trait LifeInterface {
     
 
     fn isAlive(&mut self) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

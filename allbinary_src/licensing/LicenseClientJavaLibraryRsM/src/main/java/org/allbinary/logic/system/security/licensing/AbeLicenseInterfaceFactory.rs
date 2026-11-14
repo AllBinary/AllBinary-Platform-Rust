@@ -16,15 +16,16 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::Calendar;
 use super::*;
-// use crate::java::io::IOException::IOException;
-// use crate::java::util::Calendar::Calendar;
+use crate::java::io::IOException::IOException;
+use crate::java::util::Calendar::Calendar;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::system::security::licensing::client::AbeLicenseClient::AbeLicenseClient;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::AbeLicenseInterface::AbeLicenseInterface;
 use super::AbeClientInformationInterface::AbeClientInformationInterface;
+use super::LicensingException::LicensingException;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -45,6 +46,10 @@ pub struct AbeLicenseInterfaceFactory {
 thread_local! { pub static AbeLicenseInterfaceFactory_SINGLETON: Option<Rc<RefCell<AbeLicenseInterfaceFactory>>> = AbeLicenseInterfaceFactory::new(); }
 
 impl AbeLicenseInterfaceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AbeLicenseInterfaceFactory>>> {
@@ -87,24 +92,25 @@ impl AbeLicenseInterfaceFactory {
 
     // throws LicensingException
     pub fn get(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>) -> Option<Rc<RefCell<dyn AbeLicenseInterface>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(String::from("Getting Keys"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET.clone());
-            self.abeLicenseInterface = AbeNoLicense::AbeNoLicense::getInstance().map(|reference| reference as Rc<RefCell<dyn AbeLicenseInterface>>);
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            jcall!(self.logUtil).putF(String::from("Getting Keys"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET.clone(); java_field }.clone());
+            self.abeLicenseInterface = { let java_value = (AbeNoLicense::AbeNoLicense::getInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn AbeLicenseInterface>>);
             let mut licenseClient: Option<Rc<RefCell<AbeLicenseClient>>> = AbeLicenseClient::new();
-            self.abeLicenseInterface = jcall!(licenseClient).get(abeClientInformation.clone());
+            self.abeLicenseInterface = { let java_value = (jcall!(licenseClient).get(abeClientInformation.clone())).clone(); java_value };
             if self.abeLicenseInterface.is_some() {
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Default Key: "), { let java_receiver = self.abeLicenseInterface.clone(); let java_arguments = (jcall!(AbeClientInformationData::AbeClientInformationData::getInstance()).KEY.clone(),); let java_result = jcall!(java_receiver).getKey(java_arguments.0); java_result }), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Default Key: "), { let java_receiver = self.abeLicenseInterface.clone(); let java_arguments = ({ let java_field = jcall!(AbeClientInformationData::AbeClientInformationData::getInstance()).KEY.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).getKey(java_arguments.0); java_result }), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
-            return self.abeLicenseInterface.clone();
+            return Some(self.abeLicenseInterface.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(String::from("Licensing IO Error"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put(String::from("Licensing IO Error"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             panic!("{:?}", format!("{}: {:?}", "LicensingException", (String::from("License Server Connection Error"))));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 

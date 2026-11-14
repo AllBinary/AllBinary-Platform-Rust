@@ -60,7 +60,7 @@ impl Health {
             maxHealth: 0,
             healthListenerInterface: None,
         };
-        this.healthListenerInterface = NullHealthListener_NULL_HEALTH_LISTENER.with(Clone::clone).clone();
+        this.healthListenerInterface = NullHealthListener_NULL_HEALTH_LISTENER.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn HealthListenerInterface>>);
         this.setMaxHealth(maxHealth.clone());
         this.setHealth(maxHealth.clone());
         this
@@ -100,7 +100,7 @@ impl Health {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(String::from("******* Trying to heal when damaging. Damage: "));
             jcall!(stringBuffer).appendint(ahealth.clone());
-            jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
             jcall!(stringBuffer).append(self.toString());
             ForcedLogUtil::log(jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
             return;

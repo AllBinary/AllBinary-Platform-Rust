@@ -31,6 +31,10 @@ pub struct CustomizerTransformInfoData {
 thread_local! { pub static CustomizerTransformInfoData_NAME: String = String::from("CUSTOMIZER_TRANSFORM_INFO_NAME"); }
 
 impl CustomizerTransformInfoData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

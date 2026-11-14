@@ -37,6 +37,10 @@ pub struct ImageTypeUtil {
 pub static mut ImageTypeUtil_SINGLETON: std::cell::LazyCell<Option<Rc<RefCell<ImageTypeUtil>>>> = std::cell::LazyCell::new(|| ImageTypeUtil::new());
 
 impl ImageTypeUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -49,7 +53,7 @@ impl ImageTypeUtil {
         this.PNG = String::from("png");
         this.JPG = String::from("jpg");
         this.GIF = String::from("gif");
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         jcall!(this.list).add(crate::java_into_object(this.JPG.clone()));
         jcall!(this.list).add(crate::java_into_object(this.GIF.clone()));
         jcall!(this.list).add(crate::java_into_object(this.PNG.clone()));
@@ -62,9 +66,9 @@ impl ImageTypeUtil {
     
 
     pub fn isSupported(&mut self, mut mediaFileType: String) -> bool {
-        mediaFileType = mediaFileType.to_lowercase();
-        for index in (0..=jcall!(self.list).size() - 1).rev() {
-            let mut name: String = (jcall!(self.list).get(index.clone())).clone() /* as String */;
+        mediaFileType = { let java_value = (mediaFileType.to_lowercase()).clone(); java_value };
+        for index in (0..={ let java_bound = jcall!(self.list).size() - 1; java_bound }).rev() {
+            let mut name: String = { let java_object = (jcall!(self.list).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             if (mediaFileType.cmp(&name.clone()) as i32) == 0 {
                 return true;
             }

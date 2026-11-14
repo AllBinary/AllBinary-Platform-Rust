@@ -66,6 +66,10 @@ thread_local! { pub static BasicColorFactory_instance: Option<Rc<RefCell<BasicCo
 
 impl BasicColorFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             NULL_COLOR: None,
@@ -99,32 +103,32 @@ impl BasicColorFactory {
             BORDER_COLOR: None,
         };
         this.NULL_COLOR = this.createInstanceARGB(255, 255, 255, 255, String::from("null color"));
-        this.TAN = this.createInstance(0xE9D8B5_u32 as i32);
-        this.SKIN_PINK = this.createInstance(0xFDCECE_u32 as i32);
-        this.RED = { let java_arguments = (jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(), 0xFF0000_u32 as i32, String::from("red"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
-        this.LIGHT_RED = { let java_arguments = (jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(), 0xFFA0A0_u32 as i32, String::from("light red"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
-        this.DARK_GREEN = this.createInstance(0x00FF00_u32 as i32);
-        this.GREEN = { let java_arguments = (jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(), 0x00DD00_u32 as i32, String::from("green"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
-        this.LIGHT_GREEN = this.createInstance(0x007700_u32 as i32);
-        this.PURPLE = { let java_arguments = (jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(), 0x400040_u32 as i32, String::from("purple"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
-        this.BLUE = { let java_arguments = (jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(), 0x0000FF_u32 as i32, String::from("blue"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
-        this.LIGHT_BLUE = this.createInstance(0x00aaff_u32 as i32);
-        this.VERY_LIGHT_BLUE = this.createInstance(0x000033_u32 as i32);
-        this.PUCE = this.createInstance(0xFF00AA_u32 as i32);
-        this.AQUA = this.createInstance(0x00FFFF_u32 as i32);
-        this.YELLOW = { let java_arguments = (jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(), 0xFFFF00_u32 as i32, String::from("yellow"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
-        this.PINK = this.createInstance(0xFF00FF_u32 as i32);
-        this.BLACK = { let java_arguments = (jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(), 0x000000_u32 as i32, String::from("black"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
-        this.GREY = { let java_arguments = (jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(), 0xAAAAAA_u32 as i32, String::from("grey"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
-        this.LIGHT_GREY = this.createInstance(0xC0C0C0_u32 as i32);
-        this.DARK_GREY = this.createInstance(0x404040_u32 as i32);
-        this.ORANGE = this.createInstance(0xe07718_u32 as i32);
-        this.BROWN = this.createInstance(0x956B00_u32 as i32);
-        this.WHITE = this.createInstance(0xFFFFFF_u32 as i32);
-        this.TRANSPARENT_COLOR = { let java_arguments = (0x00000000_u32 as i32, 0x000000_u32 as i32, jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
-        this.TRANSPARENT_GREY = { let java_arguments = (0x52000000_u32 as i32, 0xECECEC_u32 as i32, jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
-        this.TRANSPARENT_BLACK = { let java_arguments = (0x52000000_u32 as i32, 0x000000_u32 as i32, jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
-        this.TRANSPARENT_RED = { let java_arguments = (0x52000000_u32 as i32, 0xFF0000_u32 as i32, jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
+        this.TAN = this.createInstance(0xE9D8B5);
+        this.SKIN_PINK = this.createInstance(0xFDCECE);
+        this.RED = { let java_arguments = ({ let java_field = jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(); java_field }.clone(), 0xFF0000, String::from("red"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
+        this.LIGHT_RED = { let java_arguments = ({ let java_field = jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(); java_field }.clone(), 0xFFA0A0, String::from("light red"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
+        this.DARK_GREEN = this.createInstance(0x00FF00);
+        this.GREEN = { let java_arguments = ({ let java_field = jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(); java_field }.clone(), 0x00DD00, String::from("green"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
+        this.LIGHT_GREEN = this.createInstance(0x007700);
+        this.PURPLE = { let java_arguments = ({ let java_field = jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(); java_field }.clone(), 0x400040, String::from("purple"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
+        this.BLUE = { let java_arguments = ({ let java_field = jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(); java_field }.clone(), 0x0000FF, String::from("blue"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
+        this.LIGHT_BLUE = this.createInstance(0x00aaff);
+        this.VERY_LIGHT_BLUE = this.createInstance(0x000033);
+        this.PUCE = this.createInstance(0xFF00AA);
+        this.AQUA = this.createInstance(0x00FFFF);
+        this.YELLOW = { let java_arguments = ({ let java_field = jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(); java_field }.clone(), 0xFFFF00, String::from("yellow"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
+        this.PINK = this.createInstance(0xFF00FF);
+        this.BLACK = { let java_arguments = ({ let java_field = jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(); java_field }.clone(), 0x000000, String::from("black"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
+        this.GREY = { let java_arguments = ({ let java_field = jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(); java_field }.clone(), 0xAAAAAA, String::from("grey"),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
+        this.LIGHT_GREY = this.createInstance(0xC0C0C0);
+        this.DARK_GREY = this.createInstance(0x404040);
+        this.ORANGE = this.createInstance(0xe07718);
+        this.BROWN = this.createInstance(0x956B00);
+        this.WHITE = this.createInstance(0xFFFFFF);
+        this.TRANSPARENT_COLOR = { let java_arguments = (0x00000000, 0x000000, { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
+        this.TRANSPARENT_GREY = { let java_arguments = (0x52000000, 0xECECEC, { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
+        this.TRANSPARENT_BLACK = { let java_arguments = (0x52000000, 0x000000, { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
+        this.TRANSPARENT_RED = { let java_arguments = (0x52000000, 0xFF0000, { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(),); this.createInstanceAN(java_arguments.0, java_arguments.1, java_arguments.2) };
         this.CLEAR_COLOR = this.BLACK.clone();
         this.BORDER_COLOR = this.WHITE.clone();
         this
@@ -141,12 +145,12 @@ impl BasicColorFactory {
     
 
     pub fn createInstance(&mut self, mut value: i32) -> Option<Rc<RefCell<BasicColor>>> {
-        return BasicColor::new(jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(), value.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone());
+        return BasicColor::new({ let java_field = jcall!(BasicColorUtil::BasicColorUtil::getInstance()).ALPHA.clone(); java_field }.clone(), value.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
     }
     
 
     pub fn createInstanceA(&mut self, mut alphaValue: i32, mut value: i32) -> Option<Rc<RefCell<BasicColor>>> {
-        return BasicColor::new(alphaValue.clone(), value.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone());
+        return BasicColor::new(alphaValue.clone(), value.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
     }
     
 
@@ -157,7 +161,7 @@ impl BasicColorFactory {
 
     pub fn createInstanceARGB(&mut self, mut alphaValue: i32, mut r: i32, mut g: i32, mut b: i32, mut name: String) -> Option<Rc<RefCell<BasicColor>>> {
         let mut ALPHA_MASK: i32 = 0xFF000000_u32 as i32;
-        return BasicColor::new(alphaValue.clone(), ((alphaValue << 24) & ALPHA_MASK) + ((r << 16) & 0x00FF0000_u32 as i32) + ((g << 8) & 0x0000FF00_u32 as i32) + (b & 0x000000FF_u32 as i32), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone());
+        return BasicColor::new(alphaValue.clone(), ((alphaValue << 24) & ALPHA_MASK) + ((r << 16) & 0x00FF0000) + ((g << 8) & 0x0000FF00) + (b & 0x000000FF), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
     }
 }
 

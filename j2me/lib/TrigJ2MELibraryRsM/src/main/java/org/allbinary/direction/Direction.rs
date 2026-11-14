@@ -49,12 +49,13 @@ impl Direction {
         this.otherName = otherName.clone();
         this.value = value.clone();
         this.frameFactor = frameFactor.clone();
-        unsafe { *Direction_directionArray = this };
         this
     }
 
     pub fn new(mut name: String, mut otherName: String, mut value: i32, mut frameFactor: i32) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(name, otherName, value, frameFactor))))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(name.clone(), otherName.clone(), value.clone(), frameFactor.clone()))));
+            unsafe { (*Direction_directionArray)[(value) as usize] = this.clone() };
+        this
     }
     
 

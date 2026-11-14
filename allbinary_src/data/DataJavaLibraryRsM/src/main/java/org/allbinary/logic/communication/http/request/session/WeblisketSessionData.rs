@@ -38,6 +38,10 @@ thread_local! { pub static WeblisketSessionData_REMOVABLEREENTERNEWPASSWORD: Str
 thread_local! { pub static WeblisketSessionData_AUTHENTICATED: String = String::from("SESSION_AUTHENTICATED"); }
 
 impl WeblisketSessionData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

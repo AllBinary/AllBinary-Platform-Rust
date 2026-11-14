@@ -32,6 +32,10 @@ pub struct ColorData {
 thread_local! { pub static ColorData_instance: Option<Rc<RefCell<ColorData>>> = ColorData::new(); }
 
 impl ColorData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ColorData>>> {

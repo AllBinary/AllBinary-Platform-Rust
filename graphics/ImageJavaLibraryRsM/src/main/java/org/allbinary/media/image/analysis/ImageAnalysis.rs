@@ -24,6 +24,7 @@ use crate::org::allbinary::graphics::color::ColorCacheable::ColorCacheable;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,6 +40,10 @@ pub struct ImageAnalysis {
 thread_local! { pub static ImageAnalysis_instance: Option<Rc<RefCell<ImageAnalysis>>> = ImageAnalysis::new(); }
 
 impl ImageAnalysis {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ImageAnalysis>>> {
@@ -62,7 +67,7 @@ impl ImageAnalysis {
     // throws Exception
     pub fn process(&mut self, mut bufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>>, mut colorRangeInterface: Option<Rc<RefCell<dyn ColorRangeInterface>>>) -> Vec<Option<Rc<RefCell<ImageAnalysisResults>>>> {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", jcall!(CommonLabels::getInstance()).START, jcall!(colorRangeInterface).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).PROCESS.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).START.clone(); java_field }, jcall!(colorRangeInterface).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).PROCESS.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut imageAnalysisResultsArray: Vec<Option<Rc<RefCell<ImageAnalysisResults>>>> = vec![None; ((bufferedImageArray.len() as i32)) as usize];
         for index in (0..(bufferedImageArray.len() as i32)) {
             imageAnalysisResultsArray[(index) as usize] = ImageAnalysis::process(bufferedImageArray[(index) as usize].clone(), colorRangeInterface.clone());
@@ -73,15 +78,15 @@ impl ImageAnalysis {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn process(mut bufferedImage: Option<Rc<RefCell<BufferedImage>>>, mut colorRangeInterface: Option<Rc<RefCell<dyn ColorRangeInterface>>>) -> Option<Rc<RefCell<ImageAnalysisResults>>> {
+    pub fn process_BufferedImage_ColorRangeInterface(mut bufferedImage: Option<Rc<RefCell<BufferedImage>>>, mut colorRangeInterface: Option<Rc<RefCell<dyn ColorRangeInterface>>>) -> Option<Rc<RefCell<ImageAnalysisResults>>> {
         let mut imageAnalysisResults: Option<Rc<RefCell<ImageAnalysisResults>>> = ImageAnalysisResults::new();
         let mut redTotal: i64 = 0_i64;
         let mut greenTotal: i64 = 0_i64;
         let mut blueTotal: i64 = 0_i64;
-        for indexY in (0..jcall!(bufferedImage).getHeight()) {
-            for indexX in (0..jcall!(bufferedImage).getWidth()) {
-                let mut keyInteger: Option<i32> = (jcall!(bufferedImage).getRGB(indexX.clone(), indexY.clone())).to_string();
-                let mut colorCacheable: Option<Rc<RefCell<ColorCacheable>>> = (jcall!(ColorCacheFactory::getInstance()).get(keyInteger.clone())).clone() /* as ColorCacheable */;
+        for indexY in (0..{ let java_bound = jcall!(bufferedImage).getHeight(); java_bound }) {
+            for indexX in (0..{ let java_bound = jcall!(bufferedImage).getWidth(); java_bound }) {
+                let mut keyInteger: Option<i32> = Some((jcall!(bufferedImage).getRGB(indexX.clone(), indexY.clone())) as i32);
+                let mut colorCacheable: Option<Rc<RefCell<ColorCacheable>>> = (jcall!(ColorCacheFactory::getInstance()).get(crate::java_into_object((keyInteger.clone()).expect("NullPointerException")))).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<ColorCacheable>() }, "ClassCastException: not a ColorCacheable"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<ColorCacheable>) } });
                 let mut color: Option<Rc<RefCell<Color>>> = jcall!(colorCacheable).getColor();
                 ImageAnalysis::processColorRangeResults(imageAnalysisResults.clone(), colorRangeInterface.clone(), color.clone());
                 ImageAnalysis::processImageColorResults(jcall!(imageAnalysisResults).getImageColorResults(), colorRangeInterface.clone(), color.clone());

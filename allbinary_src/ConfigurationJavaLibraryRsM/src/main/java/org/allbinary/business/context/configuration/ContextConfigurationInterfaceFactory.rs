@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::control::crypt::file::CryptFileReader::CryptFi
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::ContextConfigurationData::ContextConfigurationData;
 use super::ContextConfigurationView::ContextConfigurationView;
 use super::ContextConfigurationInterface::ContextConfigurationInterface;
@@ -40,6 +41,10 @@ pub struct ContextConfigurationInterfaceFactory {
 thread_local! { pub static ContextConfigurationInterfaceFactory_instance: Option<Rc<RefCell<ContextConfigurationInterfaceFactory>>> = ContextConfigurationInterfaceFactory::new(); }
 
 impl ContextConfigurationInterfaceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ContextConfigurationInterfaceFactory>>> {
@@ -62,18 +67,18 @@ impl ContextConfigurationInterfaceFactory {
     // Java overloaded method: Rust needs a different name
     pub fn getInstance1(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<dyn ContextConfigurationInterface>>> {
         let mut contextConfigurationData: Option<Rc<RefCell<ContextConfigurationData>>> = ContextConfigurationData::getInstance();
-        let mut contextConfigurationNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(contextConfigurationData).NAME.clone(), jcall!(document).getChildNodes());
-        return (jcall!(ContextConfigurationView::new1(contextConfigurationNode.clone())).getContextConfigurationInterface()).clone() /* as ContextConfigurationInterface */;
+        let mut contextConfigurationNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(contextConfigurationData).NAME.clone(); java_field }.clone(), jcall!(document).getChildNodes());
+        return (jcall!(ContextConfigurationView::new1(contextConfigurationNode.clone())).getContextConfigurationInterface()).clone();
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn getInstance1(&mut self, mut contextName: String) -> Option<Rc<RefCell<dyn ContextConfigurationInterface>>> {
+    pub fn getInstance1_String(&mut self, mut contextName: String) -> Option<Rc<RefCell<dyn ContextConfigurationInterface>>> {
         let mut abPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = ContextConfigurationPathUtil::ContextConfigurationPathUtil::getAbPath(contextName.clone());
         let mut contextConfigurationData: Option<Rc<RefCell<ContextConfigurationData>>> = ContextConfigurationData::getInstance();
-        let mut documentString: String = jcall!(CryptFileReader::new(jcall!(contextConfigurationData).UNCRYPTED_EXTENSION.clone(), jcall!(contextConfigurationData).ENCRYPTED_EXTENSION.clone())).get(abPath.clone());
-        let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1(documentString.clone());
+        let mut documentString: String = jcall!(CryptFileReader::new({ let java_field = jcall!(contextConfigurationData).UNCRYPTED_EXTENSION.clone(); java_field }.clone(), { let java_field = jcall!(contextConfigurationData).ENCRYPTED_EXTENSION.clone(); java_field }.clone())).get(abPath.clone());
+        let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1_String(documentString.clone());
         return self.getInstance1(document.clone());
     }
 }

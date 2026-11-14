@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,13 +33,17 @@ pub struct AllMotionRecognizer {
 pub static mut AllMotionRecognizer_index: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 0);
 
 impl AllMotionRecognizer {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
         let mut this = Self {
             id: 0,
         };
-        this.id = unsafe { let value = AllMotionRecognizer_index.clone(); *AllMotionRecognizer_index += 1; value };
+        this.id = { let java_value = (unsafe { let value = AllMotionRecognizer_index.clone(); *AllMotionRecognizer_index += 1; value }).clone(); java_value };
         this
     }
 

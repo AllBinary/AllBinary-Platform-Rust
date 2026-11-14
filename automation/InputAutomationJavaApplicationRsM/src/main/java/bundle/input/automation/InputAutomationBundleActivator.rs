@@ -30,6 +30,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::osgi::OSGIActivatorUtil::OSGIActivatorUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::InputAutomationBundleActivatorListenerInterface::InputAutomationBundleActivatorListenerInterface;
 
 // Borrows the object of a Java reference
@@ -55,6 +56,10 @@ impl InputAutomationBundleActivatorListenerInterface for InputAutomationBundleAc
 
 impl InputAutomationBundleActivator {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,
@@ -78,7 +83,7 @@ impl InputAutomationBundleActivator {
     // throws Exception
     pub fn start(&mut self, mut bundleContext: Option<Rc<RefCell<dyn BundleContext>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).START.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone());
             unsafe { *InputAutomationBundleActivator_bundleContext = bundleContext.clone() };
             unsafe { *InputAutomationBundleActivator_moduleManagementThread = Thread::new1(InputAutomationNewBundleRunnable::new(None /* Java this: a &mut self method has no Rc of itself */)) };
             jcall!(unsafe { InputAutomationBundleActivator_moduleManagementThread.clone() }).start();
@@ -86,9 +91,9 @@ impl InputAutomationBundleActivator {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).START.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             panic!("{:?}", e);
             }
         }
@@ -97,8 +102,8 @@ impl InputAutomationBundleActivator {
 
     // throws Exception
     pub fn registerAsService(&mut self) {
-        OSGIActivatorUtil::registerAsService(self.getBundleContext(), InputAutomationServiceFactory::getInstance(), jcall!(std::any::type_name::<InputAutomationConfigurationModuleChangeListener>()).getName());
-        OSGIActivatorUtil::registerAsService(self.getBundleContext(), InputAutomationServiceFactory::getInstance(), jcall!(std::any::type_name::<InputAutomationRobotChangeListener>()).getName());
+        OSGIActivatorUtil::registerAsService(self.getBundleContext(), { let java_argument = crate::java_into_object(InputAutomationServiceFactory::getInstance()); java_argument }, { let java_argument = jcall!(std::any::type_name::<InputAutomationConfigurationModuleChangeListener>()).getName(); java_argument });
+        OSGIActivatorUtil::registerAsService(self.getBundleContext(), { let java_argument = crate::java_into_object(InputAutomationServiceFactory::getInstance()); java_argument }, { let java_argument = jcall!(std::any::type_name::<InputAutomationRobotChangeListener>()).getName(); java_argument });
     }
     
 
@@ -111,7 +116,7 @@ impl InputAutomationBundleActivator {
 
     // throws Exception
     pub fn stop(&mut self, mut context: Option<Rc<RefCell<dyn BundleContext>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("stop"));
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("stop"));
         if InputAutomationJFrame::getInstance().is_some() {
             InputAutomationJFrame::destroy();
         } else {

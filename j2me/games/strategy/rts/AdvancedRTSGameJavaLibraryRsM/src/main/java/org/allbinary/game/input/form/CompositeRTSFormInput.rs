@@ -29,6 +29,7 @@ use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCompositeInterface::GeographicMapCompositeInterface;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
+use crate::java::lang::Exception::*;
 use super::RTSFormInput::RTSFormInput;
 use super::WaypointRTSFormInput::WaypointRTSFormInput;
 use super::UnitRTSFormInput::UnitRTSFormInput;
@@ -62,8 +63,8 @@ impl CompositeRTSFormInput {
         this.itemIndex = itemIndex.clone();
         this.isPrimaryWaypointCreator = isPrimaryWaypointCreator.clone();
         this.rtsFormInputArray = vec![None; (2) as usize];
-        this.rtsFormInputArray[(0) as usize] = WaypointRTSFormInput::new(this.groupInterfaceArray.clone(), isPrimaryWaypointCreator.clone());
-        this.rtsFormInputArray[(1) as usize] = UnitRTSFormInput::new(this.groupInterfaceArray.clone());
+        this.rtsFormInputArray[(0) as usize] = WaypointRTSFormInput::new(this.groupInterfaceArray.clone(), isPrimaryWaypointCreator.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::form::RTSFormInput::RTSFormInputDyn>>);
+        this.rtsFormInputArray[(1) as usize] = UnitRTSFormInput::new(this.groupInterfaceArray.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::form::RTSFormInput::RTSFormInputDyn>>);
         this
     }
 
@@ -74,8 +75,8 @@ impl CompositeRTSFormInput {
 
     // throws Exception
     pub fn setAllBinaryGameLayerManager(&mut self, mut allBinaryGameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>) {
-        self.base.setAllBinaryGameLayerManager(allBinaryGameLayerManager.clone());
-        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (allBinaryGameLayerManager).clone() /* as GeographicMapCompositeInterface */;
+        { let java_arguments = (allBinaryGameLayerManager.clone(),); self.base.setAllBinaryGameLayerManager(java_arguments.0) };
+        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryGameLayerManager cannot be cast to GeographicMapCompositeInterface") })();
         let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
         let mut size: i32 = (self.rtsFormInputArray.len() as i32).clone();
         for index in (0..size) {
@@ -101,7 +102,7 @@ impl CompositeRTSFormInput {
     // throws Exception
     pub fn processGameSpecific(&mut self, mut associatedRtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>>, mut rtsPlayerLayerInterface: Option<Rc<RefCell<dyn RTSPlayerLayerInterface>>>, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut index: i32) {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", format!("{}{}", jcall!(CommonLabels::getInstance()).INDEX_LABEL, index), String::from(" > ")), self.itemIndex[(0) as usize]), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).PROCESS.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).INDEX_LABEL.clone(); java_field }, index), String::from(" > ")), self.itemIndex[(0) as usize]), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).PROCESS.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         if self.isStickyItemSelected() && match (&associatedRtsLayer, &CollidableDestroyableDamageableLayer::getNullInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             if self.getSelectedStickyItemIndex() <= self.itemIndex[(0) as usize] {
                 jcall!(self.rtsFormInputArray[(0) as usize]).processGameSpecific(associatedRtsLayer.clone(), rtsPlayerLayerInterface.clone(), layerManager.clone(), item.clone(), index.clone());

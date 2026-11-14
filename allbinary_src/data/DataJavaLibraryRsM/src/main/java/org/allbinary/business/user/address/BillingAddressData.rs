@@ -47,6 +47,10 @@ thread_local! { pub static BillingAddressData_CODE: String = String::from("BILLI
 thread_local! { pub static BillingAddressData_COUNTRY: String = String::from("BILLINGADDRESS_COUNTRY"); }
 
 impl BillingAddressData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

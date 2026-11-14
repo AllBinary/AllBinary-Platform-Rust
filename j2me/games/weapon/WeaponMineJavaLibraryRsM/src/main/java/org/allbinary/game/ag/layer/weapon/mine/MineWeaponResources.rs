@@ -34,16 +34,16 @@ pub struct MineWeaponResources {
     pub DROP_ICON_RESOURCE: String,
 }
 
-pub static mut MineWeaponResources_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut MineWeaponResources_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl MineWeaponResources {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<MineWeaponResources>>> {
-        if match (&unsafe { MineWeaponResources_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *MineWeaponResources_instance = MineWeaponResources::new() };
+        if match (&unsafe { MineWeaponResources_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *MineWeaponResources_instance = crate::java_into_object(MineWeaponResources::new()) };
         }
-        return (unsafe { MineWeaponResources_instance.clone() }).clone() /* as MineWeaponResources */;
+        return { let java_object = (unsafe { MineWeaponResources_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<MineWeaponResources>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -64,7 +64,7 @@ impl MineWeaponResources {
         let mut SIZE_FIVE: String = SMALL.clone();
         let mut SIZE_SIX: String = SMALL.clone();
         let mut SIZE: Vec<String> = vec![SMALL.clone(), MEDIUM.clone(), SIZE_FOUR.clone(), SIZE_FIVE.clone(), SIZE_SIX.clone()];
-        this.base.init(ROOT.clone(), SIZE.clone());
+        { let java_arguments = (ROOT.clone(), SIZE.clone(),); this.base.init(java_arguments.0, java_arguments.1) };
         this
     }
 

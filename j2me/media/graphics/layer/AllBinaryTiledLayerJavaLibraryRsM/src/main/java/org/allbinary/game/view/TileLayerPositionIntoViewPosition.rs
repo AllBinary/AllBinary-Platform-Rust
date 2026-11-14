@@ -43,7 +43,7 @@ impl TileLayerPositionIntoViewPosition {
             base: ViewPosition::new_struct(0, 0, 0),
             tiledLayer: None,
         };
-        this.tiledLayer = NullLayer::getInstance();
+        this.tiledLayer = NullLayer::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::Layer::LayerDyn>>);
         // super(...) is in the struct literal above
         this
     }
@@ -69,7 +69,7 @@ impl TileLayerPositionIntoViewPosition {
     
 
     pub fn setTiledLayer(&mut self, mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>>) {
-        self.tiledLayer = tiledLayer.clone();
+        self.tiledLayer = tiledLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::Layer::LayerDyn>>);
     }
 }
 impl std::ops::Deref for TileLayerPositionIntoViewPosition {

@@ -39,6 +39,10 @@ pub struct LayerCollisionUtil {
 thread_local! { pub static LayerCollisionUtil_instance: Option<Rc<RefCell<LayerCollisionUtil>>> = LayerCollisionUtil::new(); }
 
 impl LayerCollisionUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LayerCollisionUtil>>> {
@@ -52,7 +56,7 @@ impl LayerCollisionUtil {
         };
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
         let mut gameFeatureFactory: Option<Rc<RefCell<GameFeatureFactory>>> = GameFeatureFactory::getInstance();
-        if jcall!(OpenGLFeatureUtil::getInstance()).isAnyThreed() && !jcall!(features).isFeature(jcall!(gameFeatureFactory).COLLISIONS_FORCED_TWO_DIMENSIONAL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        if jcall!(OpenGLFeatureUtil::getInstance()).isAnyThreed() && !jcall!(features).isFeature({ let java_field = jcall!(gameFeatureFactory).COLLISIONS_FORCED_TWO_DIMENSIONAL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             this.collisionProcessor = CollisionThreedProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::collision::CollisionProcessor::CollisionProcessorDyn>>);
         } else {
             this.collisionProcessor = Collision2DProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::collision::CollisionProcessor::CollisionProcessorDyn>>);

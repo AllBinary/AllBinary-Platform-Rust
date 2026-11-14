@@ -7,8 +7,10 @@ use std::rc::Rc;
 use super::*;
 // use crate::java::util::Dictionary::Dictionary;
 use super::Bundle::Bundle;
+use super::BundleException::BundleException;
 use super::ServiceRegistration::ServiceRegistration;
 use super::ServiceReference::ServiceReference;
+use super::InvalidSyntaxException::InvalidSyntaxException;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -17,7 +19,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait BundleContext {
+pub trait BundleContext: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getBundles(&mut self) -> Vec<Option<Rc<RefCell<dyn Bundle>>>>;
@@ -38,8 +40,6 @@ pub trait BundleContext {
     
 
     fn getServiceReference(&mut self, clazz: String) -> Option<Rc<RefCell<dyn ServiceReference>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

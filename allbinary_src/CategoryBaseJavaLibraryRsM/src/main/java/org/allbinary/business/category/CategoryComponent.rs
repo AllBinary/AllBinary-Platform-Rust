@@ -22,6 +22,7 @@ use crate::org::allbinary::logic::visual::transform::TransformInterface::Transfo
 use crate::org::allbinary::logic::visual::transform::data::TransformDocumentInterface::TransformDocumentInterface;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 use super::CategoryView::CategoryView;
 use super::CategoryInterface::CategoryInterface;
 
@@ -91,7 +92,7 @@ impl CategoryComponent {
     // throws Exception
     pub fn toXmlDoc(&mut self) -> Option<Rc<RefCell<Document>>> {
         let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create();
-        jcall!(document).appendChild(jcall!(CategoryView::new(self.getCategoryInterface()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::category::CategoryView::CategoryViewDyn>>)).toXmlNode(document.clone()));
+        jcall!(document).appendChild({ let java_argument = jcall!(CategoryView::new(self.getCategoryInterface()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::category::CategoryView::CategoryViewDyn>>)).toXmlNode(document.clone()); java_argument });
         return document.clone();
     }
     

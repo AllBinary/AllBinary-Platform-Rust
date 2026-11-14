@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::PrimitiveLongSingleton::PrimitiveLongSingleton;
 
 // Borrows the object of a Java reference
@@ -41,14 +42,18 @@ pub struct PrimitiveLongUtil {
 
 
 impl PrimitiveLongUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn createPowerOfTen(mut powerOfTen: i32) -> Option<Rc<RefCell<PrimitiveLongUtil>>> {
-        let mut primitiveLongUtil: Option<Rc<RefCell<PrimitiveLongUtil>>> = PrimitiveLongUtil::new(powerOfTen.clone(), jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+        let mut primitiveLongUtil: Option<Rc<RefCell<PrimitiveLongUtil>>> = PrimitiveLongUtil::new(powerOfTen.clone(), crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()));
         if powerOfTen % 10 != 0 {
             let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(primitiveLongUtil.clone()), jcall!(commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(format!("{}: {:?}", "Exception", (String::from("Max must be power of 10")))));
+            jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(primitiveLongUtil.clone()), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(format!("{}: {:?}", "Exception", (String::from("Max must be power of 10")))));
         }
         return primitiveLongUtil.clone();
     }
@@ -66,7 +71,7 @@ impl PrimitiveLongUtil {
         };
         this.logUtil = LogUtil::getInstance();
         this.primitiveLongSingleton = PrimitiveLongSingleton::getInstance();
-        this.maxDigits = jcall!(MathUtil::MathUtil::getInstance()).getTotalDigits(powerOfTen.clone());
+        this.maxDigits = { let java_value = (jcall!(MathUtil::MathUtil::getInstance()).getTotalDigits(powerOfTen.clone())).clone(); java_value };
         this.powerOfTen = powerOfTen.clone();
         this.maxValue = (powerOfTen * 10) - 1;
         this.charArray = vec!['\0'; (this.maxDigits) as usize];
@@ -85,7 +90,7 @@ impl PrimitiveLongUtil {
         }
         if value > self.maxValue {
             self.setCurrentTotalDigits(3);
-            return jcall!(self.primitiveLongSingleton).UNK.clone();
+            return { let java_field = jcall!(self.primitiveLongSingleton).UNK.clone(); java_field }.clone();
         }
         let mut index: i32 = 0;
         let mut div: i32 = self.powerOfTen.clone();
@@ -95,7 +100,7 @@ impl PrimitiveLongUtil {
             if digit >= 0 && digit < 10 {
                 if digit == 0 && index == 0 {
                 } else {
-                    self.charArray[({ let value = index; index += 1; value }) as usize] = jcall!(self.primitiveLongSingleton).NUMBER_CHAR_ARRAY[(digit) as usize].clone();
+                    { let java_index = ({ let value = index; index += 1; value }) as usize; self.charArray[java_index] = { let java_value = (jcall!(self.primitiveLongSingleton).NUMBER_CHAR_ARRAY[(digit) as usize]).clone(); java_value }.clone(); };
                 }
                 lastValue += digit * div;
             }

@@ -32,6 +32,10 @@ pub struct CaptionResources {
 thread_local! { pub static CaptionResources_instance: Option<Rc<RefCell<CaptionResources>>> = CaptionResources::new(); }
 
 impl CaptionResources {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<CaptionResources>>> {

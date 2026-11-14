@@ -40,7 +40,7 @@ impl PlayerType {
             id: 0,
             name: String::new(),
         };
-        this.name = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.name = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.name = name.clone();
         this.id = value.clone();
         this

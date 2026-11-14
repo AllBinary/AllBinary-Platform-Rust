@@ -35,6 +35,10 @@ thread_local! { pub static ShippingMethodData_GROUP: String = String::from("SHIP
 thread_local! { pub static ShippingMethodData_COST: String = String::from("SHIPPINGMETHOD_COST"); }
 
 impl ShippingMethodData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

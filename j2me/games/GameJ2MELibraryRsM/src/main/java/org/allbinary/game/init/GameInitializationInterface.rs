@@ -17,8 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,13 +28,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait GameInitializationInterface {
+pub trait GameInitializationInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
-    fn init(&mut self, abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, commandListener: Option<Rc<RefCell<CommandListener>>>, level: i32);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn init(&mut self, abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, commandListener: Option<Rc<RefCell<dyn CommandListener>>>, level: i32);
 }
 
 

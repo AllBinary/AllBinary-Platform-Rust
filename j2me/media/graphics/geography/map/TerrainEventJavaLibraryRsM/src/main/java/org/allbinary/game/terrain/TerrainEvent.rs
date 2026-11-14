@@ -40,12 +40,12 @@ impl TerrainEvent {
 
     pub fn new_struct(mut basicTerrainInfo: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(basicTerrainInfo.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(basicTerrainInfo.clone())),
             basicTerrainInfo: None,
         };
         this.basicTerrainInfo = BasicTerrainInfo_NULL_BASIC_TERRAIN_INFO.with(Clone::clone).clone();
         // super(...) is in the struct literal above
-        this.setBasicTerrainInfo(this.basicTerrainInfo.clone());
+        { let java_arguments = (this.basicTerrainInfo.clone(),); this.setBasicTerrainInfo(java_arguments.0) };
         this
     }
 

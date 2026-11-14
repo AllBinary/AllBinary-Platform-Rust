@@ -38,6 +38,10 @@ thread_local! { pub static OrderData_STORECANCELCOMMENT: String = String::from("
 
 impl OrderData {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };

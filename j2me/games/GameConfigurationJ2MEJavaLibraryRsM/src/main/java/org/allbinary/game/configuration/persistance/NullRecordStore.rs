@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::rms::RecordStore::RecordStore;
+use crate::javax::microedition::rms::RecordStore::RecordStore;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -53,5 +53,9 @@ impl std::ops::DerefMut for NullRecordStore {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::javax::microedition::rms::RecordStore::RecordStoreDyn for NullRecordStore {
+    fn as_RecordStore(&self) -> &crate::javax::microedition::rms::RecordStore::RecordStore { &self.base }
+    fn as_RecordStore_mut(&mut self) -> &mut crate::javax::microedition::rms::RecordStore::RecordStore { &mut self.base }
+}
 
 

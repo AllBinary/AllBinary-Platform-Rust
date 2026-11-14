@@ -25,15 +25,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait BasicDataTableInterface {
+pub trait BasicDataTableInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn createTable(&mut self) -> String;
     
 
     fn dropTable(&mut self) -> String;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

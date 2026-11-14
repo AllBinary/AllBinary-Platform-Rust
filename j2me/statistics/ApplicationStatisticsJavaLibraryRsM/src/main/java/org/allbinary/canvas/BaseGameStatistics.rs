@@ -74,9 +74,9 @@ impl BaseGameStatistics {
         this.timeDelayHelper = TimeDelayHelper::new(i32::MAX.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
         this.updateDelayHelper = TimeDelayHelper::new(2000).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
         this.gameTickTimeDelayHelper = GameTickTimeDelayHelperFactory::getInstance();
-        this.DEFAULT_SCALE_FACTOR = jcall!(ScaleFactorFactory::getInstance()).DEFAULT_SCALE_FACTOR.clone();
+        this.DEFAULT_SCALE_FACTOR = { let java_field = jcall!(ScaleFactorFactory::getInstance()).DEFAULT_SCALE_FACTOR.clone(); java_field }.clone();
         this.NOT = String::from("Not enough Time to Calculate");
-        this.EMPTY_STRING = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.EMPTY_STRING = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.STRING_ARRAY = vec![String::from(" Total Time: "), this.EMPTY_STRING.clone(), String::from(" Total Frames: "), this.EMPTY_STRING.clone(), String::from(" Frames/10 Sec: "), this.EMPTY_STRING.clone(), String::from(" Total Paints: "), this.EMPTY_STRING.clone(), String::from(" Paints/10 Sec: "), this.EMPTY_STRING.clone()];
         this.SPACE_CHAR = ' ';
         this.PLUS_CHAR = '+';
@@ -117,7 +117,7 @@ impl BaseGameStatistics {
     
 
     pub fn getRefreshRate(&mut self) -> i16 {
-        let mut elapsed: i64 = jcall!(self.timeDelayHelper).getElapsed(jcall!(self.gameTickTimeDelayHelper).startTime.clone());
+        let mut elapsed: i64 = jcall!(self.timeDelayHelper).getElapsed({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone());
         if elapsed > 1_i64 {
             let mut time: i16 = (((self.totalRefreshes / (elapsed >> self.DEFAULT_SCALE_FACTOR))) as i16);
             return time.clone();
@@ -133,18 +133,18 @@ impl BaseGameStatistics {
     
 
     pub fn to2DCharArray(&mut self) -> Vec<Vec<char>> {
-        let mut totalTime: i64 = jcall!(self.timeDelayHelper).getElapsed(jcall!(self.gameTickTimeDelayHelper).startTime.clone());
+        let mut totalTime: i64 = jcall!(self.timeDelayHelper).getElapsed({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone());
         totalTime = (totalTime >> self.DEFAULT_SCALE_FACTOR);
-        if totalTime > 0_i64 && jcall!(self.updateDelayHelper).isTime(jcall!(self.gameTickTimeDelayHelper).startTime.clone()) {
+        if totalTime > 0_i64 && jcall!(self.updateDelayHelper).isTime({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone()) {
             let mut framesPerSec: i32 = (((self.totalFrames / totalTime)) as i32);
             if framesPerSec < 10 {
                 self.CHAR_ARRAY[(1) as usize][(0) as usize] = self.SPACE_CHAR.clone();
-                self.CHAR_ARRAY[(1) as usize][(1) as usize] = jcall!(self.primitiveLongSingleton).NUMBER_CHAR_ARRAY[(framesPerSec) as usize].clone();
+                self.CHAR_ARRAY[(1) as usize][(1) as usize] = { let java_value = (jcall!(self.primitiveLongSingleton).NUMBER_CHAR_ARRAY[(framesPerSec) as usize]).clone(); java_value }.clone();
             } else if framesPerSec < 100 {
                 let mut tens: i32 = framesPerSec / 10;
                 let mut removeTens: i32 = tens * 10;
-                self.CHAR_ARRAY[(1) as usize][(0) as usize] = jcall!(self.primitiveLongSingleton).NUMBER_CHAR_ARRAY[(tens) as usize].clone();
-                self.CHAR_ARRAY[(1) as usize][(1) as usize] = jcall!(self.primitiveLongSingleton).NUMBER_CHAR_ARRAY[(framesPerSec - removeTens) as usize].clone();
+                self.CHAR_ARRAY[(1) as usize][(0) as usize] = { let java_value = (jcall!(self.primitiveLongSingleton).NUMBER_CHAR_ARRAY[(tens) as usize]).clone(); java_value }.clone();
+                self.CHAR_ARRAY[(1) as usize][(1) as usize] = { let java_value = (jcall!(self.primitiveLongSingleton).NUMBER_CHAR_ARRAY[(framesPerSec - removeTens) as usize]).clone(); java_value }.clone();
             } else {
                 self.CHAR_ARRAY[(1) as usize][(0) as usize] = self.PLUS_CHAR.clone();
                 self.CHAR_ARRAY[(1) as usize][(1) as usize] = self.PLUS_CHAR.clone();
@@ -152,12 +152,12 @@ impl BaseGameStatistics {
             let mut refreshesPerSec: i32 = (((self.totalRefreshes / totalTime)) as i32);
             if refreshesPerSec < 10 {
                 self.CHAR_ARRAY[(3) as usize][(0) as usize] = self.X_CHAR.clone();
-                self.CHAR_ARRAY[(3) as usize][(1) as usize] = jcall!(self.primitiveLongSingleton).NUMBER_CHAR_ARRAY[(refreshesPerSec) as usize].clone();
+                self.CHAR_ARRAY[(3) as usize][(1) as usize] = { let java_value = (jcall!(self.primitiveLongSingleton).NUMBER_CHAR_ARRAY[(refreshesPerSec) as usize]).clone(); java_value }.clone();
             } else if refreshesPerSec < 100 {
                 let mut tens: i32 = refreshesPerSec / 10;
                 let mut removeTens: i32 = tens * 10;
-                self.CHAR_ARRAY[(3) as usize][(0) as usize] = jcall!(self.primitiveLongSingleton).NUMBER_CHAR_ARRAY[(refreshesPerSec / 10) as usize].clone();
-                self.CHAR_ARRAY[(3) as usize][(1) as usize] = jcall!(self.primitiveLongSingleton).NUMBER_CHAR_ARRAY[(refreshesPerSec - removeTens) as usize].clone();
+                self.CHAR_ARRAY[(3) as usize][(0) as usize] = { let java_value = (jcall!(self.primitiveLongSingleton).NUMBER_CHAR_ARRAY[(refreshesPerSec / 10) as usize]).clone(); java_value }.clone();
+                self.CHAR_ARRAY[(3) as usize][(1) as usize] = { let java_value = (jcall!(self.primitiveLongSingleton).NUMBER_CHAR_ARRAY[(refreshesPerSec - removeTens) as usize]).clone(); java_value }.clone();
             } else {
                 self.CHAR_ARRAY[(3) as usize][(0) as usize] = self.PLUS_CHAR.clone();
                 self.CHAR_ARRAY[(3) as usize][(1) as usize] = self.PLUS_CHAR.clone();
@@ -168,7 +168,7 @@ impl BaseGameStatistics {
     
 
     pub fn toStringArray(&mut self) -> Vec<String> {
-        let mut totalTime: i64 = jcall!(self.timeDelayHelper).getElapsed(jcall!(self.gameTickTimeDelayHelper).startTime.clone());
+        let mut totalTime: i64 = jcall!(self.timeDelayHelper).getElapsed({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone());
         totalTime = (totalTime / 10000_i64);
         if totalTime > 0_i64 {
             self.STRING_ARRAY[(1) as usize] = (totalTime.clone()).to_string();
@@ -201,14 +201,14 @@ impl BaseGameStatistics {
             jcall!(stringBuffer).appendlong(self.totalRefreshes.clone());
             jcall!(stringBuffer).append(self.STRING_ARRAY[(8) as usize].clone());
             jcall!(stringBuffer).appendlong(self.totalRefreshes / totalTime);
-            jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
         }
         return jcall!(stringBuffer).toString();
     }
     
 
     pub fn toString(&mut self) -> String {
-        let mut totalTime: i64 = jcall!(self.timeDelayHelper).getElapsed(jcall!(self.gameTickTimeDelayHelper).startTime.clone());
+        let mut totalTime: i64 = jcall!(self.timeDelayHelper).getElapsed({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone());
         totalTime = (totalTime / 1000_i64);
         if totalTime > 0_i64 {
             return self.toStringAt(totalTime.clone());
@@ -217,7 +217,7 @@ impl BaseGameStatistics {
         }
     }
 }
-pub trait BaseGameStatisticsDyn {
+pub trait BaseGameStatisticsDyn: std::any::Any {
     fn as_BaseGameStatistics(&self) -> &BaseGameStatistics;
     fn as_BaseGameStatistics_mut(&mut self) -> &mut BaseGameStatistics;
     fn init(&mut self) { BaseGameStatistics::init(self.as_BaseGameStatistics_mut()) }

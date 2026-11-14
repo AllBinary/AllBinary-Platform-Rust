@@ -37,6 +37,10 @@ impl CacheableInterfaceFactoryInterface for BufferedImageCacheableFactory {
 }
 
 impl BufferedImageCacheableFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -51,7 +55,7 @@ impl BufferedImageCacheableFactory {
     
 
     pub fn getInstance(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn CacheableInterface>>> {
-        return BufferedImageCacheable::new((key).clone() /* as BufferedImageInfo */).map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>);
+        return BufferedImageCacheable::new({ let java_object = (key).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<BufferedImageInfo>>>>().expect("ClassCastException").clone()) }).map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>).map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>);
     }
 }
 

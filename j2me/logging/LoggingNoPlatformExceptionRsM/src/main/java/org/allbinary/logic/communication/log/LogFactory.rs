@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::RuntimeException::*;
 use super::Log::Log;
 
 // Borrows the object of a Java reference
@@ -32,9 +33,13 @@ macro_rules! jcall {
 pub struct LogFactory {
 }
 
-thread_local! { pub static LogFactory_LOG: Option<Rc<RefCell<Log>>> = Log::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), jcall!(NullUtil::getInstance()).NULL_OBJECT.clone()); }
+thread_local! { pub static LogFactory_LOG: Option<Rc<RefCell<Log>>> = Log::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone())); }
 
 impl LogFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

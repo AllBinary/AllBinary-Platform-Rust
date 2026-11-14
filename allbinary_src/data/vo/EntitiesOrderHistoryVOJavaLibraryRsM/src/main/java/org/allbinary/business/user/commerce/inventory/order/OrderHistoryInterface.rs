@@ -28,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait OrderHistoryInterface {
+pub trait OrderHistoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn setUserName(&mut self, value: String);
@@ -110,8 +110,6 @@ pub trait OrderHistoryInterface {
     
 
     fn getPaymentMethod(&mut self) -> String;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

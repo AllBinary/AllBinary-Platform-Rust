@@ -37,6 +37,10 @@ thread_local! { pub static RendererStrings_instance: Option<Rc<RefCell<RendererS
 
 impl RendererStrings {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             ON_SURFACE_CREATED: String::new(),

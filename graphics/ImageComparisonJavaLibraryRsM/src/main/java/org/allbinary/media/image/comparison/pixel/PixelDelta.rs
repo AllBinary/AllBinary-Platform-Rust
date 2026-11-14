@@ -56,7 +56,7 @@ impl PixelDelta {
         };
         this.setPoint(point.clone());
         this.setColorDelta(colorDelta.clone());
-        this.key = PixelDelta::getKey2(this.getPoint(), this.getColorDelta());
+        this.key = { let java_value = (PixelDelta::getKey2(this.getPoint(), this.getColorDelta())).clone(); java_value };
         this
     }
 
@@ -72,7 +72,7 @@ impl PixelDelta {
 
     // Java overloaded method: Rust needs a different name
     pub fn getKey2(mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut colorDelta: Option<Rc<RefCell<ColorDelta>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return jcall!(StringMaker::new()).appendint(jcall!(TsUtil::getInstance()).hashCode(crate::java_into_object(point.clone()))).append(jcall!(CommonSeps::getInstance()).UNDERSCORE.clone()).append(jcall!(jcall!(colorDelta).getKey()).toString()).toString();
+        return crate::java_into_object(jcall!(StringMaker::new()).appendint(jcall!(TsUtil::getInstance()).hashCode(crate::java_into_object(point.clone()))).append({ let java_field = jcall!(CommonSeps::getInstance()).UNDERSCORE.clone(); java_field }.clone()).append({ let java_object = (jcall!(colorDelta).getKey()).clone(); let value = jcall!(java_object); value.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", value.as_ref().type_id())) }).toString());
     }
     
 
@@ -97,7 +97,7 @@ impl PixelDelta {
     
 
     pub fn toString(&mut self) -> String {
-        return jcall!(StringMaker::new()).append(String::from("PixelDelta: Point: ")).append(jcall!(self.point).toString()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(jcall!(self.colorDelta).toString()).toString();
+        return jcall!(StringMaker::new()).append(String::from("PixelDelta: Point: ")).append(jcall!(self.point).toString()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(jcall!(self.colorDelta).toString()).toString();
     }
 }
 

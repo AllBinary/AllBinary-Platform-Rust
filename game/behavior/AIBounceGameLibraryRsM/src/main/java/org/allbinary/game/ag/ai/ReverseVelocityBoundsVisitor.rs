@@ -46,6 +46,10 @@ impl BoundsVisitorInterface for ReverseVelocityBoundsVisitor {
 }
 
 impl ReverseVelocityBoundsVisitor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut layerInterface: Option<Rc<RefCell<dyn LayerInterface>>>) -> Self {
@@ -56,8 +60,8 @@ impl ReverseVelocityBoundsVisitor {
         };
         this.logUtil = LogUtil::getInstance();
         this.layerInterface = layerInterface.clone();
-        let mut velocityInterfaceCompositeInterface: Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> = panic!("ClassCastException: a Rust dyn LayerInterface cannot be cast to dyn VelocityInterfaceCompositeInterface");
-        this.velocityInterface = (jcall!(velocityInterfaceCompositeInterface).getVelocityProperties()).clone() /* as VelocityInterface */;
+        let mut velocityInterfaceCompositeInterface: Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn LayerInterface cannot be cast to dyn VelocityInterfaceCompositeInterface") })();
+        this.velocityInterface = { let java_value = ((|| -> Option<Rc<RefCell<dyn VelocityInterface>>> { panic!("ClassCastException: a Rust dyn BasicVelocityProperties cannot be cast to VelocityInterface") })()).clone(); java_value };
         this
     }
 

@@ -35,6 +35,10 @@ thread_local! { pub static InitInfo2_instance: Option<Rc<RefCell<InitInfo2>>> = 
 
 impl InitInfo2 {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             directory: None,

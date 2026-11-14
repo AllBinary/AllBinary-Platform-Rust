@@ -32,6 +32,10 @@ pub static mut AlwaysActionScriptConditionData_NAME: std::cell::LazyCell<String>
 pub static mut AlwaysActionScriptConditionData_IS_ON: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("ALWAYS_ACTION_CONDITION_IS_ON"));
 
 impl AlwaysActionScriptConditionData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

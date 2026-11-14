@@ -16,14 +16,13 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::Runnable;
 use super::*;
-// use crate::javax::microedition::lcdui::ChoiceGroup::ChoiceGroup;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Item::Item;
-// use crate::javax::microedition::lcdui::NullCommandListener::NullCommandListener;
+use crate::javax::microedition::lcdui::ChoiceGroup::ChoiceGroup;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Item::Item;
+use crate::javax::microedition::lcdui::NullCommandListener::NullCommandListener;
 use crate::org::allbinary::AndroidUtil::AndroidUtil;
 use crate::org::allbinary::J2MEUtil::J2MEUtil;
 use crate::org::allbinary::business::advertisement::GameAdStateFactory::GameAdStateFactory;
@@ -147,6 +146,7 @@ use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::AllBinaryGameCanvasInterface::AllBinaryGameCanvasInterface;
 use super::GameCanvasRunnableInterface::GameCanvasRunnableInterface;
 use super::MenuListener::MenuListener;
@@ -215,7 +215,7 @@ pub struct AllBinaryGameCanvas {
     pub highScoresPaintable: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>>,
     pub localPlayerGameInputList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
     pub isCheating: bool,
-    pub hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
     pub isSingleKeyRepeatableProcessing: bool,
     pub gameInitializationInterfaceFactoryInterface: Option<Rc<RefCell<BasicBuildGameInitializerFactory>>>,
     pub touchButtonsPaintable: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>>,
@@ -293,18 +293,23 @@ impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventLis
     fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, eventObject) }
 }
 impl UpdateMyFontInterface for AllBinaryGameCanvas {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
-impl Runnable for AllBinaryGameCanvas {
+impl crate::org::allbinary::thread::RunnableInterface::RunnableInterface for AllBinaryGameCanvas {
+    fn isRunning(&mut self) -> bool { crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas::isRunning(crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn::as_RunnableCanvas_mut(self)) }
+    fn setRunning(&mut self, mut running: bool) { Self::setRunning(self, running) }
+    fn setThread(&mut self, p1: Option<Rc<RefCell<crate::java::lang::Thread::Thread>>>) { crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas::setThread(crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn::as_RunnableCanvas_mut(self), p1) }
+}
+impl crate::Runnable for AllBinaryGameCanvas {
     fn run(&mut self) { Self::run(self) }
 }
 
 impl AllBinaryGameCanvas {
     
 
-    pub fn new_struct(mut commandListener: Option<Rc<RefCell<CommandListener>>>, mut gameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>, mut highScoresFactoryInterface: Option<Rc<RefCell<dyn HighScoresFactoryInterface>>>, mut gameInitializationInterfaceFactoryInterface: Option<Rc<RefCell<BasicBuildGameInitializerFactory>>>, mut buffered: bool) -> Self {
+    pub fn new_struct(mut commandListener: Option<Rc<RefCell<dyn CommandListener>>>, mut gameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>, mut highScoresFactoryInterface: Option<Rc<RefCell<dyn HighScoresFactoryInterface>>>, mut gameInitializationInterfaceFactoryInterface: Option<Rc<RefCell<BasicBuildGameInitializerFactory>>>, mut buffered: bool) -> Self {
         let mut this = Self {
-            base: RunnableCanvas::new_struct(commandListener.clone(), jcall!(CanvasStrings::getInstance()).EMPTY_CHILD_NAME_LIST.clone(), true),
+            base: RunnableCanvas::new_struct(commandListener.clone(), { let java_field = jcall!(CanvasStrings::getInstance()).EMPTY_CHILD_NAME_LIST.clone(); java_field }.clone(), true),
             basicColorFactory: None,
             basicSetColorUtil: None,
             touchFeatureFactory: None,
@@ -396,28 +401,25 @@ impl AllBinaryGameCanvas {
         this.gameStateFactory = GameStateFactory::getInstance();
         this.gameTickTimeDelayHelper = GameTickTimeDelayHelperFactory::getInstance();
         this.gameTickDisplayInfoSingleton = GameTickDisplayInfoSingleton::getInstance();
-        this.gameRunnable = GameCanvasRunnable::new(this);
-        this.gamePauseRunnable = GameCanvasPauseRunnable::new(this);
         this.formUtil = FormUtil::getInstance();
         this.myFormUtil = MyFormUtil::getInstance();
-        this.updateMyFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
         this.myFontProcessor = this.updateMyFontProcessor.clone();
         this.gameSpecificPaintable = NullPaintable::getInstance();
-        this.sensorGameUpdateProcessor = SingleSensorGameUpdateProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::gyro::SensorGameUpdateProcessor::SensorGameUpdateProcessorDyn>>);
+        this.sensorGameUpdateProcessor = SingleSensorGameUpdateProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::gyro::SensorGameUpdateProcessor::SensorGameUpdateProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::gyro::SensorGameUpdateProcessor::SensorGameUpdateProcessorDyn>>);
         this.endGameInfo = EndGameInfo::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::EndGameInfo::EndGameInfoDyn>>);
-        this.startIntermissionInterface = Intermission::new().map(|reference| reference as Rc<RefCell<dyn IntermissionInterface>>);
-        this.endLevelIntermissionInterface = Intermission::new().map(|reference| reference as Rc<RefCell<dyn IntermissionInterface>>);
+        this.startIntermissionInterface = Intermission::new().map(|reference| reference as Rc<RefCell<dyn IntermissionInterface>>).map(|reference| reference as Rc<RefCell<dyn IntermissionInterface>>);
+        this.endLevelIntermissionInterface = Intermission::new().map(|reference| reference as Rc<RefCell<dyn IntermissionInterface>>).map(|reference| reference as Rc<RefCell<dyn IntermissionInterface>>);
         this.gameLayerManager = AllBinaryGameLayerManager::getNullInstance();
-        this.gameState = jcall!(this.gameStateFactory).NO_GAME_STATE.clone();
+        this.gameState = { let java_field = jcall!(this.gameStateFactory).NO_GAME_STATE.clone(); java_field }.clone();
         this.gameStateTimeHelper = TimeDelayHelper::new(0).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
         this.realHighScoresPaintable = HighScoresPaintable::new();
         this.highScoresPaintable = NullPaintable::getInstance();
-        this.localPlayerGameInputList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.hashtable = jcall!(this.stdUtil).NULL_TABLE.clone();
+        this.localPlayerGameInputList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.hashtable = { let java_field = jcall!(this.stdUtil).NULL_TABLE.clone(); java_field }.clone();
         this.gameInitializationInterfaceFactoryInterface = unsafe { crate::org::allbinary::game::init::BasicBuildGameInitializerFactory::BasicBuildGameInitializerFactory_NULL_BASE_BUILD_GMAE_INITIALIZER_FACTORY.clone() }.clone();
         this.touchButtonsPaintable = NullPaintable::getInstance();
         this.touchPaintable = NullPaintable::getInstance();
-        this.cheatProcessor = NoPlayerGameInput::getInstance();
+        this.cheatProcessor = NoPlayerGameInput::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>);
         this.gameInputProcessor = Processor::getInstance();
         this.endGameProcessor = Processor::getInstance();
         this.realEndGameProcessor = Processor::getInstance();
@@ -430,16 +432,16 @@ impl AllBinaryGameCanvas {
         this.startIntermissionPaintable = NullInitUpdatePaintable::getInstance();
         this.mainStateProcessor = Processor::getInstance();
         this.processGameProcessor = Processor::getInstance();
-        this.mainMenuInputProcessor = NoMenuInputProcessor::NoMenuInputProcessor::getInstance();
-        this.popupMenuInputProcessor = NoMenuInputProcessor::NoMenuInputProcessor::getInstance();
-        this.menuInputProcessor = NoMenuInputProcessor::NoMenuInputProcessor::getInstance();
+        this.mainMenuInputProcessor = NoMenuInputProcessor::NoMenuInputProcessor::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn>>);
+        this.popupMenuInputProcessor = NoMenuInputProcessor::NoMenuInputProcessor::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn>>);
+        this.menuInputProcessor = NoMenuInputProcessor::NoMenuInputProcessor::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn>>);
         this.menuForm = ScrollSelectionForm::getNullScrollSelectionForm();
         this.formPaintable = NullPaintable::getInstance();
         this.openMenuPaintable = NullPaintable::getInstance();
         this.menuPaintable = NullPaintable::getInstance();
         this.currentTouchInputFactory = NoButtonsTouchInputFactory::getInstance();
-        this.colorFillPaintable = jcall!(ColorFillPaintableFactory::getInstance()).getInstance2(jcall!(this.basicColorFactory).BLACK.clone(), true);
-        this.baseGameStatistics = GameStatisticsFactory::getInstance();
+        this.colorFillPaintable = jcall!(ColorFillPaintableFactory::getInstance()).getInstance2({ let java_field = jcall!(this.basicColorFactory).BLACK.clone(); java_field }.clone(), true);
+        this.baseGameStatistics = GameStatisticsFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::BaseGameStatistics::BaseGameStatisticsDyn>>);
         this.primaryPlayerQueue = PrimaryPlayerQueueFactory::getInstance();
         this.secondaryPlayerQueue = SecondaryPlayerQueueFactory::getInstance();
         this.BUILD_GAME = String::from("buildGame");
@@ -448,21 +450,19 @@ impl AllBinaryGameCanvas {
         this.basicMotionGesturesHandler = BasicMotionGesturesHandler::getInstance();
         this.gameKeyEventHandler = GameKeyEventHandler::getInstance();
         this.progressPaintable = ProgressCanvasFactory::getLazyInstance();
-        this.gameCanvasStartListener = NullDemoPaintable_NULL_DEMO_PAINTABLE.with(Clone::clone).clone();
-        this.rawGameInputProcessor = GameCanvasInputProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::InputProcessor::InputProcessorDyn>>);
-        this.rawInputProcessor = FormInputProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::InputProcessor::InputProcessorDyn>>);
+        this.gameCanvasStartListener = NullDemoPaintable_NULL_DEMO_PAINTABLE.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn DemoPaintableInterface>>);
         this.inputProcessor = this.getRawGameInputProcessor();
         this.YIELD_SLEEP = 100_i64;
         // super(...) is in the struct literal above
-        this.highScoresHelper = jcall!(highScoresFactoryInterface).createHighScoresHelper();
+        this.highScoresHelper = { let java_value = (jcall!(highScoresFactoryInterface).createHighScoresHelper()).clone(); java_value };
         this.gameInitializationInterfaceFactoryInterface = gameInitializationInterfaceFactoryInterface.clone();
         this.init(gameLayerManager.clone(), buffered.clone());
         this.highScoresFactoryInterface = highScoresFactoryInterface.clone();
-        if match (&jcall!(jcall!(this.gameLayerManager).getGameInfo()).getGameType(), &jcall!(this.gameTypeFactory).BOT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&jcall!(jcall!(this.gameLayerManager).getGameInfo()).getGameType(), &jcall!(this.gameTypeFactory).NONE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            this.gameBehavior = DemoGameBehavior::getInstance();
-            this.menuBehavior = BaseMenuBehavior::getInstance();
+        if match (&jcall!(jcall!(this.gameLayerManager).getGameInfo()).getGameType(), &{ let java_field = jcall!(this.gameTypeFactory).BOT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&jcall!(jcall!(this.gameLayerManager).getGameInfo()).getGameType(), &{ let java_field = jcall!(this.gameTypeFactory).NONE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            this.gameBehavior = { let java_value = (DemoGameBehavior::getInstance()).clone(); java_value };
+            this.menuBehavior = { let java_value = (BaseMenuBehavior::getInstance()).clone(); java_value };
         } else {
-            this.gameBehavior = BaseGameBehavior::BaseGameBehavior::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::DemoGameBehavior::DemoGameBehaviorDyn>>);
+            this.gameBehavior = { let java_value = (BaseGameBehavior::BaseGameBehavior::getInstance()).clone(); java_value };
             this.menuBehavior = this.getInGameMenuBehavior();
         }
         this.initPopupMenu();
@@ -471,33 +471,38 @@ impl AllBinaryGameCanvas {
         this
     }
 
-    pub fn new(mut commandListener: Option<Rc<RefCell<CommandListener>>>, mut gameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>, mut highScoresFactoryInterface: Option<Rc<RefCell<dyn HighScoresFactoryInterface>>>, mut gameInitializationInterfaceFactoryInterface: Option<Rc<RefCell<BasicBuildGameInitializerFactory>>>, mut buffered: bool) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(commandListener, gameLayerManager, highScoresFactoryInterface, gameInitializationInterfaceFactoryInterface, buffered))));
-            jcall!(DisplayChangeEventHandler::getInstance()).addListenerInterface((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+    pub fn new(mut commandListener: Option<Rc<RefCell<dyn CommandListener>>>, mut gameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>, mut highScoresFactoryInterface: Option<Rc<RefCell<dyn HighScoresFactoryInterface>>>, mut gameInitializationInterfaceFactoryInterface: Option<Rc<RefCell<BasicBuildGameInitializerFactory>>>, mut buffered: bool) -> Option<Rc<RefCell<Self>>> {
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(commandListener.clone(), gameLayerManager.clone(), highScoresFactoryInterface.clone(), gameInitializationInterfaceFactoryInterface.clone(), buffered.clone()))));
+        jcall!(this).gameRunnable = GameCanvasRunnable::new(this.clone().map(|reference| reference as Rc<RefCell<dyn AllBinaryGameCanvasDyn>>));
+        jcall!(this).gamePauseRunnable = GameCanvasPauseRunnable::new(this.clone().map(|reference| reference as Rc<RefCell<dyn AllBinaryGameCanvasDyn>>));
+        jcall!(this).updateMyFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        jcall!(this).rawGameInputProcessor = GameCanvasInputProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn AllBinaryGameCanvasDyn>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::InputProcessor::InputProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::InputProcessor::InputProcessorDyn>>);
+        jcall!(this).rawInputProcessor = FormInputProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn AllBinaryGameCanvasDyn>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::InputProcessor::InputProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::InputProcessor::InputProcessorDyn>>);
+            jcall!(DisplayChangeEventHandler::getInstance()).addListenerInterface(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
         this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.commonStrings).START.clone()).append(jcall!(self.canvasStrings).FD_WIDTH.clone()).appendint(((MyFontProcessor::defaultCharWidth(font.clone())) as i32)).append(jcall!(self.canvasStrings).FD_HEIGHT.clone()).appendint(((jcall!(font).getHeight()) as i32)).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.canvasStrings).UPDATE_MEASUREMENT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            self.fontHeightP = jcall!(font).getHeight();
+            let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone()).append({ let java_field = jcall!(self.canvasStrings).FD_WIDTH.clone(); java_field }.clone()).appendint(MyFontProcessor::defaultCharWidth(font.clone())).append({ let java_field = jcall!(self.canvasStrings).FD_HEIGHT.clone(); java_field }.clone()).appendint(jcall!(font).getHeight()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.canvasStrings).UPDATE_MEASUREMENT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            self.fontHeightP = { let java_value = (jcall!(font).getHeight()).clone(); java_value };
             jcall!(self.myFormUtil).updateMeasurement(graphics.clone());
             let mut popupMenuRectangle: Option<Rc<RefCell<Rectangle>>> = jcall!(self.myFormUtil).getPopupMenuRectangle();
-            let mut basicPopupMenuPaintable: Option<Rc<RefCell<BasicPopupMenuPaintable>>> = ((self.getOpenMenuPaintable()).clone() /* as BasicPopupMenuPaintable */);
+            let mut basicPopupMenuPaintable: Option<Rc<RefCell<BasicPopupMenuPaintable>>> = ((self.getOpenMenuPaintable()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<BasicPopupMenuPaintable>() }, "ClassCastException: not a BasicPopupMenuPaintable"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<BasicPopupMenuPaintable>) } }));
             jcall!(basicPopupMenuPaintable).init(popupMenuRectangle.clone());
-            if !match (&self.getPopupMenuInputProcessor(), &NoMenuInputProcessor::NoMenuInputProcessor::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                let mut popupMenuInputProcessor: Option<Rc<RefCell<PopupMenuInputProcessor>>> = ((self.getPopupMenuInputProcessor()).clone() /* as PopupMenuInputProcessor */);
-                jcall!(popupMenuInputProcessor).as_BasicMenuInputProcessor_mut().init(popupMenuRectangle.clone());
+            if !match (&self.getPopupMenuInputProcessor(), &{ let java_value = NoMenuInputProcessor::NoMenuInputProcessor::getInstance(); java_value }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                let mut popupMenuInputProcessor: Option<Rc<RefCell<PopupMenuInputProcessor>>> = ((self.getPopupMenuInputProcessor()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<PopupMenuInputProcessor>() }, "ClassCastException: not a PopupMenuInputProcessor"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<PopupMenuInputProcessor>) } }));
+                jcall!(popupMenuInputProcessor).init(popupMenuRectangle.clone());
             }
-            self.myFontProcessor = MyFontProcessor::getInstance();
+            self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.canvasStrings).ON_DISPLAY_CHANGE_EVENT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.canvasStrings).ON_DISPLAY_CHANGE_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -518,21 +523,21 @@ impl AllBinaryGameCanvas {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
     pub fn onDisplayChangeEvent(&mut self, mut displayChangeEvent: Option<Rc<RefCell<DisplayChangeEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.commonStrings).START.clone()).append(jcall!(DisplayInfoSingleton::getInstance()).toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.canvasStrings).UPDATE_MEASUREMENT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone()).append(jcall!(DisplayInfoSingleton::getInstance()).toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.canvasStrings).UPDATE_MEASUREMENT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             self.myFontProcessor = self.updateMyFontProcessor.clone();
             jcall!(self.menuBehavior).onDisplayChangeEvent(None /* Java this: a &mut self method has no Rc of itself */, displayChangeEvent.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.canvasStrings).ON_DISPLAY_CHANGE_EVENT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.canvasStrings).ON_DISPLAY_CHANGE_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -544,7 +549,7 @@ impl AllBinaryGameCanvas {
         let mut rectangle: Option<Rc<RefCell<Rectangle>>> = jcall!(self.formUtil).createFormRectangle();
         jcall!(self.menuForm).init(rectangle.clone(), formType.clone());
         if !match (&self.currentTouchInputFactory, &NoButtonsTouchInputFactory::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            { let java_receiver = self.touchButtonFactory.clone(); let java_arguments = (self.isPaused(), jcall!(self.currentTouchInputFactory).getList(),); jcall!(java_receiver).toggle(java_arguments.0, java_arguments.1); };
+            { let java_receiver = self.touchButtonFactory.clone(); let java_arguments = (self.isPaused(), { let java_argument = jcall!(self.currentTouchInputFactory).getList(); java_argument },); jcall!(java_receiver).toggle(java_arguments.0, java_arguments.1); };
         }
         self.myFontProcessor = self.updateMyFontProcessor.clone();
     }
@@ -569,9 +574,9 @@ impl AllBinaryGameCanvas {
         if match (&self.popupMenuInputProcessor, &NoMenuInputProcessor::NoMenuInputProcessor::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
             let mut popupMenuRectangle: Option<Rc<RefCell<Rectangle>>> = jcall!(self.myFormUtil).getPopupMenuRectangle();
-            if jcall!(features).isFeature(jcall!(self.touchFeatureFactory).TOUCH_ENABLED.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            if jcall!(features).isFeature({ let java_field = jcall!(self.touchFeatureFactory).TOUCH_ENABLED.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
                 { let java_arguments = (BasicPopupMenuPaintable::new(popupMenuRectangle.clone(), jcall!(self.gameLayerManager).getBackgroundBasicColor(), jcall!(self.gameLayerManager).getForegroundBasicColor()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>),); self.setOpenMenuPaintable(java_arguments.0) };
-                self.setPopupMenuInputProcessor(PopupMenuInputProcessor::new(BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>), -1, None /* Java this: a &mut self method has no Rc of itself */, popupMenuRectangle.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn>>));
+                self.setPopupMenuInputProcessor(PopupMenuInputProcessor::new(BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>), -1, None /* Java this: a &mut self method has no Rc of itself */, popupMenuRectangle.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn>>));
             }
         } else {
         }
@@ -584,9 +589,9 @@ impl AllBinaryGameCanvas {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initMenu"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initMenu"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -598,18 +603,18 @@ impl AllBinaryGameCanvas {
         let mut formType: Option<Rc<RefCell<FormType>>> = jcall!(FormTypeFactory::getInstance()).getFormType();
         let mut gameLimitedCommandTextItemArrayFactory: Option<Rc<RefCell<GameLimitedCommandTextItemArrayFactory>>> = GameLimitedCommandTextItemArrayFactory::getInstance();
         let mut commandTextItemArrayFactory: Option<Rc<RefCell<CommandTextItemArrayFactory>>> = jcall!(gameLimitedCommandTextItemArrayFactory).getCommandTextItemArrayFactory();
-        let mut items: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>> = jcall!(commandTextItemArrayFactory).getInstance(crate::java_into_object(self.getCommandStack()), jcall!(self.gameLayerManager).getBackgroundBasicColor(), jcall!(self.gameLayerManager).getForegroundBasicColor());
+        let mut items: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>> = jcall!(commandTextItemArrayFactory).getInstance(crate::java_into_object(self.getCommandStack()), { let java_argument = jcall!(self.gameLayerManager).getBackgroundBasicColor(); java_argument }, { let java_argument = jcall!(self.gameLayerManager).getForegroundBasicColor(); java_argument });
         let mut rectangle: Option<Rc<RefCell<Rectangle>>> = jcall!(self.formUtil).createFormRectangle();
-        { let java_arguments = (CommandCurrentSelectionFormFactory::getInstance(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), items.clone(), rectangle.clone(), formType.clone(), 25, false, jcall!(self.gameLayerManager).getBackgroundBasicColor(), jcall!(self.gameLayerManager).getForegroundBasicColor()),); self.setMenuForm(java_arguments.0) };
+        { let java_arguments = (CommandCurrentSelectionFormFactory::getInstance({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), items.clone(), rectangle.clone(), formType.clone(), 25, false, jcall!(self.gameLayerManager).getBackgroundBasicColor(), jcall!(self.gameLayerManager).getForegroundBasicColor()),); self.setMenuForm(java_arguments.0) };
         let mut scrollSelectionForm: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn>>> = self.getMenuForm();
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
-        if jcall!(features).isFeature(jcall!(self.touchFeatureFactory).TOUCH_ENABLED.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            self.mainMenuInputProcessor = PopupCommandFormInputProcessor::new(BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>), -1, None /* Java this: a &mut self method has no Rc of itself */, scrollSelectionForm.clone(), (self.getPopupMenuInputProcessor()).clone() /* as PopupMenuInputProcessor */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn>>);
+        if jcall!(features).isFeature({ let java_field = jcall!(self.touchFeatureFactory).TOUCH_ENABLED.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            self.mainMenuInputProcessor = PopupCommandFormInputProcessor::new(BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>), -1, None /* Java this: a &mut self method has no Rc of itself */, scrollSelectionForm.clone(), (self.getPopupMenuInputProcessor()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<PopupMenuInputProcessor>() }, "ClassCastException: not a PopupMenuInputProcessor"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<PopupMenuInputProcessor>) } })).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn>>);
         } else {
         }
         { let java_arguments = (self.getPopupMenuInputProcessor(),); self.setMenuInputProcessor(java_arguments.0) };
         if !match (&scrollSelectionForm, &ScrollSelectionFormNoneFactory::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            self.setFormPaintable(FormPaintable::new(scrollSelectionForm.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>));
+            self.setFormPaintable(FormPaintable::new(scrollSelectionForm.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::PaintableForm::PaintableFormDyn>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>));
         } else {
         }
         self.closeMenu();
@@ -622,9 +627,9 @@ impl AllBinaryGameCanvas {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initMenu"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initMenu"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -633,10 +638,10 @@ impl AllBinaryGameCanvas {
     // throws Exception
     pub fn updateMenu2(&mut self) {
         let mut scrollSelectionForm: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn>>> = self.getMenuForm();
-        jcall!(scrollSelectionForm).as_ScrollSelectionForm_mut().deleteAll();
+        jcall!(scrollSelectionForm).deleteAll();
         let mut gameLimitedCommandTextItemArrayFactory: Option<Rc<RefCell<GameLimitedCommandTextItemArrayFactory>>> = GameLimitedCommandTextItemArrayFactory::getInstance();
         let mut commandTextItemArrayFactory: Option<Rc<RefCell<CommandTextItemArrayFactory>>> = jcall!(gameLimitedCommandTextItemArrayFactory).getCommandTextItemArrayFactory();
-        let mut items: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>> = jcall!(commandTextItemArrayFactory).getInstance(crate::java_into_object(self.getCommandStack()), jcall!(self.gameLayerManager).getBackgroundBasicColor(), jcall!(self.gameLayerManager).getForegroundBasicColor());
+        let mut items: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>> = jcall!(commandTextItemArrayFactory).getInstance(crate::java_into_object(self.getCommandStack()), { let java_argument = jcall!(self.gameLayerManager).getBackgroundBasicColor(); java_argument }, { let java_argument = jcall!(self.gameLayerManager).getForegroundBasicColor(); java_argument });
         let mut size: i32 = (items.len() as i32).clone();
         for index in (0..size) {
             jcall!(scrollSelectionForm).append(items[(index) as usize].clone());
@@ -652,18 +657,18 @@ impl AllBinaryGameCanvas {
         jcall!(self.gameBehavior).pause(None /* Java this: a &mut self method has no Rc of itself */);
         self.closeMenu();
         self.base.pause();
-        { let java_receiver = self.touchButtonFactory.clone(); let java_arguments = (self.isPaused(), jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance(),); jcall!(java_receiver).toggle(java_arguments.0, java_arguments.1); };
+        { let java_receiver = self.touchButtonFactory.clone(); let java_arguments = (self.isPaused(), { let java_argument = jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance(); java_argument },); jcall!(java_receiver).toggle(java_arguments.0, java_arguments.1); };
         jcall!(self.tsUtil).gc();
     }
     
 
     // synchronized
     pub fn unPause(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameStrings).UNPAUSE.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameStrings).UNPAUSE.clone(); java_field }.clone());
         self.closeMenu();
         jcall!(self.tsUtil).gc();
         self.base.unPause();
-        { let java_receiver = self.touchButtonFactory.clone(); let java_arguments = (self.isPaused(), jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance(),); jcall!(java_receiver).toggle(java_arguments.0, java_arguments.1); };
+        { let java_receiver = self.touchButtonFactory.clone(); let java_arguments = (self.isPaused(), { let java_argument = jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance(); java_argument },); jcall!(java_receiver).toggle(java_arguments.0, java_arguments.1); };
         jcall!(self.gameBehavior).unPause(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
@@ -685,23 +690,23 @@ impl AllBinaryGameCanvas {
 
     // throws Exception
     pub fn popupMenu2(&mut self) {
-        { let java_receiver = self.primaryPlayerQueue.clone(); let java_arguments = (SelectSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>),); jcall!(java_receiver).add(java_arguments.0); };
+        { let java_receiver = self.primaryPlayerQueue.clone(); let java_arguments = (SelectSound::getInstance(),); jcall!(java_receiver).add(java_arguments.0); };
         { let java_arguments = (self.getFormPaintable(),); self.setMenuPaintable(java_arguments.0) };
-        self.setMenuInputProcessor(self.mainMenuInputProcessor.clone());
-        jcall!(self.basicMotionGesturesHandler).addListenerInterface(self.mainMenuInputProcessor.clone());
-        jcall!(self.gameKeyEventHandler).addListener(self.mainMenuInputProcessor.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+        { let java_arguments = (self.mainMenuInputProcessor.clone(),); self.setMenuInputProcessor(java_arguments.0) };
+        jcall!(self.basicMotionGesturesHandler).addListenerInterface(self.mainMenuInputProcessor.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of BasicMenuInputProcessor does not have EventListenerInterface as a base trait") }));
+        jcall!(self.gameKeyEventHandler).addListener(self.mainMenuInputProcessor.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of BasicMenuInputProcessor does not have EventListenerInterface as a base trait") }));
     }
     
 
     // throws Exception
     pub fn toggleMenu(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameStrings).TOGGLE_MENU.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameStrings).TOGGLE_MENU.clone(); java_field }.clone());
         if match (&self.getMenuPaintable(), &self.getOpenMenuPaintable()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             self.pause();
             self.updateMenu();
             self.popupMenu();
         } else if match (&self.getMenuPaintable(), &self.getFormPaintable()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            { let java_receiver = self.primaryPlayerQueue.clone(); let java_arguments = (SelectSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>),); jcall!(java_receiver).add(java_arguments.0); };
+            { let java_receiver = self.primaryPlayerQueue.clone(); let java_arguments = (SelectSound::getInstance(),); jcall!(java_receiver).add(java_arguments.0); };
             self.unPause();
         }
     }
@@ -714,21 +719,21 @@ impl AllBinaryGameCanvas {
 
     pub fn closeMenu2(&mut self) {
         { let java_arguments = (self.getOpenMenuPaintable(),); self.setMenuPaintable(java_arguments.0) };
-        jcall!(self.basicMotionGesturesHandler).removeListener(self.mainMenuInputProcessor.clone());
-        jcall!(self.gameKeyEventHandler).removeListener(self.mainMenuInputProcessor.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+        jcall!(self.basicMotionGesturesHandler).removeListener(self.mainMenuInputProcessor.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of BasicMenuInputProcessor does not have EventListenerInterface as a base trait") }));
+        jcall!(self.gameKeyEventHandler).removeListener(self.mainMenuInputProcessor.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of BasicMenuInputProcessor does not have EventListenerInterface as a base trait") }));
         { let java_arguments = (self.getPopupMenuInputProcessor(),); self.setMenuInputProcessor(java_arguments.0) };
     }
     
 
     pub fn open(&mut self) {
-        jcall!(self.basicMotionGesturesHandler).addListenerInterface(self.menuInputProcessor.clone());
-        jcall!(self.gameKeyEventHandler).addListener(self.menuInputProcessor.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+        jcall!(self.basicMotionGesturesHandler).addListenerInterface(self.menuInputProcessor.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of BasicMenuInputProcessor does not have EventListenerInterface as a base trait") }));
+        jcall!(self.gameKeyEventHandler).addListener(self.menuInputProcessor.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of BasicMenuInputProcessor does not have EventListenerInterface as a base trait") }));
     }
     
 
     pub fn close(&mut self) {
-        jcall!(self.basicMotionGesturesHandler).removeListener(self.menuInputProcessor.clone());
-        jcall!(self.gameKeyEventHandler).removeListener(self.menuInputProcessor.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+        jcall!(self.basicMotionGesturesHandler).removeListener(self.menuInputProcessor.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of BasicMenuInputProcessor does not have EventListenerInterface as a base trait") }));
+        jcall!(self.gameKeyEventHandler).removeListener(self.menuInputProcessor.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of BasicMenuInputProcessor does not have EventListenerInterface as a base trait") }));
         jcall!(self.primaryPlayerQueue).clear();
         jcall!(self.secondaryPlayerQueue).clear();
     }
@@ -758,27 +763,27 @@ impl AllBinaryGameCanvas {
         self.setLayerManager(gameLayerManager.clone());
         if !buffered {
             let mut BUFF_MESSAGE: String = String::from("XXX Not Buffering Causes Concurrency Issues XXX");
-            jcall!(self.logUtil).putF(BUFF_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone());
+            jcall!(self.logUtil).putF(BUFF_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Buffering is disabled"))));
         }
         { let java_arguments = (Processor::getInstance(),); self.setGameInputProcessor(java_arguments.0) };
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
-        if jcall!(features).isFeature(jcall!(GameFeatureFactory::getInstance()).CHEATING.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        if jcall!(features).isFeature({ let java_field = jcall!(GameFeatureFactory::getInstance()).CHEATING.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             self.isCheating = true;
             self.cheatProcessor = CheatGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>);
-            jcall!(self.gameKeyEventHandler).addListener(self.cheatProcessor.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+            jcall!(self.gameKeyEventHandler).addListener(self.cheatProcessor.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of PlayerGameInput does not have EventListenerInterface as a base trait") }));
         } else {
             self.isCheating = false;
-            self.cheatProcessor = NoPlayerGameInput::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>);
+            self.cheatProcessor = { let java_value = (NoPlayerGameInput::getInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>);
         }
         self.realEndGameProcessor = EndGameProcessor::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
         { let java_arguments = (Processor::getInstance(),); self.setEndGameProcessor(java_arguments.0) };
         self.realStartIntermissionProcessor = StartIntermissionProcessor::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
-        self.startIntermissionProcessor = Processor::getInstance();
+        self.startIntermissionProcessor = { let java_value = (Processor::getInstance()).clone(); java_value };
         self.setEndGameStatePaintable(EndGamePaintable::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>));
-        { let java_arguments = (NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>),); self.setEndGamePaintable(java_arguments.0) };
-        { let java_arguments = (NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>),); self.setIntermissionPaintable(java_arguments.0) };
+        { let java_arguments = (NullPaintable::getInstance(),); self.setEndGamePaintable(java_arguments.0) };
+        { let java_arguments = (NullPaintable::getInstance(),); self.setIntermissionPaintable(java_arguments.0) };
         jcall!(self.getStartIntermissionInterface()).setListener(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
@@ -787,19 +792,19 @@ impl AllBinaryGameCanvas {
         if enable {
             self.startIntermissionProcessor = self.realStartIntermissionProcessor.clone();
         } else {
-            self.startIntermissionProcessor = Processor::getInstance();
+            self.startIntermissionProcessor = { let java_value = (Processor::getInstance()).clone(); java_value };
         }
         if enable {
             { let java_arguments = (self.getStartIntermissionPaintable().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>),); self.setIntermissionPaintable(java_arguments.0) };
         } else {
-            { let java_arguments = (NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>),); self.setIntermissionPaintable(java_arguments.0) };
+            { let java_arguments = (NullPaintable::getInstance(),); self.setIntermissionPaintable(java_arguments.0) };
         }
     }
     
 
     // throws Exception
     pub fn mediaInit(&mut self) {
-        ForcedLogUtil::log(jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
@@ -811,20 +816,20 @@ impl AllBinaryGameCanvas {
         jcall!(GameInitializationUtil::getInstance()).initGame(abeClientInformation.clone(), None /* Java this: a &mut self method has no Rc of itself */, self.gameInitializationInterfaceFactoryInterface.clone());
         let mut gameFeatureFactory: Option<Rc<RefCell<GameFeatureFactory>>> = GameFeatureFactory::getInstance();
         let mut changedGameFeatureListener: Option<Rc<RefCell<ChangedGameFeatureListener>>> = ChangedGameFeatureListener::getInstance();
-        if jcall!(changedGameFeatureListener).isChangedFeature(jcall!(gameFeatureFactory).SOUND.clone()) {
+        if jcall!(changedGameFeatureListener).isChangedFeature({ let java_field = jcall!(gameFeatureFactory).SOUND.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Sound Changing To: ")).appendboolean(jcall!(features).isFeature(jcall!(gameFeatureFactory).SOUND.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initConfigurable"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Sound Changing To: ")).appendboolean(jcall!(features).isFeature({ let java_field = jcall!(gameFeatureFactory).SOUND.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("initConfigurable"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             self.mediaInit();
-            jcall!(changedGameFeatureListener).remove(jcall!(gameFeatureFactory).SOUND.clone());
+            jcall!(changedGameFeatureListener).remove({ let java_field = jcall!(gameFeatureFactory).SOUND.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
         }
         let mut sensorFeatureFactory: Option<Rc<RefCell<SensorFeatureFactory>>> = SensorFeatureFactory::getInstance();
-        if jcall!(changedGameFeatureListener).isChangedFeature(jcall!(sensorFeatureFactory).ORIENTATION_SENSORS.clone()) || jcall!(changedGameFeatureListener).isChangedFeature(jcall!(sensorFeatureFactory).NO_ORIENTATION.clone()) || jcall!(changedGameFeatureListener).isChangedFeature(jcall!(sensorFeatureFactory).SIMULATED_ORIENTATION_SENSORS.clone()) {
-            jcall!(changedGameFeatureListener).remove(jcall!(sensorFeatureFactory).NO_ORIENTATION.clone());
-            jcall!(changedGameFeatureListener).remove(jcall!(sensorFeatureFactory).ORIENTATION_SENSORS.clone());
-            jcall!(changedGameFeatureListener).remove(jcall!(sensorFeatureFactory).SIMULATED_ORIENTATION_SENSORS.clone());
+        if jcall!(changedGameFeatureListener).isChangedFeature({ let java_field = jcall!(sensorFeatureFactory).ORIENTATION_SENSORS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(changedGameFeatureListener).isChangedFeature({ let java_field = jcall!(sensorFeatureFactory).NO_ORIENTATION.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(changedGameFeatureListener).isChangedFeature({ let java_field = jcall!(sensorFeatureFactory).SIMULATED_ORIENTATION_SENSORS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            jcall!(changedGameFeatureListener).remove({ let java_field = jcall!(sensorFeatureFactory).NO_ORIENTATION.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
+            jcall!(changedGameFeatureListener).remove({ let java_field = jcall!(sensorFeatureFactory).ORIENTATION_SENSORS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
+            jcall!(changedGameFeatureListener).remove({ let java_field = jcall!(sensorFeatureFactory).SIMULATED_ORIENTATION_SENSORS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
         }
         let mut resourceLoadingLevelFactory: Option<Rc<RefCell<ResourceLoadingLevelFactory>>> = ResourceLoadingLevelFactory::getInstance();
-        self.loadResourceLoadingLevel(jcall!(resourceLoadingLevelFactory).LOAD_GAME.clone());
+        { let java_arguments = ({ let java_field = jcall!(resourceLoadingLevelFactory).LOAD_GAME.clone(); java_field }.clone(),); self.loadResourceLoadingLevel(java_arguments.0) };
     }
     
 
@@ -840,10 +845,10 @@ impl AllBinaryGameCanvas {
 
     // throws Exception
     pub fn initTouch(&mut self) {
-        let mut gameInitializedEvent: Option<Rc<RefCell<GameInitializedEvent>>> = jcall!(GameInitializationUtil::getInstance()).EVENT.clone();
+        let mut gameInitializedEvent: Option<Rc<RefCell<GameInitializedEvent>>> = { let java_field = jcall!(GameInitializationUtil::getInstance()).EVENT.clone(); java_field }.clone();
         let mut resourceLoadingLevelFactory: Option<Rc<RefCell<ResourceLoadingLevelFactory>>> = ResourceLoadingLevelFactory::getInstance();
-        jcall!(gameInitializedEvent).setResourceLoadingLevel(jcall!(resourceLoadingLevelFactory).LOAD_TOUCH.clone());
-        jcall!(GameInitializedEventHandler::getInstance()).fireEvent(gameInitializedEvent.clone());
+        jcall!(gameInitializedEvent).setResourceLoadingLevel({ let java_field = jcall!(resourceLoadingLevelFactory).LOAD_TOUCH.clone(); java_field }.clone());
+        jcall!(GameInitializedEventHandler::getInstance()).fireEvent(gameInitializedEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
         jcall!(self.touchButtonFactory).defaultList();
         self.updateTouch();
         self.postInitTouch();
@@ -854,8 +859,8 @@ impl AllBinaryGameCanvas {
     pub fn updateCurrentTouchInputFactory(&mut self, mut nextTouchInput: Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::BaseTouchInput::BaseTouchInputDyn>>>) {
         if !match (&nextTouchInput, &self.currentTouchInputFactory) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             self.currentTouchInputFactory = nextTouchInput.clone();
-            PreLogUtil::put(jcall!(self.currentTouchInputFactory).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).UDPATE_CURRENT_TOUCH_INPUT_FACTORY.clone());
-            { let java_receiver = self.touchButtonFactory.clone(); let java_arguments = (self.isPaused(), jcall!(self.currentTouchInputFactory).getList(),); jcall!(java_receiver).toggle(java_arguments.0, java_arguments.1); };
+            PreLogUtil::put(jcall!(self.currentTouchInputFactory).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).UDPATE_CURRENT_TOUCH_INPUT_FACTORY.clone(); java_field }.clone());
+            { let java_receiver = self.touchButtonFactory.clone(); let java_arguments = (self.isPaused(), { let java_argument = jcall!(self.currentTouchInputFactory).getList(); java_argument },); jcall!(java_receiver).toggle(java_arguments.0, java_arguments.1); };
         }
     }
     
@@ -869,9 +874,9 @@ impl AllBinaryGameCanvas {
     // throws Exception
     pub fn updateTouch2(&mut self) {
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
-        if jcall!(features).isFeature(jcall!(self.touchFeatureFactory).AUTO_HIDE_SHOW_SCREEN_BUTTONS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            if jcall!(jcall!(self.gameLayerManager).getGameInfo()).getCurrentLevel() - self.getStartLevel() == 1 {
-                { let java_arguments = (NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>),); self.setTouchPaintableP(java_arguments.0) };
+        if jcall!(features).isFeature({ let java_field = jcall!(self.touchFeatureFactory).AUTO_HIDE_SHOW_SCREEN_BUTTONS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            if { let java_value = jcall!(jcall!(self.gameLayerManager).getGameInfo()).getCurrentLevel(); java_value } - self.getStartLevel() == 1 {
+                { let java_arguments = (NullPaintable::getInstance(),); self.setTouchPaintableP(java_arguments.0) };
             }
         }
     }
@@ -884,7 +889,7 @@ impl AllBinaryGameCanvas {
     }
     
 
-    pub fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<CommandListener>>>) {
+    pub fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<dyn CommandListener>>>) {
         self.removeAllCommands();
         self.addCommands();
         self.setCommandListener(cmdListener.clone());
@@ -895,34 +900,34 @@ impl AllBinaryGameCanvas {
         let mut gameCommandsFactory: Option<Rc<RefCell<GameCommandsFactory>>> = GameCommandsFactory::getInstance();
         let mut myCommandsFactory: Option<Rc<RefCell<MyCommandsFactory>>> = MyCommandsFactory::getInstance();
         if !match (&DebugFactory::getInstance(), &NoDebug::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            self.addCommand(jcall!(gameCommandsFactory).START_TRACE.clone());
+            { let java_arguments = ({ let java_field = jcall!(gameCommandsFactory).START_TRACE.clone(); java_field }.clone(),); self.addCommand(java_arguments.0) };
         }
-        self.addCommand(jcall!(gameCommandsFactory).RESTART_COMMAND.clone());
-        self.addCommand(jcall!(myCommandsFactory).PAUSE_COMMAND.clone());
-        self.addCommand(jcall!(gameCommandsFactory).QUIT_COMMAND.clone());
-        let mut isOverScan: bool = jcall!(jcall!(OperatingSystemFactory::getInstance()).getOperatingSystemInstance()).isOverScan();
+        { let java_arguments = ({ let java_field = jcall!(gameCommandsFactory).RESTART_COMMAND.clone(); java_field }.clone(),); self.addCommand(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(myCommandsFactory).PAUSE_COMMAND.clone(); java_field }.clone(),); self.addCommand(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(gameCommandsFactory).QUIT_COMMAND.clone(); java_field }.clone(),); self.addCommand(java_arguments.0) };
+        let mut isOverScan: bool = jcall!(jcall!(OperatingSystemFactory::getInstance()).getOperatingSystemInstance()).as_GenericOperatingSystem_mut().isOverScan();
         if J2MEUtil::isHTML() {
         } else if unsafe { crate::org::allbinary::game::layer::SWTUtil::SWTUtil_isSWT.clone() } {
         } else if !isOverScan {
             if jcall!(TouchScreenFactory::getInstance()).isTouch() && jcall!(InGameFeatures::new()).isAny() {
-                self.addCommand(crate::org::allbinary::game::configuration::InGameOptionsForm::InGameOptionsForm_DISPLAY.with(Clone::clone).clone());
+                { let java_arguments = (crate::org::allbinary::game::configuration::InGameOptionsForm::InGameOptionsForm_DISPLAY.with(Clone::clone).clone(),); self.addCommand(java_arguments.0) };
             }
-            self.addCommand(jcall!(gameCommandsFactory).SAVE.clone());
-            self.addCommand(jcall!(gameCommandsFactory).DISPLAY_LOAD_FORM.clone());
+            { let java_arguments = ({ let java_field = jcall!(gameCommandsFactory).SAVE.clone(); java_field }.clone(),); self.addCommand(java_arguments.0) };
+            { let java_arguments = ({ let java_field = jcall!(gameCommandsFactory).DISPLAY_LOAD_FORM.clone(); java_field }.clone(),); self.addCommand(java_arguments.0) };
         }
     }
     
 
-    pub fn itemStateChanged(&mut self, mut item: Option<Rc<RefCell<Item>>>) {
+    pub fn itemStateChanged(&mut self, mut item: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Item::ItemDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut itemLabel: String = jcall!(item).getLabel();
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.commonLabels).ITEM_LABEL.clone()).append(itemLabel.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("itemStateChanged"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.commonLabels).ITEM_LABEL.clone(); java_field }.clone()).append(itemLabel.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("itemStateChanged"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             if (item).is_some() /* instanceof ChoiceGroup */ {
                 let mut gameFeatureUtil: Option<Rc<RefCell<GameFeatureUtil>>> = GameFeatureUtil::getInstance();
                 if jcall!(gameFeatureUtil).isExclusive(itemLabel.clone()) {
-                    jcall!(gameFeatureUtil).updateExclusiveForChoiceGroup((item).clone() /* as ChoiceGroup */);
+                    jcall!(gameFeatureUtil).updateExclusiveForChoiceGroup((|| -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::ChoiceGroup::ChoiceGroupDyn>>> { panic!("ClassCastException: a Rust dyn Item cannot be cast to ChoiceGroup") })());
                 } else {
-                    jcall!(gameFeatureUtil).updateMultiple((item).clone() /* as ChoiceGroup */);
+                    jcall!(gameFeatureUtil).updateMultiple((|| -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::ChoiceGroup::ChoiceGroupDyn>>> { panic!("ClassCastException: a Rust dyn Item cannot be cast to ChoiceGroup") })());
                 }
             }
             jcall!(self.sensorGameUpdateProcessor).process(crate::java_into_object(self.gameLayerManager.clone()));
@@ -932,9 +937,9 @@ impl AllBinaryGameCanvas {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("itemStateChanged"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("itemStateChanged"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -948,15 +953,15 @@ impl AllBinaryGameCanvas {
 
     pub fn updateScreenButtonPaintable2(&mut self) {
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
-        if jcall!(features).isFeature(jcall!(self.touchFeatureFactory).AUTO_HIDE_SHOW_SCREEN_BUTTONS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        if jcall!(features).isFeature({ let java_field = jcall!(self.touchFeatureFactory).AUTO_HIDE_SHOW_SCREEN_BUTTONS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             { let java_arguments = (self.getTouchButtonsPaintable(),); self.setTouchPaintableP(java_arguments.0) };
             { let java_arguments = (jcall!(jcall!(self.gameLayerManager).getGameInfo()).getCurrentLevel(),); self.setStartLevel(java_arguments.0) };
-        } else if jcall!(features).isFeature(jcall!(self.touchFeatureFactory).SHOW_SCREEN_BUTTONS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        } else if jcall!(features).isFeature({ let java_field = jcall!(self.touchFeatureFactory).SHOW_SCREEN_BUTTONS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             { let java_arguments = (self.getTouchButtonsPaintable(),); self.setTouchPaintableP(java_arguments.0) };
-        } else if jcall!(features).isFeature(jcall!(self.touchFeatureFactory).HIDE_SCREEN_BUTTONS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            { let java_arguments = (NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>),); self.setTouchPaintableP(java_arguments.0) };
+        } else if jcall!(features).isFeature({ let java_field = jcall!(self.touchFeatureFactory).HIDE_SCREEN_BUTTONS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            { let java_arguments = (NullPaintable::getInstance(),); self.setTouchPaintableP(java_arguments.0) };
         } else {
-            { let java_arguments = (NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>),); self.setTouchPaintableP(java_arguments.0) };
+            { let java_arguments = (NullPaintable::getInstance(),); self.setTouchPaintableP(java_arguments.0) };
         }
     }
     
@@ -985,10 +990,10 @@ impl AllBinaryGameCanvas {
 
     // throws Exception
     pub fn processGameOver(&mut self) {
-        PreLogUtil::put(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameStrings).SET_GAME_OVER.clone());
+        PreLogUtil::put({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameStrings).SET_GAME_OVER.clone(); java_field }.clone());
         self.setGameOver(true);
         self.removePauseCommand();
-        self.setGameState(jcall!(self.gameStateFactory).SHOW_END_RESULT_GAME_STATE.clone());
+        { let java_arguments = ({ let java_field = jcall!(self.gameStateFactory).SHOW_END_RESULT_GAME_STATE.clone(); java_field }.clone(),); self.setGameState(java_arguments.0) };
         { let java_arguments = (self.getEndGameStatePaintable(),); self.setEndGamePaintable(java_arguments.0) };
     }
     
@@ -1015,7 +1020,7 @@ impl AllBinaryGameCanvas {
 
     // throws Exception
     pub fn setGameState(&mut self, mut gameState: Option<Rc<RefCell<GameState>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.gameStrings).GAME_STATE.clone()).append(jcall!(self.stringUtil).toString(crate::java_into_object(gameState.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameStrings).SET_GAME_STATE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.gameStrings).GAME_STATE.clone(); java_field }.clone()).append(jcall!(self.stringUtil).toString(crate::java_into_object(gameState.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameStrings).SET_GAME_STATE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         self.gameState = gameState.clone();
         jcall!(self.gameStateTimeHelper).setStartTimeTNT();
         self.updateEndGameProcessor();
@@ -1028,14 +1033,14 @@ impl AllBinaryGameCanvas {
     pub fn updateGameState(&mut self) {
         let mut gameAdState: Option<Rc<RefCell<GameAdState>>> = jcall!(self.gameAdStateFactory).getCurrentInstance();
         jcall!(gameAdState).processAdState(self.gameState.clone(), jcall!(jcall!(self.gameLayerManager).getGameInfo()).getGameType());
-        if !match (&self.gameState, &jcall!(self.gameStateFactory).PLAYING_GAME_STATE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if !match (&self.gameState, &{ let java_field = jcall!(self.gameStateFactory).PLAYING_GAME_STATE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             jcall!(gameAdState).processPageAdState();
         }
     }
     
 
     pub fn updateGameKeyEventProcessor(&mut self) {
-        if !match (&self.getGameState(), &jcall!(self.gameStateFactory).PLAYING_GAME_STATE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || self.isCheating {
+        if !match (&self.getGameState(), &{ let java_field = jcall!(self.gameStateFactory).PLAYING_GAME_STATE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || self.isCheating {
         } else {
         }
     }
@@ -1053,7 +1058,7 @@ impl AllBinaryGameCanvas {
 
     pub fn removeAllGameKeyInputListeners2(&mut self) {
         jcall!(self.logUtil).putF(String::from("Remove PlayerInput Listeners"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeAllGameKeyInputListeners"));
-        for index in (0..=jcall!(self.localPlayerGameInputList).size() - 1).rev() {
+        for index in (0..={ let java_bound = jcall!(self.localPlayerGameInputList).size() - 1; java_bound }).rev() {
             let mut playerGameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>> = { let java_object = (jcall!(self.localPlayerGameInputList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>>>().expect("ClassCastException").clone()) };
             self.removeKeyInputListener(playerGameInput.clone());
             jcall!(playerGameInput).removeNonAIInputGameKeyEvents();
@@ -1062,7 +1067,7 @@ impl AllBinaryGameCanvas {
     
 
     pub fn removeKeyInputListener(&mut self, mut playerGameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>>) {
-        jcall!(self.gameKeyEventHandler).removeListener(playerGameInput.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+        jcall!(self.gameKeyEventHandler).removeListener(playerGameInput.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of PlayerGameInput does not have EventListenerInterface as a base trait") }));
     }
     
 
@@ -1074,8 +1079,8 @@ impl AllBinaryGameCanvas {
 
     // throws Exception
     pub fn updateEndGameProcessor2(&mut self) {
-        if match (&self.getGameState(), &jcall!(self.gameStateFactory).SHOW_END_RESULT_GAME_STATE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&self.getGameState(), &jcall!(self.gameStateFactory).SHOW_HIGH_SCORE_GAME_STATE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            self.setEndGameProcessor(self.realEndGameProcessor.clone());
+        if match (&self.getGameState(), &{ let java_field = jcall!(self.gameStateFactory).SHOW_END_RESULT_GAME_STATE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&self.getGameState(), &{ let java_field = jcall!(self.gameStateFactory).SHOW_HIGH_SCORE_GAME_STATE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            { let java_arguments = (self.realEndGameProcessor.clone(),); self.setEndGameProcessor(java_arguments.0) };
         } else {
             { let java_arguments = (Processor::getInstance(),); self.setEndGameProcessor(java_arguments.0) };
         }
@@ -1089,7 +1094,7 @@ impl AllBinaryGameCanvas {
 
     // throws Exception
     pub fn cleanupGame(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CLEANUP.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CLEANUP.clone(); java_field }.clone());
         let mut progressCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn>>> = ProgressCanvasFactory::getInstance();
         jcall!(progressCanvas).addNormalPortion(10, String::from("Cleaning Up"));
         jcall!(self.primaryPlayerQueue).clear();
@@ -1100,17 +1105,17 @@ impl AllBinaryGameCanvas {
 
     // throws Exception
     pub fn loadResourceLoadingLevel(&mut self, mut resourceLoadingLevel: Option<Rc<RefCell<ResourceLoadingLevel>>>) {
-        let mut gameInitializedEvent: Option<Rc<RefCell<GameInitializedEvent>>> = jcall!(GameInitializationUtil::getInstance()).EVENT.clone();
+        let mut gameInitializedEvent: Option<Rc<RefCell<GameInitializedEvent>>> = { let java_field = jcall!(GameInitializationUtil::getInstance()).EVENT.clone(); java_field }.clone();
         jcall!(gameInitializedEvent).setResourceLoadingLevel(resourceLoadingLevel.clone());
-        jcall!(GameInitializedEventHandler::getInstance()).fireEvent(gameInitializedEvent.clone());
+        jcall!(GameInitializedEventHandler::getInstance()).fireEvent(gameInitializedEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
     }
     
 
     // throws Exception
     pub fn loadResources(&mut self, mut level: i32) {
-        let mut gameInitializedEvent: Option<Rc<RefCell<GameInitializedEvent>>> = jcall!(GameInitializationUtil::getInstance()).EVENT.clone();
+        let mut gameInitializedEvent: Option<Rc<RefCell<GameInitializedEvent>>> = { let java_field = jcall!(GameInitializationUtil::getInstance()).EVENT.clone(); java_field }.clone();
         jcall!(gameInitializedEvent).setLevel(level.clone());
-        jcall!(GameInitializedEventHandler::getInstance()).fireEvent(gameInitializedEvent.clone());
+        jcall!(GameInitializedEventHandler::getInstance()).fireEvent(gameInitializedEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
     }
     
 
@@ -1130,10 +1135,10 @@ impl AllBinaryGameCanvas {
         self.updateTouch();
         jcall!(progressCanvas).addNormalPortion(portion.clone(), String::from("High Scores"));
         { let java_receiver = self.highScoresFactoryInterface.clone(); let java_arguments = (jcall!(self.gameLayerManager).getGameInfo(), self.highScoresHelper.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::score::HighScoresResultsListener::HighScoresResultsListener>>),); jcall!(java_receiver).fetchHighScores(java_arguments.0, java_arguments.1); };
-        { let java_arguments = (NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>),); self.setHighScoresPaintable(java_arguments.0) };
+        { let java_arguments = (NullPaintable::getInstance(),); self.setHighScoresPaintable(java_arguments.0) };
         jcall!(progressCanvas).addNormalPortion(portion.clone(), String::from("Finishing."));
-        jcall!(self.getEndGameInfoP()).update(jcall!(self.getLayerManager()).getGameInfo(), None /* Java this: a &mut self method has no Rc of itself */);
-        self.isSingleKeyRepeatableProcessing = jcall!(features).isFeature(jcall!(InputFeatureFactory::getInstance()).SINGLE_KEY_REPEAT_PRESS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
+        jcall!(self.getEndGameInfoP()).update({ let java_argument = jcall!(self.getLayerManager()).getGameInfo(); java_argument }, None /* Java this: a &mut self method has no Rc of itself */);
+        self.isSingleKeyRepeatableProcessing = { let java_value = (jcall!(features).isFeature({ let java_field = jcall!(InputFeatureFactory::getInstance()).SINGLE_KEY_REPEAT_PRESS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>))).clone(); java_value };
         self.setGameOver(false);
         jcall!(progressCanvas).addNormalPortion(portion.clone(), String::from("Finishing.."));
         self.updateColor();
@@ -1143,7 +1148,7 @@ impl AllBinaryGameCanvas {
         }
         jcall!(progressCanvas).addNormalPortion(portion.clone(), String::from("Finishing..."));
         if self.isMainCanvas() || !self.isInitialized() {
-            if jcall!(features).isFeature(jcall!(MainFeatureFactory::getInstance()).LOAD_ONDEMAND.clone()) {
+            if jcall!(features).isFeature({ let java_field = jcall!(MainFeatureFactory::getInstance()).LOAD_ONDEMAND.clone(); java_field }.clone()) {
                 if self.getCustomCommandListener().is_some() {
                     jcall!(progressCanvas).end();
                 }
@@ -1164,11 +1169,11 @@ impl AllBinaryGameCanvas {
     
 
     pub fn buildGame2(&mut self) {
-        PreLogUtil::put(jcall!(StringMaker::new()).append(jcall!(self.gameInputStrings).ENABLE_PLAYER_GAME_INPUTS.clone()).appendint(jcall!(self.localPlayerGameInputList).size()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.BUILD_GAME.clone());
+        PreLogUtil::put(jcall!(StringMaker::new()).append({ let java_field = jcall!(self.gameInputStrings).ENABLE_PLAYER_GAME_INPUTS.clone(); java_field }.clone()).appendint(jcall!(self.localPlayerGameInputList).size()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.BUILD_GAME.clone());
         let mut playerGameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>> = None;
-        for index in (0..=jcall!(self.localPlayerGameInputList).size() - 1).rev() {
-            playerGameInput = { let java_object = (jcall!(self.localPlayerGameInputList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>>>().expect("ClassCastException").clone()) };
-            PreLogUtil::put(jcall!(StringMaker::new()).append(jcall!(self.gameInputStrings).ENABLE_PLAYER_GAME_INPUT.clone()).append(jcall!(playerGameInput).as_PlayerGameInput_mut().toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.BUILD_GAME.clone());
+        for index in (0..={ let java_bound = jcall!(self.localPlayerGameInputList).size() - 1; java_bound }).rev() {
+            playerGameInput = { let java_value = ({ let java_object = (jcall!(self.localPlayerGameInputList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            PreLogUtil::put(jcall!(StringMaker::new()).append({ let java_field = jcall!(self.gameInputStrings).ENABLE_PLAYER_GAME_INPUT.clone(); java_field }.clone()).append(jcall!(playerGameInput).as_PlayerGameInput_mut().toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.BUILD_GAME.clone());
             jcall!(playerGameInput).removeNonAIInputGameKeyEvents();
             self.addKeyInputListener(playerGameInput.clone());
         }
@@ -1176,7 +1181,7 @@ impl AllBinaryGameCanvas {
     
 
     pub fn addKeyInputListener(&mut self, mut playerGameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>>) {
-        jcall!(GameKeyEventHandler::getInstance()).addListenerForPlayer(playerGameInput.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>), jcall!(playerGameInput).getPlayerInputId());
+        jcall!(GameKeyEventHandler::getInstance()).addListenerForPlayer(playerGameInput.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of PlayerGameInput does not have EventListenerInterface as a base trait") }), jcall!(playerGameInput).getPlayerInputId());
     }
     
 
@@ -1187,11 +1192,11 @@ impl AllBinaryGameCanvas {
 
     // throws Exception
     pub fn loadState(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).LOAD.clone());
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = self.getLoadStateHashtable();
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).LOAD.clone(); java_field }.clone());
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = self.getLoadStateHashtable();
         if hashtable.is_some() && jcall!(hashtable).size() > 0 {
-            let mut levelAsString: String = (jcall!(hashtable).get(crate::java_into_object((crate::org::allbinary::game::GameInfo::GameInfo_LEVEL_NAME.with(Clone::clone)).clone() /* as Any */))).clone() /* as String */;
-            let mut level: i32 = (((levelAsString.clone()).to_string()).unwrap() as i32);
+            let mut levelAsString: String = { let java_object = (jcall!(hashtable).get(crate::java_into_object(crate::java_into_object((crate::org::allbinary::game::GameInfo::GameInfo_LEVEL_NAME.with(Clone::clone)).clone())))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut level: i32 = ((Some((levelAsString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32);
             let mut gameInfo: Option<Rc<RefCell<GameInfo>>> = jcall!(self.gameLayerManager).getGameInfo();
             jcall!(gameInfo).setCurrentLevel(level.clone());
         }
@@ -1199,20 +1204,20 @@ impl AllBinaryGameCanvas {
     
 
     // throws Exception
-    pub fn getLoadStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.commonLabels).START_LABEL.clone()).append(jcall!(self.stringUtil).toString(crate::java_into_object(self.hashtable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getLoadStateHashtable"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+    pub fn getLoadStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.commonLabels).START_LABEL.clone(); java_field }.clone()).append(jcall!(self.stringUtil).toString(crate::java_into_object(self.hashtable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getLoadStateHashtable"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         return self.hashtable.clone();
     }
     
 
-    pub fn setLoadStateHashtable(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.commonLabels).START_LABEL.clone()).append(jcall!(self.stringUtil).toString(crate::java_into_object(hashtable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setLoadStateHashtable"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+    pub fn setLoadStateHashtable(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) {
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.commonLabels).START_LABEL.clone(); java_field }.clone()).append(jcall!(self.stringUtil).toString(crate::java_into_object(hashtable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setLoadStateHashtable"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         self.hashtable = hashtable.clone();
     }
     
 
-    pub fn getCurrentStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(self.stdUtil).createHashtable();
+    pub fn getCurrentStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(self.stdUtil).createHashtable();
         let mut level: i32 = jcall!(jcall!(self.gameLayerManager).getGameInfo()).getCurrentLevel();
         jcall!(hashtable).put(crate::java_into_object(crate::org::allbinary::game::GameInfo::GameInfo_LEVEL_NAME.with(Clone::clone).clone()), crate::java_into_object((level.clone()).to_string()));
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("End: ")).append(jcall!(self.stringUtil).toString(crate::java_into_object(hashtable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getCurrentStateHashtable"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
@@ -1220,33 +1225,33 @@ impl AllBinaryGameCanvas {
     }
     
 
-    pub fn paintGameOver(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        ForcedLogUtil::log(jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+    pub fn paintGameOver(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        ForcedLogUtil::log({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
-    pub fn draw(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        jcall!(self.colorFillPaintable).paint(graphics.clone());
+    pub fn draw(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        jcall!(self.colorFillPaintable).as_ColorFillBasePaintable_mut().paint(graphics.clone());
         { let java_receiver = self.basicSetColorUtil.clone(); let java_arguments = (graphics.clone(), jcall!(self.gameLayerManager).getForegroundBasicColor(),); jcall!(java_receiver).setBasicColorP(java_arguments.0, java_arguments.1); };
-        jcall!(self.gameSpecificPaintable).paint(graphics.clone());
+        jcall!(self.gameSpecificPaintable).as_Paintable_mut().paint(graphics.clone());
     }
     
 
-    pub fn clear(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        jcall!(self.colorFillPaintable).paint(graphics.clone());
+    pub fn clear(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        jcall!(self.colorFillPaintable).as_ColorFillBasePaintable_mut().paint(graphics.clone());
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         jcall!(self.baseGameStatistics).nextRefresh();
         self.draw(graphics.clone());
-        jcall!(self.menuPaintable).paint(graphics.clone());
+        jcall!(self.menuPaintable).as_Paintable_mut().paint(graphics.clone());
         jcall!(self.progressPaintable).paint(graphics.clone());
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 
@@ -1255,15 +1260,15 @@ impl AllBinaryGameCanvas {
     }
     
 
-    pub fn nonBotPaint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        jcall!(self.endGamePaintable).paint(graphics.clone());
-        jcall!(self.intermissionPaintable).paint(graphics.clone());
+    pub fn nonBotPaint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        jcall!(self.endGamePaintable).as_Paintable_mut().paint(graphics.clone());
+        jcall!(self.intermissionPaintable).as_Paintable_mut().paint(graphics.clone());
         self.paintIntermission(graphics.clone());
-        jcall!(self.touchPaintable).paint(graphics.clone());
+        jcall!(self.touchPaintable).as_Paintable_mut().paint(graphics.clone());
     }
     
 
-    pub fn paintIntermission(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintIntermission(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 
@@ -1310,7 +1315,7 @@ impl AllBinaryGameCanvas {
             let mut myCommandsFactory: Option<Rc<RefCell<MyCommandsFactory>>> = MyCommandsFactory::getInstance();
             let mut progressCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn>>> = ProgressCanvasFactory::getInstance();
             jcall!(progressCanvas).start();
-            jcall!(self.getCustomCommandListener()).commandAction(jcall!(myCommandsFactory).SET_DISPLAYABLE.clone(), progressCanvas.clone());
+            jcall!(self.getCustomCommandListener()).commandAction({ let java_field = jcall!(myCommandsFactory).SET_DISPLAYABLE.clone(); java_field }.clone(), progressCanvas.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>));
             portion = 4;
         }
         return portion.clone();
@@ -1358,11 +1363,11 @@ impl AllBinaryGameCanvas {
     pub fn shouldWait(&mut self) {
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
         if AndroidUtil::isAndroid() {
-        } else if jcall!(features).isFeature(jcall!(self.openGLFeatureFactory).OPENGL_2D.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        } else if jcall!(features).isFeature({ let java_field = jcall!(self.openGLFeatureFactory).OPENGL_2D.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
         } else {
-            if jcall!(features).isDefault(jcall!(self.openGLFeatureFactory).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            if jcall!(features).isDefault({ let java_field = jcall!(self.openGLFeatureFactory).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
                 let mut openGLImageSpecificFactory: Option<Rc<RefCell<OpenGLImageSpecificFactory>>> = OpenGLImageSpecificFactory::getInstance();
-                while jcall!(openGLImageSpecificFactory).updating {
+                while { let java_field = jcall!(openGLImageSpecificFactory).updating.clone(); java_field } {
                     std::thread::sleep(std::time::Duration::from_millis((self.YIELD_SLEEP.clone()) as u64));
                 }
             }
@@ -1372,7 +1377,7 @@ impl AllBinaryGameCanvas {
 
     pub fn run(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START_RUNNABLE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START_RUNNABLE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
             let mut progressCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn>>> = ProgressCanvasFactory::getInstance();
             jcall!(progressCanvas).addNormalPortion(50, String::from("Game Thread"));
             self.setCurrentThread();
@@ -1390,13 +1395,13 @@ impl AllBinaryGameCanvas {
             jcall!(gameAdState).init();
             jcall!(gameAdState).setGameIsReady(true);
             jcall!(self.gameBehavior).run(None /* Java this: a &mut self method has no Rc of itself */);
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).END_RUNNABLE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).END_RUNNABLE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -1405,26 +1410,26 @@ impl AllBinaryGameCanvas {
     // throws Exception
     pub fn run2(&mut self) {
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
-        if jcall!(features).isDefault(jcall!(self.openGLFeatureFactory).OPENGL_AS_GAME_THREAD.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || J2MEUtil::isHTML() {
-            if jcall!(features).isDefault(jcall!(self.openGLFeatureFactory).OPENGL_AS_GAME_THREAD.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(jcall!(self.openGLFeatureFactory).OPENGL_AS_GAME_THREAD).getName(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        if jcall!(features).isDefault({ let java_field = jcall!(self.openGLFeatureFactory).OPENGL_AS_GAME_THREAD.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || J2MEUtil::isHTML() {
+            if jcall!(features).isDefault({ let java_field = jcall!(self.openGLFeatureFactory).OPENGL_AS_GAME_THREAD.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!({ let java_field = jcall!(self.openGLFeatureFactory).OPENGL_AS_GAME_THREAD.clone(); java_field }).getName(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
             if J2MEUtil::isHTML() {
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(GraphicsStrings::getInstance()).HTML.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(GraphicsStrings::getInstance()).HTML.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
             let mut currentDisplayableFactory: Option<Rc<RefCell<CurrentDisplayableFactory>>> = CurrentDisplayableFactory::getInstance();
             jcall!(currentDisplayableFactory).setRunnable(self.gameRunnable.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>));
             jcall!(currentDisplayableFactory).setDisplayable(None /* Java this: a &mut self method has no Rc of itself */);
             jcall!(OpenGLThreadUtil::getInstance()).onResume();
-        } else if jcall!(features).isDefault(jcall!(self.openGLFeatureFactory).OPENGL_AND_GAME_HAVE_DIFFERENT_THREADS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(jcall!(self.openGLFeatureFactory).OPENGL_AND_GAME_HAVE_DIFFERENT_THREADS).getName(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        } else if jcall!(features).isDefault({ let java_field = jcall!(self.openGLFeatureFactory).OPENGL_AND_GAME_HAVE_DIFFERENT_THREADS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!({ let java_field = jcall!(self.openGLFeatureFactory).OPENGL_AND_GAME_HAVE_DIFFERENT_THREADS.clone(); java_field }).getName(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             jcall!(OpenGLThreadUtil::getInstance()).onResume();
             while self.isRunning() {
                 self.run3();
             }
             self.end();
         } else {
-            jcall!(self.logUtil).putF(String::from("this thread"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.logUtil).putF(String::from("this thread"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
             while self.isRunning() {
                 self.run3();
             }
@@ -1443,13 +1448,13 @@ impl AllBinaryGameCanvas {
     
 
     pub fn setRunning(&mut self, mut running: bool) {
-        self.base.setRunning(running.clone());
+        { let java_arguments = (running.clone(),); self.base.setRunning(java_arguments.0) };
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
             if running {
             } else {
-                if jcall!(features).isDefault(jcall!(self.openGLFeatureFactory).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || unsafe { crate::org::allbinary::game::layer::SWTUtil::SWTUtil_isSWT.clone() } {
-                    if !match (&jcall!(jcall!(self.gameLayerManager).getGameInfo()).getGameType(), &jcall!(self.gameTypeFactory).BOT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                if jcall!(features).isDefault({ let java_field = jcall!(self.openGLFeatureFactory).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || unsafe { crate::org::allbinary::game::layer::SWTUtil::SWTUtil_isSWT.clone() } {
+                    if !match (&jcall!(jcall!(self.gameLayerManager).getGameInfo()).getGameType(), &{ let java_field = jcall!(self.gameTypeFactory).BOT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                         let mut currentDisplayableFactory: Option<Rc<RefCell<CurrentDisplayableFactory>>> = CurrentDisplayableFactory::getInstance();
                         jcall!(currentDisplayableFactory).clearRunnable();
                     }
@@ -1459,9 +1464,9 @@ impl AllBinaryGameCanvas {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_RUNNING.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_RUNNING.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -1470,9 +1475,9 @@ impl AllBinaryGameCanvas {
     // throws Exception
     pub fn end(&mut self) {
         jcall!(self.screenCapture).endRecording();
-        { let java_receiver = self.baseGameStatistics.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.baseGameStatistics).toString()).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone()).toString(),); jcall!(java_receiver).add(java_arguments.0); };
+        { let java_receiver = self.baseGameStatistics.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.baseGameStatistics).toString()).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone()).toString(),); jcall!(java_receiver).add(java_arguments.0); };
         jcall!(self.baseGameStatistics).init();
-        jcall!(self.gameKeyEventHandler).removeListener(self.cheatProcessor.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+        jcall!(self.gameKeyEventHandler).removeListener(self.cheatProcessor.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of PlayerGameInput does not have EventListenerInterface as a base trait") }));
         self.close();
         self.removeAllGameKeyInputListeners();
         self.endGameThread();
@@ -1490,7 +1495,7 @@ impl AllBinaryGameCanvas {
 
     pub fn createHighScore(&mut self, mut score: i64) -> Option<Rc<RefCell<HighScore>>> {
         let mut gameInfo: Option<Rc<RefCell<GameInfo>>> = jcall!(self.gameLayerManager).getGameInfo();
-        return HighScore::new(0, String::from("NONE"), GameInfo::new(jcall!(gameInfo).getGameType(), jcall!(gameInfo).getGameMode(), jcall!(PlayerTypesFactory::getInstance()).PLAYER_TYPE_ONE.clone(), 0, 0), score.clone());
+        return HighScore::new(0, String::from("NONE"), GameInfo::new(jcall!(gameInfo).getGameType(), jcall!(gameInfo).getGameMode(), { let java_field = jcall!(PlayerTypesFactory::getInstance()).PLAYER_TYPE_ONE.clone(); java_field }.clone(), 0, 0), score.clone());
     }
     
 
@@ -1503,57 +1508,12 @@ impl AllBinaryGameCanvas {
     // throws Exception
     pub fn setHighScore2(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut name: String, mut score: i64, mut autoSubmit: bool, mut isLast: bool) {
         let mut highScore: Option<Rc<RefCell<HighScore>>> = self.createHighScore(score.clone());
-        let mut textBox: Option<Rc<RefCell<HighScoreTextBox>>> = HighScoreTextBox::new(self.highScoresFactoryInterface.clone(), self.highScoresHelper.clone(), abeClientInformation.clone(), jcall!(self.gameLayerManager).getGameInfo(), self.getCustomCommandListener(), name.clone(), highScore.clone(), jcall!(self.gameLayerManager).getBackgroundBasicColor(), jcall!(self.gameLayerManager).getForegroundBasicColor());
+        let mut textBox: Option<Rc<RefCell<HighScoreTextBox>>> = HighScoreTextBox::new(self.highScoresFactoryInterface.clone(), self.highScoresHelper.clone(), abeClientInformation.clone(), { let java_argument = jcall!(self.gameLayerManager).getGameInfo(); java_argument }, self.getCustomCommandListener(), name.clone(), highScore.clone(), { let java_argument = jcall!(self.gameLayerManager).getBackgroundBasicColor(); java_argument }, { let java_argument = jcall!(self.gameLayerManager).getForegroundBasicColor(); java_argument });
         if isLast {
-            jcall!(self.getCustomCommandListener()).commandAction(jcall!(GameCommandsFactory::getInstance()).SET_MENU_DISPLAYABLE.clone(), textBox.clone());
+            jcall!(self.getCustomCommandListener()).commandAction({ let java_field = jcall!(GameCommandsFactory::getInstance()).SET_MENU_DISPLAYABLE.clone(); java_field }.clone(), textBox.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>));
         }
         if autoSubmit {
-            /* Java local class: move it out of the function
-pub struct SaveHighScoreRunnable {
-    pub progressCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn>>>,
-}
-
-impl Runnable for SaveHighScoreRunnable {
-    fn run(&mut self) { Self::run(self) }
-}
-
-impl SaveHighScoreRunnable {
-
-    pub fn new_struct() -> Self {
-        let mut this = Self {
-            progressCanvas: None,
-        };
-        this.progressCanvas = ProgressCanvasFactory::getInstance();
-        this
-    }
-
-    pub fn new() -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct())))
-    }
-                
-
-                pub fn run(&mut self) {
-                    let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-                    match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                        if self.base.isLast {
-                            jcall!(self.base.textBox).submit();
-                        } else {
-                            jcall!(self.base.textBox).saveHighScore();
-                        }
-                    })) {
-                        Ok(_) => {}
-                        Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
-
-                        let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                        jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("run"), crate::java_into_object(e.clone()));
-                        jcall!(self.progressCanvas).end();
-                        }
-                    }
-                }
-}
-*/
-            jcall!(SecondaryThreadPool::getInstance()).runTask(SaveHighScoreRunnable::new());
+            jcall!(SecondaryThreadPool::getInstance()).runTask(SaveHighScoreRunnable::new(isLast.clone(), textBox.clone()).map(|reference| reference as Rc<RefCell<dyn crate::Runnable>>));
         }
     }
     
@@ -1645,9 +1605,9 @@ impl SaveHighScoreRunnable {
 
     pub fn clearPlayerGameInputList(&mut self) {
         let mut playerGameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>> = None;
-        for index in (0..=jcall!(self.localPlayerGameInputList).size() - 1).rev() {
-            playerGameInput = { let java_object = (jcall!(self.localPlayerGameInputList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>>>().expect("ClassCastException").clone()) };
-            jcall!(self.gameKeyEventHandler).removeListener(playerGameInput.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+        for index in (0..={ let java_bound = jcall!(self.localPlayerGameInputList).size() - 1; java_bound }).rev() {
+            playerGameInput = { let java_value = ({ let java_object = (jcall!(self.localPlayerGameInputList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            jcall!(self.gameKeyEventHandler).removeListener(playerGameInput.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of PlayerGameInput does not have EventListenerInterface as a base trait") }));
         }
         jcall!(self.localPlayerGameInputList).clear();
     }
@@ -1851,7 +1811,7 @@ impl SaveHighScoreRunnable {
     pub fn isRunningInAnotherThread(&mut self) -> bool {
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
         let mut openGLFeatureFactory: Option<Rc<RefCell<OpenGLFeatureFactory>>> = OpenGLFeatureFactory::getInstance();
-        if jcall!(features).isDefault(jcall!(openGLFeatureFactory).OPENGL_AS_GAME_THREAD.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        if jcall!(features).isDefault({ let java_field = jcall!(openGLFeatureFactory).OPENGL_AS_GAME_THREAD.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             return true;
         } else {
             return self.isRunning();
@@ -1862,6 +1822,16 @@ impl SaveHighScoreRunnable {
     pub fn getType(&mut self) -> i32 {
         return AllBinaryGameCanvas_TYPE.with(Clone::clone).clone();
     }
+    
+
+    pub fn getTitle(&mut self) -> String {
+        return self.base.getTitle();
+    }
+    
+
+    pub fn isPaused(&mut self) -> bool {
+        return self.base.isPaused();
+    }
 }
 impl std::ops::Deref for AllBinaryGameCanvas {
     type Target = RunnableCanvas;
@@ -1871,10 +1841,9 @@ impl std::ops::DerefMut for AllBinaryGameCanvas {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait AllBinaryGameCanvasDyn: crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn + crate::org::allbinary::game::displayable::canvas::PopupMenuInterface::PopupMenuInterface + crate::org::allbinary::game::IntermissionCompositeInterface::IntermissionCompositeInterface + crate::org::allbinary::game::IntermissionEnableListenerInterface::IntermissionEnableListenerInterface {
+pub trait AllBinaryGameCanvasDyn: crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn + crate::org::allbinary::game::displayable::canvas::PopupMenuInterface::PopupMenuInterface + crate::org::allbinary::game::IntermissionCompositeInterface::IntermissionCompositeInterface + crate::org::allbinary::game::IntermissionEnableListenerInterface::IntermissionEnableListenerInterface + crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface {
     fn as_AllBinaryGameCanvas(&self) -> &AllBinaryGameCanvas;
     fn as_AllBinaryGameCanvas_mut(&mut self) -> &mut AllBinaryGameCanvas;
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { AllBinaryGameCanvas::updateMeasurement(self.as_AllBinaryGameCanvas_mut(), graphics) }
     fn getInGameMenuBehavior(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::BaseMenuBehavior::BaseMenuBehaviorDyn>>> { AllBinaryGameCanvas::getInGameMenuBehavior(self.as_AllBinaryGameCanvas_mut()) }
     fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { AllBinaryGameCanvas::onEvent(self.as_AllBinaryGameCanvas_mut(), eventObject) }
     fn onDisplayChangeEvent(&mut self, mut displayChangeEvent: Option<Rc<RefCell<DisplayChangeEvent>>>) { AllBinaryGameCanvas::onDisplayChangeEvent(self.as_AllBinaryGameCanvas_mut(), displayChangeEvent) }
@@ -1901,7 +1870,7 @@ pub trait AllBinaryGameCanvasDyn: crate::org::allbinary::canvas::RunnableCanvas:
     fn updateTouch2(&mut self) { AllBinaryGameCanvas::updateTouch2(self.as_AllBinaryGameCanvas_mut()) }
     fn postInitTouch(&mut self) { AllBinaryGameCanvas::postInitTouch(self.as_AllBinaryGameCanvas_mut()) }
     fn addCommands(&mut self) { AllBinaryGameCanvas::addCommands(self.as_AllBinaryGameCanvas_mut()) }
-    fn itemStateChanged(&mut self, mut item: Option<Rc<RefCell<Item>>>) { AllBinaryGameCanvas::itemStateChanged(self.as_AllBinaryGameCanvas_mut(), item) }
+    fn itemStateChanged(&mut self, mut item: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Item::ItemDyn>>>) { AllBinaryGameCanvas::itemStateChanged(self.as_AllBinaryGameCanvas_mut(), item) }
     fn updateScreenButtonPaintable(&mut self) { AllBinaryGameCanvas::updateScreenButtonPaintable(self.as_AllBinaryGameCanvas_mut()) }
     fn updateScreenButtonPaintable2(&mut self) { AllBinaryGameCanvas::updateScreenButtonPaintable2(self.as_AllBinaryGameCanvas_mut()) }
     fn getLayerManager(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>> { AllBinaryGameCanvas::getLayerManager(self.as_AllBinaryGameCanvas_mut()) }
@@ -1931,18 +1900,15 @@ pub trait AllBinaryGameCanvasDyn: crate::org::allbinary::canvas::RunnableCanvas:
     fn addKeyInputListener(&mut self, mut playerGameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>>) { AllBinaryGameCanvas::addKeyInputListener(self.as_AllBinaryGameCanvas_mut(), playerGameInput) }
     fn setGameCanvasStartListener(&mut self, mut gameCanvasStartListener: Option<Rc<RefCell<dyn DemoPaintableInterface>>>) { AllBinaryGameCanvas::setGameCanvasStartListener(self.as_AllBinaryGameCanvas_mut(), gameCanvasStartListener) }
     fn loadState(&mut self) { AllBinaryGameCanvas::loadState(self.as_AllBinaryGameCanvas_mut()) }
-    fn getLoadStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { AllBinaryGameCanvas::getLoadStateHashtable(self.as_AllBinaryGameCanvas_mut()) }
-    fn setLoadStateHashtable(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) { AllBinaryGameCanvas::setLoadStateHashtable(self.as_AllBinaryGameCanvas_mut(), hashtable) }
-    fn getCurrentStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { AllBinaryGameCanvas::getCurrentStateHashtable(self.as_AllBinaryGameCanvas_mut()) }
-    fn paintGameOver(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { AllBinaryGameCanvas::paintGameOver(self.as_AllBinaryGameCanvas_mut(), graphics) }
-    fn clear(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { AllBinaryGameCanvas::clear(self.as_AllBinaryGameCanvas_mut(), graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { AllBinaryGameCanvas::paintThreed(self.as_AllBinaryGameCanvas_mut(), graphics) }
+    fn getLoadStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { AllBinaryGameCanvas::getLoadStateHashtable(self.as_AllBinaryGameCanvas_mut()) }
+    fn setLoadStateHashtable(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) { AllBinaryGameCanvas::setLoadStateHashtable(self.as_AllBinaryGameCanvas_mut(), hashtable) }
+    fn getCurrentStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { AllBinaryGameCanvas::getCurrentStateHashtable(self.as_AllBinaryGameCanvas_mut()) }
+    fn paintGameOver(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { AllBinaryGameCanvas::paintGameOver(self.as_AllBinaryGameCanvas_mut(), graphics) }
+    fn clear(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { AllBinaryGameCanvas::clear(self.as_AllBinaryGameCanvas_mut(), graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { AllBinaryGameCanvas::paintThreed(self.as_AllBinaryGameCanvas_mut(), graphics) }
     fn processEndLevelIntermissionGameState(&mut self) { AllBinaryGameCanvas::processEndLevelIntermissionGameState(self.as_AllBinaryGameCanvas_mut()) }
-    fn nonBotPaint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { AllBinaryGameCanvas::nonBotPaint(self.as_AllBinaryGameCanvas_mut(), graphics) }
-    fn paintIntermission(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { AllBinaryGameCanvas::paintIntermission(self.as_AllBinaryGameCanvas_mut(), graphics) }
-    fn keyPressed(&mut self, mut keyCode: i32) { AllBinaryGameCanvas::keyPressed(self.as_AllBinaryGameCanvas_mut(), keyCode) }
-    fn keyReleased(&mut self, mut keyCode: i32) { AllBinaryGameCanvas::keyReleased(self.as_AllBinaryGameCanvas_mut(), keyCode) }
-    fn keyRepeated(&mut self, mut keyCode: i32) { AllBinaryGameCanvas::keyRepeated(self.as_AllBinaryGameCanvas_mut(), keyCode) }
+    fn nonBotPaint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { AllBinaryGameCanvas::nonBotPaint(self.as_AllBinaryGameCanvas_mut(), graphics) }
+    fn paintIntermission(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { AllBinaryGameCanvas::paintIntermission(self.as_AllBinaryGameCanvas_mut(), graphics) }
     fn handleRawKey(&mut self, mut keyCode: i32, mut deviceId: i32, mut repeated: bool) { AllBinaryGameCanvas::handleRawKey(self.as_AllBinaryGameCanvas_mut(), keyCode, deviceId, repeated) }
     fn endProgress(&mut self, mut isProgress: bool) -> i32 { AllBinaryGameCanvas::endProgress(self.as_AllBinaryGameCanvas_mut(), isProgress) }
     fn processPlayingGame(&mut self) { AllBinaryGameCanvas::processPlayingGame(self.as_AllBinaryGameCanvas_mut()) }
@@ -2018,10 +1984,37 @@ impl AllBinaryGameCanvasDyn for AllBinaryGameCanvas {
     fn as_AllBinaryGameCanvas_mut(&mut self) -> &mut AllBinaryGameCanvas { self }
 }
 
+impl crate::javax::microedition::lcdui::Canvas::CanvasDyn for AllBinaryGameCanvas {
+    fn as_Canvas(&self) -> &crate::javax::microedition::lcdui::Canvas::Canvas { &self.base.base.base }
+    fn as_Canvas_mut(&mut self) -> &mut crate::javax::microedition::lcdui::Canvas::Canvas { &mut self.base.base.base }
+}
+impl crate::javax::microedition::lcdui::Displayable::DisplayableDyn for AllBinaryGameCanvas {
+    fn as_Displayable(&self) -> &crate::javax::microedition::lcdui::Displayable::Displayable { &self.base.base.base.base }
+    fn as_Displayable_mut(&mut self) -> &mut crate::javax::microedition::lcdui::Displayable::Displayable { &mut self.base.base.base.base }
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn removeCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getWidth(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getHeight(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn getTitle(&mut self) -> String { Self::getTitle(self) }
+    fn setCommandListener(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::CommandListener::CommandListener>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setCommandListener(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn setFullScreenMode(&mut self, p1: bool) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setFullScreenMode(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn hideNotify(&mut self) { crate::javax::microedition::lcdui::Canvas::Canvas::hideNotify(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+    fn keyPressed(&mut self, mut keyCode: i32) { Self::keyPressed(self, keyCode) }
+    fn keyRepeated(&mut self, mut keyCode: i32) { Self::keyRepeated(self, keyCode) }
+    fn keyReleased(&mut self, mut keyCode: i32) { Self::keyReleased(self, keyCode) }
+    fn pointerPressed(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerPressed(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn pointerReleased(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerReleased(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn pointerDragged(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerDragged(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn repaint(&mut self) { crate::javax::microedition::lcdui::Canvas::Canvas::repaint(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+    fn repaintXYWH(&mut self, p1: i32, p2: i32, p3: i32, p4: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::repaintXYWH(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1, p2, p3, p4) }
+    fn sizeChanged(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::sizeChanged(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn showNotify(&mut self) { crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas::showNotify(crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn::as_RunnableCanvas_mut(self)) }
+}
 impl crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn for AllBinaryGameCanvas {
     fn as_RunnableCanvas(&self) -> &crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas { &self.base }
     fn as_RunnableCanvas_mut(&mut self) -> &mut crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas { &mut self.base }
-    fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<CommandListener>>>) { Self::initCommands(self, cmdListener) }
+    fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<dyn CommandListener>>>) { Self::initCommands(self, cmdListener) }
     fn setRunning(&mut self, mut running: bool) { Self::setRunning(self, running) }
     fn setCurrentThread(&mut self) { Self::setCurrentThread(self) }
     fn processSleep(&mut self) { Self::processSleep(self) }
@@ -2033,13 +2026,24 @@ impl crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn for AllBin
 impl crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn for AllBinaryGameCanvas {
     fn as_MyCanvas(&self) -> &crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas { &self.base.base }
     fn as_MyCanvas_mut(&mut self) -> &mut crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas { &mut self.base.base }
+    fn isPaused(&mut self) -> bool { Self::isPaused(self) }
     fn pause(&mut self) { Self::pause(self) }
     fn unPause(&mut self) { Self::unPause(self) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn draw(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::draw(self, graphics) }
+    fn draw(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::draw(self, graphics) }
     fn keyPressedByDevice(&mut self, mut keyCode: i32, mut deviceId: i32) { Self::keyPressedByDevice(self, keyCode, deviceId) }
     fn keyRepeatedByDevice(&mut self, mut keyCode: i32, mut deviceId: i32) { Self::keyRepeatedByDevice(self, keyCode, deviceId) }
     fn keyReleasedByDevice(&mut self, mut keyCode: i32, mut deviceId: i32) { Self::keyReleasedByDevice(self, keyCode, deviceId) }
+}
+impl crate::org::allbinary::graphics::displayable::DisplayableInterface::DisplayableInterface for AllBinaryGameCanvas {
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getHeight(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getWidth(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn removeCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn setCommandListener(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::CommandListener::CommandListener>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setCommandListener(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::displayable::command::MyCommandInterface::MyCommandInterface for AllBinaryGameCanvas {
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn removeAllCommands(&mut self) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeAllCommands(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
 }
 
 

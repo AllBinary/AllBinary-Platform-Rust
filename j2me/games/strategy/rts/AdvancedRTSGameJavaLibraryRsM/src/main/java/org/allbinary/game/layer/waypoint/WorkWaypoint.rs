@@ -26,6 +26,7 @@ use crate::org::allbinary::game::layer::unit::UnitWaypointBehavior::UnitWaypoint
 use crate::org::allbinary::media::audio::WorkSound::WorkSound;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::logic::math::SmallIntegerSingletonFactory::SmallIntegerSingletonFactory;
+use crate::java::lang::Exception::*;
 use super::Waypoint::Waypoint;
 use super::WaypointInfoHudPaintable::WaypointInfoHudPaintable;
 
@@ -41,6 +42,9 @@ pub struct WorkWaypoint {
 }
 
 thread_local! { pub static WorkWaypoint_ID: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(25); }
+impl crate::org::allbinary::game::layer::building::event::BuildingEventListenerInterface::BuildingEventListenerInterface for WorkWaypoint {
+    fn onBuildingEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::layer::RTSLayerEvent::RTSLayerEvent>>>) { crate::org::allbinary::game::layer::waypoint::Waypoint::Waypoint::onBuildingEvent(crate::org::allbinary::game::layer::waypoint::Waypoint::WaypointDyn::as_Waypoint_mut(self), p1) }
+}
 
 impl WorkWaypoint {
     
@@ -65,15 +69,15 @@ impl WorkWaypoint {
         }
         let mut size: i32 = jcall!(self.getConnectedWaypointList()).size();
         if size > 0 {
-            let mut occupyList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(jcall!(self.ownerLayer).getGeographicMapCellPositionArea()).getOccupyingGeographicMapCellPositionList();
+            let mut occupyList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(jcall!(self.ownerLayer).getGeographicMapCellPositionArea()).as_GeographicMapCellPositionAreaBase_mut().getOccupyingGeographicMapCellPositionList();
             let mut outOfResources: bool = true;
             let mut geologicalGeographicMapCellPosition: Option<Rc<RefCell<GeologicalGeographicMapCellPosition>>> = None;
             let mut geologicalResource: Option<Rc<RefCell<GeologicalResource>>> = None;
             {
                 let mut index: i32 = jcall!(occupyList).size();
                 while { index -= 1; index } >= 0 {
-                geologicalGeographicMapCellPosition = { let java_object = (jcall!(occupyList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GeologicalGeographicMapCellPosition>>>>().expect("ClassCastException").clone()) };
-                geologicalResource = jcall!(geologicalGeographicMapCellPosition).getGeologicalResource();
+                geologicalGeographicMapCellPosition = { let java_value = ({ let java_object = (jcall!(occupyList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GeologicalGeographicMapCellPosition>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+                geologicalResource = { let java_value = (jcall!(geologicalGeographicMapCellPosition).getGeologicalResource()).clone(); java_value };
                 if jcall!(geologicalResource).getTotal() >= 1 {
                     outOfResources = false;
                     let mut maxResourceLoad: i32 = ((jcall!(unitLayer).getMaxResourceLoad()) as i32);
@@ -82,17 +86,17 @@ impl WorkWaypoint {
                 }
                 }
             }
-            let mut waypointInfoHudPaintable: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointInfoHudPaintable::WaypointInfoHudPaintableDyn>>> = (jcall!(self.ownerLayer).getHudPaintable()).clone() /* as WaypointInfoHudPaintable */;
+            let mut waypointInfoHudPaintable: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointInfoHudPaintable::WaypointInfoHudPaintableDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointInfoHudPaintable::WaypointInfoHudPaintableDyn>>> { panic!("ClassCastException: a Rust dyn SelectionHudPaintable cannot be cast to WaypointInfoHudPaintable") })();
             if match (&self.ownerLayer, &jcall!(waypointInfoHudPaintable).getRtsLayer()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 jcall!(waypointInfoHudPaintable).updateSelectionInfo();
             }
             if !outOfResources {
-                let mut unitWaypointBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::unit::UnitWaypointBehavior::UnitWaypointBehaviorDyn>>> = (jcall!(unitLayer).getWaypointBehavior()).clone() /* as UnitWaypointBehavior */;
+                let mut unitWaypointBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::unit::UnitWaypointBehavior::UnitWaypointBehaviorDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::unit::UnitWaypointBehavior::UnitWaypointBehaviorDyn>>> { panic!("ClassCastException: a Rust dyn WaypointBehaviorBase cannot be cast to UnitWaypointBehavior") })();
                 let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = None;
-                while jcall!(self.getConnectedWaypointList()).size() > 0 {
-                    rtsLayer = (jcall!(self.getConnectedWaypointList()).get(0)).clone() /* as RTSLayer */;
+                while { let java_value = jcall!(self.getConnectedWaypointList()).size(); java_value } > 0 {
+                    rtsLayer = { let java_value = ({ let java_object = (jcall!(self.getConnectedWaypointList()).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                     if jcall!(rtsLayer).isDestroyed() {
-                        jcall!(self.getConnectedWaypointList()).remove(rtsLayer.clone());
+                        jcall!(self.getConnectedWaypointList()).remove(crate::java_into_object(rtsLayer.clone()));
                     } else {
                         jcall!(unitWaypointBehavior).insertWaypoint(0, rtsLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>));
                         break;

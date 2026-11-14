@@ -16,10 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
-// use crate::java::util::Set::Set;
+use crate::java::util::HashMap::HashMap;
+use crate::java::util::Set::Set;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
 use crate::org::allbinary::data::tree::dom::DomNodeHelper::DomNodeHelper;
 use crate::org::allbinary::data::tree::dom::DomSearchHelper::DomSearchHelper;
@@ -32,6 +31,7 @@ use crate::org::allbinary::logic::string::StringValidationUtil::StringValidation
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -54,6 +54,10 @@ pub struct StreetAddress {
 
 
 impl StreetAddress {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -93,17 +97,17 @@ impl StreetAddress {
         this.logUtil = LogUtil::getInstance();
         this.isDefault = false;
         let mut nameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(StreetAddressData_NAME.with(Clone::clone).clone(), jcall!(node).getChildNodes());
-        this.name = DomNodeHelper::getTextNodeValue(nameNode.clone());
+        this.name = { let java_value = (DomNodeHelper::getTextNodeValue(nameNode.clone())).clone(); java_value };
         let mut streetNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(StreetAddressData_STREET.with(Clone::clone).clone(), jcall!(node).getChildNodes());
-        this.street = DomNodeHelper::getTextNodeValue(streetNode.clone());
+        this.street = { let java_value = (DomNodeHelper::getTextNodeValue(streetNode.clone())).clone(); java_value };
         let mut cityNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(StreetAddressData_CITY.with(Clone::clone).clone(), jcall!(node).getChildNodes());
-        this.city = DomNodeHelper::getTextNodeValue(cityNode.clone());
+        this.city = { let java_value = (DomNodeHelper::getTextNodeValue(cityNode.clone())).clone(); java_value };
         let mut stateNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(StreetAddressData_STATE.with(Clone::clone).clone(), jcall!(node).getChildNodes());
-        this.state = DomNodeHelper::getTextNodeValue(stateNode.clone());
+        this.state = { let java_value = (DomNodeHelper::getTextNodeValue(stateNode.clone())).clone(); java_value };
         let mut codeNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(StreetAddressData_CODE.with(Clone::clone).clone(), jcall!(node).getChildNodes());
-        this.code = DomNodeHelper::getTextNodeValue(codeNode.clone());
+        this.code = { let java_value = (DomNodeHelper::getTextNodeValue(codeNode.clone())).clone(); java_value };
         let mut countryNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(StreetAddressData_COUNTRY.with(Clone::clone).clone(), jcall!(node).getChildNodes());
-        this.country = DomNodeHelper::getTextNodeValue(countryNode.clone());
+        this.country = { let java_value = (DomNodeHelper::getTextNodeValue(countryNode.clone())).clone(); java_value };
         this.log();
         this
     }
@@ -113,7 +117,7 @@ impl StreetAddress {
     }
     
 
-    pub fn new_struct1(mut streetAddress: Option<Rc<RefCell<StreetAddress>>>) -> Self {
+    pub fn new_struct1_StreetAddress(mut streetAddress: Option<Rc<RefCell<StreetAddress>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             id: String::new(),
@@ -127,24 +131,24 @@ impl StreetAddress {
         };
         this.logUtil = LogUtil::getInstance();
         this.isDefault = false;
-        this.id = jcall!(streetAddress).getId();
-        this.name = jcall!(streetAddress).getName();
-        this.street = jcall!(streetAddress).getStreet();
-        this.city = jcall!(streetAddress).getCity();
-        this.state = jcall!(streetAddress).getState();
-        this.code = jcall!(streetAddress).getCode();
-        this.country = jcall!(streetAddress).getCountry();
-        this.isDefault = jcall!(streetAddress).isDefault();
+        this.id = { let java_value = (jcall!(streetAddress).getId()).clone(); java_value };
+        this.name = { let java_value = (jcall!(streetAddress).getName()).clone(); java_value };
+        this.street = { let java_value = (jcall!(streetAddress).getStreet()).clone(); java_value };
+        this.city = { let java_value = (jcall!(streetAddress).getCity()).clone(); java_value };
+        this.state = { let java_value = (jcall!(streetAddress).getState()).clone(); java_value };
+        this.code = { let java_value = (jcall!(streetAddress).getCode()).clone(); java_value };
+        this.country = { let java_value = (jcall!(streetAddress).getCountry()).clone(); java_value };
+        this.isDefault = { let java_value = (jcall!(streetAddress).isDefault()).clone(); java_value };
         this.log();
         this
     }
 
-    pub fn new1(mut streetAddress: Option<Rc<RefCell<StreetAddress>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(streetAddress))))
+    pub fn new1_StreetAddress(mut streetAddress: Option<Rc<RefCell<StreetAddress>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_StreetAddress(streetAddress))))
     }
     
 
-    pub fn new_struct1(mut request: Option<Rc<RefCell<HttpServletRequest>>>) -> Self {
+    pub fn new_struct1_HttpServletRequest(mut request: Option<Rc<RefCell<HttpServletRequest>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             id: String::new(),
@@ -169,8 +173,8 @@ impl StreetAddress {
         this
     }
 
-    pub fn new1(mut request: Option<Rc<RefCell<HttpServletRequest>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(request))))
+    pub fn new1_HttpServletRequest(mut request: Option<Rc<RefCell<HttpServletRequest>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_HttpServletRequest(request))))
     }
     
 
@@ -203,7 +207,7 @@ impl StreetAddress {
     }
     
 
-    pub fn new_struct1(mut address: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1_HashMap(mut address: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             id: String::new(),
@@ -217,14 +221,14 @@ impl StreetAddress {
         };
         this.logUtil = LogUtil::getInstance();
         this.isDefault = false;
-        this.id = (jcall!(address).get(StreetAddressData_ID.with(Clone::clone).clone())).clone() /* as String */;
-        this.name = (jcall!(address).get(StreetAddressData_NAME.with(Clone::clone).clone())).clone() /* as String */;
-        this.street = (jcall!(address).get(StreetAddressData_STREET.with(Clone::clone).clone())).clone() /* as String */;
-        this.city = (jcall!(address).get(StreetAddressData_CITY.with(Clone::clone).clone())).clone() /* as String */;
-        this.state = (jcall!(address).get(StreetAddressData_STATE.with(Clone::clone).clone())).clone() /* as String */;
-        this.code = (jcall!(address).get(StreetAddressData_CODE.with(Clone::clone).clone())).clone() /* as String */;
-        this.country = (jcall!(address).get(StreetAddressData_COUNTRY.with(Clone::clone).clone())).clone() /* as String */;
-        let mut def: String = (jcall!(address).get(StreetAddressData_DEFAULT.with(Clone::clone).clone())).clone() /* as String */;
+        this.id = { let java_value = ({ let java_object = (jcall!(address).get(crate::java_into_object(StreetAddressData_ID.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.name = { let java_value = ({ let java_object = (jcall!(address).get(crate::java_into_object(StreetAddressData_NAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.street = { let java_value = ({ let java_object = (jcall!(address).get(crate::java_into_object(StreetAddressData_STREET.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.city = { let java_value = ({ let java_object = (jcall!(address).get(crate::java_into_object(StreetAddressData_CITY.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.state = { let java_value = ({ let java_object = (jcall!(address).get(crate::java_into_object(StreetAddressData_STATE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.code = { let java_value = ({ let java_object = (jcall!(address).get(crate::java_into_object(StreetAddressData_CODE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.country = { let java_value = ({ let java_object = (jcall!(address).get(crate::java_into_object(StreetAddressData_COUNTRY.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        let mut def: String = { let java_object = (jcall!(address).get(crate::java_into_object(StreetAddressData_DEFAULT.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if true && (def.cmp(&StreetAddressData_DEFAULT.with(Clone::clone).clone()) as i32) == 0 {
             this.isDefault = true;
         } else {
@@ -234,13 +238,13 @@ impl StreetAddress {
         this
     }
 
-    pub fn new1(mut address: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(address))))
+    pub fn new1_HashMap(mut address: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_HashMap(address))))
     }
     
 
     pub fn log(&mut self) {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGING.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGING.clone(); java_field }.clone()) {
             { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Created Address: \n"), self.toHashMap()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("log"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
     }
@@ -322,8 +326,8 @@ impl StreetAddress {
     
 
     pub fn isEmpty(&mut self) -> Option<bool> {
-        let mut EMPTY_STRING: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        if false && jcall!(self.getName()).compareTo(EMPTY_STRING.clone()) == 0 && self.getStreet().is_none() && jcall!(self.getStreet()).compareTo(EMPTY_STRING.clone()) == 0 && self.getCity().is_none() && jcall!(self.getCity()).compareTo(EMPTY_STRING.clone()) == 0 && self.getState().is_none() && jcall!(self.getState()).compareTo(EMPTY_STRING.clone()) == 0 && self.getCode().is_none() && jcall!(self.getCode()).compareTo(EMPTY_STRING.clone()) == 0 && self.getCountry().is_none() && jcall!(self.getCountry()).compareTo(EMPTY_STRING.clone()) == 0 {
+        let mut EMPTY_STRING: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        if false && { let java_value = (self.getName().cmp(&EMPTY_STRING.clone()) as i32); java_value } == 0 && false && { let java_value = (self.getStreet().cmp(&EMPTY_STRING.clone()) as i32); java_value } == 0 && false && { let java_value = (self.getCity().cmp(&EMPTY_STRING.clone()) as i32); java_value } == 0 && false && { let java_value = (self.getState().cmp(&EMPTY_STRING.clone()) as i32); java_value } == 0 && false && { let java_value = (self.getCode().cmp(&EMPTY_STRING.clone()) as i32); java_value } == 0 && false && { let java_value = (self.getCountry().cmp(&EMPTY_STRING.clone()) as i32); java_value } == 0 {
             return true;
         }
         return false;
@@ -331,8 +335,8 @@ impl StreetAddress {
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        let mut EMPTY_STRING: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        if false || jcall!(self.getName()).compareTo(EMPTY_STRING.clone()) == 0 || self.getStreet().is_none() || jcall!(self.getStreet()).compareTo(EMPTY_STRING.clone()) == 0 || self.getCity().is_none() || jcall!(self.getCity()).compareTo(EMPTY_STRING.clone()) == 0 || self.getState().is_none() || jcall!(self.getState()).compareTo(EMPTY_STRING.clone()) == 0 || self.getCode().is_none() || jcall!(self.getCode()).compareTo(EMPTY_STRING.clone()) == 0 || self.getCountry().is_none() || jcall!(self.getCountry()).compareTo(EMPTY_STRING.clone()) == 0 {
+        let mut EMPTY_STRING: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        if false || { let java_value = (self.getName().cmp(&EMPTY_STRING.clone()) as i32); java_value } == 0 || false || { let java_value = (self.getStreet().cmp(&EMPTY_STRING.clone()) as i32); java_value } == 0 || false || { let java_value = (self.getCity().cmp(&EMPTY_STRING.clone()) as i32); java_value } == 0 || false || { let java_value = (self.getState().cmp(&EMPTY_STRING.clone()) as i32); java_value } == 0 || false || { let java_value = (self.getCode().cmp(&EMPTY_STRING.clone()) as i32); java_value } == 0 || false || { let java_value = (self.getCountry().cmp(&EMPTY_STRING.clone()) as i32); java_value } == 0 {
             return false;
         }
         return true;
@@ -377,34 +381,35 @@ impl StreetAddress {
     
 
     pub fn toValidationInfoNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(StreetAddressData_FORM.with(Clone::clone).clone());
             jcall!(node).appendChild(self.toXmlNode(document.clone()));
-            return node.clone();
+            return Some(node.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLLOGGINGERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLLOGGINGERROR.clone(); java_field }.clone()) {
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toValidationInfoNode"), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toValidationInfoNode"), crate::java_into_object(e.clone()));
             }
             return None;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(StreetAddressData_ID.with(Clone::clone).clone(), self.id.clone());
-        jcall!(hashMap).put(StreetAddressData_NAME.with(Clone::clone).clone(), self.name.clone());
-        jcall!(hashMap).put(StreetAddressData_STREET.with(Clone::clone).clone(), self.street.clone());
-        jcall!(hashMap).put(StreetAddressData_CITY.with(Clone::clone).clone(), self.city.clone());
-        jcall!(hashMap).put(StreetAddressData_STATE.with(Clone::clone).clone(), self.state.clone());
-        jcall!(hashMap).put(StreetAddressData_CODE.with(Clone::clone).clone(), self.code.clone());
-        jcall!(hashMap).put(StreetAddressData_COUNTRY.with(Clone::clone).clone(), self.country.clone());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object(StreetAddressData_ID.with(Clone::clone).clone()), crate::java_into_object(self.id.clone()));
+        jcall!(hashMap).put(crate::java_into_object(StreetAddressData_NAME.with(Clone::clone).clone()), crate::java_into_object(self.name.clone()));
+        jcall!(hashMap).put(crate::java_into_object(StreetAddressData_STREET.with(Clone::clone).clone()), crate::java_into_object(self.street.clone()));
+        jcall!(hashMap).put(crate::java_into_object(StreetAddressData_CITY.with(Clone::clone).clone()), crate::java_into_object(self.city.clone()));
+        jcall!(hashMap).put(crate::java_into_object(StreetAddressData_STATE.with(Clone::clone).clone()), crate::java_into_object(self.state.clone()));
+        jcall!(hashMap).put(crate::java_into_object(StreetAddressData_CODE.with(Clone::clone).clone()), crate::java_into_object(self.code.clone()));
+        jcall!(hashMap).put(crate::java_into_object(StreetAddressData_COUNTRY.with(Clone::clone).clone()), crate::java_into_object(self.country.clone()));
         return hashMap.clone();
     }
     
@@ -412,14 +417,14 @@ impl StreetAddress {
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = self.toHashMap();
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.toHashMap();
         let mut keySet: Option<Rc<RefCell<dyn Set>>> = jcall!(hashMap).keySet();
         let mut keyArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(keySet).toArray();
         let mut size: i32 = (keyArray.len() as i32).clone();
         let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(StreetAddressData_ADDRESS.with(Clone::clone).clone());
         for i in (0..size) {
-            let mut name: String = (keyArray[(i) as usize]).clone() /* as String */;
-            let mut value: String = jcall!(stringUtil).getNonNull((jcall!(hashMap).get(name.clone())).clone() /* as String */);
+            let mut name: String = { let java_object = (keyArray[(i) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut value: String = jcall!(stringUtil).getNonNull({ let java_object = (jcall!(hashMap).get(crate::java_into_object(name.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() });
             jcall!(node).appendChild(ModDomHelper::createNameValueNodes(document.clone(), name.clone(), value.clone()));
         }
         return node.clone();

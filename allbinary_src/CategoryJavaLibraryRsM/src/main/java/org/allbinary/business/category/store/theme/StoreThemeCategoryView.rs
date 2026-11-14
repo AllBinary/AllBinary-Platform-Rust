@@ -17,12 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::util::Arrays::Arrays;
+use crate::java::util::Arrays::Arrays;
 use crate::org::allbinary::business::category::CategoryView::CategoryView;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::logic::visual::theme::ThemeValidation::ThemeValidation;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::StoreThemeCategoryInterface::StoreThemeCategoryInterface;
 use super::ThemeComparator::ThemeComparator;
 
@@ -46,7 +47,7 @@ impl StoreThemeCategoryView {
 
     pub fn new_struct(mut categoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>>) -> Self {
         let mut this = Self {
-            base: CategoryView::new_struct((categoryInterface).clone() /* as StoreThemeCategoryInterface */),
+            base: CategoryView::new_struct((categoryInterface).clone()),
         };
         // super(...) is in the struct literal above
         this
@@ -59,9 +60,9 @@ impl StoreThemeCategoryView {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut node: Option<Rc<RefCell<Node>>> = self.base.toXmlNode(document.clone());
-        let mut storeThemeCategoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>> = (self.getCategoryInterface()).clone() /* as StoreThemeCategoryInterface */;
-        let mut themeValidationArray: Vec<Option<Rc<RefCell<ThemeValidation>>>> = (jcall!(jcall!(storeThemeCategoryInterface).getThemes()).toArray()).clone() /* as  */;
+        let mut node: Option<Rc<RefCell<Node>>> = { let java_arguments = (document.clone(),); self.base.toXmlNode(java_arguments.0) };
+        let mut storeThemeCategoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>> = (|| -> Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>> { panic!("ClassCastException: a Rust dyn CategoryInterface cannot be cast to dyn StoreThemeCategoryInterface") })();
+        let mut themeValidationArray: Vec<Option<Rc<RefCell<ThemeValidation>>>> = jcall!(jcall!(storeThemeCategoryInterface).getThemes()).toArray();
         Arrays::sort(themeValidationArray.clone(), ThemeComparator::new());
         let mut size: i32 = (themeValidationArray.len() as i32).clone();
         for index in (0..size) {

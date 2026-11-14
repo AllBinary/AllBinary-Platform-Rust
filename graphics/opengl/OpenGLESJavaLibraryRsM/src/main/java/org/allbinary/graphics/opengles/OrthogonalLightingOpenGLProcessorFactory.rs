@@ -35,6 +35,10 @@ thread_local! { pub static OrthogonalLightingOpenGLProcessorFactory_instance: Op
 
 impl OrthogonalLightingOpenGLProcessorFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             sceneLightingOrthogonalModeOpenGLProcessor: None,

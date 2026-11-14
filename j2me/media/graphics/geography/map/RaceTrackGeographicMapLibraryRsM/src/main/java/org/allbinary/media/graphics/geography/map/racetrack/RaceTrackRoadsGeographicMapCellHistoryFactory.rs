@@ -32,6 +32,10 @@ pub struct RaceTrackRoadsGeographicMapCellHistoryFactory {
 pub static mut RaceTrackRoadsGeographicMapCellHistoryFactory_geographicMapCellHistory: std::cell::LazyCell<Option<Rc<RefCell<GeographicMapCellHistory>>>> = std::cell::LazyCell::new(|| GeographicMapCellHistory::new());
 
 impl RaceTrackRoadsGeographicMapCellHistoryFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

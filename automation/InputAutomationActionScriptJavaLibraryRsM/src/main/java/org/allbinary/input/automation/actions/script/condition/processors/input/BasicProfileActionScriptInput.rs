@@ -16,11 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::java::util::Iterator::Iterator;
-// use crate::java::util::Set::Set;
+use crate::java::util::Set::Set;
 use crate::org::allbinary::data::tree::dom::DomNodeHelper::DomNodeHelper;
 use crate::org::allbinary::data::tree::dom::DomSearchHelper::DomSearchHelper;
 use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
@@ -34,6 +33,7 @@ use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::ProfileActionScriptInputInterface::ProfileActionScriptInputInterface;
 
 // Borrows the object of a Java reference
@@ -67,13 +67,13 @@ impl BasicProfileActionScriptInput {
         };
         this.logUtil = LogUtil::getInstance();
         // super(...) is in the struct literal above
-        jcall!(this.logUtil).putF(format!("{}{}", jcall!(this.commonStrings).START, label), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF(format!("{}{}", { let java_field = jcall!(this.commonStrings).START.clone(); java_field }, label), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         let mut actionNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(unsafe { GenericProfileActionScriptInputData_TYPE.clone() }.clone(), jcall!(node).getChildNodes());
         let mut inputTypeString: String = DomNodeHelper::getTextNodeValue(actionNode.clone());
         let mut timeNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNodeNoThrow(unsafe { GenericProfileActionScriptInputData_DELAY.clone() }.clone(), jcall!(node).getChildNodes());
         if timeNode.is_some() {
             let mut delayString: String = DomNodeHelper::getTextNodeValue(timeNode.clone());
-            { let java_arguments = ((((delayString.clone()).to_string()).unwrap() as i32),); this.setTime(java_arguments.0) };
+            { let java_arguments = (((Some((delayString.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32),); this.setTime(java_arguments.0) };
         } else {
             this.setTime(0);
         }
@@ -95,9 +95,9 @@ impl BasicProfileActionScriptInput {
         };
         this.logUtil = LogUtil::getInstance();
         // super(...) is in the struct literal above
-        jcall!(this.logUtil).putF(format!("{}{}", jcall!(this.commonStrings).START, label), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF(format!("{}{}", { let java_field = jcall!(this.commonStrings).START.clone(); java_field }, label), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         let mut inputRobotFactory: Option<Rc<RefCell<InputRobotFactory>>> = InputRobotFactory::getInstance();
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = (jcall!(inputRobotFactory).get()).clone() /* as ABHashtable */;
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = (jcall!(inputRobotFactory).get()).clone();
         let mut set: Option<Rc<RefCell<dyn Set>>> = jcall!(hashtable).keySet();
         let mut iterator: Option<Rc<RefCell<dyn Iterator>>> = jcall!(set).iterator();
         { let java_arguments = (jcall!(inputRobotFactory).get1((jcall!(iterator).next()).clone() /* as String */),); this.setInputRobotInterface(java_arguments.0) };
@@ -120,10 +120,10 @@ impl BasicProfileActionScriptInput {
     }
     
 
-    pub fn BasicProfileActionScriptInput_toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(unsafe { GenericProfileActionScriptInputData_TYPE.clone() }.clone(), jcall!(self.getInputRobotInterface()).getName());
-        jcall!(hashMap).put(unsafe { GenericProfileActionScriptInputData_DELAY.clone() }.clone(), (self.getTime()).to_string());
+    pub fn BasicProfileActionScriptInput_toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object(unsafe { GenericProfileActionScriptInputData_TYPE.clone() }.clone()), { let java_argument = crate::java_into_object(jcall!(self.getInputRobotInterface()).getName()); java_argument });
+        jcall!(hashMap).put(crate::java_into_object(unsafe { GenericProfileActionScriptInputData_DELAY.clone() }.clone()), { let java_argument = crate::java_into_object((self.getTime()).to_string()); java_argument });
         { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("HashMap: "), jcall!(hashMap).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toHashMap()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         return hashMap.clone();
     }
@@ -131,7 +131,7 @@ impl BasicProfileActionScriptInput {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNodeWithValueNodes(document.clone(), unsafe { GenericProfileActionScriptInputData_NAME.clone() }.clone(), self.BasicProfileActionScriptInput_toHashMap());
+        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNodeWithValueNodes_Document_Node_HashMap(document.clone(), unsafe { GenericProfileActionScriptInputData_NAME.clone() }.clone(), self.BasicProfileActionScriptInput_toHashMap());
         return node.clone();
     }
     
@@ -151,9 +151,9 @@ impl BasicProfileActionScriptInput {
         jcall!(stringBuffer).append(self.base.toString());
         jcall!(stringBuffer).append(String::from(" Input Type: "));
         if self.getInputRobotInterface().is_some() {
-            jcall!(stringBuffer).append(jcall!(self.getInputRobotInterface()).getName());
+            jcall!(stringBuffer).append({ let java_argument = jcall!(self.getInputRobotInterface()).getName(); java_argument });
         } else {
-            jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).NULL_STRING.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(StringUtil::getInstance()).NULL_STRING.clone(); java_field }.clone());
         }
         jcall!(stringBuffer).append(String::from(" Time: "));
         jcall!(stringBuffer).appendlong(((self.getTime()) as i64));
@@ -173,7 +173,7 @@ pub trait BasicProfileActionScriptInputDyn: crate::org::allbinary::input::automa
     fn as_BasicProfileActionScriptInput_mut(&mut self) -> &mut BasicProfileActionScriptInput;
     fn getTime(&mut self) -> i32 { BasicProfileActionScriptInput::getTime(self.as_BasicProfileActionScriptInput_mut()) }
     fn setTime(&mut self, mut time: i32) { BasicProfileActionScriptInput::setTime(self.as_BasicProfileActionScriptInput_mut(), time) }
-    fn BasicProfileActionScriptInput_toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { BasicProfileActionScriptInput::BasicProfileActionScriptInput_toHashMap(self.as_BasicProfileActionScriptInput_mut()) }
+    fn BasicProfileActionScriptInput_toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { BasicProfileActionScriptInput::BasicProfileActionScriptInput_toHashMap(self.as_BasicProfileActionScriptInput_mut()) }
     fn setInputRobotInterface(&mut self, mut inputRobotInterface: Option<Rc<RefCell<dyn InputRobotInterface>>>) { BasicProfileActionScriptInput::setInputRobotInterface(self.as_BasicProfileActionScriptInput_mut(), inputRobotInterface) }
     fn getInputRobotInterface(&mut self) -> Option<Rc<RefCell<dyn InputRobotInterface>>> { BasicProfileActionScriptInput::getInputRobotInterface(self.as_BasicProfileActionScriptInput_mut()) }
     fn toString(&mut self) -> String { BasicProfileActionScriptInput::toString(self.as_BasicProfileActionScriptInput_mut()) }

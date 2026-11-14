@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::rand::MyRandomFactory::MyRandomFactory;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::color::BasicColorArrayIndexer::BasicColorArrayIndexer;
@@ -50,7 +50,7 @@ pub struct PtsDamageFloaters {
     pub myRandomFactory: Option<Rc<RefCell<MyRandomFactory>>>,
 }
 
-thread_local! { pub static PtsDamageFloaters_basicColorArrayIndexer: Option<Rc<RefCell<BasicColorArrayIndexer>>> = BasicColorArrayIndexer::new(vec![jcall!(BasicColorFactory::getInstance()).WHITE.clone(), jcall!(BasicColorFactory::getInstance()).RED.clone(), jcall!(BasicColorFactory::getInstance()).YELLOW.clone(), jcall!(BasicColorFactory::getInstance()).BLUE.clone()]); }
+thread_local! { pub static PtsDamageFloaters_basicColorArrayIndexer: Option<Rc<RefCell<BasicColorArrayIndexer>>> = BasicColorArrayIndexer::new(vec![{ let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).YELLOW.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).BLUE.clone(); java_field }.clone()]); }
 
 impl PtsDamageFloaters {
     
@@ -73,11 +73,11 @@ impl PtsDamageFloaters {
         this.lastDamageStringSizeArray = vec![0; (5) as usize];
         this.circularIndexUtil = CircularIndexUtil::createInstance(5);
         this.myRandomFactory = MyRandomFactory::getInstance();
-        this.primitiveLongUtil = PrimitiveLongUtil::createPowerOfTen(100000);
+        this.primitiveLongUtil = { let java_value = (PrimitiveLongUtil::createPowerOfTen(100000)).clone(); java_value };
         this.layerInterface = layerInterface.clone();
         let mut CHAR_ARRAY: Vec<char> = jcall!(CharArrayFactory::getInstance()).getZeroCharArray();
         for index in (0..=(this.lastDamageString.len() as i32) - 1).rev() {
-            this.lastDamageString[(index) as usize] = CHAR_ARRAY.clone();
+            { let java_index = (index) as usize; this.lastDamageString[java_index] = CHAR_ARRAY.clone(); };
         }
         this
     }
@@ -89,14 +89,14 @@ impl PtsDamageFloaters {
 
     pub fn add(&mut self, mut damage: i32) {
         let mut index: i32 = jcall!(self.circularIndexUtil).getIndex();
-        self.lastDamage[(index) as usize] = damage.clone();
-        self.lastDamageString[(index) as usize] = jcall!(self.primitiveLongUtil).getCharArray(self.lastDamage[(index) as usize].clone());
-        self.lastDamageStringSizeArray[(index) as usize] = jcall!(self.primitiveLongUtil).getCurrentTotalDigits();
+        { let java_index = (index) as usize; self.lastDamage[java_index] = damage.clone(); };
+        { let java_index = (index) as usize; self.lastDamageString[java_index] = jcall!(self.primitiveLongUtil).getCharArray(self.lastDamage[(index) as usize].clone()); };
+        { let java_index = (index) as usize; self.lastDamageStringSizeArray[java_index] = jcall!(self.primitiveLongUtil).getCurrentTotalDigits(); };
         jcall!(self.circularIndexUtil).next();
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         let mut viewPosition: Option<Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>> = jcall!(self.layerInterface).getViewPosition();
         let mut x: i32 = jcall!(viewPosition).getX();
         let mut y: i32 = jcall!(viewPosition).getY();
@@ -107,7 +107,7 @@ impl PtsDamageFloaters {
                 jcall!(graphics).drawChars(self.lastDamageString[(index) as usize].clone(), 0, self.lastDamageStringSizeArray[(index) as usize].clone(), x - jcall!(self.myRandomFactory).getNextInt(delta.clone()), y - delta, 0);
                 jcall!(PtsDamageFloaters_basicColorArrayIndexer.with(Clone::clone)).next();
             }
-            self.lastDamage[(index) as usize] = 0;
+            { let java_index = (index) as usize; self.lastDamage[java_index] = 0; };
         }
     }
 }
@@ -127,7 +127,10 @@ impl crate::org::allbinary::game::combat::damage::DamageFloaters::DamageFloaters
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for PtsDamageFloaters {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for PtsDamageFloaters {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

@@ -32,6 +32,12 @@ pub struct ChangedGameFeatureListener {
 }
 
 thread_local! { pub static ChangedGameFeatureListener_gameFeatureListener: Option<Rc<RefCell<ChangedGameFeatureListener>>> = ChangedGameFeatureListener::new(); }
+impl crate::org::allbinary::game::configuration::event::GameFeatureListenerInterface::GameFeatureListenerInterface for ChangedGameFeatureListener {
+    fn onGameFeatureChange(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::configuration::event::GameFeatureEvent::GameFeatureEvent>>>) { crate::org::allbinary::game::configuration::event::BaseChangedGameFeatureListener::BaseChangedGameFeatureListener::onGameFeatureChange(crate::org::allbinary::game::configuration::event::BaseChangedGameFeatureListener::BaseChangedGameFeatureListenerDyn::as_BaseChangedGameFeatureListener_mut(self), p1) }
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for ChangedGameFeatureListener {
+    fn onEvent(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { crate::org::allbinary::game::configuration::event::BaseChangedGameFeatureListener::BaseChangedGameFeatureListener::onEvent(crate::org::allbinary::game::configuration::event::BaseChangedGameFeatureListener::BaseChangedGameFeatureListenerDyn::as_BaseChangedGameFeatureListener_mut(self), p1) }
+}
 
 impl ChangedGameFeatureListener {
 

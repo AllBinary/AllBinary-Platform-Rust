@@ -32,6 +32,10 @@ pub struct ShakeAnimationListener {
 
 impl ShakeAnimationListener {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -63,7 +67,7 @@ impl ShakeAnimationListener {
         return 0;
     }
 }
-pub trait ShakeAnimationListenerDyn {
+pub trait ShakeAnimationListenerDyn: std::any::Any {
     fn as_ShakeAnimationListener(&self) -> &ShakeAnimationListener;
     fn as_ShakeAnimationListener_mut(&mut self) -> &mut ShakeAnimationListener;
     fn onSmallShakeEvent(&mut self) { ShakeAnimationListener::onSmallShakeEvent(self.as_ShakeAnimationListener_mut()) }

@@ -35,6 +35,10 @@ pub static mut MouseActionScriptInputData_MOVE_X: std::cell::LazyCell<String> = 
 pub static mut MouseActionScriptInputData_MOVE_Y: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("MOUSE_ACTION_INPUT_MOVE_Y"));
 
 impl MouseActionScriptInputData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

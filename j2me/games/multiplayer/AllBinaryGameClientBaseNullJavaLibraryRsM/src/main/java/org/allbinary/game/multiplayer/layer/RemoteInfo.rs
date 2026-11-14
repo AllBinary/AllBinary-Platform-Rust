@@ -22,9 +22,13 @@ pub struct RemoteInfo {
 }
 
 thread_local! { pub static RemoteInfo_NEW_PLAYER_ID: i32 = 0; }
-thread_local! { pub static RemoteInfo_REMOTE_INFO: Option<Rc<RefCell<RemoteInfo>>> = RemoteInfo::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), -1, -1, RemoteInfo_NEW_PLAYER_ID.with(Clone::clone).clone()); }
+thread_local! { pub static RemoteInfo_REMOTE_INFO: Option<Rc<RefCell<RemoteInfo>>> = RemoteInfo::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), -1, -1, RemoteInfo_NEW_PLAYER_ID.with(Clone::clone).clone()); }
 
 impl RemoteInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut username: String, mut actorSessionId: i32, mut playerInputId: i32, mut id: i32) -> Self {

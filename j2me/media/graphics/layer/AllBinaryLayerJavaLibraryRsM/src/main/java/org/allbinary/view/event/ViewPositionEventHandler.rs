@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::util::event::EventStrings::EventStrings;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::ViewPositionEvent::ViewPositionEvent;
 use super::ViewPositionEventListenerInterface::ViewPositionEventListenerInterface;
 
@@ -54,7 +55,7 @@ impl ViewPositionEventHandler {
             base: BasicEventHandler::new_struct(),
             list: None,
         };
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -78,7 +79,7 @@ impl ViewPositionEventHandler {
 
     pub fn removeListener(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
         jcall!(self.list).remove(crate::java_into_object(eventListenerInterface.clone()));
-        self.base.removeListener(eventListenerInterface.clone());
+        { let java_arguments = (eventListenerInterface.clone(),); self.base.removeListener(java_arguments.0) };
     }
     
 
@@ -89,25 +90,25 @@ impl ViewPositionEventHandler {
             while { index -= 1; index } >= 0 {
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                 let mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = { let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>>().expect("ClassCastException").clone()) };
-                jcall!(layerInterface).onChangeEvent((eventObject).clone() /* as ViewPositionEvent */);
+                jcall!(layerInterface).onChangeEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<ViewPositionEvent>() }, "ClassCastException: not a ViewPositionEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<ViewPositionEvent>) } }));
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
                 }
             }
             }
         }
-        self.base.fireEvent(eventObject.clone());
+        { let java_arguments = (eventObject.clone(),); self.base.fireEvent(java_arguments.0) };
     }
     
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut viewPositionEventListenerInterface: Option<Rc<RefCell<dyn ViewPositionEventListenerInterface>>> = (panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn ViewPositionEventListenerInterface"));
-        jcall!(viewPositionEventListenerInterface).onChangeEvent((eventObject).clone() /* as ViewPositionEvent */);
+        let mut viewPositionEventListenerInterface: Option<Rc<RefCell<dyn ViewPositionEventListenerInterface>>> = ((|| -> Option<Rc<RefCell<dyn ViewPositionEventListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn ViewPositionEventListenerInterface") })());
+        jcall!(viewPositionEventListenerInterface).onChangeEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<ViewPositionEvent>() }, "ClassCastException: not a ViewPositionEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<ViewPositionEvent>) } }));
     }
 }
 impl std::ops::Deref for ViewPositionEventHandler {

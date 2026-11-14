@@ -33,6 +33,10 @@ pub struct HudResources {
 thread_local! { pub static HudResources_instance: Option<Rc<RefCell<HudResources>>> = HudResources::new(); }
 
 impl HudResources {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<HudResources>>> {

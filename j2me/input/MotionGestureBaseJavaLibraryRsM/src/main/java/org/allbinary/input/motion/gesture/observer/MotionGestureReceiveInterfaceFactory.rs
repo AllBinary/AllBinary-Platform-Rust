@@ -36,6 +36,10 @@ pub struct MotionGestureReceiveInterfaceFactory {
 
 impl MotionGestureReceiveInterfaceFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -50,9 +54,9 @@ impl MotionGestureReceiveInterfaceFactory {
     pub fn getInstance() -> Option<Rc<RefCell<dyn CompleteMotionGestureListenerInterface>>> {
         let mut configuration: Option<Rc<RefCell<MotionGestureConfiguration>>> = MotionGestureConfigurationFactory::getInstance();
         if !jcall!(configuration).isExecutingActionsAllowed() {
-            return NullCompleteMotionGestureReceiver::new().map(|reference| reference as Rc<RefCell<dyn CompleteMotionGestureListenerInterface>>);
+            return NullCompleteMotionGestureReceiver::new().map(|reference| reference as Rc<RefCell<dyn CompleteMotionGestureListenerInterface>>).map(|reference| reference as Rc<RefCell<dyn CompleteMotionGestureListenerInterface>>);
         } else {
-            return ResolveCompleteMotionGestureListener::new().map(|reference| reference as Rc<RefCell<dyn CompleteMotionGestureListenerInterface>>);
+            return ResolveCompleteMotionGestureListener::new().map(|reference| reference as Rc<RefCell<dyn CompleteMotionGestureListenerInterface>>).map(|reference| reference as Rc<RefCell<dyn CompleteMotionGestureListenerInterface>>);
         }
     }
 }

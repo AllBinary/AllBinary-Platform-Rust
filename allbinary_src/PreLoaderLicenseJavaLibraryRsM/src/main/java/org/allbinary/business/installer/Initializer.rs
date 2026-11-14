@@ -16,11 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
-// use crate::java::util::Map::Map;
-// use crate::java::util::Set::Set;
+use crate::java::util::HashMap::HashMap;
+use crate::java::util::Map::Map;
+use crate::java::util::Set::Set;
 use crate::org::allbinary::business::init::db::HistoryDbInitInfo::HistoryDbInitInfo;
 use crate::org::allbinary::business::init::db::InventoryDbInitInfo::InventoryDbInitInfo;
 use crate::org::allbinary::business::init::db::LogDbInitInfo::LogDbInitInfo;
@@ -31,6 +30,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::InitializerData::InitializerData;
 
 // Borrows the object of a Java reference
@@ -85,9 +85,13 @@ thread_local! { pub static Initializer_MIN: i32 = 4; }
 thread_local! { pub static Initializer_MINPASSWORD: i32 = 0; }
 
 impl Initializer {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct1(mut map: Option<Rc<RefCell<dyn Map>>>) -> Self {
+    pub fn new_struct1(mut map: Option<Rc<RefCell<dyn Map<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             userJdbcDriver: String::new(),
@@ -128,14 +132,14 @@ impl Initializer {
         };
         this.logUtil = LogUtil::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
         let mut keys: Option<Rc<RefCell<dyn Set>>> = jcall!(map).keySet();
         let mut keyArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(keys).toArray();
         let mut size: i32 = (keyArray.len() as i32).clone();
         for index in (0..size) {
-            let mut key: String = (keyArray[(index) as usize]).clone() /* as String */;
-            let mut values: Vec<String> = (jcall!(map).get(key.clone())).clone() /* as  */;
-            jcall!(hashMap).put(key.clone().clone(), values[(0) as usize].clone().clone());
+            let mut key: String = { let java_object = (keyArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut values: Vec<String> = { let java_object = (jcall!(map).get(crate::java_into_object(key.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<Vec<String>>().cloned().expect("ClassCastException")).unwrap_or_default() };
+            jcall!(hashMap).put(crate::java_into_object(key.clone().clone()), crate::java_into_object(values[(0) as usize].clone().clone()));
             jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
             jcall!(stringBuffer).append(String::from("key: "));
             jcall!(stringBuffer).append(key.clone());
@@ -147,12 +151,12 @@ impl Initializer {
         this
     }
 
-    pub fn new1(mut map: Option<Rc<RefCell<dyn Map>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new1(mut map: Option<Rc<RefCell<dyn Map<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct1(map))))
     }
     
 
-    pub fn new_struct1(mut initHashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1_HashMap(mut initHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             userJdbcDriver: String::new(),
@@ -196,53 +200,53 @@ impl Initializer {
         this
     }
 
-    pub fn new1(mut initHashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(initHashMap))))
+    pub fn new1_HashMap(mut initHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_HashMap(initHashMap))))
     }
     
 
-    pub fn getFormData(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) {
+    pub fn getFormData(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut initializerData: Option<Rc<RefCell<InitializerData>>> = InitializerData::getInstance();
-            self.userJdbcDriver = (jcall!(hashMap).get(jcall!(initializerData).CUSTOMERJDBCDRIVER.clone())).clone() /* as String */;
-            self.userName = (jcall!(hashMap).get(jcall!(initializerData).CUSTOMERNAME.clone())).clone() /* as String */;
-            self.userUserName = (jcall!(hashMap).get(jcall!(initializerData).CUSTOMERUSERNAME.clone())).clone() /* as String */;
-            self.userPassword = (jcall!(hashMap).get(jcall!(initializerData).CUSTOMERPASSWORD.clone())).clone() /* as String */;
-            self.userSchema = (jcall!(hashMap).get(jcall!(initializerData).CUSTOMERSCHEMA.clone())).clone() /* as String */;
-            self.userServer = (jcall!(hashMap).get(jcall!(initializerData).CUSTOMERSERVER.clone())).clone() /* as String */;
-            self.userPort = (jcall!(hashMap).get(jcall!(initializerData).CUSTOMERPORT.clone())).clone() /* as String */;
-            self.historyJdbcDriver = (jcall!(hashMap).get(jcall!(initializerData).HISTORYJDBCDRIVER.clone())).clone() /* as String */;
-            self.historyName = (jcall!(hashMap).get(jcall!(initializerData).HISTORYNAME.clone())).clone() /* as String */;
-            self.historyUserName = (jcall!(hashMap).get(jcall!(initializerData).HISTORYUSERNAME.clone())).clone() /* as String */;
-            self.historyPassword = (jcall!(hashMap).get(jcall!(initializerData).HISTORYPASSWORD.clone())).clone() /* as String */;
-            self.historySchema = (jcall!(hashMap).get(jcall!(initializerData).HISTORYSCHEMA.clone())).clone() /* as String */;
-            self.historyServer = (jcall!(hashMap).get(jcall!(initializerData).HISTORYSERVER.clone())).clone() /* as String */;
-            self.historyPort = (jcall!(hashMap).get(jcall!(initializerData).HISTORYPORT.clone())).clone() /* as String */;
-            self.logJdbcDriver = (jcall!(hashMap).get(jcall!(initializerData).LOGJDBCDRIVER.clone())).clone() /* as String */;
-            self.logName = (jcall!(hashMap).get(jcall!(initializerData).LOGNAME.clone())).clone() /* as String */;
-            self.logUserName = (jcall!(hashMap).get(jcall!(initializerData).LOGUSERNAME.clone())).clone() /* as String */;
-            self.logPassword = (jcall!(hashMap).get(jcall!(initializerData).LOGPASSWORD.clone())).clone() /* as String */;
-            self.logSchema = (jcall!(hashMap).get(jcall!(initializerData).LOGSCHEMA.clone())).clone() /* as String */;
-            self.logServer = (jcall!(hashMap).get(jcall!(initializerData).LOGSERVER.clone())).clone() /* as String */;
-            self.logPort = (jcall!(hashMap).get(jcall!(initializerData).LOGPORT.clone())).clone() /* as String */;
-            self.inventoryJdbcDriver = (jcall!(hashMap).get(jcall!(initializerData).INVENTORYJDBCDRIVER.clone())).clone() /* as String */;
-            self.inventoryName = (jcall!(hashMap).get(jcall!(initializerData).INVENTORYNAME.clone())).clone() /* as String */;
-            self.inventoryUserName = (jcall!(hashMap).get(jcall!(initializerData).INVENTORYUSERNAME.clone())).clone() /* as String */;
-            self.inventoryPassword = (jcall!(hashMap).get(jcall!(initializerData).INVENTORYPASSWORD.clone())).clone() /* as String */;
-            self.inventorySchema = (jcall!(hashMap).get(jcall!(initializerData).INVENTORYSCHEMA.clone())).clone() /* as String */;
-            self.inventoryServer = (jcall!(hashMap).get(jcall!(initializerData).INVENTORYSERVER.clone())).clone() /* as String */;
-            self.inventoryPort = (jcall!(hashMap).get(jcall!(initializerData).INVENTORYPORT.clone())).clone() /* as String */;
-            self.staticPagesJdbcDriver = (jcall!(hashMap).get(jcall!(initializerData).STATICPAGESJDBCDRIVER.clone())).clone() /* as String */;
-            self.staticPagesName = (jcall!(hashMap).get(jcall!(initializerData).STATICPAGESNAME.clone())).clone() /* as String */;
-            self.staticPagesUserName = (jcall!(hashMap).get(jcall!(initializerData).STATICPAGESUSERNAME.clone())).clone() /* as String */;
-            self.staticPagesPassword = (jcall!(hashMap).get(jcall!(initializerData).STATICPAGESPASSWORD.clone())).clone() /* as String */;
-            self.staticPagesSchema = (jcall!(hashMap).get(jcall!(initializerData).STATICPAGESSCHEMA.clone())).clone() /* as String */;
-            self.staticPagesServer = (jcall!(hashMap).get(jcall!(initializerData).STATICPAGESSERVER.clone())).clone() /* as String */;
-            self.staticPagesPort = (jcall!(hashMap).get(jcall!(initializerData).STATICPAGESPORT.clone())).clone() /* as String */;
+            self.userJdbcDriver = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).CUSTOMERJDBCDRIVER.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.userName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).CUSTOMERNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.userUserName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).CUSTOMERUSERNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.userPassword = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).CUSTOMERPASSWORD.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.userSchema = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).CUSTOMERSCHEMA.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.userServer = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).CUSTOMERSERVER.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.userPort = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).CUSTOMERPORT.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.historyJdbcDriver = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).HISTORYJDBCDRIVER.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.historyName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).HISTORYNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.historyUserName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).HISTORYUSERNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.historyPassword = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).HISTORYPASSWORD.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.historySchema = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).HISTORYSCHEMA.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.historyServer = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).HISTORYSERVER.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.historyPort = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).HISTORYPORT.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.logJdbcDriver = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).LOGJDBCDRIVER.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.logName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).LOGNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.logUserName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).LOGUSERNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.logPassword = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).LOGPASSWORD.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.logSchema = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).LOGSCHEMA.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.logServer = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).LOGSERVER.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.logPort = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).LOGPORT.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.inventoryJdbcDriver = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).INVENTORYJDBCDRIVER.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.inventoryName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).INVENTORYNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.inventoryUserName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).INVENTORYUSERNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.inventoryPassword = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).INVENTORYPASSWORD.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.inventorySchema = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).INVENTORYSCHEMA.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.inventoryServer = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).INVENTORYSERVER.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.inventoryPort = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).INVENTORYPORT.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.staticPagesJdbcDriver = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).STATICPAGESJDBCDRIVER.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.staticPagesName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).STATICPAGESNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.staticPagesUserName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).STATICPAGESUSERNAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.staticPagesPassword = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).STATICPAGESPASSWORD.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.staticPagesSchema = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).STATICPAGESSCHEMA.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.staticPagesServer = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).STATICPAGESSERVER.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.staticPagesPort = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(initializerData).STATICPAGESPORT.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             jcall!(self.logUtil).put(String::from("Unable to get form data"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getFormData()"), crate::java_into_object(e.clone()));
             }
@@ -251,27 +255,28 @@ impl Initializer {
     
 
     pub fn isJdbcDriverValid(&mut self, mut jdbcDriverClassPathString: String) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(Class::Class::forName(jdbcDriverClassPathString.clone())).newInstance();
-            return true;
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PRELOADERERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PRELOADERERROR.clone(); java_field }.clone()) {
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).IS_VALID.clone(), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).IS_VALID.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn isValid(&mut self) -> bool {
         let mut isValid: bool = true;
-        if !self.isJdbcDriverValid(self.userJdbcDriver.clone()) {
+        if !{ let java_arguments = (self.userJdbcDriver.clone(),); self.isJdbcDriverValid(java_arguments.0) } {
             isValid = false;
         }
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
@@ -284,7 +289,7 @@ impl Initializer {
         if !jcall!(stringValidationUtil).isValidNotRequired(self.userPassword.clone(), Initializer_MINPASSWORD.with(Clone::clone).clone(), Initializer_MAX.with(Clone::clone).clone()) {
             isValid = false;
         }
-        if !self.isJdbcDriverValid(self.historyJdbcDriver.clone()) {
+        if !{ let java_arguments = (self.historyJdbcDriver.clone(),); self.isJdbcDriverValid(java_arguments.0) } {
             isValid = false;
         }
         if !jcall!(stringValidationUtil).isValidRequired(self.historyName.clone(), Initializer_MIN.with(Clone::clone).clone(), Initializer_MAXDB.with(Clone::clone).clone()) {
@@ -296,7 +301,7 @@ impl Initializer {
         if !jcall!(stringValidationUtil).isValidNotRequired(self.historyPassword.clone(), Initializer_MINPASSWORD.with(Clone::clone).clone(), Initializer_MAX.with(Clone::clone).clone()) {
             isValid = false;
         }
-        if !self.isJdbcDriverValid(self.logJdbcDriver.clone()) {
+        if !{ let java_arguments = (self.logJdbcDriver.clone(),); self.isJdbcDriverValid(java_arguments.0) } {
             isValid = false;
         }
         if !jcall!(stringValidationUtil).isValidRequired(self.logName.clone(), Initializer_MIN.with(Clone::clone).clone(), Initializer_MAXDB.with(Clone::clone).clone()) {
@@ -308,7 +313,7 @@ impl Initializer {
         if !jcall!(stringValidationUtil).isValidNotRequired(self.logPassword.clone(), Initializer_MINPASSWORD.with(Clone::clone).clone(), Initializer_MAX.with(Clone::clone).clone()) {
             isValid = false;
         }
-        if !self.isJdbcDriverValid(self.inventoryJdbcDriver.clone()) {
+        if !{ let java_arguments = (self.inventoryJdbcDriver.clone(),); self.isJdbcDriverValid(java_arguments.0) } {
             isValid = false;
         }
         if !jcall!(stringValidationUtil).isValidRequired(self.inventoryName.clone(), Initializer_MIN.with(Clone::clone).clone(), Initializer_MAXDB.with(Clone::clone).clone()) {
@@ -320,7 +325,7 @@ impl Initializer {
         if !jcall!(stringValidationUtil).isValidNotRequired(self.inventoryPassword.clone(), Initializer_MINPASSWORD.with(Clone::clone).clone(), Initializer_MAX.with(Clone::clone).clone()) {
             isValid = false;
         }
-        if !self.isJdbcDriverValid(self.staticPagesJdbcDriver.clone()) {
+        if !{ let java_arguments = (self.staticPagesJdbcDriver.clone(),); self.isJdbcDriverValid(java_arguments.0) } {
             isValid = false;
         }
         if !jcall!(stringValidationUtil).isValidRequired(self.staticPagesName.clone(), Initializer_MIN.with(Clone::clone).clone(), Initializer_MAXDB.with(Clone::clone).clone()) {
@@ -363,9 +368,9 @@ impl Initializer {
     pub fn getInvalidInfo(&mut self) -> String {
         let mut isJdbcDriversValid: bool = true;
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        if !self.isJdbcDriverValid(self.userJdbcDriver.clone()) {
+        if !{ let java_arguments = (self.userJdbcDriver.clone(),); self.isJdbcDriverValid(java_arguments.0) } {
             isJdbcDriversValid = false;
-            jcall!(stringBuffer).append(self.getJdbcDriverValidationInfo(self.userJdbcDriver.clone()));
+            jcall!(stringBuffer).append({ let java_arguments = (self.userJdbcDriver.clone(),); self.getJdbcDriverValidationInfo(java_arguments.0) });
         }
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
         if !jcall!(stringValidationUtil).isValidRequired(self.userName.clone(), Initializer_MIN.with(Clone::clone).clone(), Initializer_MAXDB.with(Clone::clone).clone()) {
@@ -377,9 +382,9 @@ impl Initializer {
         if !jcall!(stringValidationUtil).isValidNotRequired(self.userPassword.clone(), Initializer_MINPASSWORD.with(Clone::clone).clone(), Initializer_MAX.with(Clone::clone).clone()) {
             jcall!(stringBuffer).append(format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("User DB password should be < "), Initializer_MAX.with(Clone::clone)), String::from(" and > ")), Initializer_MINPASSWORD.with(Clone::clone)), String::from(" characters in length.<br />")));
         }
-        if !self.isJdbcDriverValid(self.historyJdbcDriver.clone()) {
+        if !{ let java_arguments = (self.historyJdbcDriver.clone(),); self.isJdbcDriverValid(java_arguments.0) } {
             isJdbcDriversValid = false;
-            jcall!(stringBuffer).append(self.getJdbcDriverValidationInfo(self.historyJdbcDriver.clone()));
+            jcall!(stringBuffer).append({ let java_arguments = (self.historyJdbcDriver.clone(),); self.getJdbcDriverValidationInfo(java_arguments.0) });
         }
         if !jcall!(stringValidationUtil).isValidRequired(self.historyName.clone(), Initializer_MIN.with(Clone::clone).clone(), Initializer_MAXDB.with(Clone::clone).clone()) {
             jcall!(stringBuffer).append(format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("History db should be < "), Initializer_MAXDB.with(Clone::clone)), String::from(" and > ")), Initializer_MIN.with(Clone::clone)), String::from(" characters in length.<br />")));
@@ -390,9 +395,9 @@ impl Initializer {
         if !jcall!(stringValidationUtil).isValidNotRequired(self.historyPassword.clone(), Initializer_MINPASSWORD.with(Clone::clone).clone(), Initializer_MAX.with(Clone::clone).clone()) {
             jcall!(stringBuffer).append(format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("History db password should be < "), Initializer_MAX.with(Clone::clone)), String::from(" and > ")), Initializer_MINPASSWORD.with(Clone::clone)), String::from(" characters in length.<br />")));
         }
-        if !self.isJdbcDriverValid(self.logJdbcDriver.clone()) {
+        if !{ let java_arguments = (self.logJdbcDriver.clone(),); self.isJdbcDriverValid(java_arguments.0) } {
             isJdbcDriversValid = false;
-            jcall!(stringBuffer).append(self.getJdbcDriverValidationInfo(self.logJdbcDriver.clone()));
+            jcall!(stringBuffer).append({ let java_arguments = (self.logJdbcDriver.clone(),); self.getJdbcDriverValidationInfo(java_arguments.0) });
         }
         if !jcall!(stringValidationUtil).isValidRequired(self.logName.clone(), Initializer_MIN.with(Clone::clone).clone(), Initializer_MAXDB.with(Clone::clone).clone()) {
             jcall!(stringBuffer).append(format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Log db should be < "), Initializer_MAXDB.with(Clone::clone)), String::from(" and > ")), Initializer_MIN.with(Clone::clone)), String::from(" characters in length.<br />")));
@@ -403,9 +408,9 @@ impl Initializer {
         if !jcall!(stringValidationUtil).isValidNotRequired(self.logPassword.clone(), Initializer_MINPASSWORD.with(Clone::clone).clone(), Initializer_MAX.with(Clone::clone).clone()) {
             jcall!(stringBuffer).append(format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Log db password should be < "), Initializer_MAX.with(Clone::clone)), String::from(" and > ")), Initializer_MINPASSWORD.with(Clone::clone)), String::from(" characters in length.<br />")));
         }
-        if !self.isJdbcDriverValid(self.inventoryJdbcDriver.clone()) {
+        if !{ let java_arguments = (self.inventoryJdbcDriver.clone(),); self.isJdbcDriverValid(java_arguments.0) } {
             isJdbcDriversValid = false;
-            jcall!(stringBuffer).append(self.getJdbcDriverValidationInfo(self.inventoryJdbcDriver.clone()));
+            jcall!(stringBuffer).append({ let java_arguments = (self.inventoryJdbcDriver.clone(),); self.getJdbcDriverValidationInfo(java_arguments.0) });
         }
         if !jcall!(stringValidationUtil).isValidRequired(self.inventoryName.clone(), Initializer_MIN.with(Clone::clone).clone(), Initializer_MAXDB.with(Clone::clone).clone()) {
             jcall!(stringBuffer).append(format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Inventory db should be < "), Initializer_MAXDB.with(Clone::clone)), String::from(" and > ")), Initializer_MIN.with(Clone::clone)), String::from(" characters in length.<br />")));
@@ -416,9 +421,9 @@ impl Initializer {
         if !jcall!(stringValidationUtil).isValidNotRequired(self.inventoryPassword.clone(), Initializer_MINPASSWORD.with(Clone::clone).clone(), Initializer_MAX.with(Clone::clone).clone()) {
             jcall!(stringBuffer).append(format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Inventory DB password should be < "), Initializer_MAX.with(Clone::clone)), String::from(" and > ")), Initializer_MINPASSWORD.with(Clone::clone)), String::from(" characters in length.<br />")));
         }
-        if !self.isJdbcDriverValid(self.staticPagesJdbcDriver.clone()) {
+        if !{ let java_arguments = (self.staticPagesJdbcDriver.clone(),); self.isJdbcDriverValid(java_arguments.0) } {
             isJdbcDriversValid = false;
-            jcall!(stringBuffer).append(self.getJdbcDriverValidationInfo(self.staticPagesJdbcDriver.clone()));
+            jcall!(stringBuffer).append({ let java_arguments = (self.staticPagesJdbcDriver.clone(),); self.getJdbcDriverValidationInfo(java_arguments.0) });
         }
         if !jcall!(stringValidationUtil).isValidRequired(self.staticPagesName.clone(), Initializer_MIN.with(Clone::clone).clone(), Initializer_MAXDB.with(Clone::clone).clone()) {
             jcall!(stringBuffer).append(format!("{}{}", format!("{}{}", format!("{}{}", format!("{}{}", String::from("Static Pages db should be < "), Initializer_MAXDB.with(Clone::clone)), String::from(" and > ")), Initializer_MIN.with(Clone::clone)), String::from(" characters in length.<br />")));

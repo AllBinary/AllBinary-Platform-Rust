@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait DisplayInBrowserContraintsInterface {
+pub trait DisplayInBrowserContraintsInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn isMountable(&mut self) -> bool;
@@ -50,8 +50,6 @@ pub trait DisplayInBrowserContraintsInterface {
     
 
     fn getMountedLink(&mut self) -> String;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

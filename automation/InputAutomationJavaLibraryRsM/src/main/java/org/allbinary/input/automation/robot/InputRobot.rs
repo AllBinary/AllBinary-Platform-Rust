@@ -24,6 +24,7 @@ use crate::org::allbinary::input::automation::PointHelper::PointHelper;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -77,14 +78,14 @@ impl InputRobot {
     // throws Exception
     pub fn mouseMoveToTarget3(&mut self, mut rectangle: Option<Rc<RefCell<Rectangle>>>, mut x: Option<i32>, mut y: Option<i32>) {
         let mut point: Option<Rc<RefCell<Point>>> = PointHelper::getCenterPoint(rectangle.clone());
-        jcall!(self.robot).mouseMove(jcall!(point).x + x, jcall!(point).y + y);
-        let mut message: String = jcall!(StringMaker::new()).append(String::from("Moved Mouse To: x: ")).appendint(((jcall!(point).x) as i32).clone()).append(String::from(" y: ")).appendint(((jcall!(point).y) as i32).clone()).append(String::from(" in the middle of: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(rectangle.clone()))).toString();
+        jcall!(self.robot).mouseMove({ let java_field = jcall!(point).x.clone(); java_field } + x, { let java_field = jcall!(point).y.clone(); java_field } + y);
+        let mut message: String = jcall!(StringMaker::new()).append(String::from("Moved Mouse To: x: ")).appendint((({ let java_field = jcall!(point).x.clone(); java_field }) as i32).clone()).append(String::from(" y: ")).appendint((({ let java_field = jcall!(point).y.clone(); java_field }) as i32).clone()).append(String::from(" in the middle of: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(rectangle.clone()))).toString();
         jcall!(self.logUtil).putF(message.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("moveMouseToTarget"));
     }
     
 
     pub fn mouseMove(&mut self, mut point: Option<Rc<RefCell<Point>>>) {
-        self.mouseMove2(jcall!(point).x.clone(), jcall!(point).y.clone());
+        { let java_arguments = ({ let java_field = jcall!(point).x.clone(); java_field }.clone(), { let java_field = jcall!(point).y.clone(); java_field }.clone(),); self.mouseMove2(java_arguments.0, java_arguments.1) };
     }
     
 
@@ -139,7 +140,7 @@ impl InputRobot {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn mouseMove2(&mut self, mut x: Option<i32>, mut y: Option<i32>) {
+    pub fn mouseMove2_Integer_Integer(&mut self, mut x: Option<i32>, mut y: Option<i32>) {
         jcall!(self.robot).mouseMove(x.clone(), y.clone());
     }
     

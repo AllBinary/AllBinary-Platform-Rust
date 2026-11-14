@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait LayerPlacementInterfaceBasicArrayListFactoryInterface {
+pub trait LayerPlacementInterfaceBasicArrayListFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>;
     
 
     fn getOnDemandResources(&mut self) -> Vec<i32>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

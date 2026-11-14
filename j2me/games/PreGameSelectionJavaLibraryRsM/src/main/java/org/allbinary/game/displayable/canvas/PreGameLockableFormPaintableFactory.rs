@@ -21,6 +21,7 @@ use crate::org::allbinary::graphics::form::ItemPaintable::ItemPaintable;
 use crate::org::allbinary::graphics::form::ItemPaintableFactory::ItemPaintableFactory;
 use crate::org::allbinary::graphics::form::PaintableForm::PaintableForm;
 use crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionForm;
+use crate::java::lang::Exception::*;
 use super::PreGameLockablePaintable::PreGameLockablePaintable;
 
 // Borrows the object of a Java reference
@@ -55,7 +56,7 @@ impl PreGameLockableFormPaintableFactory {
 
     // throws Exception
     pub fn getInstanceItemPaintable(&mut self, mut paintableForm: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::PaintableForm::PaintableFormDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemPaintable::ItemPaintableDyn>>> {
-        return PreGameLockablePaintable::new((paintableForm).clone() /* as ScrollCurrentSelectionForm */, self.lockedIndex.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemPaintable::ItemPaintableDyn>>);
+        return PreGameLockablePaintable::new((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionFormDyn>>> { panic!("ClassCastException: a Rust dyn PaintableForm cannot be cast to ScrollCurrentSelectionForm") })(), self.lockedIndex.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemPaintable::ItemPaintableDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemPaintable::ItemPaintableDyn>>);
     }
 }
 impl std::ops::Deref for PreGameLockableFormPaintableFactory {

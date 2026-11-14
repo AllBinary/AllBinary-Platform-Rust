@@ -35,6 +35,10 @@ pub struct CustomGameMenuUtil {
 
 impl CustomGameMenuUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -48,10 +52,10 @@ impl CustomGameMenuUtil {
 
     pub fn add(mut canvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn>>>) {
         let mut gameCommandsFactory: Option<Rc<RefCell<GameCommandsFactory>>> = GameCommandsFactory::getInstance();
-        if AppletUtil::isAppletLoader(canvas.clone()) {
+        if AppletUtil::isAppletLoader(crate::java_into_object(canvas.clone())) {
         } else if J2MEUtil::isHTML() {
         } else {
-            jcall!(canvas).addCommand(jcall!(gameCommandsFactory).EXIT_COMMAND.clone());
+            jcall!(canvas).as_MyCanvas_mut().addCommand({ let java_field = jcall!(gameCommandsFactory).EXIT_COMMAND.clone(); java_field }.clone());
         }
     }
 }

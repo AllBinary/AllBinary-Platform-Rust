@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
@@ -35,8 +34,8 @@ pub struct InputImageType {
     pub index: i32,
 }
 
-pub static mut InputImageType_hashMap: std::cell::LazyCell<Option<Rc<RefCell<HashMap>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashMap());
-thread_local! { pub static InputImageType_TYPE_VECTOR: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>); }
+pub static mut InputImageType_hashMap: std::cell::LazyCell<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashMap());
+thread_local! { pub static InputImageType_TYPE_VECTOR: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>); }
 pub static mut InputImageType_CAPTURE: std::cell::LazyCell<Option<Rc<RefCell<InputImageType>>>> = std::cell::LazyCell::new(|| InputImageType::new(String::from("Capture"), 0));
 pub static mut InputImageType_COMPARISON: std::cell::LazyCell<Option<Rc<RefCell<InputImageType>>>> = std::cell::LazyCell::new(|| InputImageType::new(String::from("Comparison"), 1));
 pub static mut InputImageType_MOTION: std::cell::LazyCell<Option<Rc<RefCell<InputImageType>>>> = std::cell::LazyCell::new(|| InputImageType::new(String::from("Motion"), 2));
@@ -55,9 +54,9 @@ impl InputImageType {
     }
 
     pub fn new(mut name: String, mut index: i32) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(name, index))));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(name.clone(), index.clone()))));
             jcall!(InputImageType_TYPE_VECTOR.with(Clone::clone)).add((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
-            jcall!(unsafe { InputImageType_hashMap.clone() }).put(this.getName(), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+            jcall!(unsafe { InputImageType_hashMap.clone() }).put(crate::java_into_object(jcall!(this).getName()), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
         this
     }
     
@@ -73,7 +72,7 @@ impl InputImageType {
     
 
     pub fn getInstance(mut imageTypeString: String) -> Option<Rc<RefCell<InputImageType>>> {
-        return (jcall!(unsafe { InputImageType_hashMap.clone() }).get(imageTypeString.clone())).clone() /* as InputImageType */;
+        return { let java_object = (jcall!(unsafe { InputImageType_hashMap.clone() }).get(crate::java_into_object(imageTypeString.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<InputImageType>>>>().expect("ClassCastException").clone()) };
     }
     
 

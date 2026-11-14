@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::AllBinaryLayer::AllBinaryLayer;
 use super::LayerManager::LayerManager;
 
@@ -32,6 +33,10 @@ pub struct LayerManagerLoggingBase {
 
 
 impl LayerManagerLoggingBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -64,7 +69,7 @@ impl LayerManagerLoggingBase {
     pub fn clear(&mut self) {
     }
 }
-pub trait LayerManagerLoggingBaseDyn {
+pub trait LayerManagerLoggingBaseDyn: std::any::Any {
     fn as_LayerManagerLoggingBase(&self) -> &LayerManagerLoggingBase;
     fn as_LayerManagerLoggingBase_mut(&mut self) -> &mut LayerManagerLoggingBase;
     fn append(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) { LayerManagerLoggingBase::append(self.as_LayerManagerLoggingBase_mut(), layerInterface) }

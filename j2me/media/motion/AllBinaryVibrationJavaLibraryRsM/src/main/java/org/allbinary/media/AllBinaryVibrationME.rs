@@ -31,6 +31,10 @@ pub struct AllBinaryVibrationME {
 
 impl AllBinaryVibrationME {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -45,7 +49,7 @@ impl AllBinaryVibrationME {
     pub fn vibrate(&mut self, mut duration: i32, mut r#type: i32, mut volume: i32) {
     }
 }
-pub trait AllBinaryVibrationMEDyn {
+pub trait AllBinaryVibrationMEDyn: std::any::Any {
     fn as_AllBinaryVibrationME(&self) -> &AllBinaryVibrationME;
     fn as_AllBinaryVibrationME_mut(&mut self) -> &mut AllBinaryVibrationME;
     fn vibrate(&mut self, mut duration: i32, mut r#type: i32, mut volume: i32) { AllBinaryVibrationME::vibrate(self.as_AllBinaryVibrationME_mut(), duration, r#type, volume) }

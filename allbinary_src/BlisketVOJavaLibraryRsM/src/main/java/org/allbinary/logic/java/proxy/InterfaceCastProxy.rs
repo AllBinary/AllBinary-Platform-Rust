@@ -20,9 +20,6 @@ use super::*;
 // use crate::java::lang::reflect::Method::Method;
 // use crate::java::lang::reflect::Proxy::Proxy;
 use super::InvocationHandler::InvocationHandler;
-use super::reflect::reflect;
-use super::lang::lang;
-use super::java::java;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,6 +35,10 @@ pub struct InterfaceCastProxy {
 // impl InvocationHandler for InterfaceCastProxy with the methods of the trait
 
 impl InterfaceCastProxy {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Self {
@@ -54,7 +55,7 @@ impl InterfaceCastProxy {
     
 
     pub fn newInstance(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return Proxy::newProxyInstance(jcall!(std::any::type_name_of_val(&anyType)).getClassLoader(), jcall!(std::any::type_name_of_val(&anyType)).getInterfaces(), InterfaceCastProxy::new(anyType.clone()));
+        return crate::java_into_object(Proxy::newProxyInstance(jcall!(std::any::type_name_of_val(&anyType)).getClassLoader(), jcall!(std::any::type_name_of_val(&anyType)).getInterfaces(), InterfaceCastProxy::new(crate::java_into_object(anyType.clone()))));
     }
     
 
@@ -65,7 +66,7 @@ impl InterfaceCastProxy {
         if !jcall!(realMethod).isAccessible() {
             jcall!(realMethod).setAccessible(true);
         }
-        return jcall!(proxyMethod).invoke(self.anyType.clone(), proxyArgs.clone());
+        return crate::java_into_object(jcall!(proxyMethod).invoke(self.anyType.clone(), proxyArgs.clone()));
     }
 }
 

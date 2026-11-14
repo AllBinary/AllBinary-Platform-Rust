@@ -28,6 +28,7 @@ use crate::org::allbinary::logic::java::bool::BooleanFactory::BooleanFactory;
 use crate::org::allbinary::logic::system::SoftwareInformation::SoftwareInformation;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
 use crate::org::allbinary::thread::SecondaryThreadPool::SecondaryThreadPool;
+use crate::java::lang::Exception::*;
 use super::HighScoresBase::HighScoresBase;
 use super::HighScores::HighScores;
 use super::HighScoresResultsListener::HighScoresResultsListener;
@@ -102,35 +103,35 @@ impl BasicHighScoresFactory {
             pub fn run(&mut self) {
                 let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
                 match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                    jcall!(logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.FETCH.clone());
-                    self.highScoresArray[(0) as usize] = RecordStoreHighScores::RecordStoreHighScores::getInstance(self.abeClientInformation.clone(), gameInfo.clone(), self.TOP.clone(), self.PERSONAL_HIGH_SCORES.clone(), self.SCORES.clone(), ScoreComparator::new(true));
+                    jcall!(logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.FETCH.clone());
+                    self.highScoresArray[(0) as usize] = RecordStoreHighScores::RecordStoreHighScores::getInstance(self.abeClientInformation.clone(), gameInfo.clone(), self.TOP.clone(), self.PERSONAL_HIGH_SCORES.clone(), self.SCORES.clone(), ScoreComparator::new(true).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::rms::RecordComparator::RecordComparator>>));
                     let mut gameType: Option<Rc<RefCell<GameType>>> = jcall!(gameInfo).getGameType();
                     let mut gameTypeFactory: Option<Rc<RefCell<GameTypeFactory>>> = GameTypeFactory::getInstance();
                     let mut gameInfo2: Option<Rc<RefCell<GameInfo>>> = gameInfo.clone();
-                    if match (&gameType, &jcall!(gameTypeFactory).SINGLE_PLAYER) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&gameType, &jcall!(gameTypeFactory).BOT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                        gameInfo2 = jcall!(BasicHighScoresGameInfoFactory::getInstance()).SINGLE_PLAYER_SERVER.clone();
-                    } else if match (&gameType, &jcall!(gameTypeFactory).MULTI_PLAYER) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                        gameInfo2 = jcall!(BasicHighScoresGameInfoFactory::getInstance()).MULTI_PLAYER_SERVER.clone();
+                    if match (&gameType, &{ let java_field = jcall!(gameTypeFactory).SINGLE_PLAYER.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&gameType, &{ let java_field = jcall!(gameTypeFactory).BOT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                        gameInfo2 = { let java_value = ({ let java_field = jcall!(BasicHighScoresGameInfoFactory::getInstance()).SINGLE_PLAYER_SERVER.clone(); java_field }).clone(); java_value }.clone();
+                    } else if match (&gameType, &{ let java_field = jcall!(gameTypeFactory).MULTI_PLAYER.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                        gameInfo2 = { let java_value = ({ let java_field = jcall!(BasicHighScoresGameInfoFactory::getInstance()).MULTI_PLAYER_SERVER.clone(); java_field }).clone(); java_value }.clone();
                     }
-                    self.highScoresArray[(1) as usize] = RemoteHighScores::getInstancePreload(self.abeClientInformation.clone(), self.softwareInformation.clone(), gameInfo2.clone(), self.WORLD_TOP_SCORES.clone(), self.SCORES.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone(), preload.clone());
-                    jcall!(logUtil).putF(jcall!(self.commonStrings).END.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.FETCH.clone());
+                    self.highScoresArray[(1) as usize] = RemoteHighScores::getInstancePreload(self.abeClientInformation.clone(), self.softwareInformation.clone(), gameInfo2.clone(), self.WORLD_TOP_SCORES.clone(), self.SCORES.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone(), preload.clone());
+                    jcall!(logUtil).putF({ let java_field = jcall!(self.commonStrings).END.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.FETCH.clone());
                     jcall!(LastFetchHighScoresFactory::LastFetchHighScoresFactory::getInstance()).highScoresArray = self.highScoresArray.clone();
                     jcall!(highScoresResultsListener).setHighScoresArray(self.highScoresArray.clone());
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                    jcall!(logUtil).put(jcall!(self.base.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.FETCH.clone(), crate::java_into_object(e.clone()));
+                    jcall!(logUtil).put({ let java_field = jcall!(self.base.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.FETCH.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }
-*/);
+*/.map(|reference| reference as Rc<RefCell<dyn crate::Runnable>>));
     }
     
 
     pub fn createHighScoresHelper(&mut self) -> Option<Rc<RefCell<dyn HighScoresHelperBaseInterface>>> {
-        return HighScoresHelper2::new().map(|reference| reference as Rc<RefCell<dyn HighScoresHelperBaseInterface>>);
+        return HighScoresHelper2::new().map(|reference| reference as Rc<RefCell<dyn HighScoresHelperBaseInterface>>).map(|reference| reference as Rc<RefCell<dyn HighScoresHelperBaseInterface>>);
     }
     
 

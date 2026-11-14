@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct NoDebug {
 }
 
-pub static mut NoDebug_SINGLETON: std::cell::LazyCell<Option<Rc<RefCell<dyn DebugInterface>>>> = std::cell::LazyCell::new(|| NoDebug::new().map(|reference| reference as Rc<RefCell<dyn DebugInterface>>));
+pub static mut NoDebug_SINGLETON: std::cell::LazyCell<Option<Rc<RefCell<dyn DebugInterface>>>> = std::cell::LazyCell::new(|| NoDebug::new().map(|reference| reference as Rc<RefCell<dyn DebugInterface>>).map(|reference| reference as Rc<RefCell<dyn DebugInterface>>));
 impl DebugInterface for NoDebug {
     fn start(&mut self) { Self::start(self) }
     fn stop(&mut self) { Self::stop(self) }
@@ -39,6 +39,10 @@ impl DebugInterface for NoDebug {
 }
 
 impl NoDebug {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

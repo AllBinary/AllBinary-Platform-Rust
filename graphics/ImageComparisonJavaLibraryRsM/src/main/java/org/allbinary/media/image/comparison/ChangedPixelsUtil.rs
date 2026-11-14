@@ -26,6 +26,7 @@ use crate::org::allbinary::media::image::cache::BufferedImageInfo::BufferedImage
 use crate::org::allbinary::media::image::cache::BufferedImageInfoFactory::BufferedImageInfoFactory;
 use crate::org::allbinary::media::image::cache::BufferedImagePoolSingleton::BufferedImagePoolSingleton;
 use crate::org::allbinary::media::image::comparison::pixel::PixelDelta::PixelDelta;
+use crate::java::lang::Exception::*;
 use super::ImageComparisonResult::ImageComparisonResult;
 
 // Borrows the object of a Java reference
@@ -45,6 +46,10 @@ thread_local! { pub static ChangedPixelsUtil_SCAN_SIZE: i32 = 0; }
 thread_local! { pub static ChangedPixelsUtil_CLEAR_INT_ARRAY: Vec<i32> = vec![0; (1800 * 1600) as usize]; }
 
 impl ChangedPixelsUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -63,10 +68,10 @@ impl ChangedPixelsUtil {
         let mut bufferedImageCacheables: Vec<Option<Rc<RefCell<BufferedImageCacheable>>>> = Vec::new();
         let mut originalBufferedImage: Option<Rc<RefCell<BufferedImage>>> = jcall!(imageComparisonInfo).getBufferedImages()[(0) as usize].clone();
         bufferedImageCacheables = vec![None; (2) as usize];
-        let mut bufferedImageInfo: Option<Rc<RefCell<BufferedImageInfo>>> = BufferedImageInfoFactory::getInstance(jcall!(imageComparisonInfo).imageWidth.clone(), jcall!(imageComparisonInfo).imageHeight.clone(), jcall!(originalBufferedImage).getType());
-        let mut poolInterface: Option<Rc<RefCell<dyn PoolInterface>>> = BufferedImagePoolSingleton::getInstance().map(|reference| reference as Rc<RefCell<dyn PoolInterface>>);
+        let mut bufferedImageInfo: Option<Rc<RefCell<BufferedImageInfo>>> = BufferedImageInfoFactory::getInstance({ let java_field = jcall!(imageComparisonInfo).imageWidth.clone(); java_field }.clone(), { let java_field = jcall!(imageComparisonInfo).imageHeight.clone(); java_field }.clone(), jcall!(originalBufferedImage).getType());
+        let mut poolInterface: Option<Rc<RefCell<dyn PoolInterface>>> = BufferedImagePoolSingleton::getInstance();
         for index in (0..(bufferedImageCacheables.len() as i32)) {
-            let mut bufferedImageCacheable: Option<Rc<RefCell<BufferedImageCacheable>>> = (jcall!(poolInterface).remove(crate::java_into_object(bufferedImageInfo.clone()))).clone() /* as BufferedImageCacheable */;
+            let mut bufferedImageCacheable: Option<Rc<RefCell<BufferedImageCacheable>>> = (jcall!(poolInterface).remove(crate::java_into_object(bufferedImageInfo.clone()))).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<BufferedImageCacheable>() }, "ClassCastException: not a BufferedImageCacheable"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<BufferedImageCacheable>) } });
             bufferedImageCacheables[(index) as usize] = bufferedImageCacheable.clone();
             jcall!(jcall!(bufferedImageCacheables[(index) as usize]).getBufferedImage()).setRGB(ChangedPixelsUtil_START_X.with(Clone::clone).clone(), ChangedPixelsUtil_START_Y.with(Clone::clone).clone(), jcall!(bufferedImageInfo).getWidth(), jcall!(bufferedImageInfo).getHeight(), ChangedPixelsUtil_CLEAR_INT_ARRAY.with(Clone::clone).clone(), ChangedPixelsUtil_OFFSET.with(Clone::clone).clone(), ChangedPixelsUtil_SCAN_SIZE.with(Clone::clone).clone());
         }

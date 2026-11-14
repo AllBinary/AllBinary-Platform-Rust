@@ -18,12 +18,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use super::JPanel::JPanel;
-use super::swing::swing;
-use super::javax::javax;
 use super::JColorChooser::JColorChooser;
 use super::BorderLayout::BorderLayout;
-use super::awt::awt;
-use super::java::java;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -58,7 +54,7 @@ impl ColorChooser {
     pub fn initComponents(&mut self) {
         self.jColorChooser1 = JColorChooser::new();
         self.setLayout(BorderLayout::new());
-        self.add(self.jColorChooser1.clone(), jcall!(jcall!(unsafe { java_awt.clone() }).BorderLayout).CENTER.clone());
+        { let java_arguments = (self.jColorChooser1.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { java_awt.clone() }).BorderLayout.clone(); java_field }).CENTER.clone(); java_field }.clone(),); self.add(java_arguments.0, java_arguments.1) };
     }
 }
 impl std::ops::Deref for ColorChooser {

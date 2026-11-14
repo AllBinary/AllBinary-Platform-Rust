@@ -85,8 +85,8 @@ impl DirectoryOrIncludeFileExtensionAndTrackedBooleanFileVisitor {
         if jcall!(file).isDirectory() {
             return true;
         }
-        if false || jcall!(jcall!(file).getAbsolutePath()).indexOf(self.includesString.clone()) >= 0 {
-            return self.base.visit(file.clone());
+        if false || jcall!(file).getAbsolutePath().find(&self.includesString.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return { let java_arguments = (file.clone(),); self.base.visit_AbFile(java_arguments.0) };
         } else {
             return false;
         }
@@ -96,9 +96,9 @@ impl DirectoryOrIncludeFileExtensionAndTrackedBooleanFileVisitor {
     // Java overloaded method: Rust needs a different name
     pub fn visit2(&mut self, mut file: Option<Rc<RefCell<AbFile>>>, mut fileNameString: String) -> Option<bool> {
         let mut filePath: String = jcall!(file).getPath();
-        if self.base.visit2(file.clone(), fileNameString.clone()) {
-            if !(filePath.contains(&jcall!(self.trackedStrings).APPLICATION.clone()) || filePath.contains(&jcall!(self.trackedStrings).APP.clone()) || filePath.contains(&jcall!(self.trackedStrings).HTML_TEMP.clone())) {
-                if !(filePath.contains(&jcall!(self.trackedStrings).TARGET_PATH_WINDOWS.clone()) || filePath.contains(&jcall!(self.trackedStrings).TARGET_PATH_UNIX.clone())) {
+        if { let java_arguments = (file.clone(), fileNameString.clone(),); self.base.visit2(java_arguments.0, java_arguments.1) } {
+            if !(filePath.contains(&{ let java_field = jcall!(self.trackedStrings).APPLICATION.clone(); java_field }.clone()) || filePath.contains(&{ let java_field = jcall!(self.trackedStrings).APP.clone(); java_field }.clone()) || filePath.contains(&{ let java_field = jcall!(self.trackedStrings).HTML_TEMP.clone(); java_field }.clone())) {
+                if !(filePath.contains(&{ let java_field = jcall!(self.trackedStrings).TARGET_PATH_WINDOWS.clone(); java_field }.clone()) || filePath.contains(&{ let java_field = jcall!(self.trackedStrings).TARGET_PATH_UNIX.clone(); java_field }.clone())) {
                     if jcall!(self.gitProcessHelper).isTracked(file.clone()) {
                         return true;
                     } else {
@@ -114,8 +114,8 @@ impl DirectoryOrIncludeFileExtensionAndTrackedBooleanFileVisitor {
 
     pub fn main(mut args: Vec<String>) {
         let mut commonFileStrings: Option<Rc<RefCell<CommonDataFileStrings>>> = CommonDataFileStrings::getInstance();
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        jcall!(list).add(crate::java_into_object(jcall!(commonFileStrings).JAVA.clone()));
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        jcall!(list).add(crate::java_into_object({ let java_field = jcall!(commonFileStrings).JAVA.clone(); java_field }.clone()));
         let mut filePath: String = String::from("G:\\mnt\\bc\\mydev\\games\\ZeptoRacer\\platform\\j2se\\ZeptoRacerStaticPathsJ2SEM\\target\\dependency\\org\\allbinary\\logic\\system\\security\\licensing\\ZeptoRacerPCClientInformation.java");
         let mut result: bool = jcall!(DirectoryOrIncludeFileExtensionAndTrackedBooleanFileVisitor::new1(list.clone())).visit(AbFile::createAbFileFromRawPath(filePath.clone()));
         println!("{}", format!("{}{}", format!("{}{}", filePath, String::from(" is Tracked: ")), result));

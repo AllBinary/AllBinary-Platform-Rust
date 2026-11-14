@@ -81,10 +81,10 @@ impl Log {
     
 
     pub fn toString(&mut self) -> String {
-        let mut className: String = jcall!(CommonStrings::getInstance()).EMPTY.clone();
+        let mut className: String = { let java_field = jcall!(CommonStrings::getInstance()).EMPTY.clone(); java_field }.clone();
         let mut clazz: &'static str = std::any::type_name_of_val(&self.anyType);
         if true {
-            className = clazz.to_string();
+            className = { let java_value = (clazz.to_string()).clone(); java_value };
         }
         return jcall!(self.logFormatUtil).get(className.clone(), self.functionName.clone(), self.specialMessage.clone(), crate::java_into_object(self.exception.clone()));
     }

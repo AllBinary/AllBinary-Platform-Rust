@@ -5,7 +5,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-use super::Comparable::Comparable;
+use crate::java::lang::Comparable::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

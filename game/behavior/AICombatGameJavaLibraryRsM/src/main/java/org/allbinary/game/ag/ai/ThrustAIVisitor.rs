@@ -17,12 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::game::ai::BasicAI::BasicAI;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::java::bool::BooleanFactory::BooleanFactory;
 use crate::org::allbinary::logic::util::visitor::Visitor::Visitor;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -48,7 +49,7 @@ impl ThrustAIVisitor {
             TRUE: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.TRUE = jcall!(BooleanFactory::getInstance()).TRUE.clone();
+        this.TRUE = { let java_field = jcall!(BooleanFactory::getInstance()).TRUE.clone(); java_field }.clone();
         this
     }
 
@@ -59,18 +60,18 @@ impl ThrustAIVisitor {
 
     pub fn visit(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut basicAI: Option<Rc<RefCell<dyn crate::org::allbinary::game::ai::BasicAI::BasicAIDyn>>> = (anyType).clone() /* as BasicAI */;
-            jcall!(basicAI).processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() }.clone());
+            let mut basicAI: Option<Rc<RefCell<dyn crate::org::allbinary::game::ai::BasicAI::BasicAIDyn>>> = { let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::ai::BasicAI::BasicAIDyn>>>>().expect("ClassCastException").clone()) };
+            jcall!(basicAI).processKeyAI(crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone).clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).VISIT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).VISIT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
-        return self.TRUE.clone();
+        return crate::java_into_object(self.TRUE.clone());
     }
 }
 impl std::ops::Deref for ThrustAIVisitor {

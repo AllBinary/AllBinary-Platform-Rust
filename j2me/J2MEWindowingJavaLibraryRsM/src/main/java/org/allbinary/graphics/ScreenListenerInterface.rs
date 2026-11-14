@@ -25,15 +25,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait ScreenListenerInterface {
+pub trait ScreenListenerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn onFullScreen(&mut self, isFullScreen: bool);
     
 
     fn onFullScreenDisplay(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

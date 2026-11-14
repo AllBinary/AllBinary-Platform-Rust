@@ -27,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait ColorAtActionScriptConditionInterface {
+pub trait ColorAtActionScriptConditionInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getPoint(&mut self) -> Option<Rc<RefCell<Point>>>;
@@ -43,8 +43,6 @@ pub trait ColorAtActionScriptConditionInterface {
     
 
     fn log(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

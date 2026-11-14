@@ -36,6 +36,10 @@ thread_local! { pub static PlatformRecordIdUtil_instance: Option<Rc<RefCell<Plat
 
 impl PlatformRecordIdUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             PLATFORM_SHORT_NAME: String::new(),
@@ -55,7 +59,7 @@ impl PlatformRecordIdUtil {
     
 
     pub fn getRecordId(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut baseRecordId: String) -> String {
-        return jcall!(StringMaker::new()).append(jcall!(abeClientInformation).toShortString()).append(jcall!(CommonSeps::getInstance()).UNDERSCORE.clone()).append(self.PLATFORM_SHORT_NAME.clone()).append(baseRecordId.clone()).toString();
+        return jcall!(StringMaker::new()).append(jcall!(abeClientInformation).toShortString()).append({ let java_field = jcall!(CommonSeps::getInstance()).UNDERSCORE.clone(); java_field }.clone()).append(self.PLATFORM_SHORT_NAME.clone()).append(baseRecordId.clone()).toString();
     }
 }
 

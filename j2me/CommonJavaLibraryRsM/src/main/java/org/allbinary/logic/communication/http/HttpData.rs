@@ -36,6 +36,10 @@ pub struct HttpData {
 thread_local! { pub static HttpData_instance: Option<Rc<RefCell<HttpData>>> = HttpData::new(); }
 
 impl HttpData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<HttpData>>> {
@@ -52,9 +56,9 @@ impl HttpData {
         };
         this.URL_LABEL = String::from("Url: ");
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
-        this.EQUALS = jcall!(commonSeps).EQUALS.clone();
-        this.PARAM_SEP = jcall!(commonSeps).AMPERSAND.clone();
-        this.URL_PARAM_SEP = jcall!(commonSeps).QUESTION.clone();
+        this.EQUALS = { let java_value = ({ let java_field = jcall!(commonSeps).EQUALS.clone(); java_field }).clone(); java_value }.clone();
+        this.PARAM_SEP = { let java_value = ({ let java_field = jcall!(commonSeps).AMPERSAND.clone(); java_field }).clone(); java_value }.clone();
+        this.URL_PARAM_SEP = { let java_value = ({ let java_field = jcall!(commonSeps).QUESTION.clone(); java_field }).clone(); java_value }.clone();
         this
     }
 

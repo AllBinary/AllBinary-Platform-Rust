@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::RuntimeException::*;
 use super::GeographicMapCellType::GeographicMapCellType;
 
 // Borrows the object of a Java reference
@@ -35,6 +36,10 @@ pub struct GeographicMapCellTypeFactory {
 thread_local! { pub static GeographicMapCellTypeFactory_instance: Option<Rc<RefCell<dyn GeographicMapCellTypeFactoryDyn>>> = GeographicMapCellTypeFactory::new().map(|reference| reference as Rc<RefCell<dyn GeographicMapCellTypeFactoryDyn>>); }
 
 impl GeographicMapCellTypeFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -85,7 +90,7 @@ impl GeographicMapCellTypeFactory {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait GeographicMapCellTypeFactoryDyn {
+pub trait GeographicMapCellTypeFactoryDyn: std::any::Any {
     fn as_GeographicMapCellTypeFactory(&self) -> &GeographicMapCellTypeFactory;
     fn as_GeographicMapCellTypeFactory_mut(&mut self) -> &mut GeographicMapCellTypeFactory;
     fn get(&mut self, mut r#type: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>> { GeographicMapCellTypeFactory::get(self.as_GeographicMapCellTypeFactory_mut(), r#type) }

@@ -40,6 +40,10 @@ thread_local! { pub static GraphicsStrings_instance: Option<Rc<RefCell<GraphicsS
 
 impl GraphicsStrings {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             ANIMATION: String::new(),

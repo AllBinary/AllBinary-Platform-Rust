@@ -27,15 +27,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait AdvertisementAreaConstraintsInterface {
+pub trait AdvertisementAreaConstraintsInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getDisplayInBrowserContraints(&mut self) -> Option<Rc<RefCell<dyn DisplayInBrowserContraintsInterface>>>;
     
 
     fn getTwoDimensionContraints(&mut self) -> Option<Rc<RefCell<dyn TwoDimensionalConstraintInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

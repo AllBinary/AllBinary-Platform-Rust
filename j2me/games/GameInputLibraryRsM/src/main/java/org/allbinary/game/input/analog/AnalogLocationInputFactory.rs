@@ -23,6 +23,10 @@ pub struct AnalogLocationInputFactory {
 thread_local! { pub static AnalogLocationInputFactory_instance: Option<Rc<RefCell<AnalogLocationInputFactory>>> = AnalogLocationInputFactory::new(); }
 
 impl AnalogLocationInputFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AnalogLocationInputFactory>>> {
@@ -34,7 +38,7 @@ impl AnalogLocationInputFactory {
         let mut this = Self {
             list: None,
         };
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -46,7 +50,7 @@ impl AnalogLocationInputFactory {
     pub fn addPlayer(&mut self, mut playerInputId: i32) {
         let mut analogLocationInput: Option<Rc<RefCell<AnalogLocationInput>>> = AnalogLocationInput_NULL_ANALOG_LOCATION_INPUT.with(Clone::clone).clone();
         if playerInputId < jcall!(self.list).size() {
-            analogLocationInput = { let java_object = (jcall!(self.list).get(playerInputId.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AnalogLocationInput>>>>().expect("ClassCastException").clone()) };
+            analogLocationInput = { let java_value = ({ let java_object = (jcall!(self.list).get(playerInputId.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<AnalogLocationInput>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
         }
         if match (&analogLocationInput, &AnalogLocationInput_NULL_ANALOG_LOCATION_INPUT.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             analogLocationInput = AnalogLocationInput::new(playerInputId.clone());

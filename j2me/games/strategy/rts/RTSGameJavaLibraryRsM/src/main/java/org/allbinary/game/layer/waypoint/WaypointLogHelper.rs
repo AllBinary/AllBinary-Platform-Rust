@@ -37,6 +37,10 @@ thread_local! { pub static WaypointLogHelper_instance: Option<Rc<RefCell<dyn Way
 
 impl WaypointLogHelper {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -96,7 +100,7 @@ impl WaypointLogHelper {
     pub fn setNextUnvisitedPathGeographicMapCellPosition(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut existingNextUnvisitedPathGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>, mut nextUnvisitedPathGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) {
     }
 }
-pub trait WaypointLogHelperDyn {
+pub trait WaypointLogHelperDyn: std::any::Any {
     fn as_WaypointLogHelper(&self) -> &WaypointLogHelper;
     fn as_WaypointLogHelper_mut(&mut self) -> &mut WaypointLogHelper;
     fn onWaypointEvent(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut advancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>) { WaypointLogHelper::onWaypointEvent(self.as_WaypointLogHelper_mut(), associatedAdvancedRTSGameLayer, advancedRTSGameLayer) }

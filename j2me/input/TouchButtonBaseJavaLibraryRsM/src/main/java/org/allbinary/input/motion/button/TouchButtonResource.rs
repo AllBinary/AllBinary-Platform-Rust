@@ -24,6 +24,10 @@ pub struct TouchButtonResource {
 
 
 impl TouchButtonResource {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut resource: String, mut hint: String) -> Self {
@@ -40,7 +44,7 @@ impl TouchButtonResource {
         Some(Rc::new(RefCell::new(Self::new_struct(resource, hint))))
     }
 }
-pub trait TouchButtonResourceDyn {
+pub trait TouchButtonResourceDyn: std::any::Any {
     fn as_TouchButtonResource(&self) -> &TouchButtonResource;
     fn as_TouchButtonResource_mut(&mut self) -> &mut TouchButtonResource;
 }

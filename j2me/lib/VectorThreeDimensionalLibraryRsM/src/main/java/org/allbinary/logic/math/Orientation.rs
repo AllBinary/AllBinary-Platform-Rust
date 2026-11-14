@@ -40,9 +40,9 @@ impl Orientation {
     
 
     pub fn getInstance(mut yaw: i32, mut pitch: i32, mut roll: i32) -> Option<Rc<RefCell<Orientation>>> {
-        jcall!(jcall!(unsafe { Orientation_SINGLETON.clone() }).yaw).setint(yaw.clone());
-        jcall!(jcall!(unsafe { Orientation_SINGLETON.clone() }).pitch).setint(pitch.clone());
-        jcall!(jcall!(unsafe { Orientation_SINGLETON.clone() }).roll).setint(roll.clone());
+        jcall!({ let java_field = jcall!(unsafe { Orientation_SINGLETON.clone() }).yaw.clone(); java_field }).setint(yaw.clone());
+        jcall!({ let java_field = jcall!(unsafe { Orientation_SINGLETON.clone() }).pitch.clone(); java_field }).setint(pitch.clone());
+        jcall!({ let java_field = jcall!(unsafe { Orientation_SINGLETON.clone() }).roll.clone(); java_field }).setint(roll.clone());
         return unsafe { Orientation_SINGLETON.clone() }.clone();
     }
     

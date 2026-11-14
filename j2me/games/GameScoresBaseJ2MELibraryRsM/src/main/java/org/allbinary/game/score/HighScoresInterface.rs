@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::HighScore::HighScore;
 
 // Borrows the object of a Java reference
@@ -27,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait HighScoresInterface {
+pub trait HighScoresInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>;
@@ -41,8 +42,6 @@ pub trait HighScoresInterface {
 
     // throws Exception
     fn isBestScore(&mut self, newHighScore: Option<Rc<RefCell<HighScore>>>) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

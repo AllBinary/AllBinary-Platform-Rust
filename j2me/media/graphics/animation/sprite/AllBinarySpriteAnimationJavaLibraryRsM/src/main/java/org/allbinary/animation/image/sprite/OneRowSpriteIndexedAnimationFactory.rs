@@ -17,14 +17,15 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::game::Sprite::Sprite;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::game::Sprite::Sprite;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactory;
 use crate::org::allbinary::animation::image::BaseImageAnimationFactory::BaseImageAnimationFactory;
 use crate::org::allbinary::graphics::color::BasicColorUtil::BasicColorUtil;
 use crate::org::allbinary::image::sprite::AnimationFactorySpriteScaleUtil::AnimationFactorySpriteScaleUtil;
 use crate::org::allbinary::logic::math::PrimitiveIntUtil::PrimitiveIntUtil;
+use crate::java::lang::Exception::*;
 use super::SpriteIndexedAnimation::SpriteIndexedAnimation;
 use super::AdjustedSpriteIndexedAnimation::AdjustedSpriteIndexedAnimation;
 
@@ -40,6 +41,10 @@ pub struct OneRowSpriteIndexedAnimationFactory {
     pub animationFactorySpriteScaleUtil: Option<Rc<RefCell<AnimationFactorySpriteScaleUtil>>>,
 }
 
+impl crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface for OneRowSpriteIndexedAnimationFactory {
+    fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { Self::getInstance(self, instanceId) }
+    fn setInitialScale(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::media::ScaleProperties::ScaleProperties>>>) { crate::org::allbinary::animation::image::BaseImageAnimationFactory::BaseImageAnimationFactory::setInitialScale(crate::org::allbinary::animation::image::BaseImageAnimationFactory::BaseImageAnimationFactoryDyn::as_BaseImageAnimationFactory_mut(self), p1) }
+}
 impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface for OneRowSpriteIndexedAnimationFactory {
 }
 
@@ -47,7 +52,7 @@ impl OneRowSpriteIndexedAnimationFactory {
     
 
     // throws Exception
-    pub fn createFactoryDX(mut image: Option<Rc<RefCell<Image>>>, mut dx: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<OneRowSpriteIndexedAnimationFactory>>> {
+    pub fn createFactoryDX(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut dx: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<OneRowSpriteIndexedAnimationFactory>>> {
         let mut oneRowSpriteIndexedAnimationFactory: Option<Rc<RefCell<OneRowSpriteIndexedAnimationFactory>>> = OneRowSpriteIndexedAnimationFactory::new(image.clone(), PrimitiveIntUtil::getArrayInstance(), jcall!(image).getHeight(), jcall!(image).getHeight(), 0, 0, animationBehaviorFactory.clone());
         jcall!(oneRowSpriteIndexedAnimationFactory).initW(dx.clone());
         return oneRowSpriteIndexedAnimationFactory.clone();
@@ -55,7 +60,7 @@ impl OneRowSpriteIndexedAnimationFactory {
     
 
     // throws Exception
-    pub fn createFactoryDXY(mut image: Option<Rc<RefCell<Image>>>, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<OneRowSpriteIndexedAnimationFactory>>> {
+    pub fn createFactoryDXY(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<OneRowSpriteIndexedAnimationFactory>>> {
         let mut oneRowSpriteIndexedAnimationFactory: Option<Rc<RefCell<OneRowSpriteIndexedAnimationFactory>>> = OneRowSpriteIndexedAnimationFactory::new(image.clone(), PrimitiveIntUtil::getArrayInstance(), jcall!(image).getHeight(), jcall!(image).getHeight(), 0, 0, animationBehaviorFactory.clone());
         jcall!(oneRowSpriteIndexedAnimationFactory).init(dx.clone(), dy.clone());
         return oneRowSpriteIndexedAnimationFactory.clone();
@@ -63,18 +68,18 @@ impl OneRowSpriteIndexedAnimationFactory {
     
 
     // throws Exception
-    pub fn createFactoryWH(mut image: Option<Rc<RefCell<Image>>>, mut width: i32, mut height: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<OneRowSpriteIndexedAnimationFactory>>> {
+    pub fn createFactoryWH(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut width: i32, mut height: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<OneRowSpriteIndexedAnimationFactory>>> {
         return OneRowSpriteIndexedAnimationFactory::new(image.clone(), PrimitiveIntUtil::getArrayInstance(), width.clone(), height.clone(), 0, 0, animationBehaviorFactory.clone());
     }
     
 
     // throws Exception
-    pub fn createFactory(mut image: Option<Rc<RefCell<Image>>>, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<OneRowSpriteIndexedAnimationFactory>>> {
+    pub fn createFactory(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<OneRowSpriteIndexedAnimationFactory>>> {
         return OneRowSpriteIndexedAnimationFactory::new(image.clone(), PrimitiveIntUtil::getArrayInstance(), jcall!(image).getHeight(), jcall!(image).getHeight(), 0, 0, animationBehaviorFactory.clone());
     }
     
 
-    pub fn new_struct(mut image: Option<Rc<RefCell<Image>>>, mut sequenceArray: Vec<i32>, mut width: i32, mut height: i32, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
+    pub fn new_struct(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut sequenceArray: Vec<i32>, mut width: i32, mut height: i32, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
         let mut this = Self {
             base: BaseImageAnimationFactory::new_struct(image.clone(), sequenceArray.clone(), width.clone(), height.clone(), dx.clone(), dy.clone(), animationBehaviorFactory.clone()),
             animationFactorySpriteScaleUtil: None,
@@ -84,7 +89,7 @@ impl OneRowSpriteIndexedAnimationFactory {
         this
     }
 
-    pub fn new(mut image: Option<Rc<RefCell<Image>>>, mut sequenceArray: Vec<i32>, mut width: i32, mut height: i32, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut sequenceArray: Vec<i32>, mut width: i32, mut height: i32, mut dx: i32, mut dy: i32, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(image, sequenceArray, width, height, dx, dy, animationBehaviorFactory))))
     }
     
@@ -97,17 +102,17 @@ impl OneRowSpriteIndexedAnimationFactory {
 
     pub fn initW(&mut self, mut dx: i32) {
         self.init(dx.clone(), 0);
-        jcall!(self.animationFactoryInitializationVisitor).dx += -(jcall!(self.animationFactoryInitializationVisitor).width >> 2);
+        jcall!(self.animationFactoryInitializationVisitor).dx += -({ let java_field = jcall!(self.animationFactoryInitializationVisitor).width.clone(); java_field } >> 2);
     }
     
 
     // throws Exception
     pub fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> {
-        let mut sprite: Option<Rc<RefCell<Sprite>>> = { let java_receiver = self.animationFactorySpriteScaleUtil.clone(); let java_arguments = (self.getImage(), jcall!(self.animationFactoryInitializationVisitor).width.clone(), jcall!(self.animationFactoryInitializationVisitor).height.clone(), jcall!(self.scaleProperties).scaleWidth.clone(), jcall!(self.scaleProperties).scaleHeight.clone(),); let java_result = jcall!(java_receiver).createImage(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4); java_result };
-        if jcall!(self.animationFactoryInitializationVisitor).dx != 0 || jcall!(self.animationFactoryInitializationVisitor).dy != 0 {
-            return AdjustedSpriteIndexedAnimation::new(sprite.clone(), self.getImage(), jcall!(BasicColorUtil::getInstance()).ZERO_ARRAY.clone(), jcall!(self.animationFactoryInitializationVisitor).dx.clone(), jcall!(self.animationFactoryInitializationVisitor).dy.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+        let mut sprite: Option<Rc<RefCell<Sprite>>> = { let java_receiver = self.animationFactorySpriteScaleUtil.clone(); let java_arguments = (self.getImage(), { let java_field = jcall!(self.animationFactoryInitializationVisitor).width.clone(); java_field }.clone(), { let java_field = jcall!(self.animationFactoryInitializationVisitor).height.clone(); java_field }.clone(), { let java_field = jcall!(self.scaleProperties).scaleWidth.clone(); java_field }.clone(), { let java_field = jcall!(self.scaleProperties).scaleHeight.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).createImage(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4); java_result };
+        if { let java_field = jcall!(self.animationFactoryInitializationVisitor).dx.clone(); java_field } != 0 || { let java_field = jcall!(self.animationFactoryInitializationVisitor).dy.clone(); java_field } != 0 {
+            return AdjustedSpriteIndexedAnimation::new(sprite.clone(), self.getImage(), { let java_field = jcall!(BasicColorUtil::getInstance()).ZERO_ARRAY.clone(); java_field }.clone(), { let java_field = jcall!(self.animationFactoryInitializationVisitor).dx.clone(); java_field }.clone(), { let java_field = jcall!(self.animationFactoryInitializationVisitor).dy.clone(); java_field }.clone(), { let java_argument = jcall!(self.animationBehaviorFactory).getOrCreateInstance(); java_argument }).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
         } else {
-            return SpriteIndexedAnimation::new(sprite.clone(), self.getImage(), jcall!(BasicColorUtil::getInstance()).ZERO_ARRAY.clone(), jcall!(self.animationBehaviorFactory).getOrCreateInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
+            return SpriteIndexedAnimation::new(sprite.clone(), self.getImage(), { let java_field = jcall!(BasicColorUtil::getInstance()).ZERO_ARRAY.clone(); java_field }.clone(), { let java_argument = jcall!(self.animationBehaviorFactory).getOrCreateInstance(); java_argument }).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>);
         }
     }
 }

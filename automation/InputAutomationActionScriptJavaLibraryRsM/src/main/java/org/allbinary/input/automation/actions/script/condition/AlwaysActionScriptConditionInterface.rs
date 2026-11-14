@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AlwaysActionScriptConditionInterface {
+pub trait AlwaysActionScriptConditionInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn setIsOn(&mut self, isOn: bool);
@@ -35,8 +35,6 @@ pub trait AlwaysActionScriptConditionInterface {
     
 
     fn log(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

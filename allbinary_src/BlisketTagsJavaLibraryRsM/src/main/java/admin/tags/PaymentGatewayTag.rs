@@ -23,6 +23,7 @@ use crate::admin::taghelpers::PaymentGatewayHelperFactory::PaymentGatewayHelperF
 use crate::org::allbinary::logic::communication::http::request::AbResponseHandler::AbResponseHandler;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
+use crate::java::lang::Exception::*;
 use super::TableTag::TableTag;
 
 // Borrows the object of a Java reference
@@ -47,8 +48,8 @@ impl PaymentGatewayTag {
             logUtil: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.setTagHelperFactory(PaymentGatewayHelperFactory::new());
-        this.setTagRequestHelperFactory(PaymentGatewayHelperFactory::new());
+        this.setTagHelperFactory(PaymentGatewayHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(PaymentGatewayHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 
@@ -59,52 +60,54 @@ impl PaymentGatewayTag {
 
     // throws LicensingException, Exception
     pub fn process(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(PaymentGatewayHelperFactory::new()).getInstance(self.getPropertiesHashMap(), self.pageContext.clone());
             let mut helperClass: &'static str = std::any::type_name_of_val(&anyType);
-            let mut method: Option<Rc<RefCell<Method>>> = jcall!(helperClass).getMethod(jcall!(self.base.commonStrings).PROCESS.clone(), None);
+            let mut method: Option<Rc<RefCell<Method>>> = jcall!(helperClass).getMethod({ let java_field = jcall!(self.base.commonStrings).PROCESS.clone(); java_field }.clone(), None);
             let mut result: String = (jcall!(method).invoke(anyType.clone(), None)).clone() /* as String */;
-            return result.clone();
+            return Some(result.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(String::from("LicensingException"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put(String::from("LicensingException"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws JspTagException
     pub fn doStartTag(&mut self) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if self.isEnabled() {
-                if jcall!(self.getCommand()).compareTo(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).GLOBALS2).AUTHORIZEORDEREVALBODYONERROR.clone()) == 0 || jcall!(self.getCommand()).compareTo(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).GLOBALS2).AUTHORIZEORDERANDEVALBODY.clone()) == 0 || jcall!(self.getCommand()).compareTo(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).GLOBALS2).AUTHORIZEFORMEVALBODYONERROR.clone()) == 0 {
+                if { let java_value = (self.getCommand().cmp(&{ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).GLOBALS2.clone(); java_field }).AUTHORIZEORDEREVALBODYONERROR.clone(); java_field }.clone()) as i32); java_value } == 0 || { let java_value = (self.getCommand().cmp(&{ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).GLOBALS2.clone(); java_field }).AUTHORIZEORDERANDEVALBODY.clone(); java_field }.clone()) as i32); java_value } == 0 || { let java_value = (self.getCommand().cmp(&{ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).GLOBALS2.clone(); java_field }).AUTHORIZEFORMEVALBODYONERROR.clone(); java_field }.clone()) as i32); java_value } == 0 {
                     let mut output: String = self.process();
                     {
                         jcall!(jcall!(self.pageContext).getOut()).print(format!("{}{}", output, String::from("<br />")));
                     }
-                    if jcall!(self.getCommand()).compareTo(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).GLOBALS2).AUTHORIZEORDEREVALBODYONERROR.clone()) == 0 {
-                        return self.SKIP_BODY.clone();
+                    if { let java_value = (self.getCommand().cmp(&{ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).GLOBALS2.clone(); java_field }).AUTHORIZEORDEREVALBODYONERROR.clone(); java_field }.clone()) as i32); java_value } == 0 {
+                        return Some(self.SKIP_BODY.clone());
                     } else {
-                        return self.EVAL_BODY_INCLUDE.clone();
+                        return Some(self.EVAL_BODY_INCLUDE.clone());
                     }
                 } else {
-                    return self.base.doStartTag();
+                    return Some(self.base.doStartTag());
                 }
             }
-            return SKIP_BODY.clone();
+            return Some(SKIP_BODY.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             AbResponseHandler::sendJspTagRedirect(self.pageContext.clone(), e.clone());
             return SKIP_BODY.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for PaymentGatewayTag {

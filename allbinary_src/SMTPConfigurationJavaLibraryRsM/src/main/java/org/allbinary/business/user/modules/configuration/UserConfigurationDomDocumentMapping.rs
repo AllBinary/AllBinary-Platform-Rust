@@ -22,6 +22,7 @@ use crate::org::allbinary::data::tree::dom::document::XmlDocumentHelper::XmlDocu
 use crate::org::allbinary::data::tree::dom::document::mapping::DomDocumentMappingInterface::DomDocumentMappingInterface;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::UserConfigurationInterface::UserConfigurationInterface;
 use super::UserConfigurationView::UserConfigurationView;
 
@@ -41,6 +42,10 @@ impl DomDocumentMappingInterface for UserConfigurationDomDocumentMapping {
 }
 
 impl UserConfigurationDomDocumentMapping {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut userConfigurationInterface: Option<Rc<RefCell<dyn UserConfigurationInterface>>>) -> Self {

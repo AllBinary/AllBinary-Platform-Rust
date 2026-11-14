@@ -49,6 +49,10 @@ pub struct DirectionFactory {
 thread_local! { pub static DirectionFactory_instance: Option<Rc<RefCell<DirectionFactory>>> = DirectionFactory::new(); }
 
 impl DirectionFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<DirectionFactory>>> {
@@ -74,10 +78,10 @@ impl DirectionFactory {
             ALL_DIRECTION: None,
         };
         this.NAME = String::from("DIRECTION");
-        this.LEFT = Direction::new(jcall!(CommonPhoneStrings::getInstance()).LEFT.clone(), String::from("WEST"), 0, 1);
-        this.RIGHT = Direction::new(jcall!(CommonPhoneStrings::getInstance()).RIGHT.clone(), String::from("EAST"), 1, 0);
-        this.DOWN = Direction::new(jcall!(CommonPhoneStrings::getInstance()).DOWN.clone(), String::from("SOUTH"), 2, 0);
-        this.UP = Direction::new(jcall!(CommonPhoneStrings::getInstance()).UP.clone(), String::from("NORTH"), 3, 0);
+        this.LEFT = Direction::new({ let java_field = jcall!(CommonPhoneStrings::getInstance()).LEFT.clone(); java_field }.clone(), String::from("WEST"), 0, 1);
+        this.RIGHT = Direction::new({ let java_field = jcall!(CommonPhoneStrings::getInstance()).RIGHT.clone(); java_field }.clone(), String::from("EAST"), 1, 0);
+        this.DOWN = Direction::new({ let java_field = jcall!(CommonPhoneStrings::getInstance()).DOWN.clone(); java_field }.clone(), String::from("SOUTH"), 2, 0);
+        this.UP = Direction::new({ let java_field = jcall!(CommonPhoneStrings::getInstance()).UP.clone(); java_field }.clone(), String::from("NORTH"), 3, 0);
         this.NOT_BORDERED_WITH = Direction::new(String::from("NOT_BORDERED_WITH"), String::from("NOT_BORDERED_WITH"), 8, 0);
         this.NO_DIRECTION = Direction::new(String::from("NO_DIRECTION"), String::from("NO_DIRECTION"), 9, 0);
         this.TOP = Direction::new(String::from("TOP"), String::from("TOP"), 10, 0);
@@ -85,13 +89,13 @@ impl DirectionFactory {
         this.ALL_DIRECTION = Direction::new(String::from("ALL_DIRECTION"), String::from("ALL_DIRECTION"), 12, 0);
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
-        this.UP_LEFT = Direction::new(String::from("UP LEFT"), jcall!(stringBuffer).append(jcall!(this.UP).getOtherName()).append(jcall!(commonSeps).SPACE.clone()).append(jcall!(this.LEFT).getOtherName()).toString(), 4, 0);
+        this.UP_LEFT = { let java_value = (Direction::new(String::from("UP LEFT"), jcall!(stringBuffer).append(jcall!(this.UP).getOtherName()).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone()).append(jcall!(this.LEFT).getOtherName()).toString(), 4, 0)).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
-        this.UP_RIGHT = Direction::new(String::from("UP RIGHT"), jcall!(stringBuffer).append(jcall!(this.UP).getOtherName()).append(jcall!(commonSeps).SPACE.clone()).append(jcall!(this.RIGHT).getOtherName()).toString(), 5, 0);
+        this.UP_RIGHT = { let java_value = (Direction::new(String::from("UP RIGHT"), jcall!(stringBuffer).append(jcall!(this.UP).getOtherName()).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone()).append(jcall!(this.RIGHT).getOtherName()).toString(), 5, 0)).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
-        this.DOWN_LEFT = Direction::new(String::from("DOWN LEFT"), jcall!(stringBuffer).append(jcall!(this.DOWN).getOtherName()).append(jcall!(commonSeps).SPACE.clone()).append(jcall!(this.LEFT).getOtherName()).toString(), 6, 0);
+        this.DOWN_LEFT = { let java_value = (Direction::new(String::from("DOWN LEFT"), jcall!(stringBuffer).append(jcall!(this.DOWN).getOtherName()).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone()).append(jcall!(this.LEFT).getOtherName()).toString(), 6, 0)).clone(); java_value };
         jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
-        this.DOWN_RIGHT = Direction::new(String::from("DOWN RIGHT"), jcall!(stringBuffer).append(jcall!(this.DOWN).getOtherName()).append(jcall!(commonSeps).SPACE.clone()).append(jcall!(this.RIGHT).getOtherName()).toString(), 7, 0);
+        this.DOWN_RIGHT = { let java_value = (Direction::new(String::from("DOWN RIGHT"), jcall!(stringBuffer).append(jcall!(this.DOWN).getOtherName()).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone()).append(jcall!(this.RIGHT).getOtherName()).toString(), 7, 0)).clone(); java_value };
         this
     }
 

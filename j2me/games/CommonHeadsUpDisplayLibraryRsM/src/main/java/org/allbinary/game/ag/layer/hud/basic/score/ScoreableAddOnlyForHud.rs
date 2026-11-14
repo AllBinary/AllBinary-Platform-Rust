@@ -57,7 +57,7 @@ impl ScoreableAddOnlyForHud {
     
 
     pub fn addPoints(&mut self, mut points: i32) {
-        self.base.addPoints(points.clone());
+        { let java_arguments = (points.clone(),); self.base.addPoints(java_arguments.0) };
         jcall!(self.getScoreHudWidget()).add(points.clone());
     }
     

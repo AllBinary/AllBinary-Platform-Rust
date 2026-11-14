@@ -55,6 +55,7 @@ use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellTyp
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCompositeInterface::GeographicMapCompositeInterface;
 use crate::org::allbinary::media::graphics::geography::map::drop::DropCellPositionHistory::DropCellPositionHistory;
 use crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactory;
+use crate::java::lang::Exception::*;
 use super::RTSFormInput::RTSFormInput;
 
 // Borrows the object of a Java reference
@@ -94,8 +95,8 @@ impl WaypointRTSFormInput {
             isPrimaryWaypointCreator: false,
             stickyAssociatedRtsLayer: None,
         };
-        this.WAYPOINT_EVENT = RTSLayerEvent::new(crate::org::allbinary::game::layer::NullRTSLayer::NullRTSLayer_NULL_RTS_LAYER.with(Clone::clone).clone());
-        this.stickyAssociatedRtsLayer = crate::org::allbinary::game::layer::NullPathFindingLayer::NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone();
+        this.WAYPOINT_EVENT = RTSLayerEvent::new(crate::org::allbinary::game::layer::NullRTSLayer::NullRTSLayer_NULL_RTS_LAYER.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn PathFindingLayerInterface>>));
+        this.stickyAssociatedRtsLayer = crate::org::allbinary::game::layer::NullPathFindingLayer::NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of NullPathFindingLayer does not have PathFindingLayerInterface as a base trait") });
         // super(...) is in the struct literal above
         this.isPrimaryWaypointCreator = isPrimaryWaypointCreator.clone();
         let mut smallIntegerSingletonFactory: Option<Rc<RefCell<SmallIntegerSingletonFactory>>> = SmallIntegerSingletonFactory::getInstance();
@@ -104,21 +105,23 @@ impl WaypointRTSFormInput {
     }
 
     pub fn new(mut groupInterface: Vec<Option<Rc<RefCell<Group>>>>, mut isPrimaryWaypointCreator: bool) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(groupInterface, isPrimaryWaypointCreator))));
-            this.dragToSpotGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).DRAG_TO_SPOT.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).WHITE.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
-            this.spotTakenGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).SPOT_TAKEN.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).WHITE.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
-            this.buildingCollisionGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).BUILDING_COLLISION.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).WHITE.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
-            this.roadCollisionGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).ROAD_COLLISION.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).WHITE.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
-            this.newWaypointGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).NEW_WAYPOINT.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).WHITE.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
-            this.noMoneyGameNotificationEvent = GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), jcall!(RTSGameStrings::getInstance()).NO_MONEY.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), jcall!(basicColorFactory).WHITE.clone(), jcall!(BooleanFactory::getInstance()).FALSE.clone());
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(groupInterface.clone(), isPrimaryWaypointCreator.clone()))));
+            let mut smallIntegerSingletonFactory: Option<Rc<RefCell<SmallIntegerSingletonFactory>>> = SmallIntegerSingletonFactory::getInstance();
+            let mut basicColorFactory: Option<Rc<RefCell<BasicColorFactory>>> = BasicColorFactory::getInstance();
+            jcall!(this).dragToSpotGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).DRAG_TO_SPOT.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).WHITE.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
+            jcall!(this).spotTakenGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).SPOT_TAKEN.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).WHITE.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
+            jcall!(this).buildingCollisionGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).BUILDING_COLLISION.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).WHITE.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
+            jcall!(this).roadCollisionGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).ROAD_COLLISION.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).WHITE.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
+            jcall!(this).newWaypointGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).NEW_WAYPOINT.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).WHITE.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
+            jcall!(this).noMoneyGameNotificationEvent = { let java_value = (GameNotificationEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), { let java_field = jcall!(RTSGameStrings::getInstance()).NO_MONEY.clone(); java_field }.clone(), jcall!(smallIntegerSingletonFactory).getAt(2), { let java_field = jcall!(basicColorFactory).WHITE.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone())).clone(); java_value };
         this
     }
     
 
     // throws Exception
     pub fn setAllBinaryGameLayerManager(&mut self, mut allBinaryGameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>) {
-        self.base.setAllBinaryGameLayerManager(allBinaryGameLayerManager.clone());
-        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (allBinaryGameLayerManager).clone() /* as GeographicMapCompositeInterface */;
+        { let java_arguments = (allBinaryGameLayerManager.clone(),); self.base.setAllBinaryGameLayerManager(java_arguments.0) };
+        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryGameLayerManager cannot be cast to GeographicMapCompositeInterface") })();
         let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
         { let java_receiver = self.dragToSpotGameNotificationEvent.clone(); let java_arguments = (jcall!(geographicMapInterface).getForegroundBasicColor(),); jcall!(java_receiver).setBasicColorP(java_arguments.0); };
         { let java_receiver = self.spotTakenGameNotificationEvent.clone(); let java_arguments = (jcall!(geographicMapInterface).getForegroundBasicColor(),); jcall!(java_receiver).setBasicColorP(java_arguments.0); };
@@ -131,10 +134,10 @@ impl WaypointRTSFormInput {
 
     // throws Exception
     pub fn processAtPoint(&mut self, mut associatedRtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>>, mut rtsPlayerLayerInterface: Option<Rc<RefCell<dyn RTSPlayerLayerInterface>>>, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) {
-        self.base.process(layerManager.clone());
+        { let java_arguments = (layerManager.clone(),); self.base.process(java_arguments.0) };
         if self.isStickyItemSelected() || match (&associatedRtsLayer, &CollidableDestroyableDamageableLayer::getNullInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             if self.isStickyItemSelected() && match (&associatedRtsLayer, &CollidableDestroyableDamageableLayer::getNullInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (layerManager).clone() /* as GeographicMapCompositeInterface */;
+                let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayerManager cannot be cast to GeographicMapCompositeInterface") })();
                 let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
                 let mut allBinaryTiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(geographicMapInterface).getAllBinaryTiledLayer();
                 let mut x: i32 = jcall!(point).getX() + jcall!(allBinaryTiledLayer).getXP();
@@ -143,12 +146,12 @@ impl WaypointRTSFormInput {
                 self.processCellPosition(rtsPlayerLayerInterface.clone(), layerManager.clone(), geographicMapCellPosition.clone());
             } else {
                 if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-                    jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.dragToSpotGameNotificationEvent.clone());
+                    jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.dragToSpotGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
                 }
             }
         } else {
             if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.spotTakenGameNotificationEvent.clone());
+                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.spotTakenGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
             }
         }
     }
@@ -158,16 +161,16 @@ impl WaypointRTSFormInput {
     pub fn processCellPosition(&mut self, mut rtsPlayerLayerInterface: Option<Rc<RefCell<dyn RTSPlayerLayerInterface>>>, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) {
         let mut itemIndex: i32 = self.getSelectedStickyItemIndex();
         if match (&self.newUnconstructedRTSLayerInterfaceArray[(itemIndex) as usize], &CollidableDestroyableDamageableLayer::getNullInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            self.newUnconstructedRTSLayerInterfaceArray[(itemIndex) as usize] = { let java_arguments = (layerManager.clone(), self.getSelectedStickyItem(), geographicMapCellPosition.clone(),); self.getInstance(java_arguments.0, java_arguments.1, java_arguments.2) };
+            { let java_index = (itemIndex) as usize; self.newUnconstructedRTSLayerInterfaceArray[java_index] = { let java_arguments = (layerManager.clone(), self.getSelectedStickyItem(), geographicMapCellPosition.clone(),); self.getInstance(java_arguments.0, java_arguments.1, java_arguments.2) }; };
         } else {
             let mut cellPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(geographicMapCellPosition).getPoint();
-            let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = (self.newUnconstructedRTSLayerInterfaceArray[(itemIndex) as usize]).clone() /* as RTSLayer */;
+            let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableDestroyableDamageableLayer cannot be cast to RTSLayer") })();
             jcall!(rtsLayer).setPosition(jcall!(cellPoint).getX(), jcall!(cellPoint).getY(), jcall!(rtsLayer).getZP());
-            let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (jcall!(rtsLayer).as_RTSLayer_mut().allBinaryGameLayerManagerP).clone() /* as GeographicMapCompositeInterface */;
+            let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryGameLayerManager cannot be cast to GeographicMapCompositeInterface") })();
             let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
-            jcall!(jcall!(rtsLayer).as_RTSLayer_mut().geographicMapCellPositionAreaBase).update(geographicMapInterface.clone());
+            jcall!({ let java_field = jcall!(rtsLayer).as_RTSLayer_mut().geographicMapCellPositionAreaBase.clone(); java_field }).as_GeographicMapCellPositionAreaBase_mut().update(geographicMapInterface.clone());
         }
-        self.attemptBuild(rtsPlayerLayerInterface.clone(), layerManager.clone(), (self.newUnconstructedRTSLayerInterfaceArray[(itemIndex) as usize]).clone() /* as RTSLayer */, itemIndex.clone());
+        { let java_arguments = (rtsPlayerLayerInterface.clone(), layerManager.clone(), (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableDestroyableDamageableLayer cannot be cast to RTSLayer") })(), itemIndex.clone(),); self.attemptBuild(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3) };
     }
     
 
@@ -177,8 +180,8 @@ impl WaypointRTSFormInput {
         self.setSelectedStickyItem(item.clone());
         self.setSelectedStickyItemIndex(index.clone());
         self.setStickyItemSelected(true);
-        self.stickyAssociatedRtsLayer = (associatedRtsLayer).clone() /* as RTSLayer */;
-        jcall!(self.getHashtable()).put(crate::org::allbinary::layer::Layer::Layer_ID.with(Clone::clone).clone(), associatedRtsLayer.clone());
+        self.stickyAssociatedRtsLayer = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableDestroyableDamageableLayer cannot be cast to RTSLayer") })();
+        jcall!(self.getHashtable()).put(crate::java_into_object(crate::org::allbinary::layer::Layer::Layer_ID.with(Clone::clone).clone()), crate::java_into_object(associatedRtsLayer.clone()));
     }
     
 
@@ -189,33 +192,33 @@ impl WaypointRTSFormInput {
             jcall!(self.logUtil).put(String::from("Layer was null"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("attemptBuild"), crate::java_into_object(format!("{}: {:?}", "Exception", ())));
             return false;
         }
-        let mut geographicMapCellPositionArea: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::GeographicMapCellPositionAreaBase::GeographicMapCellPositionAreaBaseDyn>>> = jcall!(layerInterface).as_RTSLayer_mut().geographicMapCellPositionAreaBase.clone();
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(geographicMapCellPositionArea).getOccupyingGeographicMapCellPositionList();
+        let mut geographicMapCellPositionArea: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::GeographicMapCellPositionAreaBase::GeographicMapCellPositionAreaBaseDyn>>> = { let java_field = jcall!(layerInterface).as_RTSLayer_mut().geographicMapCellPositionAreaBase.clone(); java_field }.clone();
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(geographicMapCellPositionArea).as_GeographicMapCellPositionAreaBase_mut().getOccupyingGeographicMapCellPositionList();
         if jcall!(DropCellPositionHistory::getInstance()).anyCellPositionWithDrop(list.clone()) || jcall!(WaypointCellPositionHistory::getInstance()).anyCellPositionWithDrop(list.clone()) {
-            jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
+            jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance());
             if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.buildingCollisionGameNotificationEvent.clone());
+                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.buildingCollisionGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
             }
             return false;
         }
-        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (layerManager).clone() /* as GeographicMapCompositeInterface */;
+        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayerManager cannot be cast to GeographicMapCompositeInterface") })();
         let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
-        let mut raceTrackGeographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactoryDyn>>> = (jcall!(geographicMapInterface).getGeographicMapCellTypeFactory()).clone() /* as RaceTrackGeographicMapCellTypeFactory */;
+        let mut raceTrackGeographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactoryDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellTypeFactory::RaceTrackGeographicMapCellTypeFactoryDyn>>> { panic!("ClassCastException: a Rust dyn GeographicMapCellTypeFactory cannot be cast to RaceTrackGeographicMapCellTypeFactory") })();
         let mut geographicMapCellType: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>> = None;
         {
             let mut index: i32 = jcall!(list).size();
             while { index -= 1; index } >= 0 {
-            geographicMapCellType = jcall!(geographicMapInterface).getCellTypeAt({ let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) });
+            geographicMapCellType = { let java_value = (jcall!(geographicMapInterface).getCellTypeAt({ let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) })).clone(); java_value };
             if jcall!(raceTrackGeographicMapCellTypeFactory).isPath(geographicMapCellType.clone()) {
-                jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
+                jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance());
                 if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-                    jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.roadCollisionGameNotificationEvent.clone());
+                    jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.roadCollisionGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
                 }
                 return false;
             }
             }
         }
-        let mut cost: i32 = jcall!(layerInterface).getCost();
+        let mut cost: i32 = jcall!(layerInterface).as_RTSLayer_mut().getCost();
         let mut capital: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::capital::Capital::CapitalDyn>>> = jcall!(rtsPlayerLayerInterface).getCapital();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(String::from("Trying to Build: "));
@@ -227,27 +230,27 @@ impl WaypointRTSFormInput {
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("attemptBuild"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         if cost <= jcall!(capital).getTotalMoney() {
             jcall!(layerInterface).construct(rtsPlayerLayerInterface.clone());
-            self.newUnconstructedRTSLayerInterfaceArray[(itemIndex) as usize] = CollidableDestroyableDamageableLayer::getNullInstance();
+            { let java_index = (itemIndex) as usize; self.newUnconstructedRTSLayerInterfaceArray[java_index] = CollidableDestroyableDamageableLayer::getNullInstance(); };
             jcall!(capital).removeMoney(cost.clone());
             jcall!(WaypointCellPositionHistory::getInstance()).addList(list.clone(), layerInterface.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>));
             let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = jcall!(geographicMapInterface).getCellPositionAtXY(jcall!(layerInterface).getXP(), jcall!(layerInterface).getYP());
-            let mut waypointLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointLayer::WaypointLayerDyn>>> = (layerInterface).clone() /* as WaypointLayer */;
+            let mut waypointLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointLayer::WaypointLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointLayer::WaypointLayerDyn>>> { panic!("ClassCastException: a Rust dyn RTSLayer cannot be cast to WaypointLayer") })();
             self.addWayPoint(waypointLayer.clone());
-            let mut rtsPlayerGameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::RTSPlayerGameInput::RTSPlayerGameInputDyn>>> = (jcall!(rtsPlayerLayerInterface).getPlayerGameInput()).clone() /* as RTSPlayerGameInput */;
+            let mut rtsPlayerGameInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::RTSPlayerGameInput::RTSPlayerGameInputDyn>>> = (jcall!(rtsPlayerLayerInterface).getPlayerGameInput()).clone();
             jcall!(rtsPlayerGameInput).setSelectedRTSLayer(layerInterface.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>), geographicMapCellPosition.clone());
-            let mut advancedRTSPlayerLayerInterface: Option<Rc<RefCell<dyn AdvancedRTSPlayerLayerInterface>>> = panic!("ClassCastException: a Rust dyn RTSPlayerLayerInterface cannot be cast to dyn AdvancedRTSPlayerLayerInterface");
+            let mut advancedRTSPlayerLayerInterface: Option<Rc<RefCell<dyn AdvancedRTSPlayerLayerInterface>>> = (|| -> Option<Rc<RefCell<dyn AdvancedRTSPlayerLayerInterface>>> { panic!("ClassCastException: a Rust dyn RTSPlayerLayerInterface cannot be cast to dyn AdvancedRTSPlayerLayerInterface") })();
             jcall!(jcall!(advancedRTSPlayerLayerInterface).getAdvancedPlayerOwnedRTSLayers()).addWaypoint(layerInterface.clone());
             jcall!(layerManager).append(layerInterface.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>));
-            let mut waypointAvancedRTSGameLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>> = (waypointLayer).clone() /* as AdvancedRTSGameLayer */;
+            let mut waypointAvancedRTSGameLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>> = (waypointLayer).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>);
             jcall!(rtsPlayerLayerInterface).add(jcall!(jcall!(jcall!(waypointAvancedRTSGameLayer).getWaypointBehavior()).getWaypoint()).getSound());
             if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.newWaypointGameNotificationEvent.clone());
+                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.newWaypointGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
             }
             return true;
         } else {
-            jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>));
+            jcall!(rtsPlayerLayerInterface).add(ErrorSound::getInstance());
             if !jcall!(rtsPlayerLayerInterface).implmentsArtificialIntelligenceCompositeInterface() {
-                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.noMoneyGameNotificationEvent.clone());
+                jcall!(GameNotificationEventHandler::getInstance()).fireEvent(self.noMoneyGameNotificationEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
             }
             return false;
         }
@@ -256,15 +259,15 @@ impl WaypointRTSFormInput {
 
     // throws Exception
     pub fn addWayPoint(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointLayer::WaypointLayerDyn>>>) {
-        let mut stickyAssociatedAdvandedRtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>> = (self.stickyAssociatedRtsLayer).clone() /* as AdvancedRTSGameLayer */;
+        let mut stickyAssociatedAdvandedRtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>> { panic!("ClassCastException: a Rust dyn PathFindingLayerInterface cannot be cast to AdvancedRTSGameLayer") })();
         let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(jcall!(stickyAssociatedAdvandedRtsLayer).getWaypointBehavior()).getOwnedWaypointList();
         jcall!(RTSLayerUtil::getInstance()).destroyAndClear(list.clone());
         jcall!(list).add(crate::java_into_object(layerInterface.clone()));
         if self.isPrimaryWaypointCreator {
             jcall!(PrimaryWaypointHelper::PrimaryWaypointHelper::getInstance()).setWaypointLayer(layerInterface.clone());
         }
-        jcall!(self.WAYPOINT_EVENT).setRtsLayer(layerInterface.clone().map(|reference| reference as Rc<RefCell<dyn PathFindingLayerInterface>>));
-        jcall!(WaypointEventHandlerFactory::getInstance(jcall!(layerInterface).getGroupInterface()[(0) as usize].clone())).fireEvent(self.WAYPOINT_EVENT.clone());
+        jcall!(self.WAYPOINT_EVENT).setRtsLayer(layerInterface.clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of WaypointLayer does not have PathFindingLayerInterface as a base trait") }));
+        jcall!(WaypointEventHandlerFactory::getInstance(jcall!(layerInterface).getGroupInterface()[(0) as usize].clone())).fireEvent(self.WAYPOINT_EVENT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
     }
 }
 impl std::ops::Deref for WaypointRTSFormInput {

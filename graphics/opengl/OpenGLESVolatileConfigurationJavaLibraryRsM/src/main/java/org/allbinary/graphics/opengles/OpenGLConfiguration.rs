@@ -27,6 +27,7 @@ use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::game::configuration::feature::MainFeatureFactory::MainFeatureFactory;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 use super::OpenGLFeature::OpenGLFeature;
 use super::OpenGLFeatureFactory::OpenGLFeatureFactory;
 
@@ -47,16 +48,16 @@ pub struct OpenGLConfiguration {
     pub versionSelector: Option<Rc<RefCell<OpenGLFeature>>>,
 }
 
-pub static mut OpenGLConfiguration_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut OpenGLConfiguration_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl OpenGLConfiguration {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<OpenGLConfiguration>>> {
-        if match (&unsafe { OpenGLConfiguration_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *OpenGLConfiguration_instance = OpenGLConfiguration::new() };
+        if match (&unsafe { OpenGLConfiguration_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *OpenGLConfiguration_instance = crate::java_into_object(OpenGLConfiguration::new()) };
         }
-        return (unsafe { OpenGLConfiguration_instance.clone() }).clone() /* as OpenGLConfiguration */;
+        return { let java_object = (unsafe { OpenGLConfiguration_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<OpenGLConfiguration>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -73,10 +74,10 @@ impl OpenGLConfiguration {
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
         this.opengl = false;
-        this.r#type = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL_AS_GAME_THREAD.clone();
-        this.imageColor = jcall!(OpenGLFeatureFactory::getInstance()).IMAGE_COLOR_DEPTH_4444.clone();
-        this.color = jcall!(OpenGLFeatureFactory::getInstance()).IMAGE_COLOR_DEPTH_4444.clone();
-        this.versionSelector = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL_AUTO_SELECT.clone();
+        this.r#type = { let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL_AS_GAME_THREAD.clone(); java_field }.clone();
+        this.imageColor = { let java_field = jcall!(OpenGLFeatureFactory::getInstance()).IMAGE_COLOR_DEPTH_4444.clone(); java_field }.clone();
+        this.color = { let java_field = jcall!(OpenGLFeatureFactory::getInstance()).IMAGE_COLOR_DEPTH_4444.clone(); java_field }.clone();
+        this.versionSelector = { let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL_AUTO_SELECT.clone(); java_field }.clone();
         this
     }
 
@@ -92,29 +93,29 @@ impl OpenGLConfiguration {
     // throws Exception
     pub fn init(&mut self) {
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
-        if jcall!(ChangedGameFeatureListener::getInstance()).isChangedFeature(jcall!(MainFeatureFactory::getInstance()).STATIC.clone()) {
+        if jcall!(ChangedGameFeatureListener::getInstance()).isChangedFeature({ let java_field = jcall!(MainFeatureFactory::getInstance()).STATIC.clone(); java_field }.clone()) {
             if self.isOpenGL() {
-                if !jcall!(features).isDefault(jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-                    jcall!(self.logUtil).putF(String::from("Turning on OpenGL"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone());
-                    jcall!(features).addDefault(jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-                    { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Using OpenGL Type Feature: "), self.getType()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                if !jcall!(features).isDefault({ let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+                    jcall!(self.logUtil).putF(String::from("Turning on OpenGL"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
+                    jcall!(features).addDefault({ let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
+                    { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Using OpenGL Type Feature: "), self.getType()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                     jcall!(features).addDefault(self.getType().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-                    { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Using OpenGL ImageColor Feature: "), self.getImageColor()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                    { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Using OpenGL ImageColor Feature: "), self.getImageColor()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                     jcall!(features).addDefault(self.getImageColor().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-                    { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Using OpenGL Color Feature: "), self.getColor()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                    { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Using OpenGL Color Feature: "), self.getColor()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                     jcall!(features).addDefault(self.getColor().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-                    { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Using OpenGL Version Selector Feature: "), self.getVersionSelector()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                    { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Using OpenGL Version Selector Feature: "), self.getVersionSelector()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                     jcall!(features).addDefault(self.getVersionSelector().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
                 }
             } else {
-                jcall!(self.logUtil).putF(String::from("OpenGL is Off"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone());
+                jcall!(self.logUtil).putF(String::from("OpenGL is Off"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
             }
         } else {
-            if self.isOpenGL() && !jcall!(features).isDefault(jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-                PreLogUtil::put(String::from("OpenGL is set but not Enabled since Statics where not cleared (Reboot or Complete exit is Required)"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone());
+            if self.isOpenGL() && !jcall!(features).isDefault({ let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+                PreLogUtil::put(String::from("OpenGL is set but not Enabled since Statics where not cleared (Reboot or Complete exit is Required)"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
             }
         }
-        PreLogUtil::put(self.toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone());
+        PreLogUtil::put(self.toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
     }
     
 
@@ -123,7 +124,7 @@ impl OpenGLConfiguration {
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
         let mut openGLFeatureFactory: Option<Rc<RefCell<OpenGLFeatureFactory>>> = OpenGLFeatureFactory::getInstance();
         let mut modified: bool = false;
-        if match (&gameFeature, &jcall!(openGLFeatureFactory).OPENGL) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&gameFeature, &{ let java_field = jcall!(openGLFeatureFactory).OPENGL.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             if jcall!(features).isFeature(gameFeature.clone()) {
                 if !self.isOpenGL() {
                     self.setOpenGL(true);
@@ -136,42 +137,42 @@ impl OpenGLConfiguration {
                 }
             }
         }
-        if match (&gameFeature, &jcall!(openGLFeatureFactory).OPENGL_AND_GAME_HAVE_DIFFERENT_THREADS) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&gameFeature, &jcall!(openGLFeatureFactory).OPENGL_AS_GAME_THREAD) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&gameFeature, &{ let java_field = jcall!(openGLFeatureFactory).OPENGL_AND_GAME_HAVE_DIFFERENT_THREADS.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&gameFeature, &{ let java_field = jcall!(openGLFeatureFactory).OPENGL_AS_GAME_THREAD.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             if jcall!(features).isFeature(gameFeature.clone()) {
                 if !match (&gameFeature, &self.getType()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                    self.setType((gameFeature).clone() /* as OpenGLFeature */);
+                    self.setType((gameFeature).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<OpenGLFeature>() }, "ClassCastException: not a OpenGLFeature"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<OpenGLFeature>) } }));
                     modified = true;
                 }
             }
         }
-        if match (&gameFeature, &jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_4444) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&gameFeature, &jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_565) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&gameFeature, &jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_8888) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&gameFeature, &{ let java_field = jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_4444.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&gameFeature, &{ let java_field = jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_565.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&gameFeature, &{ let java_field = jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_8888.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             if jcall!(features).isFeature(gameFeature.clone()) {
                 if !match (&self.getImageColor(), &gameFeature) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                    self.setImageColor((gameFeature).clone() /* as OpenGLFeature */);
+                    self.setImageColor((gameFeature).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<OpenGLFeature>() }, "ClassCastException: not a OpenGLFeature"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<OpenGLFeature>) } }));
                     if colorLocked {
-                        if match (&gameFeature, &jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_4444) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                            self.setColor(jcall!(openGLFeatureFactory).OPENGL_COLOR_DEPTH_4444.clone());
-                        } else if match (&gameFeature, &jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_565) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                            self.setColor(jcall!(openGLFeatureFactory).OPENGL_COLOR_DEPTH_565.clone());
-                        } else if match (&gameFeature, &jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_8888) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                            self.setColor(jcall!(openGLFeatureFactory).OPENGL_COLOR_DEPTH_8888.clone());
+                        if match (&gameFeature, &{ let java_field = jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_4444.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                            { let java_arguments = ({ let java_field = jcall!(openGLFeatureFactory).OPENGL_COLOR_DEPTH_4444.clone(); java_field }.clone(),); self.setColor(java_arguments.0) };
+                        } else if match (&gameFeature, &{ let java_field = jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_565.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                            { let java_arguments = ({ let java_field = jcall!(openGLFeatureFactory).OPENGL_COLOR_DEPTH_565.clone(); java_field }.clone(),); self.setColor(java_arguments.0) };
+                        } else if match (&gameFeature, &{ let java_field = jcall!(openGLFeatureFactory).IMAGE_COLOR_DEPTH_8888.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+                            { let java_arguments = ({ let java_field = jcall!(openGLFeatureFactory).OPENGL_COLOR_DEPTH_8888.clone(); java_field }.clone(),); self.setColor(java_arguments.0) };
                         }
                     }
                     modified = true;
                 }
             }
         }
-        if match (&gameFeature, &jcall!(openGLFeatureFactory).OPENGL_COLOR_DEPTH_4444) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&gameFeature, &jcall!(openGLFeatureFactory).OPENGL_COLOR_DEPTH_565) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&gameFeature, &jcall!(openGLFeatureFactory).OPENGL_COLOR_DEPTH_8888) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&gameFeature, &{ let java_field = jcall!(openGLFeatureFactory).OPENGL_COLOR_DEPTH_4444.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&gameFeature, &{ let java_field = jcall!(openGLFeatureFactory).OPENGL_COLOR_DEPTH_565.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&gameFeature, &{ let java_field = jcall!(openGLFeatureFactory).OPENGL_COLOR_DEPTH_8888.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             if jcall!(features).isFeature(gameFeature.clone()) {
                 if !match (&self.getColor(), &gameFeature) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                    self.setColor((gameFeature).clone() /* as OpenGLFeature */);
+                    self.setColor((gameFeature).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<OpenGLFeature>() }, "ClassCastException: not a OpenGLFeature"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<OpenGLFeature>) } }));
                     modified = true;
                 }
             }
         }
-        if match (&gameFeature, &jcall!(openGLFeatureFactory).OPENGL_AUTO_SELECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&gameFeature, &jcall!(openGLFeatureFactory).OPENGL_MINIMUM) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&gameFeature, &{ let java_field = jcall!(openGLFeatureFactory).OPENGL_AUTO_SELECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&gameFeature, &{ let java_field = jcall!(openGLFeatureFactory).OPENGL_MINIMUM.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             if jcall!(features).isFeature(gameFeature.clone()) {
-                self.setVersionSelector((gameFeature).clone() /* as OpenGLFeature */);
+                self.setVersionSelector((gameFeature).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<OpenGLFeature>() }, "ClassCastException: not a OpenGLFeature"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<OpenGLFeature>) } }));
             }
             modified = true;
         }
@@ -234,13 +235,13 @@ impl OpenGLConfiguration {
         jcall!(stringBuffer).append(String::from(" isOpenGL: "));
         jcall!(stringBuffer).appendboolean(self.isOpenGL());
         jcall!(stringBuffer).append(String::from(" VersionSelector: "));
-        jcall!(stringBuffer).append(jcall!(stringUtil).toString(crate::java_into_object(self.getVersionSelector())));
+        jcall!(stringBuffer).append({ let java_argument = jcall!(stringUtil).toString(crate::java_into_object(self.getVersionSelector())); java_argument });
         jcall!(stringBuffer).append(String::from(" Type: "));
-        jcall!(stringBuffer).append(jcall!(stringUtil).toString(crate::java_into_object(self.getType())));
+        jcall!(stringBuffer).append({ let java_argument = jcall!(stringUtil).toString(crate::java_into_object(self.getType())); java_argument });
         jcall!(stringBuffer).append(String::from(" Image Color: "));
-        jcall!(stringBuffer).append(jcall!(stringUtil).toString(crate::java_into_object(self.getImageColor())));
+        jcall!(stringBuffer).append({ let java_argument = jcall!(stringUtil).toString(crate::java_into_object(self.getImageColor())); java_argument });
         jcall!(stringBuffer).append(String::from(" Color: "));
-        jcall!(stringBuffer).append(jcall!(stringUtil).toString(crate::java_into_object(self.getColor())));
+        jcall!(stringBuffer).append({ let java_argument = jcall!(stringUtil).toString(crate::java_into_object(self.getColor())); java_argument });
         return jcall!(stringBuffer).toString();
     }
 }

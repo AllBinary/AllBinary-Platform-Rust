@@ -62,5 +62,8 @@ impl crate::org::allbinary::graphics::paint::LocationPaintable::LocationPaintabl
     fn as_LocationPaintable(&self) -> &crate::org::allbinary::graphics::paint::LocationPaintable::LocationPaintable { &self.base }
     fn as_LocationPaintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::LocationPaintable::LocationPaintable { &mut self.base }
 }
+impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for NullLocationPaintable {
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::graphics::paint::LocationPaintable::LocationPaintable::paintXY(crate::org::allbinary::graphics::paint::LocationPaintable::LocationPaintableDyn::as_LocationPaintable_mut(self), p1, p2, p3) }
+}
 
 

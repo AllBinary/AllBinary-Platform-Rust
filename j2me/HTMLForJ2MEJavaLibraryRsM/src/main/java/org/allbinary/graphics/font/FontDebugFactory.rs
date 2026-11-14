@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +33,10 @@ pub struct FontDebugFactory {
 thread_local! { pub static FontDebugFactory_instance: Option<Rc<RefCell<FontDebugFactory>>> = FontDebugFactory::new(); }
 
 impl FontDebugFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -50,7 +54,7 @@ impl FontDebugFactory {
     }
     
 
-    pub fn setFont(&mut self, mut font: Option<Rc<RefCell<Font>>>, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn setFont(&mut self, mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(graphics).setFont(font.clone());
     }
 }

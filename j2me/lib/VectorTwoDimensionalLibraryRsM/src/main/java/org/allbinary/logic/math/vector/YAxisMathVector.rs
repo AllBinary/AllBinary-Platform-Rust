@@ -55,7 +55,7 @@ impl YAxisMathVector {
     
 
     pub fn calculate(&mut self) {
-        let mut result: i64 = YAxisMathVectorUtil::YAxisMathVectorUtil::calculate(jcall!(self.getMagnitude()).getUnscaled(), self.getDirection());
+        let mut result: i64 = YAxisMathVectorUtil::YAxisMathVectorUtil::calculate({ let java_argument = jcall!(self.getMagnitude()).getUnscaled(); java_argument }, self.getDirection());
         self.resultBasicDecimal = BasicDecimal::new(result.clone());
     }
 }

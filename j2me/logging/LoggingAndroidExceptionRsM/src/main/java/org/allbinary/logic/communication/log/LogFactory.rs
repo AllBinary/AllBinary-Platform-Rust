@@ -33,6 +33,10 @@ pub struct LogFactory {
 
 impl LogFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -45,7 +49,7 @@ impl LogFactory {
     
 
     pub fn getInstance(mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Log>>> {
-        return Log::new(specialMessage.clone(), anyType.clone(), functionName.clone(), exception.clone());
+        return Log::new(specialMessage.clone(), crate::java_into_object(anyType.clone()), functionName.clone(), crate::java_into_object(exception.clone()));
     }
     
 
@@ -55,7 +59,7 @@ impl LogFactory {
     
 
     pub fn getInstanceSE(mut specialMessage: String, mut className: String, mut functionName: String, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Log>>> {
-        return LogFactory::getInstance(specialMessage.clone(), className.clone(), functionName.clone(), exception.clone());
+        return LogFactory::getInstance(specialMessage.clone(), crate::java_into_object(className.clone()), functionName.clone(), crate::java_into_object(exception.clone()));
     }
 }
 

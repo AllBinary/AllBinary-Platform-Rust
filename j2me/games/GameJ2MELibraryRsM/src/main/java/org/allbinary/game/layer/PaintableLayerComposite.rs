@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::paint::Paintable::Paintable;
 use crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface;
 use crate::org::allbinary::layer::Layer::Layer;
@@ -34,10 +34,6 @@ pub struct PaintableLayerComposite {
     pub paintableArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::layer::Layer::LayerDyn>>>>,
 }
 
-impl PaintableInterface for PaintableLayerComposite {
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
-}
 
 impl PaintableLayerComposite {
     
@@ -56,7 +52,7 @@ impl PaintableLayerComposite {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         {
             let mut index: i32 = (self.paintableArray.len() as i32).clone();
             while { index -= 1; index } >= 0 {
@@ -66,12 +62,12 @@ impl PaintableLayerComposite {
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         let mut paintableInterface: Option<Rc<RefCell<dyn PaintableInterface>>> = None;
         {
             let mut index: i32 = (self.paintableArray.len() as i32).clone();
             while { index -= 1; index } >= 0 {
-            paintableInterface = (self.paintableArray[(index) as usize]).clone() /* as PaintableInterface */;
+            paintableInterface = (|| -> Option<Rc<RefCell<dyn PaintableInterface>>> { panic!("ClassCastException: a Rust dyn Layer cannot be cast to PaintableInterface") })();
             jcall!(paintableInterface).paintThreed(graphics.clone());
             }
         }
@@ -88,8 +84,10 @@ impl std::ops::DerefMut for PaintableLayerComposite {
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for PaintableLayerComposite {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for PaintableLayerComposite {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paintThreed(self, graphics) }
 }
 
 

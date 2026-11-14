@@ -22,6 +22,7 @@ use crate::org::allbinary::data::tree::dom::BasicUriResolver::BasicUriResolver;
 use crate::org::allbinary::data::tree::dom::StoreUriResolver::StoreUriResolver;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
+use crate::java::lang::Exception::*;
 use super::BasicTransformer::BasicTransformer;
 
 // Borrows the object of a Java reference
@@ -35,6 +36,9 @@ pub struct StoreTransformer {
     pub base: BasicTransformer,
 }
 
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for StoreTransformer {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::AbTransformer::AbTransformer::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::AbTransformer::AbTransformerDyn::as_AbTransformer_mut(self)) }
+}
 
 impl StoreTransformer {
     
@@ -44,7 +48,7 @@ impl StoreTransformer {
             base: BasicTransformer::new_struct(abeClientInformation.clone(), transformInfoInterface.clone()),
         };
         // super(...) is in the struct literal above
-        { let java_arguments = ((StoreUriResolver::new(this.getTransformInfoInterface(), (this.getURIResolver()).clone() /* as BasicUriResolver */)).clone() /* as URIResolver */,); this.setURIResolver(java_arguments.0) };
+        { let java_arguments = ((StoreUriResolver::new(this.getTransformInfoInterface(), (this.getURIResolver()).clone())).clone() /* as URIResolver */,); this.setURIResolver(java_arguments.0) };
         this
     }
 

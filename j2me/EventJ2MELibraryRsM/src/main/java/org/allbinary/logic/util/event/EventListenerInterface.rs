@@ -28,12 +28,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait EventListenerInterface {
+pub trait EventListenerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn onEvent(&mut self, eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

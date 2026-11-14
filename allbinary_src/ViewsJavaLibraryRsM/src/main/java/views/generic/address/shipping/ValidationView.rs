@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::control::validate::ValidationComponentInterfac
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::ShippingAddressesView::ShippingAddressesView;
 
 // Borrows the object of a Java reference
@@ -37,6 +38,9 @@ pub struct ValidationView {
 }
 
 // impl ValidationComponentInterface for ValidationView with the methods of the trait
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for ValidationView {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }
+}
 
 impl ValidationView {
     
@@ -55,15 +59,15 @@ impl ValidationView {
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        let mut billingAddressesEntity: Option<Rc<RefCell<ShippingAddressesEntity>>> = ShippingAddressesEntity::new(jcall!(self.getWeblisketSession()).getUserName());
-        self.streetAddressList = jcall!(billingAddressesEntity).get();
+        let mut billingAddressesEntity: Option<Rc<RefCell<ShippingAddressesEntity>>> = ShippingAddressesEntity::new({ let java_argument = jcall!(self.getWeblisketSession()).getUserName(); java_argument });
+        self.streetAddressList = { let java_value = (jcall!(billingAddressesEntity).get()).clone(); java_value };
         if self.streetAddressList.is_none() {
             return false;
         }
         let mut size: i32 = jcall!(self.streetAddressList).size();
         for index in (0..size) {
             let mut streetAddress: Option<Rc<RefCell<StreetAddress>>> = { let java_object = (jcall!(self.base.streetAddressList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<StreetAddress>>>>().expect("ClassCastException").clone()) };
-            if match (&jcall!(streetAddress).isValid(), &false) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if jcall!(streetAddress).isValid() == false {
                 jcall!(self.base.streetAddressList).remove(crate::java_into_object(streetAddress.clone()));
             }
         }
@@ -99,6 +103,10 @@ impl std::ops::DerefMut for ValidationView {
 impl crate::views::generic::address::shipping::ShippingAddressesView::ShippingAddressesViewDyn for ValidationView {
     fn as_ShippingAddressesView(&self) -> &crate::views::generic::address::shipping::ShippingAddressesView::ShippingAddressesView { &self.base }
     fn as_ShippingAddressesView_mut(&mut self) -> &mut crate::views::generic::address::shipping::ShippingAddressesView::ShippingAddressesView { &mut self.base }
+}
+impl crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn for ValidationView {
+    fn as_TransformInfoHttpComposite(&self) -> &crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &self.base.base.base.base }
+    fn as_TransformInfoHttpComposite_mut(&mut self) -> &mut crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &mut self.base.base.base.base }
 }
 impl crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentViewDyn for ValidationView {
     fn as_HttpStoreComponentView(&self) -> &crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &self.base.base }

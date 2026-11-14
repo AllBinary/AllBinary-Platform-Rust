@@ -36,6 +36,8 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -49,11 +51,15 @@ pub struct InputAutomationModuleConfiguration {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
     pub className: String,
     pub name: String,
-    pub inputAutomationModuleInterface: Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>,
+    pub inputAutomationModuleInterface: Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>,
 }
 
 
 impl InputAutomationModuleConfiguration {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -114,7 +120,7 @@ impl InputAutomationModuleConfiguration {
     }
     
 
-    pub fn new_struct1(mut inputAutomationModuleInterface: Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>) -> Self {
+    pub fn new_struct1(mut inputAutomationModuleInterface: Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -129,7 +135,7 @@ impl InputAutomationModuleConfiguration {
         this
     }
 
-    pub fn new1(mut inputAutomationModuleInterface: Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new1(mut inputAutomationModuleInterface: Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct1(inputAutomationModuleInterface))))
     }
     
@@ -143,7 +149,7 @@ impl InputAutomationModuleConfiguration {
                 { let java_arguments = (DomNodeHelper::getTextNodeValue(classNameNode.clone()),); self.setClassName(java_arguments.0) };
                 self.init(abeClientInformation.clone());
             } else {
-                jcall!(self.logUtil).putF(String::from("Class Node Null"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone());
+                jcall!(self.logUtil).putF(String::from("Class Node Null"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
             }
         } else {
             jcall!(self.logUtil).putF(format!("{}{}", unsafe { crate::org::allbinary::input::automation::InputAutomationData::InputAutomationData_NAME.clone() }, String::from(" Node Has No Children")), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Contructor"));
@@ -154,15 +160,15 @@ impl InputAutomationModuleConfiguration {
     // Java overloaded method: Rust needs a different name
     pub fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Name: "), self.getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            jcall!(self.logUtil).putF(format!("{}{}", String::from("ClassName: "), self.className), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone());
-            { let java_arguments = ((jcall!(jcall!(AbeFactory::getInstance()).getInstance()).getInstance(abeClientInformation.clone(), self.getClassName())).clone() /* as InputAutomationModuleFactoryInterface */,); self.setInputAutomationModuleInterface(java_arguments.0) };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Name: "), self.getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            jcall!(self.logUtil).putF(format!("{}{}", String::from("ClassName: "), self.className), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
+            { let java_arguments = ((jcall!(jcall!(AbeFactory::getInstance()).getInstance()).getInstance2(abeClientInformation.clone(), self.getClassName())).clone(),); self.setInputAutomationModuleInterface(java_arguments.0) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
             }
         }
@@ -200,12 +206,12 @@ impl InputAutomationModuleConfiguration {
     }
     
 
-    pub fn getInputAutomationModuleInterface(&mut self) -> Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>> {
+    pub fn getInputAutomationModuleInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>> {
         return self.inputAutomationModuleInterface.clone();
     }
     
 
-    pub fn setInputAutomationModuleInterface(&mut self, mut inputAutomationModuleInterface: Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>) {
+    pub fn setInputAutomationModuleInterface(&mut self, mut inputAutomationModuleInterface: Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>) {
         jcall!(self.logUtil).putF(format!("{}{}", String::from("InputAutomationModuleFactoryInterface : "), inputAutomationModuleInterface), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setInputAutomationModuleInterface"));
         self.inputAutomationModuleInterface = inputAutomationModuleInterface.clone();
         { let java_arguments = (jcall!(self.inputAutomationModuleInterface).getName(),); self.setName(java_arguments.0) };

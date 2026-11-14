@@ -23,6 +23,8 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::AbPathData::AbPathData;
 use super::PathUtil::PathUtil;
 
@@ -51,17 +53,18 @@ impl AbPath {
     
 
     pub fn createAbPath() -> Option<Rc<RefCell<dyn AbPathDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut EMPTY_STRING: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-            return AbPath::new(EMPTY_STRING.clone(), EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn AbPathDyn>>);
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut EMPTY_STRING: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+            return Some(AbPath::new(EMPTY_STRING.clone(), EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn AbPathDyn>>));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(ex) => {
-            let ex: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(ex as Box<dyn std::any::Any>)));
+            let ex: String = crate::java::lang::Exception::java_panic_message(&ex);
 
             panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -80,7 +83,7 @@ impl AbPath {
         this.commonSeps = CommonSeps::getInstance();
         this.abPathData = AbPathData::getInstance();
         this.abPathUtil = PathUtil::getInstance();
-        this.EMPTY_STRING = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.EMPTY_STRING = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.schema = this.EMPTY_STRING.clone();
         this.path = this.EMPTY_STRING.clone();
         this.nameP = this.EMPTY_STRING.clone();
@@ -90,7 +93,7 @@ impl AbPath {
         if !jcall!(stringValidationUtil).isEmpty(aPath.clone()) {
             this.schema = this.getSchema(aPath.clone());
             this.nameP = name.clone();
-            this.path = { let java_receiver = this.abPathUtil.clone(); let java_arguments = ({ let java_receiver = this.abPathUtil.clone(); let java_arguments = (this.getPathFromPath(aPath.clone()),); let java_result = jcall!(java_receiver).adjust(java_arguments.0); java_result },); let java_result = jcall!(java_receiver).adjustEnd(java_arguments.0); java_result };
+            this.path = { let java_value = ({ let java_receiver = this.abPathUtil.clone(); let java_arguments = ({ let java_argument = { let java_receiver = this.abPathUtil.clone(); let java_arguments = (this.getPathFromPath(aPath.clone()),); let java_result = jcall!(java_receiver).adjust(java_arguments.0); java_result }; java_argument },); let java_result = jcall!(java_receiver).adjustEnd(java_arguments.0); java_result }).clone(); java_value };
         } else {
             this.init();
             if !jcall!(stringValidationUtil).isEmpty(name.clone()) {
@@ -107,13 +110,13 @@ impl AbPath {
 
     pub fn init(&mut self) {
         self.schema = self.EMPTY_STRING.clone();
-        self.setPath(jcall!(self.abPathData).SEPARATOR.clone());
+        { let java_arguments = ({ let java_field = jcall!(self.abPathData).SEPARATOR.clone(); java_field }.clone(),); self.setPath(java_arguments.0) };
         self.nameP = self.EMPTY_STRING.clone();
     }
     
 
     pub fn getSchema(&mut self, mut aPath: String) -> String {
-        let mut beginIndex: i32 = aPath.find(&jcall!(self.commonSeps).COLON.clone()).map(|index| index as i32).unwrap_or(-1);
+        let mut beginIndex: i32 = aPath.find(&{ let java_field = jcall!(self.commonSeps).COLON.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1);
         if beginIndex >= 0 {
             self.hasSchemaP = true;
             return aPath[(0) as usize..(beginIndex) as usize].to_string();
@@ -133,19 +136,19 @@ impl AbPath {
         let mut filePathData: Option<Rc<RefCell<FilePathData>>> = FilePathData::getInstance();
         let mut tempPath: String = aPath.clone();
         if !self.hasSchema() {
-            tempPath = jcall!(self.abPathUtil).adjustStart(tempPath.clone());
+            tempPath = { let java_value = (jcall!(self.abPathUtil).adjustStart(tempPath.clone())).clone(); java_value };
         } else {
-            let mut beginIndex: i32 = tempPath.find(&jcall!(self.commonSeps).COLON.clone()).map(|index| index as i32).unwrap_or(-1);
+            let mut beginIndex: i32 = tempPath.find(&{ let java_field = jcall!(self.commonSeps).COLON.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1);
             if beginIndex >= 0 {
                 beginIndex += 1;
-                while tempPath.chars().nth((beginIndex.clone()) as usize).unwrap() == jcall!(self.abPathData).SEPARATORCHAR || tempPath.chars().nth((beginIndex.clone()) as usize).unwrap() == jcall!(filePathData).SEPARATORCHAR {
+                while tempPath.chars().nth((beginIndex.clone()) as usize).unwrap() == { let java_field = jcall!(self.abPathData).SEPARATORCHAR.clone(); java_field } || tempPath.chars().nth((beginIndex.clone()) as usize).unwrap() == { let java_field = jcall!(filePathData).SEPARATORCHAR.clone(); java_field } {
                     beginIndex += 1;
                     self.numberOfSeps += 1;
                     if self.numberOfSeps > 2 {
                         panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Should Not Have More Than Two Seps"))));
                     }
                 }
-                tempPath = tempPath[(beginIndex) as usize..((tempPath.chars().count() as i32)) as usize].to_string();
+                tempPath = { let java_value = (tempPath[(beginIndex) as usize..((tempPath.chars().count() as i32)) as usize].to_string()).clone(); java_value };
             }
         }
         return tempPath.clone();
@@ -179,13 +182,13 @@ impl AbPath {
             let mut filePathData: Option<Rc<RefCell<FilePathData>>> = FilePathData::getInstance();
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(self.schema.clone());
-            jcall!(stringBuffer).append(jcall!(self.commonSeps).COLON.clone());
-            jcall!(stringBuffer).append(jcall!(filePathData).PATH_START.clone());
-            jcall!(stringBuffer).append(FilePathUtil::adjust(self.getPath()));
+            jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).COLON.clone(); java_field }.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(filePathData).PATH_START.clone(); java_field }.clone());
+            jcall!(stringBuffer).append({ let java_argument = FilePathUtil::adjust(self.getPath()); java_argument });
             jcall!(stringBuffer).append(self.nameP.clone());
             return jcall!(stringBuffer).toString();
         } else {
-            return format!("{}{}", FilePathUtil::adjust(self.getPath()), self.nameP);
+            return format!("{}{}", { let java_value = FilePathUtil::adjust(self.getPath()); java_value }, self.nameP);
         }
     }
     
@@ -199,7 +202,7 @@ impl AbPath {
         self.path = path.clone();
     }
 }
-pub trait AbPathDyn {
+pub trait AbPathDyn: std::any::Any {
     fn as_AbPath(&self) -> &AbPath;
     fn as_AbPath_mut(&mut self) -> &mut AbPath;
     fn init(&mut self) { AbPath::init(self.as_AbPath_mut()) }

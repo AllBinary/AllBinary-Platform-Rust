@@ -23,6 +23,7 @@ use crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::Animat
 use crate::org::allbinary::animation::NullAnimationFactory::NullAnimationFactory;
 use crate::org::allbinary::logic::communication::log::ForcedLogUtil::ForcedLogUtil;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -44,6 +45,10 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 }
 
 impl CompoundAnimationInterfaceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut basicAnimationInterfaceFactoryInterfaceArray: Vec<Option<Rc<RefCell<dyn AnimationInterfaceFactoryInterface>>>>, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>) -> Self {
@@ -73,7 +78,7 @@ impl CompoundAnimationInterfaceFactory {
     
 
     pub fn createArray(&mut self, mut size: i32) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>> {
-        return jcall!(NullAnimationFactory::getFactoryInstance()).EMPTY_ARRAY.clone();
+        return { let java_field = jcall!(NullAnimationFactory::getFactoryInstance()).EMPTY_ARRAY.clone(); java_field }.clone();
     }
     
 
@@ -94,7 +99,7 @@ impl CompoundAnimationInterfaceFactory {
         }
     }
 }
-pub trait CompoundAnimationInterfaceFactoryDyn {
+pub trait CompoundAnimationInterfaceFactoryDyn: std::any::Any {
     fn as_CompoundAnimationInterfaceFactory(&self) -> &CompoundAnimationInterfaceFactory;
     fn as_CompoundAnimationInterfaceFactory_mut(&mut self) -> &mut CompoundAnimationInterfaceFactory;
     fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { CompoundAnimationInterfaceFactory::getInstance(self.as_CompoundAnimationInterfaceFactory_mut(), instanceId) }

@@ -49,13 +49,13 @@ impl TouchButtonLocationHelper {
             columnsRemainderHalf: 0,
             rowsRemainderHalf: 0,
         };
-        let mut buttonSize: i32 = jcall!(CommonButtons::CommonButtons::getInstance()).STANDARD_BUTTON_SIZE.clone();
+        let mut buttonSize: i32 = { let java_field = jcall!(CommonButtons::CommonButtons::getInstance()).STANDARD_BUTTON_SIZE.clone(); java_field }.clone();
         let mut displayInfo: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
-        this.totalColumns = ((((jcall!(displayInfo).getLastWidth()) as f32) / ((buttonSize) as f32)) as f64).round() as i64;
-        this.totalRows = ((((jcall!(displayInfo).getLastHeight()) as f32) / ((buttonSize) as f32)) as f64).round() as i64;
-        this.columnsRemainder = jcall!(displayInfo).getLastWidth() % buttonSize;
+        this.totalColumns = { let java_value = (((((jcall!(displayInfo).getLastWidth()) as f32) / ((buttonSize) as f32)) as f32).round() as i32).clone(); java_value };
+        this.totalRows = { let java_value = (((((jcall!(displayInfo).getLastHeight()) as f32) / ((buttonSize) as f32)) as f32).round() as i32).clone(); java_value };
+        this.columnsRemainder = { let java_value = (jcall!(displayInfo).getLastWidth() % buttonSize).clone(); java_value };
         this.columnsRemainderHalf = (this.columnsRemainder >> 1);
-        this.rowsRemainder = jcall!(displayInfo).getLastHeight() % buttonSize;
+        this.rowsRemainder = { let java_value = (jcall!(displayInfo).getLastHeight() % buttonSize).clone(); java_value };
         this.rowsRemainderHalf = (this.rowsRemainder >> 1);
         this
     }

@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::control::validate::ValidationInterface::ValidationInterface;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::StoreThemeCategoryView::StoreThemeCategoryView;
 use super::StoreThemeCategoryInterface::StoreThemeCategoryInterface;
 
@@ -46,7 +47,7 @@ impl StoreThemeCategoryValidationView {
 
     pub fn new_struct(mut categoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>>) -> Self {
         let mut this = Self {
-            base: StoreThemeCategoryView::new_struct((categoryInterface).clone() /* as StoreThemeCategoryInterface */),
+            base: StoreThemeCategoryView::new_struct((categoryInterface).clone()),
         };
         // super(...) is in the struct literal above
         this

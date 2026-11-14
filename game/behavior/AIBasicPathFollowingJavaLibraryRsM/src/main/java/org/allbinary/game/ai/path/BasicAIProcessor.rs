@@ -26,6 +26,7 @@ use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellHis
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapDirectionUtil::GeographicMapDirectionUtil;
 use crate::org::allbinary::media::graphics::geography::pathfinding::GeographicMapCellPathHistoryInfo::GeographicMapCellPathHistoryInfo;
+use crate::java::lang::Exception::*;
 use super::BasicDirectionAIHelper::BasicDirectionAIHelper;
 
 // Borrows the object of a Java reference
@@ -46,6 +47,10 @@ pub struct BasicAIProcessor {
 
 
 impl BasicAIProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut name: String, mut geographicMapCellHistory: Option<Rc<RefCell<GeographicMapCellHistory>>>, mut geographicMapCellPathHistoryInfo: Option<Rc<RefCell<GeographicMapCellPathHistoryInfo>>>, mut chosenPathList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut seed: i32) -> Self {
@@ -93,16 +98,16 @@ impl BasicAIProcessor {
         let mut keyDirection: i32 = -1;
         let mut goToGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = jcall!(self.geographicMapCellPathHistoryInfo).getNextChosenOnPathGeographicMapCellPosition();
         let mut geographicMapDirectionData: Option<Rc<RefCell<Direction>>> = jcall!(self.geographicMapDirectionUtil).getDirectionFromCellPositionToAdjacentCellPosition(currentGeographicMapCellPosition.clone(), goToGeographicMapCellPosition.clone());
-        if match (&geographicMapDirectionData, &jcall!(DirectionFactory::getInstance()).NOT_BORDERED_WITH) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            geographicMapDirectionData = jcall!(self.geographicMapDirectionUtil).getDirectionFromCellPositionToCellPosition(currentGeographicMapCellPosition.clone(), goToGeographicMapCellPosition.clone());
+        if match (&geographicMapDirectionData, &{ let java_field = jcall!(DirectionFactory::getInstance()).NOT_BORDERED_WITH.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            geographicMapDirectionData = { let java_value = (jcall!(self.geographicMapDirectionUtil).getDirectionFromCellPositionToCellPosition(currentGeographicMapCellPosition.clone(), goToGeographicMapCellPosition.clone())).clone(); java_value };
         }
-        keyDirection = jcall!(self.basicAI).getAIKeyPressedFromDirection(geographicMapDirectionData.clone());
+        keyDirection = { let java_value = (jcall!(self.basicAI).getAIKeyPressedFromDirection(geographicMapDirectionData.clone())).clone(); java_value };
         return keyDirection.clone();
     }
     
 
     pub fn update(&mut self) {
-        { let java_receiver = self.geographicMapCellPathHistoryInfo.clone(); let java_arguments = (jcall!(self.getGeographicMapCellHistory()).getFirstUnvisited(),); jcall!(java_receiver).setNextUnvisitedOnPathGeographicMapCellPosition(java_arguments.0); };
+        { let java_receiver = self.geographicMapCellPathHistoryInfo.clone(); let java_arguments = ({ let java_argument = jcall!(self.getGeographicMapCellHistory()).getFirstUnvisited(); java_argument },); jcall!(java_receiver).setNextUnvisitedOnPathGeographicMapCellPosition(java_arguments.0); };
         { let java_receiver = self.geographicMapCellPathHistoryInfo.clone(); let java_arguments = (jcall!(self.geographicMapCellPathHistoryInfo).getNextUnvisitedOnPathGeographicMapCellPosition(),); jcall!(java_receiver).setNextChosenOnPathGeographicMapCellPosition(java_arguments.0); };
     }
     

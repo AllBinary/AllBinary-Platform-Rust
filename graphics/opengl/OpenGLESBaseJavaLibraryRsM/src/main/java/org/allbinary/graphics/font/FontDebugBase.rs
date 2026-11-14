@@ -5,7 +5,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Font::Font;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 
 // Borrows the object of a Java reference
@@ -23,6 +23,10 @@ pub struct FontDebugBase {
 thread_local! { pub static FontDebugBase_instanceBase: Option<Rc<RefCell<dyn FontDebugBaseDyn>>> = FontDebugBase::new().map(|reference| reference as Rc<RefCell<dyn FontDebugBaseDyn>>); }
 
 impl FontDebugBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -42,7 +46,7 @@ impl FontDebugBase {
     }
     
 
-    pub fn debugMetrics(&mut self, mut currentFont: Option<Rc<RefCell<Font>>>, mut convertedTextSize: f32, mut displayMetrics: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) {
+    pub fn debugMetrics(&mut self, mut currentFont: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, mut convertedTextSize: f32, mut displayMetrics: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) {
     }
     
 
@@ -50,15 +54,15 @@ impl FontDebugBase {
     }
     
 
-    pub fn debugDimension(&mut self, mut currentFont: Option<Rc<RefCell<Font>>>, mut convertedTextSize: f32, mut longestDimensionTotalPixels: i32, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) {
+    pub fn debugDimension(&mut self, mut currentFont: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, mut convertedTextSize: f32, mut longestDimensionTotalPixels: i32, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) {
     }
 }
-pub trait FontDebugBaseDyn {
+pub trait FontDebugBaseDyn: std::any::Any {
     fn as_FontDebugBase(&self) -> &FontDebugBase;
     fn as_FontDebugBase_mut(&mut self) -> &mut FontDebugBase;
-    fn debugMetrics(&mut self, mut currentFont: Option<Rc<RefCell<Font>>>, mut convertedTextSize: f32, mut displayMetrics: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) { FontDebugBase::debugMetrics(self.as_FontDebugBase_mut(), currentFont, convertedTextSize, displayMetrics, stringBuffer) }
+    fn debugMetrics(&mut self, mut currentFont: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, mut convertedTextSize: f32, mut displayMetrics: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) { FontDebugBase::debugMetrics(self.as_FontDebugBase_mut(), currentFont, convertedTextSize, displayMetrics, stringBuffer) }
     fn debugDpi(&mut self, mut densityDpi: i32, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) { FontDebugBase::debugDpi(self.as_FontDebugBase_mut(), densityDpi, stringBuffer) }
-    fn debugDimension(&mut self, mut currentFont: Option<Rc<RefCell<Font>>>, mut convertedTextSize: f32, mut longestDimensionTotalPixels: i32, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) { FontDebugBase::debugDimension(self.as_FontDebugBase_mut(), currentFont, convertedTextSize, longestDimensionTotalPixels, stringBuffer) }
+    fn debugDimension(&mut self, mut currentFont: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, mut convertedTextSize: f32, mut longestDimensionTotalPixels: i32, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) { FontDebugBase::debugDimension(self.as_FontDebugBase_mut(), currentFont, convertedTextSize, longestDimensionTotalPixels, stringBuffer) }
 }
 impl FontDebugBaseDyn for FontDebugBase {
     fn as_FontDebugBase(&self) -> &FontDebugBase { self }

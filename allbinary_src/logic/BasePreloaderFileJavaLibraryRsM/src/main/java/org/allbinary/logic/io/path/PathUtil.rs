@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::io::file::FilePathData::FilePathData;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
+use crate::java::lang::Exception::*;
 use super::AbPathData::AbPathData;
 use super::AbFilePath::AbFilePath;
 use super::AbPath::AbPath;
@@ -40,6 +41,10 @@ pub struct PathUtil {
 thread_local! { pub static PathUtil_instance: Option<Rc<RefCell<PathUtil>>> = PathUtil::new(); }
 
 impl PathUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<PathUtil>>> {
@@ -89,7 +94,7 @@ impl PathUtil {
         let mut indexOfFileExtensionDelmiter: i32 = jcall!(self.abPathData).getExtensionIndex(filePath.clone());
         let mut pathWithoutExtension: String = filePath.clone();
         if indexOfFileExtensionDelmiter >= 0 {
-            pathWithoutExtension = filePath[(0) as usize..(indexOfFileExtensionDelmiter) as usize].to_string();
+            pathWithoutExtension = { let java_value = (filePath[(0) as usize..(indexOfFileExtensionDelmiter) as usize].to_string()).clone(); java_value };
         }
         return pathWithoutExtension.clone();
     }
@@ -106,7 +111,7 @@ impl PathUtil {
     
 
     pub fn isValidStart(&mut self, mut path: String) -> bool {
-        if path.chars().nth((0) as usize).unwrap() == jcall!(self.abPathData).SEPARATORCHAR || path.chars().nth((0) as usize).unwrap() == '.' {
+        if path.chars().nth((0) as usize).unwrap() == { let java_field = jcall!(self.abPathData).SEPARATORCHAR.clone(); java_field } || path.chars().nth((0) as usize).unwrap() == '.' {
             return true;
         } else {
             return false;
@@ -119,7 +124,7 @@ impl PathUtil {
         if jcall!(stringValidationUtil).isEmpty(path.clone()) {
             return false;
         }
-        if path.chars().nth(((path.chars().count() as i32) - 1) as usize).unwrap() == jcall!(self.abPathData).SEPARATORCHAR {
+        if path.chars().nth(((path.chars().count() as i32) - 1) as usize).unwrap() == { let java_field = jcall!(self.abPathData).SEPARATORCHAR.clone(); java_field } {
             return true;
         } else {
             return false;
@@ -129,7 +134,7 @@ impl PathUtil {
 
     pub fn adjustStart(&mut self, mut path: String) -> String {
         if !self.isValidStart(path.clone()) {
-            path = format!("{}{}", jcall!(self.abPathData).SEPARATOR, path);
+            path = { let java_value = (format!("{}{}", { let java_field = jcall!(self.abPathData).SEPARATOR.clone(); java_field }, path)).clone(); java_value };
         }
         return path.clone();
     }
@@ -137,7 +142,7 @@ impl PathUtil {
 
     pub fn adjustEnd(&mut self, mut path: String) -> String {
         if !self.isValidEnd(path.clone()) {
-            path = format!("{}{}", path, jcall!(self.abPathData).SEPARATOR);
+            path = { let java_value = (format!("{}{}", path, { let java_field = jcall!(self.abPathData).SEPARATOR.clone(); java_field })).clone(); java_value };
         }
         return path.clone();
     }
@@ -146,10 +151,10 @@ impl PathUtil {
     pub fn adjust(&mut self, mut path: String) -> String {
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
         if jcall!(stringValidationUtil).isEmpty(path.clone()) {
-            return jcall!(self.abPathData).SEPARATOR.clone();
+            return { let java_field = jcall!(self.abPathData).SEPARATOR.clone(); java_field }.clone();
         }
         if path.find(&String::from("\\")).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            path = path.replace(&'\\', &jcall!(self.abPathData).SEPARATORCHAR);
+            path = { let java_value = (path.replace(&('\\').to_string(), &({ let java_field = jcall!(self.abPathData).SEPARATORCHAR.clone(); java_field }).to_string())).clone(); java_value };
         }
         return path.clone();
     }
@@ -157,9 +162,9 @@ impl PathUtil {
 
     // throws Exception
     pub fn removeNameFromPath(&mut self, mut path: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> {
-        let mut endIndex: i32 = path.rfind(&jcall!(self.abPathData).SEPARATOR.clone()).map(|index| index as i32).unwrap_or(-1);
+        let mut endIndex: i32 = path.rfind(&{ let java_field = jcall!(self.abPathData).SEPARATOR.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1);
         if endIndex < 0 {
-            endIndex = path.rfind(jcall!(self.filePathData).SEPARATORCHAR.clone()).map(|index| index as i32).unwrap_or(-1);
+            endIndex = { let java_value = (path.rfind({ let java_field = jcall!(self.filePathData).SEPARATORCHAR.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1)).clone(); java_value };
         }
         if endIndex < 0 {
             return AbPath::createAbPath();
@@ -168,7 +173,7 @@ impl PathUtil {
             return { let java_arguments = (path[(0) as usize..(endIndex - 1) as usize].to_string(),); self.removeNameFromPath(java_arguments.0) };
         } else {
             let mut pathWithoutName: String = path[(0) as usize..(endIndex) as usize].to_string();
-            return AbPath::new(pathWithoutName.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+            return AbPath::new(pathWithoutName.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
         }
     }
 }

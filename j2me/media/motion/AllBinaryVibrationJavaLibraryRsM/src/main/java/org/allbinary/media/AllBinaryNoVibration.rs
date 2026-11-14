@@ -30,7 +30,7 @@ pub struct AllBinaryNoVibration {
     pub base: AllBinaryVibrationME,
 }
 
-pub static mut AllBinaryNoVibration_NO_VIBRATION: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::media::AllBinaryVibrationME::AllBinaryVibrationMEDyn>>>> = std::cell::LazyCell::new(|| AllBinaryNoVibration::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::AllBinaryVibrationME::AllBinaryVibrationMEDyn>>));
+pub static mut AllBinaryNoVibration_NO_VIBRATION: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::media::AllBinaryVibrationME::AllBinaryVibrationMEDyn>>>> = std::cell::LazyCell::new(|| AllBinaryNoVibration::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::AllBinaryVibrationME::AllBinaryVibrationMEDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::AllBinaryVibrationME::AllBinaryVibrationMEDyn>>));
 
 impl AllBinaryNoVibration {
 

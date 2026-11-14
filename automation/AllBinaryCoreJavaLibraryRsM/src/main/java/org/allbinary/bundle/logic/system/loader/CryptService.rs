@@ -18,7 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::io::ByteArrayInputStream::ByteArrayInputStream;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::InputStream::InputStream;
 use crate::org::allbinary::globals::Globals::Globals;
 use crate::org::allbinary::globals::URLGLOBALS::URLGLOBALS;
 use crate::org::allbinary::gui::dialog::BasicTextJDialog::BasicTextJDialog;
@@ -32,6 +32,7 @@ use crate::org::allbinary::logic::system::security::licensing::AbeLicenseInterfa
 use crate::org::allbinary::logic::system::security::licensing::AbeNoLicense::AbeNoLicense;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -48,6 +49,10 @@ pub struct CryptService {
 
 
 impl CryptService {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -59,8 +64,8 @@ impl CryptService {
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
         this.abCryptUtil = AbCryptUtil::getInstance();
-        jcall!(Globals::getInstance()).init(jcall!(std::any::type_name_of_val(&this)).getClassLoader(), String::from("./"));
-        { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Set Globals: "), URLGLOBALS::getWebappPath()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        jcall!(Globals::getInstance()).init({ let java_argument = jcall!(std::any::type_name_of_val(&this)).getClassLoader(); java_argument }, String::from("./"));
+        { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Set Globals: "), URLGLOBALS::getWebappPath()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         this
     }
 
@@ -69,26 +74,27 @@ impl CryptService {
     }
     
 
-    pub fn getDecryptedInputStream(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut name: String, mut inputStream: Option<Rc<RefCell<InputStream>>>) -> Option<Rc<RefCell<InputStream>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+    pub fn getDecryptedInputStream(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut name: String, mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut key: String = jcall!(AbKeys::getInstance()).getKey(abeClientInformation.clone(), name.clone());
             let mut decrypted: Vec<i8> = jcall!(self.abCryptUtil).decrypt(inputStream.clone(), key.clone());
-            return ByteArrayInputStream::new(decrypted.clone());
+            return Some(crate::java::io::InputStream::InputStream::new1(decrypted.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             self.showLicenseDialog(abeClientInformation.clone(), e.clone());
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }
         return None;
     }
     
 
     pub fn showLicenseDialog(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut e: String) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             let mut basicTextJDialog: Option<Rc<RefCell<BasicTextJDialog>>> = BasicTextJDialog::new1(e.to_string());
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                 let mut abeLicenseInterface: Option<Rc<RefCell<dyn AbeLicenseInterface>>> = jcall!(AbeLicenseInterfaceFactory::getInstance()).getLicenseInstance(abeClientInformation.clone());
@@ -100,19 +106,19 @@ impl CryptService {
             })) {
                 Ok(_) => {}
                 Err(e2) => {
-            let e2: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e2 as Box<dyn std::any::Any>)));
+            let e2: String = crate::java::lang::Exception::java_panic_message(&e2);
 
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(), crate::java_into_object(e2.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(), crate::java_into_object(e2.clone()));
                 }
             }
-            jcall!(basicTextJDialog).addCloseListener(ExitCloseListener::new());
+            jcall!(basicTextJDialog).addCloseListener(ExitCloseListener::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::gui::dialog::CloseJDialogListenerInterface::CloseJDialogListenerInterface>>));
             jcall!(basicTextJDialog).setVisible(true);
         })) {
             Ok(_) => {}
             Err(e3) => {
-            let e3: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e3 as Box<dyn std::any::Any>)));
+            let e3: String = crate::java::lang::Exception::java_panic_message(&e3);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(), crate::java_into_object(e3.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(), crate::java_into_object(e3.clone()));
             }
         }
     }

@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
 use crate::org::allbinary::business::category::properties::root::store::RootStoreCategoryProperties::RootStoreCategoryProperties;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontFactory::StoreFrontFactory;
@@ -32,6 +31,7 @@ use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpStoreInterface::TransformInfoHttpStoreInterface;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -74,46 +74,46 @@ impl RootStoreThemeCategoryProperties {
     }
     
 
-    pub fn new_struct2(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut node: Option<Rc<RefCell<Node>>>) -> Self {
+    pub fn new_struct2_TransformInfoInterface_Node(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut node: Option<Rc<RefCell<Node>>>) -> Self {
         let mut this = Self {
-            base: RootStoreCategoryProperties::new_struct2(transformInfoInterface.clone(), node.clone()),
+            base: RootStoreCategoryProperties::new_struct2_TransformInfoInterface_Node(transformInfoInterface.clone(), node.clone()),
         };
         // super(...) is in the struct literal above
         this
     }
 
-    pub fn new2(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct2(transformInfoInterface, node))))
+    pub fn new2_TransformInfoInterface_Node(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct2_TransformInfoInterface_Node(transformInfoInterface, node))))
     }
     
 
-    pub fn new_struct2(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut categoryPropertiesHashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct2_TransformInfoInterface_HashMap(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut categoryPropertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
-            base: RootStoreCategoryProperties::new_struct2(transformInfoInterface.clone(), categoryPropertiesHashMap.clone()),
+            base: RootStoreCategoryProperties::new_struct2_TransformInfoInterface_HashMap(transformInfoInterface.clone(), categoryPropertiesHashMap.clone()),
         };
         // super(...) is in the struct literal above
         this
     }
 
-    pub fn new2(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut categoryPropertiesHashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct2(transformInfoInterface, categoryPropertiesHashMap))))
+    pub fn new2_TransformInfoInterface_HashMap(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut categoryPropertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct2_TransformInfoInterface_HashMap(transformInfoInterface, categoryPropertiesHashMap))))
     }
     
 
     // throws Exception
     pub fn initPath(&mut self) {
-        let mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn TransformInfoHttpStoreInterface>>> = (self.transformInfoInterface).clone() /* as TransformInfoHttpStoreInterface */;
-        let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(transformInfoHttpStoreInterface).getStoreName());
+        let mut transformInfoHttpStoreInterface: Option<Rc<RefCell<dyn TransformInfoHttpStoreInterface>>> = (|| -> Option<Rc<RefCell<dyn TransformInfoHttpStoreInterface>>> { panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to TransformInfoHttpStoreInterface") })();
+        let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(transformInfoHttpStoreInterface).getStoreName()).map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-        jcall!(stringBuffer).append(jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(storeFrontInterface).getName());
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
-        jcall!(stringBuffer).append(jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).THEMEPATH.clone());
-        let mut abPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).THEMEPATH.clone(); java_field }.clone());
+        let mut abPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
         let mut httpServletRequest: Option<Rc<RefCell<HttpServletRequest>>> = (jcall!(jcall!(transformInfoHttpStoreInterface).getPageContext()).getRequest()).clone() /* as HttpServletRequest */;
-        self.webAppAbPath = AbPath::new(format!("{}{}", jcall!(httpServletRequest).getContextPath(), jcall!(abPath).toString()), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-        { let java_arguments = (AbPath::new(format!("{}{}", URLGLOBALS::getMainPath(), jcall!(abPath).toString()), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>),); self.setRootFilePath(java_arguments.0) };
+        self.webAppAbPath = { let java_value = (AbPath::new(format!("{}{}", jcall!(httpServletRequest).getContextPath(), jcall!(abPath).toString()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
+        { let java_arguments = (AbPath::new(format!("{}{}", URLGLOBALS::getMainPath(), jcall!(abPath).toString()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>),); self.setRootFilePath(java_arguments.0) };
     }
 }
 impl std::ops::Deref for RootStoreThemeCategoryProperties {

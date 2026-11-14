@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Command::Command;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 
 // Borrows the object of a Java reference
@@ -34,6 +34,10 @@ pub struct CommandUriAction {
 thread_local! { pub static CommandUriAction_instance: Option<Rc<RefCell<CommandUriAction>>> = CommandUriAction::new(); }
 
 impl CommandUriAction {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -53,11 +57,11 @@ impl CommandUriAction {
     }
     
 
-    pub fn add(&mut self, mut command: Option<Rc<RefCell<Command>>>, mut url: String) {
+    pub fn add(&mut self, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut url: String) {
     }
     
 
-    pub fn process(&mut self, mut command: Option<Rc<RefCell<Command>>>) {
+    pub fn process(&mut self, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) {
     }
 }
 

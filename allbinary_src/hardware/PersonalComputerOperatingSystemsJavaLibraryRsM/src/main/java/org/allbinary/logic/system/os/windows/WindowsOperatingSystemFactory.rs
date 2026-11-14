@@ -25,6 +25,7 @@ use crate::org::allbinary::logic::system::os::NoOperatingSystem::NoOperatingSyst
 use crate::org::allbinary::logic::system::os::OperatingSystems::OperatingSystems;
 use crate::org::allbinary::logic::system::os::SystemProperties::SystemProperties;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::WindowsOS::WindowsOS;
 
 // Borrows the object of a Java reference
@@ -41,6 +42,10 @@ pub struct WindowsOperatingSystemFactory {
 thread_local! { pub static WindowsOperatingSystemFactory_instance: Option<Rc<RefCell<WindowsOperatingSystemFactory>>> = WindowsOperatingSystemFactory::new(); }
 
 impl WindowsOperatingSystemFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<WindowsOperatingSystemFactory>>> {
@@ -62,21 +67,21 @@ impl WindowsOperatingSystemFactory {
     
 
     pub fn getOperatingSystemInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut operatingSystems: Option<Rc<RefCell<OperatingSystems>>> = OperatingSystems::getInstance();
             let mut osName: String = jcall!(SystemProperties::getInstance()).getName();
             let mut operatingSystemInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>> = None;
-            if (osName.cmp(&jcall!(operatingSystems).WINDOWS_NT.clone()) as i32) == 0 {
+            if (osName.cmp(&{ let java_field = jcall!(operatingSystems).WINDOWS_NT.clone(); java_field }.clone()) as i32) == 0 {
                 operatingSystemInterface = WindowsOS::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>);
-            } else if (osName.cmp(&jcall!(operatingSystems).WINDOWS_10.clone()) as i32) == 0 {
+            } else if (osName.cmp(&{ let java_field = jcall!(operatingSystems).WINDOWS_10.clone(); java_field }.clone()) as i32) == 0 {
                 operatingSystemInterface = WindowsOS::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>);
-            } else if (osName.cmp(&jcall!(operatingSystems).WINDOWS_11.clone()) as i32) == 0 {
+            } else if (osName.cmp(&{ let java_field = jcall!(operatingSystems).WINDOWS_11.clone(); java_field }.clone()) as i32) == 0 {
                 operatingSystemInterface = WindowsOS::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>);
-            } else if (osName.cmp(&jcall!(operatingSystems).WINDOWS2000.clone()) as i32) == 0 {
+            } else if (osName.cmp(&{ let java_field = jcall!(operatingSystems).WINDOWS2000.clone(); java_field }.clone()) as i32) == 0 {
                 operatingSystemInterface = WindowsOS::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>);
-            } else if (osName.cmp(&jcall!(operatingSystems).WINDOWS_XP.clone()) as i32) == 0 {
+            } else if (osName.cmp(&{ let java_field = jcall!(operatingSystems).WINDOWS_XP.clone(); java_field }.clone()) as i32) == 0 {
                 operatingSystemInterface = WindowsOS::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>);
-            } else if (osName.cmp(&jcall!(operatingSystems).WINDOWS_VISTA.clone()) as i32) == 0 {
+            } else if (osName.cmp(&{ let java_field = jcall!(operatingSystems).WINDOWS_VISTA.clone(); java_field }.clone()) as i32) == 0 {
                 operatingSystemInterface = WindowsOS::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>);
             } else {
                 if jcall!(operatingSystems).isUnknownSpecificOSAllowed() {
@@ -85,19 +90,20 @@ impl WindowsOperatingSystemFactory {
                     panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Specific Windows OS Not Supported: "), osName))));
                 }
             }
-            return operatingSystemInterface.clone();
+            return Some(operatingSystemInterface.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).FACTORYERROR.clone())) {
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).FACTORYERROR.clone(); java_field }.clone())) {
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return crate::org::allbinary::logic::system::os::NoOperatingSystem::NoOperatingSystem_NO_OPERATING_SYSTEM.with(Clone::clone).clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

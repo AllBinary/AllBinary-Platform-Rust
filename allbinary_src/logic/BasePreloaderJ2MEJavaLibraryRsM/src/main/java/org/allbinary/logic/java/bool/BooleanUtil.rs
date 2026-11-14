@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
+use crate::java::lang::Exception::*;
 use super::BooleanFactory::BooleanFactory;
 
 // Borrows the object of a Java reference
@@ -36,6 +37,10 @@ pub struct BooleanUtil {
 thread_local! { pub static BooleanUtil_instance: Option<Rc<RefCell<BooleanUtil>>> = BooleanUtil::new(); }
 
 impl BooleanUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<BooleanUtil>>> {
@@ -64,9 +69,9 @@ impl BooleanUtil {
             return false;
         }
         let mut booleanStringLowerCase: String = booleanString.to_lowercase();
-        if { let left = &(booleanStringLowerCase); let right = &(jcall!(booleanFactory).TRUE_STRING); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 {
+        if { let left = (booleanStringLowerCase).clone(); let right = ({ let java_field = jcall!(booleanFactory).TRUE_STRING.clone(); java_field }).clone(); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 {
             return true;
-        } else if { let left = &(booleanStringLowerCase); let right = &(jcall!(booleanFactory).FALSE_STRING); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 {
+        } else if { let left = (booleanStringLowerCase).clone(); let right = ({ let java_field = jcall!(booleanFactory).FALSE_STRING.clone(); java_field }).clone(); let mut left_units = left.encode_utf16(); let mut right_units = right.encode_utf16(); loop { match (left_units.next(), right_units.next()) { (Some(a), Some(b)) if a != b => break a as i32 - b as i32, (Some(_), Some(_)) => {}, (None, None) => break 0, _ => break left.encode_utf16().count() as i32 - right.encode_utf16().count() as i32 } } } == 0 {
             return false;
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Invalid booleanString - Must be true or false"))));
@@ -78,7 +83,7 @@ impl BooleanUtil {
     pub fn isStringBoolean(&mut self, mut booleanString: String) -> bool {
         let mut booleanFactory: Option<Rc<RefCell<BooleanFactory>>> = BooleanFactory::getInstance();
         let mut booleanStringLowerCase: String = booleanString.to_lowercase();
-        if (booleanStringLowerCase.cmp(&jcall!(booleanFactory).TRUE_STRING.clone()) as i32) == 0 || (booleanStringLowerCase.cmp(&jcall!(booleanFactory).FALSE_STRING.clone()) as i32) == 0 {
+        if (booleanStringLowerCase.cmp(&{ let java_field = jcall!(booleanFactory).TRUE_STRING.clone(); java_field }.clone()) as i32) == 0 || (booleanStringLowerCase.cmp(&{ let java_field = jcall!(booleanFactory).FALSE_STRING.clone(); java_field }.clone()) as i32) == 0 {
             return true;
         }
         return false;

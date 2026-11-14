@@ -55,16 +55,16 @@ impl MotionGestureEvent {
 
     pub fn new_struct(mut source: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut id: i32, mut motionGesture: Option<Rc<RefCell<MotionGestureInput>>>) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(source.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(source.clone())),
             motionGesture: None,
             id: 0,
             previousPoint: None,
             currentPoint: None,
             commonLabels: None,
         };
-        this.motionGesture = jcall!(TouchMotionGestureFactory::getInstance()).NO_MOTION.clone();
-        this.previousPoint = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone();
-        this.currentPoint = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone();
+        this.motionGesture = { let java_field = jcall!(TouchMotionGestureFactory::getInstance()).NO_MOTION.clone(); java_field }.clone();
+        this.previousPoint = { let java_field = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone();
+        this.currentPoint = { let java_field = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone();
         this.commonLabels = CommonLabels::getInstance();
         // super(...) is in the struct literal above
         this.id = id.clone();
@@ -111,7 +111,7 @@ impl MotionGestureEvent {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
         jcall!(stringBuffer).append(jcall!(stringUtil).toString(crate::java_into_object(self.motionGesture.clone())));
-        jcall!(stringBuffer).append(jcall!(self.commonLabels).CURRENT.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonLabels).CURRENT.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(stringUtil).toString(crate::java_into_object(self.currentPoint.clone())));
         jcall!(stringBuffer).append(MotionGestureEvent_PREVIOUS.with(Clone::clone).clone());
         jcall!(stringBuffer).append(jcall!(stringUtil).toString(crate::java_into_object(self.previousPoint.clone())));

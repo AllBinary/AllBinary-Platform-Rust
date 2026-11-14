@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::input::gyro::AllBinaryOrientationSensor::AllBinaryOrientationSensor;
 use crate::org::allbinary::logic::math::Orientation::Orientation;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

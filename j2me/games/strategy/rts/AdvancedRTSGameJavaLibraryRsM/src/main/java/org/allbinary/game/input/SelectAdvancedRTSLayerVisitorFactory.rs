@@ -38,6 +38,10 @@ impl SelectRTSLayerVisitorFactoryInterface for SelectAdvancedRTSLayerVisitorFact
 }
 
 impl SelectAdvancedRTSLayerVisitorFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<SelectAdvancedRTSLayerVisitorFactory>>> {
@@ -57,7 +61,7 @@ impl SelectAdvancedRTSLayerVisitorFactory {
     
 
     pub fn create(&mut self, mut selectedRTSLayersPlayerGameInput: Option<Rc<RefCell<SelectedRTSLayersPlayerGameInput>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>> {
-        return SelectAdvancedRTSLayerVisitor::new(selectedRTSLayersPlayerGameInput.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>);
+        return SelectAdvancedRTSLayerVisitor::new(selectedRTSLayersPlayerGameInput.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>);
     }
 }
 

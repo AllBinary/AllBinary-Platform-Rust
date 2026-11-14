@@ -54,7 +54,7 @@ impl PoolType {
 
     pub fn toString(&mut self) -> String {
         let mut POOL_TYPE: String = String::from("PoolType: ");
-        return format!("{}{}", POOL_TYPE, jcall!(self.getCacheType()).toString());
+        return format!("{}{}", POOL_TYPE, { let java_value = jcall!(self.getCacheType()).toString(); java_value });
     }
 }
 

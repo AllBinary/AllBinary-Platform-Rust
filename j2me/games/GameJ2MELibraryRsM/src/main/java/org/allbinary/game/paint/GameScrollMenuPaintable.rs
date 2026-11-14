@@ -59,8 +59,8 @@ impl GameScrollMenuPaintable {
     }
 
     pub fn new(mut mainDemoStatePaintable: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>>, mut ownershipPaintable: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>>, mut helpPaintableInterface: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(mainDemoStatePaintable, ownershipPaintable, helpPaintableInterface, basicColor))));
-            jcall!(ColorChangeEventHandler::getInstance()).addListenerInterface((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(mainDemoStatePaintable.clone(), ownershipPaintable.clone(), helpPaintableInterface.clone(), basicColor.clone()))));
+            jcall!(ColorChangeEventHandler::getInstance()).addListenerInterface(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
         this
     }
     
@@ -75,16 +75,16 @@ impl GameScrollMenuPaintable {
     
 
     pub fn setColor(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
-        let mut mainGameDemoStatePaintable: Option<Rc<RefCell<MainGameDemoStatePaintable>>> = (self.getMainDemoStatePaintable()).clone() /* as MainGameDemoStatePaintable */;
-        let mut formPaintable: Option<Rc<RefCell<FormPaintable>>> = (jcall!(mainGameDemoStatePaintable).getMenuPaintableInterface()).clone() /* as FormPaintable */;
-        let mut scrollSelectionForm: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn>>> = (jcall!(formPaintable).getForm()).clone() /* as ScrollSelectionForm */;
+        let mut mainGameDemoStatePaintable: Option<Rc<RefCell<MainGameDemoStatePaintable>>> = (self.getMainDemoStatePaintable()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<MainGameDemoStatePaintable>() }, "ClassCastException: not a MainGameDemoStatePaintable"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<MainGameDemoStatePaintable>) } });
+        let mut formPaintable: Option<Rc<RefCell<FormPaintable>>> = (jcall!(mainGameDemoStatePaintable).getMenuPaintableInterface()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<FormPaintable>() }, "ClassCastException: not a FormPaintable"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<FormPaintable>) } });
+        let mut scrollSelectionForm: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn>>> { panic!("ClassCastException: a Rust dyn PaintableForm cannot be cast to ScrollSelectionForm") })();
         jcall!(jcall!(mainGameDemoStatePaintable).getOwnershipPaintableInterface()).setBasicColorP(basicColor.clone());
         jcall!(scrollSelectionForm).setButtonBasicColor(basicColor.clone());
         let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn>>> = None;
         let mut stringComponent: Option<Rc<RefCell<ABStringComponent>>> = None;
-        for index in (0..=jcall!(scrollSelectionForm).as_ScrollSelectionForm_mut().size() - 1).rev() {
-            item = (jcall!(scrollSelectionForm).as_ScrollSelectionForm_mut().get(index.clone())).clone() /* as ABTextItem */;
-            stringComponent = jcall!(item).getLabelStringComponent();
+        for index in (0..={ let java_bound = jcall!(scrollSelectionForm).size() - 1; java_bound }).rev() {
+            item = { let java_value = ((|| -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABTextItem::ABTextItemDyn>>> { panic!("ClassCastException: a Rust dyn ABCustomItem cannot be cast to ABTextItem") })()).clone(); java_value };
+            stringComponent = { let java_value = (jcall!(item).getLabelStringComponent()).clone(); java_value };
             if stringComponent.is_some() {
                 jcall!(stringComponent).setForegroundBasicColor(basicColor.clone());
             }
@@ -110,6 +110,10 @@ impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for GameScr
 impl crate::org::allbinary::graphics::paint::StatePaintable::StatePaintableDyn for GameScrollMenuPaintable {
     fn as_StatePaintable(&self) -> &crate::org::allbinary::graphics::paint::StatePaintable::StatePaintable { &self.base.base }
     fn as_StatePaintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::StatePaintable::StatePaintable { &mut self.base.base }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for GameScrollMenuPaintable {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::paint::BasicGameDemoPaintable::BasicGameDemoPaintable::paint(crate::org::allbinary::game::paint::BasicGameDemoPaintable::BasicGameDemoPaintableDyn::as_BasicGameDemoPaintable_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 impl crate::org::allbinary::graphics::displayable::StateControlledInterface::StateControlledInterface for GameScrollMenuPaintable {
     fn setState(&mut self, mut state: i32) { Self::setState(self, state) }

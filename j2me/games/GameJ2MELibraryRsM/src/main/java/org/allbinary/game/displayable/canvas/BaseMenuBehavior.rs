@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::graphics::displayable::event::DisplayChangeEvent::DisplayChangeEvent;
 use crate::org::allbinary::graphics::paint::NullPaintable::NullPaintable;
+use crate::java::lang::Exception::*;
 use super::AllBinaryGameCanvas::AllBinaryGameCanvas;
 
 // Borrows the object of a Java reference
@@ -34,6 +35,10 @@ pub struct BaseMenuBehavior {
 thread_local! { pub static BaseMenuBehavior_instance: Option<Rc<RefCell<dyn BaseMenuBehaviorDyn>>> = BaseMenuBehavior::new().map(|reference| reference as Rc<RefCell<dyn BaseMenuBehaviorDyn>>); }
 
 impl BaseMenuBehavior {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -57,7 +62,7 @@ impl BaseMenuBehavior {
     
 
     pub fn initSpecialPaint(&mut self, mut allBinaryGameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>) {
-        jcall!(allBinaryGameCanvas).setNonBotPaintableP(NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>));
+        jcall!(allBinaryGameCanvas).setNonBotPaintableP(NullPaintable::getInstance());
     }
     
 
@@ -79,7 +84,7 @@ impl BaseMenuBehavior {
     pub fn closeMenu(&mut self, mut allBinaryGameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>) {
     }
 }
-pub trait BaseMenuBehaviorDyn {
+pub trait BaseMenuBehaviorDyn: std::any::Any {
     fn as_BaseMenuBehavior(&self) -> &BaseMenuBehavior;
     fn as_BaseMenuBehavior_mut(&mut self) -> &mut BaseMenuBehavior;
     fn onDisplayChangeEvent(&mut self, mut allBinaryGameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>, mut displayChangeEvent: Option<Rc<RefCell<DisplayChangeEvent>>>) { BaseMenuBehavior::onDisplayChangeEvent(self.as_BaseMenuBehavior_mut(), allBinaryGameCanvas, displayChangeEvent) }

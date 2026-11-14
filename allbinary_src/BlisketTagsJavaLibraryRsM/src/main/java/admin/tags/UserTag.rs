@@ -22,6 +22,7 @@ use crate::admin::taghelpers::UserHelperFactory::UserHelperFactory;
 use crate::org::allbinary::business::entry::EntryData::EntryData;
 use crate::org::allbinary::business::user::role::UserRoleData::UserRoleData;
 use crate::org::allbinary::logic::communication::http::request::AbResponseHandler::AbResponseHandler;
+use crate::java::lang::Exception::*;
 use super::TableTag::TableTag;
 
 // Borrows the object of a Java reference
@@ -47,8 +48,8 @@ impl UserTag {
             role: String::new(),
             enable: String::new(),
         };
-        this.setTagHelperFactory(UserHelperFactory::new());
-        this.setTagRequestHelperFactory(UserHelperFactory::new());
+        this.setTagHelperFactory(UserHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(UserHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 
@@ -59,32 +60,33 @@ impl UserTag {
 
     pub fn setRole(&mut self, mut value: String) {
         self.role = value.clone();
-        jcall!(self.getPropertiesHashMap()).put(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone(), self.role.clone());
+        jcall!(self.getPropertiesHashMap()).put(crate::java_into_object(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone()), crate::java_into_object(self.role.clone()));
     }
     
 
     pub fn setEnable(&mut self, mut value: String) {
         self.enable = value.clone();
-        jcall!(self.getPropertiesHashMap()).put(jcall!(EntryData::getInstance()).ENABLE.clone(), self.enable.clone());
+        jcall!(self.getPropertiesHashMap()).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).ENABLE.clone(); java_field }.clone()), crate::java_into_object(self.enable.clone()));
     }
     
 
     // throws JspTagException
     pub fn doStartTag(&mut self) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if self.isEnabled() {
-                return self.base.doStartTag();
+                return Some(self.base.doStartTag());
             }
-            return SKIP_BODY.clone();
+            return Some(SKIP_BODY.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             AbResponseHandler::sendJspTagRedirect(self.pageContext.clone(), e.clone());
             return SKIP_BODY.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for UserTag {

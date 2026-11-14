@@ -31,6 +31,10 @@ pub struct LayerPlacementType {
 
 
 impl LayerPlacementType {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut r#type: i32) -> Self {

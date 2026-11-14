@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::business::user::commerce::money::payment::PaymentException::PaymentException;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

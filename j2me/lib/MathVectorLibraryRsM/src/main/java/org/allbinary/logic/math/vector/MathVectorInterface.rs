@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait MathVectorInterface {
+pub trait MathVectorInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getDirection(&mut self) -> i32;
@@ -36,8 +36,6 @@ pub trait MathVectorInterface {
     
 
     fn getResult(&mut self) -> Option<Rc<RefCell<BasicDecimal>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -21,6 +21,7 @@ use crate::org::allbinary::business::category::CategoryInterface::CategoryInterf
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::StoreThemeCategoryInterface::StoreThemeCategoryInterface;
 use super::StoreThemeCategoryView::StoreThemeCategoryView;
 
@@ -40,6 +41,10 @@ impl DomNodeInterface for StoreThemeCategoriesView {
 }
 
 impl StoreThemeCategoriesView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut categoryInterface: Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>>) -> Self {
@@ -61,8 +66,8 @@ impl StoreThemeCategoriesView {
         let mut childArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(self.categoryInterface).getChildNodes()).toArray();
         let mut size: i32 = (childArray.len() as i32).clone();
         for i in (0..size) {
-            let mut childCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>> = (childArray[(i) as usize]).clone() /* as CategoryInterface */;
-            let mut childCategoryNode: Option<Rc<RefCell<Node>>> = jcall!(StoreThemeCategoriesView::new(panic!("ClassCastException: a Rust dyn CategoryInterface cannot be cast to dyn StoreThemeCategoryInterface"))).toXmlNode(document.clone());
+            let mut childCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>> = { let java_object = (childArray[(i) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn CategoryInterface>>>>().expect("ClassCastException").clone()) };
+            let mut childCategoryNode: Option<Rc<RefCell<Node>>> = jcall!(StoreThemeCategoriesView::new((|| -> Option<Rc<RefCell<dyn StoreThemeCategoryInterface>>> { panic!("ClassCastException: a Rust dyn CategoryInterface cannot be cast to dyn StoreThemeCategoryInterface") })())).toXmlNode(document.clone());
             jcall!(node).appendChild(childCategoryNode.clone());
         }
         return node.clone();

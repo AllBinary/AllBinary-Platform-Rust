@@ -35,6 +35,10 @@ pub struct LogFactory {
 
 impl LogFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -49,23 +53,23 @@ impl LogFactory {
     pub fn getInstanceD() -> Option<Rc<RefCell<Log>>> {
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
         let mut nullUtil: Option<Rc<RefCell<NullUtil>>> = NullUtil::getInstance();
-        return Log::new(jcall!(stringUtil).EMPTY_STRING.clone(), jcall!(nullUtil).NULL_OBJECT.clone(), jcall!(stringUtil).EMPTY_STRING.clone(), jcall!(nullUtil).NULL_OBJECT.clone());
+        return Log::new({ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone(), crate::java_into_object({ let java_field = jcall!(nullUtil).NULL_OBJECT.clone(); java_field }.clone()), { let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone(), crate::java_into_object({ let java_field = jcall!(nullUtil).NULL_OBJECT.clone(); java_field }.clone()));
     }
     
 
     pub fn getInstanceNoF(mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Log>>> {
-        return Log::new(specialMessage.clone(), anyType.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), exception.clone());
+        return Log::new(specialMessage.clone(), crate::java_into_object(anyType.clone()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::java_into_object(exception.clone()));
     }
     
 
     pub fn getInstance(mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Log>>> {
-        return Log::new(specialMessage.clone(), anyType.clone(), functionName.clone(), exception.clone());
+        return Log::new(specialMessage.clone(), crate::java_into_object(anyType.clone()), functionName.clone(), crate::java_into_object(exception.clone()));
     }
     
 
     pub fn getInstanceF(mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String) -> Option<Rc<RefCell<Log>>> {
         let mut nullUtil: Option<Rc<RefCell<NullUtil>>> = NullUtil::getInstance();
-        return Log::new(specialMessage.clone(), anyType.clone(), functionName.clone(), jcall!(nullUtil).NULL_OBJECT.clone());
+        return Log::new(specialMessage.clone(), crate::java_into_object(anyType.clone()), functionName.clone(), crate::java_into_object({ let java_field = jcall!(nullUtil).NULL_OBJECT.clone(); java_field }.clone()));
     }
 }
 

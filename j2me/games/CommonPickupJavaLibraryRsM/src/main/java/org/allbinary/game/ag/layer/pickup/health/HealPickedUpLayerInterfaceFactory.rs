@@ -25,6 +25,7 @@ use crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactoryInt
 use crate::org::allbinary::game::layer::pickup::PickedUpLayerTypeFactory::PickedUpLayerTypeFactory;
 use crate::org::allbinary::game::layer::pickup::PickupProcessorInterface::PickupProcessorInterface;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
+use crate::java::lang::Exception::*;
 use super::HealLayerCircularStaticPool::HealLayerCircularStaticPool;
 use super::HealLayerFactory::HealLayerFactory;
 
@@ -40,7 +41,7 @@ pub struct HealPickedUpLayerInterfaceFactory {
     pub pool: Option<Rc<RefCell<HealLayerCircularStaticPool>>>,
 }
 
-pub static mut HealPickedUpLayerInterfaceFactory_pickedUpLayerInterfaceFactoryInterface: std::cell::LazyCell<Option<Rc<RefCell<dyn PickedUpLayerInterfaceFactoryInterface>>>> = std::cell::LazyCell::new(|| crate::org::allbinary::game::layer::pickup::CountedPickedUpLayerInterfaceFactory::CountedPickedUpLayerInterfaceFactory_NULL_COUNTED_PICKUP_LAYER_FACTORY.with(Clone::clone).clone());
+pub static mut HealPickedUpLayerInterfaceFactory_pickedUpLayerInterfaceFactoryInterface: std::cell::LazyCell<Option<Rc<RefCell<dyn PickedUpLayerInterfaceFactoryInterface>>>> = std::cell::LazyCell::new(|| crate::org::allbinary::game::layer::pickup::CountedPickedUpLayerInterfaceFactory::CountedPickedUpLayerInterfaceFactory_NULL_COUNTED_PICKUP_LAYER_FACTORY.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn PickedUpLayerInterfaceFactoryInterface>>));
 impl PickupProcessorInterface for HealPickedUpLayerInterfaceFactory {
     fn process(&mut self, mut sourceLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) { Self::process(self, sourceLayerInterface) }
 }
@@ -50,16 +51,16 @@ impl HealPickedUpLayerInterfaceFactory {
 
     // throws Exception
     pub fn init() {
-        unsafe { *HealPickedUpLayerInterfaceFactory_pickedUpLayerInterfaceFactoryInterface = HealPickedUpLayerInterfaceFactory::new() };
+        unsafe { *HealPickedUpLayerInterfaceFactory_pickedUpLayerInterfaceFactoryInterface = HealPickedUpLayerInterfaceFactory::new().map(|reference| reference as Rc<RefCell<dyn PickedUpLayerInterfaceFactoryInterface>>) };
     }
     
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: PickedUpLayerInterfaceFactory::new_struct(jcall!(PickedUpLayerTypeFactory::getInstance()).HEAL.clone(), IconLayerFactory::getInstance(jcall!(jcall!(FeaturedAnimationInterfaceFactoryInterfaceFactory::getInstance()).get(jcall!(HealthResources::HealthResources::getInstance()).RESOURCE.clone())).getInstance(0), 10, 10), jcall!(jcall!(FeaturedAnimationInterfaceFactoryInterfaceFactory::getInstance()).get(jcall!(HealthResources::HealthResources::getInstance()).RESOURCE.clone())).getInstance(0)),
+            base: PickedUpLayerInterfaceFactory::new_struct({ let java_field = jcall!(PickedUpLayerTypeFactory::getInstance()).HEAL.clone(); java_field }.clone(), IconLayerFactory::getInstance(jcall!(jcall!(FeaturedAnimationInterfaceFactoryInterfaceFactory::getInstance()).get({ let java_field = jcall!(HealthResources::HealthResources::getInstance()).RESOURCE.clone(); java_field }.clone())).getInstance(0), 10, 10), jcall!(jcall!(FeaturedAnimationInterfaceFactoryInterfaceFactory::getInstance()).get({ let java_field = jcall!(HealthResources::HealthResources::getInstance()).RESOURCE.clone(); java_field }.clone())).getInstance(0)),
             pool: None,
         };
-        this.pool = HealLayerCircularStaticPool::new(HealLayerFactory::new(), 1);
+        this.pool = HealLayerCircularStaticPool::new(HealLayerFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerFactoryInterface::AllBinaryLayerFactoryInterface>>), 1);
         // super(...) is in the struct literal above
         this
     }

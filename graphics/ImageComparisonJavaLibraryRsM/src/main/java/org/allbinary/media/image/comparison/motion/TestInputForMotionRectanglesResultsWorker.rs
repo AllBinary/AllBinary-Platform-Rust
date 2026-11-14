@@ -19,7 +19,7 @@ use std::rc::Rc;
 use super::*;
 // use crate::java::awt::Rectangle::Rectangle;
 // use crate::java::awt::event::InputEvent::InputEvent;
-// use crate::java::awt::event::KeyEvent::KeyEvent;
+use crate::java::awt::event::KeyEvent::KeyEvent;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::input::automation::robot::InputRobotFactory::InputRobotFactory;
@@ -32,6 +32,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::MotionRectanglesResultsListener::MotionRectanglesResultsListener;
 use super::MotionRectanglesResultsEvent::MotionRectanglesResultsEvent;
 use super::MotionRectangles::MotionRectangles;
@@ -51,9 +52,20 @@ pub struct TestInputForMotionRectanglesResultsWorker {
     pub motionRectanglesVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-// impl MotionRectanglesResultsListener for TestInputForMotionRectanglesResultsWorker with the methods of the trait
+impl MotionRectanglesResultsListener for TestInputForMotionRectanglesResultsWorker {
+    fn onMotionRectanglesImageComparisonResultsEvent(&mut self, mut motionRectanglesImageComparisonResultsEvent: Option<Rc<RefCell<MotionRectanglesResultsEvent>>>) { Self::onMotionRectanglesImageComparisonResultsEvent(self, motionRectanglesImageComparisonResultsEvent) }
+}
+impl crate::org::allbinary::logic::util::event::BasicEventListenerInterface::BasicEventListenerInterface for TestInputForMotionRectanglesResultsWorker {
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for TestInputForMotionRectanglesResultsWorker {
+    fn onEvent(&mut self, mut allBinaryEventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, allBinaryEventObject) }
+}
 
 impl TestInputForMotionRectanglesResultsWorker {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -81,13 +93,13 @@ impl TestInputForMotionRectanglesResultsWorker {
     
 
     pub fn onMotionRectanglesImageComparisonResultsEvent(&mut self, mut motionRectanglesImageComparisonResultsEvent: Option<Rc<RefCell<MotionRectanglesResultsEvent>>>) {
-        jcall!(self.getMotionRectanglesVector()).add(jcall!(motionRectanglesImageComparisonResultsEvent).getMotionRectangles());
+        jcall!(self.getMotionRectanglesVector()).add(crate::java_into_object(jcall!(motionRectanglesImageComparisonResultsEvent).getMotionRectangles()));
         self.run();
     }
     
 
     pub fn onEvent(&mut self, mut allBinaryEventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        self.onMotionRectanglesImageComparisonResultsEvent((allBinaryEventObject).clone() /* as MotionRectanglesResultsEvent */);
+        self.onMotionRectanglesImageComparisonResultsEvent((allBinaryEventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<MotionRectanglesResultsEvent>() }, "ClassCastException: not a MotionRectanglesResultsEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<MotionRectanglesResultsEvent>) } }));
     }
     
 
@@ -105,22 +117,22 @@ impl TestInputForMotionRectanglesResultsWorker {
 
     pub fn run(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
             self.setRunning(true);
             let mut timeHelper: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>> = TimeDelayHelper::new(1000).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
             jcall!(timeHelper).setStartTimeTNT();
-            let mut motionRectangles: Option<Rc<RefCell<dyn crate::org::allbinary::media::image::comparison::motion::MotionRectangles::MotionRectanglesDyn>>> = (jcall!(self.getMotionRectanglesVector()).get(0)).clone() /* as MotionRectangles */;
+            let mut motionRectangles: Option<Rc<RefCell<dyn crate::org::allbinary::media::image::comparison::motion::MotionRectangles::MotionRectanglesDyn>>> = { let java_object = (jcall!(self.getMotionRectanglesVector()).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::image::comparison::motion::MotionRectangles::MotionRectanglesDyn>>>>().expect("ClassCastException").clone()) };
             let mut motionRectangleVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(motionRectangles).getVector();
             if jcall!(motionRectangleVector).size() > 0 {
-                let mut rectangle: Option<Rc<RefCell<Rectangle>>> = (jcall!(motionRectangleVector).get(0)).clone() /* as Rectangle */;
-                let mut robotHashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(InputRobotFactory::getInstance()).get();
+                let mut rectangle: Option<Rc<RefCell<Rectangle>>> = { let java_object = (jcall!(motionRectangleVector).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<Rectangle>>>>().expect("ClassCastException").clone()) };
+                let mut robotHashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(InputRobotFactory::getInstance()).get();
                 let mut inputTypeNameArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(robotHashtable).keySet()).toArray();
                 let mut size: i32 = (inputTypeNameArray.len() as i32).clone();
                 for index in (0..size) {
-                    let mut inputTypeNameString: String = (inputTypeNameArray[(index) as usize]).clone() /* as String */;
-                    let mut inputRobotInterface: Option<Rc<RefCell<dyn InputRobotInterface>>> = { let java_object = jcall!(robotHashtable).get(crate::java_into_object(inputTypeNameString.clone())); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn InputRobotInterface>>>>().expect("ClassCastException").clone()) };
+                    let mut inputTypeNameString: String = { let java_object = (inputTypeNameArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+                    let mut inputRobotInterface: Option<Rc<RefCell<dyn InputRobotInterface>>> = { let java_object = (jcall!(robotHashtable).get(crate::java_into_object(inputTypeNameString.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn InputRobotInterface>>>>().expect("ClassCastException").clone()) };
                     jcall!(inputRobotInterface).mouseMoveToTarget(rectangle.clone());
-                    if jcall!(jcall!(inputRobotInterface).getName()).compareTo(crate::org::allbinary::input::automation::robot::TempInputRobotNames::TempInputRobotNames_DX_NAME.with(Clone::clone).clone()) == 0 {
+                    if (jcall!(inputRobotInterface).getName().cmp(&crate::org::allbinary::input::automation::robot::TempInputRobotNames::TempInputRobotNames_DX_NAME.with(Clone::clone).clone()) as i32) == 0 {
                         jcall!(inputRobotInterface).mousePress(unsafe { crate::java::awt::event::InputEvent::InputEvent_BUTTON1_MASK.clone() }.clone());
                         std::thread::sleep(std::time::Duration::from_millis((300) as u64));
                         jcall!(inputRobotInterface).mouseRelease(unsafe { crate::java::awt::event::InputEvent::InputEvent_BUTTON1_MASK.clone() }.clone());
@@ -149,15 +161,15 @@ impl TestInputForMotionRectanglesResultsWorker {
                 }
             }
             self.index += 1;
-            jcall!(self.getMotionRectanglesVector()).remove(motionRectangles.clone());
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", jcall!(CommonLabels::getInstance()).ELAPSED, jcall!(timeHelper).getElapsedTNT()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).END.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.getMotionRectanglesVector()).remove(crate::java_into_object(motionRectangles.clone()));
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).ELAPSED.clone(); java_field }, jcall!(timeHelper).getElapsedTNT()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).END.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

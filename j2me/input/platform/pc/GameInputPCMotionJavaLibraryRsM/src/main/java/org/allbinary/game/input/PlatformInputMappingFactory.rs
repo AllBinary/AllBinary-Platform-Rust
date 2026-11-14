@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMapping;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::MotionLaptopGameInputMapping::MotionLaptopGameInputMapping;
 
 // Borrows the object of a Java reference
@@ -31,12 +32,16 @@ macro_rules! jcall {
 
 pub struct PlatformInputMappingFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
-    pub inputToGameKeyMapping: Option<Rc<RefCell<PersistentInputMapping>>>,
+    pub inputToGameKeyMapping: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMappingDyn>>>,
 }
 
 thread_local! { pub static PlatformInputMappingFactory_instance: Option<Rc<RefCell<PlatformInputMappingFactory>>> = PlatformInputMappingFactory::new(); }
 
 impl PlatformInputMappingFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -58,18 +63,18 @@ impl PlatformInputMappingFactory {
     }
     
 
-    pub fn getPersistentInputMappingInstance(&mut self) -> Option<Rc<RefCell<PersistentInputMapping>>> {
+    pub fn getPersistentInputMappingInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMappingDyn>>> {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if match (&self.inputToGameKeyMapping, &PersistentInputMapping::getNullInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                self.inputToGameKeyMapping = MotionLaptopGameInputMapping::new().map(|reference| Rc::new(RefCell::new(Rc::try_unwrap(reference).ok().expect("new object is not shared").into_inner().base.base)));
+                self.inputToGameKeyMapping = MotionLaptopGameInputMapping::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMappingDyn>>);
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(), e.clone());
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         return self.inputToGameKeyMapping.clone();

@@ -35,6 +35,10 @@ pub struct PrimaryWaypointHelper {
 thread_local! { pub static PrimaryWaypointHelper_instance: Option<Rc<RefCell<PrimaryWaypointHelper>>> = PrimaryWaypointHelper::new(); }
 
 impl PrimaryWaypointHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<PrimaryWaypointHelper>>> {
@@ -46,7 +50,7 @@ impl PrimaryWaypointHelper {
         let mut this = Self {
             waypointLayer: None,
         };
-        this.waypointLayer = crate::org::allbinary::game::layer::NullPathFindingLayer::NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone();
+        this.waypointLayer = crate::org::allbinary::game::layer::NullPathFindingLayer::NullPathFindingLayer_NULL_PATH_FINDING_LAYER.with(Clone::clone).clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of NullPathFindingLayer does not have PathFindingLayerInterface as a base trait") });
         this
     }
 
@@ -61,7 +65,7 @@ impl PrimaryWaypointHelper {
     
 
     pub fn setWaypointLayer(&mut self, mut waypointLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointLayer::WaypointLayerDyn>>>) {
-        self.waypointLayer = waypointLayer.clone();
+        self.waypointLayer = waypointLayer.clone().map(|_java_reference| -> Rc<RefCell<dyn PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of WaypointLayer does not have PathFindingLayerInterface as a base trait") });
     }
 }
 

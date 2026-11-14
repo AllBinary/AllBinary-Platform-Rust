@@ -35,6 +35,10 @@ pub struct AdConfiguration {
 
 
 impl AdConfiguration {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut advertIdArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>>) -> Self {
@@ -43,9 +47,9 @@ impl AdConfiguration {
             LEADBOLT: String::new(),
             ADMOB: String::new(),
         };
-        this.INNERACTIVE = (advertIdArray[(0) as usize]).clone() /* as String */;
-        this.ADMOB = (advertIdArray[(1) as usize]).clone() /* as String */;
-        this.LEADBOLT = (advertIdArray[(2) as usize]).clone() /* as String */;
+        this.INNERACTIVE = { let java_object = (advertIdArray[(0) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+        this.ADMOB = { let java_object = (advertIdArray[(1) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+        this.LEADBOLT = { let java_object = (advertIdArray[(2) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         this
     }
 
@@ -79,7 +83,7 @@ impl AdConfiguration {
         return true;
     }
 }
-pub trait AdConfigurationDyn {
+pub trait AdConfigurationDyn: std::any::Any {
     fn as_AdConfiguration(&self) -> &AdConfiguration;
     fn as_AdConfiguration_mut(&mut self) -> &mut AdConfiguration;
     fn getValidAdSpots(&mut self) -> Vec<Option<Rc<RefCell<Direction>>>> { AdConfiguration::getValidAdSpots(self.as_AdConfiguration_mut()) }

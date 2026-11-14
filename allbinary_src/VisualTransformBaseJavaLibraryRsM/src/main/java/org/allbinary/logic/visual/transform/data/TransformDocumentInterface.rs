@@ -27,15 +27,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait TransformDocumentInterface {
+pub trait TransformDocumentInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getBaseNode(&mut self) -> Option<Rc<RefCell<Node>>>;
     
 
     fn getDoc(&mut self) -> Option<Rc<RefCell<Document>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

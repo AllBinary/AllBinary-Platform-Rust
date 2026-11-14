@@ -33,6 +33,10 @@ pub struct CollisionHelper {
 
 
 impl CollisionHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut sourceLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> Self {
@@ -62,7 +66,7 @@ impl CollisionHelper {
         self.sourceLayerInterface = sourceLayerInterface.clone();
     }
 }
-pub trait CollisionHelperDyn {
+pub trait CollisionHelperDyn: std::any::Any {
     fn as_CollisionHelper(&self) -> &CollisionHelper;
     fn as_CollisionHelper_mut(&mut self) -> &mut CollisionHelper;
     fn isCollidable(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::CollidableCompositeLayer::CollidableCompositeLayerDyn>>>) -> bool { CollisionHelper::isCollidable(self.as_CollisionHelper_mut(), layerInterface) }

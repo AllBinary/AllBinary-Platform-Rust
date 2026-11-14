@@ -20,6 +20,8 @@ use super::*;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::GeographicMapCellPositionAreaInterface::GeographicMapCellPositionAreaInterface;
 
 // Borrows the object of a Java reference
@@ -41,6 +43,10 @@ impl GeographicMapCellPositionAreaInterface for GeographicMapCellPositionAreaBas
 }
 
 impl GeographicMapCellPositionAreaBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -73,7 +79,7 @@ impl GeographicMapCellPositionAreaBase {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait GeographicMapCellPositionAreaBaseDyn: crate::org::allbinary::game::layer::GeographicMapCellPositionAreaInterface::GeographicMapCellPositionAreaInterface {
+pub trait GeographicMapCellPositionAreaBaseDyn: std::any::Any + crate::org::allbinary::game::layer::GeographicMapCellPositionAreaInterface::GeographicMapCellPositionAreaInterface {
     fn as_GeographicMapCellPositionAreaBase(&self) -> &GeographicMapCellPositionAreaBase;
     fn as_GeographicMapCellPositionAreaBase_mut(&mut self) -> &mut GeographicMapCellPositionAreaBase;
 }

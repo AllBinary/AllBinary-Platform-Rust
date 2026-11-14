@@ -6,8 +6,6 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use super::JTree::JTree;
-use super::swing::swing;
-use super::javax::javax;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -16,15 +14,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait JTreeInterface {
+pub trait JTreeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn updateJTree(&mut self);
     
 
     fn getActionScriptJTree(&mut self) -> Option<Rc<RefCell<JTree>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

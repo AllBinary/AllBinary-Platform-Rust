@@ -37,6 +37,10 @@ pub struct PreLogUtil {
 thread_local! { pub static PreLogUtil_LOG_SUCCESS: String = String::from("org.allbinary: "); }
 
 impl PreLogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -51,22 +55,22 @@ impl PreLogUtil {
     
 
     pub fn put(mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String) {
-        let mut className: String = PreLogUtil::getClassName(anyType.clone());
+        let mut className: String = PreLogUtil::getClassName(crate::java_into_object(anyType.clone()));
         if false {
-            className = jcall!(CommonStrings::getInstance()).EMPTY.clone();
+            className = { let java_value = ({ let java_field = jcall!(CommonStrings::getInstance()).EMPTY.clone(); java_field }).clone(); java_value }.clone();
         }
-        className = jcall!(StringMaker::new()).append(className.clone()).append(jcall!(CommonSeps::getInstance()).FORWARD_SLASH.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(anyType.clone()))).toString();
+        className = { let java_value = (jcall!(StringMaker::new()).append(className.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).FORWARD_SLASH.clone(); java_field }.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(anyType.clone()))).toString()).clone(); java_value };
         let mut message: String = jcall!(LogFormatUtil::LogFormatUtil::getInstance()).getS(className.clone(), functionName.clone(), specialMessage.clone());
         jcall!(PlayN::log()).debug(format!("{}{}", PreLogUtil_LOG_SUCCESS.with(Clone::clone), message));
     }
     
 
     pub fn putOE(mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {
-        let mut className: String = PreLogUtil::getClassName(anyType.clone());
+        let mut className: String = PreLogUtil::getClassName(crate::java_into_object(anyType.clone()));
         if false {
-            className = jcall!(CommonStrings::getInstance()).EMPTY.clone();
+            className = { let java_value = ({ let java_field = jcall!(CommonStrings::getInstance()).EMPTY.clone(); java_field }).clone(); java_value }.clone();
         }
-        className = jcall!(StringMaker::new()).append(className.clone()).append(jcall!(CommonSeps::getInstance()).FORWARD_SLASH.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(anyType.clone()))).toString();
+        className = { let java_value = (jcall!(StringMaker::new()).append(className.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).FORWARD_SLASH.clone(); java_field }.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(anyType.clone()))).toString()).clone(); java_value };
         let mut message: String = jcall!(LogFormatUtil::LogFormatUtil::getInstance()).get(className.clone(), functionName.clone(), specialMessage.clone(), crate::java_into_object(exception.clone()));
         jcall!(PlayN::log()).error(format!("{}{}", PreLogUtil_LOG_SUCCESS.with(Clone::clone), message), { let reference = exception.as_ref().expect("null reference").borrow(); reference.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", reference.as_ref().type_id())) });
     }

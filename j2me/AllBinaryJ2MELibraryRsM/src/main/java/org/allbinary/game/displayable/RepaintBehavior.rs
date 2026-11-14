@@ -17,8 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-use crate::org::allbinary::thread::ARunnable::ARunnable;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::graphics::displayable::DisplayInfoSingleton::DisplayInfoSingleton;
 use crate::org::allbinary::graphics::opengles::OpenGLFeatureFactory::OpenGLFeatureFactory;
@@ -26,6 +25,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::thread::NullRunnable::NullRunnable;
 use crate::java::lang::Thread::*;
+use super::RepaintRunnable::RepaintRunnable;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -42,6 +42,10 @@ pub struct RepaintBehavior {
 thread_local! { pub static RepaintBehavior_instance: Option<Rc<RefCell<dyn RepaintBehaviorDyn>>> = RepaintBehavior::new().map(|reference| reference as Rc<RefCell<dyn RepaintBehaviorDyn>>); }
 
 impl RepaintBehavior {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -63,44 +67,26 @@ impl RepaintBehavior {
     }
     
 
-    pub fn repaint(&mut self, mut canvas: Option<Rc<RefCell<Canvas>>>) {
+    pub fn repaint(&mut self, mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>) {
     }
     
 
-    pub fn onChangeRepaint(&mut self, mut canvas: Option<Rc<RefCell<Canvas>>>) {
+    pub fn onChangeRepaint(&mut self, mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>) {
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
         let mut openGLFeatureFactory: Option<Rc<RefCell<OpenGLFeatureFactory>>> = OpenGLFeatureFactory::getInstance();
-        if jcall!(features).isFeature(jcall!(openGLFeatureFactory).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        if jcall!(features).isFeature({ let java_field = jcall!(openGLFeatureFactory).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             jcall!(DisplayInfoSingleton::getInstance()).process();
         } else {
-            let mut thread: Option<Rc<RefCell<Thread>>> = Thread::new2(ARunnable::new() /* Java anonymous class body: implement it as a named type
-                
-
-                pub fn run(&mut self) {
-                    match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                        jcall!(canvas).repaint();
-                        jcall!(DisplayInfoSingleton::getInstance()).process();
-                    })) {
-                        Ok(_) => {}
-                        Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
-
-                        let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                        let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-                        jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
-                        }
-                    }
-                }
-*/, self.NAME.clone());
+            let mut thread: Option<Rc<RefCell<Thread>>> = Thread::new2(RepaintRunnable::new(canvas.clone()), self.NAME.clone());
             jcall!(thread).start();
         }
     }
 }
-pub trait RepaintBehaviorDyn {
+pub trait RepaintBehaviorDyn: std::any::Any {
     fn as_RepaintBehavior(&self) -> &RepaintBehavior;
     fn as_RepaintBehavior_mut(&mut self) -> &mut RepaintBehavior;
-    fn repaint(&mut self, mut canvas: Option<Rc<RefCell<Canvas>>>) { RepaintBehavior::repaint(self.as_RepaintBehavior_mut(), canvas) }
-    fn onChangeRepaint(&mut self, mut canvas: Option<Rc<RefCell<Canvas>>>) { RepaintBehavior::onChangeRepaint(self.as_RepaintBehavior_mut(), canvas) }
+    fn repaint(&mut self, mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>) { RepaintBehavior::repaint(self.as_RepaintBehavior_mut(), canvas) }
+    fn onChangeRepaint(&mut self, mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>) { RepaintBehavior::onChangeRepaint(self.as_RepaintBehavior_mut(), canvas) }
 }
 impl RepaintBehaviorDyn for RepaintBehavior {
     fn as_RepaintBehavior(&self) -> &RepaintBehavior { self }

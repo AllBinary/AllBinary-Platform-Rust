@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub trait InputAutomationModuleServiceInterface: OSGIServiceInterface {
     
 
-    fn getInputAutomationModuleInterfaceArray(&mut self) -> Vec<Option<Rc<RefCell<dyn InputAutomationModuleFactoryInterface>>>>;
+    fn getInputAutomationModuleInterfaceArray(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::InputAutomationModuleFactoryInterface::InputAutomationModuleFactoryInterfaceDyn>>>>;
 }
 
 

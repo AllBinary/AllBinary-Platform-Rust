@@ -21,6 +21,7 @@ use crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayer;
 use crate::org::allbinary::game::physics::acceleration::GravityUtil::GravityUtil;
 use crate::org::allbinary::game::physics::velocity::VelocityProperties::VelocityProperties;
 use crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal;
+use crate::java::lang::Exception::*;
 use super::BasicConstantVelocityMovement::BasicConstantVelocityMovement;
 
 // Borrows the object of a Java reference
@@ -42,7 +43,7 @@ impl CustomGravityConstantVelocityMovement {
 
     pub fn new_struct(mut speedBasicDecimal: Option<Rc<RefCell<BasicDecimal>>>, mut customGravity: i32) -> Self {
         let mut this = Self {
-            base: BasicConstantVelocityMovement::new_struct(speedBasicDecimal.clone(), VelocityProperties::new(((jcall!(speedBasicDecimal).getUnscaled()) as i32), ((jcall!(speedBasicDecimal).getUnscaled()) as i32))),
+            base: BasicConstantVelocityMovement::new_struct(speedBasicDecimal.clone(), VelocityProperties::new(((jcall!(speedBasicDecimal).getUnscaled()) as i32), ((jcall!(speedBasicDecimal).getUnscaled()) as i32)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn>>)),
             customGravity: 0,
             gravityUtil: None,
         };
@@ -59,9 +60,9 @@ impl CustomGravityConstantVelocityMovement {
 
     // throws Exception
     pub fn process(&mut self, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayerDyn>>>) {
-        self.base.process(layer.clone());
+        { let java_arguments = (layer.clone(),); self.base.process(java_arguments.0) };
         { let java_receiver = self.gravityUtil.clone(); let java_arguments = (self.getVelocityProperties(), self.customGravity.clone(),); jcall!(java_receiver).process(java_arguments.0, java_arguments.1); };
-        let mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>> = (self.getVelocityProperties()).clone() /* as VelocityProperties */;
+        let mut velocityProperties: Option<Rc<RefCell<VelocityProperties>>> = (self.getVelocityProperties()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<VelocityProperties>() }, "ClassCastException: not a VelocityProperties"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<VelocityProperties>) } });
         jcall!(velocityProperties).limitMaxYForwardVelocity();
     }
 }

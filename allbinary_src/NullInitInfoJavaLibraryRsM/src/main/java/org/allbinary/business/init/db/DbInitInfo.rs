@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
+use crate::java::lang::Exception::*;
 use super::DbConnectionInfo::DbConnectionInfo;
 
 // Borrows the object of a Java reference

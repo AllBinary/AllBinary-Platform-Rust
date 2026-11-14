@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation;
 use crate::org::allbinary::graphics::displayable::CanvasStrings::CanvasStrings;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
@@ -26,6 +26,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::CircularIndexUtil::CircularIndexUtil;
 use crate::org::allbinary::view::ViewPosition::ViewPosition;
 use crate::org::allbinary::view::ViewPositionBase::ViewPositionBase;
+use crate::java::lang::Exception::*;
 use super::DamageFloaters::DamageFloaters;
 
 // Borrows the object of a Java reference
@@ -62,10 +63,10 @@ impl AnimationDamageFloaters {
         this.logUtil = LogUtil::getInstance();
         this.animationInterfaceArray = animationInterfaceArray.clone();
         for index in (0..=(this.animationInterfaceArray.len() as i32) - 1).rev() {
-            jcall!(this.animationInterfaceArray[(index) as usize]).setFrame(jcall!(this.animationInterfaceArray[(index) as usize]).getSize() - 1);
+            { let java_receiver = this.animationInterfaceArray[(index) as usize].clone(); let java_arguments = (jcall!(this.animationInterfaceArray[(index) as usize]).getSize() - 1,); jcall!(java_receiver).setFrame(java_arguments.0); };
         }
         this.layerInterface = layerInterface.clone();
-        this.circularIndexUtil = CircularIndexUtil::createInstance((this.animationInterfaceArray.len() as i32).clone());
+        this.circularIndexUtil = { let java_value = (CircularIndexUtil::createInstance((this.animationInterfaceArray.len() as i32).clone())).clone(); java_value };
         this.dx = dx.clone();
         this.dy = dy.clone();
         this
@@ -83,7 +84,7 @@ impl AnimationDamageFloaters {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut viewPosition: Option<Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>> = jcall!(self.layerInterface).getViewPosition();
             let mut x: i32 = jcall!(viewPosition).getX();
@@ -99,11 +100,11 @@ impl AnimationDamageFloaters {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
             let mut canvasStrings: Option<Rc<RefCell<CanvasStrings>>> = CanvasStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(canvasStrings).PAINT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(canvasStrings).PAINT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -124,7 +125,10 @@ impl crate::org::allbinary::game::combat::damage::DamageFloaters::DamageFloaters
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for AnimationDamageFloaters {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for AnimationDamageFloaters {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

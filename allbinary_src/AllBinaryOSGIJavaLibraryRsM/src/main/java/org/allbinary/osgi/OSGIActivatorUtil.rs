@@ -23,6 +23,7 @@ use crate::org::osgi::framework::BundleContext::BundleContext;
 use crate::org::osgi::framework::NullServiceReferenceFactory::NullServiceReferenceFactory;
 use crate::org::osgi::framework::ServiceReference::ServiceReference;
 use crate::org::osgi::framework::ServiceRegistration::ServiceRegistration;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,6 +37,10 @@ pub struct OSGIActivatorUtil {
 
 
 impl OSGIActivatorUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -51,17 +56,17 @@ impl OSGIActivatorUtil {
 
     // throws Exception
     pub fn registerAsService(mut bundleContext: Option<Rc<RefCell<dyn BundleContext>>>, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut serviceName: String) {
-        OSGIActivatorUtil::registerAsService4(bundleContext.clone(), anyType.clone(), serviceName.clone(), jcall!(StdUtil::getInstance()).createHashtable());
+        OSGIActivatorUtil::registerAsService4(bundleContext.clone(), crate::java_into_object(anyType.clone()), serviceName.clone(), jcall!(StdUtil::getInstance()).createHashtable());
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn registerAsService4(mut bundleContext: Option<Rc<RefCell<dyn BundleContext>>>, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut serviceName: String, mut properties: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) {
+    pub fn registerAsService4(mut bundleContext: Option<Rc<RefCell<dyn BundleContext>>>, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut serviceName: String, mut properties: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) {
         let mut serviceRegistration: Option<Rc<RefCell<dyn ServiceRegistration>>> = jcall!(bundleContext).registerService(serviceName.clone(), crate::java_into_object(anyType.clone()), properties.clone());
         let mut serviceReference: Option<Rc<RefCell<dyn ServiceReference>>> = jcall!(serviceRegistration).getReference();
-        serviceReference = jcall!(bundleContext).getServiceReference(serviceName.clone());
-        if match (&serviceReference, &jcall!(NullServiceReferenceFactory::getInstance()).NULL_SERVICE_REFERENCE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        serviceReference = { let java_value = (jcall!(bundleContext).getServiceReference(serviceName.clone())).clone(); java_value };
+        if match (&serviceReference, &{ let java_field = jcall!(NullServiceReferenceFactory::getInstance()).NULL_SERVICE_REFERENCE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("No Such Service Reference"))));
         }
     }

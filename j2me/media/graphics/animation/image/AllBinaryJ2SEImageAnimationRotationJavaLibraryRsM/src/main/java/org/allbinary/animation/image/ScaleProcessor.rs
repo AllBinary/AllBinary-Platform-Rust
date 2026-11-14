@@ -17,10 +17,11 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::media::image::ImageScaleUtil::ImageScaleUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::ScaleBaseProcessor::ScaleBaseProcessor;
 
 // Borrows the object of a Java reference
@@ -60,19 +61,19 @@ impl ScaleProcessor {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::image::ScaleBaseProcessor::ScaleBaseProcessorDyn>>> {
-        return ScaleProcessor_instanceC.with(Clone::clone).clone();
+        return ScaleProcessor_instanceC.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::image::ScaleBaseProcessor::ScaleBaseProcessorDyn>>);
     }
     
 
-    pub fn update(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut originalImageArray: Vec<Option<Rc<RefCell<Image>>>>, mut ximageToShowArray: Vec<Option<Rc<RefCell<Image>>>>, mut unused: i32, mut scaleX: f32, mut scaleY: f32, mut maxScaleX: f32, mut maxScaleY: f32) {
+    pub fn update(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut originalImageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut ximageToShowArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut unused: i32, mut scaleX: f32, mut scaleY: f32, mut maxScaleX: f32, mut maxScaleY: f32) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(self.imageScaleUtil).scale2(originalImage.clone(), originalImageArray.clone(), ximageToShowArray.clone(), unused.clone(), scaleX.clone(), scaleY.clone(), maxScaleX.clone(), maxScaleY.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).UPDATE.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).UPDATE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -88,7 +89,7 @@ impl std::ops::DerefMut for ScaleProcessor {
 impl crate::org::allbinary::animation::image::ScaleBaseProcessor::ScaleBaseProcessorDyn for ScaleProcessor {
     fn as_ScaleBaseProcessor(&self) -> &crate::org::allbinary::animation::image::ScaleBaseProcessor::ScaleBaseProcessor { &self.base }
     fn as_ScaleBaseProcessor_mut(&mut self) -> &mut crate::org::allbinary::animation::image::ScaleBaseProcessor::ScaleBaseProcessor { &mut self.base }
-    fn update(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut originalImageArray: Vec<Option<Rc<RefCell<Image>>>>, mut ximageToShowArray: Vec<Option<Rc<RefCell<Image>>>>, mut unused: i32, mut scaleX: f32, mut scaleY: f32, mut maxScaleX: f32, mut maxScaleY: f32) { Self::update(self, originalImage, originalImageArray, ximageToShowArray, unused, scaleX, scaleY, maxScaleX, maxScaleY) }
+    fn update(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut originalImageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut ximageToShowArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut unused: i32, mut scaleX: f32, mut scaleY: f32, mut maxScaleX: f32, mut maxScaleY: f32) { Self::update(self, originalImage, originalImageArray, ximageToShowArray, unused, scaleX, scaleY, maxScaleX, maxScaleY) }
 }
 
 

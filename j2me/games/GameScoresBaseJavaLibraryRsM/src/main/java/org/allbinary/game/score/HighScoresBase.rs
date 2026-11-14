@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::GameInfo::GameInfo;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::RuntimeException::*;
 use super::HighScoresFactoryInterface::HighScoresFactoryInterface;
 use super::HighScoresResultsListener::HighScoresResultsListener;
 use super::HighScoresHelperBaseInterface::HighScoresHelperBaseInterface;
@@ -41,6 +42,10 @@ impl HighScoresFactoryInterface for HighScoresBase {
 }
 
 impl HighScoresBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -70,7 +75,7 @@ impl HighScoresBase {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait HighScoresBaseDyn: crate::org::allbinary::game::score::HighScoresFactoryInterface::HighScoresFactoryInterface {
+pub trait HighScoresBaseDyn: std::any::Any + crate::org::allbinary::game::score::HighScoresFactoryInterface::HighScoresFactoryInterface {
     fn as_HighScoresBase(&self) -> &HighScoresBase;
     fn as_HighScoresBase_mut(&mut self) -> &mut HighScoresBase;
 }

@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::util::cache::CacheInterfaceFactory::CacheInter
 use crate::org::allbinary::logic::util::cache::CachePolicyFactory::CachePolicyFactory;
 use crate::org::allbinary::logic::util::cache::CacheTypeFactory::CacheTypeFactory;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::ColorDelta::ColorDelta;
 
 // Borrows the object of a Java reference
@@ -39,6 +40,10 @@ pub struct ColorDeltaFactory {
 pub static mut ColorDeltaFactory_cacheInterface: std::cell::LazyCell<Option<Rc<RefCell<dyn AutomaticCacheInterface>>>> = std::cell::LazyCell::new(|| None);
 
 impl ColorDeltaFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     // Java static initializer: call this once at startup
@@ -48,15 +53,15 @@ impl ColorDeltaFactory {
         let mut STATIC_BLOCK: String = String::from("Static Block");
         let mut instance: String = String::from("ColorDeltaFactory");
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
-            unsafe { *ColorDeltaFactory_cacheInterface = (CacheInterfaceFactory::getInstance(jcall!(CacheTypeFactory::getInstance()).CACHE.clone(), jcall!(CachePolicyFactory::getInstance()).THIRTY_MINUTES_TEN_THOUSAND_MAX.clone())).clone() /* as AutomaticCacheInterface */ };
-            jcall!(logUtil).putF(jcall!(commonStrings).END.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
+            jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
+            unsafe { *ColorDeltaFactory_cacheInterface = (|| -> Option<Rc<RefCell<dyn AutomaticCacheInterface>>> { panic!("ClassCastException: a Rust dyn CacheInterface cannot be cast to dyn AutomaticCacheInterface") })() };
+            jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).END.clone(); java_field }.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone(), crate::java_into_object(e.clone()));
+            jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -77,7 +82,7 @@ impl ColorDeltaFactory {
 
     // throws Exception
     pub fn getInstance(mut rgb1: i32, mut rgb2: i32) -> Option<Rc<RefCell<ColorDelta>>> {
-        let mut colorDelta: Option<Rc<RefCell<ColorDelta>>> = (jcall!(unsafe { ColorDeltaFactory_cacheInterface.clone() }).get(crate::java_into_object(ColorDelta::getKey2(rgb1.clone(), rgb2.clone())))).clone() /* as ColorDelta */;
+        let mut colorDelta: Option<Rc<RefCell<ColorDelta>>> = (jcall!(unsafe { ColorDeltaFactory_cacheInterface.clone() }).get(crate::java_into_object(ColorDelta::getKey2(rgb1.clone(), rgb2.clone())))).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<ColorDelta>() }, "ClassCastException: not a ColorDelta"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<ColorDelta>) } });
         if colorDelta.is_none() {
             colorDelta = ColorDelta::new(rgb1.clone(), rgb2.clone());
         }

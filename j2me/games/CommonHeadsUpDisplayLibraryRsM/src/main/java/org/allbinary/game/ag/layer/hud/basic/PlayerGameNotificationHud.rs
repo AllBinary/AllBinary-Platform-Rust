@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::business::advertisement::GameAdStateFactory::GameAdStateFactory;
 use crate::org::allbinary::canvas::Processor::Processor;
 use crate::org::allbinary::game::GameAdState::GameAdState;
@@ -38,8 +38,7 @@ use crate::org::allbinary::time::GameTickTimeDelayHelper::GameTickTimeDelayHelpe
 use crate::org::allbinary::time::GameTickTimeDelayHelperFactory::GameTickTimeDelayHelperFactory;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::org::allbinary::util::CircularIndexUtil::CircularIndexUtil;
-use super::SetAndRemoveProcessor::SetAndRemoveProcessor;
-use super::NextUnremoveableProcessor::NextUnremoveableProcessor;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -68,7 +67,13 @@ pub struct PlayerGameNotificationHud {
 }
 
 impl UpdateMyFontInterface for PlayerGameNotificationHud {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
+}
+impl crate::org::allbinary::game::layer::hud::event::GameNotificationListenerInterface::GameNotificationListenerInterface for PlayerGameNotificationHud {
+    fn onGameNotificationEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::layer::hud::event::GameNotificationEvent::GameNotificationEvent>>>) { crate::org::allbinary::game::ag::layer::hud::basic::notification::GameNotificationHud::GameNotificationHud::onGameNotificationEvent(crate::org::allbinary::game::ag::layer::hud::basic::notification::GameNotificationHud::GameNotificationHudDyn::as_GameNotificationHud_mut(self), p1) }
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for PlayerGameNotificationHud {
+    fn onEvent(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { crate::org::allbinary::game::ag::layer::hud::basic::notification::GameNotificationHud::GameNotificationHud::onEvent(crate::org::allbinary::game::ag::layer::hud::basic::notification::GameNotificationHud::GameNotificationHudDyn::as_GameNotificationHud_mut(self), p1) }
 }
 
 impl PlayerGameNotificationHud {
@@ -94,54 +99,55 @@ impl PlayerGameNotificationHud {
             width: 0,
         };
         this.gameTickTimeDelayHelper = GameTickTimeDelayHelperFactory::getInstance();
-        this.EMPTY_STRING = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.EMPTY_STRING = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.displayInfo = DisplayInfoSingleton::getInstance();
         this.timeDelayHelper = TimeDelayHelper::new(0).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
         this.gameNotification = GameNotification::new();
         this.permanentGameNotification = GameNotification::new();
-        this.setAndRemoveProcessor = SetAndRemoveProcessor::new(this);
-        this.nextUnremoveableProcessor = NextUnremoveableProcessor::new(this);
         this.processor = Processor::getInstance();
         this.PERMANENT_GAME_NOTIFICATION = String::from("Permanent Game Notification: ");
-        this.lastString = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.lastString = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.string = this.EMPTY_STRING.clone();
         this.point = crate::org::allbinary::graphics::CustomGPoint::CustomGPoint_NULL_CUSTOM_POINT.with(Clone::clone).clone();
         // super(...) is in the struct literal above
-        this.circularIndexUtil = CircularIndexUtil::createInstance(0);
+        this.circularIndexUtil = { let java_value = (CircularIndexUtil::createInstance(0)).clone(); java_value };
         let mut gameNotificationEventHandler: Option<Rc<RefCell<GameNotificationEventHandler>>> = GameNotificationEventHandler::getInstance();
         jcall!(gameNotificationEventHandler).removeAllListeners();
         this
     }
 
     pub fn new(mut location: i32, mut direction: i32, mut bufferZone: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(location, direction, bufferZone, basicColor))));
-            jcall!(gameNotificationEventHandler).addListenerInterface((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(location.clone(), direction.clone(), bufferZone.clone(), basicColor.clone()))));
+        jcall!(this).setAndRemoveProcessor = SetAndRemoveProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn PlayerGameNotificationHudDyn>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
+        jcall!(this).nextUnremoveableProcessor = NextUnremoveableProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn PlayerGameNotificationHudDyn>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
+            let mut gameNotificationEventHandler: Option<Rc<RefCell<GameNotificationEventHandler>>> = GameNotificationEventHandler::getInstance();
+            jcall!(gameNotificationEventHandler).addListenerInterface(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
         this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            self.base.updateMeasurement(graphics.clone());
-            let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-            self.width = jcall!(font).stringWidth(self.string.clone());
+            { let java_arguments = (graphics.clone(),); self.base.updateMeasurement(java_arguments.0) };
+            let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+            self.width = { let java_value = (jcall!(font).stringWidth(self.string.clone())).clone(); java_value };
             jcall!(self.processor).process();
-            self.processor = Processor::getInstance();
+            self.processor = { let java_value = (Processor::getInstance()).clone(); java_value };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).UPDATE.clone(), crate::java_into_object(e.clone()));
+            jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).UPDATE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
     pub fn getPoint(&mut self, mut x: i32, mut y: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> {
-        self.point = CustomGPoint::getInstance3(0, 0);
+        self.point = { let java_value = (CustomGPoint::getInstance3(0, 0)).clone(); java_value };
         jcall!(self.point).setX(x.clone());
         jcall!(self.point).setY(y.clone());
         return self.point.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>);
@@ -152,7 +158,7 @@ impl PlayerGameNotificationHud {
         if permanent.unwrap() {
             if self.lastString != string {
                 self.lastString = string.clone();
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(self.PERMANENT_GAME_NOTIFICATION.clone()).append(string.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).ADD.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(self.PERMANENT_GAME_NOTIFICATION.clone()).append(string.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).ADD.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
             jcall!(self.permanentGameNotification).add(string.clone(), seconds.clone(), basicColor.clone());
             { let java_receiver = self.circularIndexUtil.clone(); let java_arguments = (jcall!(self.permanentGameNotification).getSize(),); jcall!(java_receiver).setSize(java_arguments.0); };
@@ -164,7 +170,7 @@ impl PlayerGameNotificationHud {
 
     // throws Exception
     pub fn processTick(&mut self) {
-        if jcall!(self.timeDelayHelper).isTime(jcall!(self.gameTickTimeDelayHelper).startTime.clone()) {
+        if jcall!(self.timeDelayHelper).isTime({ let java_field = jcall!(self.gameTickTimeDelayHelper).startTime.clone(); java_field }.clone()) {
             let mut gameAdState: Option<Rc<RefCell<GameAdState>>> = jcall!(GameAdStateFactory::getInstance()).getCurrentInstance();
             if jcall!(gameAdState).isShowingAtLocation(self.getLocation()) {
                 self.offsetY = -54;
@@ -184,7 +190,7 @@ impl PlayerGameNotificationHud {
 
     // throws Exception
     pub fn setAndRemove(&mut self) {
-        self.string = (jcall!(jcall!(self.gameNotification).stringList).removeAt(0)).clone() /* as String */;
+        self.string = { let java_value = ({ let java_object = (jcall!({ let java_field = jcall!(self.gameNotification).stringList.clone(); java_field }).removeAt(0)).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         self.processor = self.setAndRemoveProcessor.clone();
     }
     
@@ -194,20 +200,20 @@ impl PlayerGameNotificationHud {
         { let java_arguments = ((jcall!(self.displayInfo).getLastWidth() - self.width) >> 1,); self.setX(java_arguments.0) };
         { let java_receiver = self.point.clone(); let java_arguments = (self.getX(),); jcall!(java_receiver).setX(java_arguments.0); };
         { let java_receiver = self.point.clone(); let java_arguments = (self.getY(),); jcall!(java_receiver).setY(java_arguments.0); };
-        let mut time: Option<i32> = { let java_object = jcall!(jcall!(self.gameNotification).timeList).removeAt(0); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
+        let mut time: Option<i32> = { let java_object = (jcall!({ let java_field = jcall!(self.gameNotification).timeList.clone(); java_field }).removeAt(0)).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
         let mut iTime: i32 = ((time).unwrap() as i32) * 1000;
         if iTime == 0 {
             iTime = 500;
         }
         jcall!(self.timeDelayHelper).as_TimeDelayHelper_mut().delay = iTime.clone();
-        { let java_arguments = ({ let java_object = (jcall!(jcall!(self.gameNotification).colorList).removeAt(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<BasicColor>>>>().expect("ClassCastException").clone()) },); self.setBasicColorP(java_arguments.0) };
+        { let java_arguments = ({ let java_object = (jcall!({ let java_field = jcall!(self.gameNotification).colorList.clone(); java_field }).removeAt(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<BasicColor>>>>().expect("ClassCastException").clone()) },); self.setBasicColorP(java_arguments.0) };
     }
     
 
     // throws Exception
     pub fn setNextUnremoveable(&mut self) {
         let mut index: i32 = jcall!(self.circularIndexUtil).getIndex();
-        self.string = (jcall!(jcall!(self.permanentGameNotification).stringList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone() /* as String */;
+        self.string = { let java_value = ({ let java_object = (jcall!({ let java_field = jcall!(self.permanentGameNotification).stringList.clone(); java_field }).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         self.processor = self.nextUnremoveableProcessor.clone();
     }
     
@@ -218,9 +224,9 @@ impl PlayerGameNotificationHud {
         { let java_arguments = ((jcall!(self.displayInfo).getLastWidth() - self.width) >> 1,); self.setX(java_arguments.0) };
         { let java_receiver = self.point.clone(); let java_arguments = (self.getX(),); jcall!(java_receiver).setX(java_arguments.0); };
         { let java_receiver = self.point.clone(); let java_arguments = (self.getY(),); jcall!(java_receiver).setY(java_arguments.0); };
-        let mut time: Option<i32> = { let java_object = jcall!(jcall!(self.permanentGameNotification).timeList).as_BasicArrayList_mut().objectArray[(index) as usize]; java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
+        let mut time: Option<i32> = { let java_object = (jcall!({ let java_field = jcall!(self.permanentGameNotification).timeList.clone(); java_field }).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
         jcall!(self.timeDelayHelper).as_TimeDelayHelper_mut().delay = ((time).unwrap() as i32) * 1000;
-        self.setBasicColorP({ let java_object = (jcall!(jcall!(self.permanentGameNotification).colorList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<BasicColor>>>>().expect("ClassCastException").clone()) });
+        { let java_arguments = ({ let java_object = (jcall!({ let java_field = jcall!(self.permanentGameNotification).colorList.clone(); java_field }).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<BasicColor>>>>().expect("ClassCastException").clone()) },); self.setBasicColorP(java_arguments.0) };
         jcall!(self.circularIndexUtil).next();
     }
     
@@ -231,9 +237,9 @@ impl PlayerGameNotificationHud {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.myFontProcessor).process(graphics.clone());
-        self.base.paintString(graphics.clone(), self.string.clone());
+        { let java_arguments = (graphics.clone(), self.string.clone(),); self.base.paintString(java_arguments.0, java_arguments.1) };
     }
 }
 impl std::ops::Deref for PlayerGameNotificationHud {
@@ -244,7 +250,7 @@ impl std::ops::DerefMut for PlayerGameNotificationHud {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait PlayerGameNotificationHudDyn: crate::org::allbinary::game::ag::layer::hud::basic::notification::GameNotificationHud::GameNotificationHudDyn {
+pub trait PlayerGameNotificationHudDyn: crate::org::allbinary::game::ag::layer::hud::basic::notification::GameNotificationHud::GameNotificationHudDyn + crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface {
     fn as_PlayerGameNotificationHud(&self) -> &PlayerGameNotificationHud;
     fn as_PlayerGameNotificationHud_mut(&mut self) -> &mut PlayerGameNotificationHud;
     fn setAndRemove(&mut self) { PlayerGameNotificationHud::setAndRemove(self.as_PlayerGameNotificationHud_mut()) }
@@ -260,7 +266,6 @@ impl PlayerGameNotificationHudDyn for PlayerGameNotificationHud {
 impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for PlayerGameNotificationHud {
     fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self.base.base }
     fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self.base.base }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
     fn onEvent(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { crate::org::allbinary::game::ag::layer::hud::basic::notification::GameNotificationHud::GameNotificationHud::onEvent(crate::org::allbinary::game::ag::layer::hud::basic::notification::GameNotificationHud::GameNotificationHudDyn::as_GameNotificationHud_mut(self), p1) }
     fn getPoint(&mut self, mut x: i32, mut y: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> { Self::getPoint(self, x, y) }
 }
@@ -269,7 +274,7 @@ impl crate::org::allbinary::game::ag::layer::hud::basic::notification::GameNotif
     fn as_GameNotificationHud_mut(&mut self) -> &mut crate::org::allbinary::game::ag::layer::hud::basic::notification::GameNotificationHud::GameNotificationHud { &mut self.base }
     fn add(&mut self, mut string: String, mut seconds: Option<i32>, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut permanent: Option<bool>) { Self::add(self, string, seconds, basicColor, permanent) }
     fn processTick(&mut self) { Self::processTick(self) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
     fn clear(&mut self) { Self::clear(self) }
 }
 
@@ -311,8 +316,8 @@ impl std::ops::DerefMut for SetAndRemoveProcessor {
 }
 
 impl crate::org::allbinary::canvas::Processor::ProcessorDyn for SetAndRemoveProcessor {
-    fn as_Processor(&self) -> &crate::org::allbinary::canvas::Processor::Processor { &self }
-    fn as_Processor_mut(&mut self) -> &mut crate::org::allbinary::canvas::Processor::Processor { &mut self }
+    fn as_Processor(&self) -> &crate::org::allbinary::canvas::Processor::Processor { &self.base }
+    fn as_Processor_mut(&mut self) -> &mut crate::org::allbinary::canvas::Processor::Processor { &mut self.base }
     fn process(&mut self) { Self::process(self) }
 }
 
@@ -354,8 +359,8 @@ impl std::ops::DerefMut for NextUnremoveableProcessor {
 }
 
 impl crate::org::allbinary::canvas::Processor::ProcessorDyn for NextUnremoveableProcessor {
-    fn as_Processor(&self) -> &crate::org::allbinary::canvas::Processor::Processor { &self }
-    fn as_Processor_mut(&mut self) -> &mut crate::org::allbinary::canvas::Processor::Processor { &mut self }
+    fn as_Processor(&self) -> &crate::org::allbinary::canvas::Processor::Processor { &self.base }
+    fn as_Processor_mut(&mut self) -> &mut crate::org::allbinary::canvas::Processor::Processor { &mut self.base }
     fn process(&mut self) { Self::process(self) }
 }
 

@@ -6,12 +6,13 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::io::ByteArrayOutputStream::ByteArrayOutputStream;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::InputStream::InputStream;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::io::StreamUtil::StreamUtil;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::logic::io::file::AbFileNativeUtil::AbFileNativeUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
+use crate::java::lang::Exception::*;
 use super::FileItemStream::FileItemStream;
 use super::FileItem::FileItem;
 
@@ -30,6 +31,10 @@ pub struct FileItemUtil {
 thread_local! { pub static FileItemUtil_instance: Option<Rc<RefCell<FileItemUtil>>> = FileItemUtil::new(); }
 
 impl FileItemUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -59,7 +64,7 @@ impl FileItemUtil {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn getString(&mut self, mut fileItem: Option<Rc<RefCell<FileItemStream>>>) -> String {
+    pub fn getString_FileItemStream(&mut self, mut fileItem: Option<Rc<RefCell<FileItemStream>>>) -> String {
         return String::new(self.getBytes(fileItem.clone()), self.DEFAULT_CHARSET.clone());
     }
     
@@ -67,11 +72,11 @@ impl FileItemUtil {
     // throws Exception
     pub fn getBytes(&mut self, mut fileItem: Option<Rc<RefCell<FileItemStream>>>) -> Vec<i8> {
         let mut streamUtil: Option<Rc<RefCell<StreamUtil>>> = StreamUtil::getInstance();
-        let mut inputStream: Option<Rc<RefCell<InputStream>>> = None;
-        let mut outputStream: Vec<u8> = None;
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            inputStream = jcall!(fileItem).openStream();
-            outputStream = Vec::new();
+        let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = None;
+        let mut outputStream: Option<Rc<RefCell<crate::java::io::OutputStream::OutputStream>>> = None;
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            inputStream = { let java_value = (jcall!(fileItem).openStream()).clone(); java_value };
+            outputStream = crate::java::io::OutputStream::OutputStream::new();
             if jcall!(fileItem).isFormField() {
                 { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("FileItemStream FieldName: "), jcall!(fileItem).getFieldName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("write()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             } else {
@@ -82,16 +87,16 @@ impl FileItemUtil {
                 jcall!(stringBuffer).append(jcall!(fileItem).getName());
                 { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("write()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
-            outputStream = (jcall!(streamUtil).get(inputStream.clone(), outputStream.clone(), vec![0; (16384) as usize])).clone() /* as ByteArrayOutputStream */;
-            return jcall!(outputStream).toByteArray();
+            outputStream = { let java_value = ((jcall!(streamUtil).get(inputStream.clone(), outputStream.clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>), vec![0; (16384) as usize])).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<ByteArrayOutputStream>() }, "ClassCastException: not a ByteArrayOutputStream"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<ByteArrayOutputStream>) } })).clone(); java_value };
+            return Some(jcall!(outputStream).toByteArray());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(error) => std::panic::resume_unwind(error),
-        }
+        };
         { // finally
-            jcall!(streamUtil).close(outputStream.clone());
-            jcall!(streamUtil).close(inputStream.clone());
-        }
+            jcall!(streamUtil).close(outputStream.clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::Closeable::Closeable>>));
+            jcall!(streamUtil).close(inputStream.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::java::io::Closeable::Closeable>> { panic!("ClassCastException: the Rust trait of InputStream does not have Closeable as a base trait") }));
+        }if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 

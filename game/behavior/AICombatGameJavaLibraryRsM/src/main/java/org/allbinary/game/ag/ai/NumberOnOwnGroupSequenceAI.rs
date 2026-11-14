@@ -23,6 +23,7 @@ use crate::org::allbinary::game::input::GameInput::GameInput;
 use crate::org::allbinary::game::layer::identification::GroupLayerManagerListener::GroupLayerManagerListener;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,7 +41,7 @@ impl ArtificialIntelligenceInterface for NumberOnOwnGroupSequenceAI {
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for NumberOnOwnGroupSequenceAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl NumberOnOwnGroupSequenceAI {
@@ -66,12 +67,12 @@ impl NumberOnOwnGroupSequenceAI {
         let mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = self.getOwnerLayerInterface();
         let mut index: i32 = self.getIndex();
         if (self.numberOnSameTeam.len() as i32) > index {
-            let mut size: i32 = jcall!(GroupLayerManagerListener::getInstance()).getGroupSizeFromInterface(layerInterface.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::identification::GroupInterfaceCompositeInterface::GroupInterfaceCompositeInterface>>));
+            let mut size: i32 = jcall!(GroupLayerManagerListener::getInstance()).getGroupSizeFromInterface(layerInterface.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::game::identification::GroupInterfaceCompositeInterface::GroupInterfaceCompositeInterface>> { panic!("ClassCastException: the Rust trait of AllBinaryLayer does not have GroupInterfaceCompositeInterface as a base trait") }));
             if ((self.numberOnSameTeam[(index) as usize]).unwrap() as i32) > size {
                 self.next();
             }
         }
-        self.base.processAI(allBinaryLayerManager.clone());
+        { let java_arguments = (allBinaryLayerManager.clone(),); self.base.processAI(java_arguments.0) };
     }
 }
 impl std::ops::Deref for NumberOnOwnGroupSequenceAI {

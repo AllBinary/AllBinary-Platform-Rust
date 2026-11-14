@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::graphics::opengles::OpenGLFeatureUtil::OpenGLFeatureUtil;
 use crate::org::allbinary::animation::FeaturedAnimationInterfaceFactoryInterfaceFactory::FeaturedAnimationInterfaceFactoryInterfaceFactory;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
+use crate::java::lang::Exception::*;
 use super::HealthBar::HealthBar;
 use super::HealthBarTwodAnimation::HealthBarTwodAnimation;
 use super::HealthBarAnimationInterfaceFactory::HealthBarAnimationInterfaceFactory;
@@ -38,6 +39,10 @@ pub struct HealthBarFactory {
 
 impl HealthBarFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -53,10 +58,10 @@ impl HealthBarFactory {
     pub fn getInstance(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut healthInterface: Option<Rc<RefCell<Health>>>, mut location: i32, mut direction: i32) -> Option<Rc<RefCell<HealthBar>>> {
         if jcall!(OpenGLFeatureUtil::getInstance()).isAnyThreed() {
             let mut featuredAnimationInterfaceFactoryInterfaceFactory: Option<Rc<RefCell<FeaturedAnimationInterfaceFactoryInterfaceFactory>>> = FeaturedAnimationInterfaceFactoryInterfaceFactory::getInstance();
-            let mut healthBarAnimationInterfaceFactory: Option<Rc<RefCell<HealthBarAnimationInterfaceFactory>>> = (jcall!(featuredAnimationInterfaceFactoryInterfaceFactory).get(Health_NAME.with(Clone::clone).clone())).clone() /* as HealthBarAnimationInterfaceFactory */;
+            let mut healthBarAnimationInterfaceFactory: Option<Rc<RefCell<HealthBarAnimationInterfaceFactory>>> = (jcall!(featuredAnimationInterfaceFactoryInterfaceFactory).get(Health_NAME.with(Clone::clone).clone())).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<HealthBarAnimationInterfaceFactory>() }, "ClassCastException: not a HealthBarAnimationInterfaceFactory"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<HealthBarAnimationInterfaceFactory>) } });
             return HealthBar::new(layerInterface.clone(), healthInterface.clone(), jcall!(healthBarAnimationInterfaceFactory).getInstanceByLocation(layerInterface.clone(), location.clone()), direction.clone());
         } else {
-            return HealthBar::new(layerInterface.clone(), healthInterface.clone(), HealthBarTwodAnimation::new(layerInterface.clone(), location.clone()), direction.clone());
+            return HealthBar::new(layerInterface.clone(), healthInterface.clone(), HealthBarTwodAnimation::new(layerInterface.clone(), location.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::health::HealthBarAnimation::HealthBarAnimationDyn>>), direction.clone());
         }
     }
 }

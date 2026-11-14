@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait TrackListenerInterface {
+pub trait TrackListenerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn finished(&mut self, layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -17,10 +17,11 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::math::AngleInfo::AngleInfo;
+use crate::java::lang::Exception::*;
 use super::ImageArrayRotationAnimation::ImageArrayRotationAnimation;
 use super::ImageArrayRotationAnimationInfo::ImageArrayRotationAnimationInfo;
 
@@ -38,12 +39,18 @@ pub struct AdjustedImageArrayRotationAnimation {
     pub dy: i32,
 }
 
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for AdjustedImageArrayRotationAnimation {
-    fn getSize(&mut self) -> i32 { self.base.getSize() }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for AdjustedImageArrayRotationAnimation {
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::Animation::Animation::nextFrame(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self)) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for AdjustedImageArrayRotationAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+}
+impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterface for AdjustedImageArrayRotationAnimation {
+    fn setFrameByDirection(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameByDirection(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn setFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrame(&mut self, p1: i16) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrame(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
 }
 
 impl AdjustedImageArrayRotationAnimation {
@@ -51,18 +58,18 @@ impl AdjustedImageArrayRotationAnimation {
 
     // throws Exception
     pub fn createAdjustedImageArrayRotationAnimationInfo(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<dyn AdjustedImageArrayRotationAnimationDyn>>> {
-        let mut imageRotationAnimationInfo: Option<Rc<RefCell<ImageArrayRotationAnimationInfo>>> = (anyType).clone() /* as ImageArrayRotationAnimationInfo */;
+        let mut imageRotationAnimationInfo: Option<Rc<RefCell<ImageArrayRotationAnimationInfo>>> = { let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ImageArrayRotationAnimationInfo>>>>().expect("ClassCastException").clone()) };
         return AdjustedImageArrayRotationAnimation::new(jcall!(imageRotationAnimationInfo).getImageArray(), jcall!(imageRotationAnimationInfo).getAngleInfoP(), jcall!(imageRotationAnimationInfo).getTotalAngle(), jcall!(imageRotationAnimationInfo).getDx(), jcall!(imageRotationAnimationInfo).getDy(), animationBehavior.clone()).map(|reference| reference as Rc<RefCell<dyn AdjustedImageArrayRotationAnimationDyn>>);
     }
     
 
     // throws Exception
-    pub fn createAnimation(mut imageArray: Vec<Option<Rc<RefCell<Image>>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut totalAngle: i32, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<dyn AdjustedImageArrayRotationAnimationDyn>>> {
+    pub fn createAnimation(mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut totalAngle: i32, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<dyn AdjustedImageArrayRotationAnimationDyn>>> {
         return AdjustedImageArrayRotationAnimation::new(imageArray.clone(), angleInfo.clone(), totalAngle.clone(), -(jcall!(imageArray[(0) as usize]).getWidth() >> 2), -(jcall!(imageArray[(0) as usize]).getHeight() >> 2), animationBehavior.clone()).map(|reference| reference as Rc<RefCell<dyn AdjustedImageArrayRotationAnimationDyn>>);
     }
     
 
-    pub fn new_struct(mut imageArray: Vec<Option<Rc<RefCell<Image>>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut totalAngle: i32, mut dx: i32, mut dy: i32, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
+    pub fn new_struct(mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut totalAngle: i32, mut dx: i32, mut dy: i32, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
         let mut this = Self {
             base: ImageArrayRotationAnimation::new_struct(imageArray.clone(), angleInfo.clone(), totalAngle.clone(), animationBehavior.clone()),
             dx: 0,
@@ -73,7 +80,7 @@ impl AdjustedImageArrayRotationAnimation {
         this
     }
 
-    pub fn new(mut imageArray: Vec<Option<Rc<RefCell<Image>>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut totalAngle: i32, mut dx: i32, mut dy: i32, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut totalAngle: i32, mut dx: i32, mut dy: i32, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(imageArray, angleInfo, totalAngle, dx, dy, animationBehavior))))
     }
     
@@ -85,8 +92,8 @@ impl AdjustedImageArrayRotationAnimation {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
-        self.base.paintXY(graphics.clone(), x + self.dx, y + self.dy);
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
+        { let java_arguments = (graphics.clone(), x + self.dx, y + self.dy,); self.base.paintXY(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
     
 
@@ -134,12 +141,13 @@ impl crate::org::allbinary::animation::image::ImageArrayRotationAnimation::Image
 impl crate::org::allbinary::animation::image::ImageArrayBaseRotationAnimation::ImageArrayBaseRotationAnimationDyn for AdjustedImageArrayRotationAnimation {
     fn as_ImageArrayBaseRotationAnimation(&self) -> &crate::org::allbinary::animation::image::ImageArrayBaseRotationAnimation::ImageArrayBaseRotationAnimation { &self.base.base }
     fn as_ImageArrayBaseRotationAnimation_mut(&mut self) -> &mut crate::org::allbinary::animation::image::ImageArrayBaseRotationAnimation::ImageArrayBaseRotationAnimation { &mut self.base.base }
+    fn setImageArray(&mut self, p1: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>) { crate::org::allbinary::animation::image::ImageArrayRotationAnimation::ImageArrayRotationAnimation::setImageArray(crate::org::allbinary::animation::image::ImageArrayRotationAnimation::ImageArrayRotationAnimationDyn::as_ImageArrayRotationAnimation_mut(self), p1) }
 }
 impl crate::org::allbinary::animation::Animation::AnimationDyn for AdjustedImageArrayRotationAnimation {
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base.base.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base.base.base.base }
     fn setAlpha(&mut self, p1: i32) { crate::org::allbinary::animation::image::ImageArrayBaseRotationAnimation::ImageArrayBaseRotationAnimation::setAlpha(crate::org::allbinary::animation::image::ImageArrayBaseRotationAnimation::ImageArrayBaseRotationAnimationDyn::as_ImageArrayBaseRotationAnimation_mut(self), p1) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
     fn setDx(&mut self, mut dx: i32) { Self::setDx(self, dx) }
     fn getDx(&mut self) -> i32 { Self::getDx(self) }
     fn setDy(&mut self, mut dy: i32) { Self::setDy(self, dy) }

@@ -19,6 +19,8 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::PathFindingNodeCostInfoFactoryBaseInterface::PathFindingNodeCostInfoFactoryBaseInterface;
 
 // Borrows the object of a Java reference
@@ -38,6 +40,10 @@ impl PathFindingNodeCostInfoFactoryBaseInterface for PathFindingNodeCostInfoFact
 }
 
 impl PathFindingNodeCostInfoFactoryBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -61,7 +67,7 @@ impl PathFindingNodeCostInfoFactoryBase {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait PathFindingNodeCostInfoFactoryBaseDyn: crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNodeCostInfoFactoryBaseInterface::PathFindingNodeCostInfoFactoryBaseInterface {
+pub trait PathFindingNodeCostInfoFactoryBaseDyn: std::any::Any + crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNodeCostInfoFactoryBaseInterface::PathFindingNodeCostInfoFactoryBaseInterface {
     fn as_PathFindingNodeCostInfoFactoryBase(&self) -> &PathFindingNodeCostInfoFactoryBase;
     fn as_PathFindingNodeCostInfoFactoryBase_mut(&mut self) -> &mut PathFindingNodeCostInfoFactoryBase;
 }

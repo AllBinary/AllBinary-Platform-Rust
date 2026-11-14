@@ -32,6 +32,10 @@ pub struct GameInputProcessorUtil {
 
 impl GameInputProcessorUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -45,7 +49,7 @@ impl GameInputProcessorUtil {
 
     pub fn init(mut inputProcessorArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>>>) {
         let mut noInputProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>> = GameInputProcessor::getInstance();
-        let mut total: i32 = jcall!(InputFactory::InputFactory::getInstance()).MAX.clone();
+        let mut total: i32 = { let java_field = jcall!(InputFactory::InputFactory::getInstance()).MAX.clone(); java_field }.clone();
         for index in (0..total) {
             let mut inputProcessorCanBeNull: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>> = inputProcessorArray[(index) as usize].clone();
             if inputProcessorCanBeNull.is_none() {

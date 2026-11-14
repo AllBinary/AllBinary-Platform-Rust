@@ -27,6 +27,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::GenericProfileDataWorkerType::GenericProfileDataWorkerType;
 
 // Borrows the object of a Java reference
@@ -45,6 +46,10 @@ pub struct GenericProfile {
 
 
 impl GenericProfile {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut node: Option<Rc<RefCell<Node>>>) -> Self {
@@ -58,8 +63,8 @@ impl GenericProfile {
         { let java_arguments = (DomNodeHelper::getTextNodeValue(node.clone()),); this.setName(java_arguments.0) };
         this.vector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(node).getChildNodes();
-        { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", format!("{}{}", String::from("Name: "), this.getName()), String::from(" Child Nodes: ")), jcall!(nodeList).getLength()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Contructor"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        for index in (0..jcall!(nodeList).getLength()) {
+        { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", format!("{}{}", String::from("Name: "), this.getName()), String::from(" Child Nodes: ")), { let java_value = jcall!(nodeList).getLength(); java_value }), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Contructor"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
             let mut profileNode: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
             if jcall!(jcall!(profileNode).getNodeName()).compareTo(unsafe { GenericProfileDataWorkerData_NAME.clone() }.clone()) == 0 {
                 let mut genericProfileDataWorkerType: Option<Rc<RefCell<dyn crate::org::allbinary::input::automation::module::generic::configuration::profile::GenericProfileDataWorkerType::GenericProfileDataWorkerTypeDyn>>> = GenericProfileDataWorkerType::getInstance(profileNode.clone());
@@ -75,7 +80,7 @@ impl GenericProfile {
     }
     
 
-    pub fn new_struct1(mut name: String) -> Self {
+    pub fn new_struct1_String(mut name: String) -> Self {
         let mut this = Self {
             logUtil: None,
             name: String::new(),
@@ -88,8 +93,8 @@ impl GenericProfile {
         this
     }
 
-    pub fn new1(mut name: String) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(name))))
+    pub fn new1_String(mut name: String) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_String(name))))
     }
     
 

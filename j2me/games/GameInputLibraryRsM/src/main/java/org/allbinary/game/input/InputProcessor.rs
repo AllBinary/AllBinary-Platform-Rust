@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use super::GameInputStrings::GameInputStrings;
 
 // Borrows the object of a Java reference
@@ -33,6 +33,10 @@ pub struct InputProcessor {
 
 
 impl InputProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -51,14 +55,14 @@ impl InputProcessor {
     }
     
 
-    pub fn keyReleasedByDevice(&mut self, mut canvas: Option<Rc<RefCell<Canvas>>>, mut keyCode: i32, mut deviceId: i32) {
+    pub fn keyReleasedByDevice(&mut self, mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>, mut keyCode: i32, mut deviceId: i32) {
     }
 }
-pub trait InputProcessorDyn {
+pub trait InputProcessorDyn: std::any::Any {
     fn as_InputProcessor(&self) -> &InputProcessor;
     fn as_InputProcessor_mut(&mut self) -> &mut InputProcessor;
     fn keyPressedByDevice(&mut self, mut keyCode: i32, mut deviceId: i32) { InputProcessor::keyPressedByDevice(self.as_InputProcessor_mut(), keyCode, deviceId) }
-    fn keyReleasedByDevice(&mut self, mut canvas: Option<Rc<RefCell<Canvas>>>, mut keyCode: i32, mut deviceId: i32) { InputProcessor::keyReleasedByDevice(self.as_InputProcessor_mut(), canvas, keyCode, deviceId) }
+    fn keyReleasedByDevice(&mut self, mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>, mut keyCode: i32, mut deviceId: i32) { InputProcessor::keyReleasedByDevice(self.as_InputProcessor_mut(), canvas, keyCode, deviceId) }
 }
 impl InputProcessorDyn for InputProcessor {
     fn as_InputProcessor(&self) -> &InputProcessor { self }

@@ -45,6 +45,10 @@ thread_local! { pub static ShippingAddressData_COUNTRY: String = String::from("S
 thread_local! { pub static ShippingAddressData_TAX: String = String::from("SHIPPINGADDRESS_TAX"); }
 
 impl ShippingAddressData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

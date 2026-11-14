@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
+use crate::java::lang::Exception::*;
 use super::BoundsChangeEventListener::BoundsChangeEventListener;
 use super::BoundsChangeEvent::BoundsChangeEvent;
 
@@ -34,7 +35,7 @@ pub struct BoundsChangeEventHandler {
     pub base: BasicEventHandler,
 }
 
-pub static mut BoundsChangeEventHandler_SINGLETON: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>>> = std::cell::LazyCell::new(|| BoundsChangeEventHandler::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>));
+pub static mut BoundsChangeEventHandler_SINGLETON: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>>> = std::cell::LazyCell::new(|| BoundsChangeEventHandler::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandlerDyn>>));
 
 impl BoundsChangeEventHandler {
     
@@ -58,8 +59,8 @@ impl BoundsChangeEventHandler {
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut boundsChangeEventListener: Option<Rc<RefCell<dyn BoundsChangeEventListener>>> = panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn BoundsChangeEventListener");
-        jcall!(boundsChangeEventListener).onBoundsChangeEvent((eventObject).clone() /* as BoundsChangeEvent */);
+        let mut boundsChangeEventListener: Option<Rc<RefCell<dyn BoundsChangeEventListener>>> = (|| -> Option<Rc<RefCell<dyn BoundsChangeEventListener>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn BoundsChangeEventListener") })();
+        jcall!(boundsChangeEventListener).onBoundsChangeEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<BoundsChangeEvent>() }, "ClassCastException: not a BoundsChangeEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<BoundsChangeEvent>) } }));
     }
 }
 impl std::ops::Deref for BoundsChangeEventHandler {

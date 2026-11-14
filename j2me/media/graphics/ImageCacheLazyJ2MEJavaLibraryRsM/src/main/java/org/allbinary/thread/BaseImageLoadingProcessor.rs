@@ -32,6 +32,10 @@ thread_local! { pub static BaseImageLoadingProcessor_instance: Option<Rc<RefCell
 
 impl BaseImageLoadingProcessor {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -51,7 +55,7 @@ impl BaseImageLoadingProcessor {
     pub fn runTask(&mut self) {
     }
 }
-pub trait BaseImageLoadingProcessorDyn {
+pub trait BaseImageLoadingProcessorDyn: std::any::Any {
     fn as_BaseImageLoadingProcessor(&self) -> &BaseImageLoadingProcessor;
     fn as_BaseImageLoadingProcessor_mut(&mut self) -> &mut BaseImageLoadingProcessor;
     fn runTask(&mut self) { BaseImageLoadingProcessor::runTask(self.as_BaseImageLoadingProcessor_mut()) }

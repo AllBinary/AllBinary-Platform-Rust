@@ -25,6 +25,7 @@ use crate::org::allbinary::game::input::event::GameKeyEventFactory::GameKeyEvent
 use crate::org::allbinary::game::input::mapping::InputToGameKeyMapping::InputToGameKeyMapping;
 use crate::org::allbinary::input::motion::gesture::MotionGestureInput::MotionGestureInput;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -48,7 +49,7 @@ impl GameKeyEventSourceInterface for GameKeyCompleteMotionGestureInputEvent {
 impl crate::org::allbinary::game::input::CompleteMotionGestureInputInterface::CompleteMotionGestureInputInterface for GameKeyCompleteMotionGestureInputEvent {
 }
 impl crate::org::allbinary::layer::NamedInterface::NamedInterface for GameKeyCompleteMotionGestureInputEvent {
-    fn getName(&mut self) -> String { self.base.getName() }
+    fn getName(&mut self) -> String { crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEvent::getName(crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn::as_CompleteMotionGestureInputEvent_mut(self)) }
 }
 
 impl GameKeyCompleteMotionGestureInputEvent {
@@ -64,18 +65,18 @@ impl GameKeyCompleteMotionGestureInputEvent {
             inputToGameKeyMapping: None,
         };
         this.gameKeyEventFactory = GameKeyEventFactory::getInstance();
-        this.SOURCE_ID = jcall!(this.gameKeyEventFactory).MOTION_GESTURE_SOURCE_ID.clone();
+        this.SOURCE_ID = { let java_field = jcall!(this.gameKeyEventFactory).MOTION_GESTURE_SOURCE_ID.clone(); java_field }.clone();
         this.gameKey = crate::org::allbinary::game::input::GameKey::GameKey_NULL_GAME_KEY.with(Clone::clone).clone();
         this.gameKeyEvent = crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent_NONE.with(Clone::clone).clone();
         // super(...) is in the struct literal above
         this.inputToGameKeyMapping = inputToGameKeyMapping.clone();
-        this.update();
         this
     }
 
     pub fn new(mut name: String, mut motionGestureInput: Option<Rc<RefCell<MotionGestureInput>>>, mut inputToGameKeyMapping: Option<Rc<RefCell<InputToGameKeyMapping>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(name, motionGestureInput, inputToGameKeyMapping))));
-            jcall!(GameKeyCompleteMotionGestureInputEventFactory::GameKeyCompleteMotionGestureInputEventFactory::getInstance()).add((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(name.clone(), motionGestureInput.clone(), inputToGameKeyMapping.clone()))));
+            jcall!(GameKeyCompleteMotionGestureInputEventFactory::GameKeyCompleteMotionGestureInputEventFactory::getInstance()).add(this.clone().map(|reference| reference as Rc<RefCell<dyn GameKeyCompleteMotionGestureInputEventDyn>>));
+            jcall!(this).update();
         this
     }
     
@@ -87,15 +88,15 @@ impl GameKeyCompleteMotionGestureInputEvent {
 
     pub fn update(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            { let java_arguments = ({ let java_receiver = self.inputToGameKeyMapping.clone(); let java_arguments = (jcall!(self.getMotionGestureInput()).getId(),); let java_result = jcall!(java_receiver).getInstance(java_arguments.0); java_result },); self.setGameKey(java_arguments.0) };
-            { let java_arguments = ({ let java_receiver = self.gameKeyEventFactory.clone(); let java_arguments = (None /* Java this: a &mut self method has no Rc of itself */, self.getGameKey().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>),); let java_result = jcall!(java_receiver).getInstanceForInput(java_arguments.0, java_arguments.1); java_result },); self.setGameKeyEvent(java_arguments.0) };
+            { let java_arguments = ({ let java_argument = { let java_receiver = self.inputToGameKeyMapping.clone(); let java_arguments = ({ let java_argument = jcall!(self.getMotionGestureInput()).getId(); java_argument },); let java_result = jcall!(java_receiver).getInstance(java_arguments.0); java_result }; java_argument },); self.setGameKey(java_arguments.0) };
+            { let java_arguments = ({ let java_argument = { let java_receiver = self.gameKeyEventFactory.clone(); let java_arguments = (None /* Java this: a &mut self method has no Rc of itself */, self.getGameKey().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>),); let java_result = jcall!(java_receiver).getInstanceForInput(java_arguments.0, java_arguments.1); java_result }; java_argument },); self.setGameKeyEvent(java_arguments.0) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).UPDATE.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).UPDATE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

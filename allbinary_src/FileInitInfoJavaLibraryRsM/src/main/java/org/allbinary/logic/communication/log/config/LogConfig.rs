@@ -36,6 +36,7 @@ use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::LogConfigData::LogConfigData;
 
 // Borrows the object of a Java reference
@@ -55,6 +56,10 @@ pub struct LogConfig {
 
 
 impl LogConfig {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct4(mut aName: String, mut aDescription: String, mut aPath: String, mut aFileName: String) -> Self {
@@ -86,16 +91,16 @@ impl LogConfig {
             path: String::new(),
             fileName: String::new(),
         };
-        let mut enabledValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(EntryData::getInstance()).ENABLE.clone(), jcall!(node).getChildNodes());
+        let mut enabledValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(EntryData::getInstance()).ENABLE.clone(); java_field }.clone(), jcall!(node).getChildNodes());
         let mut isEnabledString: String = DomNodeHelper::getTextNodeValue(enabledValueNode.clone());
-        this.isEnabled = jcall!(BooleanUtil::getInstance()).getFromString(isEnabledString.clone());
+        this.isEnabled = { let java_value = (jcall!(BooleanUtil::getInstance()).getFromString(isEnabledString.clone())).clone(); java_value };
         let mut logConfigData: Option<Rc<RefCell<LogConfigData>>> = LogConfigData::getInstance();
-        let mut nameValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(logConfigData).NAME.clone(), jcall!(node).getChildNodes());
-        this.name = DomNodeHelper::getTextNodeValue(nameValueNode.clone());
-        let mut descriptionValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(logConfigData).DESCRIPTION.clone(), jcall!(node).getChildNodes());
-        this.description = DomNodeHelper::getTextNodeValue(descriptionValueNode.clone());
-        let mut fileValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(logConfigData).FILE.clone(), jcall!(node).getChildNodes());
-        this.fileName = DomNodeHelper::getTextNodeValue(fileValueNode.clone());
+        let mut nameValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(logConfigData).NAME.clone(); java_field }.clone(), jcall!(node).getChildNodes());
+        this.name = { let java_value = (DomNodeHelper::getTextNodeValue(nameValueNode.clone())).clone(); java_value };
+        let mut descriptionValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(logConfigData).DESCRIPTION.clone(); java_field }.clone(), jcall!(node).getChildNodes());
+        this.description = { let java_value = (DomNodeHelper::getTextNodeValue(descriptionValueNode.clone())).clone(); java_value };
+        let mut fileValueNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(logConfigData).FILE.clone(); java_field }.clone(), jcall!(node).getChildNodes());
+        this.fileName = { let java_value = (DomNodeHelper::getTextNodeValue(fileValueNode.clone())).clone(); java_value };
         this
     }
 
@@ -158,7 +163,7 @@ impl LogConfig {
     pub fn getDoc(&mut self) -> Option<Rc<RefCell<Document>>> {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(URLGLOBALS::getWebappPath());
-        jcall!(stringBuffer).append(jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.getFileName());
         let mut file: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFile(jcall!(stringBuffer).toString());
         let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1(AbFileLocalInputStream::new(file.clone()));
@@ -168,11 +173,11 @@ impl LogConfig {
 
     // throws Exception
     pub fn getTypeVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut logKeyVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut logKeyVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut document: Option<Rc<RefCell<Document>>> = self.getDoc();
-        let mut logConfigTypesNodeList: Option<Rc<RefCell<NodeList>>> = jcall!(document).getElementsByTagName(jcall!(LogConfigTypesData::getInstance()).NAME.clone());
+        let mut logConfigTypesNodeList: Option<Rc<RefCell<NodeList>>> = jcall!(document).getElementsByTagName({ let java_field = jcall!(LogConfigTypesData::getInstance()).NAME.clone(); java_field }.clone());
         let mut logConfigTypesNode: Option<Rc<RefCell<Node>>> = jcall!(logConfigTypesNodeList).item(0);
-        let mut logConfigTypeNodeVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = DomSearchHelper::getAllNodes(jcall!(LogConfigTypeData::getInstance()).NAME.clone(), jcall!(logConfigTypesNode).getChildNodes());
+        let mut logConfigTypeNodeVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = DomSearchHelper::getAllNodes({ let java_field = jcall!(LogConfigTypeData::getInstance()).NAME.clone(); java_field }.clone(), jcall!(logConfigTypesNode).getChildNodes());
         let mut size: i32 = jcall!(logConfigTypeNodeVector).size();
         for i in (0..size) {
             let mut node: Option<Rc<RefCell<Node>>> = (jcall!(logConfigTypeNodeVector).get(i.clone())).clone() /* as Node */;

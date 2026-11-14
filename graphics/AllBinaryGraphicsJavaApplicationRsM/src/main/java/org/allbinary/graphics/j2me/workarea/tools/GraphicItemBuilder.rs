@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::LinesGraphicItem::LinesGraphicItem;
 use super::GraphicItemInterface::GraphicItemInterface;
 
@@ -33,6 +34,10 @@ pub struct GraphicItemBuilder {
 
 
 impl GraphicItemBuilder {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -49,8 +54,8 @@ impl GraphicItemBuilder {
     // throws Exception
     pub fn getInstance(mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<dyn GraphicItemInterface>>> {
         let mut graphicItemName: String = jcall!(node).getNodeName();
-        if (graphicItemName.cmp(&jcall!(PointsDomUtil::PointsDomUtil::getInstance()).LINES.clone()) as i32) == 0 {
-            return LinesGraphicItem::new1(node.clone()).map(|reference| reference as Rc<RefCell<dyn GraphicItemInterface>>);
+        if (graphicItemName.cmp(&{ let java_field = jcall!(PointsDomUtil::PointsDomUtil::getInstance()).LINES.clone(); java_field }.clone()) as i32) == 0 {
+            return LinesGraphicItem::new1(node.clone()).map(|reference| reference as Rc<RefCell<dyn GraphicItemInterface>>).map(|reference| reference as Rc<RefCell<dyn GraphicItemInterface>>);
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Graphic Item Does Not Exist: "), graphicItemName))));
         }

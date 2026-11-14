@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait ProgressActivityInterface {
+pub trait ProgressActivityInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn runOnUiThread(&mut self, action: Option<Rc<RefCell<dyn Runnable>>>);
@@ -39,8 +39,6 @@ pub trait ProgressActivityInterface {
     
 
     fn onTitleProgressBarSetProgress(&mut self, value: i32);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

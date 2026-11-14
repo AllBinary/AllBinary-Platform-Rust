@@ -40,6 +40,7 @@ use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::apache::commons::fileupload::FileItem::FileItem;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::InventoryItemView::InventoryItemView;
 
 // Borrows the object of a Java reference
@@ -56,8 +57,11 @@ pub struct AddFileValidationView {
 }
 
 thread_local! { pub static AddFileValidationView_ADDPRODUCT: String = String::from("Add Product"); }
-thread_local! { pub static AddFileValidationView_NEXTSTEP: String = format!("{}{}", jcall!(CommonLabels::getInstance()).NEXT, String::from(" Step")); }
+thread_local! { pub static AddFileValidationView_NEXTSTEP: String = format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).NEXT.clone(); java_field }, String::from(" Step")); }
 // impl ValidationComponentInterface for AddFileValidationView with the methods of the trait
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for AddFileValidationView {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }
+}
 
 impl AddFileValidationView {
     
@@ -80,10 +84,10 @@ impl AddFileValidationView {
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut command: String = (jcall!(self.getRequestHashMap()).get(crate::org::allbinary::globals::GLOBALS2::GLOBALS2_ADMINCOMMAND.with(Clone::clone).clone())).clone() /* as String */;
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut command: String = { let java_object = (jcall!(self.getRequestHashMap()).get(crate::java_into_object(crate::org::allbinary::globals::GLOBALS2::GLOBALS2_ADMINCOMMAND.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             if jcall!(StringValidationUtil::getInstance()).isEmpty(command.clone()) || ((command.cmp(&AddFileValidationView_ADDPRODUCT.with(Clone::clone).clone()) as i32) != 0 && (command.cmp(&AddFileValidationView_NEXTSTEP.with(Clone::clone).clone()) as i32) != 0) {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                     let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                     jcall!(stringBuffer).append(String::from("Invalid AdminCommand: "));
                     jcall!(stringBuffer).append(command.clone());
@@ -91,55 +95,56 @@ impl AddFileValidationView {
                     jcall!(stringBuffer).append(AddFileValidationView_ADDPRODUCT.with(Clone::clone).clone());
                     jcall!(stringBuffer).append(String::from(" or "));
                     jcall!(stringBuffer).append(AddFileValidationView_NEXTSTEP.with(Clone::clone).clone());
-                    { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                    { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
-                return false;
+                return Some(false);
             }
             let mut basicItemValidation: Option<Rc<RefCell<BasicItemValidation>>> = BasicItemValidation::new(self.itemInterface.clone());
-            if match (&jcall!(basicItemValidation).isValid(), &false) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
-                    { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(basicItemValidation).validationInfo(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            if jcall!(basicItemValidation).isValid() == false {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
+                    { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(basicItemValidation).validationInfo(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
-                return false;
+                return Some(false);
             }
-            let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(self.getWeblisketSession()).getStoreName());
-            { let java_receiver = self.itemInterface.clone(); let java_arguments = (jcall!(storeFrontInterface).getCategoryPath() + jcall!(self.itemInterface).getCategory(),); jcall!(java_receiver).setCategory(java_arguments.0); };
+            let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance({ let java_argument = jcall!(self.getWeblisketSession()).getStoreName(); java_argument }).map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
+            { let java_receiver = self.itemInterface.clone(); let java_arguments = (format!("{}{}", jcall!(storeFrontInterface).getCategoryPath(), jcall!(self.itemInterface).getCategory()),); jcall!(java_receiver).setCategory(java_arguments.0); };
             let mut fullCategory: String = jcall!(StringMaker::new()).append(URLGLOBALS::getWebappPath()).append(jcall!(storeFrontInterface).getCurrentHostNamePath()).append(jcall!(self.itemInterface).getCategory()).toString();
             let mut categoryFile: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFile(fullCategory.clone());
             if !jcall!(categoryFile).isDirectory() {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
-                    jcall!(self.logUtil).putF(format!("{}{}", String::from("Category Does Not Exist: "), fullCategory), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone());
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
+                    jcall!(self.logUtil).putF(format!("{}{}", String::from("Category Does Not Exist: "), fullCategory), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone());
                 }
-                return false;
+                return Some(false);
             }
             if jcall!(jcall!(InventoryEntityFactory::getInstance()).getInventoryEntityInstance()).getItem(jcall!(self.itemInterface).getId()).is_some() {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
-                    jcall!(self.logUtil).putF(String::from("Item Already Exists"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone());
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
+                    jcall!(self.logUtil).putF(String::from("Item Already Exists"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone());
                 }
-                return false;
+                return Some(false);
             }
-            let mut imageFileItemObject: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(self.getRequestHashMap()).get(jcall!(self.basicItemData).IMAGE.clone());
+            let mut imageFileItemObject: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(self.getRequestHashMap()).get(crate::java_into_object({ let java_field = jcall!(self.basicItemData).IMAGE.clone(); java_field }.clone()));
             if jcall!(HttpFileUploadUtil::getInstance()).isValid(crate::java_into_object(imageFileItemObject.clone())) {
                 let mut fileItem: Option<Rc<RefCell<FileItem>>> = (imageFileItemObject).clone() /* as FileItem */;
                 let mut fileName: String = jcall!(fileItem).getName();
                 let mut size: i64 = jcall!(fileItem).getSize();
-                HttpFileUploadUtil::log(fileItem.clone());
-                if match (&self.isValid2(fileName.clone(), size.clone()), &false) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                    return false;
+                HttpFileUploadUtil::log_FileItem(fileItem.clone());
+                if self.isValid2(fileName.clone(), size.clone()) == false {
+                    return Some(false);
                 }
             }
-            return true;
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
-                jcall!(self.logUtil).put(String::from("Exception in validation"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put(String::from("Exception in validation"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -154,20 +159,20 @@ impl AddFileValidationView {
     
 
     pub fn validationInfo(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-            let mut command: String = (jcall!(self.getRequestHashMap()).get(crate::org::allbinary::globals::GLOBALS2::GLOBALS2_ADMINCOMMAND.with(Clone::clone).clone())).clone() /* as String */;
+            let mut command: String = { let java_object = (jcall!(self.getRequestHashMap()).get(crate::java_into_object(crate::org::allbinary::globals::GLOBALS2::GLOBALS2_ADMINCOMMAND.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
             if jcall!(StringValidationUtil::getInstance()).isEmpty(command.clone()) || ((command.cmp(&AddFileValidationView_ADDPRODUCT.with(Clone::clone).clone()) as i32) != 0 && (command.cmp(&AddFileValidationView_NEXTSTEP.with(Clone::clone).clone()) as i32) != 0) {
-                return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+                return Some({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
             }
             let mut basicItemValidation: Option<Rc<RefCell<BasicItemValidation>>> = BasicItemValidation::new(self.itemInterface.clone());
-            if match (&jcall!(basicItemValidation).isValid(), &false) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if jcall!(basicItemValidation).isValid() == false {
                 jcall!(stringBuffer).append(jcall!(basicItemValidation).validationInfo());
                 jcall!(stringBuffer).append(String::from("<br/>"));
             }
-            let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(self.getWeblisketSession()).getStoreName());
+            let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance({ let java_argument = jcall!(self.getWeblisketSession()).getStoreName(); java_argument }).map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
             let mut fullCategory: String = jcall!(StringMaker::new()).append(URLGLOBALS::getWebappPath()).append(jcall!(storeFrontInterface).getCurrentHostNamePath()).append(jcall!(self.itemInterface).getCategory()).toString();
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).putF(format!("{}{}", String::from("Category: "), fullCategory), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("validationInfo()"));
             }
             let mut categoryFile: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFile(fullCategory.clone());
@@ -183,14 +188,14 @@ impl AddFileValidationView {
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                     jcall!(self.logUtil).putF(String::from("Existing Item With MoneyException"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("validationInfo()"));
                 }
                 }
             }
-            let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(self.getRequestHashMap()).get(jcall!(self.basicItemData).IMAGE.clone());
+            let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(self.getRequestHashMap()).get(crate::java_into_object({ let java_field = jcall!(self.basicItemData).IMAGE.clone(); java_field }.clone()));
             if jcall!(HttpFileUploadUtil::getInstance()).isValid(crate::java_into_object(anyType.clone())) {
                 let mut fileItem: Option<Rc<RefCell<FileItem>>> = (anyType).clone() /* as FileItem */;
                 let mut fileName: String = jcall!(fileItem).getName();
@@ -198,18 +203,19 @@ impl AddFileValidationView {
                 let mut size: i64 = jcall!(fileItem).getSize();
                 self.validationInfo4(stringBuffer.clone(), fileName.clone(), fileItemFieldName.clone(), size.clone());
             }
-            return jcall!(stringBuffer).toString();
+            return Some(jcall!(stringBuffer).toString());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).put(String::from("Failed to generate validation error info"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("validationInfo()"), crate::java_into_object(e.clone()));
             }
             return String::from("Error Getting Validation Info");
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -217,9 +223,9 @@ impl AddFileValidationView {
     // Java overloaded method: Rust needs a different name
     pub fn isValid2(&mut self, mut fileName: String, mut size: i64) -> Option<bool> {
         let mut fileData: Option<Rc<RefCell<FileData>>> = FileData::getInstance();
-        if size > ((jcall!(fileData).MINIMAGEFILESIZE) as i64) {
-            if size < ((jcall!(fileData).MAXIMAGEFILESIZE) as i64) {
-                if !jcall!(StringValidationUtil::getInstance()).isValidRequired(fileName.clone(), jcall!(fileData).MINLEN.clone(), jcall!(fileData).MAXLEN.clone()) {
+        if size > (({ let java_field = jcall!(fileData).MINIMAGEFILESIZE.clone(); java_field }) as i64) {
+            if size < (({ let java_field = jcall!(fileData).MAXIMAGEFILESIZE.clone(); java_field }) as i64) {
+                if !jcall!(StringValidationUtil::getInstance()).isValidRequired(fileName.clone(), { let java_field = jcall!(fileData).MINLEN.clone(); java_field }.clone(), { let java_field = jcall!(fileData).MAXLEN.clone(); java_field }.clone()) {
                     return false;
                 } else {
                     let mut pathData: Option<Rc<RefCell<AbPathData>>> = AbPathData::getInstance();
@@ -230,25 +236,25 @@ impl AddFileValidationView {
                     }
                 }
             } else {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                     let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                     jcall!(stringBuffer).append(String::from("File Size To Large: "));
                     jcall!(stringBuffer).appendlong(size.clone());
                     jcall!(stringBuffer).append(String::from(">"));
-                    jcall!(stringBuffer).appendint(jcall!(fileData).MAXIMAGEFILESIZE.clone());
-                    { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                    jcall!(stringBuffer).appendint({ let java_field = jcall!(fileData).MAXIMAGEFILESIZE.clone(); java_field }.clone());
+                    { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
                 return false;
             }
             self.processImageFiles();
         } else {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                 jcall!(stringBuffer).append(String::from("File Size To Small: "));
                 jcall!(stringBuffer).appendlong(size.clone());
                 jcall!(stringBuffer).append(String::from(">"));
-                jcall!(stringBuffer).appendint(jcall!(fileData).MINIMAGEFILESIZE.clone());
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                jcall!(stringBuffer).appendint({ let java_field = jcall!(fileData).MINIMAGEFILESIZE.clone(); java_field }.clone());
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
             return false;
         }
@@ -259,14 +265,14 @@ impl AddFileValidationView {
     // Java overloaded method: Rust needs a different name
     pub fn validationInfo4(&mut self, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>, mut fileName: String, mut fileItemFieldName: String, mut size: i64) {
         let mut fileData: Option<Rc<RefCell<FileData>>> = FileData::getInstance();
-        if size > ((jcall!(fileData).MINIMAGEFILESIZE) as i64) {
-            if (fileItemFieldName.cmp(&jcall!(self.basicItemData).IMAGE.clone()) as i32) == 0 {
-                if size < ((jcall!(fileData).MAXIMAGEFILESIZE) as i64) {
-                    if !jcall!(StringValidationUtil::getInstance()).isValidRequired(fileName.clone(), jcall!(fileData).MINLEN.clone(), jcall!(fileData).MAXLEN.clone()) {
+        if size > (({ let java_field = jcall!(fileData).MINIMAGEFILESIZE.clone(); java_field }) as i64) {
+            if (fileItemFieldName.cmp(&{ let java_field = jcall!(self.basicItemData).IMAGE.clone(); java_field }.clone()) as i32) == 0 {
+                if size < (({ let java_field = jcall!(fileData).MAXIMAGEFILESIZE.clone(); java_field }) as i64) {
+                    if !jcall!(StringValidationUtil::getInstance()).isValidRequired(fileName.clone(), { let java_field = jcall!(fileData).MINLEN.clone(); java_field }.clone(), { let java_field = jcall!(fileData).MAXLEN.clone(); java_field }.clone()) {
                         jcall!(stringBuffer).append(String::from("FileName must be >"));
-                        jcall!(stringBuffer).appendint(jcall!(fileData).MINLEN.clone());
+                        jcall!(stringBuffer).appendint({ let java_field = jcall!(fileData).MINLEN.clone(); java_field }.clone());
                         jcall!(stringBuffer).append(String::from(" and <"));
-                        jcall!(stringBuffer).appendint(jcall!(fileData).MAXLEN.clone());
+                        jcall!(stringBuffer).appendint({ let java_field = jcall!(fileData).MAXLEN.clone(); java_field }.clone());
                         jcall!(stringBuffer).append(String::from("<br/>"));
                     } else {
                         let mut pathData: Option<Rc<RefCell<AbPathData>>> = AbPathData::getInstance();
@@ -280,17 +286,17 @@ impl AddFileValidationView {
                     }
                 } else {
                     jcall!(stringBuffer).append(String::from("Image File Is To Large. "));
-                    jcall!(stringBuffer).appendint(jcall!(fileData).MINIMAGEFILESIZE.clone());
+                    jcall!(stringBuffer).appendint({ let java_field = jcall!(fileData).MINIMAGEFILESIZE.clone(); java_field }.clone());
                     jcall!(stringBuffer).append(String::from(" < > "));
-                    jcall!(stringBuffer).appendint(jcall!(fileData).MAXIMAGEFILESIZE.clone());
+                    jcall!(stringBuffer).appendint({ let java_field = jcall!(fileData).MAXIMAGEFILESIZE.clone(); java_field }.clone());
                     jcall!(stringBuffer).append(String::from("<br/>"));
                 }
             }
         } else {
             jcall!(stringBuffer).append(String::from("Image File Is To Small. "));
-            jcall!(stringBuffer).appendint(jcall!(fileData).MINIMAGEFILESIZE.clone());
+            jcall!(stringBuffer).appendint({ let java_field = jcall!(fileData).MINIMAGEFILESIZE.clone(); java_field }.clone());
             jcall!(stringBuffer).append(String::from(" < > "));
-            jcall!(stringBuffer).appendint(jcall!(fileData).MAXIMAGEFILESIZE.clone());
+            jcall!(stringBuffer).appendint({ let java_field = jcall!(fileData).MAXIMAGEFILESIZE.clone(); java_field }.clone());
             jcall!(stringBuffer).append(String::from("<br/>"));
         }
     }
@@ -306,6 +312,10 @@ impl std::ops::DerefMut for AddFileValidationView {
 impl crate::views::admin::inventory::InventoryItemView::InventoryItemViewDyn for AddFileValidationView {
     fn as_InventoryItemView(&self) -> &crate::views::admin::inventory::InventoryItemView::InventoryItemView { &self.base }
     fn as_InventoryItemView_mut(&mut self) -> &mut crate::views::admin::inventory::InventoryItemView::InventoryItemView { &mut self.base }
+}
+impl crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn for AddFileValidationView {
+    fn as_TransformInfoHttpComposite(&self) -> &crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &self.base.base.base.base }
+    fn as_TransformInfoHttpComposite_mut(&mut self) -> &mut crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &mut self.base.base.base.base }
 }
 impl crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentViewDyn for AddFileValidationView {
     fn as_HttpStoreComponentView(&self) -> &crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &self.base.base }

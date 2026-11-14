@@ -5,7 +5,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
 use super::RectangleFilledAnimation::RectangleFilledAnimation;
 
@@ -22,8 +22,18 @@ pub struct ARectangleFilledAnimation {
     pub y: i32,
 }
 
+impl crate::org::allbinary::graphics::color::BasicColorCompositeSetterInterface::BasicColorCompositeSetterInterface for ARectangleFilledAnimation {
+    fn setBasicColorP(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::animation::vector::RectangleFilledAnimation::RectangleFilledAnimation::setBasicColorP(crate::org::allbinary::animation::vector::RectangleFilledAnimation::RectangleFilledAnimationDyn::as_RectangleFilledAnimation_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::color::ColorCompositeInterface::ColorCompositeInterface for ARectangleFilledAnimation {
+    fn getBasicColorP(&mut self) -> Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>> { crate::org::allbinary::animation::vector::RectangleFilledAnimation::RectangleFilledAnimation::getBasicColorP(crate::org::allbinary::animation::vector::RectangleFilledAnimation::RectangleFilledAnimationDyn::as_RectangleFilledAnimation_mut(self)) }
+}
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for ARectangleFilledAnimation {
+    fn nextFrame(&mut self) { Self::nextFrame(self) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
+}
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for ARectangleFilledAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut unusedX: i32, mut unusedY: i32) { Self::paintXY(self, graphics, unusedX, unusedY) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut unusedX: i32, mut unusedY: i32) { Self::paintXY(self, graphics, unusedX, unusedY) }
 }
 
 impl ARectangleFilledAnimation {
@@ -31,7 +41,7 @@ impl ARectangleFilledAnimation {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: RectangleFilledAnimation::new_struct(0, 0, jcall!(BasicColorFactory::getInstance()).BLACK.clone()),
+            base: RectangleFilledAnimation::new_struct(0, 0, { let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone()),
             x: 0,
             y: 0,
         };
@@ -48,8 +58,8 @@ impl ARectangleFilledAnimation {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut unusedX: i32, mut unusedY: i32) {
-        self.base.paintXY(graphics.clone(), self.x.clone(), self.y.clone());
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut unusedX: i32, mut unusedY: i32) {
+        { let java_arguments = (graphics.clone(), self.x.clone(), self.y.clone(),); self.base.paintXY(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
 }
 impl std::ops::Deref for ARectangleFilledAnimation {
@@ -68,7 +78,9 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for ARectangleFil
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base }
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut unusedX: i32, mut unusedY: i32) { Self::paintXY(self, graphics, unusedX, unusedY) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut unusedX: i32, mut unusedY: i32) { Self::paintXY(self, graphics, unusedX, unusedY) }
+    fn getBasicColorP(&mut self) -> Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>> { crate::org::allbinary::animation::vector::RectangleFilledAnimation::RectangleFilledAnimation::getBasicColorP(crate::org::allbinary::animation::vector::RectangleFilledAnimation::RectangleFilledAnimationDyn::as_RectangleFilledAnimation_mut(self)) }
+    fn setBasicColorP(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::animation::vector::RectangleFilledAnimation::RectangleFilledAnimation::setBasicColorP(crate::org::allbinary::animation::vector::RectangleFilledAnimation::RectangleFilledAnimationDyn::as_RectangleFilledAnimation_mut(self), p1) }
 }
 impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface for ARectangleFilledAnimation {
     fn set(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::khronos::opengles::GL::GL>>>) { crate::org::allbinary::animation::Animation::Animation::set(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1) }

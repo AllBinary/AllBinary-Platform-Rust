@@ -17,9 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::NullImage::NullImage;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::NullImage::NullImage;
 use crate::org::allbinary::DisposalUtil::DisposalUtil;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
@@ -27,6 +27,7 @@ use crate::org::allbinary::math::AngleInfo::AngleInfo;
 use crate::org::allbinary::media::image::ImageCopyUtil::ImageCopyUtil;
 use crate::org::allbinary::media::image::ImageModifierUtil::ImageModifierUtil;
 use crate::org::allbinary::media::image::ImageRotationUtil::ImageRotationUtil;
+use crate::java::lang::Exception::*;
 use super::ImageBaseRotationAnimation::ImageBaseRotationAnimation;
 use super::ModifierBaseProcessor::ModifierBaseProcessor;
 use super::ScaleBaseProcessor::ScaleBaseProcessor;
@@ -42,10 +43,10 @@ pub struct AllBinaryJ2SEImageRotationAnimation {
     pub base: ImageBaseRotationAnimation,
     pub imageRotationUtil: Option<Rc<RefCell<ImageRotationUtil>>>,
     pub imageModifierUtil: Option<Rc<RefCell<ImageModifierUtil>>>,
-    pub realOriginalImage: Option<Rc<RefCell<Image>>>,
-    pub originalImageArray: Vec<Option<Rc<RefCell<Image>>>>,
-    pub twoImages: Vec<Option<Rc<RefCell<Image>>>>,
-    pub imageToShow: Option<Rc<RefCell<Image>>>,
+    pub realOriginalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
+    pub originalImageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>,
+    pub twoImages: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>,
+    pub imageToShow: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
     pub bufferedImageIndex: i32,
     pub lastScaleX: f32,
     pub lastScaleY: f32,
@@ -59,23 +60,24 @@ pub struct AllBinaryJ2SEImageRotationAnimation {
     pub scaleProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::animation::image::ScaleBaseProcessor::ScaleBaseProcessorDyn>>>,
 }
 
-impl crate::org::allbinary::animation::IndexedAnimationInterface::IndexedAnimationInterface for AllBinaryJ2SEImageRotationAnimation {
-    fn reset(&mut self) { self.base.reset() }
-    fn setFrame(&mut self, mut index: i32) { Self::setFrame(self, index) }
-    fn getFrame(&mut self) -> i32 { self.base.getFrame() }
-}
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for AllBinaryJ2SEImageRotationAnimation {
-    fn getSize(&mut self) -> i32 { self.base.getSize() }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for AllBinaryJ2SEImageRotationAnimation {
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::Animation::Animation::nextFrame(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self)) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for AllBinaryJ2SEImageRotationAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+}
+impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterface for AllBinaryJ2SEImageRotationAnimation {
+    fn setFrameByDirection(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::direction::Direction::Direction>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameByDirection(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn setFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::setFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrameToAngle(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrameToAngle(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
+    fn adjustFrame(&mut self, p1: i16) { crate::org::allbinary::animation::RotationAnimation::RotationAnimation::adjustFrame(crate::org::allbinary::animation::RotationAnimation::RotationAnimationDyn::as_RotationAnimation_mut(self), p1) }
 }
 
 impl AllBinaryJ2SEImageRotationAnimation {
     
 
-    pub fn new_struct(mut originalImage: Option<Rc<RefCell<Image>>>, mut image: Option<Rc<RefCell<Image>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut totalAngle: i16, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
+    pub fn new_struct(mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut totalAngle: i16, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
         let mut this = Self {
             base: ImageBaseRotationAnimation::new_struct(image.clone(), angleInfo.clone(), totalAngle.clone(), animationBehavior.clone()),
             imageRotationUtil: None,
@@ -117,19 +119,19 @@ impl AllBinaryJ2SEImageRotationAnimation {
         this
     }
 
-    pub fn new(mut originalImage: Option<Rc<RefCell<Image>>>, mut image: Option<Rc<RefCell<Image>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut totalAngle: i16, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut angleInfo: Option<Rc<RefCell<AngleInfo>>>, mut totalAngle: i16, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(originalImage, image, angleInfo, totalAngle, animationBehavior))))
     }
     
 
     pub fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
         let mut changed: bool = false;
-        if self.getBasicColorP().is_none() || ((self.getBasicColorP()).unwrap() as i32) != jcall!(basicColor).intValue() {
+        if self.getBasicColorP().is_none() || { let java_value = jcall!(self.getBasicColorP()).intValue(); java_value } != { let java_value = jcall!(basicColor).intValue(); java_value } {
             changed = true;
         }
-        self.base.setBasicColorP(basicColor.clone());
+        { let java_arguments = (basicColor.clone(),); self.base.setBasicColorP(java_arguments.0) };
         if changed {
-            self.setColorProcessor = SetColorProcessor::SetColorProcessor::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::image::ModifierBaseProcessor::ModifierBaseProcessorDyn>>);
+            self.setColorProcessor = { let java_value = (SetColorProcessor::SetColorProcessor::getInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::image::ModifierBaseProcessor::ModifierBaseProcessorDyn>>);
             self.updateImage();
         }
     }
@@ -137,12 +139,12 @@ impl AllBinaryJ2SEImageRotationAnimation {
 
     pub fn changeBasicColor(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
         let mut changed: bool = false;
-        if self.getChangeBasicColor().is_none() || ((self.getChangeBasicColor()).unwrap() as i32) != jcall!(basicColor).intValue() {
+        if self.getChangeBasicColor().is_none() || { let java_value = jcall!(self.getChangeBasicColor()).intValue(); java_value } != { let java_value = jcall!(basicColor).intValue(); java_value } {
             changed = true;
         }
-        self.base.changeBasicColor(basicColor.clone());
+        { let java_arguments = (basicColor.clone(),); self.base.changeBasicColor(java_arguments.0) };
         if changed {
-            self.changeColorProcessor = ChangeColorProcessor::ChangeColorProcessor::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::image::ModifierBaseProcessor::ModifierBaseProcessorDyn>>);
+            self.changeColorProcessor = { let java_value = (ChangeColorProcessor::ChangeColorProcessor::getInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::image::ModifierBaseProcessor::ModifierBaseProcessorDyn>>);
             self.updateImage();
         }
     }
@@ -153,9 +155,9 @@ impl AllBinaryJ2SEImageRotationAnimation {
         if self.alphaP != alpha {
             changed = true;
         }
-        self.base.setAlpha(alpha.clone());
+        { let java_arguments = (alpha.clone(),); self.base.setAlpha(java_arguments.0) };
         if changed {
-            self.alphaProcessor = AlphaProcessor::AlphaProcessor::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::image::ModifierBaseProcessor::ModifierBaseProcessorDyn>>);
+            self.alphaProcessor = { let java_value = (AlphaProcessor::AlphaProcessor::getInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::image::ModifierBaseProcessor::ModifierBaseProcessorDyn>>);
             self.updateImage();
         }
     }
@@ -203,13 +205,13 @@ impl AllBinaryJ2SEImageRotationAnimation {
     
 
     pub fn setFrame(&mut self, mut index: i32) {
-        self.base.setFrame(index.clone());
+        { let java_arguments = (index.clone(),); self.base.setFrame(java_arguments.0) };
         self.updateImage();
     }
     
 
     pub fn swap(&mut self) {
-        self.imageToShow = self.twoImages[(self.bufferedImageIndex) as usize].clone();
+        self.imageToShow = { let java_value = (self.twoImages[(self.bufferedImageIndex) as usize]).clone(); java_value }.clone();
         if self.bufferedImageIndex == 0 {
             self.bufferedImageIndex = 1;
         } else {
@@ -218,7 +220,7 @@ impl AllBinaryJ2SEImageRotationAnimation {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         jcall!(graphics).drawImage(self.imageToShow.clone(), x.clone(), y.clone(), self.anchor.clone());
     }
     
@@ -285,7 +287,7 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for AllBinaryJ2SE
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base.base.base }
     fn setAlpha(&mut self, mut alpha: i32) { Self::setAlpha(self, alpha) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
     fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::setBasicColorP(self, basicColor) }
     fn changeBasicColor(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::changeBasicColor(self, basicColor) }
     fn setScale(&mut self, mut scaleX: f32, mut scaleY: f32) { Self::setScale(self, scaleX, scaleY) }

@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::system::security::licensing::AbeClientInformat
 use crate::org::allbinary::canvas::SpecialMessageUtil::SpecialMessageUtil;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::RegistrationConfiguration::RegistrationConfiguration;
 use super::XmlRpcRemoteLicenseRegistrationClient::XmlRpcRemoteLicenseRegistrationClient;
 
@@ -38,6 +39,10 @@ pub struct LicenseRegistrationUtil {
 
 
 impl LicenseRegistrationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -55,20 +60,20 @@ impl LicenseRegistrationUtil {
     pub fn process(mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut registrationId: String) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            PreLogUtil::put(format!("{}{}", jcall!(CommonLabels::getInstance()).START_LABEL, String::from("License Registration")), String::from("LicenseRegistrationUtil"), jcall!(commonStrings).PROCESS.clone());
+            PreLogUtil::put(format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).START_LABEL.clone(); java_field }, String::from("License Registration")), crate::java_into_object(String::from("LicenseRegistrationUtil")), { let java_field = jcall!(commonStrings).PROCESS.clone(); java_field }.clone());
             let mut registrationConfiguration: Option<Rc<RefCell<RegistrationConfiguration>>> = RegistrationConfiguration::getInstance();
             jcall!(registrationConfiguration).setRegistrationCode(registrationId.clone());
             jcall!(registrationConfiguration).write();
-            let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(abeClientInformation).toHashtable();
-            jcall!(hashtable).put(crate::java_into_object(jcall!(RegistrationConfiguration::getInstance()).NAME.clone()), crate::java_into_object(registrationId.clone()));
+            let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(abeClientInformation).toHashtable();
+            jcall!(hashtable).put(crate::java_into_object({ let java_field = jcall!(RegistrationConfiguration::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(registrationId.clone()));
             jcall!(hashtable).put(crate::java_into_object(String::from("message")), crate::java_into_object(jcall!(SpecialMessageUtil::getInstance()).get()));
             jcall!(XmlRpcRemoteLicenseRegistrationClient::new(abeClientInformation.clone())).get(hashtable.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putOE(String::from("License Registration Exception"), String::from("LicenseRegistrationUtil"), String::from("License Registration"), e.clone());
+            PreLogUtil::putOE(String::from("License Registration Exception"), crate::java_into_object(String::from("LicenseRegistrationUtil")), String::from("License Registration"), crate::java_into_object(e.clone()));
             }
         }
     }

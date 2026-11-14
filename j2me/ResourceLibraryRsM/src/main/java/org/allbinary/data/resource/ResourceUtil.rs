@@ -17,14 +17,15 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::InputStream::InputStream;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::java::lang::Thread::*;
-use super::ClassLoader::ClassLoader;
+use crate::java::lang::Exception::*;
+use crate::java::lang::ClassLoader::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,10 +39,14 @@ pub struct ResourceUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-pub static mut ResourceUtil_classLoader: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut ResourceUtil_classLoader: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 thread_local! { pub static ResourceUtil_instance: Option<Rc<RefCell<ResourceUtil>>> = ResourceUtil::new(); }
 
 impl ResourceUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ResourceUtil>>> {
@@ -63,19 +68,19 @@ impl ResourceUtil {
     
 
     pub fn setLoadingPaths(&mut self, mut path: String, mut ext: String) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setLoadingPaths"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setLoadingPaths"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
     pub fn setClassLoader(&mut self, mut classLoader: Option<Rc<RefCell<ClassLoader>>>) {
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Resource Loader: ")).append(std::any::type_name_of_val(&classLoader).to_string()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setClassLoader"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        unsafe { *ResourceUtil_classLoader = classLoader.clone() };
+        unsafe { *ResourceUtil_classLoader = crate::java_into_object(classLoader.clone()) };
     }
     
 
     // throws Exception
-    pub fn getResourceAsStream(&mut self, mut resource: String) -> Option<Rc<RefCell<InputStream>>> {
-        let mut inputStream: Option<Rc<RefCell<InputStream>>> = self.getResourceAsStreamAtStart(resource.clone(), 2);
+    pub fn getResourceAsStream(&mut self, mut resource: String) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
+        let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = self.getResourceAsStreamAtStart(resource.clone(), 2);
         if inputStream.is_none() {
             inputStream = self.getResourceAsStreamAtStart(resource.clone(), 1);
             if inputStream.is_none() {
@@ -87,20 +92,20 @@ impl ResourceUtil {
     
 
     // throws Exception
-    pub fn getResourceAsStreamAtStart(&mut self, mut resource: String, mut startIndex: i32) -> Option<Rc<RefCell<InputStream>>> {
+    pub fn getResourceAsStreamAtStart(&mut self, mut resource: String, mut startIndex: i32) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
-        let mut index: i32 = resource.find(&jcall!(commonSeps).COLON.clone()).map(|index| index as i32).unwrap_or(-1);
+        let mut index: i32 = resource.find(&{ let java_field = jcall!(commonSeps).COLON.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1);
         let mut resourcePath: String = resource[(index + startIndex) as usize..].to_string();
-        let mut inputStream: Option<Rc<RefCell<InputStream>>> = jcall!(std::any::type_name_of_val(&resource)).getResourceAsStream(resourcePath.clone());
+        let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = crate::java::lang::ClassLoader::ClassLoader::getSystemResourceAsStream(resourcePath.clone());
         if inputStream.is_some() {
             return inputStream.clone();
         }
-        let mut classLoader: Option<Rc<RefCell<ClassLoader>>> = (unsafe { ResourceUtil_classLoader.clone() }).clone() /* as ClassLoader */;
-        inputStream = jcall!(classLoader).getResourceAsStream(resourcePath.clone());
+        let mut classLoader: Option<Rc<RefCell<ClassLoader>>> = { let java_object = (unsafe { ResourceUtil_classLoader.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ClassLoader>>>>().expect("ClassCastException").clone()) };
+        inputStream = { let java_value = (jcall!(classLoader).getResourceAsStream(resourcePath.clone())).clone(); java_value };
         if inputStream.is_some() {
             return inputStream.clone();
         }
-        inputStream = jcall!(jcall!(Thread::currentThread()).getContextClassLoader()).getResourceAsStream(resourcePath.clone());
+        inputStream = { let java_value = (jcall!(jcall!(Thread::currentThread()).getContextClassLoader()).getResourceAsStream(resourcePath.clone())).clone(); java_value };
         if inputStream.is_some() {
             return inputStream.clone();
         }

@@ -34,6 +34,10 @@ thread_local! { pub static VectorUtil_instance: Option<Rc<RefCell<VectorUtil>>> 
 
 impl VectorUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -51,13 +55,13 @@ impl VectorUtil {
     
 
     pub fn getSize(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> i32 {
-        let mut vector: Option<Rc<RefCell<Vector<Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = None /* erased Java Vector cast */;
+        let mut vector: Option<Rc<RefCell<Vector<crate::JavaObject>>>> = None /* erased Java Vector cast */;
         return jcall!(vector).size();
     }
     
 
     pub fn elementAt(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut index: i32) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        let mut vector: Option<Rc<RefCell<Vector<Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = None /* erased Java Vector cast */;
+        let mut vector: Option<Rc<RefCell<Vector<crate::JavaObject>>>> = None /* erased Java Vector cast */;
         return jcall!(vector).elementAt(index.clone());
     }
 }

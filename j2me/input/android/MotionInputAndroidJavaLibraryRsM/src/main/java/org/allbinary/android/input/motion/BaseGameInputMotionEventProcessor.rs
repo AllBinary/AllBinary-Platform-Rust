@@ -48,7 +48,7 @@ impl BaseGameInputMotionEventProcessor {
             gameMotionGestureListener: None,
         };
         this.commonStrings = CommonStrings::getInstance();
-        this.gameMotionGestureListener = GameMotionGestureListener::new(MotionGestureReceiveInterfaceFactory::getInstance());
+        this.gameMotionGestureListener = { let java_value = (GameMotionGestureListener::new(MotionGestureReceiveInterfaceFactory::getInstance())).clone(); java_value };
         this.addListener();
         this
     }
@@ -64,7 +64,7 @@ impl BaseGameInputMotionEventProcessor {
 
     pub fn addListener(&mut self) {
         let mut motionGesturesHandler: Option<Rc<RefCell<BasicMotionGesturesHandler>>> = BasicMotionGesturesHandler::getInstance();
-        jcall!(motionGesturesHandler).addListenerInterface(self.gameMotionGestureListener.clone());
+        jcall!(motionGesturesHandler).addListenerInterface(self.gameMotionGestureListener.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
     }
 }
 impl std::ops::Deref for BaseGameInputMotionEventProcessor {

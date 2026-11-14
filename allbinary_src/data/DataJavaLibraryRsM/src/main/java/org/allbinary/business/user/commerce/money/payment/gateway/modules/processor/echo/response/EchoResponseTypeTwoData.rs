@@ -31,6 +31,10 @@ pub struct EchoResponseTypeTwoData {
 pub static mut EchoResponseTypeTwoData_NAME: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("ECHOTYPE2"));
 
 impl EchoResponseTypeTwoData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

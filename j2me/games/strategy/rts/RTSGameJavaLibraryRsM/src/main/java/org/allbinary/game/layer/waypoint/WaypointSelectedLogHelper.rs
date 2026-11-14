@@ -108,7 +108,7 @@ impl WaypointSelectedLogHelper {
     pub fn insertWaypoint(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut index: i32, mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>>, mut waypointName: String) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(waypointName.clone());
         jcall!(stringBuffer).append(String::from(" Insert: "));
         jcall!(stringBuffer).append(jcall!(rtsLayer).getName());
@@ -120,7 +120,7 @@ impl WaypointSelectedLogHelper {
     pub fn insertWaypointList(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut index: i32, mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>>, mut waypointName: String, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(waypointName.clone());
         jcall!(stringBuffer).append(String::from(" Insert: "));
         jcall!(stringBuffer).append(jcall!(rtsLayer).getName());
@@ -134,8 +134,8 @@ impl WaypointSelectedLogHelper {
         let mut size: i32 = jcall!(pathsList).size();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(CommonLabels::getInstance()).START.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonLabels::getInstance()).START.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(size.clone());
         jcall!(stringBuffer).append(String::from(" -> "));
         jcall!(stringBuffer).append(jcall!(self.stringUtil).toString(crate::java_into_object(pathsList.clone())));

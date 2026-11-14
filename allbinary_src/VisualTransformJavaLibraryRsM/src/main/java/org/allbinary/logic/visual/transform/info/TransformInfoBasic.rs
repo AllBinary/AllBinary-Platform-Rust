@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
@@ -27,6 +26,7 @@ use crate::org::allbinary::business::context::modules::storefront::StoreFrontInt
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::logic::visual::transform::info::objectConfig::TransformInfoObjectConfigInterface::TransformInfoObjectConfigInterface;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 use super::TransformInfoHttpInterface::TransformInfoHttpInterface;
 
 // Borrows the object of a Java reference
@@ -47,7 +47,7 @@ pub struct TransformInfoBasic {
 impl TransformInfoBasic {
     
 
-    pub fn new_struct(mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
+    pub fn new_struct(mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Self {
         let mut this = Self {
             base: AbContext::new_struct(propertiesHashMap.clone(), pageContext.clone()),
             storeFrontInterface: None,
@@ -57,7 +57,7 @@ impl TransformInfoBasic {
         this
     }
 
-    pub fn new(mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(storeFrontInterface, propertiesHashMap, pageContext))))
     }
     
@@ -68,11 +68,11 @@ impl TransformInfoBasic {
     
 
     pub fn log(&mut self) -> String {
-        return jcall!(self.base.commonStrings).NOT_IMPLEMENTED.clone();
+        return { let java_field = jcall!(self.base.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone();
     }
     
 
-    pub fn r#override(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) {
+    pub fn r#override(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
     }
     
 
@@ -127,7 +127,7 @@ impl TransformInfoBasic {
 
     // throws Exception
     pub fn getDataDocument(&mut self) -> Option<Rc<RefCell<Document>>> {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(self.base.commonStrings).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(self.base.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
@@ -198,7 +198,7 @@ impl TransformInfoBasic {
     
 
     // throws Exception
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return None;
     }
 }

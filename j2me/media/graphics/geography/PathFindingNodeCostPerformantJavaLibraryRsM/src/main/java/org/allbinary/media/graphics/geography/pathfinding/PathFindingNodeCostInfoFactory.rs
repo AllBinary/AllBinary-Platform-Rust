@@ -21,6 +21,7 @@ use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellType;
 use crate::org::allbinary::media::graphics::geography::map::racetrack::RaceTrackGeographicMapCellType::RaceTrackGeographicMapCellType;
+use crate::java::lang::Exception::*;
 use super::PathFindingNodeCostInfoFactoryBase::PathFindingNodeCostInfoFactoryBase;
 
 // Borrows the object of a Java reference
@@ -59,8 +60,8 @@ impl PathFindingNodeCostInfoFactory {
     pub fn getTotalCost(&mut self, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, mut comingFromGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> i64 {
         let mut geographicMapCellType: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>> = jcall!(geographicMapInterface).getCellTypeAt(comingFromGeographicMapCellPosition.clone());
         let mut geographicMapCellType2: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>> = jcall!(geographicMapInterface).getCellTypeAt(geographicMapCellPosition.clone());
-        let mut raceTrackGeographicMapCellType: Option<Rc<RefCell<RaceTrackGeographicMapCellType>>> = (geographicMapCellType).clone() /* as RaceTrackGeographicMapCellType */;
-        let mut raceTrackGeographicMapCellType2: Option<Rc<RefCell<RaceTrackGeographicMapCellType>>> = (geographicMapCellType2).clone() /* as RaceTrackGeographicMapCellType */;
+        let mut raceTrackGeographicMapCellType: Option<Rc<RefCell<RaceTrackGeographicMapCellType>>> = (geographicMapCellType).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<RaceTrackGeographicMapCellType>() }, "ClassCastException: not a RaceTrackGeographicMapCellType"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<RaceTrackGeographicMapCellType>) } });
+        let mut raceTrackGeographicMapCellType2: Option<Rc<RefCell<RaceTrackGeographicMapCellType>>> = (geographicMapCellType2).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<RaceTrackGeographicMapCellType>() }, "ClassCastException: not a RaceTrackGeographicMapCellType"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<RaceTrackGeographicMapCellType>) } });
         return ((jcall!(raceTrackGeographicMapCellType).getTravelCost()) as i64) + ((jcall!(raceTrackGeographicMapCellType2).getTravelCost()) as i64);
     }
 }

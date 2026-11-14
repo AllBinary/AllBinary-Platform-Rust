@@ -17,9 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::DataInputStream::DataInputStream;
-// use crate::java::io::InputStream::InputStream;
-// use crate::java::io::OutputStream::OutputStream;
+use crate::java::io::DataInputStream::DataInputStream;
+use crate::java::io::InputStream::InputStream;
+use crate::java::io::OutputStream::OutputStream;
 use crate::org::allbinary::logic::io::AbDataOutputStream::AbDataOutputStream;
 use crate::org::allbinary::logic::io::FileStreamFactory::FileStreamFactory;
 use crate::org::allbinary::logic::io::StreamUtil::StreamUtil;
@@ -29,6 +29,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -69,10 +70,10 @@ impl RegistrationConfiguration {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(this.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(e.clone()));
+            jcall!(this.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         this
@@ -91,10 +92,10 @@ impl RegistrationConfiguration {
     // throws Exception
     pub fn read(&mut self) {
         let mut fileInputStreamFactory: Option<Rc<RefCell<FileStreamFactory>>> = FileStreamFactory::getInstance();
-        let mut fileInputStream: Option<Rc<RefCell<InputStream>>> = jcall!(fileInputStreamFactory).getFileInputStreamInstance(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), self.FILE.clone());
+        let mut fileInputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = jcall!(fileInputStreamFactory).getFileInputStreamInstance({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), self.FILE.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>);
         let mut dataInputStream: Option<Rc<RefCell<DataInputStream>>> = DataInputStream::new(fileInputStream.clone());
         { let java_arguments = (jcall!(dataInputStream).readUTF(),); self.setRegistrationCode(java_arguments.0) };
-        PreLogUtil::put(jcall!(StringMaker::new()).append(String::from("Read Configuration: ")).append(self.toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("read"));
+        PreLogUtil::put({ let java_argument = jcall!(StringMaker::new()).append(String::from("Read Configuration: ")).append(self.toString()).toString(); java_argument }, crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("read"));
     }
     
 
@@ -102,9 +103,9 @@ impl RegistrationConfiguration {
     pub fn write(&mut self) {
         let mut dataOutputStream: Option<Rc<RefCell<AbDataOutputStream>>> = None;
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Write Configuration: ")).append(self.toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("write"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_argument = jcall!(StringMaker::new()).append(String::from("Write Configuration: ")).append(self.toString()).toString(); java_argument }, crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("write"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             let mut fileInputStreamFactory: Option<Rc<RefCell<FileStreamFactory>>> = FileStreamFactory::getInstance();
-            let mut fileOutputStream: Option<Rc<RefCell<OutputStream>>> = jcall!(fileInputStreamFactory).getFileOutputStreamInstance(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), self.FILE.clone());
+            let mut fileOutputStream: Option<Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>> = jcall!(fileInputStreamFactory).getFileOutputStreamInstance({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), self.FILE.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>);
             dataOutputStream = AbDataOutputStream::new(fileOutputStream.clone());
             jcall!(dataOutputStream).writeUTF(self.getRegistrationCode());
             jcall!(dataOutputStream).flush();
@@ -113,7 +114,7 @@ impl RegistrationConfiguration {
             Err(error) => std::panic::resume_unwind(error),
         }
         { // finally
-            jcall!(StreamUtil::getInstance()).close(dataOutputStream.clone());
+            jcall!(StreamUtil::getInstance()).close(dataOutputStream.clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::Closeable::Closeable>>));
         }
     }
     

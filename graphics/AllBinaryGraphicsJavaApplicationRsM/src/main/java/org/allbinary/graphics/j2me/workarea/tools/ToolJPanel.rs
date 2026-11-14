@@ -18,16 +18,11 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use super::JPanel::JPanel;
-use super::swing::swing;
-use super::javax::javax;
 use super::JButton::JButton;
 use super::JList::JList;
 use super::GridLayout::GridLayout;
-use super::awt::awt;
-use super::java::java;
 use super::Font::Font;
 use super::MouseAdapter::MouseAdapter;
-use super::event::event;
 use super::MouseEvent::MouseEvent;
 
 // Borrows the object of a Java reference
@@ -114,7 +109,7 @@ impl ToolJPanel {
         self.colorJPanel = JPanel::new();
         self.colorJList = JList::new();
         self.setLayout(GridLayout::new(17, 1));
-        jcall!(self.lineJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        jcall!(self.lineJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.lineJButton).setText(LinesGraphicItem::LinesGraphicItem::getStaticName());
         jcall!(self.lineJButton).addMouseListener(MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -123,8 +118,8 @@ impl ToolJPanel {
                 self.lineJButtonMouseClicked(evt.clone());
             }
 */);
-        self.add(self.lineJButton.clone());
-        jcall!(self.rectJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.lineJButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.rectJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.rectJButton).setText(String::from("Rect"));
         { let java_receiver = self.rectJButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -133,8 +128,8 @@ impl ToolJPanel {
                 self.rectJButtonMouseClicked(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.rectJButton.clone());
-        jcall!(self.arcJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.rectJButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.arcJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.arcJButton).setText(String::from("Arc"));
         { let java_receiver = self.arcJButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -143,8 +138,8 @@ impl ToolJPanel {
                 self.arcJButtonMousePressed(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.arcJButton.clone());
-        jcall!(self.stringJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.arcJButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.stringJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.stringJButton).setText(String::from("String"));
         { let java_receiver = self.stringJButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -153,8 +148,8 @@ impl ToolJPanel {
                 self.stringJButtonMousePressed(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.stringJButton.clone());
-        jcall!(self.charJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.stringJButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.charJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.charJButton).setText(String::from("Char"));
         { let java_receiver = self.charJButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -163,8 +158,8 @@ impl ToolJPanel {
                 self.charJButtonMousePressed(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.charJButton.clone());
-        jcall!(self.roundRectJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.charJButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.roundRectJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.roundRectJButton).setText(String::from("Round Rect"));
         { let java_receiver = self.roundRectJButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -173,8 +168,8 @@ impl ToolJPanel {
                 self.roundRectJButtonMousePressed(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.roundRectJButton.clone());
-        jcall!(self.imageJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.roundRectJButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.imageJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.imageJButton).setText(String::from("Image"));
         { let java_receiver = self.imageJButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -183,8 +178,8 @@ impl ToolJPanel {
                 self.imageJButtonMousePressed(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.imageJButton.clone());
-        jcall!(self.fillArcJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.imageJButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.fillArcJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.fillArcJButton).setText(String::from("Fill Arc"));
         { let java_receiver = self.fillArcJButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -193,8 +188,8 @@ impl ToolJPanel {
                 self.fillArcJButtonMousePressed(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.fillArcJButton.clone());
-        jcall!(self.fillRectJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.fillArcJButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.fillRectJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.fillRectJButton).setText(String::from("Fill Rect"));
         { let java_receiver = self.fillRectJButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -203,8 +198,8 @@ impl ToolJPanel {
                 self.fillRectJButtonMousePressed(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.fillRectJButton.clone());
-        jcall!(self.fillRoundRectJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.fillRectJButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.fillRoundRectJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.fillRoundRectJButton).setText(String::from("Fill Rnd Rect"));
         { let java_receiver = self.fillRoundRectJButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -213,8 +208,8 @@ impl ToolJPanel {
                 self.fillRoundRectJButtonMousePressed(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.fillRoundRectJButton.clone());
-        jcall!(self.dottedLineJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.fillRoundRectJButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.dottedLineJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.dottedLineJButton).setText(String::from("Dot Line"));
         { let java_receiver = self.dottedLineJButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -223,8 +218,8 @@ impl ToolJPanel {
                 self.dottedLineJButtonMousePressed(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.dottedLineJButton.clone());
-        jcall!(self.dottedRectButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.dottedLineJButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.dottedRectButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.dottedRectButton).setText(String::from("Dot Rect"));
         { let java_receiver = self.dottedRectButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -233,8 +228,8 @@ impl ToolJPanel {
                 self.dottedRectButtonMousePressed(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.dottedRectButton.clone());
-        jcall!(self.dottedArcJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.dottedRectButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.dottedArcJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.dottedArcJButton).setText(String::from("Dot Arc"));
         { let java_receiver = self.dottedArcJButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -243,8 +238,8 @@ impl ToolJPanel {
                 self.dottedArcJButtonMousePressed(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.dottedArcJButton.clone());
-        jcall!(self.dottedFillRectJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.dottedArcJButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.dottedFillRectJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.dottedFillRectJButton).setText(String::from("Dot Fill Rect"));
         { let java_receiver = self.dottedFillRectJButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -253,8 +248,8 @@ impl ToolJPanel {
                 self.dottedFillRectJButtonMousePressed(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.dottedFillRectJButton.clone());
-        jcall!(self.dottedFillArcJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.dottedFillRectJButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.dottedFillArcJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.dottedFillArcJButton).setText(String::from("Dot Fill Arc"));
         { let java_receiver = self.dottedFillArcJButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -263,8 +258,8 @@ impl ToolJPanel {
                 self.dottedFillArcJButtonMousePressed(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.dottedFillArcJButton.clone());
-        jcall!(self.dottedFillRountRectJButton).setFont(Font::new(String::from("Dialog"), 0, 10));
+        { let java_arguments = (self.dottedFillArcJButton.clone(),); self.add(java_arguments.0) };
+        jcall!(self.dottedFillRountRectJButton).setFont(Font::new(String::from("Dialog"), 0, 10).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>));
         jcall!(self.dottedFillRountRectJButton).setText(String::from("Dot Fill Rnd Rect"));
         { let java_receiver = self.dottedFillRountRectJButton.clone(); let java_arguments = (MouseAdapter::new() /* Java anonymous class body: implement it as a named type
             
@@ -273,10 +268,10 @@ impl ToolJPanel {
                 self.dottedFillRountRectJButtonMousePressed(evt.clone());
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
-        self.add(self.dottedFillRountRectJButton.clone());
+        { let java_arguments = (self.dottedFillRountRectJButton.clone(),); self.add(java_arguments.0) };
         jcall!(self.colorJPanel).setLayout(GridLayout::new(1, 1));
         jcall!(self.colorJPanel).add(self.colorJList.clone());
-        self.add(self.colorJPanel.clone());
+        { let java_arguments = (self.colorJPanel.clone(),); self.add(java_arguments.0) };
     }
     
 

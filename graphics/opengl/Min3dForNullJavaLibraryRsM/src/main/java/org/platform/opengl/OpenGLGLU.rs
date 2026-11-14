@@ -5,7 +5,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -20,6 +21,10 @@ pub struct OpenGLGLU {
 thread_local! { pub static OpenGLGLU_instance: Option<Rc<RefCell<OpenGLGLU>>> = OpenGLGLU::new(); }
 
 impl OpenGLGLU {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

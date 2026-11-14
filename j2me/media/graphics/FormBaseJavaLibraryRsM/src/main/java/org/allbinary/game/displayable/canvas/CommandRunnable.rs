@@ -18,11 +18,12 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use crate::Runnable;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
 use crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::CommandFormInputProcessor::CommandFormInputProcessor;
 
 // Borrows the object of a Java reference
@@ -36,7 +37,7 @@ pub struct CommandRunnable {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
     pub commandFormInputProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::CommandFormInputProcessor::CommandFormInputProcessorDyn>>>,
-    pub command: Option<Rc<RefCell<Command>>>,
+    pub command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
 }
 
 impl Runnable for CommandRunnable {
@@ -44,9 +45,13 @@ impl Runnable for CommandRunnable {
 }
 
 impl CommandRunnable {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct(mut commandFormInputProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::CommandFormInputProcessor::CommandFormInputProcessorDyn>>>, mut command: Option<Rc<RefCell<Command>>>) -> Self {
+    pub fn new_struct(mut commandFormInputProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::CommandFormInputProcessor::CommandFormInputProcessorDyn>>>, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             commonStrings: None,
@@ -60,24 +65,24 @@ impl CommandRunnable {
         this
     }
 
-    pub fn new(mut commandFormInputProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::CommandFormInputProcessor::CommandFormInputProcessorDyn>>>, mut command: Option<Rc<RefCell<Command>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut commandFormInputProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::CommandFormInputProcessor::CommandFormInputProcessorDyn>>>, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(commandFormInputProcessor, command))))
     }
     
 
     pub fn run(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START_RUNNABLE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START_RUNNABLE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
             let mut canvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn>>> = jcall!(self.commandFormInputProcessor).getCanvas();
-            let mut commandListener: Option<Rc<RefCell<CommandListener>>> = jcall!(canvas).getCustomCommandListener();
-            jcall!(commandListener).commandAction(self.command.clone(), canvas.clone());
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).END_RUNNABLE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            let mut commandListener: Option<Rc<RefCell<dyn CommandListener>>> = jcall!(canvas).getCustomCommandListener();
+            jcall!(commandListener).commandAction(self.command.clone(), canvas.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).END_RUNNABLE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

@@ -31,6 +31,10 @@ pub struct GeneratorTransformInfoData {
 thread_local! { pub static GeneratorTransformInfoData_NAME: String = String::from("GENERATOR_TRANSFORM_INFO_NAME"); }
 
 impl GeneratorTransformInfoData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

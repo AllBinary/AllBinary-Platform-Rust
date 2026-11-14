@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait GenericProfileDataWorkerTypeInterface {
+pub trait GenericProfileDataWorkerTypeInterface: std::any::Any {
     
 
     fn getName(&mut self) -> String;

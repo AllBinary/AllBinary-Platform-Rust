@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::logic::util::event::AllBinaryEventCircularPool::AllBinaryEventCircularPool;
+use crate::java::lang::Exception::*;
 use super::TrackingEventFactory::TrackingEventFactory;
 use super::TrackingEvent::TrackingEvent;
 
@@ -36,6 +37,10 @@ pub struct TrackingEventCircularStaticPool {
 pub static mut TrackingEventCircularStaticPool_instance: std::cell::LazyCell<Option<Rc<RefCell<TrackingEventCircularStaticPool>>>> = std::cell::LazyCell::new(|| TrackingEventCircularStaticPool::new());
 
 impl TrackingEventCircularStaticPool {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -56,7 +61,7 @@ impl TrackingEventCircularStaticPool {
     
 
     pub fn init(&mut self) {
-        jcall!(self.EVENT_POOL).initAllBinaryEventCircularPool(TrackingEventFactory::new());
+        jcall!(self.EVENT_POOL).initAllBinaryEventCircularPool(TrackingEventFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObjectFactoryInterface::AllBinaryEventObjectFactoryInterface>>));
     }
     
 

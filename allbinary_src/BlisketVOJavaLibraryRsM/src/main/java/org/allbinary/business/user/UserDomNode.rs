@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::entry::EntryData::EntryData;
 use crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
@@ -26,6 +25,7 @@ use crate::org::allbinary::data::tree::dom::ModDomHelper::ModDomHelper;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -43,6 +43,10 @@ impl DomNodeInterface for UserDomNode {
 }
 
 impl UserDomNode {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut dataMappingInterface: Option<Rc<RefCell<dyn TableMappingInterface>>>) -> Self {
@@ -60,12 +64,12 @@ impl UserDomNode {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut EMPTY_STRING: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(self.dataMappingInterface).toHashMap();
-        jcall!(hashMap).put(jcall!(EntryData::getInstance()).LASTMODIFIED.clone(), EMPTY_STRING.clone());
-        jcall!(hashMap).put(jcall!(EntryData::getInstance()).ENCRYPTION.clone(), EMPTY_STRING.clone());
-        jcall!(hashMap).put(UserData_PASSWORD.with(Clone::clone).clone(), EMPTY_STRING.clone());
-        return ModDomHelper::createNameValueNodes(document.clone(), UserData_NAME.with(Clone::clone).clone(), hashMap.clone());
+        let mut EMPTY_STRING: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(self.dataMappingInterface).toHashMap();
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone()), crate::java_into_object(EMPTY_STRING.clone()));
+        jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).ENCRYPTION.clone(); java_field }.clone()), crate::java_into_object(EMPTY_STRING.clone()));
+        jcall!(hashMap).put(crate::java_into_object(UserData_PASSWORD.with(Clone::clone).clone()), crate::java_into_object(EMPTY_STRING.clone()));
+        return ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), UserData_NAME.with(Clone::clone).clone(), hashMap.clone());
     }
     
 

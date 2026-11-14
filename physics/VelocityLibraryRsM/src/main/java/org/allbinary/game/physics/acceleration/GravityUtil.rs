@@ -35,6 +35,10 @@ thread_local! { pub static GravityUtil_instance: Option<Rc<RefCell<GravityUtil>>
 
 impl GravityUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             GAME_GRAVITY_VELOCITY: 0,
@@ -56,7 +60,7 @@ impl GravityUtil {
     
 
     pub fn process(&mut self, mut velocityProperties: Option<Rc<RefCell<dyn crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn>>>, mut customGravity: i32) {
-        jcall!(jcall!(velocityProperties).getVelocityYBasicDecimalP()).addint(customGravity.clone());
+        jcall!(jcall!(velocityProperties).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP()).addint(customGravity.clone());
     }
 }
 

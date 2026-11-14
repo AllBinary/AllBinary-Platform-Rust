@@ -36,6 +36,10 @@ impl ViewPositionFactoryInterface for ViewPositionFactory {
 
 impl ViewPositionFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -48,7 +52,7 @@ impl ViewPositionFactory {
     
 
     pub fn getInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>> {
-        return ViewPosition::ViewPosition::getInstanceD();
+        return ViewPosition::ViewPosition::getInstanceD().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>);
     }
 }
 

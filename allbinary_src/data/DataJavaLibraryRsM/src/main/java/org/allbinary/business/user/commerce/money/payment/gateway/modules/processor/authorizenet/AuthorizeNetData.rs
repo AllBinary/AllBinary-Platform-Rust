@@ -83,6 +83,10 @@ thread_local! { pub static AuthorizeNetData_X_FREIGHT: String = String::from("x_
 thread_local! { pub static AuthorizeNetData_X_DUTY: String = String::from("x_duty"); }
 
 impl AuthorizeNetData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

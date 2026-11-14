@@ -35,6 +35,10 @@ pub struct Line {
 
 
 impl Line {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut p1: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut p2: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) -> Self {
@@ -44,7 +48,7 @@ impl Line {
             deltaX: 0.0,
             deltaY: 0.0,
         };
-        this.p1 = jcall!(PointFactory::PointFactory::getInstance()).ZERO_ZERO.clone();
+        this.p1 = { let java_value = ({ let java_field = jcall!(PointFactory::PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }).clone(); java_value }.clone();
         this.p2 = this.p1.clone();
         this.setP1(p1.clone());
         this.setP2(p2.clone());
@@ -62,8 +66,8 @@ impl Line {
     
 
     pub fn update(&mut self) {
-        self.deltaX = ((jcall!(self.getP1()).getX()) as f64) - jcall!(self.getP2()).getX();
-        self.deltaY = ((jcall!(self.getP1()).getY()) as f64) - jcall!(self.getP2()).getY();
+        self.deltaX = { let java_value = (((jcall!(self.getP1()).getX()) as f64) - { let java_value = ((jcall!(self.getP2()).getX()) as f64); java_value }).clone(); java_value };
+        self.deltaY = { let java_value = (((jcall!(self.getP1()).getY()) as f64) - { let java_value = ((jcall!(self.getP2()).getY()) as f64); java_value }).clone(); java_value };
     }
     
 

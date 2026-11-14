@@ -71,8 +71,8 @@ impl DirectoryOrIncludeFileExtensionBooleanFileVisitor {
         if jcall!(file).isDirectory() {
             return true;
         }
-        if false || jcall!(jcall!(file).getAbsolutePath()).indexOf(self.includesString.clone()) >= 0 {
-            return self.base.visit(file.clone());
+        if false || jcall!(file).getAbsolutePath().find(&self.includesString.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return { let java_arguments = (file.clone(),); self.base.visit_AbFile(java_arguments.0) };
         } else {
             return false;
         }

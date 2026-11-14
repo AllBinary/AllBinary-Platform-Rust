@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait HighScoresResultsListener {
+pub trait HighScoresResultsListener: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn setHighScoresArray(&mut self, highScoresArrayP: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

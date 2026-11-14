@@ -39,12 +39,16 @@ thread_local! { pub static ColorFromEventUtil_instance: Option<Rc<RefCell<ColorF
 
 impl ColorFromEventUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             YELLOW: None,
             COLOR_INT: 0,
         };
-        this.YELLOW = jcall!(BasicColorFactory::getInstance()).YELLOW.clone();
+        this.YELLOW = { let java_field = jcall!(BasicColorFactory::getInstance()).YELLOW.clone(); java_field }.clone();
         this.COLOR_INT = jcall!(this.YELLOW).intValue();
         this
     }
@@ -61,7 +65,7 @@ impl ColorFromEventUtil {
 
     pub fn getForegroundColor(&mut self, mut gameCanvasInterface: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>) -> Option<Rc<RefCell<BasicColor>>> {
         let mut color: Option<Rc<RefCell<BasicColor>>> = self.YELLOW.clone();
-        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (jcall!(gameCanvasInterface).getLayerManager()).clone() /* as GeographicMapCompositeInterface */;
+        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryGameLayerManager cannot be cast to GeographicMapCompositeInterface") })();
         let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
         if geographicMapInterface.is_some() {
             let mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>> = jcall!(geographicMapInterface).getForegroundBasicColor();

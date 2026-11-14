@@ -17,8 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +34,10 @@ pub struct IndexedAnimationToImageArrayUtil {
 
 impl IndexedAnimationToImageArrayUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -45,9 +50,9 @@ impl IndexedAnimationToImageArrayUtil {
     
 
     // throws Exception
-    pub fn getInstance(mut width: i32, mut height: i32, mut sequentialAnimationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>>) -> Vec<Option<Rc<RefCell<Image>>>> {
+    pub fn getInstance(mut width: i32, mut height: i32, mut sequentialAnimationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>>) -> Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> {
         let mut size: i32 = jcall!(sequentialAnimationInterface).getAnimationSize();
-        let mut imageArray: Vec<Option<Rc<RefCell<Image>>>> = vec![None; (size) as usize];
+        let mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> = vec![None; (size) as usize];
         for index in (0..size) {
             jcall!(sequentialAnimationInterface).setFrame(index.clone());
             imageArray[(index) as usize] = jcall!(AnimationFrameToImageUtil::AnimationFrameToImageUtil::getInstance()).getInstanceWH(width.clone(), height.clone(), sequentialAnimationInterface.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>));

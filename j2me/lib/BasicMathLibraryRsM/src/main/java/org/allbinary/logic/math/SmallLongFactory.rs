@@ -38,6 +38,10 @@ pub struct SmallLongFactory {
 thread_local! { pub static SmallLongFactory_instance: Option<Rc<RefCell<SmallLongFactory>>> = SmallLongFactory::new(); }
 
 impl SmallLongFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<SmallLongFactory>>> {
@@ -47,10 +51,10 @@ impl SmallLongFactory {
 
     pub fn initWithRange(&mut self, mut value: i32, mut negativeValue: i32) {
         for index in (self.lastMin..=value - 1).rev() {
-            self.INTEGER_ARRAY[(index + self.NEGATIVE_MAX) as usize] = Some((index.clone()) as i64);
+            { let java_index = (index + self.NEGATIVE_MAX) as usize; self.INTEGER_ARRAY[java_index] = Some((index.clone()) as i64); };
         }
         for index in (self.lastNegativeMin..=negativeValue - 1).rev() {
-            self.INTEGER_ARRAY[(index) as usize] = Some((-index) as i64);
+            { let java_index = (index) as usize; self.INTEGER_ARRAY[java_index] = Some((-index) as i64); };
         }
         if self.lastMin < value {
             self.lastMin = value.clone();
@@ -66,10 +70,10 @@ impl SmallLongFactory {
         if self.INTEGER_ARRAY[(0) as usize].is_none() {
             if self.lastMin < self.POSITIVE_MAX || self.lastNegativeMin < self.NEGATIVE_MAX {
                 for index in (self.lastMin..=self.POSITIVE_MAX - 1).rev() {
-                    self.INTEGER_ARRAY[(index + self.NEGATIVE_MAX) as usize] = Some((index.clone()) as i64);
+                    { let java_index = (index + self.NEGATIVE_MAX) as usize; self.INTEGER_ARRAY[java_index] = Some((index.clone()) as i64); };
                 }
                 for index in (self.lastNegativeMin..=self.NEGATIVE_MAX - 1).rev() {
-                    self.INTEGER_ARRAY[(index) as usize] = Some((-index) as i64);
+                    { let java_index = (index) as usize; self.INTEGER_ARRAY[java_index] = Some((-index) as i64); };
                 }
                 self.lastMin = self.POSITIVE_MAX.clone();
                 self.lastNegativeMin = self.NEGATIVE_MAX.clone();
@@ -89,7 +93,7 @@ impl SmallLongFactory {
             lastNegativeMin: 0,
         };
         this.NEGATIVE_MAX = 500;
-        this.POSITIVE_MAX = 0x2D1_u32 as i32;
+        this.POSITIVE_MAX = 0x2D1;
         this.INTEGER_ARRAY = vec![None; (this.NEGATIVE_MAX + this.POSITIVE_MAX) as usize];
         this.STRING_ARRAY = vec![String::new(); (this.NEGATIVE_MAX + this.POSITIVE_MAX) as usize];
         this.MIN = 0;
@@ -114,7 +118,7 @@ impl SmallLongFactory {
     pub fn getString(&mut self, mut index: i32) -> String {
         let mut i: i32 = index + self.NEGATIVE_MAX;
         if self.STRING_ARRAY[(i) as usize].is_empty() {
-            self.STRING_ARRAY[(i) as usize] = (self.INTEGER_ARRAY[(i) as usize]).expect("NullPointerException").to_string();
+            { let java_index = (i) as usize; self.STRING_ARRAY[java_index] = (self.INTEGER_ARRAY[(i) as usize]).expect("NullPointerException").to_string(); };
         }
         return self.STRING_ARRAY[(i) as usize].clone();
     }

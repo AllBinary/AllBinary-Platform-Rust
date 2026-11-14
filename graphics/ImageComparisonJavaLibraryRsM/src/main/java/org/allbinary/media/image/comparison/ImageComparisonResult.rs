@@ -90,7 +90,7 @@ impl ImageComparisonResult {
         if !match (&jcall!(bufferedImage).getHeight(), &jcall!(bufferedImage2).getHeight()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             this.isSameHeight = false;
             if imageHeight > jcall!(bufferedImage2).getHeight() {
-                imageHeight = jcall!(bufferedImage2).getHeight();
+                imageHeight = { let java_value = (jcall!(bufferedImage2).getHeight()).clone(); java_value };
             }
         } else {
             this.isSameHeight = true;
@@ -98,7 +98,7 @@ impl ImageComparisonResult {
         if !match (&jcall!(bufferedImage).getWidth(), &jcall!(bufferedImage2).getWidth()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             this.isSameWidth = false;
             if imageWidth > jcall!(bufferedImage2).getWidth() {
-                imageWidth = jcall!(bufferedImage2).getWidth();
+                imageWidth = { let java_value = (jcall!(bufferedImage2).getWidth()).clone(); java_value };
             }
         } else {
             this.isSameWidth = true;
@@ -107,9 +107,9 @@ impl ImageComparisonResult {
         this.imageHeight = imageHeight.clone();
         if !this.isSameWidth || !this.isSameHeight {
             let mut imageUtil: Option<Rc<RefCell<ImageUtil>>> = ImageUtil::getInstance();
-            jcall!(this.logUtil).putF(String::from("Images were not the same size? Most likely a resolution change."), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
-            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("1: "), jcall!(imageUtil).toString(bufferedImage.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("2: "), jcall!(imageUtil).toString(bufferedImage2.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            jcall!(this.logUtil).putF(String::from("Images were not the same size? Most likely a resolution change."), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
+            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("1: "), jcall!(imageUtil).toString(bufferedImage.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("2: "), jcall!(imageUtil).toString(bufferedImage2.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         this
     }
@@ -138,7 +138,7 @@ impl ImageComparisonResult {
     
 
     pub fn toString(&mut self) -> String {
-        return jcall!(StringMaker::new()).append(String::from("ImageComparisonInfo: ")).append(self.name.clone()).append(String::from(" Number Of Matching Pixels: ")).appendint(self.pixelsThatMatch.clone()).append(String::from("\nNumber Of Non-Matching Pixels: ")).appendint(jcall!(self.getNonMatchingPixelVector()).size()).append(String::from("\nNumber Of Pixels Ignored: ")).appendint(self.pixelsIgnored.clone()).append(String::from("\nMatching Percentage: ")).appendfloat(self.getMatchingPercent()).toString();
+        return jcall!(StringMaker::new()).append(String::from("ImageComparisonInfo: ")).append(self.name.clone()).append(String::from(" Number Of Matching Pixels: ")).appendint(self.pixelsThatMatch.clone()).append(String::from("\nNumber Of Non-Matching Pixels: ")).appendint({ let java_argument = jcall!(self.getNonMatchingPixelVector()).size(); java_argument }).append(String::from("\nNumber Of Pixels Ignored: ")).appendint(self.pixelsIgnored.clone()).append(String::from("\nMatching Percentage: ")).appendfloat(self.getMatchingPercent()).toString();
     }
     
 

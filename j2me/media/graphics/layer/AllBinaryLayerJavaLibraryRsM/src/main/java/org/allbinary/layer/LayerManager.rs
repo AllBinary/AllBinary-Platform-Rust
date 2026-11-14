@@ -5,7 +5,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
@@ -13,6 +13,7 @@ use crate::org::allbinary::thread::SynchObject::SynchObject;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::logic::ABSystemWrapper::ABSystemWrapper;
+use crate::java::lang::Exception::*;
 use super::LayerManagerLoggingBase::LayerManagerLoggingBase;
 use super::AllBinaryLayer::AllBinaryLayer;
 use super::Layer::Layer;
@@ -36,6 +37,10 @@ pub struct LayerManager {
 
 
 impl LayerManager {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut layerManagerLogging: Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerManagerLoggingBase::LayerManagerLoggingBaseDyn>>>) -> Self {
@@ -52,9 +57,9 @@ impl LayerManager {
         this.commonStrings = CommonStrings::getInstance();
         this.systemWrapper = ABSystemWrapper::getInstance();
         this.tsUtil = TsUtil::getInstance();
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.anyType = SynchObject::new();
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this.layerManagerLogging = layerManagerLogging.clone();
         this
     }
@@ -76,7 +81,7 @@ impl LayerManager {
             let mut nextLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = None;
             let mut size: i32 = jcall!(self.list).size();
             for index in (0..size) {
-                nextLayerInterface = { let java_object = (jcall!(self.list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>>().expect("ClassCastException").clone()) };
+                nextLayerInterface = { let java_value = ({ let java_object = (jcall!(self.list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 if jcall!(layerInterface).getZP() > jcall!(nextLayerInterface).getZP() {
                     jcall!(self.list).addAt(index.clone(), crate::java_into_object(layerInterface.clone()));
                     return;
@@ -92,7 +97,7 @@ impl LayerManager {
         let mut nextLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = None;
         let mut size: i32 = jcall!(self.list).size();
         for index in (0..size) {
-            nextLayerInterface = { let java_object = (jcall!(self.list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>>().expect("ClassCastException").clone()) };
+            nextLayerInterface = { let java_value = ({ let java_object = (jcall!(self.list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             if jcall!(layerInterface).getZP() > jcall!(nextLayerInterface).getZP() {
                 self.appendAt(layerInterface.clone(), index.clone());
                 return;
@@ -147,13 +152,13 @@ impl LayerManager {
     }
     
 
-    pub fn paint(&mut self, mut g: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paint(&mut self, mut g: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         { // synchronized (self.anyType)
             let mut comp: Option<Rc<RefCell<dyn crate::org::allbinary::layer::Layer::LayerDyn>>> = None;
             {
                 let mut index: i32 = jcall!(self.list).size();
                 while { index -= 1; index } >= 0 {
-                comp = { let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::Layer::LayerDyn>>>>().expect("ClassCastException").clone()) };
+                comp = { let java_value = ({ let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::Layer::LayerDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 if comp.is_some() && jcall!(comp).isVisible() {
                     jcall!(comp).paint(g.clone());
                 }
@@ -162,7 +167,7 @@ impl LayerManager {
         }
     }
 }
-pub trait LayerManagerDyn {
+pub trait LayerManagerDyn: std::any::Any {
     fn as_LayerManager(&self) -> &LayerManager;
     fn as_LayerManager_mut(&mut self) -> &mut LayerManager;
     fn contains(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> bool { LayerManager::contains(self.as_LayerManager_mut(), layerInterface) }
@@ -174,7 +179,7 @@ pub trait LayerManagerDyn {
     fn getLayerAt(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::Layer::LayerDyn>>> { LayerManager::getLayerAt(self.as_LayerManager_mut(), index) }
     fn getSize(&mut self) -> i32 { LayerManager::getSize(self.as_LayerManager_mut()) }
     fn cleanup(&mut self) { LayerManager::cleanup(self.as_LayerManager_mut()) }
-    fn paint(&mut self, mut g: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { LayerManager::paint(self.as_LayerManager_mut(), g, x, y) }
+    fn paint(&mut self, mut g: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { LayerManager::paint(self.as_LayerManager_mut(), g, x, y) }
 }
 impl LayerManagerDyn for LayerManager {
     fn as_LayerManager(&self) -> &LayerManager { self }

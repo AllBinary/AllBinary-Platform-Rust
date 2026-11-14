@@ -17,13 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
-// use crate::javax::microedition::lcdui::Display::Display;
-// use crate::javax::microedition::lcdui::Displayable::Displayable;
-// use crate::javax::microedition::lcdui::NullCanvas::NullCanvas;
-// use crate::javax::microedition::midlet::MIDlet::MIDlet;
-// use crate::javax::microedition::midlet::MIDletStateChangeException::MIDletStateChangeException;
+use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::Display::Display;
+use crate::javax::microedition::lcdui::Displayable::Displayable;
+use crate::javax::microedition::lcdui::NullCanvas::NullCanvas;
+use crate::javax::microedition::midlet::MIDlet::MIDlet;
+use crate::javax::microedition::midlet::MIDletStateChangeException::MIDletStateChangeException;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::communication::log::ForcedLogUtil::ForcedLogUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
@@ -36,6 +36,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::system::Memory::Memory;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -52,21 +53,23 @@ pub struct AllBinaryMidlet {
     pub SETTING_: String,
     pub _DISPLAY_: String,
     pub SETTING_NO_TITLE: String,
-    pub hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
     pub midletDestroyed: bool,
 }
 
-pub static mut AllBinaryMidlet_NULL_ALLBINARY_MIDLET: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
-// impl CommandListener for AllBinaryMidlet with the methods of the trait
+pub static mut AllBinaryMidlet_NULL_ALLBINARY_MIDLET: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
+impl CommandListener for AllBinaryMidlet {
+    fn commandAction(&mut self, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut displayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) { Self::commandAction(self, command, displayable) }
+}
 
 impl AllBinaryMidlet {
     
 
     pub fn getNullInstance() -> Option<Rc<RefCell<dyn AllBinaryMidletDyn>>> {
-        if match (&unsafe { AllBinaryMidlet_NULL_ALLBINARY_MIDLET.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *AllBinaryMidlet_NULL_ALLBINARY_MIDLET = AllBinaryMidlet::new().map(|reference| reference as Rc<RefCell<dyn AllBinaryMidletDyn>>) };
+        if match (&unsafe { AllBinaryMidlet_NULL_ALLBINARY_MIDLET.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *AllBinaryMidlet_NULL_ALLBINARY_MIDLET = crate::java_into_object(AllBinaryMidlet::new()) };
         }
-        return (unsafe { AllBinaryMidlet_NULL_ALLBINARY_MIDLET.clone() }).clone() /* as AllBinaryMidlet */;
+        return { let java_object = (unsafe { AllBinaryMidlet_NULL_ALLBINARY_MIDLET.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn AllBinaryMidletDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -89,7 +92,7 @@ impl AllBinaryMidlet {
         this._DISPLAY_ = String::from(" Display: ");
         this.SETTING_NO_TITLE = String::from("Setting: No Title, Display: ");
         this.hashtable = jcall!(StdUtil::getInstance()).createHashtable();
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("AllBinaryMidlet::AllBinaryMidlet"));
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("AllBinaryMidlet::AllBinaryMidlet"));
         this
     }
 
@@ -98,15 +101,11 @@ impl AllBinaryMidlet {
     }
     
 
-    pub fn setDisplay(&mut self, mut newDisplay: Option<Rc<RefCell<Displayable>>>) {
-        let mut title: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+    pub fn setDisplay(&mut self, mut newDisplay: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) {
+        let mut title: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         if !match (&newDisplay, &crate::javax::microedition::lcdui::NullCanvas::NullCanvas_NULL_CANVAS.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            title = jcall!(newDisplay).getTitle();
-            if true {
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(self.SETTING_.clone()).append(title.clone()).append(self._DISPLAY_.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(newDisplay.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_DISPLAY.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            } else {
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(self.SETTING_NO_TITLE.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(newDisplay.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_DISPLAY.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            }
+            title = { let java_value = (jcall!(newDisplay).getTitle()).clone(); java_value };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(self.SETTING_.clone()).append(title.clone()).append(self._DISPLAY_.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(newDisplay.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_DISPLAY.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         let mut display: Option<Rc<RefCell<Display>>> = self.getDisplay();
         jcall!(display).setCurrent(newDisplay.clone());
@@ -118,7 +117,7 @@ impl AllBinaryMidlet {
     }
     
 
-    pub fn getCurrentDisplayable(&mut self) -> Option<Rc<RefCell<Displayable>>> {
+    pub fn getCurrentDisplayable(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>> {
         return jcall!(Display::getDisplay(None /* Java this: a &mut self method has no Rc of itself */)).getCurrent();
     }
     
@@ -135,12 +134,12 @@ impl AllBinaryMidlet {
 
     // throws MIDletStateChangeException
     pub fn startApp(&mut self) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
     pub fn pauseApp(&mut self) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
@@ -151,42 +150,42 @@ impl AllBinaryMidlet {
     pub fn destroyApp(&mut self, mut unconditional: bool) {
         let mut METHOD_NAME: String = String::from("AllBinaryMidlet::destroyApp");
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone());
             PreLogUtil::put(Memory::getInfo(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone());
             self.setDestroyed(true);
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
     // throws Exception
-    pub fn setStartStateHashtable(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).START_LABEL.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(hashtable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setStartStateHashtable"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+    pub fn setStartStateHashtable(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) {
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).START_LABEL.clone(); java_field }.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(hashtable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setStartStateHashtable"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         self.hashtable = hashtable.clone();
     }
     
 
     // throws Exception
-    pub fn getStartStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).START_LABEL.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.hashtable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getStartStateHashtable"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+    pub fn getStartStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).START_LABEL.clone(); java_field }.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.hashtable.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getStartStateHashtable"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         return self.hashtable.clone();
     }
     
 
     // throws Exception
-    pub fn getCurrentStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getStateHashtable"));
-        return jcall!(StdUtil::getInstance()).NULL_TABLE.clone();
+    pub fn getCurrentStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getStateHashtable"));
+        return { let java_field = jcall!(StdUtil::getInstance()).NULL_TABLE.clone(); java_field }.clone();
     }
     
 
-    pub fn commandAction(&mut self, mut command: Option<Rc<RefCell<Command>>>, mut displayable: Option<Rc<RefCell<Displayable>>>) {
+    pub fn commandAction(&mut self, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut displayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) {
     }
 }
 impl std::ops::Deref for AllBinaryMidlet {
@@ -197,27 +196,30 @@ impl std::ops::DerefMut for AllBinaryMidlet {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait AllBinaryMidletDyn {
+pub trait AllBinaryMidletDyn: crate::javax::microedition::midlet::MIDlet::MIDletDyn + crate::javax::microedition::lcdui::CommandListener::CommandListener {
     fn as_AllBinaryMidlet(&self) -> &AllBinaryMidlet;
     fn as_AllBinaryMidlet_mut(&mut self) -> &mut AllBinaryMidlet;
-    fn setDisplay(&mut self, mut newDisplay: Option<Rc<RefCell<Displayable>>>) { AllBinaryMidlet::setDisplay(self.as_AllBinaryMidlet_mut(), newDisplay) }
+    fn setDisplay(&mut self, mut newDisplay: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) { AllBinaryMidlet::setDisplay(self.as_AllBinaryMidlet_mut(), newDisplay) }
     fn getDisplay(&mut self) -> Option<Rc<RefCell<Display>>> { AllBinaryMidlet::getDisplay(self.as_AllBinaryMidlet_mut()) }
-    fn getCurrentDisplayable(&mut self) -> Option<Rc<RefCell<Displayable>>> { AllBinaryMidlet::getCurrentDisplayable(self.as_AllBinaryMidlet_mut()) }
+    fn getCurrentDisplayable(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>> { AllBinaryMidlet::getCurrentDisplayable(self.as_AllBinaryMidlet_mut()) }
     fn setDestroyed(&mut self, mut destroyed: bool) { AllBinaryMidlet::setDestroyed(self.as_AllBinaryMidlet_mut(), destroyed) }
     fn isDestroyed(&mut self) -> bool { AllBinaryMidlet::isDestroyed(self.as_AllBinaryMidlet_mut()) }
-    fn startApp(&mut self) { AllBinaryMidlet::startApp(self.as_AllBinaryMidlet_mut()) }
-    fn pauseApp(&mut self) { AllBinaryMidlet::pauseApp(self.as_AllBinaryMidlet_mut()) }
     fn destroyAppInRunnable(&mut self, mut unconditional: bool, mut isProgress: bool) { AllBinaryMidlet::destroyAppInRunnable(self.as_AllBinaryMidlet_mut(), unconditional, isProgress) }
-    fn destroyApp(&mut self, mut unconditional: bool) { AllBinaryMidlet::destroyApp(self.as_AllBinaryMidlet_mut(), unconditional) }
-    fn setStartStateHashtable(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) { AllBinaryMidlet::setStartStateHashtable(self.as_AllBinaryMidlet_mut(), hashtable) }
-    fn getStartStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { AllBinaryMidlet::getStartStateHashtable(self.as_AllBinaryMidlet_mut()) }
-    fn getCurrentStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { AllBinaryMidlet::getCurrentStateHashtable(self.as_AllBinaryMidlet_mut()) }
-    fn commandAction(&mut self, mut command: Option<Rc<RefCell<Command>>>, mut displayable: Option<Rc<RefCell<Displayable>>>) { AllBinaryMidlet::commandAction(self.as_AllBinaryMidlet_mut(), command, displayable) }
+    fn setStartStateHashtable(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) { AllBinaryMidlet::setStartStateHashtable(self.as_AllBinaryMidlet_mut(), hashtable) }
+    fn getStartStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { AllBinaryMidlet::getStartStateHashtable(self.as_AllBinaryMidlet_mut()) }
+    fn getCurrentStateHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { AllBinaryMidlet::getCurrentStateHashtable(self.as_AllBinaryMidlet_mut()) }
 }
 impl AllBinaryMidletDyn for AllBinaryMidlet {
     fn as_AllBinaryMidlet(&self) -> &AllBinaryMidlet { self }
     fn as_AllBinaryMidlet_mut(&mut self) -> &mut AllBinaryMidlet { self }
 }
 
+impl crate::javax::microedition::midlet::MIDlet::MIDletDyn for AllBinaryMidlet {
+    fn as_MIDlet(&self) -> &crate::javax::microedition::midlet::MIDlet::MIDlet { &self.base }
+    fn as_MIDlet_mut(&mut self) -> &mut crate::javax::microedition::midlet::MIDlet::MIDlet { &mut self.base }
+    fn startApp(&mut self) { Self::startApp(self) }
+    fn pauseApp(&mut self) { Self::pauseApp(self) }
+    fn destroyApp(&mut self, mut unconditional: bool) { Self::destroyApp(self, unconditional) }
+}
 
 

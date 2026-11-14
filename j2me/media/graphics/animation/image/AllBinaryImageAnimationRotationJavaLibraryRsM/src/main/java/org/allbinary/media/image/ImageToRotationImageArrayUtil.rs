@@ -17,7 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::java::lang::Exception::*;
 use super::ImageRotationUtil::ImageRotationUtil;
 
 // Borrows the object of a Java reference
@@ -33,6 +34,10 @@ pub struct ImageToRotationImageArrayUtil {
 thread_local! { pub static ImageToRotationImageArrayUtil_instance: Option<Rc<RefCell<ImageToRotationImageArrayUtil>>> = ImageToRotationImageArrayUtil::new(); }
 
 impl ImageToRotationImageArrayUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ImageToRotationImageArrayUtil>>> {
@@ -52,10 +57,10 @@ impl ImageToRotationImageArrayUtil {
     
 
     // throws Exception
-    pub fn generate(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut angleIncrement: i32, mut totalAngle: i32) -> Vec<Option<Rc<RefCell<Image>>>> {
+    pub fn generate(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut angleIncrement: i32, mut totalAngle: i32) -> Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> {
         let mut imageRotationUtil: Option<Rc<RefCell<ImageRotationUtil>>> = ImageRotationUtil::getInstance();
         let mut totalFrames: i32 = totalAngle / angleIncrement;
-        let mut imageArray: Vec<Option<Rc<RefCell<Image>>>> = vec![None; (totalFrames) as usize];
+        let mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> = vec![None; (totalFrames) as usize];
         imageArray[(0) as usize] = image.clone();
         for index in (1..totalFrames) {
             imageArray[(index) as usize] = jcall!(imageRotationUtil).createRotatedImage(image.clone(), index * angleIncrement);

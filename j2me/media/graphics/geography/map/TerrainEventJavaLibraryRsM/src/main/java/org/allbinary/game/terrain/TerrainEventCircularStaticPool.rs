@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::util::event::AllBinaryEventCircularPool::AllBinaryEventCircularPool;
+use crate::java::lang::Exception::*;
 use super::TerrainEventFactory::TerrainEventFactory;
 use super::TerrainEvent::TerrainEvent;
 use super::BasicTerrainInfo::BasicTerrainInfo;
@@ -36,6 +37,10 @@ pub struct TerrainEventCircularStaticPool {
 thread_local! { pub static TerrainEventCircularStaticPool_instance: Option<Rc<RefCell<TerrainEventCircularStaticPool>>> = TerrainEventCircularStaticPool::new(); }
 
 impl TerrainEventCircularStaticPool {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -56,7 +61,7 @@ impl TerrainEventCircularStaticPool {
     
 
     pub fn init(&mut self) {
-        jcall!(self.EVENT_POOL).initAllBinaryEventCircularPool(TerrainEventFactory::new());
+        jcall!(self.EVENT_POOL).initAllBinaryEventCircularPool(TerrainEventFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObjectFactoryInterface::AllBinaryEventObjectFactoryInterface>>));
     }
     
 

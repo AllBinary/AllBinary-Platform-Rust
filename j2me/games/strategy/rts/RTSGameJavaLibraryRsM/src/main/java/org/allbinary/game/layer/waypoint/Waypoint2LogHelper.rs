@@ -36,6 +36,10 @@ thread_local! { pub static Waypoint2LogHelper_instance: Option<Rc<RefCell<dyn Wa
 
 impl Waypoint2LogHelper {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -135,7 +139,7 @@ impl Waypoint2LogHelper {
     pub fn targetMovedSoRetarget(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>) {
     }
 }
-pub trait Waypoint2LogHelperDyn {
+pub trait Waypoint2LogHelperDyn: std::any::Any {
     fn as_Waypoint2LogHelper(&self) -> &Waypoint2LogHelper;
     fn as_Waypoint2LogHelper_mut(&mut self) -> &mut Waypoint2LogHelper;
     fn initRange(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut closeRange: i32, mut sensorRange: i32) { Waypoint2LogHelper::initRange(self.as_Waypoint2LogHelper_mut(), associatedAdvancedRTSGameLayer, closeRange, sensorRange) }

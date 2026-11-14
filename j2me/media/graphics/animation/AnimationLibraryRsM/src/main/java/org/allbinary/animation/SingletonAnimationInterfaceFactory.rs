@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface;
 use super::ProceduralAnimationInterfaceFactoryInterface::ProceduralAnimationInterfaceFactoryInterface;
 use super::Animation::Animation;
@@ -42,10 +43,12 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 impl ProceduralAnimationInterfaceFactoryInterface for SingletonAnimationInterfaceFactory {
     fn getInstanceAnimation(&mut self, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { Self::getInstanceAnimation(self, animationInterface) }
 }
-impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface for SingletonAnimationInterfaceFactory {
-}
 
 impl SingletonAnimationInterfaceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Self {
@@ -76,7 +79,7 @@ impl SingletonAnimationInterfaceFactory {
     pub fn setInitialScale(&mut self, mut scaleProperties: Option<Rc<RefCell<ScaleProperties>>>) {
     }
 }
-pub trait SingletonAnimationInterfaceFactoryDyn {
+pub trait SingletonAnimationInterfaceFactoryDyn: std::any::Any {
     fn as_SingletonAnimationInterfaceFactory(&self) -> &SingletonAnimationInterfaceFactory;
     fn as_SingletonAnimationInterfaceFactory_mut(&mut self) -> &mut SingletonAnimationInterfaceFactory;
     fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { SingletonAnimationInterfaceFactory::getInstance(self.as_SingletonAnimationInterfaceFactory_mut(), instanceId) }

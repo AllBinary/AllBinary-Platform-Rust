@@ -68,8 +68,8 @@ impl HtmlCell {
         this.after = after.clone().clone();
         this.height = height.clone().clone();
         this.width = width.clone().clone();
-        this.addAttribute(this.HEIGHT.clone(), this.height.clone());
-        this.addAttribute(this.WIDTH.clone(), this.width.clone());
+        { let java_arguments = (this.HEIGHT.clone(), this.height.clone(),); this.addAttribute(java_arguments.0, java_arguments.1) };
+        { let java_arguments = (this.WIDTH.clone(), this.width.clone(),); this.addAttribute(java_arguments.0, java_arguments.1) };
         this
     }
 
@@ -85,16 +85,16 @@ impl HtmlCell {
 
     pub fn toString(&mut self) -> String {
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        let mut result: String = jcall!(stringUtil).EMPTY_STRING.clone();
+        let mut result: String = { let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone();
         let mut attributeKeys: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(self.otherAttributes).keySet()).toArray();
         let mut attributeSize: i32 = (attributeKeys.len() as i32).clone();
         result = self.before.clone();
         result += &self.START.clone();
         result += &String::from(" ");
         for i in (0..attributeSize) {
-            let mut key: String = (attributeKeys[(i) as usize]).clone() /* as String */;
-            let mut value: String = (jcall!(self.base.otherAttributes).get(key.clone())).clone() /* as String */;
-            if true && (value.cmp(&jcall!(stringUtil).EMPTY_STRING.clone()) as i32) != 0 {
+            let mut key: String = { let java_object = (attributeKeys[(i) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut value: String = { let java_object = (jcall!(self.base.otherAttributes).get(crate::java_into_object(key.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            if true && (value.cmp(&{ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()) as i32) != 0 {
                 result += &key.clone();
                 result += &String::from("=\"");
                 result += &value.clone();

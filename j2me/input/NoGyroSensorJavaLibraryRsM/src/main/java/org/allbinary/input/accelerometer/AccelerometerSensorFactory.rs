@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::game::configuration::feature::SensorFeatureFactory::SensorFeatureFactory;
 use crate::org::allbinary::input::gyro::AllBinaryOrientationSensor::AllBinaryOrientationSensor;
+use crate::java::lang::Exception::*;
 use super::NoAccelerometerSensor::NoAccelerometerSensor;
 
 // Borrows the object of a Java reference
@@ -36,6 +37,10 @@ pub static mut AccelerometerSensorFactory_allBinaryAccelerometerSensor: std::cel
 
 impl AccelerometerSensorFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -51,12 +56,12 @@ impl AccelerometerSensorFactory {
     pub fn init() {
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
         let mut sensorFeatureFactory: Option<Rc<RefCell<SensorFeatureFactory>>> = SensorFeatureFactory::getInstance();
-        if jcall!(features).isFeature(jcall!(sensorFeatureFactory).ORIENTATION_SENSORS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        if jcall!(features).isFeature({ let java_field = jcall!(sensorFeatureFactory).ORIENTATION_SENSORS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("No Orientation Sensors"))));
-        } else if jcall!(features).isFeature(jcall!(sensorFeatureFactory).SIMULATED_ORIENTATION_SENSORS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        } else if jcall!(features).isFeature({ let java_field = jcall!(sensorFeatureFactory).SIMULATED_ORIENTATION_SENSORS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("No Simulation Sensors"))));
-        } else if jcall!(features).isFeature(jcall!(sensorFeatureFactory).NO_ORIENTATION.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            unsafe { *AccelerometerSensorFactory_allBinaryAccelerometerSensor = NoAccelerometerSensor::new() };
+        } else if jcall!(features).isFeature({ let java_field = jcall!(sensorFeatureFactory).NO_ORIENTATION.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            unsafe { *AccelerometerSensorFactory_allBinaryAccelerometerSensor = NoAccelerometerSensor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::gyro::AllBinaryOrientationSensor::AllBinaryOrientationSensorDyn>>) };
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Not Such SensorFeature"))));
         }

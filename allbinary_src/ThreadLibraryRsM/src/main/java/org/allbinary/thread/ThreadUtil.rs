@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -35,6 +36,10 @@ pub struct ThreadUtil {
 thread_local! { pub static ThreadUtil_instance: Option<Rc<RefCell<ThreadUtil>>> = ThreadUtil::new(); }
 
 impl ThreadUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

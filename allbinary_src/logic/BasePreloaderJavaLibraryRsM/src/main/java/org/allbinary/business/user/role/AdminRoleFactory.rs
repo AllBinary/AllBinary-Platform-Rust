@@ -45,6 +45,10 @@ pub struct AdminRoleFactory {
 thread_local! { pub static AdminRoleFactory_instance: Option<Rc<RefCell<AdminRoleFactory>>> = AdminRoleFactory::new(); }
 
 impl AdminRoleFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AdminRoleFactory>>> {
@@ -66,53 +70,53 @@ impl AdminRoleFactory {
             shippingManagementRoles: None,
             webManagementRoles: None,
         };
-        this.adminRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.storeAdminRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.storeManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.productManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.reviewManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.customerManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.workflowManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.orderManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.adjusterManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.shippingManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.webManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.adminRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.storeAdminRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.storeManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.productManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.reviewManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.customerManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.workflowManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.orderManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.adjusterManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.shippingManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.webManagementRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut basicUserRoleFactory: Option<Rc<RefCell<BasicUserRoleFactory>>> = BasicUserRoleFactory::getInstance();
-        jcall!(this.adminRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).ADMINISTRATOR.clone()));
-        jcall!(this.storeAdminRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).ADMINISTRATOR.clone()));
-        jcall!(this.storeAdminRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).STOREMANAGER.clone()));
-        jcall!(this.storeManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).ADMINISTRATOR.clone()));
-        jcall!(this.storeManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).STOREMANAGER.clone()));
-        jcall!(this.storeManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).CUSTOMERMANAGER.clone()));
-        jcall!(this.storeManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).ADJUSTER.clone()));
-        jcall!(this.storeManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).PRODUCTMANAGER.clone()));
-        jcall!(this.storeManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).REVIEWER.clone()));
-        jcall!(this.storeManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).SHIPPING.clone()));
-        jcall!(this.productManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).ADMINISTRATOR.clone()));
-        jcall!(this.productManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).STOREMANAGER.clone()));
-        jcall!(this.productManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).PRODUCTMANAGER.clone()));
-        jcall!(this.reviewManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).ADMINISTRATOR.clone()));
-        jcall!(this.reviewManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).STOREMANAGER.clone()));
-        jcall!(this.reviewManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).REVIEWER.clone()));
-        jcall!(this.customerManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).ADMINISTRATOR.clone()));
-        jcall!(this.customerManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).STOREMANAGER.clone()));
-        jcall!(this.customerManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).CUSTOMERMANAGER.clone()));
-        jcall!(this.workflowManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).ADMINISTRATOR.clone()));
-        jcall!(this.workflowManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).STOREMANAGER.clone()));
-        jcall!(this.workflowManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).WORKFLOWEDITOR.clone()));
-        jcall!(this.orderManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).ADMINISTRATOR.clone()));
-        jcall!(this.orderManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).STOREMANAGER.clone()));
-        jcall!(this.adjusterManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).ADMINISTRATOR.clone()));
-        jcall!(this.adjusterManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).STOREMANAGER.clone()));
-        jcall!(this.adjusterManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).ADJUSTER.clone()));
-        jcall!(this.shippingManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).ADMINISTRATOR.clone()));
-        jcall!(this.shippingManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).STOREMANAGER.clone()));
-        jcall!(this.shippingManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).SHIPPING.clone()));
-        jcall!(this.webManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).ADMINISTRATOR.clone()));
-        jcall!(this.webManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).STOREMANAGER.clone()));
-        jcall!(this.webManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).WEBMANAGER.clone()));
-        jcall!(this.webManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).WORKFLOWEDITOR.clone()));
-        jcall!(this.webManagementRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).VIEWEDITOR.clone()));
+        jcall!(this.adminRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).ADMINISTRATOR.clone(); java_field }.clone()));
+        jcall!(this.storeAdminRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).ADMINISTRATOR.clone(); java_field }.clone()));
+        jcall!(this.storeAdminRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).STOREMANAGER.clone(); java_field }.clone()));
+        jcall!(this.storeManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).ADMINISTRATOR.clone(); java_field }.clone()));
+        jcall!(this.storeManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).STOREMANAGER.clone(); java_field }.clone()));
+        jcall!(this.storeManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).CUSTOMERMANAGER.clone(); java_field }.clone()));
+        jcall!(this.storeManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).ADJUSTER.clone(); java_field }.clone()));
+        jcall!(this.storeManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).PRODUCTMANAGER.clone(); java_field }.clone()));
+        jcall!(this.storeManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).REVIEWER.clone(); java_field }.clone()));
+        jcall!(this.storeManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).SHIPPING.clone(); java_field }.clone()));
+        jcall!(this.productManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).ADMINISTRATOR.clone(); java_field }.clone()));
+        jcall!(this.productManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).STOREMANAGER.clone(); java_field }.clone()));
+        jcall!(this.productManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).PRODUCTMANAGER.clone(); java_field }.clone()));
+        jcall!(this.reviewManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).ADMINISTRATOR.clone(); java_field }.clone()));
+        jcall!(this.reviewManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).STOREMANAGER.clone(); java_field }.clone()));
+        jcall!(this.reviewManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).REVIEWER.clone(); java_field }.clone()));
+        jcall!(this.customerManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).ADMINISTRATOR.clone(); java_field }.clone()));
+        jcall!(this.customerManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).STOREMANAGER.clone(); java_field }.clone()));
+        jcall!(this.customerManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).CUSTOMERMANAGER.clone(); java_field }.clone()));
+        jcall!(this.workflowManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).ADMINISTRATOR.clone(); java_field }.clone()));
+        jcall!(this.workflowManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).STOREMANAGER.clone(); java_field }.clone()));
+        jcall!(this.workflowManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).WORKFLOWEDITOR.clone(); java_field }.clone()));
+        jcall!(this.orderManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).ADMINISTRATOR.clone(); java_field }.clone()));
+        jcall!(this.orderManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).STOREMANAGER.clone(); java_field }.clone()));
+        jcall!(this.adjusterManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).ADMINISTRATOR.clone(); java_field }.clone()));
+        jcall!(this.adjusterManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).STOREMANAGER.clone(); java_field }.clone()));
+        jcall!(this.adjusterManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).ADJUSTER.clone(); java_field }.clone()));
+        jcall!(this.shippingManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).ADMINISTRATOR.clone(); java_field }.clone()));
+        jcall!(this.shippingManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).STOREMANAGER.clone(); java_field }.clone()));
+        jcall!(this.shippingManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).SHIPPING.clone(); java_field }.clone()));
+        jcall!(this.webManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).ADMINISTRATOR.clone(); java_field }.clone()));
+        jcall!(this.webManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).STOREMANAGER.clone(); java_field }.clone()));
+        jcall!(this.webManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).WEBMANAGER.clone(); java_field }.clone()));
+        jcall!(this.webManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).WORKFLOWEDITOR.clone(); java_field }.clone()));
+        jcall!(this.webManagementRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).VIEWEDITOR.clone(); java_field }.clone()));
         this
     }
 

@@ -23,6 +23,7 @@ use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellType;
 use crate::org::allbinary::media::graphics::geography::map::topview::BasicTopViewGeographicMapCellTypeFactory::BasicTopViewGeographicMapCellTypeFactory;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,6 +38,10 @@ pub struct TopViewCharacterBehavior {
 
 impl TopViewCharacterBehavior {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -49,32 +54,32 @@ impl TopViewCharacterBehavior {
     
 
     // throws Exception
-    pub fn terrainEvent(&mut self, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>, mut direction: Option<Rc<RefCell<Direction>>>, mut x: i32, mut y: i32, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>>) {
+    pub fn terrainEvent(&mut self, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut direction: Option<Rc<RefCell<Direction>>>, mut x: i32, mut y: i32, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) {
     }
     
 
-    pub fn terrainMove(&mut self, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut x: i32, mut y: i32) {
+    pub fn terrainMove(&mut self, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut x: i32, mut y: i32) {
     }
     
 
-    pub fn hasSolidBlock(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>) -> bool {
+    pub fn hasSolidBlock(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>) -> bool {
         let mut size: i32 = (geographicMapInterfaceArray.len() as i32).clone();
         let mut basicTopViewGeographicMapCellTypeFactory: Option<Rc<RefCell<BasicTopViewGeographicMapCellTypeFactory>>> = None;
         for index in (0..size) {
-            basicTopViewGeographicMapCellTypeFactory = (jcall!(geographicMapInterfaceArray[(index) as usize]).getGeographicMapCellTypeFactory()).clone() /* as BasicTopViewGeographicMapCellTypeFactory */;
-            if jcall!(jcall!(basicTopViewGeographicMapCellTypeFactory).BLOCK_CELL_TYPE).isType(geographicMapCellTypeArray[(index) as usize].clone()) {
+            basicTopViewGeographicMapCellTypeFactory = { let java_value = ((jcall!(geographicMapInterfaceArray[(index) as usize]).getGeographicMapCellTypeFactory()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<BasicTopViewGeographicMapCellTypeFactory>() }, "ClassCastException: not a BasicTopViewGeographicMapCellTypeFactory"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<BasicTopViewGeographicMapCellTypeFactory>) } })).clone(); java_value };
+            if jcall!({ let java_field = jcall!(basicTopViewGeographicMapCellTypeFactory).BLOCK_CELL_TYPE.clone(); java_field }).isType(geographicMapCellTypeArray[(index) as usize].clone()) {
                 return true;
             }
         }
         return false;
     }
 }
-pub trait TopViewCharacterBehaviorDyn {
+pub trait TopViewCharacterBehaviorDyn: std::any::Any {
     fn as_TopViewCharacterBehavior(&self) -> &TopViewCharacterBehavior;
     fn as_TopViewCharacterBehavior_mut(&mut self) -> &mut TopViewCharacterBehavior;
-    fn terrainEvent(&mut self, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>, mut direction: Option<Rc<RefCell<Direction>>>, mut x: i32, mut y: i32, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellPosition: Option<Rc<RefCell<GeographicMapCellPosition>>>) { TopViewCharacterBehavior::terrainEvent(self.as_TopViewCharacterBehavior_mut(), layer, direction, x, y, geographicMapInterfaceArray, geographicMapCellPosition) }
-    fn terrainMove(&mut self, mut layer: Option<Rc<RefCell<AllBinaryLayer>>>, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut x: i32, mut y: i32) { TopViewCharacterBehavior::terrainMove(self.as_TopViewCharacterBehavior_mut(), layer, geographicMapInterfaceArray, x, y) }
-    fn hasSolidBlock(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<BasicGeographicMap>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<GeographicMapCellType>>>>) -> bool { TopViewCharacterBehavior::hasSolidBlock(self.as_TopViewCharacterBehavior_mut(), geographicMapInterfaceArray, geographicMapCellTypeArray) }
+    fn terrainEvent(&mut self, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut direction: Option<Rc<RefCell<Direction>>>, mut x: i32, mut y: i32, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) { TopViewCharacterBehavior::terrainEvent(self.as_TopViewCharacterBehavior_mut(), layer, direction, x, y, geographicMapInterfaceArray, geographicMapCellPosition) }
+    fn terrainMove(&mut self, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut x: i32, mut y: i32) { TopViewCharacterBehavior::terrainMove(self.as_TopViewCharacterBehavior_mut(), layer, geographicMapInterfaceArray, x, y) }
+    fn hasSolidBlock(&mut self, mut geographicMapInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>>, mut geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>) -> bool { TopViewCharacterBehavior::hasSolidBlock(self.as_TopViewCharacterBehavior_mut(), geographicMapInterfaceArray, geographicMapCellTypeArray) }
 }
 impl TopViewCharacterBehaviorDyn for TopViewCharacterBehavior {
     fn as_TopViewCharacterBehavior(&self) -> &TopViewCharacterBehavior { self }

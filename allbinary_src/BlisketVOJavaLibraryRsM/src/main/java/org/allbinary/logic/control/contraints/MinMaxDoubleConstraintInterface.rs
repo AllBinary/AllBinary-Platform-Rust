@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait MinMaxDoubleConstraintInterface {
+pub trait MinMaxDoubleConstraintInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getMax(&mut self) -> f64;
@@ -38,8 +38,6 @@ pub trait MinMaxDoubleConstraintInterface {
     
 
     fn setMin(&mut self, min: f64);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

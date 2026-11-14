@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::game::ai::BasicAI::BasicAI;
 use crate::org::allbinary::game::input::GameInput::GameInput;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
@@ -25,6 +25,7 @@ use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::logic::math::SmallIntegerSingletonFactory::SmallIntegerSingletonFactory;
 use crate::org::allbinary::time::GameTickTimeDelayHelperFactory::GameTickTimeDelayHelperFactory;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
+use crate::java::lang::Exception::*;
 use super::TimeFiredInterface::TimeFiredInterface;
 
 // Borrows the object of a Java reference
@@ -45,7 +46,7 @@ impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntel
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }
 impl crate::org::allbinary::graphics::IdentifierInterface::IdentifierInterface for TimedFireAI {
-    fn getId(&mut self) -> i32 { self.base.getId() }
+    fn getId(&mut self) -> i32 { crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence::getId(crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligenceDyn::as_ArtificialIntelligence_mut(self)) }
 }
 
 impl TimedFireAI {
@@ -70,9 +71,9 @@ impl TimedFireAI {
 
     // throws Exception
     pub fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) {
-        let mut timeFiredInterface: Option<Rc<RefCell<dyn TimeFiredInterface>>> = (self.getOwnerLayerInterface()).clone() /* as TimeFiredInterface */;
-        if { let java_receiver = self.maxFireDelayTimeHelper.clone(); let java_arguments = (jcall!(GameTickTimeDelayHelperFactory::getInstance()).startTime.clone(),); let java_result = jcall!(java_receiver).isTime(java_arguments.0); java_result } && jcall!(timeFiredInterface).getLastFireTime() + ((jcall!(self.maxFireDelayTimeHelper).as_TimeDelayHelper_mut().delay) as i64) < jcall!(self.maxFireDelayTimeHelper).getStartTime() {
-            self.base.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }.clone());
+        let mut timeFiredInterface: Option<Rc<RefCell<dyn TimeFiredInterface>>> = (|| -> Option<Rc<RefCell<dyn TimeFiredInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to TimeFiredInterface") })();
+        if { let java_receiver = self.maxFireDelayTimeHelper.clone(); let java_arguments = ({ let java_field = jcall!(GameTickTimeDelayHelperFactory::getInstance()).startTime.clone(); java_field }.clone(),); let java_result = jcall!(java_receiver).isTime(java_arguments.0); java_result } && jcall!(timeFiredInterface).getLastFireTime() + (({ let java_field = jcall!(self.maxFireDelayTimeHelper).as_TimeDelayHelper_mut().delay.clone(); java_field }) as i64) < jcall!(self.maxFireDelayTimeHelper).getStartTime() {
+            { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone).clone(),); self.base.processKeyAI(java_arguments.0) };
             jcall!(self.maxFireDelayTimeHelper).as_TimeDelayHelper_mut().delay = self.delay.clone();
         }
     }

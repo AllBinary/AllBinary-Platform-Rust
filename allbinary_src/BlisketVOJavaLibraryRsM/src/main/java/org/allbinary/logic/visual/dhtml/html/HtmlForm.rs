@@ -103,7 +103,7 @@ impl HtmlForm {
 
     pub fn toString(&mut self) -> String {
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        let mut result: String = jcall!(stringUtil).EMPTY_STRING.clone();
+        let mut result: String = { let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone();
         let mut inputArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(self.inputs).toArray();
         let mut inputSize: i32 = (inputArray.len() as i32).clone();
         result = self.FORMBEGIN.clone();
@@ -115,14 +115,14 @@ impl HtmlForm {
         result += &String::from("\" ");
         result += &self.END.clone();
         for i in (0..inputSize) {
-            result += &{ let value = jcall!(inputArray[(i) as usize]); value.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", value.as_ref().type_id())) };
+            result += &{ let java_object = (inputArray[(i) as usize]).clone(); let value = jcall!(java_object); value.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", value.as_ref().type_id())) };
             result += &String::from(" ");
         }
         result += &self.FORMEND.clone();
         return result.clone();
     }
 }
-pub trait HtmlFormDyn {
+pub trait HtmlFormDyn: std::any::Any {
     fn as_HtmlForm(&self) -> &HtmlForm;
     fn as_HtmlForm_mut(&mut self) -> &mut HtmlForm;
     fn setPost(&mut self) { HtmlForm::setPost(self.as_HtmlForm_mut()) }

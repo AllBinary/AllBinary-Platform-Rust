@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::Closeable::Closeable;
-// use crate::java::io::IOException::IOException;
+use crate::java::io::Closeable::Closeable;
+use crate::java::io::IOException::IOException;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,9 +31,15 @@ pub struct NullCloseable {
 }
 
 thread_local! { pub static NullCloseable_NULL_CLOSEABLE: Option<Rc<RefCell<NullCloseable>>> = NullCloseable::new(); }
-// impl Closeable for NullCloseable with the methods of the trait
+impl Closeable for NullCloseable {
+    fn close(&mut self) { Self::close(self) }
+}
 
 impl NullCloseable {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

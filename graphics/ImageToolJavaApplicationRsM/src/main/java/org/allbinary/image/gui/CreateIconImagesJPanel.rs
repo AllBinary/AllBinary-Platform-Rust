@@ -19,7 +19,7 @@ use std::rc::Rc;
 use super::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
 // use crate::java::awt::image::Raster::Raster;
-// use crate::java::io::File::File;
+use crate::java::io::File::File;
 use crate::org::allbinary::graphics::displayable::CanvasStrings::CanvasStrings;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
@@ -32,14 +32,10 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::JPanel::JPanel;
-use super::swing::swing;
-use super::javax::javax;
 use super::JButton::JButton;
 use super::ActionListener::ActionListener;
-use super::event::event;
-use super::awt::awt;
-use super::java::java;
 use super::ActionEvent::ActionEvent;
 use super::GroupLayout::GroupLayout;
 
@@ -109,8 +105,8 @@ impl CreateIconImagesJPanel {
                     let mut stringMaker: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                     let mut imageProcessorInput: Option<Rc<RefCell<ImageProcessorInput>>> = self.getImageProcessorInput();
                     let mut files: Vec<Option<Rc<RefCell<File>>>> = jcall!(imageProcessorInput).getFiles();
-                    let mut iconWidthList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-                    let mut iconHeightList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+                    let mut iconWidthList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+                    let mut iconHeightList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
                     jcall!(iconWidthList).add(crate::java_into_object(864));
                     jcall!(iconHeightList).add(crate::java_into_object(864));
                     let mut ANDROID: String = String::from("android-icon-");
@@ -119,8 +115,8 @@ impl CreateIconImagesJPanel {
                     let mut width: i32 = 0;
                     let mut height: i32 = 0;
                     for index2 in (0..size) {
-                        width = ((({ let java_object = jcall!(iconWidthList).get(index2.clone()); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) })).unwrap() as i32);
-                        height = ((({ let java_object = jcall!(iconHeightList).get(index2.clone()); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) })).unwrap() as i32);
+                        width = { let java_value = (((({ let java_object = (jcall!(iconWidthList).get(index2.clone())).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) })).unwrap() as i32)).clone(); java_value };
+                        height = { let java_value = (((({ let java_object = (jcall!(iconHeightList).get(index2.clone())).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) })).unwrap() as i32)).clone(); java_value };
                         let mut generatedBufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>> = jcall!(imageUtil).createBufferedImage3(jcall!(imageProcessorInput).getBufferedImageArray(), width.clone(), height.clone(), true);
                         let mut imagePersistanceUtil: Option<Rc<RefCell<ImagePersistanceUtil>>> = ImagePersistanceUtil::getInstance();
                         for index in (0..(generatedBufferedImageArray.len() as i32)) {
@@ -128,12 +124,12 @@ impl CreateIconImagesJPanel {
                             let mut endIndex: i32 = filePath.rfind('\\').map(|index| index as i32).unwrap_or(-1);
                             let mut path: String = filePath[(0) as usize..(endIndex + 1) as usize].to_string();
                             jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                            jcall!(stringMaker).append(path.clone()).append(ANDROID.clone()).appendint(width.clone()).append(jcall!(CanvasStrings::getInstance())._PNG.clone());
+                            jcall!(stringMaker).append(path.clone()).append(ANDROID.clone()).appendint(width.clone()).append({ let java_field = jcall!(CanvasStrings::getInstance())._PNG.clone(); java_field }.clone());
                             let mut newFilePath: String = jcall!(stringMaker).toString();
                             jcall!(imagePersistanceUtil).saveWithBatik(AbFile::createAbFile(newFilePath.clone()), generatedBufferedImageArray[(index) as usize].clone());
                             jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                            jcall!(stringMaker).append(path.clone()).append(IOS.clone()).appendint(width.clone()).append(jcall!(CanvasStrings::getInstance())._PNG.clone());
-                            newFilePath = jcall!(stringMaker).toString();
+                            jcall!(stringMaker).append(path.clone()).append(IOS.clone()).appendint(width.clone()).append({ let java_field = jcall!(CanvasStrings::getInstance())._PNG.clone(); java_field }.clone());
+                            newFilePath = { let java_value = (jcall!(stringMaker).toString()).clone(); java_value };
                             jcall!(imagePersistanceUtil).saveWithBatik(AbFile::createAbFile(newFilePath.clone()), generatedBufferedImageArray[(index) as usize].clone());
                         }
                     }
@@ -141,9 +137,9 @@ impl CreateIconImagesJPanel {
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                    jcall!(logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+                    jcall!(logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                     }
                 }
             }
@@ -173,8 +169,8 @@ impl CreateIconImagesJPanel {
 */,); jcall!(java_receiver).addActionListener(java_arguments.0); };
         let mut layout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(None /* Java this: a &mut self method has no Rc of itself */);
         self.setLayout(layout.clone());
-        jcall!(layout).setHorizontalGroup(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addComponent(self.aboveJButton.clone())).addGap(0, 335, i16::MAX.clone())));
-        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addContainerGap()).addComponent(self.aboveJButton.clone())).addContainerGap(286, i16::MAX.clone())));
+        jcall!(layout).setHorizontalGroup(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addComponent(self.aboveJButton.clone())).addGap(0, 335, i16::MAX.clone())));
+        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addContainerGap()).addComponent(self.aboveJButton.clone())).addContainerGap(286, i16::MAX.clone())));
     }
     
 

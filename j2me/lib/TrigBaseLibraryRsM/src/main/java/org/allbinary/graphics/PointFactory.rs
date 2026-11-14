@@ -37,6 +37,10 @@ pub struct PointFactory {
 thread_local! { pub static PointFactory_instance: Option<Rc<RefCell<PointFactory>>> = PointFactory::new(); }
 
 impl PointFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<PointFactory>>> {

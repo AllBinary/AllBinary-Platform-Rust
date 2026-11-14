@@ -39,6 +39,10 @@ thread_local! { pub static DisplaysUtil_instance: Option<Rc<RefCell<DisplaysUtil
 
 impl DisplaysUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -57,7 +61,7 @@ impl DisplaysUtil {
 
     pub fn getPrimaryScreenSize(&mut self) -> Option<Rc<RefCell<Rectangle>>> {
         let mut dimension: Option<Rc<RefCell<Dimension>>> = jcall!(Toolkit::getDefaultToolkit()).getScreenSize();
-        return Rectangle::new(jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(), jcall!(dimension).width.clone(), jcall!(dimension).height.clone());
+        return Rectangle::new({ let java_field = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone(), { let java_field = jcall!(dimension).width.clone(); java_field }.clone(), { let java_field = jcall!(dimension).height.clone(); java_field }.clone());
     }
     
 
@@ -70,9 +74,9 @@ impl DisplaysUtil {
         let mut size: i32 = (graphicsDeviceArray.len() as i32).clone();
         let mut rectangleArray: Vec<Option<Rc<RefCell<Rectangle>>>> = vec![None; (size) as usize];
         for index in (0..size) {
-            graphicsDevice = graphicsDeviceArray[(index) as usize].clone();
-            displayMode = jcall!(graphicsDevice).getDisplayMode();
-            rectangle = Rectangle::new(jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(), jcall!(displayMode).getWidth(), jcall!(displayMode).getHeight());
+            graphicsDevice = { let java_value = (graphicsDeviceArray[(index) as usize]).clone(); java_value }.clone();
+            displayMode = { let java_value = (jcall!(graphicsDevice).getDisplayMode()).clone(); java_value };
+            rectangle = { let java_value = (Rectangle::new({ let java_field = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone(), jcall!(displayMode).getWidth(), jcall!(displayMode).getHeight())).clone(); java_value };
             rectangleArray[(index) as usize] = rectangle.clone();
         }
         return rectangleArray.clone();

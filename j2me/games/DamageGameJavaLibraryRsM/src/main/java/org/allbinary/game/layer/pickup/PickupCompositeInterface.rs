@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait PickupCompositeInterface {
+pub trait PickupCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getPickupBehavior(&mut self) -> Option<Rc<RefCell<PickupBehavior>>>;
     
 
     fn setPickupBehavior(&mut self, pickupBehavior: Option<Rc<RefCell<PickupBehavior>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -32,6 +32,10 @@ thread_local! { pub static ItemData_ITEM: String = String::from("ITEM"); }
 
 impl ItemData {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };

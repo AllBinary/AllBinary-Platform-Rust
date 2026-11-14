@@ -35,13 +35,17 @@ thread_local! { pub static TableDataFactory_instance: Option<Rc<RefCell<TableDat
 
 impl TableDataFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             INTEGER_MAX_VALUE_STRING: String::new(),
             ZERO_STRING: String::new(),
         };
         this.INTEGER_MAX_VALUE_STRING = (i32::MAX.clone()).to_string();
-        this.ZERO_STRING = jcall!(CommonPhoneStrings::getInstance()).ZERO.clone();
+        this.ZERO_STRING = { let java_field = jcall!(CommonPhoneStrings::getInstance()).ZERO.clone(); java_field }.clone();
         this
     }
 

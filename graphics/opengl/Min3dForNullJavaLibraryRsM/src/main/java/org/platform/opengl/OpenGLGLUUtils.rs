@@ -5,10 +5,11 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::nio::ByteBuffer::ByteBuffer;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::java::nio::ByteBuffer::ByteBuffer;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use crate::org::allbinary::graphics::OpenGLBitmap::OpenGLBitmap;
 use crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImage;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -23,6 +24,10 @@ pub struct OpenGLGLUUtils {
 thread_local! { pub static OpenGLGLUUtils_instance: Option<Rc<RefCell<OpenGLGLUUtils>>> = OpenGLGLUUtils::new(); }
 
 impl OpenGLGLUUtils {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -51,7 +56,7 @@ impl OpenGLGLUUtils {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn texImage2D(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut glVersion: String, mut target: i32, mut level: i32, mut generateMipMap: bool, mut bitmap: Option<Rc<RefCell<OpenGLBitmap>>>, mut border: i32, mut flip: bool) {
+    pub fn texImage2D_GL10_String_int_int_boolean_OpenGLBitmap_int_boolean(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut glVersion: String, mut target: i32, mut level: i32, mut generateMipMap: bool, mut bitmap: Option<Rc<RefCell<OpenGLBitmap>>>, mut border: i32, mut flip: bool) {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }

@@ -21,6 +21,7 @@ use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::CssProperty::CssProperty;
 
 // Borrows the object of a Java reference
@@ -40,6 +41,10 @@ impl DomNodeInterface for CssPropertyView {
 }
 
 impl CssPropertyView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut name: String) -> Self {
@@ -57,18 +62,18 @@ impl CssPropertyView {
     }
     
 
-    pub fn new_struct1(mut node: Option<Rc<RefCell<Node>>>) -> Self {
+    pub fn new_struct1_Node(mut node: Option<Rc<RefCell<Node>>>) -> Self {
         let mut this = Self {
             commonStrings: None,
             cssProperty: None,
         };
         this.commonStrings = CommonStrings::getInstance();
-        this.cssProperty = CssProperty::new1(node.clone());
+        this.cssProperty = CssProperty::new1_Node(node.clone());
         this
     }
 
-    pub fn new1(mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(node))))
+    pub fn new1_Node(mut node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_Node(node))))
     }
     
 
@@ -82,7 +87,7 @@ impl CssPropertyView {
         return jcall!(self.cssProperty).toXmlNode(document.clone());
     }
 }
-pub trait CssPropertyViewDyn {
+pub trait CssPropertyViewDyn: std::any::Any {
     fn as_CssPropertyView(&self) -> &CssPropertyView;
     fn as_CssPropertyView_mut(&mut self) -> &mut CssPropertyView;
     fn getProperty(&mut self) -> Option<Rc<RefCell<CssProperty>>> { CssPropertyView::getProperty(self.as_CssPropertyView_mut()) }

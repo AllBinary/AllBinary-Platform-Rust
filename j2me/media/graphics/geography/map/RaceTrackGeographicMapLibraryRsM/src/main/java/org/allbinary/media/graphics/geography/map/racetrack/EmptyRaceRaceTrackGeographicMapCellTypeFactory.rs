@@ -48,7 +48,7 @@ impl EmptyRaceRaceTrackGeographicMapCellTypeFactory {
             base: RaceTrackGeographicMapCellTypeFactory::new_struct(),
         };
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        this.EMPTY_CELL_TYPE = RaceTrackGeographicMapCellType::new(jcall!(commonStrings).EMPTY.clone(), 0, jcall!(PathFindingNodeCostInfoData::getInstance()).MAX_NODE_COST.clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>);
+        this.EMPTY_CELL_TYPE = { let java_value = (RaceTrackGeographicMapCellType::new({ let java_field = jcall!(commonStrings).EMPTY.clone(); java_field }.clone(), 0, { let java_field = jcall!(PathFindingNodeCostInfoData::getInstance()).MAX_NODE_COST.clone(); java_field }.clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>)).clone(); java_value };
         this.EASY_CELL_TYPE = RaceTrackGeographicMapCellType::new(String::from("Easy"), 19, 1, 0).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>);
         this.FINISH_LINE_ROAD_CELL_TYPE = this.DEFAULT_FINISH_LINE_ROAD_CELL_TYPE.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>);
         this

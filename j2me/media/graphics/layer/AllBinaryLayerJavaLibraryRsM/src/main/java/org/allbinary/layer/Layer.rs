@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::displayable::CanvasStrings::CanvasStrings;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::math::SmallIntegerSingletonFactory::SmallIntegerSingletonFactory;
@@ -44,6 +44,10 @@ pub struct Layer {
 thread_local! { pub static Layer_ID: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0); }
 
 impl Layer {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut width: i32, mut height: i32) -> Self {
@@ -129,10 +133,10 @@ impl Layer {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
         let mut canvasStrings: Option<Rc<RefCell<CanvasStrings>>> = CanvasStrings::getInstance();
-        jcall!(self.logUtil).putF(jcall!(commonStrings).NOT_IMPLEMENTED.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(canvasStrings).PAINT.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(canvasStrings).PAINT.clone(); java_field }.clone());
     }
     
 
@@ -155,7 +159,7 @@ impl Layer {
     pub fn toStringAppend(&mut self, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) {
     }
 }
-pub trait LayerDyn {
+pub trait LayerDyn: std::any::Any {
     fn as_Layer(&self) -> &Layer;
     fn as_Layer_mut(&mut self) -> &mut Layer;
     fn setPosition(&mut self, mut x: i32, mut y: i32, mut z: i32) { Layer::setPosition(self.as_Layer_mut(), x, y, z) }
@@ -169,7 +173,7 @@ pub trait LayerDyn {
     fn getDepth(&mut self) -> i64 { Layer::getDepth(self.as_Layer_mut()) }
     fn setVisible(&mut self, mut visible: bool) { Layer::setVisible(self.as_Layer_mut(), visible) }
     fn isVisible(&mut self) -> bool { Layer::isVisible(self.as_Layer_mut()) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Layer::paint(self.as_Layer_mut(), graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Layer::paint(self.as_Layer_mut(), graphics) }
     fn setLayerWidth(&mut self, mut width: i32) { Layer::setLayerWidth(self.as_Layer_mut(), width) }
     fn setLayerHeight(&mut self, mut height: i32) { Layer::setLayerHeight(self.as_Layer_mut(), height) }
     fn toStringAppend(&mut self, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) { Layer::toStringAppend(self.as_Layer_mut(), stringBuffer) }

@@ -45,8 +45,9 @@ impl MotionGestureInput {
     }
 
     pub fn new(mut id: i32, mut name: String) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(id, name))));
-            jcall!(inputFactory).add(this.getId(), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(id.clone(), name.clone()))));
+            let mut inputFactory: Option<Rc<RefCell<InputFactory>>> = InputFactory::getInstance();
+            jcall!(inputFactory).add(jcall!(this).getId(), this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
         this
     }
 }

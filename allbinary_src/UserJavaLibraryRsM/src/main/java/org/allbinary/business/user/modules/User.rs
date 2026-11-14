@@ -16,11 +16,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::Calendar;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::Calendar::Calendar;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::Calendar::Calendar;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
@@ -47,6 +45,7 @@ use crate::org::allbinary::logic::string::StringValidationUtil::StringValidation
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -129,7 +128,7 @@ impl UserInterface for User {
     fn getPermissions(&mut self) -> String { Self::getPermissions(self) }
     fn getUserConfigurationInterface(&mut self) -> Option<Rc<RefCell<dyn UserConfigurationInterface>>> { Self::getUserConfigurationInterface(self) }
     fn setUserConfigurationInterface(&mut self, mut userConfigurationInterface: Option<Rc<RefCell<dyn UserConfigurationInterface>>>) { Self::setUserConfigurationInterface(self, userConfigurationInterface) }
-    fn toPasswordHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::toPasswordHashMap(self) }
+    fn toPasswordHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toPasswordHashMap(self) }
     fn validateSession(&mut self, mut weblisketSession: Option<Rc<RefCell<dyn WeblisketSessionInterface>>>) { Self::validateSession(self, weblisketSession) }
     fn updateSession(&mut self, mut weblisketSession: Option<Rc<RefCell<dyn WeblisketSessionInterface>>>) { Self::updateSession(self, weblisketSession) }
     fn isSessionValid(&mut self) -> Option<bool> { Self::isSessionValid(self) }
@@ -137,7 +136,7 @@ impl UserInterface for User {
 impl crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface for User {
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getKey(self) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::toVector(self) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::toHashMap(self) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toHashMap(self) }
 }
 impl crate::org::allbinary::logic::control::validate::ValidationInterface::ValidationInterface for User {
     fn isValid(&mut self) -> Option<bool> { Self::isValid(self) }
@@ -147,6 +146,10 @@ impl crate::org::allbinary::logic::control::validate::ValidationInterface::Valid
 }
 
 impl User {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -177,8 +180,8 @@ impl User {
             userConfigurationInterface: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.userConfigurationInterface = UserConfigurationInterfaceFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn UserConfigurationInterface>>);
-        this.password = Password::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone());
+        this.userConfigurationInterface = { let java_value = (UserConfigurationInterfaceFactory::getInstance()).clone(); java_value };
+        this.password = { let java_value = (Password::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone())).clone(); java_value };
         this
     }
 
@@ -216,7 +219,7 @@ impl User {
         };
         this.logUtil = LogUtil::getInstance();
         { let java_arguments = (jcall!(RequestParams::new1(request.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParamsDyn>>)).toHashMap(),); this.getFormData(java_arguments.0) };
-        this.userConfigurationInterface = UserConfigurationInterfaceFactory::getInstance1(this.getRole());
+        this.userConfigurationInterface = { let java_value = (UserConfigurationInterfaceFactory::getInstance1(this.getRole())).clone(); java_value };
         this
     }
 
@@ -225,7 +228,7 @@ impl User {
     }
     
 
-    pub fn new_struct1(mut userHashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1_HashMap(mut userHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             logUtil: None,
             userName: String::new(),
@@ -254,91 +257,92 @@ impl User {
         };
         this.logUtil = LogUtil::getInstance();
         this.getFormData(userHashMap.clone());
-        this.userConfigurationInterface = UserConfigurationInterfaceFactory::getInstance1(this.getRole());
+        this.userConfigurationInterface = { let java_value = (UserConfigurationInterfaceFactory::getInstance1(this.getRole())).clone(); java_value };
         this
     }
 
-    pub fn new1(mut userHashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(userHashMap))))
+    pub fn new1_HashMap(mut userHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_HashMap(userHashMap))))
     }
     
 
     // throws Exception
-    pub fn getFormData(&mut self, mut userHashMap: Option<Rc<RefCell<HashMap>>>) {
-        self.userName = jcall!(UserName::new1(userHashMap.clone())).get();
+    pub fn getFormData(&mut self, mut userHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
+        self.userName = { let java_value = (jcall!(UserName::new1(userHashMap.clone())).get()).clone(); java_value };
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        let mut passwordString: String = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_PASSWORD.with(Clone::clone).clone())).clone() /* as String */);
+        let mut passwordString: String = jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_PASSWORD.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() });
         let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
         if jcall!(stringValidationUtil).isEmpty(self.userName.clone()) && jcall!(stringValidationUtil).isEmpty(passwordString.clone()) {
-            self.userName = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::logic::communication::http::request::session::WeblisketSessionData::WeblisketSessionData_REMOVABLEUSERNAME.with(Clone::clone).clone())).clone() /* as String */);
-            passwordString = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::logic::communication::http::request::session::WeblisketSessionData::WeblisketSessionData_REMOVABLEPASSWORD.with(Clone::clone).clone())).clone() /* as String */);
+            self.userName = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::logic::communication::http::request::session::WeblisketSessionData::WeblisketSessionData_REMOVABLEUSERNAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+            passwordString = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::logic::communication::http::request::session::WeblisketSessionData::WeblisketSessionData_REMOVABLEPASSWORD.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
         }
-        let mut encryption: String = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(jcall!(EntryData::getInstance()).ENCRYPTION.clone())).clone() /* as String */);
-        let mut secret: String = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_SECRET.with(Clone::clone).clone())).clone() /* as String */);
+        let mut encryption: String = jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).ENCRYPTION.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() });
+        let mut secret: String = jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_SECRET.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() });
         self.password = Password::new(passwordString.clone());
-        self.prefixName = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_PREFIXNAME.with(Clone::clone).clone())).clone() /* as String */);
-        self.firstName = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_FIRSTNAME.with(Clone::clone).clone())).clone() /* as String */);
-        self.lastName = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_LASTNAME.with(Clone::clone).clone())).clone() /* as String */);
-        self.middleName = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_MIDDLENAME.with(Clone::clone).clone())).clone() /* as String */);
-        self.suffixName = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_SUFFIXNAME.with(Clone::clone).clone())).clone() /* as String */);
-        self.company = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_COMPANY.with(Clone::clone).clone())).clone() /* as String */);
-        self.positionAtCompany = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_POSITIONATCOMPANY.with(Clone::clone).clone())).clone() /* as String */);
-        self.mainEmail = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_MAINEMAIL.with(Clone::clone).clone())).clone() /* as String */);
-        self.secondaryEmail = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_SECONDARYEMAIL.with(Clone::clone).clone())).clone() /* as String */);
-        self.homePhone = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_HOMEPHONE.with(Clone::clone).clone())).clone() /* as String */);
-        self.cellPhone = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_CELLPHONE.with(Clone::clone).clone())).clone() /* as String */);
-        self.workPhone = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_WORKPHONE.with(Clone::clone).clone())).clone() /* as String */);
-        self.otherContact = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_OTHERCONTACT.with(Clone::clone).clone())).clone() /* as String */);
-        self.electronicDevice = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_ELECTRONICDEVICE.with(Clone::clone).clone())).clone() /* as String */);
-        self.fax = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_FAX.with(Clone::clone).clone())).clone() /* as String */);
-        self.role = UserRoleB::getRole((jcall!(userHashMap).get(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone())).clone() /* as String */);
-        self.permissions = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(crate::org::allbinary::business::user::UserData::UserData_PERMISSIONS.with(Clone::clone).clone())).clone() /* as String */);
-        if !jcall!(stringValidationUtil).isEmpty(self.permissions.clone()) && (self.permissions.cmp(&jcall!(StoreFrontData::getInstance()).NAME.clone()) as i32) == 0 {
-            self.permissions = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(jcall!(StoreFrontData::getInstance()).NAME.clone())).clone() /* as String */);
+        self.prefixName = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_PREFIXNAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.firstName = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_FIRSTNAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.lastName = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_LASTNAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.middleName = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_MIDDLENAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.suffixName = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_SUFFIXNAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.company = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_COMPANY.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.positionAtCompany = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_POSITIONATCOMPANY.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.mainEmail = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_MAINEMAIL.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.secondaryEmail = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_SECONDARYEMAIL.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.homePhone = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_HOMEPHONE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.cellPhone = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_CELLPHONE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.workPhone = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_WORKPHONE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.otherContact = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_OTHERCONTACT.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.electronicDevice = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_ELECTRONICDEVICE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.fax = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_FAX.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.role = { let java_value = (UserRoleB::getRole({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.permissions = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_PERMISSIONS.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        if !jcall!(stringValidationUtil).isEmpty(self.permissions.clone()) && (self.permissions.cmp(&{ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()) as i32) == 0 {
+            self.permissions = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
         } else if false {
             self.permissions = String::from("No Permissions");
         }
-        self.enable = jcall!(stringUtil).getNonNull((jcall!(userHashMap).get(jcall!(EntryData::getInstance()).ENABLE.clone())).clone() /* as String */);
+        self.enable = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(userHashMap).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).ENABLE.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
     }
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut valid: Option<bool> = true;
             if !jcall!(UserName::getInstance()).isValid1(self.userName.clone()).unwrap() {
-                valid = false;
+                valid = { let java_value = (false).clone(); java_value }.clone();
             }
             if !jcall!(self.password).isValid().unwrap() {
-                valid = false;
+                valid = { let java_value = (false).clone(); java_value }.clone();
             }
             let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
             if !jcall!(stringValidationUtil).isValidRequired(self.firstName.clone(), 1, unsafe { crate::org::allbinary::business::user::UserData::UserData_MAXLEN.clone() }.clone()) {
-                valid = false;
+                valid = { let java_value = (false).clone(); java_value }.clone();
             }
             if !jcall!(stringValidationUtil).isValidRequired(self.lastName.clone(), 1, unsafe { crate::org::allbinary::business::user::UserData::UserData_MAXLEN.clone() }.clone()) {
-                valid = false;
+                valid = { let java_value = (false).clone(); java_value }.clone();
             }
             if !jcall!(stringValidationUtil).isValidRequired(self.mainEmail.clone(), 1, unsafe { crate::org::allbinary::business::user::UserData::UserData_MAXLEN.clone() }.clone()) || self.mainEmail.find(&String::from("@")).map(|index| index as i32).unwrap_or(-1) == -1 {
-                valid = false;
+                valid = { let java_value = (false).clone(); java_value }.clone();
             }
-            return valid.clone();
+            return Some(valid.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VALIDATIONERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VALIDATIONERROR.clone(); java_field }.clone()) {
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(self.logUtil).put(String::from("Failed to validate form"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).IS_VALID.clone(), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put(String::from("Failed to validate form"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).IS_VALID.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn validationInfo(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut stringValidationUtil: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::getInstance();
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(UserName::getValidationInfo(self.userName.clone()));
@@ -352,18 +356,19 @@ impl User {
             if !jcall!(stringValidationUtil).isValidRequired(self.mainEmail.clone(), 1, unsafe { crate::org::allbinary::business::user::UserData::UserData_MAXLEN.clone() }.clone()) || self.mainEmail.find(&String::from("@")).map(|index| index as i32).unwrap_or(-1) == -1 {
                 jcall!(stringBuffer).append(String::from("Please enter a valid email address.<br />"));
             }
-            return jcall!(stringBuffer).toString();
+            return Some(jcall!(stringBuffer).toString());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).put(String::from("Failed to generate validation error info"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("validationInfo()"), crate::java_into_object(e.clone()));
             }
             return String::from("Error Validating Form");
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -594,7 +599,7 @@ impl User {
 
     // throws Exception
     pub fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut values: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         jcall!(values).add(crate::java_into_object(self.userName.clone()));
         jcall!(values).add(crate::java_into_object(self.prefixName.clone()));
         jcall!(values).add(crate::java_into_object(self.firstName.clone()));
@@ -611,14 +616,14 @@ impl User {
         jcall!(values).add(crate::java_into_object(self.otherContact.clone()));
         jcall!(values).add(crate::java_into_object(self.electronicDevice.clone()));
         jcall!(values).add(crate::java_into_object(self.fax.clone()));
-        jcall!(values).add(crate::java_into_object(jcall!(self.getRole()).toString()));
+        jcall!(values).add({ let java_argument = crate::java_into_object(jcall!(self.getRole()).toString()); java_argument });
         let mut userConfigurationDomDocumentMapping: Option<Rc<RefCell<UserConfigurationDomDocumentMapping>>> = UserConfigurationDomDocumentMapping::new(self.getUserConfigurationInterface());
         jcall!(values).add(crate::java_into_object(jcall!(userConfigurationDomDocumentMapping).toDomDocumentString()));
         jcall!(values).add(crate::java_into_object(self.permissions.clone()));
         jcall!(values).addAllList(jcall!(self.password).toVector(self.secret.clone()));
         jcall!(values).add(crate::java_into_object(self.enable.clone()));
         let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-        let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString().clone();
+        let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string().clone();
         jcall!(values).add(crate::java_into_object(time.clone()));
         jcall!(values).add(crate::java_into_object(time.clone()));
         return values.clone();
@@ -626,40 +631,40 @@ impl User {
     
 
     // throws Exception
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut values: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), self.userName.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_PREFIXNAME.with(Clone::clone).clone(), self.prefixName.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_FIRSTNAME.with(Clone::clone).clone(), self.firstName.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_LASTNAME.with(Clone::clone).clone(), self.lastName.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_MIDDLENAME.with(Clone::clone).clone(), self.middleName.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_SUFFIXNAME.with(Clone::clone).clone(), self.suffixName.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_COMPANY.with(Clone::clone).clone(), self.company.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_POSITIONATCOMPANY.with(Clone::clone).clone(), self.positionAtCompany.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_MAINEMAIL.with(Clone::clone).clone(), self.mainEmail.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_SECONDARYEMAIL.with(Clone::clone).clone(), self.secondaryEmail.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_HOMEPHONE.with(Clone::clone).clone(), self.homePhone.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_CELLPHONE.with(Clone::clone).clone(), self.cellPhone.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_WORKPHONE.with(Clone::clone).clone(), self.workPhone.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_OTHERCONTACT.with(Clone::clone).clone(), self.otherContact.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_ELECTRONICDEVICE.with(Clone::clone).clone(), self.electronicDevice.clone());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_FAX.with(Clone::clone).clone(), self.fax.clone());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut values: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()), crate::java_into_object(self.userName.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_PREFIXNAME.with(Clone::clone).clone()), crate::java_into_object(self.prefixName.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_FIRSTNAME.with(Clone::clone).clone()), crate::java_into_object(self.firstName.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_LASTNAME.with(Clone::clone).clone()), crate::java_into_object(self.lastName.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_MIDDLENAME.with(Clone::clone).clone()), crate::java_into_object(self.middleName.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_SUFFIXNAME.with(Clone::clone).clone()), crate::java_into_object(self.suffixName.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_COMPANY.with(Clone::clone).clone()), crate::java_into_object(self.company.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_POSITIONATCOMPANY.with(Clone::clone).clone()), crate::java_into_object(self.positionAtCompany.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_MAINEMAIL.with(Clone::clone).clone()), crate::java_into_object(self.mainEmail.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_SECONDARYEMAIL.with(Clone::clone).clone()), crate::java_into_object(self.secondaryEmail.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_HOMEPHONE.with(Clone::clone).clone()), crate::java_into_object(self.homePhone.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_CELLPHONE.with(Clone::clone).clone()), crate::java_into_object(self.cellPhone.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_WORKPHONE.with(Clone::clone).clone()), crate::java_into_object(self.workPhone.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_OTHERCONTACT.with(Clone::clone).clone()), crate::java_into_object(self.otherContact.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_ELECTRONICDEVICE.with(Clone::clone).clone()), crate::java_into_object(self.electronicDevice.clone()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_FAX.with(Clone::clone).clone()), crate::java_into_object(self.fax.clone()));
         if self.getRole().is_some() {
-            jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone(), jcall!(self.getRole()).toString());
+            jcall!(values).put({ let java_argument = crate::java_into_object(crate::org::allbinary::business::user::role::UserRoleData::UserRoleData_NAME.with(Clone::clone).clone()); java_argument }, { let java_argument = crate::java_into_object(jcall!(self.getRole()).toString()); java_argument });
         }
         let mut userConfigurationDomDocumentMapping: Option<Rc<RefCell<UserConfigurationDomDocumentMapping>>> = UserConfigurationDomDocumentMapping::new(self.getUserConfigurationInterface());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_CONFIGURATION.with(Clone::clone).clone(), jcall!(userConfigurationDomDocumentMapping).toDomDocumentString());
-        jcall!(values).as_BasicArrayList_mut().put(crate::org::allbinary::business::user::UserData::UserData_PERMISSIONS.with(Clone::clone).clone(), self.permissions.clone());
-        jcall!(values).as_BasicArrayList_mut().putAll(jcall!(self.password).toHashMap(self.secret.clone()));
-        jcall!(values).as_BasicArrayList_mut().put(jcall!(EntryData::getInstance()).ENABLE.clone(), self.enable.clone());
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_CONFIGURATION.with(Clone::clone).clone()), crate::java_into_object(jcall!(userConfigurationDomDocumentMapping).toDomDocumentString()));
+        jcall!(values).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_PERMISSIONS.with(Clone::clone).clone()), crate::java_into_object(self.permissions.clone()));
+        jcall!(values).putAll(jcall!(self.password).toHashMap(self.secret.clone()));
+        jcall!(values).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).ENABLE.clone(); java_field }.clone()), crate::java_into_object(self.enable.clone()));
         let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
-        let mut time: String = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString().clone();
-        jcall!(values).as_BasicArrayList_mut().put(jcall!(EntryData::getInstance()).LASTMODIFIED.clone(), time.clone());
+        let mut time: String = (Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string().clone();
+        jcall!(values).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone()), crate::java_into_object(time.clone()));
         return values.clone();
     }
     
 
-    pub fn toPasswordHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn toPasswordHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return jcall!(self.password).toHashMap(self.secret.clone());
     }
     
@@ -682,7 +687,7 @@ impl User {
 
     // throws Exception
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return (self.userName).clone() /* as Any */;
+        return crate::java_into_object(crate::java_into_object((self.userName).clone()));
     }
     
 
@@ -705,10 +710,10 @@ impl User {
         self.userConfigurationInterface = userConfigurationInterface.clone();
     }
 }
-pub trait UserDyn {
+pub trait UserDyn: std::any::Any {
     fn as_User(&self) -> &User;
     fn as_User_mut(&mut self) -> &mut User;
-    fn getFormData(&mut self, mut userHashMap: Option<Rc<RefCell<HashMap>>>) { User::getFormData(self.as_User_mut(), userHashMap) }
+    fn getFormData(&mut self, mut userHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) { User::getFormData(self.as_User_mut(), userHashMap) }
     fn isValid(&mut self) -> Option<bool> { User::isValid(self.as_User_mut()) }
     fn validationInfo(&mut self) -> String { User::validationInfo(self.as_User_mut()) }
     fn setUserName(&mut self, mut value: String) { User::setUserName(self.as_User_mut(), value) }
@@ -757,8 +762,8 @@ pub trait UserDyn {
     fn getSecret(&mut self) -> String { User::getSecret(self.as_User_mut()) }
     fn getPassword(&mut self) -> String { User::getPassword(self.as_User_mut()) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { User::toVector(self.as_User_mut()) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { User::toHashMap(self.as_User_mut()) }
-    fn toPasswordHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { User::toPasswordHashMap(self.as_User_mut()) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { User::toHashMap(self.as_User_mut()) }
+    fn toPasswordHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { User::toPasswordHashMap(self.as_User_mut()) }
     fn validateSession(&mut self, mut weblisketSession: Option<Rc<RefCell<dyn WeblisketSessionInterface>>>) { User::validateSession(self.as_User_mut(), weblisketSession) }
     fn updateSession(&mut self, mut weblisketSession: Option<Rc<RefCell<dyn WeblisketSessionInterface>>>) { User::updateSession(self.as_User_mut(), weblisketSession) }
     fn isSessionValid(&mut self) -> Option<bool> { User::isSessionValid(self.as_User_mut()) }

@@ -40,6 +40,10 @@ pub struct RaceTrackGeographicMapCellTypes {
 thread_local! { pub static RaceTrackGeographicMapCellTypes_instance: Option<Rc<RefCell<RaceTrackGeographicMapCellTypes>>> = RaceTrackGeographicMapCellTypes::new(); }
 
 impl RaceTrackGeographicMapCellTypes {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<RaceTrackGeographicMapCellTypes>>> {

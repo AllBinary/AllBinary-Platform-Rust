@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::midlet::MIDlet::MIDlet;
+use crate::javax::microedition::midlet::MIDlet::MIDlet;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,6 +32,10 @@ pub struct MidletFactoryInterface {
 
 impl MidletFactoryInterface {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -43,8 +47,8 @@ impl MidletFactoryInterface {
     }
     
 
-    pub fn getInstance(&mut self) -> Option<Rc<RefCell<MIDlet>>> {
-        return AllBinaryMidlet::AllBinaryMidlet::getNullInstance();
+    pub fn getInstance(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::midlet::MIDlet::MIDletDyn>>> {
+        return AllBinaryMidlet::AllBinaryMidlet::getNullInstance().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::midlet::MIDlet::MIDletDyn>>);
     }
 }
 

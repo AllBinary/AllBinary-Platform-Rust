@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::layer::LayerProcessor::LayerProcessor;
+use crate::java::lang::Exception::*;
 use super::GameInputLayerManager::GameInputLayerManager;
 use super::GameInputInterface::GameInputInterface;
 
@@ -34,13 +35,21 @@ pub struct GameInputLayerProcessor {
     pub base: LayerProcessor,
 }
 
+impl crate::org::allbinary::layer::BasicLayerProcessorInterface::BasicLayerProcessorInterface for GameInputLayerProcessor {
+    fn process(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { crate::org::allbinary::layer::LayerProcessor::LayerProcessor::process(crate::org::allbinary::layer::LayerProcessor::LayerProcessorDyn::as_LayerProcessor_mut(self), p1) }
+}
+impl crate::org::allbinary::layer::LayerProcessorInterface::LayerProcessorInterface for GameInputLayerProcessor {
+    fn getLayerManager(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>> { crate::org::allbinary::layer::LayerProcessor::LayerProcessor::getLayerManager(crate::org::allbinary::layer::LayerProcessor::LayerProcessorDyn::as_LayerProcessor_mut(self)) }
+    fn processAt(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut index: i32) { Self::processAt(self, allBinaryLayerManager, layerInterface, index) }
+    fn isProcessorLayer(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) -> bool { Self::isProcessorLayer(self, layerInterface) }
+}
 
 impl GameInputLayerProcessor {
     
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: LayerProcessor::new_struct(GameInputLayerManager::new()),
+            base: LayerProcessor::new_struct(GameInputLayerManager::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::LayerManager::LayerManagerDyn>>)),
         };
         // super(...) is in the struct literal above
         this
@@ -53,7 +62,7 @@ impl GameInputLayerProcessor {
 
     // throws Exception
     pub fn processAt(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut index: i32) {
-        let mut gameInputInterface: Option<Rc<RefCell<dyn GameInputInterface>>> = (layerInterface).clone() /* as GameInputInterface */;
+        let mut gameInputInterface: Option<Rc<RefCell<dyn GameInputInterface>>> = (|| -> Option<Rc<RefCell<dyn GameInputInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to GameInputInterface") })();
         jcall!(gameInputInterface).processInput(allBinaryLayerManager.clone());
     }
     

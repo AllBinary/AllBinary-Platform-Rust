@@ -29,6 +29,7 @@ use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::Basic
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
+use crate::java::lang::Exception::*;
 use super::ImageComparatorConstraintsInterface::ImageComparatorConstraintsInterface;
 use super::ImageComparator::ImageComparator;
 use super::ImageComparisonResult::ImageComparisonResult;
@@ -53,7 +54,14 @@ pub struct ImageComparisonWorker {
     pub index2: i32,
 }
 
-// impl CapturedImageWorkerResultsListener for ImageComparisonWorker with the methods of the trait
+impl CapturedImageWorkerResultsListener for ImageComparisonWorker {
+    fn onCaptureEvent(&mut self, mut capturedImageWorkerResultsEvent: Option<Rc<RefCell<CapturedImageWorkerResultsEvent>>>) { Self::onCaptureEvent(self, capturedImageWorkerResultsEvent) }
+}
+impl crate::org::allbinary::logic::util::event::BasicEventListenerInterface::BasicEventListenerInterface for ImageComparisonWorker {
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for ImageComparisonWorker {
+    fn onEvent(&mut self, mut allBinaryEventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, allBinaryEventObject) }
+}
 
 impl ImageComparisonWorker {
     
@@ -71,7 +79,7 @@ impl ImageComparisonWorker {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        this.bufferedImageVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.bufferedImageVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.imageComparatorConstraintsInterface = imageComparatorConstraintsInterface.clone();
         this.imageComparator = ImageComparator::new(imageComparatorConstraintsInterface.clone());
         this
@@ -105,13 +113,13 @@ impl ImageComparisonWorker {
 
     // synchronized
     pub fn onEvent(&mut self, mut allBinaryEventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        self.onCaptureEvent((allBinaryEventObject).clone() /* as CapturedImageWorkerResultsEvent */);
+        self.onCaptureEvent((allBinaryEventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<CapturedImageWorkerResultsEvent>() }, "ClassCastException: not a CapturedImageWorkerResultsEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<CapturedImageWorkerResultsEvent>) } }));
     }
     
 
     pub fn run(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
             self.setRunning(true);
             let mut timeHelper: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>> = TimeDelayHelper::new(1000).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
             jcall!(timeHelper).setStartTimeTNT();
@@ -123,25 +131,25 @@ impl ImageComparisonWorker {
                     let mut imageComparisonResult: Option<Rc<RefCell<ImageComparisonResult>>> = { let java_receiver = self.imageComparator.clone(); let java_arguments = (jcall!(capturedImageWorkerResultsEvent[(0) as usize]).getBufferedImage(), jcall!(capturedImageWorkerResultsEvent[(1) as usize]).getBufferedImage(), jcall!(capturedImageWorkerResultsEvent[(0) as usize]).getFrame(), jcall!(capturedImageWorkerResultsEvent[(1) as usize]).getFrame(), 0,); let java_result = jcall!(java_receiver).compare(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4); java_result };
                     let mut frame: Option<i64> = jcall!(capturedImageWorkerResultsEvent[(1) as usize]).getFrame();
                     let mut imageComparisonResultFrameCacheable: Option<Rc<RefCell<ImageComparisonResultFrameCacheable>>> = ImageComparisonResultFrameCacheable::new(imageComparisonResult.clone(), frame.clone());
-                    jcall!(ImageComparisonResultCacheSingleton::ImageComparisonResultCacheSingleton::getInstance()).add(imageComparisonResultFrameCacheable.clone());
-                    self.fireEvent(ImageComparisonResultsEvent::new(None /* Java this: a &mut self method has no Rc of itself */, imageComparisonResult.clone()));
-                    { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Image Comparison Result: ")).append(jcall!(imageComparisonResult).toString()).append(String::from(" for frame: ")).appendlong(frame.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                    jcall!(ImageComparisonResultCacheSingleton::ImageComparisonResultCacheSingleton::getInstance()).add(imageComparisonResultFrameCacheable.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::cache::CacheableInterface::CacheableInterface>>));
+                    self.fireEvent(ImageComparisonResultsEvent::new(None /* Java this: a &mut self method has no Rc of itself */, imageComparisonResult.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
+                    { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Image Comparison Result: ")).append(jcall!(imageComparisonResult).toString()).append(String::from(" for frame: ")).appendlong(frame.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 } else {
-                    jcall!(self.logUtil).putF(String::from("An Image Was Not Valid: Image Worker Event Processing terminated"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+                    jcall!(self.logUtil).putF(String::from("An Image Was Not Valid: Image Worker Event Processing terminated"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
                 }
             }
             jcall!(self.bufferedImageVector).remove(crate::java_into_object(0));
             self.index2 += 1;
-            let mut message: String = jcall!(StringMaker::new()).append(String::from("Frame: ")).appendint(self.index2.clone()).append(jcall!(CommonLabels::getInstance()).ELAPSED.clone()).appendlong(jcall!(timeHelper).getElapsedTNT()).toString();
-            jcall!(self.logUtil).putF(message.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            let mut message: String = jcall!(StringMaker::new()).append(String::from("Frame: ")).appendint(self.index2.clone()).append({ let java_field = jcall!(CommonLabels::getInstance()).ELAPSED.clone(); java_field }.clone()).appendlong(jcall!(timeHelper).getElapsedTNT()).toString();
+            jcall!(self.logUtil).putF(message.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
             self.setRunning(false);
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).END.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).END.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

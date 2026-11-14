@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -30,6 +31,10 @@ pub struct MotionRecognizer {
 
 
 impl MotionRecognizer {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -56,7 +61,7 @@ impl MotionRecognizer {
     pub fn processDraggedMotionEvent(&mut self, mut x: i32, mut y: i32, mut deviceId: i32, mut modifiers: i32) {
     }
 }
-pub trait MotionRecognizerDyn {
+pub trait MotionRecognizerDyn: std::any::Any {
     fn as_MotionRecognizer(&self) -> &MotionRecognizer;
     fn as_MotionRecognizer_mut(&mut self) -> &mut MotionRecognizer;
     fn processStartMotionEvent(&mut self, mut x: i32, mut y: i32, mut deviceId: i32, mut modifiers: i32) { MotionRecognizer::processStartMotionEvent(self.as_MotionRecognizer_mut(), x, y, deviceId, modifiers) }

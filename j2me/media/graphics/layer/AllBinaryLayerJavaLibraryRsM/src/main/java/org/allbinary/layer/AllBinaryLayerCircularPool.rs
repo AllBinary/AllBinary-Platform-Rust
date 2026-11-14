@@ -19,7 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::util::cache::BaseCircularPool::BaseCircularPool;
 use crate::org::allbinary::util::CircularIndexUtil::CircularIndexUtil;
-use super::AllBinaryLayer::AllBinaryLayer;
+use crate::java::lang::Exception::*;
 use super::AllBinaryLayerFactoryInterface::AllBinaryLayerFactoryInterface;
 
 // Borrows the object of a Java reference
@@ -51,10 +51,10 @@ impl AllBinaryLayerCircularPool {
 
     // throws Exception
     pub fn initAllBinaryLayerCircularPool(&mut self, mut allbinaryLayerFactoryInterface: Option<Rc<RefCell<dyn AllBinaryLayerFactoryInterface>>>, mut total: i32) {
-        self.circularIndexUtil = CircularIndexUtil::createInstance(total.clone());
+        self.circularIndexUtil = { let java_value = (CircularIndexUtil::createInstance(total.clone())).clone(); java_value };
         self.OBJECT_ARRAY = vec![None; (total) as usize];
         for localIndex in (0..total) {
-            self.OBJECT_ARRAY[(localIndex) as usize] = crate::java_into_object(jcall!(allbinaryLayerFactoryInterface).getInstance());
+            { let java_index = (localIndex) as usize; self.OBJECT_ARRAY[java_index] = crate::java_into_object(jcall!(allbinaryLayerFactoryInterface).getInstance()); };
         }
     }
 }

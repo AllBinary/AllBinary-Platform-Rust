@@ -39,6 +39,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -56,6 +57,10 @@ pub struct TaxFactory {
 thread_local! { pub static TaxFactory_instance: Option<Rc<RefCell<TaxFactory>>> = TaxFactory::new(); }
 
 impl TaxFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<TaxFactory>>> {
@@ -85,34 +90,34 @@ impl TaxFactory {
     pub fn getInstance2(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>) -> Option<Rc<RefCell<dyn TaxModuleInterface>>> {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(URLGLOBALS::getMainPath());
-        jcall!(stringBuffer).append(jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(storeFrontInterface).getName());
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("generic"));
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from("taxes"));
-        jcall!(stringBuffer).append(jcall!(AbPathData::getInstance()).SEPARATOR.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone());
         let mut abPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(jcall!(stringBuffer).toString(), self.TAXATIONFILENAME.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
         let mut transformInfoObjectConfigData: Option<Rc<RefCell<TransformInfoObjectConfigData>>> = TransformInfoObjectConfigData::getInstance();
-        let mut data: String = jcall!(CryptFileReader::new(jcall!(transformInfoObjectConfigData).UNCRYPTED_EXTENSION.clone(), jcall!(transformInfoObjectConfigData).ENCRYPTED_EXTENSION.clone())).get(abPath.clone());
-        let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1(data.clone());
+        let mut data: String = jcall!(CryptFileReader::new({ let java_field = jcall!(transformInfoObjectConfigData).UNCRYPTED_EXTENSION.clone(); java_field }.clone(), { let java_field = jcall!(transformInfoObjectConfigData).ENCRYPTED_EXTENSION.clone(); java_field }.clone())).get(abPath.clone());
+        let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1_String(data.clone());
         let mut taxNameNodeList: Option<Rc<RefCell<NodeList>>> = jcall!(document).getElementsByTagName(crate::org::allbinary::business::user::commerce::money::tax::components::TaxData::TaxData_NAME.with(Clone::clone).clone());
-        for index in (0..jcall!(taxNameNodeList).getLength()) {
+        for index in (0..{ let java_bound = jcall!(taxNameNodeList).getLength(); java_bound }) {
             let mut node: Option<Rc<RefCell<Node>>> = jcall!(taxNameNodeList).item(index.clone());
             let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(node).getChildNodes();
             if nodeList.is_some() {
                 let mut classNameNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(crate::org::allbinary::business::DynamicObjectData::DynamicObjectData_NAME.with(Clone::clone).clone(), nodeList.clone());
                 if classNameNode.is_some() {
                     let mut className: String = DomNodeHelper::getTextNodeValue(classNameNode.clone());
-                    return (jcall!(AbeFactory::getInstance()).getInstance2(abeClientInformation.clone(), className.clone())).clone() /* as TaxModuleInterface */;
+                    return (jcall!(AbeFactory::getInstance()).getInstance2(abeClientInformation.clone(), className.clone())).clone();
                 } else {
-                    if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).TAX.clone()) {
-                        jcall!(self.logUtil).putF(String::from("Class Node Null"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET_INSTANCE.clone());
+                    if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).TAX.clone(); java_field }.clone()) {
+                        jcall!(self.logUtil).putF(String::from("Class Node Null"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET_INSTANCE.clone(); java_field }.clone());
                     }
                 }
             } else {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).TAX.clone()) {
-                    jcall!(self.logUtil).putF(String::from("Tax Name Node Node Children"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET_INSTANCE.clone());
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).TAX.clone(); java_field }.clone()) {
+                    jcall!(self.logUtil).putF(String::from("Tax Name Node Node Children"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET_INSTANCE.clone(); java_field }.clone());
                 }
             }
         }

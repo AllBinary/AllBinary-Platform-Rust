@@ -5,9 +5,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::Closeable::Closeable;
-// use crate::java::io::InputStream::InputStream;
-// use crate::java::io::OutputStream::OutputStream;
+use crate::java::io::Closeable::Closeable;
+use crate::java::io::InputStream::InputStream;
+use crate::java::io::OutputStream::OutputStream;
 use crate::org::allbinary::game::configuration::feature::Feature::Feature;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::game::configuration::feature::MainFeatureFactory::MainFeatureFactory;
@@ -22,6 +22,7 @@ use crate::org::allbinary::logic::io::file::FileFactory::FileFactory;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,16 +39,16 @@ pub struct ApplicationConfiguration {
     pub FILE: String,
 }
 
-pub static mut ApplicationConfiguration_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut ApplicationConfiguration_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl ApplicationConfiguration {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ApplicationConfiguration>>> {
-        if match (&unsafe { ApplicationConfiguration_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *ApplicationConfiguration_instance = ApplicationConfiguration::new() };
+        if match (&unsafe { ApplicationConfiguration_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *ApplicationConfiguration_instance = crate::java_into_object(ApplicationConfiguration::new()) };
         }
-        return (unsafe { ApplicationConfiguration_instance.clone() }).clone() /* as ApplicationConfiguration */;
+        return { let java_object = (unsafe { ApplicationConfiguration_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ApplicationConfiguration>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -73,10 +74,10 @@ impl ApplicationConfiguration {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(this.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone(), e.clone());
+            jcall!(this.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         this
@@ -90,7 +91,7 @@ impl ApplicationConfiguration {
     // throws Exception
     pub fn read(&mut self) {
         let mut fileInputStreamFactory: Option<Rc<RefCell<FileStreamFactory>>> = FileStreamFactory::getInstance();
-        let mut fileInputStream: Option<Rc<RefCell<InputStream>>> = jcall!(fileInputStreamFactory).getFileInputStreamInstance(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), self.FILE.clone());
+        let mut fileInputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = jcall!(fileInputStreamFactory).getFileInputStreamInstance({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), self.FILE.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>);
         let mut dataInputStream: Option<Rc<RefCell<AbDataInputStream>>> = AbDataInputStream::new(fileInputStream.clone());
         let mut fullScreen: i32 = jcall!(dataInputStream).readInt();
         if fullScreen == 0 {
@@ -122,13 +123,13 @@ impl ApplicationConfiguration {
 
     // throws Exception
     pub fn write(&mut self) {
-        let mut closeable: Option<Rc<RefCell<Closeable>>> = unsafe { crate::org::allbinary::logic::io::NullCloseable::NullCloseable_NULL_CLOSEABLE.clone() }.clone();
+        let mut closeable: Option<Rc<RefCell<dyn Closeable>>> = crate::org::allbinary::logic::io::NullCloseable::NullCloseable_NULL_CLOSEABLE.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn Closeable>>);
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Write Configuration: "), self.toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("write"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             let mut fileInputStreamFactory: Option<Rc<RefCell<FileStreamFactory>>> = FileStreamFactory::getInstance();
-            let mut fileOutputStream: Option<Rc<RefCell<OutputStream>>> = jcall!(fileInputStreamFactory).getFileOutputStreamInstance(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), self.FILE.clone());
+            let mut fileOutputStream: Option<Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>> = jcall!(fileInputStreamFactory).getFileOutputStreamInstance({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), self.FILE.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>);
             let mut dataOutputStream: Option<Rc<RefCell<AbDataOutputStream>>> = AbDataOutputStream::new(fileOutputStream.clone());
-            closeable = dataOutputStream.clone();
+            closeable = dataOutputStream.clone().map(|reference| reference as Rc<RefCell<dyn Closeable>>);
             if self.isFullscreen() {
                 jcall!(dataOutputStream).writeInt(1);
             } else {
@@ -148,7 +149,7 @@ impl ApplicationConfiguration {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
             }
@@ -160,8 +161,8 @@ impl ApplicationConfiguration {
     
 
     // throws Exception
-    pub fn update(&mut self, mut gameFeature: Option<Rc<RefCell<Feature>>>) {
-        if match (&gameFeature, &jcall!(MainFeatureFactory::getInstance()).FULL_SCREEN) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+    pub fn update(&mut self, mut gameFeature: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>>) {
+        if match (&gameFeature, &{ let java_field = jcall!(MainFeatureFactory::getInstance()).FULL_SCREEN.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
             if jcall!(features).isFeature(gameFeature.clone()) {
                 if !self.isFullscreen() {

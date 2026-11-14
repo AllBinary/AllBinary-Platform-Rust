@@ -22,6 +22,7 @@ use crate::org::allbinary::globals::FREEBLISKET_PATH_GLOBALS::FREEBLISKET_PATH_G
 use crate::org::allbinary::globals::URLGLOBALS::URLGLOBALS;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::SearchParams::SearchParams;
 
 // Borrows the object of a Java reference
@@ -41,6 +42,10 @@ pub struct TableSearchRequest {
 
 
 impl TableSearchRequest {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut keywords: String, mut searchParams: Option<Rc<RefCell<SearchParams>>>, mut xslFile: String, mut contentType: String) -> Self {
@@ -101,7 +106,7 @@ impl TableSearchRequest {
 
     // throws Exception
     pub fn getXslFile(&mut self) -> String {
-        let mut path: String = format!("{}{}", format!("{}{}", URLGLOBALS::getMainPath(), jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH), self.xslFile);
+        let mut path: String = format!("{}{}", format!("{}{}", URLGLOBALS::getMainPath(), { let java_field = jcall!(FREEBLISKET_PATH_GLOBALS::getInstance()).XSLPATH.clone(); java_field }), self.xslFile);
         return path.clone();
     }
     
@@ -118,7 +123,7 @@ impl TableSearchRequest {
 
     // throws Exception
     pub fn getFileBaseNameNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        return ModDomHelper::createNameValueNodes(document.clone(), SearchData_FILENAME.with(Clone::clone).clone(), self.getFileBaseName());
+        return ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), SearchData_FILENAME.with(Clone::clone).clone(), self.getFileBaseName());
     }
 }
 

@@ -21,8 +21,6 @@ use crate::org::allbinary::business::context::modules::storefront::StoreFront::S
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use super::Serializable::Serializable;
-use super::io::io;
-use super::java::java;
 use super::PaymentGateway::PaymentGateway;
 
 // Borrows the object of a Java reference
@@ -83,7 +81,7 @@ impl PaymentGatewayPrimaryKey {
         jcall!(stringBuffer).append(jcall!(std::any::type_name::<StoreFront>()).getName());
         jcall!(stringBuffer).append(String::from(" ="));
         jcall!(stringBuffer).append(self.getStoreName());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(std::any::type_name::<PaymentGateway>()).getName());
         jcall!(stringBuffer).append(String::from("="));
         jcall!(stringBuffer).append(self.getName());

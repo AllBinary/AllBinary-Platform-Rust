@@ -29,6 +29,7 @@ use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::apache::xmlrpc::NullXmlRpcHandler::NullXmlRpcHandler;
 use crate::org::apache::xmlrpc::XmlRpcClient::XmlRpcClient;
 use crate::org::apache::xmlrpc::XmlRpcHandler::XmlRpcHandler;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -65,6 +66,10 @@ pub struct XmlRpcAbeClient {
 pub static mut XmlRpcAbeClient_isOnline: std::cell::LazyCell<bool> = std::cell::LazyCell::new(|| true);
 
 impl XmlRpcAbeClient {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut clientInfo: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut remoteMethod: String) -> Self {
@@ -94,12 +99,12 @@ impl XmlRpcAbeClient {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        this.client = crate::org::apache::xmlrpc::NullXmlRpcHandler::NullXmlRpcHandler_NULL_XML_RPC_HANDLER.with(Clone::clone).clone();
+        this.client = crate::org::apache::xmlrpc::NullXmlRpcHandler::NullXmlRpcHandler_NULL_XML_RPC_HANDLER.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn XmlRpcHandler>>);
         this.START_SERVER = String::from("Start With Server #");
         this.TRYING = String::from("Trying Server #");
-        this.SEP = jcall!(CommonLabels::getInstance()).COLON_SEP.clone();
+        this.SEP = { let java_field = jcall!(CommonLabels::getInstance()).COLON_SEP.clone(); java_field }.clone();
         this.CLIENT_INFO = String::from("Client Info: \n");
-        this.RESULT = format!("{}{}", jcall!(CommonLabels::getInstance()).RESULT_, jcall!(CommonSeps::getInstance()).NEW_LINE);
+        this.RESULT = format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).RESULT_.clone(); java_field }, { let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field });
         this.INVALID = String::from("License data is Invalid Trying Other Servers");
         this.EXCEPTION_IN_CLIENT = String::from("Exception in client");
         this.SERVER_REPORTED_ERROR = String::from("Server reported error");
@@ -111,8 +116,8 @@ impl XmlRpcAbeClient {
         this.remoteMethod = remoteMethod.clone();
         this.clientInfo = clientInfo.clone();
         if jcall!(clientInfo).getNumberOfLicenseServers() > 1 {
-            this.maxServers = jcall!(clientInfo).getNumberOfLicenseServers() - 2;
-            this.start = jcall!(this.myRandomFactory).getAbsoluteNextInt(this.maxServers.clone()) + 1;
+            this.maxServers = { let java_value = (jcall!(clientInfo).getNumberOfLicenseServers() - 2).clone(); java_value };
+            this.start = { let java_value = (jcall!(this.myRandomFactory).getAbsoluteNextInt(this.maxServers.clone()) + 1).clone(); java_value };
         } else if jcall!(clientInfo).getNumberOfLicenseServers() == 1 {
             this.maxServers = 0;
             this.start = 0;
@@ -123,8 +128,8 @@ impl XmlRpcAbeClient {
         jcall!(stringBuffer).append(this.START_SERVER.clone());
         jcall!(stringBuffer).appendint(this.getServer());
         jcall!(stringBuffer).append(this.SEP.clone());
-        jcall!(stringBuffer).append(jcall!(clientInfo).getLicenseServer(this.getServer()));
-        { let java_receiver = this.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        jcall!(stringBuffer).append({ let java_argument = jcall!(clientInfo).getLicenseServer(this.getServer()); java_argument });
+        { let java_receiver = this.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         this
     }
 
@@ -135,8 +140,8 @@ impl XmlRpcAbeClient {
 
     // throws Exception
     pub fn get(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        ForcedLogUtil::log(jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
-        return jcall!(NullUtil::getInstance()).NULL_OBJECT.clone();
+        ForcedLogUtil::log({ let java_field = jcall!(self.commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        return { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone();
     }
     
 
@@ -167,7 +172,7 @@ impl XmlRpcAbeClient {
     
 
     pub fn setClient(&mut self, mut client: Option<Rc<RefCell<dyn crate::org::apache::xmlrpc::XmlRpcClient::XmlRpcClientDyn>>>) {
-        self.client = client.clone();
+        self.client = client.clone().map(|reference| reference as Rc<RefCell<dyn XmlRpcHandler>>);
     }
     
 
@@ -215,7 +220,7 @@ impl XmlRpcAbeClient {
         return self.remoteMethod.clone();
     }
 }
-pub trait XmlRpcAbeClientDyn {
+pub trait XmlRpcAbeClientDyn: std::any::Any {
     fn as_XmlRpcAbeClient(&self) -> &XmlRpcAbeClient;
     fn as_XmlRpcAbeClient_mut(&mut self) -> &mut XmlRpcAbeClient;
     fn get(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { XmlRpcAbeClient::get(self.as_XmlRpcAbeClient_mut(), anyType) }

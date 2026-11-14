@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::BaseSoundsFactory::BaseSoundsFactory;
 use super::Sound::Sound;
 
@@ -51,8 +52,8 @@ impl EarlySoundsFactory {
     pub fn getSoundInterfaceArray(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>> {
         let mut soundInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>> = vec![None; (2) as usize];
         let mut index: i32 = 0;
-        soundInterfaceArray[({ let value = index; index += 1; value }) as usize] = SelectSound::SelectSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>);
-        soundInterfaceArray[({ let value = index; index += 1; value }) as usize] = ErrorSound::ErrorSound::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>);
+        soundInterfaceArray[({ let value = index; index += 1; value }) as usize] = SelectSound::SelectSound::getInstance();
+        soundInterfaceArray[({ let value = index; index += 1; value }) as usize] = ErrorSound::ErrorSound::getInstance();
         return soundInterfaceArray.clone();
     }
     
@@ -72,7 +73,12 @@ impl std::ops::DerefMut for EarlySoundsFactory {
 impl crate::org::allbinary::media::audio::BaseSoundsFactory::BaseSoundsFactoryDyn for EarlySoundsFactory {
     fn as_BaseSoundsFactory(&self) -> &crate::org::allbinary::media::audio::BaseSoundsFactory::BaseSoundsFactory { &self.base }
     fn as_BaseSoundsFactory_mut(&mut self) -> &mut crate::org::allbinary::media::audio::BaseSoundsFactory::BaseSoundsFactory { &mut self.base }
+}
+impl crate::org::allbinary::media::audio::SoundsFactoryInterface::SoundsFactoryInterface for EarlySoundsFactory {
+    fn init(&mut self) { crate::org::allbinary::media::audio::BaseSoundsFactory::BaseSoundsFactory::init(crate::org::allbinary::media::audio::BaseSoundsFactory::BaseSoundsFactoryDyn::as_BaseSoundsFactory_mut(self)) }
     fn getSoundInterfaceArray(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>> { Self::getSoundInterfaceArray(self) }
+    fn setInitialized(&mut self, p1: bool) { crate::org::allbinary::media::audio::BaseSoundsFactory::BaseSoundsFactory::setInitialized(crate::org::allbinary::media::audio::BaseSoundsFactory::BaseSoundsFactoryDyn::as_BaseSoundsFactory_mut(self), p1) }
+    fn isInitialized(&mut self) -> bool { crate::org::allbinary::media::audio::BaseSoundsFactory::BaseSoundsFactory::isInitialized(crate::org::allbinary::media::audio::BaseSoundsFactory::BaseSoundsFactoryDyn::as_BaseSoundsFactory_mut(self)) }
 }
 
 

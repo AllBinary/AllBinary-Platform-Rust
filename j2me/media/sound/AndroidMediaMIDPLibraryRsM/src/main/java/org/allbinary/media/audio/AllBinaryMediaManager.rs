@@ -17,10 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::IOException::IOException;
-// use crate::java::io::InputStream::InputStream;
-// use crate::javax::microedition::media::MediaException::MediaException;
-// use crate::javax::microedition::media::Player::Player;
+use crate::java::io::IOException::IOException;
+use crate::java::io::InputStream::InputStream;
+use crate::javax::microedition::media::MediaException::MediaException;
+use crate::javax::microedition::media::Player::Player;
 use crate::org::allbinary::TsUtil::TsUtil;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::game::configuration::feature::GameFeatureFactory::GameFeatureFactory;
@@ -29,6 +29,7 @@ use crate::org::allbinary::logic::ABSystemWrapper::ABSystemWrapper;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::Sounds::Sounds;
 use super::SoundsFactoryInterface::SoundsFactoryInterface;
 use super::Sound::Sound;
@@ -50,6 +51,10 @@ thread_local! { pub static AllBinaryMediaManager_THIS: String = String::from("Al
 pub static mut AllBinaryMediaManager_mostUsedTotal: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 0);
 
 impl AllBinaryMediaManager {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -81,12 +86,12 @@ impl AllBinaryMediaManager {
     pub fn init(mut soundsFactoryInterface: Option<Rc<RefCell<dyn SoundsFactoryInterface>>>) {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut commonString: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(logUtil).putF(jcall!(commonString).START.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), jcall!(commonString).INIT.clone());
+        jcall!(logUtil).putF({ let java_field = jcall!(commonString).START.clone(); java_field }.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), { let java_field = jcall!(commonString).INIT.clone(); java_field }.clone());
         AllBinaryMediaManager::shutdown(soundsFactoryInterface.clone());
         jcall!(ProgressCanvasFactory::getInstance()).addNormalPortion(50, String::from("Media Manager"));
         jcall!(TsUtil::getInstance()).gc();
         jcall!(Sounds::new(soundsFactoryInterface.clone())).init();
-        jcall!(logUtil).putF(jcall!(commonString).END.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), jcall!(commonString).INIT.clone());
+        jcall!(logUtil).putF({ let java_field = jcall!(commonString).END.clone(); java_field }.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), { let java_field = jcall!(commonString).INIT.clone(); java_field }.clone());
     }
     
 
@@ -94,20 +99,20 @@ impl AllBinaryMediaManager {
     pub fn shutdown(mut soundsFactoryInterface: Option<Rc<RefCell<dyn SoundsFactoryInterface>>>) {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut commonString: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(logUtil).putF(jcall!(commonString).START.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), String::from("shutdown"));
+        jcall!(logUtil).putF({ let java_field = jcall!(commonString).START.clone(); java_field }.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), String::from("shutdown"));
         if jcall!(soundsFactoryInterface).isInitialized() {
             jcall!(Sounds::new(soundsFactoryInterface.clone())).stopAll();
             let mut soundInterfaceArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>> = jcall!(soundsFactoryInterface).getSoundInterfaceArray();
-            let mut player: Option<Rc<RefCell<Player>>> = None;
-            let mut player2: Option<Rc<RefCell<Player>>> = None;
+            let mut player: Option<Rc<RefCell<dyn Player>>> = None;
+            let mut player2: Option<Rc<RefCell<dyn Player>>> = None;
             let mut androidMediaPlayerWrapper: Option<Rc<RefCell<AndroidMediaPlayerWrapper>>> = None;
             for i in (0..(soundInterfaceArray.len() as i32)) {
                 if soundInterfaceArray[(i) as usize].is_some() {
-                    player = jcall!(soundInterfaceArray[(i) as usize]).getPlayerP();
+                    player = { let java_value = (jcall!(soundInterfaceArray[(i) as usize]).as_Sound_mut().getPlayerP()).clone(); java_value };
                     if player.is_some() {
-                        player2 = jcall!(((player).clone() /* as PlayerComposite */)).getPlayerP();
+                        player2 = { let java_value = (jcall!(((player).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<PlayerComposite>() }, "ClassCastException: not a PlayerComposite"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<PlayerComposite>) } }))).getPlayerP()).clone(); java_value };
                         if (player2).is_some() /* instanceof AndroidMediaPlayerWrapper */ {
-                            androidMediaPlayerWrapper = (player2).clone() /* as AndroidMediaPlayerWrapper */;
+                            androidMediaPlayerWrapper = (player2).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<AndroidMediaPlayerWrapper>() }, "ClassCastException: not a AndroidMediaPlayerWrapper"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<AndroidMediaPlayerWrapper>) } });
                             jcall!(MediaPlayerUtil::MediaPlayerUtil::getInstance()).waitForMediaPlayer(jcall!(androidMediaPlayerWrapper).getMediaPlayer());
                         } else {
                             panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Unknown Property Player: "), std::any::type_name_of_val(&player).to_string()))));
@@ -120,34 +125,36 @@ impl AllBinaryMediaManager {
             jcall!(soundsFactoryInterface).setInitialized(false);
             unsafe { *AllBinaryMediaManager_mostUsedTotal = 0 };
         }
-        jcall!(logUtil).putF(jcall!(commonString).START.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), String::from("shutdown"));
+        jcall!(logUtil).putF({ let java_field = jcall!(commonString).START.clone(); java_field }.clone(), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), String::from("shutdown"));
     }
     
 
     // throws Exception
-    pub fn createPlayer(mut resource: String) -> Option<Rc<RefCell<Player>>> {
+    pub fn createPlayer(mut resource: String) -> Option<Rc<RefCell<dyn Player>>> {
         unsafe { *AllBinaryMediaManager_mostUsedTotal += 1 };
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-        if jcall!(Features::getInstance()).isFeature(jcall!(GameFeatureFactory::getInstance()).SOUND.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                return AndroidMediaPlayerWrapper::new(resource.clone());
+        if jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(GameFeatureFactory::getInstance()).SOUND.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                return Some(AndroidMediaPlayerWrapper::new(resource.clone()).map(|reference| reference as Rc<RefCell<dyn Player>>).map(|reference| reference as Rc<RefCell<dyn Player>>));
             })) {
-                Ok(java_return) => return java_return,
+                Ok(java_return) => java_return,
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                jcall!(logUtil).put(format!("{}{}", format!("{}{}", String::from("Could not create AndroidMediaPlayerWrapper using NoPlayer at "), jcall!(CommonLabels::getInstance()).TOTAL_LABEL), unsafe { AllBinaryMediaManager_mostUsedTotal.clone() }), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), String::from("createPlayer"), crate::java_into_object(e.clone()));
-                return NoPlayer_NO_PLAYER.with(Clone::clone).clone();
+                jcall!(logUtil).put(format!("{}{}", format!("{}{}", String::from("Could not create AndroidMediaPlayerWrapper using NoPlayer at "), { let java_field = jcall!(CommonLabels::getInstance()).TOTAL_LABEL.clone(); java_field }), unsafe { AllBinaryMediaManager_mostUsedTotal.clone() }), crate::java_into_object(AllBinaryMediaManager_THIS.with(Clone::clone).clone()), String::from("createPlayer"), crate::java_into_object(e.clone()));
+                return NoPlayer_NO_PLAYER.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn Player>>);
+                None
                 }
-            }
+            };
+        if let Some(java_return) = java_try_result { return java_return; }
         } else {
-            return NoPlayer_NO_PLAYER.with(Clone::clone).clone();
+            return NoPlayer_NO_PLAYER.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn Player>>);
         }
     }
     
 
     // throws IOException, MediaException
-    pub fn createPlayerFromInputStream(mut stream: Option<Rc<RefCell<InputStream>>>, mut r#type: String) -> Option<Rc<RefCell<Player>>> {
+    pub fn createPlayerFromInputStream(mut stream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>>, mut r#type: String) -> Option<Rc<RefCell<dyn Player>>> {
         panic!("{:?}", format!("{}: {:?}", "MediaException", (String::from("No Input Stream Player"))));
     }
     

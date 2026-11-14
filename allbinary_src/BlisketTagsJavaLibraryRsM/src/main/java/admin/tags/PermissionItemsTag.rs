@@ -40,8 +40,8 @@ impl PermissionItemsTag {
         let mut this = Self {
             base: TableTag::new_struct(),
         };
-        this.setTagHelperFactory(PermissionItemsHelperFactory::new());
-        this.setTagRequestHelperFactory(PermissionItemsRequestHelperFactory::new());
+        this.setTagHelperFactory(PermissionItemsHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(PermissionItemsRequestHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 

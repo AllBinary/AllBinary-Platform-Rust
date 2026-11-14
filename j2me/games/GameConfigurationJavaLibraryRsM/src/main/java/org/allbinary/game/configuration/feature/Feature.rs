@@ -32,7 +32,7 @@ pub struct Feature {
     pub name: String,
 }
 
-pub static mut Feature_hashtable: std::cell::LazyCell<Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashtable());
+pub static mut Feature_hashtable: std::cell::LazyCell<Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashtable());
 
 impl Feature {
     
@@ -46,9 +46,9 @@ impl Feature {
     }
 
     pub fn new(mut name: String) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(name))));
-            Feature::add(name.clone(), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
-            jcall!(ChangedGameFeatureListener::getInstance()).add((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(name.clone()))));
+            Feature::add(name.clone(), this.clone().map(|reference| reference as Rc<RefCell<dyn FeatureDyn>>));
+            jcall!(ChangedGameFeatureListener::getInstance()).add(this.clone().map(|reference| reference as Rc<RefCell<dyn FeatureDyn>>));
         this
     }
     
@@ -72,7 +72,7 @@ impl Feature {
         return self.name.clone();
     }
 }
-pub trait FeatureDyn {
+pub trait FeatureDyn: std::any::Any {
     fn as_Feature(&self) -> &Feature;
     fn as_Feature_mut(&mut self) -> &mut Feature;
     fn toString(&mut self) -> String { Feature::toString(self.as_Feature_mut()) }

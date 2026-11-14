@@ -17,8 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactory;
+use crate::java::lang::Exception::*;
 use super::AllBinaryAndroidImageRotationAnimationFactory::AllBinaryAndroidImageRotationAnimationFactory;
 
 // Borrows the object of a Java reference
@@ -32,13 +33,17 @@ pub struct AllBinaryPlatformImageRotationAnimationFactory {
     pub base: AllBinaryAndroidImageRotationAnimationFactory,
 }
 
+impl crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface for AllBinaryPlatformImageRotationAnimationFactory {
+    fn getInstance(&mut self, p1: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { crate::org::allbinary::animation::image::AllBinaryAndroidImageRotationAnimationFactory::AllBinaryAndroidImageRotationAnimationFactory::getInstance(crate::org::allbinary::animation::image::AllBinaryAndroidImageRotationAnimationFactory::AllBinaryAndroidImageRotationAnimationFactoryDyn::as_AllBinaryAndroidImageRotationAnimationFactory_mut(self), p1) }
+    fn setInitialScale(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::media::ScaleProperties::ScaleProperties>>>) { crate::org::allbinary::animation::image::BaseImageAnimationFactory::BaseImageAnimationFactory::setInitialScale(crate::org::allbinary::animation::image::BaseImageAnimationFactory::BaseImageAnimationFactoryDyn::as_BaseImageAnimationFactory_mut(self), p1) }
+}
 impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface for AllBinaryPlatformImageRotationAnimationFactory {
 }
 
 impl AllBinaryPlatformImageRotationAnimationFactory {
     
 
-    pub fn new_struct(mut image: Option<Rc<RefCell<Image>>>, mut width: i32, mut height: i32, mut angleIncrement: i16, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>, mut resizeCanvasForRotation: bool) -> Self {
+    pub fn new_struct(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut width: i32, mut height: i32, mut angleIncrement: i16, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>, mut resizeCanvasForRotation: bool) -> Self {
         let mut this = Self {
             base: AllBinaryAndroidImageRotationAnimationFactory::new_struct(image.clone(), width.clone(), height.clone(), angleIncrement.clone(), animationBehaviorFactory.clone(), resizeCanvasForRotation.clone()),
         };
@@ -46,7 +51,7 @@ impl AllBinaryPlatformImageRotationAnimationFactory {
         this
     }
 
-    pub fn new(mut image: Option<Rc<RefCell<Image>>>, mut width: i32, mut height: i32, mut angleIncrement: i16, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>, mut resizeCanvasForRotation: bool) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut width: i32, mut height: i32, mut angleIncrement: i16, mut animationBehaviorFactory: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehaviorFactory::AnimationBehaviorFactoryDyn>>>, mut resizeCanvasForRotation: bool) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(image, width, height, angleIncrement, animationBehaviorFactory, resizeCanvasForRotation))))
     }
 }

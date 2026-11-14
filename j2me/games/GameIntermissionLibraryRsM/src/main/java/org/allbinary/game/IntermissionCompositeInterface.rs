@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait IntermissionCompositeInterface {
+pub trait IntermissionCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getStartIntermissionInterface(&mut self) -> Option<Rc<RefCell<dyn IntermissionInterface>>>;
     
 
     fn getEndLevelIntermissionInterface(&mut self) -> Option<Rc<RefCell<dyn IntermissionInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

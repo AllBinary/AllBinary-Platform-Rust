@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::game::input::GameInputStrings::GameInputStrings;
 use crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent;
 use crate::org::allbinary::graphics::GPoint::GPoint;
@@ -32,6 +32,7 @@ use crate::org::allbinary::math::RectangleCollisionUtil::RectangleCollisionUtil;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::BasicMenuInputProcessor::BasicMenuInputProcessor;
 use super::AllBinaryGameCanvas::AllBinaryGameCanvas;
 
@@ -50,7 +51,23 @@ pub struct PopupMenuInputProcessor {
     pub rectangle: Option<Rc<RefCell<Rectangle>>>,
 }
 
+impl crate::org::allbinary::game::input::event::DownGameKeyEventListenerInterface::DownGameKeyEventListenerInterface for PopupMenuInputProcessor {
+    fn onDownGameKeyEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onDownGameKeyEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
+}
 impl crate::org::allbinary::game::input::event::GameKeyEventListenerInterface::GameKeyEventListenerInterface for PopupMenuInputProcessor {
+}
+impl crate::org::allbinary::game::input::event::PressGameKeyEventListenerInterface::PressGameKeyEventListenerInterface for PopupMenuInputProcessor {
+    fn onPressGameKeyEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onPressGameKeyEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
+}
+impl crate::org::allbinary::game::input::event::UpGameKeyEventListenerInterface::UpGameKeyEventListenerInterface for PopupMenuInputProcessor {
+    fn onUpGameKeyEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onUpGameKeyEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
+}
+impl crate::org::allbinary::input::motion::gesture::observer::BaseMotionGestureEventListener::BaseMotionGestureEventListener for PopupMenuInputProcessor {
+    fn onMotionGestureEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::input::motion::gesture::observer::MotionGestureEvent::MotionGestureEvent>>>) { crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessor::onMotionGestureEvent(crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn::as_BasicMenuInputProcessor_mut(self), p1) }
+    fn onScrolledMotionGestureEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::input::motion::gesture::observer::MotionGestureEvent::MotionGestureEvent>>>) { crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessor::onScrolledMotionGestureEvent(crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn::as_BasicMenuInputProcessor_mut(self), p1) }
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for PopupMenuInputProcessor {
+    fn onEvent(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
 }
 
 impl PopupMenuInputProcessor {
@@ -58,7 +75,7 @@ impl PopupMenuInputProcessor {
 
     pub fn new_struct(mut gameKeyEventList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut playerInputId: i32, mut gameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn>>>, mut rectangle: Option<Rc<RefCell<Rectangle>>>) -> Self {
         let mut this = Self {
-            base: BasicMenuInputProcessor::new_struct(gameKeyEventList.clone(), playerInputId.clone(), gameCanvas.clone()),
+            base: BasicMenuInputProcessor::new_struct(gameKeyEventList.clone(), playerInputId.clone(), gameCanvas.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>)),
             rectangleCollisionUtil: None,
             CLICK_DELAY: 0,
             clickTimeHelper: None,
@@ -84,9 +101,9 @@ impl PopupMenuInputProcessor {
 
     // throws Exception
     pub fn processInput(&mut self, mut key: i32) -> i32 {
-        if key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_STAR.clone() } {
-            let mut gameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>> = (self.getCanvas()).clone() /* as AllBinaryGameCanvas */;
-            jcall!(gameCanvas).as_MyCanvas_mut().toggleMenu();
+        if key == crate::javax::microedition::lcdui::Canvas::Canvas_KEY_STAR.with(Clone::clone) {
+            let mut gameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>> { panic!("ClassCastException: a Rust dyn MyCanvas cannot be cast to AllBinaryGameCanvas") })();
+            jcall!(gameCanvas).as_AllBinaryGameCanvas_mut().toggleMenu();
             return 1;
         }
         return 0;
@@ -95,16 +112,16 @@ impl PopupMenuInputProcessor {
 
     // throws Exception
     pub fn processInputList(&mut self) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut motionInputsIndex: i32 = self.processMotionInputs();
             let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getGameKeyEventList();
             let mut size: i32 = jcall!(list).size();
             let mut key: i32 = 0;
             let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = None;
             for index in (0..size) {
-                gameKeyEvent = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameKeyEvent>>>>().expect("ClassCastException").clone()) };
+                gameKeyEvent = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameKeyEvent>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 if gameKeyEvent.is_some() {
-                    key = jcall!(gameKeyEvent).getKey();
+                    key = { let java_value = (jcall!(gameKeyEvent).getKey()).clone(); java_value };
                     if self.processInput(key.clone()) == 1 {
                         break;
                     }
@@ -112,19 +129,20 @@ impl PopupMenuInputProcessor {
             }
             self.clear();
             if size > 0 || motionInputsIndex >= 0 {
-                return 1;
+                return Some(1);
             } else {
-                return -1;
-            }
+                return Some(-1);
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(GameInputStrings::getInstance()).PROCESS_INPUT.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(GameInputStrings::getInstance()).PROCESS_INPUT.clone(); java_field }.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
             return -1;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -143,18 +161,18 @@ impl PopupMenuInputProcessor {
     // throws Exception
     pub fn processMotionInput(&mut self, mut motionGestureEvent: Option<Rc<RefCell<MotionGestureEvent>>>) {
         if motionGestureEvent.is_none() {
-            jcall!(self.logUtil).putF(String::from("Exception: Bug"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).PROCESS_MOTION_INPUT.clone());
+            jcall!(self.logUtil).putF(String::from("Exception: Bug"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).PROCESS_MOTION_INPUT.clone(); java_field }.clone());
             return;
         }
         let mut touchMotionGestureFactory: Option<Rc<RefCell<TouchMotionGestureFactory>>> = TouchMotionGestureFactory::getInstance();
         let mut motionGestureInput: Option<Rc<RefCell<MotionGestureInput>>> = jcall!(motionGestureEvent).getMotionGesture();
-        if match (&motionGestureInput, &jcall!(touchMotionGestureFactory).RELEASED) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&motionGestureInput, &{ let java_field = jcall!(touchMotionGestureFactory).RELEASED.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(motionGestureEvent).getCurrentPoint();
             let mut rectPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(self.rectangle).getPoint();
             if { let java_receiver = self.rectangleCollisionUtil.clone(); let java_arguments = (jcall!(rectPoint).getX(), jcall!(rectPoint).getY(), jcall!(self.rectangle).getMaxX() + 20, jcall!(self.rectangle).getMaxY(), jcall!(point).getX(), jcall!(point).getY(),); let java_result = jcall!(java_receiver).isInside(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5); java_result } {
                 if jcall!(self.clickTimeHelper).isTimeTNT() {
-                    let mut gameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>> = (self.getCanvas()).clone() /* as AllBinaryGameCanvas */;
-                    jcall!(gameCanvas).as_MyCanvas_mut().toggleMenu();
+                    let mut gameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>> { panic!("ClassCastException: a Rust dyn MyCanvas cannot be cast to AllBinaryGameCanvas") })();
+                    jcall!(gameCanvas).as_AllBinaryGameCanvas_mut().toggleMenu();
                 }
             }
         }

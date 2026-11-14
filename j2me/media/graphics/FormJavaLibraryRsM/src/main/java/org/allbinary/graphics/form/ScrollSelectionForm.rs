@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::GPoint::GPoint;
 use crate::org::allbinary::graphics::Rectangle::Rectangle;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
@@ -32,6 +32,7 @@ use crate::org::allbinary::math::RectangleCollisionUtil::RectangleCollisionUtil;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::PaintableForm::PaintableForm;
 use super::ItemPaintableFactory::ItemPaintableFactory;
 use super::ItemIndexPaintable::ItemIndexPaintable;
@@ -65,8 +66,8 @@ pub struct ScrollSelectionForm {
     pub adjustedExtraBorder: i32,
 }
 
-pub static mut ScrollSelectionForm_NULL_SCROLL_SELECTION_FORM: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
-pub static mut ScrollSelectionForm_NULL_SCROLL_SELECTION_HORIZONTAL_FORM: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut ScrollSelectionForm_NULL_SCROLL_SELECTION_FORM: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
+pub static mut ScrollSelectionForm_NULL_SCROLL_SELECTION_HORIZONTAL_FORM: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 thread_local! { pub static ScrollSelectionForm_INSIDE_FORM: String = String::from(" inside form"); }
 thread_local! { pub static ScrollSelectionForm_IS_IN_FORM: String = String::from("isInForm"); }
 thread_local! { pub static ScrollSelectionForm_GET_SELECTED_INDEX: String = String::from("getSelectedIndexForPoint"); }
@@ -75,42 +76,43 @@ impl ScrollSelectionForm {
     
 
     pub fn createForm(mut title: String, mut items: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>>, mut formPaintableFactory: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemPaintableFactory::ItemPaintableFactoryDyn>>>, mut border: i32, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::PaintableForm::PaintableFormDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if match (&formPaintableFactory, &ItemPaintableFactory::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                return ScrollSelectionForm::new(title.clone(), items.clone(), formPaintableFactory.clone(), border.clone(), -3, backgroundBasicColor.clone(), foregroundBasicColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::PaintableForm::PaintableFormDyn>>);
+                return Some(ScrollSelectionForm::new(title.clone(), items.clone(), formPaintableFactory.clone(), border.clone(), -3, backgroundBasicColor.clone(), foregroundBasicColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::PaintableForm::PaintableFormDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::PaintableForm::PaintableFormDyn>>));
             } else {
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
                 let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-                jcall!(logUtil).putF(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(logUtil.clone()), jcall!(commonStrings).EXCEPTION.clone());
-                return PaintableForm::getNullPaintableForm();
-            }
+                jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(logUtil.clone()), { let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone());
+                return Some(PaintableForm::getNullPaintableForm());
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
             let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-            jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(logUtil.clone()), jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(e.clone()));
+            jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(logUtil.clone()), { let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             return PaintableForm::getNullPaintableForm();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn getNullScrollSelectionForm() -> Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>> {
-        if match (&unsafe { ScrollSelectionForm_NULL_SCROLL_SELECTION_FORM.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *ScrollSelectionForm_NULL_SCROLL_SELECTION_FORM = ScrollSelectionForm::createForm(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), vec![None; (0) as usize], ItemPaintableFactory::getInstance(), 0, jcall!(BasicColorFactory::getInstance()).BLACK.clone(), jcall!(BasicColorFactory::getInstance()).WHITE.clone()) };
+        if match (&unsafe { ScrollSelectionForm_NULL_SCROLL_SELECTION_FORM.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *ScrollSelectionForm_NULL_SCROLL_SELECTION_FORM = crate::java_into_object(ScrollSelectionForm::createForm({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), vec![None; (0) as usize], ItemPaintableFactory::getInstance(), 0, { let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone())) };
         }
-        return (unsafe { ScrollSelectionForm_NULL_SCROLL_SELECTION_FORM.clone() }).clone() /* as ScrollSelectionForm */;
+        return { let java_object = (unsafe { ScrollSelectionForm_NULL_SCROLL_SELECTION_FORM.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getNullScrollSelectionFormHorizontal() -> Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>> {
-        if match (&unsafe { ScrollSelectionForm_NULL_SCROLL_SELECTION_HORIZONTAL_FORM.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *ScrollSelectionForm_NULL_SCROLL_SELECTION_HORIZONTAL_FORM = ScrollSelectionForm::createForm(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), vec![None; (0) as usize], ItemPaintableFactory::getInstance(), 0, jcall!(BasicColorFactory::getInstance()).BLACK.clone(), jcall!(BasicColorFactory::getInstance()).WHITE.clone()) };
+        if match (&unsafe { ScrollSelectionForm_NULL_SCROLL_SELECTION_HORIZONTAL_FORM.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *ScrollSelectionForm_NULL_SCROLL_SELECTION_HORIZONTAL_FORM = crate::java_into_object(ScrollSelectionForm::createForm({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), vec![None; (0) as usize], ItemPaintableFactory::getInstance(), 0, { let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone())) };
         }
-        return (unsafe { ScrollSelectionForm_NULL_SCROLL_SELECTION_HORIZONTAL_FORM.clone() }).clone() /* as ScrollSelectionForm */;
+        return { let java_object = (unsafe { ScrollSelectionForm_NULL_SCROLL_SELECTION_HORIZONTAL_FORM.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -129,7 +131,7 @@ impl ScrollSelectionForm {
         this.rectangleCollisionUtil = RectangleCollisionUtil::getInstance();
         this.scrollSelectionFormFormTypeItemIndexPaintable = ItemIndexPaintable::getInstance();
         this.formTypeItemIndexDx = ItemIndexDx::getInstance();
-        this.paintable = ItemPaintableFactory::getInstance();
+        this.paintable = ItemPaintableFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemPaintable::ItemPaintableDyn>>);
         // super(...) is in the struct literal above
         this.adjustedExtraBorder = adjustedExtraBorder.clone();
         this.buttonBasicColor = foregroundBasicColor.clone();
@@ -139,45 +141,45 @@ impl ScrollSelectionForm {
     }
 
     pub fn new(mut title: String, mut items: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>>, mut formPaintableFactory: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemPaintableFactory::ItemPaintableFactoryDyn>>>, mut border: i32, mut adjustedExtraBorder: i32, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(title, items, formPaintableFactory, border, adjustedExtraBorder, backgroundBasicColor, foregroundBasicColor))));
-            this.paintable = jcall!(formPaintableFactory).getInstanceItemPaintable((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(title.clone(), items.clone(), formPaintableFactory.clone(), border.clone(), adjustedExtraBorder.clone(), backgroundBasicColor.clone(), foregroundBasicColor.clone()))));
+            jcall!(this).paintable = { let java_value = (jcall!(formPaintableFactory).getInstanceItemPaintable(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::PaintableForm::PaintableFormDyn>>))).clone(); java_value };
         this
     }
     
 
     // throws Exception
     pub fn init(&mut self, mut rectangle: Option<Rc<RefCell<Rectangle>>>, mut formType: Option<Rc<RefCell<FormType>>>) {
-        self.base.init(rectangle.clone(), formType.clone());
+        { let java_arguments = (rectangle.clone(), formType.clone(),); self.base.init(java_arguments.0, java_arguments.1) };
         let mut formTypeFactory: Option<Rc<RefCell<FormTypeFactory>>> = FormTypeFactory::getInstance();
-        if match (&formType, &jcall!(formTypeFactory).HORIZONTAL_FORM) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            self.scrollSelectionFormFormTypeItemIndexPaintable = ScrollSelectionFormHorizontalPaintable::new(None /* Java this: a &mut self method has no Rc of itself */);
-            self.formTypeItemIndexDx = ScrollSelectionFormHorizontalDx::new(None /* Java this: a &mut self method has no Rc of itself */);
-        } else if match (&formType, &jcall!(formTypeFactory).VERTICAL_CENTER_FORM) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            self.scrollSelectionFormFormTypeItemIndexPaintable = ScrollSelectionFormVerticalPaintable::new(None /* Java this: a &mut self method has no Rc of itself */);
-            self.formTypeItemIndexDx = ScrollSelectionFormVericalDx::new(None /* Java this: a &mut self method has no Rc of itself */);
-        } else if match (&formType, &jcall!(formTypeFactory).TEMP_HORIZONTAL_FORM) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            self.scrollSelectionFormFormTypeItemIndexPaintable = ScrollSelectionFormTempHorizontalPaintable::new(None /* Java this: a &mut self method has no Rc of itself */);
-            self.formTypeItemIndexDx = ScrollSelectionFormTempHorizontalDx::new(None /* Java this: a &mut self method has no Rc of itself */);
-        } else if match (&formType, &jcall!(formTypeFactory).NULL_FORM_TYPE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&formType, &{ let java_field = jcall!(formTypeFactory).HORIZONTAL_FORM.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            self.scrollSelectionFormFormTypeItemIndexPaintable = ScrollSelectionFormHorizontalPaintable::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemIndexPaintable::ItemIndexPaintableDyn>>);
+            self.formTypeItemIndexDx = ScrollSelectionFormHorizontalDx::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemIndexDx::ItemIndexDxDyn>>);
+        } else if match (&formType, &{ let java_field = jcall!(formTypeFactory).VERTICAL_CENTER_FORM.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            self.scrollSelectionFormFormTypeItemIndexPaintable = ScrollSelectionFormVerticalPaintable::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemIndexPaintable::ItemIndexPaintableDyn>>);
+            self.formTypeItemIndexDx = ScrollSelectionFormVericalDx::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemIndexDx::ItemIndexDxDyn>>);
+        } else if match (&formType, &{ let java_field = jcall!(formTypeFactory).TEMP_HORIZONTAL_FORM.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            self.scrollSelectionFormFormTypeItemIndexPaintable = ScrollSelectionFormTempHorizontalPaintable::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemIndexPaintable::ItemIndexPaintableDyn>>);
+            self.formTypeItemIndexDx = ScrollSelectionFormTempHorizontalDx::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::ItemIndexDx::ItemIndexDxDyn>>);
+        } else if match (&formType, &{ let java_field = jcall!(formTypeFactory).NULL_FORM_TYPE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
         } else {
-            panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(formTypeFactory).UNK.clone())));
+            panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(formTypeFactory).UNK.clone(); java_field }.clone())));
         }
     }
     
 
-    pub fn paintItemHorizontal(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 {
+    pub fn paintItemHorizontal(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 {
         let mut width: i32 = jcall!(item).getMinimumWidth();
         return x + width + self.border;
     }
     
 
-    pub fn paintItemVertical(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 {
+    pub fn paintItemVertical(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 {
         let mut height: i32 = jcall!(item).getMinimumHeight();
         return y + height + self.border;
     }
     
 
-    pub fn paintItemTempHorizontal(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 {
+    pub fn paintItemTempHorizontal(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 {
         return 0;
     }
     
@@ -198,7 +200,7 @@ impl ScrollSelectionForm {
     
 
     pub fn append(&mut self, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) -> i32 {
-        return self.base.append(item.clone());
+        return { let java_arguments = (item.clone(),); self.base.append(java_arguments.0) };
     }
     
 
@@ -218,7 +220,7 @@ impl ScrollSelectionForm {
         let mut nextItem: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>> = None;
         let mut size: i32 = self.size();
         for index in (0..size) {
-            nextItem = (self.get(index.clone())).clone() /* as ABCustomItem */;
+            nextItem = (self.get(index.clone())).clone();
             if match (&nextItem, &item) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 return index.clone();
             }
@@ -241,10 +243,10 @@ impl ScrollSelectionForm {
         let mut formTypeFactory: Option<Rc<RefCell<FormTypeFactory>>> = FormTypeFactory::getInstance();
         let mut commonLabels: Option<Rc<RefCell<CommonLabels>>> = CommonLabels::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(jcall!(commonLabels).START_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonLabels).START_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(start.clone());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(commonLabels).TOTAL_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonLabels).TOTAL_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(size.clone());
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), ScrollSelectionForm_GET_SELECTED_INDEX.with(Clone::clone).clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>> = None;
@@ -253,32 +255,32 @@ impl ScrollSelectionForm {
         let mut diffX: i32 = 0;
         for index in (start..size) {
             item = self.get(index.clone());
-            width = jcall!(item).getMinimumWidth();
-            height = jcall!(item).getMinimumHeight();
-            diffX = jcall!(self.formTypeItemIndexDx).getDx(index.clone(), item.clone(), dx.clone(), dy.clone());
+            width = { let java_value = (jcall!(item).getMinimumWidth()).clone(); java_value };
+            height = { let java_value = (jcall!(item).getMinimumHeight()).clone(); java_value };
+            diffX = { let java_value = (jcall!(self.formTypeItemIndexDx).getDx(index.clone(), item.clone(), dx.clone(), dy.clone())).clone(); java_value };
             if { let java_receiver = self.rectangleCollisionUtil.clone(); let java_arguments = (diffX.clone(), dy - self.halfBorder, diffX + width + self.border, dy + height + self.halfBorder + 1, jcall!(point).getX(), jcall!(point).getY(),); let java_result = jcall!(java_receiver).isInside(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5); java_result } {
                 jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
-                jcall!(stringBuffer).append(jcall!(commonLabels).ITEM_LABEL.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(commonLabels).ITEM_LABEL.clone(); java_field }.clone());
                 jcall!(stringBuffer).append(jcall!(item).getLabel());
-                jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-                jcall!(stringBuffer).append(jcall!(commonLabels).INDEX_LABEL.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(commonLabels).INDEX_LABEL.clone(); java_field }.clone());
                 jcall!(stringBuffer).appendint(index.clone());
                 { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), ScrollSelectionForm_GET_SELECTED_INDEX.with(Clone::clone).clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 return index.clone();
             }
-            if match (&self.formType, &jcall!(formTypeFactory).HORIZONTAL_FORM) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if match (&self.formType, &{ let java_field = jcall!(formTypeFactory).HORIZONTAL_FORM.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 dx = dx + width + self.border;
                 if dx > jcall!(self.rectangle).getMaxX() {
                     break;
                 }
-            } else if match (&self.formType, &jcall!(formTypeFactory).VERTICAL_CENTER_FORM) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            } else if match (&self.formType, &{ let java_field = jcall!(formTypeFactory).VERTICAL_CENTER_FORM.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 dy = dy + height + self.border;
                 if dy > jcall!(self.rectangle).getMaxY() {
                     break;
                 }
-            } else if match (&self.formType, &jcall!(formTypeFactory).NULL_FORM_TYPE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            } else if match (&self.formType, &{ let java_field = jcall!(formTypeFactory).NULL_FORM_TYPE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             } else {
-                panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(formTypeFactory).UNK.clone())));
+                panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(formTypeFactory).UNK.clone(); java_field }.clone())));
             }
         }
         return -1;
@@ -292,21 +294,21 @@ impl ScrollSelectionForm {
             return -1;
         }
         let mut index: i32 = self.getSelectedIndex();
-        if match (&self.formType, &jcall!(formTypeFactory).HORIZONTAL_FORM) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&self.formType, &jcall!(formTypeFactory).TEMP_HORIZONTAL_FORM) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            if gameKeyCode == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() } {
+        if match (&self.formType, &{ let java_field = jcall!(formTypeFactory).HORIZONTAL_FORM.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&self.formType, &{ let java_field = jcall!(formTypeFactory).TEMP_HORIZONTAL_FORM.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if gameKeyCode == crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone) {
                 index += 1;
-            } else if gameKeyCode == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() } {
+            } else if gameKeyCode == crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone) {
                 index -= 1;
             }
-        } else if match (&self.formType, &jcall!(formTypeFactory).VERTICAL_CENTER_FORM) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            if gameKeyCode == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.clone() } {
+        } else if match (&self.formType, &{ let java_field = jcall!(formTypeFactory).VERTICAL_CENTER_FORM.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if gameKeyCode == crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.with(Clone::clone) {
                 index += 1;
-            } else if gameKeyCode == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() } {
+            } else if gameKeyCode == crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone) {
                 index -= 1;
             }
-        } else if match (&self.formType, &jcall!(formTypeFactory).NULL_FORM_TYPE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        } else if match (&self.formType, &{ let java_field = jcall!(formTypeFactory).NULL_FORM_TYPE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
         } else {
-            panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(formTypeFactory).UNK.clone())));
+            panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(formTypeFactory).UNK.clone(); java_field }.clone())));
         }
         let mut max: i32 = self.size() - 1;
         if index < 0 {
@@ -330,11 +332,11 @@ impl ScrollSelectionForm {
     
 
     // throws Exception
-    pub fn paintItem(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 {
+    pub fn paintItem(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 {
         jcall!(item).paintXY(graphics.clone(), x.clone(), y.clone());
         let mut width: i32 = jcall!(item).getMinimumWidth();
         let mut height: i32 = jcall!(item).getMinimumHeight();
-        jcall!(graphics).setColor(((self.getButtonBasicColor()).unwrap() as i32));
+        jcall!(graphics).setColor({ let java_argument = jcall!(self.getButtonBasicColor()).intValue(); java_argument });
         let mut adjustedBorder: i32 = 3;
         jcall!(graphics).drawRect(x - self.halfBorder - adjustedBorder, y - self.halfBorder - adjustedBorder, width + self.border + self.adjustedExtraBorder, height + self.border + self.adjustedExtraBorder);
         return jcall!(self.scrollSelectionFormFormTypeItemIndexPaintable).paint(graphics.clone(), index.clone(), item.clone(), x.clone(), y.clone());
@@ -342,8 +344,8 @@ impl ScrollSelectionForm {
     
 
     // throws Exception
-    pub fn paintUnselectedItem(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 {
-        jcall!(graphics).setColor(((self.getButtonBasicColor()).unwrap() as i32));
+    pub fn paintUnselectedItem(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 {
+        jcall!(graphics).setColor({ let java_argument = jcall!(self.getButtonBasicColor()).intValue(); java_argument });
         jcall!(item).paintUnselected(graphics.clone(), x.clone(), y.clone());
         return jcall!(self.scrollSelectionFormFormTypeItemIndexPaintable).paint(graphics.clone(), index.clone(), item.clone(), x.clone(), y.clone());
     }
@@ -384,9 +386,9 @@ impl std::ops::DerefMut for ScrollSelectionForm {
 pub trait ScrollSelectionFormDyn: crate::org::allbinary::graphics::form::PaintableForm::PaintableFormDyn {
     fn as_ScrollSelectionForm(&self) -> &ScrollSelectionForm;
     fn as_ScrollSelectionForm_mut(&mut self) -> &mut ScrollSelectionForm;
-    fn paintItemHorizontal(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 { ScrollSelectionForm::paintItemHorizontal(self.as_ScrollSelectionForm_mut(), graphics, index, item, x, y) }
-    fn paintItemVertical(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 { ScrollSelectionForm::paintItemVertical(self.as_ScrollSelectionForm_mut(), graphics, index, item, x, y) }
-    fn paintItemTempHorizontal(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 { ScrollSelectionForm::paintItemTempHorizontal(self.as_ScrollSelectionForm_mut(), graphics, index, item, x, y) }
+    fn paintItemHorizontal(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 { ScrollSelectionForm::paintItemHorizontal(self.as_ScrollSelectionForm_mut(), graphics, index, item, x, y) }
+    fn paintItemVertical(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 { ScrollSelectionForm::paintItemVertical(self.as_ScrollSelectionForm_mut(), graphics, index, item, x, y) }
+    fn paintItemTempHorizontal(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 { ScrollSelectionForm::paintItemTempHorizontal(self.as_ScrollSelectionForm_mut(), graphics, index, item, x, y) }
     fn getSelectedIndexForPointHorizontalDx(&mut self, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 { ScrollSelectionForm::getSelectedIndexForPointHorizontalDx(self.as_ScrollSelectionForm_mut(), index, item, dx, dy) }
     fn getSelectedIndexForPointVerticalDx(&mut self, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 { ScrollSelectionForm::getSelectedIndexForPointVerticalDx(self.as_ScrollSelectionForm_mut(), index, item, dx, dy) }
     fn getSelectedIndexForPointTempHorizontalDx(&mut self, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 { ScrollSelectionForm::getSelectedIndexForPointTempHorizontalDx(self.as_ScrollSelectionForm_mut(), index, item, dx, dy) }
@@ -396,8 +398,8 @@ pub trait ScrollSelectionFormDyn: crate::org::allbinary::graphics::form::Paintab
     fn getSelectedIndexForPoint(&mut self, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) -> i32 { ScrollSelectionForm::getSelectedIndexForPoint(self.as_ScrollSelectionForm_mut(), point) }
     fn processInputKey(&mut self, mut gameKeyCode: i32) -> i32 { ScrollSelectionForm::processInputKey(self.as_ScrollSelectionForm_mut(), gameKeyCode) }
     fn isInForm(&mut self, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) -> bool { ScrollSelectionForm::isInForm(self.as_ScrollSelectionForm_mut(), point) }
-    fn paintItem(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 { ScrollSelectionForm::paintItem(self.as_ScrollSelectionForm_mut(), graphics, index, item, x, y) }
-    fn paintUnselectedItem(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 { ScrollSelectionForm::paintUnselectedItem(self.as_ScrollSelectionForm_mut(), graphics, index, item, x, y) }
+    fn paintItem(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 { ScrollSelectionForm::paintItem(self.as_ScrollSelectionForm_mut(), graphics, index, item, x, y) }
+    fn paintUnselectedItem(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 { ScrollSelectionForm::paintUnselectedItem(self.as_ScrollSelectionForm_mut(), graphics, index, item, x, y) }
     fn getDiffX(&mut self, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) -> i32 { ScrollSelectionForm::getDiffX(self.as_ScrollSelectionForm_mut(), item) }
     fn getDx(&mut self) -> i32 { ScrollSelectionForm::getDx(self.as_ScrollSelectionForm_mut()) }
     fn getDy(&mut self) -> i32 { ScrollSelectionForm::getDy(self.as_ScrollSelectionForm_mut()) }
@@ -427,264 +429,6 @@ impl crate::org::allbinary::graphics::form::CustomDisplayable::CustomDisplayable
 impl crate::org::allbinary::graphics::form::CustomScreen::CustomScreenDyn for ScrollSelectionForm {
     fn as_CustomScreen(&self) -> &crate::org::allbinary::graphics::form::CustomScreen::CustomScreen { &self.base.base.base }
     fn as_CustomScreen_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::CustomScreen::CustomScreen { &mut self.base.base.base }
-}
-
-
-pub struct ScrollSelectionFormHorizontalPaintable {
-    pub base: ItemIndexPaintable,
-    pub scrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>,
-}
-
-
-impl ScrollSelectionFormHorizontalPaintable {
-        
-
-        pub fn new_struct(mut scrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>) -> Self {
-            let mut this = Self {
-            base: ItemIndexPaintable::new_struct(),
-            scrollSelectionForm: None,
-            };
-            this.scrollSelectionForm = scrollSelectionForm.clone();
-            this
-        }
-
-        pub fn new(mut scrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>) -> Option<Rc<RefCell<Self>>> {
-            Some(Rc::new(RefCell::new(Self::new_struct(scrollSelectionForm))))
-        }
-        
-
-        // throws Exception
-        pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 {
-            return jcall!(self.scrollSelectionForm).paintItemHorizontal(graphics.clone(), index.clone(), item.clone(), dx.clone(), dy.clone());
-        }
-}
-impl std::ops::Deref for ScrollSelectionFormHorizontalPaintable {
-    type Target = ItemIndexPaintable;
-    fn deref(&self) -> &Self::Target { &self.base }
-}
-impl std::ops::DerefMut for ScrollSelectionFormHorizontalPaintable {
-    fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
-}
-
-impl crate::org::allbinary::graphics::form::ItemIndexPaintable::ItemIndexPaintableDyn for ScrollSelectionFormHorizontalPaintable {
-    fn as_ItemIndexPaintable(&self) -> &crate::org::allbinary::graphics::form::ItemIndexPaintable::ItemIndexPaintable { &self }
-    fn as_ItemIndexPaintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::ItemIndexPaintable::ItemIndexPaintable { &mut self }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 { Self::paint(self, graphics, index, item, dx, dy) }
-}
-
-
-pub struct ScrollSelectionFormVerticalPaintable {
-    pub base: ItemIndexPaintable,
-    pub scrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>,
-}
-
-
-impl ScrollSelectionFormVerticalPaintable {
-        
-
-        pub fn new_struct(mut scrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>) -> Self {
-            let mut this = Self {
-            base: ItemIndexPaintable::new_struct(),
-            scrollSelectionForm: None,
-            };
-            this.scrollSelectionForm = scrollSelectionForm.clone();
-            this
-        }
-
-        pub fn new(mut scrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>) -> Option<Rc<RefCell<Self>>> {
-            Some(Rc::new(RefCell::new(Self::new_struct(scrollSelectionForm))))
-        }
-        
-
-        // throws Exception
-        pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 {
-            return jcall!(self.scrollSelectionForm).paintItemVertical(graphics.clone(), index.clone(), item.clone(), dx.clone(), dy.clone());
-        }
-}
-impl std::ops::Deref for ScrollSelectionFormVerticalPaintable {
-    type Target = ItemIndexPaintable;
-    fn deref(&self) -> &Self::Target { &self.base }
-}
-impl std::ops::DerefMut for ScrollSelectionFormVerticalPaintable {
-    fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
-}
-
-impl crate::org::allbinary::graphics::form::ItemIndexPaintable::ItemIndexPaintableDyn for ScrollSelectionFormVerticalPaintable {
-    fn as_ItemIndexPaintable(&self) -> &crate::org::allbinary::graphics::form::ItemIndexPaintable::ItemIndexPaintable { &self }
-    fn as_ItemIndexPaintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::ItemIndexPaintable::ItemIndexPaintable { &mut self }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 { Self::paint(self, graphics, index, item, dx, dy) }
-}
-
-
-pub struct ScrollSelectionFormTempHorizontalPaintable {
-    pub base: ItemIndexPaintable,
-    pub scrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>,
-}
-
-
-impl ScrollSelectionFormTempHorizontalPaintable {
-        
-
-        pub fn new_struct(mut scrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>) -> Self {
-            let mut this = Self {
-            base: ItemIndexPaintable::new_struct(),
-            scrollSelectionForm: None,
-            };
-            this.scrollSelectionForm = scrollSelectionForm.clone();
-            this
-        }
-
-        pub fn new(mut scrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>) -> Option<Rc<RefCell<Self>>> {
-            Some(Rc::new(RefCell::new(Self::new_struct(scrollSelectionForm))))
-        }
-        
-
-        // throws Exception
-        pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 {
-            return jcall!(self.scrollSelectionForm).paintItemTempHorizontal(graphics.clone(), index.clone(), item.clone(), dx.clone(), dy.clone());
-        }
-}
-impl std::ops::Deref for ScrollSelectionFormTempHorizontalPaintable {
-    type Target = ItemIndexPaintable;
-    fn deref(&self) -> &Self::Target { &self.base }
-}
-impl std::ops::DerefMut for ScrollSelectionFormTempHorizontalPaintable {
-    fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
-}
-
-impl crate::org::allbinary::graphics::form::ItemIndexPaintable::ItemIndexPaintableDyn for ScrollSelectionFormTempHorizontalPaintable {
-    fn as_ItemIndexPaintable(&self) -> &crate::org::allbinary::graphics::form::ItemIndexPaintable::ItemIndexPaintable { &self }
-    fn as_ItemIndexPaintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::ItemIndexPaintable::ItemIndexPaintable { &mut self }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 { Self::paint(self, graphics, index, item, dx, dy) }
-}
-
-
-pub struct ScrollSelectionFormHorizontalDx {
-    pub base: ItemIndexDx,
-    pub scrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>,
-}
-
-
-impl ScrollSelectionFormHorizontalDx {
-        
-
-        pub fn new_struct(mut multipleScrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>) -> Self {
-            let mut this = Self {
-            base: ItemIndexDx::new_struct(),
-            scrollSelectionForm: None,
-            };
-            this.scrollSelectionForm = multipleScrollSelectionForm.clone();
-            this
-        }
-
-        pub fn new(mut multipleScrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>) -> Option<Rc<RefCell<Self>>> {
-            Some(Rc::new(RefCell::new(Self::new_struct(multipleScrollSelectionForm))))
-        }
-        
-
-        // throws Exception
-        pub fn getDx(&mut self, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 {
-            return jcall!(self.scrollSelectionForm).getSelectedIndexForPointHorizontalDx(index.clone(), item.clone(), dx.clone(), dy.clone());
-        }
-}
-impl std::ops::Deref for ScrollSelectionFormHorizontalDx {
-    type Target = ItemIndexDx;
-    fn deref(&self) -> &Self::Target { &self.base }
-}
-impl std::ops::DerefMut for ScrollSelectionFormHorizontalDx {
-    fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
-}
-
-impl crate::org::allbinary::graphics::form::ItemIndexDx::ItemIndexDxDyn for ScrollSelectionFormHorizontalDx {
-    fn as_ItemIndexDx(&self) -> &crate::org::allbinary::graphics::form::ItemIndexDx::ItemIndexDx { &self }
-    fn as_ItemIndexDx_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::ItemIndexDx::ItemIndexDx { &mut self }
-    fn getDx(&mut self, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 { Self::getDx(self, index, item, dx, dy) }
-}
-
-
-pub struct ScrollSelectionFormVericalDx {
-    pub base: ItemIndexDx,
-    pub scrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>,
-}
-
-
-impl ScrollSelectionFormVericalDx {
-        
-
-        pub fn new_struct(mut multipleScrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>) -> Self {
-            let mut this = Self {
-            base: ItemIndexDx::new_struct(),
-            scrollSelectionForm: None,
-            };
-            this.scrollSelectionForm = multipleScrollSelectionForm.clone();
-            this
-        }
-
-        pub fn new(mut multipleScrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>) -> Option<Rc<RefCell<Self>>> {
-            Some(Rc::new(RefCell::new(Self::new_struct(multipleScrollSelectionForm))))
-        }
-        
-
-        // throws Exception
-        pub fn getDx(&mut self, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 {
-            return jcall!(self.scrollSelectionForm).getSelectedIndexForPointVerticalDx(index.clone(), item.clone(), dx.clone(), dy.clone());
-        }
-}
-impl std::ops::Deref for ScrollSelectionFormVericalDx {
-    type Target = ItemIndexDx;
-    fn deref(&self) -> &Self::Target { &self.base }
-}
-impl std::ops::DerefMut for ScrollSelectionFormVericalDx {
-    fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
-}
-
-impl crate::org::allbinary::graphics::form::ItemIndexDx::ItemIndexDxDyn for ScrollSelectionFormVericalDx {
-    fn as_ItemIndexDx(&self) -> &crate::org::allbinary::graphics::form::ItemIndexDx::ItemIndexDx { &self }
-    fn as_ItemIndexDx_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::ItemIndexDx::ItemIndexDx { &mut self }
-    fn getDx(&mut self, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 { Self::getDx(self, index, item, dx, dy) }
-}
-
-
-pub struct ScrollSelectionFormTempHorizontalDx {
-    pub base: ItemIndexDx,
-    pub scrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>,
-}
-
-
-impl ScrollSelectionFormTempHorizontalDx {
-        
-
-        pub fn new_struct(mut multipleScrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>) -> Self {
-            let mut this = Self {
-            base: ItemIndexDx::new_struct(),
-            scrollSelectionForm: None,
-            };
-            this.scrollSelectionForm = multipleScrollSelectionForm.clone();
-            this
-        }
-
-        pub fn new(mut multipleScrollSelectionForm: Option<Rc<RefCell<dyn ScrollSelectionFormDyn>>>) -> Option<Rc<RefCell<Self>>> {
-            Some(Rc::new(RefCell::new(Self::new_struct(multipleScrollSelectionForm))))
-        }
-        
-
-        // throws Exception
-        pub fn getDx(&mut self, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 {
-            return jcall!(self.scrollSelectionForm).getSelectedIndexForPointTempHorizontalDx(index.clone(), item.clone(), dx.clone(), dy.clone());
-        }
-}
-impl std::ops::Deref for ScrollSelectionFormTempHorizontalDx {
-    type Target = ItemIndexDx;
-    fn deref(&self) -> &Self::Target { &self.base }
-}
-impl std::ops::DerefMut for ScrollSelectionFormTempHorizontalDx {
-    fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
-}
-
-impl crate::org::allbinary::graphics::form::ItemIndexDx::ItemIndexDxDyn for ScrollSelectionFormTempHorizontalDx {
-    fn as_ItemIndexDx(&self) -> &crate::org::allbinary::graphics::form::ItemIndexDx::ItemIndexDx { &self }
-    fn as_ItemIndexDx_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::ItemIndexDx::ItemIndexDx { &mut self }
-    fn getDx(&mut self, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut dx: i32, mut dy: i32) -> i32 { Self::getDx(self, index, item, dx, dy) }
 }
 
 

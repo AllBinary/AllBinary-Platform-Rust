@@ -37,7 +37,7 @@ impl Time {
         let mut this = Self {
             timeLong: None,
         };
-        this.timeLong = Some((time.clone()) as i64);
+        this.timeLong = Some((time.clone()).trim().parse::<i64>().expect("NumberFormatException"));
         this
     }
 
@@ -46,7 +46,7 @@ impl Time {
     }
     
 
-    pub fn new_struct1(mut time: i64) -> Self {
+    pub fn new_struct1_long(mut time: i64) -> Self {
         let mut this = Self {
             timeLong: None,
         };
@@ -54,8 +54,8 @@ impl Time {
         this
     }
 
-    pub fn new1(mut time: i64) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(time))))
+    pub fn new1_long(mut time: i64) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_long(time))))
     }
     
 
@@ -70,10 +70,10 @@ impl Time {
     
 
     pub fn toString(&mut self) -> String {
-        return jcall!(self.getLong()).toString();
+        return (self.getLong()).expect("NullPointerException").to_string();
     }
 }
-pub trait TimeDyn {
+pub trait TimeDyn: std::any::Any {
     fn as_Time(&self) -> &Time;
     fn as_Time_mut(&mut self) -> &mut Time;
     fn getLong(&mut self) -> Option<i64> { Time::getLong(self.as_Time_mut()) }

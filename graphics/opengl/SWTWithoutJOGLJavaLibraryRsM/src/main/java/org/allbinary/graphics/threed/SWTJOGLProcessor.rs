@@ -18,8 +18,9 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use crate::Runnable;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::midlet::MIDlet::MIDlet;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::midlet::MIDlet::MIDlet;
+use crate::java::lang::RuntimeException::*;
 use super::GLHolder::GLHolder;
 use super::RatioProcessor::RatioProcessor;
 
@@ -41,6 +42,10 @@ impl Runnable for SWTJOGLProcessor {
 }
 
 impl SWTJOGLProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -70,7 +75,7 @@ impl SWTJOGLProcessor {
     
 
     pub fn isHolderCreated(&mut self) -> bool {
-        return jcall!(self.glHolder).isCreated.clone();
+        return { let java_field = jcall!(self.glHolder).isCreated.clone(); java_field }.clone();
     }
     
 
@@ -107,7 +112,7 @@ impl SWTJOGLProcessor {
     }
     
 
-    pub fn addListeners(&mut self, mut midlet: Option<Rc<RefCell<MIDlet>>>) {
+    pub fn addListeners(&mut self, mut midlet: Option<Rc<RefCell<dyn crate::javax::microedition::midlet::MIDlet::MIDletDyn>>>) {
     }
     
 
@@ -127,22 +132,22 @@ impl SWTJOGLProcessor {
     }
     
 
-    pub fn charWidth(&mut self, mut font: Option<Rc<RefCell<Font>>>, mut ch: char) -> i32 {
+    pub fn charWidth(&mut self, mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, mut ch: char) -> i32 {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     
 
-    pub fn charsWidth(&mut self, mut font: Option<Rc<RefCell<Font>>>, mut ch: Vec<char>, mut offset: i32, mut length: i32) -> i32 {
+    pub fn charsWidth(&mut self, mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, mut ch: Vec<char>, mut offset: i32, mut length: i32) -> i32 {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     
 
-    pub fn stringWidth(&mut self, mut font: Option<Rc<RefCell<Font>>>, mut str: String) -> i32 {
+    pub fn stringWidth(&mut self, mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, mut str: String) -> i32 {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
     
 
-    pub fn substringWidth(&mut self, mut font: Option<Rc<RefCell<Font>>>, mut str: String, mut offset: i32, mut len: i32) -> i32 {
+    pub fn substringWidth(&mut self, mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>, mut str: String, mut offset: i32, mut len: i32) -> i32 {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }

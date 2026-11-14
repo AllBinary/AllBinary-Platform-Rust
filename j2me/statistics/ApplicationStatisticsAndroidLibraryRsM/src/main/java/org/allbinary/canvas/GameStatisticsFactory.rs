@@ -33,7 +33,7 @@ pub struct GameStatisticsFactory {
     pub stringBuffer: Option<Rc<RefCell<StringMaker>>>,
 }
 
-thread_local! { pub static GameStatisticsFactory_SINGLETON: Option<Rc<RefCell<dyn crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn>>> = GameStatisticsFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn>>); }
+thread_local! { pub static GameStatisticsFactory_SINGLETON: Option<Rc<RefCell<dyn crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn>>> = GameStatisticsFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn>>); }
 
 impl GameStatisticsFactory {
 
@@ -86,6 +86,7 @@ impl crate::org::allbinary::canvas::BaseGameStatistics::BaseGameStatisticsDyn fo
     fn as_BaseGameStatistics_mut(&mut self) -> &mut crate::org::allbinary::canvas::BaseGameStatistics::BaseGameStatistics { &mut self.base.base }
     fn add(&mut self, mut string: String) { Self::add(self, string) }
     fn process(&mut self) { crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatistics::process(crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn::as_AndroidGameStatistics_mut(self)) }
+    fn toStringArray(&mut self) -> Vec<String> { crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatistics::toStringArray(crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn::as_AndroidGameStatistics_mut(self)) }
     fn toString(&mut self) -> String { Self::toString(self) }
 }
 

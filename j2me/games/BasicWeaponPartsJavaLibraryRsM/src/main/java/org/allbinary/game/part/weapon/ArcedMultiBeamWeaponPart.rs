@@ -26,6 +26,7 @@ use crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationship;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::math::AngleFactory::AngleFactory;
+use crate::java::lang::Exception::*;
 use super::BasicWeaponPart::BasicWeaponPart;
 
 // Borrows the object of a Java reference
@@ -42,7 +43,14 @@ pub struct ArcedMultiBeamWeaponPart {
     pub TOTAL_ANGLE: i32,
 }
 
+impl crate::org::allbinary::animation::AnimationInterfaceCompositeInterface::AnimationInterfaceCompositeInterface for ArcedMultiBeamWeaponPart {
+    fn getAnimationInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPart::getAnimationInterface(crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn::as_BasicWeaponPart_mut(self)) }
+}
 impl crate::org::allbinary::game::part::PartInterface::PartInterface for ArcedMultiBeamWeaponPart {
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for ArcedMultiBeamWeaponPart {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPart::paint(crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn::as_BasicWeaponPart_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPart::paintThreed(crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn::as_BasicWeaponPart_mut(self), p1) }
 }
 
 impl ArcedMultiBeamWeaponPart {
@@ -55,7 +63,7 @@ impl ArcedMultiBeamWeaponPart {
             total: 0,
             TOTAL_ANGLE: 0,
         };
-        this.TOTAL_ANGLE = ((jcall!(AngleFactory::getInstance()).TOTAL_ANGLE) as i32);
+        this.TOTAL_ANGLE = (({ let java_field = jcall!(AngleFactory::getInstance()).TOTAL_ANGLE.clone(); java_field }) as i32);
         // super(...) is in the struct literal above
         this.total = total.clone();
         this.weaponLayerCircularStaticPool = weaponLayerCircularStaticPool.clone();
@@ -74,8 +82,8 @@ impl ArcedMultiBeamWeaponPart {
         let mut next: i32 = 0;
         let mut weaponLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::weapon::WeaponLayer::WeaponLayerDyn>>> = None;
         for index in (0..self.total) {
-            weaponLayer = { let java_receiver = self.weaponLayerCircularStaticPool.clone(); let java_arguments = (self.getOwnerLayerInterface(), jcall!(self.relativeRelationship).getX(), jcall!(self.relativeRelationship).getY(), 0, (((minAngle) as i32) + ((increment) as i32)), ((otherAngle) as i32), weaponProperties.clone(), scoreableInterface.clone(),); let java_result = jcall!(java_receiver).getInstanceWeaponLayer(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5, java_arguments.6, java_arguments.7); java_result };
-            jcall!(allbinaryLayerManager).append(weaponLayer.clone());
+            weaponLayer = { let java_value = ({ let java_receiver = self.weaponLayerCircularStaticPool.clone(); let java_arguments = (self.getOwnerLayerInterface(), { let java_argument = jcall!(self.relativeRelationship).getX(); java_argument }, { let java_argument = jcall!(self.relativeRelationship).getY(); java_argument }, 0, (((minAngle) as i32) + ((increment) as i32)), ((otherAngle) as i32), weaponProperties.clone(), scoreableInterface.clone(),); let java_result = jcall!(java_receiver).getInstanceWeaponLayer(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4, java_arguments.5, java_arguments.6, java_arguments.7); java_result }).clone(); java_value };
+            jcall!(allbinaryLayerManager).append(weaponLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>));
             next += ((increment) as i32).clone();
         }
     }

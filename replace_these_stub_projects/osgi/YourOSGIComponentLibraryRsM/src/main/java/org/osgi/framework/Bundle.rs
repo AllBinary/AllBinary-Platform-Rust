@@ -5,6 +5,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use super::BundleException::BundleException;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -13,7 +14,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait Bundle {
+pub trait Bundle: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getSymbolicName(&mut self) -> String;
@@ -26,8 +27,6 @@ pub trait Bundle {
     // throws BundleException
     // Java overloaded method: Rust needs a different name
     fn start1(&mut self, options: i32);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

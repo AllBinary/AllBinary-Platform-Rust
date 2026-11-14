@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::w3c::dom::Node::Node;
 use super::CategoryInterface::CategoryInterface;
@@ -30,7 +29,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait CategoryFactoryInterface {
+pub trait CategoryFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getRootInstance(&mut self) -> Option<Rc<RefCell<dyn CategoryInterface>>>;
@@ -47,13 +46,11 @@ pub trait CategoryFactoryInterface {
     
 
     // Java overloaded method: Rust needs a different name
-    fn getInstance(&mut self, rootCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, parentCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<dyn CategoryInterface>>>;
+    fn getInstance_CategoryInterface_CategoryInterface_Node(&mut self, rootCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, parentCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<dyn CategoryInterface>>>;
     
 
     // Java overloaded method: Rust needs a different name
-    fn getInstance(&mut self, rootCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, parentCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, categoryPropertiesHashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<dyn CategoryInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn getInstance_CategoryInterface_CategoryInterface_HashMap(&mut self, rootCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, parentCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>, categoryPropertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn CategoryInterface>>>;
 }
 
 

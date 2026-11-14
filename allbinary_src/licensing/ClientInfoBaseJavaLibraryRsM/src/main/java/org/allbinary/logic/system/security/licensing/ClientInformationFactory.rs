@@ -35,6 +35,10 @@ pub struct ClientInformationFactory {
 
 impl ClientInformationFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -49,9 +53,9 @@ impl ClientInformationFactory {
     pub fn getInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn>>> {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(logUtil).putF(jcall!(commonStrings).NOT_IMPLEMENTED.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone());
+        jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).NOT_IMPLEMENTED.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone());
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        return ClientInformation::new(jcall!(stringUtil).NULL_STRING.clone(), jcall!(stringUtil).NULL_STRING.clone(), jcall!(stringUtil).NULL_STRING.clone(), jcall!(stringUtil).NULL_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn>>);
+        return ClientInformation::new({ let java_field = jcall!(stringUtil).NULL_STRING.clone(); java_field }.clone(), { let java_field = jcall!(stringUtil).NULL_STRING.clone(); java_field }.clone(), { let java_field = jcall!(stringUtil).NULL_STRING.clone(); java_field }.clone(), { let java_field = jcall!(stringUtil).NULL_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn>>);
     }
 }
 

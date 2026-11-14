@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::TextField::TextField;
+use crate::javax::microedition::lcdui::TextField::TextField;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
@@ -34,11 +34,15 @@ pub struct GameConfigurationTextInput {
     pub text: String,
 }
 
-pub static mut GameConfigurationTextInput_hashtable: std::cell::LazyCell<Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashtable());
+pub static mut GameConfigurationTextInput_hashtable: std::cell::LazyCell<Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashtable());
 pub static mut GameConfigurationTextInput_SIMULATOR_IP: std::cell::LazyCell<Option<Rc<RefCell<GameConfigurationTextInput>>>> = std::cell::LazyCell::new(|| GameConfigurationTextInput::new(String::from("IP: "), String::from("192.168.1.3")));
 pub static mut GameConfigurationTextInput_SIMULATOR_PORT: std::cell::LazyCell<Option<Rc<RefCell<GameConfigurationTextInput>>>> = std::cell::LazyCell::new(|| GameConfigurationTextInput::new(String::from("Port: "), String::from("8010")));
 
 impl GameConfigurationTextInput {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut label: String, mut text: String) -> Self {
@@ -46,22 +50,22 @@ impl GameConfigurationTextInput {
             label: String::new(),
             text: String::new(),
         };
-        this.label = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.text = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.label = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.text = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.setText(text.clone());
         this.setLabel(label.clone());
         this
     }
 
     pub fn new(mut label: String, mut text: String) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(label, text))));
-            jcall!(unsafe { GameConfigurationTextInput_hashtable.clone() }).put(crate::java_into_object(this.getLabel()), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(label.clone(), text.clone()))));
+            jcall!(unsafe { GameConfigurationTextInput_hashtable.clone() }).put(crate::java_into_object(jcall!(this).getLabel()), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
         this
     }
     
 
-    pub fn update(mut textField: Option<Rc<RefCell<TextField>>>) {
-        let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = (jcall!(textField).getLabel()).clone() /* as Any */;
+    pub fn update(mut textField: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::TextField::TextFieldDyn>>>) {
+        let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = crate::java_into_object((jcall!(textField).getLabel()).clone());
         let mut gameConfigurationTextInput: Option<Rc<RefCell<GameConfigurationTextInput>>> = { let java_object = (jcall!(unsafe { GameConfigurationTextInput_hashtable.clone() }).get(anyType.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameConfigurationTextInput>>>>().expect("ClassCastException").clone()) };
         jcall!(gameConfigurationTextInput).setText(jcall!(textField).getString());
     }
@@ -87,7 +91,7 @@ impl GameConfigurationTextInput {
     }
     
 
-    pub fn getHashtable() -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn getHashtable() -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
         return unsafe { GameConfigurationTextInput_hashtable.clone() }.clone();
     }
 }

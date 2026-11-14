@@ -22,6 +22,10 @@ thread_local! { pub static MathUtil_instance: Option<Rc<RefCell<MathUtil>>> = Ma
 
 impl MathUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             ACCURACY: 0,
@@ -81,22 +85,22 @@ impl MathUtil {
     
 
     pub fn abs(&mut self, mut value: i32) -> i32 {
-        return (if (value < 0) { -value } else { value });
+        return (if (value < 0) { -value } else { value.clone() });
     }
     
 
     pub fn abslong(&mut self, mut value: i64) -> i64 {
-        return (if (value < 0_i64) { -value } else { value });
+        return (if (value < 0_i64) { -value } else { value.clone() });
     }
     
 
     pub fn min(&mut self, mut value: i32, mut value2: i32) -> i32 {
-        return (if (value <= value2) { value } else { value2 });
+        return (if (value <= value2) { value.clone() } else { value2.clone() });
     }
     
 
     pub fn max(&mut self, mut value: i32, mut value2: i32) -> i32 {
-        return (if (value >= value2) { value } else { value2 });
+        return (if (value >= value2) { value.clone() } else { value2.clone() });
     }
 }
 

@@ -40,6 +40,10 @@ thread_local! { pub static FormTypeFactory_instance: Option<Rc<RefCell<FormTypeF
 
 impl FormTypeFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             UNK: String::new(),
@@ -49,7 +53,7 @@ impl FormTypeFactory {
             VERTICAL_CENTER_FORM: None,
         };
         this.UNK = String::from("Unknown FormType");
-        this.NULL_FORM_TYPE = FormType::new(jcall!(StringUtil::getInstance()).NULL_STRING.clone());
+        this.NULL_FORM_TYPE = FormType::new({ let java_field = jcall!(StringUtil::getInstance()).NULL_STRING.clone(); java_field }.clone());
         this.TEMP_HORIZONTAL_FORM = FormType::new(String::from("TempHorizontal"));
         this.HORIZONTAL_FORM = FormType::new(String::from("Horizontal"));
         this.VERTICAL_CENTER_FORM = FormType::new(String::from("Vertical"));

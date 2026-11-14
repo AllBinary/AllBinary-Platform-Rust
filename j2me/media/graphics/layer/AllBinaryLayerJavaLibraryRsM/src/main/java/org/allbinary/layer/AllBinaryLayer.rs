@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::identification::BasicGroupFactory::BasicGroupFactory;
 use crate::org::allbinary::game::identification::Group::Group;
 use crate::org::allbinary::graphics::GPoint::GPoint;
@@ -32,6 +32,7 @@ use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::view::ViewPositionBase::ViewPositionBase;
 use crate::org::allbinary::view::event::ViewPositionEvent::ViewPositionEvent;
+use crate::java::lang::Exception::*;
 use super::Layer::Layer;
 use super::LayerInterface::LayerInterface;
 
@@ -55,9 +56,41 @@ pub struct AllBinaryLayer {
     pub viewPosition: Option<Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>>,
 }
 
-thread_local! { pub static AllBinaryLayer_NULL_ALLBINARY_LAYER: Option<Rc<RefCell<dyn AllBinaryLayerDyn>>> = AllBinaryLayer::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), crate::org::allbinary::graphics::RectangleFactory::RectangleFactory_SINGLETON.with(Clone::clone).clone(), crate::org::allbinary::view::ViewPositionBase::ViewPositionBase_NULL_VIEW_POSITION.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn AllBinaryLayerDyn>>); }
+thread_local! { pub static AllBinaryLayer_NULL_ALLBINARY_LAYER: Option<Rc<RefCell<dyn AllBinaryLayerDyn>>> = AllBinaryLayer::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::org::allbinary::graphics::RectangleFactory::RectangleFactory_SINGLETON.with(Clone::clone).clone(), crate::org::allbinary::view::ViewPositionBase::ViewPositionBase_NULL_VIEW_POSITION.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn AllBinaryLayerDyn>>); }
 thread_local! { pub static AllBinaryLayer_TYPE: String = String::from("Type: "); }
-// impl LayerInterface for AllBinaryLayer with the methods of the trait
+impl LayerInterface for AllBinaryLayer {
+    fn getHeight(&mut self) -> i32 { Self::getHeight(self) }
+    fn getWidth(&mut self) -> i32 { Self::getWidth(self) }
+    fn getHalfHeight(&mut self) -> i32 { Self::getHalfHeight(self) }
+    fn getHalfWidth(&mut self) -> i32 { Self::getHalfWidth(self) }
+    fn getXP(&mut self) -> i32 { Self::getXP(self) }
+    fn getYP(&mut self) -> i32 { Self::getYP(self) }
+    fn getZP(&mut self) -> i32 { Self::getZP(self) }
+    fn getX2(&mut self) -> i32 { Self::getX2(self) }
+    fn getY2(&mut self) -> i32 { Self::getY2(self) }
+    fn getZ2(&mut self) -> i32 { Self::getZ2(self) }
+    fn isVisible(&mut self) -> bool { Self::isVisible(self) }
+    fn moveDXYZ(&mut self, mut dx: i32, mut dy: i32, mut dz: i32) { Self::moveDXYZ(self, dx, dy, dz) }
+    fn setVisible(&mut self, mut visible: bool) { Self::setVisible(self, visible) }
+    fn implmentsTickableInterface(&mut self) -> bool { Self::implmentsTickableInterface(self) }
+    fn implmentsCollidableInterface(&mut self) -> bool { Self::implmentsCollidableInterface(self) }
+    fn implmentsGameInputInterface(&mut self) -> bool { Self::implmentsGameInputInterface(self) }
+    fn implmentsArtificialIntelligenceCompositeInterface(&mut self) -> bool { Self::implmentsArtificialIntelligenceCompositeInterface(self) }
+    fn getType(&mut self) -> i32 { Self::getType(self) }
+}
+impl crate::org::allbinary::layer::NamedInterface::NamedInterface for AllBinaryLayer {
+    fn getName(&mut self) -> String { Self::getName(self) }
+}
+impl crate::org::allbinary::layer::PositionInterface::PositionInterface for AllBinaryLayer {
+    fn setPosition(&mut self, mut x: i32, mut y: i32, mut z: i32) { Self::setPosition(self, x, y, z) }
+}
+impl crate::org::allbinary::game::identification::GroupInterfaceCompositeInterface::GroupInterfaceCompositeInterface for AllBinaryLayer {
+    fn getGroupInterface(&mut self) -> Vec<Option<Rc<RefCell<Group>>>> { Self::getGroupInterface(self) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for AllBinaryLayer {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paintThreed(self, graphics) }
+}
 
 impl AllBinaryLayer {
     
@@ -71,10 +104,10 @@ impl AllBinaryLayer {
             name: String::new(),
             viewPosition: None,
         };
-        this.viewPositionEvent = ViewPositionEvent::new(this);
         this.viewPosition = crate::org::allbinary::view::ViewPositionBase::ViewPositionBase_NULL_VIEW_POSITION.with(Clone::clone).clone();
         // super(...) is in the struct literal above
         let mut localName: String = String::new();
+        localName = { let java_value = (jcall!(StringMaker::new()).append(name.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).COLON.clone(); java_field }.clone()).append(format!("{:x}", jcall!(TsUtil::getInstance()).hashCode(crate::java_into_object(String::from(std::any::type_name::<Self>()))))).toString()).clone(); java_value };
         this.name = localName.clone();
         let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(rectangle).getPoint();
         { let java_arguments = (jcall!(point).getX(), jcall!(point).getY(), jcall!(point).getZ(),); this.setPosition(java_arguments.0, java_arguments.1, java_arguments.2) };
@@ -85,14 +118,62 @@ impl AllBinaryLayer {
     }
 
     pub fn new(mut name: String, mut rectangle: Option<Rc<RefCell<Rectangle>>>, mut viewPosition: Option<Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(name, rectangle, viewPosition))));
-            if false {
-            localName = std::any::type_name_of_val(&this).to_string();
-        } else {
-            localName = jcall!(StringMaker::new()).append(name.clone()).append(jcall!(CommonSeps::getInstance()).COLON.clone()).append(format!("{:x}", jcall!(TsUtil::getInstance()).hashCode((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone())))).toString();
-        }
-            jcall!(this.viewPosition).setAllbinaryLayer((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(name.clone(), rectangle.clone(), viewPosition.clone()))));
+        jcall!(this).viewPositionEvent = ViewPositionEvent::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+            let mut localName: String = String::new();
+            let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(rectangle).getPoint();
+            jcall!(jcall!(this).viewPosition).setAllbinaryLayer((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
         this
+    }
+    
+
+    pub fn setPosition(&mut self, mut x: i32, mut y: i32, mut z: i32) {
+        { let java_arguments = (x.clone(), y.clone(), z.clone(),); self.base.setPosition(java_arguments.0, java_arguments.1, java_arguments.2) };
+    }
+    
+
+    pub fn moveDXYZ(&mut self, mut dx: i32, mut dy: i32, mut dz: i32) {
+        { let java_arguments = (dx.clone(), dy.clone(), dz.clone(),); self.base.moveDXYZ(java_arguments.0, java_arguments.1, java_arguments.2) };
+    }
+    
+
+    pub fn getXP(&mut self) -> i32 {
+        return self.base.getXP();
+    }
+    
+
+    pub fn getYP(&mut self) -> i32 {
+        return self.base.getYP();
+    }
+    
+
+    pub fn getZP(&mut self) -> i32 {
+        return self.base.getZP();
+    }
+    
+
+    pub fn getWidth(&mut self) -> i32 {
+        return self.base.getWidth();
+    }
+    
+
+    pub fn getHeight(&mut self) -> i32 {
+        return self.base.getHeight();
+    }
+    
+
+    pub fn setVisible(&mut self, mut visible: bool) {
+        { let java_arguments = (visible.clone(),); self.base.setVisible(java_arguments.0) };
+    }
+    
+
+    pub fn isVisible(&mut self) -> bool {
+        return self.base.isVisible();
+    }
+    
+
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(),); self.base.paint(java_arguments.0) };
     }
     
 
@@ -101,7 +182,7 @@ impl AllBinaryLayer {
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 
@@ -116,7 +197,7 @@ impl AllBinaryLayer {
     
 
     pub fn getZ2(&mut self) -> i32 {
-        return (((self.getZP() + self.getDepth())) as i32);
+        return (((((self.getZP()) as i64) + self.getDepth())) as i32);
     }
     
 
@@ -161,7 +242,7 @@ impl AllBinaryLayer {
     
 
     pub fn getGroupInterface(&mut self) -> Vec<Option<Rc<RefCell<Group>>>> {
-        return jcall!(BasicGroupFactory::getInstance()).NONE_ARRAY.clone();
+        return { let java_field = jcall!(BasicGroupFactory::getInstance()).NONE_ARRAY.clone(); java_field }.clone();
     }
     
 
@@ -205,24 +286,24 @@ impl AllBinaryLayer {
         let mut positionStrings: Option<Rc<RefCell<PositionStrings>>> = PositionStrings::getInstance();
         let mut commonLabels: Option<Rc<RefCell<CommonLabels>>> = CommonLabels::getInstance();
         jcall!(stringBuffer).append(self.getName());
-        jcall!(stringBuffer).append(jcall!(commonSeps).COLON.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).COLON.clone(); java_field }.clone());
         jcall!(stringBuffer).append(AllBinaryLayer_TYPE.with(Clone::clone).clone());
         jcall!(stringBuffer).appendint(self.getType());
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).X_LABEL.clone());
-        jcall!(stringBuffer).appendint(((self.getXP()) as i32));
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).Y_LABEL.clone());
-        jcall!(stringBuffer).appendint(((self.getYP()) as i32));
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).Z_LABEL.clone());
-        jcall!(stringBuffer).appendint(((self.getZP()) as i32));
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(commonLabels).WIDTH_LABEL.clone());
-        jcall!(stringBuffer).appendint(((self.getWidth()) as i32));
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(commonLabels).HEIGHT_LABEL.clone());
-        jcall!(stringBuffer).appendint(((self.getHeight()) as i32));
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).X_LABEL.clone(); java_field }.clone());
+        jcall!(stringBuffer).appendint(self.getXP());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).Y_LABEL.clone(); java_field }.clone());
+        jcall!(stringBuffer).appendint(self.getYP());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).Z_LABEL.clone(); java_field }.clone());
+        jcall!(stringBuffer).appendint(self.getZP());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonLabels).WIDTH_LABEL.clone(); java_field }.clone());
+        jcall!(stringBuffer).appendint(self.getWidth());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonLabels).HEIGHT_LABEL.clone(); java_field }.clone());
+        jcall!(stringBuffer).appendint(self.getHeight());
     }
     
 
@@ -244,7 +325,7 @@ pub trait AllBinaryLayerDyn: crate::org::allbinary::layer::Layer::LayerDyn {
     fn as_AllBinaryLayer(&self) -> &AllBinaryLayer;
     fn as_AllBinaryLayer_mut(&mut self) -> &mut AllBinaryLayer;
     fn onChangeEvent(&mut self, mut layerManagerEvent: Option<Rc<RefCell<ViewPositionEvent>>>) { AllBinaryLayer::onChangeEvent(self.as_AllBinaryLayer_mut(), layerManagerEvent) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { AllBinaryLayer::paintThreed(self.as_AllBinaryLayer_mut(), graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { AllBinaryLayer::paintThreed(self.as_AllBinaryLayer_mut(), graphics) }
     fn getX2(&mut self) -> i32 { AllBinaryLayer::getX2(self.as_AllBinaryLayer_mut()) }
     fn getY2(&mut self) -> i32 { AllBinaryLayer::getY2(self.as_AllBinaryLayer_mut()) }
     fn getZ2(&mut self) -> i32 { AllBinaryLayer::getZ2(self.as_AllBinaryLayer_mut()) }
@@ -274,6 +355,16 @@ impl AllBinaryLayerDyn for AllBinaryLayer {
 impl crate::org::allbinary::layer::Layer::LayerDyn for AllBinaryLayer {
     fn as_Layer(&self) -> &crate::org::allbinary::layer::Layer::Layer { &self.base }
     fn as_Layer_mut(&mut self) -> &mut crate::org::allbinary::layer::Layer::Layer { &mut self.base }
+    fn setPosition(&mut self, mut x: i32, mut y: i32, mut z: i32) { Self::setPosition(self, x, y, z) }
+    fn moveDXYZ(&mut self, mut dx: i32, mut dy: i32, mut dz: i32) { Self::moveDXYZ(self, dx, dy, dz) }
+    fn getXP(&mut self) -> i32 { Self::getXP(self) }
+    fn getYP(&mut self) -> i32 { Self::getYP(self) }
+    fn getZP(&mut self) -> i32 { Self::getZP(self) }
+    fn getWidth(&mut self) -> i32 { Self::getWidth(self) }
+    fn getHeight(&mut self) -> i32 { Self::getHeight(self) }
+    fn setVisible(&mut self, mut visible: bool) { Self::setVisible(self, visible) }
+    fn isVisible(&mut self) -> bool { Self::isVisible(self) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
     fn toStringAppend(&mut self, mut stringBuffer: Option<Rc<RefCell<StringMaker>>>) { Self::toStringAppend(self, stringBuffer) }
 }
 

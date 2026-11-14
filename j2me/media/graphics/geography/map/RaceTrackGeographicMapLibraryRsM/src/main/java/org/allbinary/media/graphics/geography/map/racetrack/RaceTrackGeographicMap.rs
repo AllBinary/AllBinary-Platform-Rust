@@ -22,6 +22,7 @@ use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPos
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionBaseFactory::GeographicMapCellPositionBaseFactory;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionFactoryInterface::GeographicMapCellPositionFactoryInterface;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellTypeFactory::GeographicMapCellTypeFactory;
+use crate::java::lang::Exception::*;
 use super::BaseRaceTrackGeographicMap::BaseRaceTrackGeographicMap;
 use super::CustomMapGeneratorBase::CustomMapGeneratorBase;
 use super::BasicGeographicMapFactory::BasicGeographicMapFactory;
@@ -56,8 +57,8 @@ impl RaceTrackGeographicMap {
     }
 
     pub fn new(mut raceTrackInfo: Option<Rc<RefCell<RaceTrackInfo>>>, mut raceTrackData: Option<Rc<RefCell<RaceTrackData>>>, mut tiledLayerFactoryInterface: Option<Rc<RefCell<dyn AllBinaryTiledLayerFactoryInterface>>>, mut geographicMapCellPositionFactoryInterface: Option<Rc<RefCell<dyn GeographicMapCellPositionFactoryInterface>>>, mut geographicMapCellPositionBaseFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionBaseFactory::GeographicMapCellPositionBaseFactoryDyn>>>, mut geographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellTypeFactory::GeographicMapCellTypeFactoryDyn>>>, mut customMapGeneratorBaseFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::racetrack::CustomMapGeneratorBaseFactory::CustomMapGeneratorBaseFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(raceTrackInfo, raceTrackData, tiledLayerFactoryInterface, geographicMapCellPositionFactoryInterface, geographicMapCellPositionBaseFactory, geographicMapCellTypeFactory, customMapGeneratorBaseFactory))));
-            this.customMapGenerator = jcall!(customMapGeneratorBaseFactory).create((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(raceTrackInfo.clone(), raceTrackData.clone(), tiledLayerFactoryInterface.clone(), geographicMapCellPositionFactoryInterface.clone(), geographicMapCellPositionBaseFactory.clone(), geographicMapCellTypeFactory.clone(), customMapGeneratorBaseFactory.clone()))));
+            jcall!(this).customMapGenerator = { let java_value = (jcall!(customMapGeneratorBaseFactory).create(this.clone())).clone(); java_value };
         this
     }
     
@@ -76,7 +77,7 @@ impl RaceTrackGeographicMap {
             jcall!(stringBuffer).appendint(jcall!(geographicMapCellPosition).getColumn());
             jcall!(stringBuffer).append(String::from(" not in: "));
             jcall!(stringBuffer).appendint((customMapArray[(0) as usize].len() as i32).clone());
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             if jcall!(geographicMapCellPosition).getColumn() == (customMapArray[(0) as usize].len() as i32) {
                 return true;
             } else {
@@ -88,7 +89,7 @@ impl RaceTrackGeographicMap {
             jcall!(stringBuffer).appendint(jcall!(geographicMapCellPosition).getRow());
             jcall!(stringBuffer).append(String::from(" not in: "));
             jcall!(stringBuffer).appendint((customMapArray.len() as i32).clone());
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             if jcall!(geographicMapCellPosition).getRow() == (customMapArray.len() as i32) {
                 return true;
             } else {

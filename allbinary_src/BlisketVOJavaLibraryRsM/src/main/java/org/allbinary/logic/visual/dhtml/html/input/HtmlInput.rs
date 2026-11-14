@@ -76,7 +76,7 @@ impl HtmlInput {
 
     pub fn toString(&mut self) -> String {
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        let mut result: String = jcall!(stringUtil).EMPTY_STRING.clone();
+        let mut result: String = { let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone();
         let mut attributeKeys: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(self.otherAttributes).keySet()).toArray();
         let mut attributeSize: i32 = (attributeKeys.len() as i32).clone();
         result = self.before.clone();
@@ -88,9 +88,9 @@ impl HtmlInput {
         result += &self.name.clone();
         result += &String::from("\" ");
         for i in (0..attributeSize) {
-            let mut key: String = (attributeKeys[(i) as usize]).clone() /* as String */;
-            let mut value: String = (jcall!(self.base.otherAttributes).get(key.clone())).clone() /* as String */;
-            if true && (value.cmp(&jcall!(stringUtil).EMPTY_STRING.clone()) as i32) != 0 {
+            let mut key: String = { let java_object = (attributeKeys[(i) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut value: String = { let java_object = (jcall!(self.base.otherAttributes).get(crate::java_into_object(key.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            if true && (value.cmp(&{ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()) as i32) != 0 {
                 result += &key.clone();
                 result += &String::from("=\"");
                 result += &value.clone();

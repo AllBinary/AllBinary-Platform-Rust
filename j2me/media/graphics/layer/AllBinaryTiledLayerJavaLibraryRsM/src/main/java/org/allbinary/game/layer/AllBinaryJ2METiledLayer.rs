@@ -17,9 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::game::TiledLayer::TiledLayer;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::game::TiledLayer::TiledLayer;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use super::AllBinaryTiledLayer::AllBinaryTiledLayer;
@@ -35,7 +35,7 @@ pub struct AllBinaryJ2METiledLayer {
     pub base: AllBinaryTiledLayer,
     pub tiledLayerP: Option<Rc<RefCell<TiledLayer>>>,
     pub debugColor: i32,
-    pub font2: Option<Rc<RefCell<Font>>>,
+    pub font2: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>>,
 }
 
 
@@ -49,7 +49,7 @@ impl AllBinaryJ2METiledLayer {
             debugColor: 0,
             font2: None,
         };
-        this.font2 = Font::getFont(unsafe { crate::javax::microedition::lcdui::Font::Font_FACE_SYSTEM.clone() }.clone(), unsafe { crate::javax::microedition::lcdui::Font::Font_STYLE_PLAIN.clone() }.clone(), 4);
+        this.font2 = Font::getFont(crate::javax::microedition::lcdui::Font::Font_FACE_SYSTEM.with(Clone::clone).clone(), crate::javax::microedition::lcdui::Font::Font_STYLE_PLAIN.with(Clone::clone).clone(), 4);
         // super(...) is in the struct literal above
         this.tiledLayerP = tiledLayer.clone();
         this.debugColor = debugColor.clone();
@@ -62,13 +62,13 @@ impl AllBinaryJ2METiledLayer {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.tiledLayerP).paint(graphics.clone());
     }
     
 
-    pub fn paintDebug(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
+    pub fn paintDebug(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
         jcall!(graphics).setFont(self.font2.clone());
         jcall!(graphics).setColor(self.debugColor.clone());
         let mut x: i32 = jcall!(self.tiledLayerP).getX();
@@ -92,16 +92,16 @@ impl AllBinaryJ2METiledLayer {
                 let mut columnIndex: i32 = firstColumn.clone();
                 while columnIndex < totalColumns {
                     // continue skips the update below
-                tile = jcall!(self.tiledLayerP).getCell(columnIndex.clone(), rowIndex.clone());
+                tile = { let java_value = (jcall!(self.tiledLayerP).getCell(columnIndex.clone(), rowIndex.clone())).clone(); java_value };
                 if tile < 0 {
-                    tile = jcall!(self.tiledLayerP).getAnimatedTile(tile.clone());
+                    tile = { let java_value = (jcall!(self.tiledLayerP).getAnimatedTile(tile.clone())).clone(); java_value };
                 }
                 if tile == 0 {
                     continue;
                 }
                 tile -= 1;
                 jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                jcall!(graphics).drawString(jcall!(stringMaker).appendint(columnIndex.clone()).append(jcall!(commonSeps).COMMA.clone()).appendint(rowIndex.clone()).append(jcall!(commonSeps).COLON.clone()).appendint(tile.clone()).toString(), x + 5, y + 10, 0);
+                jcall!(graphics).drawString(jcall!(stringMaker).appendint(columnIndex.clone()).append({ let java_field = jcall!(commonSeps).COMMA.clone(); java_field }.clone()).appendint(rowIndex.clone()).append({ let java_field = jcall!(commonSeps).COLON.clone(); java_field }.clone()).appendint(tile.clone()).toString(), x + 5, y + 10, 0);
                 columnIndex += 1;
                 x += tileWidth.clone();
                 }
@@ -116,13 +116,13 @@ impl AllBinaryJ2METiledLayer {
 
     pub fn moveDXY(&mut self, mut dx: i32, mut dy: i32) {
         jcall!(self.tiledLayerP).r#move(dx.clone(), dy.clone());
-        self.base.moveDXY(-dx, -dy);
+        { let java_arguments = (-dx, -dy,); self.base.moveDXY(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn setPosition(&mut self, mut x: i32, mut y: i32, mut z: i32) {
         jcall!(self.tiledLayerP).setPosition(x.clone(), y.clone());
-        self.base.setPosition(-x, -y, z.clone());
+        { let java_arguments = (-x, -y, z.clone(),); self.base.setPosition(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
     
 
@@ -184,12 +184,16 @@ impl crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLaye
     fn setCell(&mut self, mut col: i32, mut row: i32, mut index: i32) { Self::setCell(self, col, row, index) }
     fn getAnimatedTile(&mut self, mut animationTileIndex: i32) -> i32 { Self::getAnimatedTile(self, animationTileIndex) }
 }
-impl crate::org::allbinary::layer::Layer::LayerDyn for AllBinaryJ2METiledLayer {
-    fn as_Layer(&self) -> &crate::org::allbinary::layer::Layer::Layer { &self.base.base }
-    fn as_Layer_mut(&mut self) -> &mut crate::org::allbinary::layer::Layer::Layer { &mut self.base.base }
+impl crate::javax::microedition::lcdui::game::Layer::LayerDyn for AllBinaryJ2METiledLayer {
+    fn as_Layer(&self) -> &crate::javax::microedition::lcdui::game::Layer::Layer { &self.base.base }
+    fn as_Layer_mut(&mut self) -> &mut crate::javax::microedition::lcdui::game::Layer::Layer { &mut self.base.base }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
     fn setPosition(&mut self, mut x: i32, mut y: i32, mut z: i32) { Self::setPosition(self, x, y, z) }
     fn moveDXY(&mut self, mut dx: i32, mut dy: i32) { Self::moveDXY(self, dx, dy) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for AllBinaryJ2METiledLayer {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayer::paintThreed(crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn::as_AllBinaryTiledLayer_mut(self), p1) }
 }
 impl crate::org::allbinary::layer::NamedInterface::NamedInterface for AllBinaryJ2METiledLayer {
     fn getName(&mut self) -> String { crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayer::getName(crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn::as_AllBinaryTiledLayer_mut(self)) }

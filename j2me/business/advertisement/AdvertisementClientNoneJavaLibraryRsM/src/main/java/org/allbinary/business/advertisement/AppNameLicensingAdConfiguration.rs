@@ -25,7 +25,7 @@ impl AppNameLicensingAdConfiguration {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: AdConfiguration::new_struct(vec![jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()]),
+            base: AdConfiguration::new_struct(vec![crate::java_into_object({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone())]),
         };
         // super(...) is in the struct literal above
         this

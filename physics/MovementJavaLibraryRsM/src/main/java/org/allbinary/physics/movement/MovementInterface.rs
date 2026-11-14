@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayer;
 use crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -27,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait MovementInterface {
+pub trait MovementInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn init(&mut self, speedBasicDecimal: Option<Rc<RefCell<BasicDecimal>>>, angle: i32, otherAngle: i32);
@@ -38,8 +39,6 @@ pub trait MovementInterface {
     
 
     fn stop(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

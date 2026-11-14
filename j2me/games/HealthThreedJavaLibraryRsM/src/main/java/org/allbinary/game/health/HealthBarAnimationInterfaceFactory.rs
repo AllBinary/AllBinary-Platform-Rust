@@ -22,6 +22,7 @@ use crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::Animat
 use crate::org::allbinary::animation::ProceduralAnimationInterfaceFactoryInterface::ProceduralAnimationInterfaceFactoryInterface;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::media::ScaleProperties::ScaleProperties;
+use crate::java::lang::Exception::*;
 use super::HealthBarThreedAnimation::HealthBarThreedAnimation;
 use super::HealthBarAnimation::HealthBarAnimation;
 
@@ -44,10 +45,12 @@ impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::
 impl ProceduralAnimationInterfaceFactoryInterface for HealthBarAnimationInterfaceFactory {
     fn getInstanceAnimation(&mut self, mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { Self::getInstanceAnimation(self, animationInterface) }
 }
-impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface for HealthBarAnimationInterfaceFactory {
-}
 
 impl HealthBarAnimationInterfaceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -63,7 +66,7 @@ impl HealthBarAnimationInterfaceFactory {
 
     // throws Exception
     pub fn getInstanceByLocation(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>, mut location: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::health::HealthBarAnimation::HealthBarAnimationDyn>>> {
-        return HealthBarThreedAnimation::new(layerInterface.clone(), location.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::health::HealthBarAnimation::HealthBarAnimationDyn>>);
+        return HealthBarThreedAnimation::new(layerInterface.clone(), location.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::health::HealthBarAnimation::HealthBarAnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::health::HealthBarAnimation::HealthBarAnimationDyn>>);
     }
     
 

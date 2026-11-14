@@ -34,6 +34,10 @@ pub struct BodyData {
 thread_local! { pub static BodyData_instance: Option<Rc<RefCell<BodyData>>> = BodyData::new(); }
 
 impl BodyData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

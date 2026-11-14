@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -26,13 +27,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait DomDocumentMappingInterface {
+pub trait DomDocumentMappingInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn toXmlDoc(&mut self) -> Option<Rc<RefCell<Document>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

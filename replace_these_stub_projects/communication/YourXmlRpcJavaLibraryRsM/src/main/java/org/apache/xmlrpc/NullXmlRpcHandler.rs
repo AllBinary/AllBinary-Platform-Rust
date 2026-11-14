@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
+use crate::java::lang::Exception::*;
 use super::XmlRpcHandler::XmlRpcHandler;
 
 // Borrows the object of a Java reference
@@ -39,6 +40,10 @@ impl XmlRpcHandler for NullXmlRpcHandler {
 
 impl NullXmlRpcHandler {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -52,7 +57,7 @@ impl NullXmlRpcHandler {
 
     // throws Exception
     pub fn execute(&mut self, mut method: String, mut params: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return jcall!(NullUtil::getInstance()).NULL_OBJECT.clone();
+        return { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone();
     }
 }
 

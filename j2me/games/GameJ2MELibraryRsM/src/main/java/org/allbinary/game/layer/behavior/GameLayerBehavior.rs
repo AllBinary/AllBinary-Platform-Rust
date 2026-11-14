@@ -31,6 +31,10 @@ pub struct GameLayerBehavior {
 
 impl GameLayerBehavior {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -41,7 +45,7 @@ impl GameLayerBehavior {
         Some(Rc::new(RefCell::new(Self::new_struct())))
     }
 }
-pub trait GameLayerBehaviorDyn {
+pub trait GameLayerBehaviorDyn: std::any::Any {
     fn as_GameLayerBehavior(&self) -> &GameLayerBehavior;
     fn as_GameLayerBehavior_mut(&mut self) -> &mut GameLayerBehavior;
 }

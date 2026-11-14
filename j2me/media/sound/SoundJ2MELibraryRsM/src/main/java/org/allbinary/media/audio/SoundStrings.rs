@@ -38,6 +38,10 @@ thread_local! { pub static SoundStrings_instance: Option<Rc<RefCell<SoundStrings
 
 impl SoundStrings {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             STOP_ALL: String::new(),

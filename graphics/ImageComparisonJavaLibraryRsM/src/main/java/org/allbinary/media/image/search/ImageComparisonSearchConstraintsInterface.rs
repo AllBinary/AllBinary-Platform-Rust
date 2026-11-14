@@ -27,12 +27,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait ImageComparisonSearchConstraintsInterface {
+pub trait ImageComparisonSearchConstraintsInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getStatisticalMatchConstraintsVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

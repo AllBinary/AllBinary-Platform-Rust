@@ -5,12 +5,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItem;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::RuntimeException::*;
 use super::CustomScreen::CustomScreen;
 
 // Borrows the object of a Java reference
@@ -96,12 +97,12 @@ impl ABCustomForm {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 
     pub fn getTitle(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
 }
 impl std::ops::Deref for ABCustomForm {
@@ -126,7 +127,7 @@ pub trait ABCustomFormDyn: crate::org::allbinary::graphics::form::CustomScreen::
     fn set(&mut self, mut itemNum: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) { ABCustomForm::set(self.as_ABCustomForm_mut(), itemNum, item) }
     fn get(&mut self, mut itemNum: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>> { ABCustomForm::get(self.as_ABCustomForm_mut(), itemNum) }
     fn getWidth(&mut self) -> i32 { ABCustomForm::getWidth(self.as_ABCustomForm_mut()) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { ABCustomForm::paint(self.as_ABCustomForm_mut(), graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { ABCustomForm::paint(self.as_ABCustomForm_mut(), graphics) }
     fn getTitle(&mut self) -> String { ABCustomForm::getTitle(self.as_ABCustomForm_mut()) }
 }
 impl ABCustomFormDyn for ABCustomForm {

@@ -36,6 +36,7 @@ use crate::org::allbinary::media::image::cache::BufferedImagePoolSingleton::Buff
 use crate::org::allbinary::media::image::comparison::ImageComparisonResult::ImageComparisonResult;
 use crate::org::allbinary::media::image::io::ImageIOInterface::ImageIOInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -54,6 +55,10 @@ impl ImageIOInterface for MotionRectanglesImageInputOutput {
 }
 
 impl MotionRectanglesImageInputOutput {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -74,18 +79,18 @@ impl MotionRectanglesImageInputOutput {
     // throws Exception
     pub fn save(&mut self, mut frame: Option<i64>) {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        let mut motionRectanglesResultsFrameCacheable: Option<Rc<RefCell<MotionRectanglesResultsFrameCacheable>>> = (jcall!(((AllMotionRectanglesResultsCacheSingleton::AllMotionRectanglesResultsCacheSingleton::getInstance()).clone() /* as AutomaticCacheInterface */)).get(frame.clone())).clone() /* as MotionRectanglesResultsFrameCacheable */;
+        let mut motionRectanglesResultsFrameCacheable: Option<Rc<RefCell<MotionRectanglesResultsFrameCacheable>>> = (jcall!(((|| -> Option<Rc<RefCell<dyn AutomaticCacheInterface>>> { panic!("ClassCastException: a Rust dyn CacheInterface cannot be cast to dyn AutomaticCacheInterface") })())).get(crate::java_into_object((frame.clone()).expect("NullPointerException")))).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<MotionRectanglesResultsFrameCacheable>() }, "ClassCastException: not a MotionRectanglesResultsFrameCacheable"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<MotionRectanglesResultsFrameCacheable>) } });
         if motionRectanglesResultsFrameCacheable.is_some() {
             let mut motionRectangles: Option<Rc<RefCell<dyn crate::org::allbinary::media::image::comparison::motion::MotionRectangles::MotionRectanglesDyn>>> = jcall!(motionRectanglesResultsFrameCacheable).getMotionRectangles();
             self.save2(motionRectangles.clone(), frame.clone());
-            motionRectanglesResultsFrameCacheable = (jcall!(((ConsolidatedMotionRectanglesResultsCacheSingleton::ConsolidatedMotionRectanglesResultsCacheSingleton::getInstance()).clone() /* as AutomaticCacheInterface */)).get(frame.clone())).clone() /* as MotionRectanglesResultsFrameCacheable */;
-            motionRectangles = jcall!(motionRectanglesResultsFrameCacheable).getMotionRectangles();
+            motionRectanglesResultsFrameCacheable = { let java_value = ((jcall!(((|| -> Option<Rc<RefCell<dyn AutomaticCacheInterface>>> { panic!("ClassCastException: a Rust dyn CacheInterface cannot be cast to dyn AutomaticCacheInterface") })())).get(crate::java_into_object((frame.clone()).expect("NullPointerException")))).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<MotionRectanglesResultsFrameCacheable>() }, "ClassCastException: not a MotionRectanglesResultsFrameCacheable"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<MotionRectanglesResultsFrameCacheable>) } })).clone(); java_value };
+            motionRectangles = { let java_value = (jcall!(motionRectanglesResultsFrameCacheable).getMotionRectangles()).clone(); java_value };
             self.save2(motionRectangles.clone(), frame.clone());
-            motionRectanglesResultsFrameCacheable = (jcall!(((ConstrainedMotionRectanglesResultsCacheSingleton::ConstrainedMotionRectanglesResultsCacheSingleton::getInstance()).clone() /* as AutomaticCacheInterface */)).get(frame.clone())).clone() /* as MotionRectanglesResultsFrameCacheable */;
-            motionRectangles = jcall!(motionRectanglesResultsFrameCacheable).getMotionRectangles();
+            motionRectanglesResultsFrameCacheable = { let java_value = ((jcall!(((|| -> Option<Rc<RefCell<dyn AutomaticCacheInterface>>> { panic!("ClassCastException: a Rust dyn CacheInterface cannot be cast to dyn AutomaticCacheInterface") })())).get(crate::java_into_object((frame.clone()).expect("NullPointerException")))).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<MotionRectanglesResultsFrameCacheable>() }, "ClassCastException: not a MotionRectanglesResultsFrameCacheable"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<MotionRectanglesResultsFrameCacheable>) } })).clone(); java_value };
+            motionRectangles = { let java_value = (jcall!(motionRectanglesResultsFrameCacheable).getMotionRectangles()).clone(); java_value };
             self.save2(motionRectangles.clone(), frame.clone());
         } else {
-            jcall!(self.logUtil).putF(format!("{}{}", String::from("No Motion Rectangle Results for Frame: "), frame), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).SAVE.clone());
+            jcall!(self.logUtil).putF(format!("{}{}", String::from("No Motion Rectangle Results for Frame: "), frame), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).SAVE.clone(); java_field }.clone());
         }
     }
     
@@ -102,30 +107,30 @@ impl MotionRectanglesImageInputOutput {
         let mut filePathStringBuffer1: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(filePathStringBuffer1).append(jcall!(filePathStringBuffer).toString());
         jcall!(filePathStringBuffer1).append(String::from("_1"));
-        jcall!(filePathStringBuffer1).append(jcall!(jcall!(MediaDataFactory::getInstance()).JPG).getExtension());
+        jcall!(filePathStringBuffer1).append(jcall!({ let java_field = jcall!(MediaDataFactory::getInstance()).JPG.clone(); java_field }).getExtension());
         let mut filePathStringBuffer2: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(filePathStringBuffer2).append(jcall!(filePathStringBuffer).toString());
         jcall!(filePathStringBuffer2).append(String::from("_2"));
-        jcall!(filePathStringBuffer2).append(jcall!(jcall!(MediaDataFactory::getInstance()).JPG).getExtension());
+        jcall!(filePathStringBuffer2).append(jcall!({ let java_field = jcall!(MediaDataFactory::getInstance()).JPG.clone(); java_field }).getExtension());
         let mut filePathStringBuffer3: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(filePathStringBuffer3).append(jcall!(filePathStringBuffer).toString());
-        jcall!(filePathStringBuffer3).append(jcall!(jcall!(MediaDataFactory::getInstance()).JPG).getExtension());
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Motion Image File Path 1: "), jcall!(filePathStringBuffer1).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).SAVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Motion Image File Path 2: "), jcall!(filePathStringBuffer2).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).SAVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Motion Image File Path 2: "), jcall!(filePathStringBuffer3).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).SAVE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        jcall!(filePathStringBuffer3).append(jcall!({ let java_field = jcall!(MediaDataFactory::getInstance()).JPG.clone(); java_field }).getExtension());
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Motion Image File Path 1: "), jcall!(filePathStringBuffer1).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).SAVE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Motion Image File Path 2: "), jcall!(filePathStringBuffer2).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).SAVE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Motion Image File Path 2: "), jcall!(filePathStringBuffer3).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).SAVE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut bufferedImageCacheables: Vec<Option<Rc<RefCell<BufferedImageCacheable>>>> = vec![None; (self.NUMBER_OF_IMAGES) as usize];
         let mut imageComparisonInfo: Option<Rc<RefCell<ImageComparisonResult>>> = jcall!(motionRectangles).getImageComparisonResult();
         let mut originalBufferedImage: Option<Rc<RefCell<BufferedImage>>> = jcall!(imageComparisonInfo).getBufferedImages()[(0) as usize].clone();
-        let mut bufferedImageInfo: Option<Rc<RefCell<BufferedImageInfo>>> = BufferedImageInfoFactory::getInstance(jcall!(imageComparisonInfo).imageWidth.clone(), jcall!(imageComparisonInfo).imageHeight.clone(), jcall!(originalBufferedImage).getType());
-        let mut poolInterface: Option<Rc<RefCell<dyn PoolInterface>>> = BufferedImagePoolSingleton::getInstance().map(|reference| reference as Rc<RefCell<dyn PoolInterface>>);
+        let mut bufferedImageInfo: Option<Rc<RefCell<BufferedImageInfo>>> = BufferedImageInfoFactory::getInstance({ let java_field = jcall!(imageComparisonInfo).imageWidth.clone(); java_field }.clone(), { let java_field = jcall!(imageComparisonInfo).imageHeight.clone(); java_field }.clone(), jcall!(originalBufferedImage).getType());
+        let mut poolInterface: Option<Rc<RefCell<dyn PoolInterface>>> = BufferedImagePoolSingleton::getInstance();
         for index in (0..self.NUMBER_OF_IMAGES) {
-            bufferedImageCacheables[(index) as usize] = (jcall!(poolInterface).remove(crate::java_into_object(bufferedImageInfo.clone()))).clone() /* as BufferedImageCacheable */;
+            bufferedImageCacheables[(index) as usize] = (jcall!(poolInterface).remove(crate::java_into_object(bufferedImageInfo.clone()))).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<BufferedImageCacheable>() }, "ClassCastException: not a BufferedImageCacheable"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<BufferedImageCacheable>) } });
         }
         jcall!(jcall!(bufferedImageCacheables[(0) as usize]).getBufferedImage()).setData(jcall!(jcall!(imageComparisonInfo).getBufferedImages()[(1) as usize]).getData());
         if self.NUMBER_OF_IMAGES > 1 {
             jcall!(jcall!(bufferedImageCacheables[(1) as usize]).getBufferedImage()).setData(jcall!(jcall!(imageComparisonInfo).getBufferedImages()[(1) as usize]).getData());
         }
-        let mut bufferedImageGraphicsArray: Vec<Option<Rc<RefCell<Graphics>>>> = Vec::new();
+        let mut bufferedImageGraphicsArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>> = Vec::new();
         bufferedImageGraphicsArray = vec![None; (self.NUMBER_OF_IMAGES) as usize];
         for index in (0..self.NUMBER_OF_IMAGES) {
             bufferedImageGraphicsArray[(index) as usize] = jcall!(jcall!(bufferedImageCacheables[(index) as usize]).getBufferedImage()).getGraphics();
@@ -137,7 +142,7 @@ impl MotionRectanglesImageInputOutput {
             let mut rectangle: Option<Rc<RefCell<Rectangle>>> = jcall!(motionRectangle).getRectangle();
             for index in (0..self.NUMBER_OF_IMAGES) {
                 jcall!(bufferedImageGraphicsArray[(index) as usize]).setColor(unsafe { Color_ORANGE.clone() }.clone());
-                jcall!(bufferedImageGraphicsArray[(index) as usize]).drawRect(jcall!(rectangle).x.clone(), jcall!(rectangle).y.clone(), jcall!(rectangle).width.clone(), jcall!(rectangle).height.clone());
+                jcall!(bufferedImageGraphicsArray[(index) as usize]).drawRect({ let java_field = jcall!(rectangle).x.clone(); java_field }.clone(), { let java_field = jcall!(rectangle).y.clone(); java_field }.clone(), { let java_field = jcall!(rectangle).width.clone(); java_field }.clone(), { let java_field = jcall!(rectangle).height.clone(); java_field }.clone());
             }
         }
         let mut imagePersistanceUtil: Option<Rc<RefCell<ImagePersistanceUtil>>> = ImagePersistanceUtil::getInstance();

@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait MovementCompositeInterface {
+pub trait MovementCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getMovement(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::physics::movement::Movement::MovementDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

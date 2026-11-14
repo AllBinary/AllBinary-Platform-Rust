@@ -38,6 +38,10 @@ thread_local! { pub static RTSLayerLogHelper_instance: Option<Rc<RefCell<dyn RTS
 
 impl RTSLayerLogHelper {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -117,7 +121,7 @@ impl RTSLayerLogHelper {
     pub fn notOnPath(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut geographicMapCellHistory: Option<Rc<RefCell<GeographicMapCellHistory>>>, mut currentGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>, mut pathList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
     }
 }
-pub trait RTSLayerLogHelperDyn {
+pub trait RTSLayerLogHelperDyn: std::any::Any {
     fn as_RTSLayerLogHelper(&self) -> &RTSLayerLogHelper;
     fn as_RTSLayerLogHelper_mut(&mut self) -> &mut RTSLayerLogHelper;
     fn setClosestGeographicMapCellHistory(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut pathsList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) { RTSLayerLogHelper::setClosestGeographicMapCellHistory(self.as_RTSLayerLogHelper_mut(), associatedAdvancedRTSGameLayer, pathsList) }

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use super::Paintable::Paintable;
 use super::PaintableInterface::PaintableInterface;
 
@@ -33,10 +33,6 @@ pub struct PaintableComposite {
     pub paintableArray: Vec<Option<Rc<RefCell<dyn PaintableInterface>>>>,
 }
 
-impl PaintableInterface for PaintableComposite {
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
-}
 
 impl PaintableComposite {
     
@@ -55,14 +51,14 @@ impl PaintableComposite {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         for index in (0..=(self.paintableArray.len() as i32) - 1).rev() {
             jcall!(self.paintableArray[(index) as usize]).paint(graphics.clone());
         }
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         for index in (0..=(self.paintableArray.len() as i32) - 1).rev() {
             jcall!(self.paintableArray[(index) as usize]).paintThreed(graphics.clone());
         }
@@ -79,8 +75,10 @@ impl std::ops::DerefMut for PaintableComposite {
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for PaintableComposite {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for PaintableComposite {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paintThreed(self, graphics) }
 }
 
 

@@ -22,11 +22,15 @@ thread_local! { pub static PoolTypeFactory_instance: Option<Rc<RefCell<PoolTypeF
 
 impl PoolTypeFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             VECTOR_POOL: None,
         };
-        this.VECTOR_POOL = PoolType::new(jcall!(CacheTypeFactory::CacheTypeFactory::getInstance()).NO_CACHE.clone());
+        this.VECTOR_POOL = PoolType::new({ let java_field = jcall!(CacheTypeFactory::CacheTypeFactory::getInstance()).NO_CACHE.clone(); java_field }.clone());
         this
     }
 

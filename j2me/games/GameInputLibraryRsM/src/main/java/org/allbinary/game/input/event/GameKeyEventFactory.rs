@@ -22,6 +22,7 @@ use crate::org::allbinary::game::input::Input::Input;
 use crate::org::allbinary::game::input::InputFactory::InputFactory;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 use super::GameKeyEvent::GameKeyEvent;
 
 // Borrows the object of a Java reference
@@ -39,16 +40,20 @@ pub struct GameKeyEventFactory {
     pub ARRAY: Vec<Vec<Option<Rc<RefCell<GameKeyEvent>>>>>,
 }
 
-pub static mut GameKeyEventFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut GameKeyEventFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl GameKeyEventFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GameKeyEventFactory>>> {
-        if match (&unsafe { GameKeyEventFactory_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *GameKeyEventFactory_instance = GameKeyEventFactory::new() };
+        if match (&unsafe { GameKeyEventFactory_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *GameKeyEventFactory_instance = crate::java_into_object(GameKeyEventFactory::new()) };
         }
-        return (unsafe { GameKeyEventFactory_instance.clone() }).clone() /* as GameKeyEventFactory */;
+        return { let java_object = (unsafe { GameKeyEventFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameKeyEventFactory>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -64,7 +69,7 @@ impl GameKeyEventFactory {
         this.TOUCH_BUTTON_SOURCE_ID = 2;
         this.MOTION_GESTURE_SOURCE_ID = 3;
         this.MAX_SOURCES = 4;
-        this.ARRAY = vec![vec![None; (jcall!(InputFactory::getInstance()).MAX) as usize]; (this.MAX_SOURCES) as usize];
+        this.ARRAY = vec![vec![None; ({ let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field }) as usize]; (this.MAX_SOURCES) as usize];
         this
     }
 
@@ -75,14 +80,14 @@ impl GameKeyEventFactory {
 
     pub fn init(&mut self) {
         let mut nullUtil: Option<Rc<RefCell<NullUtil>>> = NullUtil::getInstance();
-        let mut size: i32 = jcall!(InputFactory::getInstance()).MAX.clone();
+        let mut size: i32 = { let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field }.clone();
         {
             let mut index: i32 = self.MAX_SOURCES.clone();
             while { index -= 1; index } >= 0 {
             {
                 let mut index2: i32 = size.clone();
                 while { index2 -= 1; index2 } >= 0 {
-                self.ARRAY[(index) as usize][(index2) as usize] = GameKeyEvent::createEvent(jcall!(nullUtil).NULL_OBJECT.clone(), index.clone(), index2.clone());
+                { let java_index = (index2) as usize; self.ARRAY[(index) as usize][java_index] = GameKeyEvent::createEvent(crate::java_into_object({ let java_field = jcall!(nullUtil).NULL_OBJECT.clone(); java_field }.clone()), index.clone(), index2.clone()); };
                 }
             }
             }

@@ -33,6 +33,10 @@ thread_local! { pub static RTSLayer2LogHelper_instance: Option<Rc<RefCell<dyn RT
 
 impl RTSLayer2LogHelper {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -88,7 +92,7 @@ impl RTSLayer2LogHelper {
     pub fn buildingRight(&mut self) {
     }
 }
-pub trait RTSLayer2LogHelperDyn {
+pub trait RTSLayer2LogHelperDyn: std::any::Any {
     fn as_RTSLayer2LogHelper(&self) -> &RTSLayer2LogHelper;
     fn as_RTSLayer2LogHelper_mut(&mut self) -> &mut RTSLayer2LogHelper;
     fn steeringUp(&mut self, mut pathFindingLayerInterface: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>) { RTSLayer2LogHelper::steeringUp(self.as_RTSLayer2LogHelper_mut(), pathFindingLayerInterface) }

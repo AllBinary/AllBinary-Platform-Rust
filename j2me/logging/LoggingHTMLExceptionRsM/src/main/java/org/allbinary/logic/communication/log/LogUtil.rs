@@ -38,6 +38,10 @@ pub struct LogUtil {
 thread_local! { pub static LogUtil_instance: Option<Rc<RefCell<LogUtil>>> = LogUtil::new(); }
 
 impl LogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogUtil>>> {
@@ -73,9 +77,9 @@ impl LogUtil {
     
 
     pub fn putF(&mut self, mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String) {
-        let mut className: String = PreLogUtil::PreLogUtil::getClassName(anyType.clone());
+        let mut className: String = PreLogUtil::PreLogUtil::getClassName(crate::java_into_object(anyType.clone()));
         if false {
-            className = jcall!(CommonStrings::getInstance()).EMPTY.clone();
+            className = { let java_value = ({ let java_field = jcall!(CommonStrings::getInstance()).EMPTY.clone(); java_field }).clone(); java_value }.clone();
         }
         let mut message: String = jcall!(self.logFormatUtil).getS(className.clone(), functionName.clone(), specialMessage.clone());
         jcall!(PlayN::log()).debug(format!("{}{}", self.LOG_SUCCESS, message));
@@ -89,9 +93,9 @@ impl LogUtil {
     
 
     pub fn put(&mut self, mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {
-        let mut className: String = PreLogUtil::PreLogUtil::getClassName(anyType.clone());
+        let mut className: String = PreLogUtil::PreLogUtil::getClassName(crate::java_into_object(anyType.clone()));
         if false {
-            className = jcall!(CommonStrings::getInstance()).EMPTY.clone();
+            className = { let java_value = ({ let java_field = jcall!(CommonStrings::getInstance()).EMPTY.clone(); java_field }).clone(); java_value }.clone();
         }
         let mut message: String = jcall!(self.logFormatUtil).get(className.clone(), functionName.clone(), specialMessage.clone(), crate::java_into_object(exception.clone()));
         if exception.is_some() {

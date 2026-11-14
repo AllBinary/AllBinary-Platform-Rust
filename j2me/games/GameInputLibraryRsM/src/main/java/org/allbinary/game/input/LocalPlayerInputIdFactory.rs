@@ -41,6 +41,10 @@ pub struct LocalPlayerInputIdFactory {
 thread_local! { pub static LocalPlayerInputIdFactory_instance: Option<Rc<RefCell<LocalPlayerInputIdFactory>>> = LocalPlayerInputIdFactory::new(); }
 
 impl LocalPlayerInputIdFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -61,7 +65,7 @@ impl LocalPlayerInputIdFactory {
         this.playersInPlay = vec![false; (this.MAX_NUMBER_OF_PLAYERS) as usize];
         this.totalDevicesMapped = 0;
         for index in (0..=(this.deviceIdToplayerId.len() as i32) - 1).rev() {
-            this.deviceIdToplayerId[(index) as usize] = -1;
+            { let java_index = (index) as usize; this.deviceIdToplayerId[java_index] = -1; };
         }
         this
     }
@@ -97,11 +101,11 @@ impl LocalPlayerInputIdFactory {
         }
         index = self.totalDevicesMapped.clone();
         if deviceId < self.MAX_FAST_DEVICEID {
-            self.deviceIdToplayerId[(deviceId) as usize] = index.clone();
+            { let java_index = (deviceId) as usize; self.deviceIdToplayerId[java_index] = index.clone(); };
         } else {
             { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Added DeviceId: ")).appendint(deviceId.clone()).append(String::from(" beyond fast Id list")).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getPlayerForDevice"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
-        self.playerIdToDeviceId[(index) as usize] = deviceId.clone();
+        { let java_index = (index) as usize; self.playerIdToDeviceId[java_index] = deviceId.clone(); };
         jcall!(AnalogLocationInputFactory::getInstance()).addPlayer(self.totalDevicesMapped.clone());
         self.totalDevicesMapped += 1;
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Added DeviceId: ")).appendint(deviceId.clone()).append(String::from(" at: ")).appendint(index.clone()).append(String::from(" Total: ")).appendint(self.totalDevicesMapped.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getPlayerForDevice"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
@@ -127,13 +131,13 @@ impl LocalPlayerInputIdFactory {
 
     pub fn setPlayerInPlay(&mut self, mut playerInputId: i32) {
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Setting PlayerInPlay with playerInputId: ")).appendint(playerInputId.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setPlayerInPlay"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        self.playersInPlay[(playerInputId) as usize] = true;
+        { let java_index = (playerInputId) as usize; self.playersInPlay[java_index] = true; };
     }
     
 
     pub fn setPlayerOutOfPlay(&mut self, mut playerInputId: i32) {
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Setting PlayerOutOfPlay with playerInputId: ")).appendint(playerInputId.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setPlayerOutOfPlay"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        self.playersInPlay[(playerInputId) as usize] = false;
+        { let java_index = (playerInputId) as usize; self.playersInPlay[java_index] = false; };
     }
     
 

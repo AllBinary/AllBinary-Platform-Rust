@@ -21,6 +21,7 @@ use crate::org::allbinary::animation::transition::TransistionTypes::TransistionT
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::android::app::Activity::Activity;
+use crate::java::lang::Exception::*;
 use super::ProgressRunnable::ProgressRunnable;
 use super::ProgressCanvas::ProgressCanvas;
 
@@ -48,7 +49,7 @@ impl ShowTitleProgressBarRunnable {
             FADE_IN_HALF: Vec::new(),
         };
         this.logUtil = LogUtil::getInstance();
-        this.FADE_IN_HALF = vec![jcall!(TransistionTypes::getInstance()).FADE_IN_TO_HALF_ALPHA.clone(), jcall!(TransistionTypes::getInstance()).FADE_IN_FROM_HALF_ALPHA.clone()];
+        this.FADE_IN_HALF = vec![{ let java_field = jcall!(TransistionTypes::getInstance()).FADE_IN_TO_HALF_ALPHA.clone(); java_field }.clone(), { let java_field = jcall!(TransistionTypes::getInstance()).FADE_IN_FROM_HALF_ALPHA.clone(); java_field }.clone()];
         // super(...) is in the struct literal above
         this
     }
@@ -64,10 +65,10 @@ impl ShowTitleProgressBarRunnable {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

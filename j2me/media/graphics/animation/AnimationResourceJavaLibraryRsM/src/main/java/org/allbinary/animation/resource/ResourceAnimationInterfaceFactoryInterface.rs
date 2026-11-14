@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -26,13 +27,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait ResourceAnimationInterfaceFactoryInterface {
+pub trait ResourceAnimationInterfaceFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn getBasicAnimationInterfaceFactoryInstance(&mut self, resource: String) -> Option<Rc<RefCell<dyn BasicAnimationInterfaceFactoryInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

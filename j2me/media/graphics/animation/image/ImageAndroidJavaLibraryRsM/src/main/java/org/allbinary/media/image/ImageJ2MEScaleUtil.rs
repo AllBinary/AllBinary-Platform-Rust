@@ -17,8 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::image::GameFeatureImageCacheFactory::GameFeatureImageCacheFactory;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +34,10 @@ pub struct ImageJ2MEScaleUtil {
 thread_local! { pub static ImageJ2MEScaleUtil_instance: Option<Rc<RefCell<ImageJ2MEScaleUtil>>> = ImageJ2MEScaleUtil::new(); }
 
 impl ImageJ2MEScaleUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ImageJ2MEScaleUtil>>> {
@@ -52,9 +57,9 @@ impl ImageJ2MEScaleUtil {
     
 
     // throws Exception
-    pub fn scaleArray(&mut self, mut images: Vec<Option<Rc<RefCell<Image>>>>, mut width: i32, mut height: i32) -> Vec<Option<Rc<RefCell<Image>>>> {
+    pub fn scaleArray(&mut self, mut images: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut width: i32, mut height: i32) -> Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> {
         for index in (0..(images.len() as i32)) {
-            let mut image: Option<Rc<RefCell<Image>>> = images[(index) as usize].clone();
+            let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = images[(index) as usize].clone();
             images[(index) as usize] = jcall!(ImageScaleUtil::ImageScaleUtil::getInstance()).createImage2(GameFeatureImageCacheFactory::getInstance(), image.clone(), ((width) as f32) / 2.0_f32, ((jcall!(image).getWidth()) as f32), ((height) as f32), ((jcall!(image).getHeight()) as f32), false);
         }
         return images.clone();
@@ -62,7 +67,7 @@ impl ImageJ2MEScaleUtil {
     
 
     // throws Exception
-    pub fn scale(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut width: i32, mut height: i32) -> Option<Rc<RefCell<Image>>> {
+    pub fn scale(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return jcall!(ImageScaleUtil::ImageScaleUtil::getInstance()).createImage2(GameFeatureImageCacheFactory::getInstance(), image.clone(), ((width) as f32), ((jcall!(image).getWidth()) as f32), ((height) as f32), ((jcall!(image).getHeight()) as f32), false);
     }
 }

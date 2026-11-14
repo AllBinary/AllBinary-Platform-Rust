@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 use super::UrlGlobalsInterface::UrlGlobalsInterface;
 
 // Borrows the object of a Java reference
@@ -42,7 +43,7 @@ impl AppUrlGlobals {
             base: UrlGlobalsInterface::new_struct(),
             path: String::new(),
         };
-        this.path = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.path = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this
     }
 
@@ -71,7 +72,7 @@ impl AppUrlGlobals {
     
 
     pub fn getTestHtmlPath(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 

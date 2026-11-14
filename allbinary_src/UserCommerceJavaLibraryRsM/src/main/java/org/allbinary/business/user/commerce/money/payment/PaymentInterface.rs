@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait PaymentInterface {
+pub trait PaymentInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn setName(&mut self, value: String);
@@ -62,8 +62,6 @@ pub trait PaymentInterface {
     
 
     fn isDefault(&mut self) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -21,6 +21,7 @@ use crate::org::allbinary::game::score::ScoreableInterface::ScoreableInterface;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerCircularPool::AllBinaryLayerCircularPool;
 use crate::org::allbinary::layer::AllBinaryLayerFactoryInterface::AllBinaryLayerFactoryInterface;
+use crate::java::lang::Exception::*;
 use super::PointsLayer::PointsLayer;
 
 // Borrows the object of a Java reference
@@ -42,7 +43,7 @@ impl PointsLayerCircularStaticPool {
         let mut this = Self {
             base: AllBinaryLayerCircularPool::new_struct(),
         };
-        this.base.initAllBinaryLayerCircularPool(allbinaryLayerFactoryInterface.clone(), total.clone());
+        { let java_arguments = (allbinaryLayerFactoryInterface.clone(), total.clone(),); this.base.initAllBinaryLayerCircularPool(java_arguments.0, java_arguments.1) };
         this
     }
 
@@ -54,7 +55,7 @@ impl PointsLayerCircularStaticPool {
     // throws Exception
     pub fn visit(&mut self, mut sourceLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) {
         let mut pointsLayer: Option<Rc<RefCell<PointsLayer>>> = { let java_object = (self.getNextInstance()).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<PointsLayer>>>>().expect("ClassCastException").clone()) };
-        let mut scoreableInterface: Option<Rc<RefCell<dyn ScoreableInterface>>> = (sourceLayerInterface).clone() /* as ScoreableInterface */;
+        let mut scoreableInterface: Option<Rc<RefCell<dyn ScoreableInterface>>> = (|| -> Option<Rc<RefCell<dyn ScoreableInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to ScoreableInterface") })();
         jcall!(pointsLayer).visit(scoreableInterface.clone());
     }
 }

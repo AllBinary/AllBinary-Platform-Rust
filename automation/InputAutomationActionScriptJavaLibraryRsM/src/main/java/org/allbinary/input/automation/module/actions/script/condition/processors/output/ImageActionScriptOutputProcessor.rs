@@ -24,6 +24,7 @@ use crate::org::allbinary::input::media::image::InputImageType::InputImageType;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::media::image::io::ImageIOInterface::ImageIOInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::ImageTypes::ImageTypes;
 use super::ImageActionScriptOutputInterface::ImageActionScriptOutputInterface;
 
@@ -40,6 +41,10 @@ pub struct ImageActionScriptOutputProcessor {
 
 
 impl ImageActionScriptOutputProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -59,7 +64,7 @@ impl ImageActionScriptOutputProcessor {
     pub fn process(mut imageActionScriptOutputInterface: Option<Rc<RefCell<dyn ImageActionScriptOutputInterface>>>, mut frame: Option<i64>) {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(logUtil).putF(format!("{}{}", String::from("Start - Processing at: "), jcall!(imageActionScriptOutputInterface).toString()), crate::java_into_object(String::from("ImageActionScriptOutputProcessor")), jcall!(commonStrings).PROCESS.clone());
+        jcall!(logUtil).putF(format!("{}{}", String::from("Start - Processing at: "), jcall!(imageActionScriptOutputInterface).toString()), crate::java_into_object(String::from("ImageActionScriptOutputProcessor")), { let java_field = jcall!(commonStrings).PROCESS.clone(); java_field }.clone());
         let mut imageTypes: Option<Rc<RefCell<ImageTypes>>> = jcall!(imageActionScriptOutputInterface).getImageTypes();
         let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(imageTypes).getVector();
         let mut size: i32 = jcall!(vector).size();

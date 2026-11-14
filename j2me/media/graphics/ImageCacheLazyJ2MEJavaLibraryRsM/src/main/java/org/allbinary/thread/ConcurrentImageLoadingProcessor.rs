@@ -22,9 +22,9 @@ use crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanva
 use crate::org::allbinary::image::ImageCache::ImageCache;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::BaseImageLoadingProcessor::BaseImageLoadingProcessor;
 use super::ABRunnable::ABRunnable;
-use super::ImageCacheRunnable::ImageCacheRunnable;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -50,7 +50,7 @@ impl ConcurrentImageLoadingProcessor {
             runnable: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.runnable = ImageCacheRunnable::new(imageCache.clone());
+        this.runnable = ImageCacheRunnable::new(imageCache.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ABRunnable::ABRunnableDyn>>);
         this
     }
 
@@ -61,7 +61,7 @@ impl ConcurrentImageLoadingProcessor {
 
     pub fn runTask(&mut self) {
         if !jcall!(self.runnable).isRunning() {
-            jcall!(ImageThreadPool::ImageThreadPool::getInstance()).runTask(self.runnable.clone().map(|reference| reference as Rc<RefCell<dyn crate::Runnable>>));
+            jcall!(ImageThreadPool::ImageThreadPool::getInstance()).runTask(self.runnable.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::Runnable>> { panic!("ClassCastException: the Rust trait of ABRunnable does not have Runnable as a base trait") }));
         }
     }
 }
@@ -85,6 +85,11 @@ pub struct ImageCacheRunnable {
     pub imageCache: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>>,
 }
 
+impl crate::org::allbinary::thread::RunnableInterface::RunnableInterface for ImageCacheRunnable {
+    fn isRunning(&mut self) -> bool { crate::org::allbinary::thread::ABRunnable::ABRunnable::isRunning(crate::org::allbinary::thread::ABRunnable::ABRunnableDyn::as_ABRunnable_mut(self)) }
+    fn setRunning(&mut self, p1: bool) { crate::org::allbinary::thread::ABRunnable::ABRunnable::setRunning(crate::org::allbinary::thread::ABRunnable::ABRunnableDyn::as_ABRunnable_mut(self), p1) }
+    fn setThread(&mut self, p1: Option<Rc<RefCell<crate::java::lang::Thread::Thread>>>) { crate::org::allbinary::thread::ABRunnable::ABRunnable::setThread(crate::org::allbinary::thread::ABRunnable::ABRunnableDyn::as_ABRunnable_mut(self), p1) }
+}
 impl crate::Runnable for ImageCacheRunnable {
     fn run(&mut self) { Self::run(self) }
 }
@@ -115,17 +120,17 @@ impl ImageCacheRunnable {
                 jcall!(self.imageCache).loadRemainingAnimations();
                 self.setRunning(false);
                 let mut progressCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::canvas::transition::progress::ProgressCanvas::ProgressCanvasDyn>>> = ProgressCanvasFactory::getInstance();
-                if !jcall!(progressCanvas).as_ProgressCanvas_mut().inProgress {
+                if !{ let java_field = jcall!(progressCanvas).as_ProgressCanvas_mut().inProgress.clone(); java_field } {
                     jcall!(progressCanvas).endFromInitialLazyLoadingComplete();
                 }
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                 self.setRunning(false);
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+                jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                 }
             }
         }
@@ -139,8 +144,8 @@ impl std::ops::DerefMut for ImageCacheRunnable {
 }
 
 impl crate::org::allbinary::thread::ABRunnable::ABRunnableDyn for ImageCacheRunnable {
-    fn as_ABRunnable(&self) -> &crate::org::allbinary::thread::ABRunnable::ABRunnable { &self }
-    fn as_ABRunnable_mut(&mut self) -> &mut crate::org::allbinary::thread::ABRunnable::ABRunnable { &mut self }
+    fn as_ABRunnable(&self) -> &crate::org::allbinary::thread::ABRunnable::ABRunnable { &self.base }
+    fn as_ABRunnable_mut(&mut self) -> &mut crate::org::allbinary::thread::ABRunnable::ABRunnable { &mut self.base }
     fn run(&mut self) { Self::run(self) }
 }
 

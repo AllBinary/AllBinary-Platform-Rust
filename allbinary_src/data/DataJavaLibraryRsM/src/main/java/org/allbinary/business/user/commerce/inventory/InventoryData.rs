@@ -32,6 +32,10 @@ thread_local! { pub static InventoryData_INVENTORY: String = String::from("INVEN
 
 impl InventoryData {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };

@@ -22,6 +22,7 @@ use super::*;
 use crate::org::allbinary::graphics::color::ColorCacheFactory::ColorCacheFactory;
 use crate::org::allbinary::graphics::color::ColorCacheable::ColorCacheable;
 use crate::org::allbinary::logic::util::cache::AutomaticCacheInterface::AutomaticCacheInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,6 +37,10 @@ pub struct GraphicsAnalysisUtil {
 thread_local! { pub static GraphicsAnalysisUtil_MAX: i32 = 122; }
 
 impl GraphicsAnalysisUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -52,9 +57,9 @@ impl GraphicsAnalysisUtil {
     // throws Exception
     pub fn getNominator(mut bufferedImage: Option<Rc<RefCell<BufferedImage>>>, mut min_x: Option<i32>, mut max_x: Option<i32>, mut y: Option<i32>) -> f64 {
         for index in ((((min_x).unwrap() as i32)) + 1..=((max_x).unwrap() as i32)).rev() {
-            let mut colorInteger: Option<i32> = (jcall!(bufferedImage).getRGB(index.clone(), ((y).unwrap() as i32))).to_string();
-            let mut automaticCacheInterface: Option<Rc<RefCell<dyn AutomaticCacheInterface>>> = ColorCacheFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn AutomaticCacheInterface>>);
-            let mut colorCacheable: Option<Rc<RefCell<ColorCacheable>>> = (jcall!(automaticCacheInterface).get(crate::java_into_object((colorInteger.clone()).expect("NullPointerException")))).clone() /* as ColorCacheable */;
+            let mut colorInteger: Option<i32> = Some((jcall!(bufferedImage).getRGB(index.clone(), ((y).unwrap() as i32))) as i32);
+            let mut automaticCacheInterface: Option<Rc<RefCell<dyn AutomaticCacheInterface>>> = ColorCacheFactory::getInstance();
+            let mut colorCacheable: Option<Rc<RefCell<ColorCacheable>>> = (jcall!(automaticCacheInterface).get(crate::java_into_object((colorInteger.clone()).expect("NullPointerException")))).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<ColorCacheable>() }, "ClassCastException: not a ColorCacheable"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<ColorCacheable>) } });
             let mut color: Option<Rc<RefCell<Color>>> = jcall!(colorCacheable).getColor();
             if jcall!(color).getRed() < GraphicsAnalysisUtil_MAX.with(Clone::clone) && jcall!(color).getGreen() < GraphicsAnalysisUtil_MAX.with(Clone::clone) && jcall!(color).getBlue() < GraphicsAnalysisUtil_MAX.with(Clone::clone) {
             } else {

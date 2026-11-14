@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait ScoreableInterface {
+pub trait ScoreableInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getPoints(&mut self) -> i32;
@@ -35,8 +35,6 @@ pub trait ScoreableInterface {
     
 
     fn removePoints(&mut self, points: i32);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

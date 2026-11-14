@@ -30,7 +30,7 @@ pub struct GameMode {
     pub name: String,
 }
 
-pub static mut GameMode_NONE: std::cell::LazyCell<Option<Rc<RefCell<GameMode>>>> = std::cell::LazyCell::new(|| GameMode::new(jcall!(StringUtil::getInstance()).NULL_STRING.clone()));
+pub static mut GameMode_NONE: std::cell::LazyCell<Option<Rc<RefCell<GameMode>>>> = std::cell::LazyCell::new(|| GameMode::new({ let java_field = jcall!(StringUtil::getInstance()).NULL_STRING.clone(); java_field }.clone()));
 pub static mut GameMode_SERVER: std::cell::LazyCell<Option<Rc<RefCell<GameMode>>>> = std::cell::LazyCell::new(|| GameMode::new(String::from("Server")));
 pub static mut GameMode_CLIENT: std::cell::LazyCell<Option<Rc<RefCell<GameMode>>>> = std::cell::LazyCell::new(|| GameMode::new(String::from("Client")));
 
@@ -41,7 +41,7 @@ impl GameMode {
         let mut this = Self {
             name: String::new(),
         };
-        this.name = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.name = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.setName(name.clone());
         this
     }

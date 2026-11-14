@@ -26,6 +26,7 @@ use crate::org::allbinary::business::context::modules::storefront::statistics::o
 use crate::org::allbinary::business::context::modules::storefront::statistics::orders::history::StoreFrontOrdersHistoryStatisticsInterface::StoreFrontOrdersHistoryStatisticsInterface;
 use crate::org::allbinary::business::context::modules::storefront::statistics::users::StoreFrontUsersStatistics::StoreFrontUsersStatistics;
 use crate::org::allbinary::business::context::modules::storefront::statistics::users::StoreFrontUsersStatisticsInterface::StoreFrontUsersStatisticsInterface;
+use crate::java::lang::Exception::*;
 use super::StoreFrontStatisticsInterface::StoreFrontStatisticsInterface;
 
 // Borrows the object of a Java reference
@@ -50,6 +51,10 @@ impl StoreFrontStatisticsInterface for RealTimeStoreFrontStatistics {
 }
 
 impl RealTimeStoreFrontStatistics {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>>) -> Self {

@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::ServletRequest::ServletRequest;
 use crate::org::allbinary::business::entry::EntryData::EntryData;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
@@ -28,6 +27,7 @@ use crate::org::allbinary::logic::control::crypt::SuperCrypt::SuperCrypt;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::PaymentInterface::PaymentInterface;
 
 // Borrows the object of a Java reference
@@ -76,9 +76,13 @@ impl DomNodeInterface for Payment {
 }
 
 impl Payment {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct1(mut payment: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1(mut payment: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             name: String::new(),
             expiration: String::new(),
@@ -99,37 +103,37 @@ impl Payment {
             isDefault: false,
         };
         this.isDefault = false;
-        this.name = (jcall!(payment).get(PaymentData_NAME.with(Clone::clone).clone())).clone() /* as String */;
-        this.r#type = (jcall!(payment).get(PaymentData_TYPE.with(Clone::clone).clone())).clone() /* as String */;
-        this.expiration = (jcall!(payment).get(PaymentData_EXPIRATION.with(Clone::clone).clone())).clone() /* as String */;
-        this.encryption = (jcall!(payment).get(jcall!(EntryData::getInstance()).ENCRYPTION.clone())).clone() /* as String */;
-        this.number = (jcall!(SuperCrypt::new(((Some((this.encryption.clone()) as i32)).unwrap() as i32))).decrypt((jcall!(payment).get(PaymentData_NUMBER.with(Clone::clone).clone())).clone() /* as String */)).clone() /* as String */;
-        this.id = (jcall!(payment).get(PaymentData_ID.with(Clone::clone).clone())).clone() /* as String */;
-        let mut def: String = (jcall!(payment).get(jcall!(EntryData::getInstance()).DEFAULT.clone())).clone() /* as String */;
-        if true && (def.cmp(&jcall!(EntryData::getInstance()).DEFAULT.clone()) as i32) == 0 {
+        this.name = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_NAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.r#type = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_TYPE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.expiration = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_EXPIRATION.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.encryption = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).ENCRYPTION.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.number = { let java_value = ((jcall!(SuperCrypt::new(((Some((this.encryption.clone()).trim().parse::<i32>().expect("NumberFormatException"))).unwrap() as i32))).decrypt({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_NUMBER.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone() /* as String */).clone(); java_value };
+        this.id = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_ID.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        let mut def: String = { let java_object = (jcall!(payment).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).DEFAULT.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+        if true && (def.cmp(&{ let java_field = jcall!(EntryData::getInstance()).DEFAULT.clone(); java_field }.clone()) as i32) == 0 {
             this.isDefault = true;
         } else {
             this.isDefault = false;
         }
-        this.tenderType = (jcall!(payment).get(PaymentData_TENDERTYPE.with(Clone::clone).clone())).clone() /* as String */;
-        this.transactionType = (jcall!(payment).get(PaymentData_TRANSACTIONTYPE.with(Clone::clone).clone())).clone() /* as String */;
-        this.aba = (jcall!(payment).get(PaymentData_ABA.with(Clone::clone).clone())).clone() /* as String */;
-        this.account = (jcall!(payment).get(PaymentData_ACCOUNT.with(Clone::clone).clone())).clone() /* as String */;
-        this.accountType = (jcall!(payment).get(PaymentData_ACCOUNTTYPE.with(Clone::clone).clone())).clone() /* as String */;
-        this.authorizationCode = (jcall!(payment).get(PaymentData_AUTHORIZATIONCODE.with(Clone::clone).clone())).clone() /* as String */;
-        this.checkNumber = (jcall!(payment).get(PaymentData_CHECKNUMBER.with(Clone::clone).clone())).clone() /* as String */;
-        this.checkType = (jcall!(payment).get(PaymentData_CHECKTYPE.with(Clone::clone).clone())).clone() /* as String */;
-        this.driversLicense = (jcall!(payment).get(PaymentData_DRIVERSLICENSE.with(Clone::clone).clone())).clone() /* as String */;
-        this.magneticInkCheckReader = (jcall!(payment).get(PaymentData_MAGNETICINKCHECKREADER.with(Clone::clone).clone())).clone() /* as String */;
+        this.tenderType = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_TENDERTYPE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.transactionType = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_TRANSACTIONTYPE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.aba = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_ABA.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.account = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_ACCOUNT.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.accountType = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_ACCOUNTTYPE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.authorizationCode = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_AUTHORIZATIONCODE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.checkNumber = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_CHECKNUMBER.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.checkType = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_CHECKTYPE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.driversLicense = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_DRIVERSLICENSE.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        this.magneticInkCheckReader = { let java_value = ({ let java_object = (jcall!(payment).get(crate::java_into_object(PaymentData_MAGNETICINKCHECKREADER.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         this
     }
 
-    pub fn new1(mut payment: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new1(mut payment: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct1(payment))))
     }
     
 
-    pub fn new_struct1(mut request: Option<Rc<RefCell<ServletRequest>>>) -> Self {
+    pub fn new_struct1_ServletRequest(mut request: Option<Rc<RefCell<ServletRequest>>>) -> Self {
         let mut this = Self {
             name: String::new(),
             expiration: String::new(),
@@ -150,25 +154,25 @@ impl Payment {
             isDefault: false,
         };
         this.isDefault = false;
-        this.name = jcall!(request).getParameter(PaymentData_NAME.with(Clone::clone).clone());
-        this.r#type = jcall!(request).getParameter(PaymentData_TYPE.with(Clone::clone).clone());
-        this.expiration = jcall!(request).getParameter(PaymentData_EXPIRATION.with(Clone::clone).clone());
-        this.number = jcall!(request).getParameter(PaymentData_NUMBER.with(Clone::clone).clone());
-        this.tenderType = jcall!(request).getParameter(PaymentData_TENDERTYPE.with(Clone::clone).clone());
-        this.transactionType = jcall!(request).getParameter(PaymentData_TRANSACTIONTYPE.with(Clone::clone).clone());
-        this.aba = jcall!(request).getParameter(PaymentData_ABA.with(Clone::clone).clone());
-        this.account = jcall!(request).getParameter(PaymentData_ACCOUNT.with(Clone::clone).clone());
-        this.accountType = jcall!(request).getParameter(PaymentData_ACCOUNTTYPE.with(Clone::clone).clone());
-        this.authorizationCode = jcall!(request).getParameter(PaymentData_AUTHORIZATIONCODE.with(Clone::clone).clone());
-        this.checkNumber = jcall!(request).getParameter(PaymentData_CHECKNUMBER.with(Clone::clone).clone());
-        this.checkType = jcall!(request).getParameter(PaymentData_CHECKTYPE.with(Clone::clone).clone());
-        this.driversLicense = jcall!(request).getParameter(PaymentData_DRIVERSLICENSE.with(Clone::clone).clone());
-        this.magneticInkCheckReader = jcall!(request).getParameter(PaymentData_MAGNETICINKCHECKREADER.with(Clone::clone).clone());
+        this.name = { let java_value = (jcall!(request).getParameter(PaymentData_NAME.with(Clone::clone).clone())).clone(); java_value };
+        this.r#type = { let java_value = (jcall!(request).getParameter(PaymentData_TYPE.with(Clone::clone).clone())).clone(); java_value };
+        this.expiration = { let java_value = (jcall!(request).getParameter(PaymentData_EXPIRATION.with(Clone::clone).clone())).clone(); java_value };
+        this.number = { let java_value = (jcall!(request).getParameter(PaymentData_NUMBER.with(Clone::clone).clone())).clone(); java_value };
+        this.tenderType = { let java_value = (jcall!(request).getParameter(PaymentData_TENDERTYPE.with(Clone::clone).clone())).clone(); java_value };
+        this.transactionType = { let java_value = (jcall!(request).getParameter(PaymentData_TRANSACTIONTYPE.with(Clone::clone).clone())).clone(); java_value };
+        this.aba = { let java_value = (jcall!(request).getParameter(PaymentData_ABA.with(Clone::clone).clone())).clone(); java_value };
+        this.account = { let java_value = (jcall!(request).getParameter(PaymentData_ACCOUNT.with(Clone::clone).clone())).clone(); java_value };
+        this.accountType = { let java_value = (jcall!(request).getParameter(PaymentData_ACCOUNTTYPE.with(Clone::clone).clone())).clone(); java_value };
+        this.authorizationCode = { let java_value = (jcall!(request).getParameter(PaymentData_AUTHORIZATIONCODE.with(Clone::clone).clone())).clone(); java_value };
+        this.checkNumber = { let java_value = (jcall!(request).getParameter(PaymentData_CHECKNUMBER.with(Clone::clone).clone())).clone(); java_value };
+        this.checkType = { let java_value = (jcall!(request).getParameter(PaymentData_CHECKTYPE.with(Clone::clone).clone())).clone(); java_value };
+        this.driversLicense = { let java_value = (jcall!(request).getParameter(PaymentData_DRIVERSLICENSE.with(Clone::clone).clone())).clone(); java_value };
+        this.magneticInkCheckReader = { let java_value = (jcall!(request).getParameter(PaymentData_MAGNETICINKCHECKREADER.with(Clone::clone).clone())).clone(); java_value };
         this
     }
 
-    pub fn new1(mut request: Option<Rc<RefCell<ServletRequest>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(request))))
+    pub fn new1_ServletRequest(mut request: Option<Rc<RefCell<ServletRequest>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_ServletRequest(request))))
     }
     
 
@@ -204,19 +208,19 @@ impl Payment {
     pub fn isValid(&mut self) -> Option<bool> {
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
         let mut aFalse: Option<bool> = false;
-        if false || (self.name.cmp(&jcall!(stringUtil).EMPTY_STRING.clone()) as i32) == 0 {
+        if false || (self.name.cmp(&{ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()) as i32) == 0 {
             return aFalse.clone();
         }
-        if false || (self.r#type.cmp(&jcall!(stringUtil).EMPTY_STRING.clone()) as i32) == 0 {
+        if false || (self.r#type.cmp(&{ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()) as i32) == 0 {
             return aFalse.clone();
         }
-        if false || (self.expiration.cmp(&jcall!(stringUtil).EMPTY_STRING.clone()) as i32) == 0 {
+        if false || (self.expiration.cmp(&{ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()) as i32) == 0 {
             return aFalse.clone();
         }
-        if false || (self.number.cmp(&jcall!(stringUtil).EMPTY_STRING.clone()) as i32) == 0 {
+        if false || (self.number.cmp(&{ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()) as i32) == 0 {
             return aFalse.clone();
         }
-        if (self.number.chars().count() as i32) > jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).business).user).commerce).money).payment).types).CreditCardType).MAXLEN {
+        if (self.number.chars().count() as i32) > { let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).business.clone(); java_field }).user.clone(); java_field }).commerce.clone(); java_field }).money.clone(); java_field }).payment.clone(); java_field }).types.clone(); java_field }).CreditCardType.clone(); java_field }).MAXLEN.clone(); java_field } {
             return aFalse.clone();
         }
         return true;
@@ -382,25 +386,25 @@ impl Payment {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(PaymentData_NAME.with(Clone::clone).clone(), self.name.clone());
-        jcall!(hashMap).put(PaymentData_TYPE.with(Clone::clone).clone(), self.r#type.clone());
-        jcall!(hashMap).put(PaymentData_EXPIRATION.with(Clone::clone).clone(), self.expiration.clone());
-        jcall!(hashMap).put(PaymentData_NUMBER.with(Clone::clone).clone(), self.getLastFour());
-        jcall!(hashMap).put(PaymentData_TENDERTYPE.with(Clone::clone).clone(), self.tenderType.clone());
-        jcall!(hashMap).put(PaymentData_TRANSACTIONTYPE.with(Clone::clone).clone(), self.transactionType.clone());
-        jcall!(hashMap).put(PaymentData_ABA.with(Clone::clone).clone(), self.aba.clone());
-        jcall!(hashMap).put(PaymentData_ACCOUNT.with(Clone::clone).clone(), self.account.clone());
-        jcall!(hashMap).put(PaymentData_ACCOUNTTYPE.with(Clone::clone).clone(), self.accountType.clone());
-        jcall!(hashMap).put(PaymentData_AUTHORIZATIONCODE.with(Clone::clone).clone(), self.authorizationCode.clone());
-        jcall!(hashMap).put(PaymentData_CHECKNUMBER.with(Clone::clone).clone(), self.checkNumber.clone());
-        jcall!(hashMap).put(PaymentData_DRIVERSLICENSE.with(Clone::clone).clone(), self.driversLicense.clone());
-        jcall!(hashMap).put(PaymentData_MAGNETICINKCHECKREADER.with(Clone::clone).clone(), self.magneticInkCheckReader.clone());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object(PaymentData_NAME.with(Clone::clone).clone()), crate::java_into_object(self.name.clone()));
+        jcall!(hashMap).put(crate::java_into_object(PaymentData_TYPE.with(Clone::clone).clone()), crate::java_into_object(self.r#type.clone()));
+        jcall!(hashMap).put(crate::java_into_object(PaymentData_EXPIRATION.with(Clone::clone).clone()), crate::java_into_object(self.expiration.clone()));
+        jcall!(hashMap).put(crate::java_into_object(PaymentData_NUMBER.with(Clone::clone).clone()), crate::java_into_object(self.getLastFour()));
+        jcall!(hashMap).put(crate::java_into_object(PaymentData_TENDERTYPE.with(Clone::clone).clone()), crate::java_into_object(self.tenderType.clone()));
+        jcall!(hashMap).put(crate::java_into_object(PaymentData_TRANSACTIONTYPE.with(Clone::clone).clone()), crate::java_into_object(self.transactionType.clone()));
+        jcall!(hashMap).put(crate::java_into_object(PaymentData_ABA.with(Clone::clone).clone()), crate::java_into_object(self.aba.clone()));
+        jcall!(hashMap).put(crate::java_into_object(PaymentData_ACCOUNT.with(Clone::clone).clone()), crate::java_into_object(self.account.clone()));
+        jcall!(hashMap).put(crate::java_into_object(PaymentData_ACCOUNTTYPE.with(Clone::clone).clone()), crate::java_into_object(self.accountType.clone()));
+        jcall!(hashMap).put(crate::java_into_object(PaymentData_AUTHORIZATIONCODE.with(Clone::clone).clone()), crate::java_into_object(self.authorizationCode.clone()));
+        jcall!(hashMap).put(crate::java_into_object(PaymentData_CHECKNUMBER.with(Clone::clone).clone()), crate::java_into_object(self.checkNumber.clone()));
+        jcall!(hashMap).put(crate::java_into_object(PaymentData_DRIVERSLICENSE.with(Clone::clone).clone()), crate::java_into_object(self.driversLicense.clone()));
+        jcall!(hashMap).put(crate::java_into_object(PaymentData_MAGNETICINKCHECKREADER.with(Clone::clone).clone()), crate::java_into_object(self.magneticInkCheckReader.clone()));
         if self.isDefault {
-            jcall!(hashMap).put(jcall!(EntryData::getInstance()).DEFAULT.clone(), jcall!(EntryData::getInstance()).DEFAULT.clone());
+            jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).DEFAULT.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).DEFAULT.clone(); java_field }.clone()));
         } else {
-            jcall!(hashMap).put(jcall!(EntryData::getInstance()).DEFAULT.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone());
+            jcall!(hashMap).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).DEFAULT.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()));
         }
         return hashMap.clone();
     }
@@ -408,8 +412,8 @@ impl Payment {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = self.toHashMap();
-        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes(document.clone(), PaymentData_PAYMENT.with(Clone::clone).clone(), hashMap.clone());
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.toHashMap();
+        let mut node: Option<Rc<RefCell<Node>>> = ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), PaymentData_PAYMENT.with(Clone::clone).clone(), hashMap.clone());
         return node.clone();
     }
     

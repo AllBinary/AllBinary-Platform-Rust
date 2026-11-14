@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::File::File;
+use crate::java::io::File::File;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait FileJDialogListenerInterface {
+pub trait FileJDialogListenerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn onFiles(&mut self, files: Vec<Option<Rc<RefCell<File>>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

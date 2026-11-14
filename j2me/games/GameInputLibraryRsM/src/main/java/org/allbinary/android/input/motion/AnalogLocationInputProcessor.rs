@@ -33,6 +33,10 @@ pub struct AnalogLocationInputProcessor {
 
 impl AnalogLocationInputProcessor {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -47,7 +51,7 @@ impl AnalogLocationInputProcessor {
     pub fn process(&mut self, mut allbinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut analogLocationInput: Option<Rc<RefCell<AnalogLocationInput>>>) {
     }
 }
-pub trait AnalogLocationInputProcessorDyn {
+pub trait AnalogLocationInputProcessorDyn: std::any::Any {
     fn as_AnalogLocationInputProcessor(&self) -> &AnalogLocationInputProcessor;
     fn as_AnalogLocationInputProcessor_mut(&mut self) -> &mut AnalogLocationInputProcessor;
     fn process(&mut self, mut allbinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut analogLocationInput: Option<Rc<RefCell<AnalogLocationInput>>>) { AnalogLocationInputProcessor::process(self.as_AnalogLocationInputProcessor_mut(), allbinaryLayerManager, analogLocationInput) }

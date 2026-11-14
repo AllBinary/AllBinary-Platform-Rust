@@ -51,9 +51,13 @@ pub struct BasicTouchInputFactory {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-pub static mut BasicTouchInputFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut BasicTouchInputFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl BasicTouchInputFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -73,19 +77,19 @@ impl BasicTouchInputFactory {
             list: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.SPECIAL_BUTTON_SIX = TouchButtonInput::new(jcall!(InputFactory::getInstance()).MAX - 30, String::from("Button 6"));
-        this.SPECIAL_BUTTON_FIVE = TouchButtonInput::new(jcall!(InputFactory::getInstance()).MAX - 31, String::from("Button 5"));
-        this.SPECIAL_BUTTON_FOUR = TouchButtonInput::new(jcall!(InputFactory::getInstance()).MAX - 32, String::from("Button 4"));
-        this.SPECIAL_BUTTON_THREE = TouchButtonInput::new(jcall!(InputFactory::getInstance()).MAX - 33, String::from("Button 3"));
-        this.SPECIAL_BUTTON_TWO = TouchButtonInput::new(jcall!(InputFactory::getInstance()).MAX - 34, String::from("Button 2"));
-        this.SPECIAL_BUTTON_ONE = TouchButtonInput::new(jcall!(InputFactory::getInstance()).MAX - 35, String::from("Button 1"));
-        this.UP = TouchButtonInput::new(jcall!(InputFactory::getInstance()).MAX - 36, String::from("Up Button"));
-        this.LEFT = TouchButtonInput::new(jcall!(InputFactory::getInstance()).MAX - 37, String::from("Left Button"));
-        this.RIGHT = TouchButtonInput::new(jcall!(InputFactory::getInstance()).MAX - 38, String::from("Right Button"));
-        this.DOWN = TouchButtonInput::new(jcall!(InputFactory::getInstance()).MAX - 39, String::from("Down Button"));
-        this.NONE = TouchButtonInput::new(jcall!(InputFactory::getInstance()).MAX - 40, String::from("No Button"));
+        this.SPECIAL_BUTTON_SIX = TouchButtonInput::new({ let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field } - 30, String::from("Button 6"));
+        this.SPECIAL_BUTTON_FIVE = TouchButtonInput::new({ let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field } - 31, String::from("Button 5"));
+        this.SPECIAL_BUTTON_FOUR = TouchButtonInput::new({ let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field } - 32, String::from("Button 4"));
+        this.SPECIAL_BUTTON_THREE = TouchButtonInput::new({ let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field } - 33, String::from("Button 3"));
+        this.SPECIAL_BUTTON_TWO = TouchButtonInput::new({ let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field } - 34, String::from("Button 2"));
+        this.SPECIAL_BUTTON_ONE = TouchButtonInput::new({ let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field } - 35, String::from("Button 1"));
+        this.UP = TouchButtonInput::new({ let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field } - 36, String::from("Up Button"));
+        this.LEFT = TouchButtonInput::new({ let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field } - 37, String::from("Left Button"));
+        this.RIGHT = TouchButtonInput::new({ let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field } - 38, String::from("Right Button"));
+        this.DOWN = TouchButtonInput::new({ let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field } - 39, String::from("Down Button"));
+        this.NONE = TouchButtonInput::new({ let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field } - 40, String::from("No Button"));
         this.initialized = false;
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -95,10 +99,10 @@ impl BasicTouchInputFactory {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<BasicTouchInputFactory>>> {
-        if match (&unsafe { BasicTouchInputFactory_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *BasicTouchInputFactory_instance = BasicTouchInputFactory::new() };
+        if match (&unsafe { BasicTouchInputFactory_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *BasicTouchInputFactory_instance = crate::java_into_object(BasicTouchInputFactory::new()) };
         }
-        return (unsafe { BasicTouchInputFactory_instance.clone() }).clone() /* as BasicTouchInputFactory */;
+        return { let java_object = (unsafe { BasicTouchInputFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<BasicTouchInputFactory>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -116,7 +120,7 @@ impl BasicTouchInputFactory {
             jcall!(self.list).add(crate::java_into_object(self.SPECIAL_BUTTON_ONE.clone()));
             jcall!(self.list).add(crate::java_into_object(self.SPECIAL_BUTTON_FIVE.clone()));
             jcall!(self.list).add(crate::java_into_object(self.SPECIAL_BUTTON_SIX.clone()));
-            self.updateAllList(self.list.clone(), inputToGameKeyMapping.clone());
+            { let java_arguments = (self.list.clone(), inputToGameKeyMapping.clone(),); self.updateAllList(java_arguments.0, java_arguments.1) };
         }
     }
     
@@ -127,8 +131,8 @@ impl BasicTouchInputFactory {
     
 
     pub fn updateAllList(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut inputToGameKeyMapping: Option<Rc<RefCell<InputToGameKeyMapping>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).START.clone()).appendint(jcall!(list).size()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateAll"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        for index in (0..=jcall!(list).size() - 1).rev() {
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).START.clone(); java_field }.clone()).appendint(jcall!(list).size()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateAll"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
             let mut touchButtonInput: Option<Rc<RefCell<TouchButtonInput>>> = { let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<TouchButtonInput>>>>().expect("ClassCastException").clone()) };
             jcall!(touchButtonInput).update(inputToGameKeyMapping.clone());
         }

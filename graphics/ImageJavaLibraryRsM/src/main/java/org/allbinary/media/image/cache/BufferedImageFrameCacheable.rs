@@ -56,7 +56,7 @@ impl BufferedImageFrameCacheable {
     
 
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return self.frame.clone();
+        return crate::java_into_object(self.frame.clone());
     }
     
 
@@ -82,9 +82,9 @@ impl BufferedImageFrameCacheable {
 
     pub fn toString(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(std::any::type_name_of_val(&self).to_string());
+        jcall!(stringBuffer).append({ let java_argument = std::any::type_name_of_val(&self).to_string(); java_argument });
         jcall!(stringBuffer).append(String::from(" Frame: "));
-        jcall!(stringBuffer).appendlong(self.getFrame());
+        jcall!(stringBuffer).appendlong(((self.getFrame()) as i64));
         return jcall!(stringBuffer).toString();
     }
 }

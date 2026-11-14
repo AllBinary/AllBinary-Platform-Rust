@@ -17,14 +17,14 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Displayable::Displayable;
-// use crate::javax::microedition::lcdui::Form::Form;
-// use crate::javax::microedition::rms::InvalidRecordIDException::InvalidRecordIDException;
-// use crate::javax::microedition::rms::RecordStore::RecordStore;
-// use crate::javax::microedition::rms::RecordStoreException::RecordStoreException;
-// use crate::javax::microedition::rms::RecordStoreNotOpenException::RecordStoreNotOpenException;
+use crate::javax::microedition::lcdui::Displayable::Displayable;
+use crate::javax::microedition::lcdui::Form::Form;
+use crate::javax::microedition::rms::InvalidRecordIDException::InvalidRecordIDException;
+use crate::javax::microedition::rms::RecordStore::RecordStore;
+use crate::javax::microedition::rms::RecordStoreException::RecordStoreException;
+use crate::javax::microedition::rms::RecordStoreNotOpenException::RecordStoreNotOpenException;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
-use super::ClassLoader::ClassLoader;
+use crate::java::lang::ClassLoader::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -45,6 +45,10 @@ thread_local! { pub static TsUtil_instance: Option<Rc<RefCell<TsUtil>>> = TsUtil
 
 impl TsUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -61,6 +65,16 @@ impl TsUtil {
     }
     
 
+    pub fn longBitsToDouble(&mut self, mut bits: i64) -> f64 {
+        return f64::from_bits((bits.clone()) as u64);
+    }
+    
+
+    pub fn intBitsToFloat(&mut self, mut bits: i32) -> f32 {
+        return f32::from_bits((bits.clone()) as u32);
+    }
+    
+
     pub fn hashCode(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> i32 {
         return (Rc::as_ptr(anyType.as_ref().expect("null reference")) as usize as i32);
     }
@@ -68,20 +82,20 @@ impl TsUtil {
 
     // throws InterruptedException
     pub fn waitFor(&mut self, mut any: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut timeoutMillis: i64) {
-        let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = (any).clone() /* as Any */;
+        let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = (any).clone();
         std::thread::sleep(std::time::Duration::from_millis((timeoutMillis.clone()) as u64));
     }
     
 
     // throws RecordStoreNotOpenException, InvalidRecordIDException, RecordStoreException
     pub fn getRecord(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut recordId: i32) -> Vec<i8> {
-        let mut recordStore: Option<Rc<RefCell<RecordStore>>> = (anyType).clone() /* as RecordStore */;
+        let mut recordStore: Option<Rc<RefCell<dyn crate::javax::microedition::rms::RecordStore::RecordStoreDyn>>> = { let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::javax::microedition::rms::RecordStore::RecordStoreDyn>>>>().expect("ClassCastException").clone()) };
         let mut data: Vec<i8> = Vec::new();
         { // synchronized (self)
-            data = vec![0; (jcall!(recordStore).getRecordSize(recordId.clone())) as usize];
+            data = { let java_value = (vec![0; (jcall!(recordStore).getRecordSize(recordId.clone())) as usize]).clone(); java_value };
             jcall!(recordStore).getRecord(recordId.clone(), data.clone(), 0);
         }
-        return (if (data.len() as i32) < 1 { jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY } else { data });
+        return (if (data.len() as i32) < 1 { { let java_field = jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone(); java_field }.clone() } else { data.clone() });
     }
     
 
@@ -120,7 +134,7 @@ impl TsUtil {
     }
     
 
-    pub fn isItemListener(&mut self, mut owner: Option<Rc<RefCell<Displayable>>>) -> bool {
+    pub fn isItemListener(&mut self, mut owner: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) -> bool {
         if (owner).is_some() /* instanceof Form */ {
             return true;
         } else {

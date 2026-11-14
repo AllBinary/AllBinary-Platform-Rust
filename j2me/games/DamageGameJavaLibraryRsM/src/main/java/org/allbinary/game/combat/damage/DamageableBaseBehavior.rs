@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::DamageableInterface::DamageableInterface;
 
 // Borrows the object of a Java reference
@@ -39,6 +40,10 @@ impl crate::org::allbinary::layer::NamedInterface::NamedInterface for Damageable
 }
 
 impl DamageableBaseBehavior {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

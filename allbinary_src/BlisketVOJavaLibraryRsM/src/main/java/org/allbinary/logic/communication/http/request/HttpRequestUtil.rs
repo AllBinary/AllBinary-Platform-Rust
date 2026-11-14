@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::io::path::AbPathData::AbPathData;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,6 +33,10 @@ pub struct HttpRequestUtil {
 thread_local! { pub static HttpRequestUtil_instance: Option<Rc<RefCell<HttpRequestUtil>>> = HttpRequestUtil::new(); }
 
 impl HttpRequestUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<HttpRequestUtil>>> {
@@ -51,9 +56,9 @@ impl HttpRequestUtil {
     
 
     pub fn getLastSeparatorIndex(&mut self, mut requestPath: String) -> i32 {
-        let mut beginIndex: i32 = requestPath.rfind(&jcall!(AbPathData::getInstance()).SEPARATOR.clone()).map(|index| index as i32).unwrap_or(-1);
+        let mut beginIndex: i32 = requestPath.rfind(&{ let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1);
         if beginIndex < 0 {
-            beginIndex = requestPath.rfind(&String::from("\\")).map(|index| index as i32).unwrap_or(-1);
+            beginIndex = { let java_value = (requestPath.rfind(&String::from("\\")).map(|index| index as i32).unwrap_or(-1)).clone(); java_value };
         }
         return beginIndex.clone();
     }

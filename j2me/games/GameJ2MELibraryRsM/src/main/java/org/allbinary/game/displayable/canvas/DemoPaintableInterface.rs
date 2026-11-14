@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait DemoPaintableInterface {
+pub trait DemoPaintableInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn showGamePaintable(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

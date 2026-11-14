@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::communication::smtp::event::EmailEvent::EmailEvent;
 use crate::org::allbinary::logic::communication::smtp::event::UserEmailEventListenerInterface::UserEmailEventListenerInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,9 +33,15 @@ pub struct LogUserEmailEventListenerModule {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-// impl UserEmailEventListenerInterface for LogUserEmailEventListenerModule with the methods of the trait
+impl UserEmailEventListenerInterface for LogUserEmailEventListenerModule {
+    fn onEmailSendRequest(&mut self, mut userEmailInfoEvent: Option<Rc<RefCell<EmailEvent>>>) { Self::onEmailSendRequest(self, userEmailInfoEvent) }
+}
 
 impl LogUserEmailEventListenerModule {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -52,7 +59,7 @@ impl LogUserEmailEventListenerModule {
 
     // throws Exception
     pub fn onEmailSendRequest(&mut self, mut userEmailInfoEvent: Option<Rc<RefCell<EmailEvent>>>) {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).EMAILLOGGING.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).EMAILLOGGING.clone(); java_field }.clone()) {
             let mut message: String = format!("{}{}", String::from("Logging EmailEvent - Temporary Listener for debugging.\n\n"), jcall!(userEmailInfoEvent).toString());
             jcall!(self.logUtil).putF(message.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onEmailSendRequest"));
         }

@@ -52,7 +52,7 @@ impl<E> ABVector<E> {
     
 
     pub fn ensureCapacity(&mut self, mut minCapacity: i32) {
-        self.base.ensureCapacity(minCapacity.clone());
+        { let java_arguments = (minCapacity.clone(),); self.base.ensureCapacity(java_arguments.0) };
     }
     
 
@@ -72,22 +72,22 @@ impl<E> ABVector<E> {
     
 
     pub fn contains(&mut self, mut obj: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> bool {
-        return self.base.contains(obj.clone());
+        return { let java_arguments = (obj.clone(),); self.base.contains(java_arguments.0) };
     }
     
 
     pub fn indexOf(&mut self, mut obj: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> i32 {
-        return self.base.indexOf(obj.clone());
+        return { let java_arguments = (obj.clone(),); self.base.indexOf(java_arguments.0) };
     }
     
 
     pub fn lastIndexOf(&mut self, mut obj: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> i32 {
-        return self.base.lastIndexOf(obj.clone());
+        return { let java_arguments = (obj.clone(),); self.base.lastIndexOf(java_arguments.0) };
     }
     
 
     pub fn elementAt(&mut self, mut index: i32) -> E {
-        return self.base.elementAt(index.clone());
+        return { let java_arguments = (index.clone(),); self.base.elementAt(java_arguments.0) };
     }
     
 
@@ -102,27 +102,27 @@ impl<E> ABVector<E> {
     
 
     pub fn setElementAt(&mut self, mut obj: E, mut index: i32) {
-        self.base.setElementAt(obj.clone(), index.clone());
+        { let java_arguments = (crate::java_into_object(obj.clone()), index.clone(),); self.base.setElementAt(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn removeElementAt(&mut self, mut index: i32) {
-        self.base.removeElementAt(index.clone());
+        { let java_arguments = (index.clone(),); self.base.removeElementAt(java_arguments.0) };
     }
     
 
     pub fn addElement(&mut self, mut obj: E) {
-        self.base.addElement(obj.clone());
+        { let java_arguments = (crate::java_into_object(obj.clone()),); self.base.addElement(java_arguments.0) };
     }
     
 
     pub fn insertElementAt(&mut self, mut obj: E, mut index: i32) {
-        self.base.insertElementAt(obj.clone(), index.clone());
+        { let java_arguments = (crate::java_into_object(obj.clone()), index.clone(),); self.base.insertElementAt(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn removeElement(&mut self, mut obj: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> bool {
-        return self.base.removeElement(obj.clone());
+        return { let java_arguments = (obj.clone(),); self.base.removeElement(java_arguments.0) };
     }
     
 
@@ -132,7 +132,7 @@ impl<E> ABVector<E> {
     
 
     pub fn clone(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return self.base.clone();
+        return crate::java_into_object(self.base.clone());
     }
     
 
@@ -142,29 +142,29 @@ impl<E> ABVector<E> {
     
 
     pub fn set(&mut self, mut index: i32, mut element: E) -> E {
-        return self.base.set(index.clone(), element.clone());
+        return { let java_arguments = (index.clone(), element.clone(),); self.base.set(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn add(&mut self, mut element: E) -> bool {
-        return self.base.add(element.clone());
+        return { let java_arguments = (crate::java_into_object(element.clone()),); self.base.add(java_arguments.0) };
     }
     
 
     pub fn remove(&mut self, mut obj: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> bool {
-        return self.base.remove(obj.clone());
+        return { let java_arguments = (obj.clone(),); self.base.remove(java_arguments.0) };
     }
     
 
     // Java overloaded method: Rust needs a different name
     pub fn add2(&mut self, mut index: i32, mut element: E) {
-        self.base.add2(index.clone(), element.clone());
+        { let java_arguments = (crate::java_into_object(index.clone()), element.clone(),); self.base.add2(java_arguments.0, java_arguments.1) };
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn remove(&mut self, mut index: i32) -> E {
-        return self.base.remove(index.clone());
+    pub fn remove_int(&mut self, mut index: i32) -> E {
+        return { let java_arguments = (crate::java_into_object(index.clone()),); self.base.remove_int(java_arguments.0) };
     }
     
 
@@ -174,7 +174,7 @@ impl<E> ABVector<E> {
     
 
     pub fn equals(&mut self, mut obj: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> bool {
-        return self.base.equals(obj.clone());
+        return { let java_arguments = (obj.clone(),); self.base.equals(java_arguments.0) };
     }
     
 
@@ -189,7 +189,7 @@ impl<E> ABVector<E> {
     
 
     pub fn removeRange(&mut self, mut fromIndex: i32, mut toIndex: i32) {
-        self.base.removeRange(fromIndex.clone(), toIndex.clone());
+        { let java_arguments = (fromIndex.clone(), toIndex.clone(),); self.base.removeRange(java_arguments.0, java_arguments.1) };
     }
 }
 impl<E> std::ops::Deref for ABVector<E> {

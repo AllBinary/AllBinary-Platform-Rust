@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::ImageItem::ImageItem;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::ImageItem::ImageItem;
 use crate::org::allbinary::game::layer::RTSGameStrings::RTSGameStrings;
 use crate::org::allbinary::game::layer::item::LayerInterfaceFactoryImageItem::LayerInterfaceFactoryImageItem;
 use crate::org::allbinary::game::layer::item::RTSLayerTextAnimation::RTSLayerTextAnimation;
@@ -34,6 +34,7 @@ use crate::org::allbinary::graphics::form::item::CustomItemUtil::CustomItemUtil;
 use crate::org::allbinary::graphics::form::item::ItemArraySingletonFactoryInterface::ItemArraySingletonFactoryInterface;
 use crate::org::allbinary::image::ImageCache::ImageCache;
 use crate::org::allbinary::layer::LayerInterfaceFactoryInterface::LayerInterfaceFactoryInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -48,12 +49,16 @@ pub struct UnitItemArrayFactory {
     pub resources: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResourcesDyn>>>>,
 }
 
-thread_local! { pub static UnitItemArrayFactory_ITEMS: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>> = jcall!(CustomItemUtil::getInstance()).CUSTOM_ITEM_ARRAY.clone(); }
+thread_local! { pub static UnitItemArrayFactory_ITEMS: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>> = { let java_field = jcall!(CustomItemUtil::getInstance()).CUSTOM_ITEM_ARRAY.clone(); java_field }.clone(); }
 impl ItemArraySingletonFactoryInterface for UnitItemArrayFactory {
     fn getItems(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>> { Self::getItems(self) }
 }
 
 impl UnitItemArrayFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut resources: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResourcesDyn>>>>) -> Self {
@@ -63,7 +68,7 @@ impl UnitItemArrayFactory {
             resources: Vec::new(),
         };
         this.commonSeps = CommonSeps::getInstance();
-        this.basicColor = jcall!(BasicColorFactory::getInstance()).WHITE.clone();
+        this.basicColor = { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone();
         this.resources = resources.clone();
         this
     }
@@ -75,10 +80,10 @@ impl UnitItemArrayFactory {
 
     // throws Exception
     pub fn createFlagItem(&mut self, mut flagResources: Option<Rc<RefCell<FlagGameResources>>>, mut layerInterfaceFactoryInterface: Option<Rc<RefCell<dyn LayerInterfaceFactoryInterface>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>> {
-        let mut name: String = jcall!(flagResources).NAME.clone();
-        let mut index: i32 = name.find(&jcall!(self.commonSeps).SPACE.clone()).map(|index| index as i32).unwrap_or(-1);
+        let mut name: String = { let java_field = jcall!(flagResources).NAME.clone(); java_field }.clone();
+        let mut index: i32 = name.find(&{ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1);
         if index >= 0 {
-            name = name[(index.clone()) as usize..].to_string();
+            name = { let java_value = (name[(index.clone()) as usize..].to_string()).clone(); java_value };
         }
         return self.createNamedFlagItem(flagResources.clone(), name.clone(), layerInterfaceFactoryInterface.clone());
     }
@@ -87,8 +92,8 @@ impl UnitItemArrayFactory {
     // throws Exception
     pub fn createNamedFlagItem(&mut self, mut flagResources: Option<Rc<RefCell<FlagGameResources>>>, mut name: String, mut layerInterfaceFactoryInterface: Option<Rc<RefCell<dyn LayerInterfaceFactoryInterface>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>> {
         let mut IMAGE_CACHE: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>> = GameFeatureImageCacheFactory::getInstance();
-        let mut image: Option<Rc<RefCell<Image>>> = jcall!(IMAGE_CACHE).getWithKey(crate::java_into_object(jcall!(flagResources).RESOURCE_ICON.clone()));
-        let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>> = LayerInterfaceFactoryImageItem::new(name.clone(), image.clone(), unsafe { crate::javax::microedition::lcdui::ImageItem::ImageItem_LAYOUT_DEFAULT.clone() }.clone(), jcall!(flagResources).NAME.clone(), self.basicColor.clone(), vec![RTSLayerTextAnimation::new(jcall!(RTSGameStrings::getInstance()).DRAGGABLE.clone(), image.clone())], layerInterfaceFactoryInterface.clone());
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(IMAGE_CACHE).getWithKey(crate::java_into_object({ let java_field = jcall!(flagResources).RESOURCE_ICON.clone(); java_field }.clone()));
+        let mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>> = LayerInterfaceFactoryImageItem::new(name.clone(), image.clone(), crate::javax::microedition::lcdui::ImageItem::ImageItem_LAYOUT_DEFAULT.with(Clone::clone).clone(), { let java_field = jcall!(flagResources).NAME.clone(); java_field }.clone(), self.basicColor.clone(), vec![RTSLayerTextAnimation::new({ let java_field = jcall!(RTSGameStrings::getInstance()).DRAGGABLE.clone(); java_field }.clone(), image.clone())], layerInterfaceFactoryInterface.clone());
         return item.clone();
     }
     

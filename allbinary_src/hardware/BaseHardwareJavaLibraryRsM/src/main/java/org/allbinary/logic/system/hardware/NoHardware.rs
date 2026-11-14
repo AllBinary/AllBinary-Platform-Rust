@@ -33,12 +33,12 @@ macro_rules! jcall {
 pub struct NoHardware {
 }
 
-thread_local! { pub static NoHardware_instance: Option<Rc<RefCell<dyn HardwareInterface>>> = NoHardware::new().map(|reference| reference as Rc<RefCell<dyn HardwareInterface>>); }
+thread_local! { pub static NoHardware_instance: Option<Rc<RefCell<dyn HardwareInterface>>> = NoHardware::new().map(|reference| reference as Rc<RefCell<dyn HardwareInterface>>).map(|reference| reference as Rc<RefCell<dyn HardwareInterface>>); }
 impl HardwareInterface for NoHardware {
     fn getComponent(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn HardwareComponentInterface>>> { Self::getComponent(self, index) }
     fn toString(&mut self) -> String { Self::toString(self) }
     fn compareTo(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> bool { Self::compareTo(self, hardwareInterface) }
-    fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { Self::difference(self, hardwareInterface) }
+    fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { Self::difference(self, hardwareInterface) }
 }
 
 impl NoHardware {
@@ -74,8 +74,8 @@ impl NoHardware {
     }
     
 
-    pub fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        return jcall!(StdUtil::getInstance()).NULL_TABLE.clone();
+    pub fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        return { let java_field = jcall!(StdUtil::getInstance()).NULL_TABLE.clone(); java_field }.clone();
     }
 }
 

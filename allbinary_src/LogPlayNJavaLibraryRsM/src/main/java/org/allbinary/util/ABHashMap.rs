@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,7 +35,7 @@ impl<K, V> ABHashMap<K, V> {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: HashMap::new(),
+            base: HashMap::new_struct(),
         };
         this
     }

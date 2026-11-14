@@ -34,6 +34,10 @@ thread_local! { pub static CustomItemUtil_instance: Option<Rc<RefCell<CustomItem
 
 impl CustomItemUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             CUSTOM_ITEM_ARRAY: Vec::new(),

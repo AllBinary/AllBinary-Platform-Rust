@@ -21,6 +21,7 @@ use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::animation::SingletonAnimationInterfaceFactory::SingletonAnimationInterfaceFactory;
 use crate::org::allbinary::image::AnimationFrameToImageUtil::AnimationFrameToImageUtil;
+use crate::java::lang::Exception::*;
 use super::ImageAnimation::ImageAnimation;
 
 // Borrows the object of a Java reference
@@ -34,7 +35,14 @@ pub struct ImageAnimationSingletonInterfaceFactory {
     pub base: SingletonAnimationInterfaceFactory,
 }
 
+impl crate::org::allbinary::animation::AnimationInterfaceFactoryInterface::AnimationInterfaceFactoryInterface for ImageAnimationSingletonInterfaceFactory {
+    fn getInstance(&mut self, p1: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { crate::org::allbinary::animation::SingletonAnimationInterfaceFactory::SingletonAnimationInterfaceFactory::getInstance(crate::org::allbinary::animation::SingletonAnimationInterfaceFactory::SingletonAnimationInterfaceFactoryDyn::as_SingletonAnimationInterfaceFactory_mut(self), p1) }
+    fn setInitialScale(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::media::ScaleProperties::ScaleProperties>>>) { crate::org::allbinary::animation::SingletonAnimationInterfaceFactory::SingletonAnimationInterfaceFactory::setInitialScale(crate::org::allbinary::animation::SingletonAnimationInterfaceFactory::SingletonAnimationInterfaceFactoryDyn::as_SingletonAnimationInterfaceFactory_mut(self), p1) }
+}
 impl crate::org::allbinary::animation::BasicAnimationInterfaceFactoryInterface::BasicAnimationInterfaceFactoryInterface for ImageAnimationSingletonInterfaceFactory {
+}
+impl crate::org::allbinary::animation::ProceduralAnimationInterfaceFactoryInterface::ProceduralAnimationInterfaceFactoryInterface for ImageAnimationSingletonInterfaceFactory {
+    fn getInstanceAnimation(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { crate::org::allbinary::animation::SingletonAnimationInterfaceFactory::SingletonAnimationInterfaceFactory::getInstanceAnimation(crate::org::allbinary::animation::SingletonAnimationInterfaceFactory::SingletonAnimationInterfaceFactoryDyn::as_SingletonAnimationInterfaceFactory_mut(self), p1) }
 }
 
 impl ImageAnimationSingletonInterfaceFactory {
@@ -42,7 +50,7 @@ impl ImageAnimationSingletonInterfaceFactory {
 
     pub fn new_struct(mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>, mut width: i32, mut height: i32) -> Self {
         let mut this = Self {
-            base: SingletonAnimationInterfaceFactory::new_struct(ImageAnimation::new(jcall!(AnimationFrameToImageUtil::getInstance()).getInstanceWH(width.clone(), height.clone(), animationInterface.clone()), AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::image::ImageAnimation::ImageAnimationDyn>>)),
+            base: SingletonAnimationInterfaceFactory::new_struct(ImageAnimation::new(jcall!(AnimationFrameToImageUtil::getInstance()).getInstanceWH(width.clone(), height.clone(), animationInterface.clone()), AnimationBehavior::getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::image::ImageAnimation::ImageAnimationDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>)),
         };
         // super(...) is in the struct literal above
         this

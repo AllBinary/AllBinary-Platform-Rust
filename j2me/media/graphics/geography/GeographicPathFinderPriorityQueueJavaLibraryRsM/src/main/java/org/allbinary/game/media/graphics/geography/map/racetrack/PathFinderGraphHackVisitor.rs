@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
+use crate::java::lang::Exception::*;
 use super::BasePathFinderGraphVisitor::BasePathFinderGraphVisitor;
 
 // Borrows the object of a Java reference

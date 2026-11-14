@@ -18,8 +18,6 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::io::Serializable::Serializable;
-use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
-use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,7 +34,6 @@ pub struct BasicUserRole {
     pub sessionInactivityTimeout: i64,
 }
 
-thread_local! { pub static BasicUserRole_roleVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>); }
 // impl Serializable for BasicUserRole with the methods of the trait
 
 impl BasicUserRole {
@@ -70,8 +67,8 @@ impl BasicUserRole {
     }
 
     pub fn new5(mut aRole: String, mut aDisplayValue: String, mut a_int_RoleId: i32, mut aSessionTimeout: i64, mut aSessionInactivityTimeout: i64) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct5(aRole, aDisplayValue, a_int_RoleId, aSessionTimeout, aSessionInactivityTimeout))));
-            jcall!(BasicUserRole_roleVector.with(Clone::clone)).add((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct5(aRole.clone(), aDisplayValue.clone(), a_int_RoleId.clone(), aSessionTimeout.clone(), aSessionInactivityTimeout.clone()))));
+            jcall!({ let java_field = jcall!(BasicUserRoles::BasicUserRoles::getInstance()).roleVector.clone(); java_field }).add((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
         this
     }
     
@@ -97,7 +94,7 @@ impl BasicUserRole {
     
 
     pub fn equals(&mut self, mut basicUserRole: Option<Rc<RefCell<BasicUserRole>>>) -> bool {
-        if self.getRoleId() == jcall!(basicUserRole).getRoleId() {
+        if self.getRoleId() == { let java_value = jcall!(basicUserRole).getRoleId(); java_value } {
             return true;
         }
         return false;
@@ -106,27 +103,6 @@ impl BasicUserRole {
 
     pub fn toString(&mut self) -> String {
         return self.getRole();
-    }
-    
-
-    // throws Exception
-    // Java overloaded method: Rust needs a different name
-    // synchronized
-    pub fn getRole1(mut role: String) -> Option<Rc<RefCell<BasicUserRole>>> {
-        let mut roleVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicUserRole::getAll();
-        let mut size: i32 = jcall!(roleVector).size();
-        for index in (0..size) {
-            let mut userRole: Option<Rc<RefCell<BasicUserRole>>> = { let java_object = (jcall!(roleVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<BasicUserRole>>>>().expect("ClassCastException").clone()) };
-            if (role.cmp(&jcall!(userRole).toString()) as i32) == 0 {
-                return userRole.clone();
-            }
-        }
-        panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Unable to get role - Unknown Role"))));
-    }
-    
-
-    pub fn getAll() -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        return BasicUserRole_roleVector.with(Clone::clone).clone();
     }
 }
 

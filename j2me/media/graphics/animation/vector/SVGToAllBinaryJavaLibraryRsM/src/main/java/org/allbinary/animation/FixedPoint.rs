@@ -21,6 +21,10 @@ thread_local! { pub static FixedPoint_instance: Option<Rc<RefCell<FixedPoint>>> 
 
 impl FixedPoint {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             ONE: 0,
@@ -45,7 +49,7 @@ impl FixedPoint {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn toFixed(&mut self, mut val: f32) -> i32 {
+    pub fn toFixed_float(&mut self, mut val: f32) -> i32 {
         return (((val * 65536.0_f32)) as i32);
     }
     

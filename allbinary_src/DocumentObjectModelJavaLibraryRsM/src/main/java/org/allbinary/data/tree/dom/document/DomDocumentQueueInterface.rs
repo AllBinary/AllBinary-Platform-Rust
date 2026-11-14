@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::data::tree::dom::document::mapping::DomDocumentMappingInterface::DomDocumentMappingInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -26,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait DomDocumentQueueInterface {
+pub trait DomDocumentQueueInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
@@ -35,8 +36,6 @@ pub trait DomDocumentQueueInterface {
 
     // throws Exception
     fn remove(&mut self) -> Option<Rc<RefCell<dyn DomDocumentMappingInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

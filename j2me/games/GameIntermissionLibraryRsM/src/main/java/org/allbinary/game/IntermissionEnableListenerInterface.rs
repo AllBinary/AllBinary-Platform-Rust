@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait IntermissionEnableListenerInterface {
+pub trait IntermissionEnableListenerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn notifyIntermission(&mut self, enable: bool);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -33,7 +33,7 @@ pub struct PathFindingThreadPool {
     pub base: ThreadPool,
 }
 
-thread_local! { pub static PathFindingThreadPool_instance: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>> = PathFindingThreadPool::new(String::from("PathFinding"), 1, 1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>); }
+thread_local! { pub static PathFindingThreadPool_instance: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>> = PathFindingThreadPool::new(String::from("PathFinding"), 1, 1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>); }
 
 impl PathFindingThreadPool {
     
@@ -57,12 +57,12 @@ impl PathFindingThreadPool {
     
 
     pub fn runTaskWithPriority(&mut self, mut task: Option<Rc<RefCell<dyn PriorityRunnable>>>) {
-        self.base.runTaskWithPriority(task.clone());
+        { let java_arguments = (task.clone(),); self.base.runTaskWithPriority(java_arguments.0) };
     }
     
 
     pub fn runTask(&mut self, mut task: Option<Rc<RefCell<dyn Runnable>>>) {
-        self.base.runTask(task.clone());
+        { let java_arguments = (task.clone(),); self.base.runTask(java_arguments.0) };
     }
     
 

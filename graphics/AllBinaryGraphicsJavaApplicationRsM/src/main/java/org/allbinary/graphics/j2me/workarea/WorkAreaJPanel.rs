@@ -17,11 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use crate::Runnable;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::awt::*;
 // use crate::java::util::EventListener::EventListener;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::java::util::LinkedList::LinkedList;
 // use crate::javax::swing::*;
 // use crate::javax::swing::tree::MutableTreeNode::MutableTreeNode;
@@ -41,6 +40,7 @@ use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -63,7 +63,20 @@ pub struct WorkAreaJPanel {
 }
 
 pub static mut WorkAreaJPanel_document: std::cell::LazyCell<Option<Rc<RefCell<Document>>>> = std::cell::LazyCell::new(|| None);
-// impl WorkAreaJPanelInterface for WorkAreaJPanel with the methods of the trait
+impl WorkAreaJPanelInterface for WorkAreaJPanel {
+    fn getName(&mut self) -> String { Self::getName(self) }
+    fn deselect(&mut self) { Self::deselect(self) }
+    fn select(&mut self) { Self::select(self) }
+    fn changeZoom(&mut self, mut factor: i32) { Self::changeZoom(self, factor) }
+    fn explodeAll(&mut self) { Self::explodeAll(self) }
+    fn autoRotate(&mut self, mut increments: i32, mut totalAngle: i32) { Self::autoRotate(self, increments, totalAngle) }
+    fn autoExplode(&mut self, mut numberOfFrames: i32, mut explodeType: i32) { Self::autoExplode2(self, numberOfFrames, explodeType) }
+    fn autoMirror(&mut self) { Self::autoMirror(self) }
+    fn play(&mut self) { Self::play(self) }
+    fn stop(&mut self) { Self::stop(self) }
+    fn isPlaying(&mut self) -> bool { Self::isPlaying(self) }
+    fn toDocument(&mut self) -> Option<Rc<RefCell<Document>>> { Self::toDocument(self) }
+}
 // impl MyCanvasEventListener for WorkAreaJPanel with the methods of the trait
 // impl EventListener for WorkAreaJPanel with the methods of the trait
 impl Runnable for WorkAreaJPanel {
@@ -101,7 +114,7 @@ impl WorkAreaJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
             }
@@ -131,7 +144,7 @@ impl WorkAreaJPanel {
         this.isPlaying = false;
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             this.initComponents();
-            this.name = jcall!(workAreaDom).getName();
+            this.name = { let java_value = (jcall!(workAreaDom).getName()).clone(); java_value };
             this.initMyComponents(dimension.clone());
             let mut canvasNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(workAreaDom).getCanvasNodes();
             let mut numberOfFrames: i32 = jcall!(canvasNodeList).size();
@@ -146,7 +159,7 @@ impl WorkAreaJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             if LOGGING::contains(crate::org::allbinary::log::LOGGING::LOGGING_LOADINGERROR.with(Clone::clone).clone()) {
                 jcall!(this.logUtil).put(String::from("Constructor Error"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("WorkAreaJPanel"), crate::java_into_object(e.clone()));
@@ -175,7 +188,7 @@ impl WorkAreaJPanel {
         jcall!(gridBagConstraints).gridx = 0;
         jcall!(gridBagConstraints).gridy = 0;
         jcall!(gridBagConstraints).gridwidth = 1;
-        jcall!(gridBagConstraints).fill = jcall!(jcall!(unsafe { java_awt.clone() }).GridBagConstraints).BOTH.clone();
+        jcall!(gridBagConstraints).fill = { let java_field = jcall!({ let java_field = jcall!(unsafe { java_awt.clone() }).GridBagConstraints.clone(); java_field }).BOTH.clone(); java_field }.clone();
         jcall!(gridBagConstraints).weightx = .05;
         jcall!(gridBagConstraints).weighty = .05;
         let mut toolJPanel: Option<Rc<RefCell<ToolJPanel>>> = ToolJPanel::new();
@@ -185,7 +198,7 @@ impl WorkAreaJPanel {
         jcall!(gridBagConstraints).gridx = 1;
         jcall!(gridBagConstraints).gridy = 0;
         jcall!(gridBagConstraints).gridwidth = 6;
-        jcall!(gridBagConstraints).fill = jcall!(jcall!(unsafe { java_awt.clone() }).GridBagConstraints).BOTH.clone();
+        jcall!(gridBagConstraints).fill = { let java_field = jcall!({ let java_field = jcall!(unsafe { java_awt.clone() }).GridBagConstraints.clone(); java_field }).BOTH.clone(); java_field }.clone();
         jcall!(gridBagConstraints).weightx = 1;
         jcall!(gridBagConstraints).weighty = 1;
         jcall!(gridBagLayout).setConstraints(self.canvasHolderJPanel.clone(), gridBagConstraints.clone());
@@ -193,23 +206,23 @@ impl WorkAreaJPanel {
         gridBagConstraints = GridBagConstraints::new();
         jcall!(gridBagConstraints).gridx = 8;
         jcall!(gridBagConstraints).gridy = 0;
-        jcall!(gridBagConstraints).gridwidth = jcall!(jcall!(unsafe { java_awt.clone() }).GridBagConstraints).REMAINDER.clone();
-        jcall!(gridBagConstraints).fill = jcall!(jcall!(unsafe { java_awt.clone() }).GridBagConstraints).BOTH.clone();
+        jcall!(gridBagConstraints).gridwidth = { let java_field = jcall!({ let java_field = jcall!(unsafe { java_awt.clone() }).GridBagConstraints.clone(); java_field }).REMAINDER.clone(); java_field }.clone();
+        jcall!(gridBagConstraints).fill = { let java_field = jcall!({ let java_field = jcall!(unsafe { java_awt.clone() }).GridBagConstraints.clone(); java_field }).BOTH.clone(); java_field }.clone();
         jcall!(gridBagConstraints).weightx = .1;
         jcall!(gridBagConstraints).weighty = .1;
         self.propertiesJPanel = PropertiesJPanel::new();
         jcall!(gridBagLayout).setConstraints(self.propertiesJPanel.clone(), gridBagConstraints.clone());
         jcall!(self.innerJPanel).add(self.propertiesJPanel.clone());
-        MyCanvasEventService::addListener((self).clone() /* as MyCanvasEventListener */);
+        MyCanvasEventService::addListener(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
 
-    pub fn getCanvasHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut canvasJPanelHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
+    pub fn getCanvasHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut canvasJPanelHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
         let mut size: i32 = jcall!(self.canvasJPanelList).size();
         for index in (0..size) {
-            let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (jcall!(self.canvasJPanelList).get(index.clone())).clone() /* as CanvasJPanel */;
-            jcall!(canvasJPanelHashMap).put(jcall!(canvasJPanel).getTreeNode(), Some((index.clone()) as i32));
+            let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (jcall!(self.canvasJPanelList).get(index.clone())).clone();
+            jcall!(canvasJPanelHashMap).put(crate::java_into_object(jcall!(canvasJPanel).getTreeNode()), crate::java_into_object((Some((index.clone()) as i32)).expect("NullPointerException")));
         }
         return canvasJPanelHashMap.clone();
     }
@@ -272,14 +285,14 @@ impl WorkAreaJPanel {
     pub fn changeZoom(&mut self, mut factor: i32) {
         let mut size: i32 = jcall!(self.canvasJPanelList).size();
         for index in (0..size) {
-            let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (jcall!(self.canvasJPanelList).get(index.clone())).clone() /* as CanvasJPanel */;
+            let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (jcall!(self.canvasJPanelList).get(index.clone())).clone();
             jcall!(jcall!(canvasJPanel).getGrid()).setZoom(jcall!(jcall!(canvasJPanel).getGrid()).getZoom() + factor);
         }
     }
     
 
     pub fn getCurrentFrame(&mut self) -> Option<Rc<RefCell<CanvasJPanel>>> {
-        return (jcall!(self.canvasJPanelList).get(self.selectedFrame.clone())).clone() /* as CanvasJPanel */;
+        return (jcall!(self.canvasJPanelList).get(self.selectedFrame.clone())).clone();
     }
     
 
@@ -293,10 +306,10 @@ impl WorkAreaJPanel {
 
     // throws Exception
     pub fn duplicate(&mut self, mut treeNode: Option<Rc<RefCell<MutableTreeNode>>>) {
-        let mut canvasJPanelHashMap: Option<Rc<RefCell<HashMap>>> = self.getCanvasHashMap();
-        if jcall!(canvasJPanelHashMap).containsKey(treeNode.clone()) {
-            let mut frameInteger: Option<i32> = (jcall!(canvasJPanelHashMap).get(treeNode.clone())).clone() /* as Integer */;
-            let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = ({ let java_receiver = self.canvasJPanelList.clone(); let java_arguments = (((frameInteger).unwrap() as i32),); let java_result = jcall!(java_receiver).get(java_arguments.0); java_result }).clone() /* as CanvasJPanel */;
+        let mut canvasJPanelHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.getCanvasHashMap();
+        if jcall!(canvasJPanelHashMap).containsKey(crate::java_into_object(treeNode.clone())) {
+            let mut frameInteger: Option<i32> = { let java_object = (jcall!(canvasJPanelHashMap).get(crate::java_into_object(treeNode.clone()))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
+            let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = ({ let java_receiver = self.canvasJPanelList.clone(); let java_arguments = (((frameInteger).unwrap() as i32),); let java_result = jcall!(java_receiver).get(java_arguments.0); java_result }).clone();
             { let java_arguments = (jcall!(canvasJPanel).duplicate(),); self.initDuplicate(java_arguments.0) };
         }
     }
@@ -306,7 +319,7 @@ impl WorkAreaJPanel {
     pub fn autoRotate(&mut self, mut increments: i32, mut totalAngle: i32) {
         let mut incrementAngle: i32 = (totalAngle / increments);
         for index in (1..increments) {
-            let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (self.getCurrentFrame()).clone() /* as CanvasJPanel */;
+            let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (self.getCurrentFrame()).clone();
             let mut newCanvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = jcall!(canvasJPanel).duplicate();
             jcall!(newCanvasJPanel).setAngle(incrementAngle * index);
             self.initDuplicate(newCanvasJPanel.clone());
@@ -315,7 +328,7 @@ impl WorkAreaJPanel {
     
 
     pub fn explodeAll(&mut self) {
-        let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (self.getCurrentFrame()).clone() /* as CanvasJPanel */;
+        let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (self.getCurrentFrame()).clone();
         jcall!(canvasJPanel).explodeAll();
     }
     
@@ -323,7 +336,7 @@ impl WorkAreaJPanel {
     // throws Exception
     pub fn autoExplode2(&mut self, mut numberOfFrames: i32, mut explodeType: i32) {
         for index in (1..numberOfFrames) {
-            let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (self.getCurrentFrame()).clone() /* as CanvasJPanel */;
+            let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (self.getCurrentFrame()).clone();
             let mut newCanvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = jcall!(canvasJPanel).duplicate();
             jcall!(newCanvasJPanel).explode(index + 1, explodeType.clone());
             self.initDuplicate(newCanvasJPanel.clone());
@@ -333,7 +346,7 @@ impl WorkAreaJPanel {
 
     // throws Exception
     pub fn autoMirror(&mut self) {
-        let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (self.getCurrentFrame()).clone() /* as CanvasJPanel */;
+        let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (self.getCurrentFrame()).clone();
         let mut newCanvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = jcall!(canvasJPanel).duplicate();
         jcall!(newCanvasJPanel).mirror();
         self.initDuplicate(newCanvasJPanel.clone());
@@ -344,7 +357,7 @@ impl WorkAreaJPanel {
     // synchronized
     pub fn select1(&mut self, mut index: i32) {
         if index < jcall!(self.canvasJPanelList).size() {
-            let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (jcall!(self.canvasJPanelList).get(index.clone())).clone() /* as CanvasJPanel */;
+            let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (jcall!(self.canvasJPanelList).get(index.clone())).clone();
             if canvasJPanel.is_some() {
                 jcall!(self.canvasHolderJPanel).removeAll();
                 jcall!(self.canvasHolderJPanel).add(canvasJPanel.clone());
@@ -358,9 +371,9 @@ impl WorkAreaJPanel {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn select1(&mut self, mut treeNode: Option<Rc<RefCell<MutableTreeNode>>>) {
-        let mut canvasJPanelHashMap: Option<Rc<RefCell<HashMap>>> = self.getCanvasHashMap();
-        let mut frameInteger: Option<i32> = (jcall!(canvasJPanelHashMap).get(treeNode.clone())).clone() /* as Integer */;
+    pub fn select1_MutableTreeNode(&mut self, mut treeNode: Option<Rc<RefCell<MutableTreeNode>>>) {
+        let mut canvasJPanelHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.getCanvasHashMap();
+        let mut frameInteger: Option<i32> = { let java_object = (jcall!(canvasJPanelHashMap).get(crate::java_into_object(treeNode.clone()))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
         if frameInteger.is_some() {
             { let java_arguments = (((frameInteger).unwrap() as i32),); self.select1(java_arguments.0) };
         }
@@ -382,7 +395,7 @@ impl WorkAreaJPanel {
         let mut framesNode: Option<Rc<RefCell<Node>>> = jcall!(unsafe { WorkAreaJPanel_document.clone() }).createElement(WorkAreaDom_FRAMES.with(Clone::clone).clone());
         let mut size: i32 = jcall!(self.canvasJPanelList).size();
         for index in (0..size) {
-            let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (jcall!(self.canvasJPanelList).get(index.clone())).clone() /* as CanvasJPanel */;
+            let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (jcall!(self.canvasJPanelList).get(index.clone())).clone();
             jcall!(framesNode).appendChild(jcall!(canvasJPanel).toDom());
         }
         jcall!(workAreaNode).appendChild(nameNode.clone());
@@ -412,7 +425,7 @@ impl WorkAreaJPanel {
                 self.innerJPanelKeyReleased(evt.clone());
             }
 */,); jcall!(java_receiver).addKeyListener(java_arguments.0); };
-        self.add(self.innerJPanel.clone());
+        { let java_arguments = (self.innerJPanel.clone(),); self.add(java_arguments.0) };
     }
     
 
@@ -445,10 +458,10 @@ impl WorkAreaJPanel {
     
 
     pub fn delete(&mut self, mut evt: Option<Rc<RefCell<MyCanvasEvent>>>) {
-        let mut canvasJPanelHashMap: Option<Rc<RefCell<HashMap>>> = self.getCanvasHashMap();
-        if jcall!(canvasJPanelHashMap).containsKey(jcall!(evt).getTreeNode()) {
+        let mut canvasJPanelHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.getCanvasHashMap();
+        if jcall!(canvasJPanelHashMap).containsKey(crate::java_into_object(jcall!(evt).getTreeNode())) {
             jcall!(self.canvasHolderJPanel).removeAll();
-            let mut frameInt: Option<i32> = (jcall!(canvasJPanelHashMap).get(jcall!(evt).getTreeNode())).clone() /* as Integer */;
+            let mut frameInt: Option<i32> = { let java_object = (jcall!(canvasJPanelHashMap).get(crate::java_into_object(jcall!(evt).getTreeNode()))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
             { let java_receiver = self.canvasJPanelList.clone(); let java_arguments = (((frameInt).unwrap() as i32),); jcall!(java_receiver).remove(java_arguments.0); };
             { let java_arguments = (((frameInt).unwrap() as i32),); self.select1(java_arguments.0) };
         }
@@ -457,23 +470,23 @@ impl WorkAreaJPanel {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn duplicate(&mut self, mut evt: Option<Rc<RefCell<MyCanvasEvent>>>) {
+    pub fn duplicate_MyCanvasEvent(&mut self, mut evt: Option<Rc<RefCell<MyCanvasEvent>>>) {
         { let java_arguments = (jcall!(evt).getTreeNode(),); self.duplicate(java_arguments.0) };
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn select1(&mut self, mut evt: Option<Rc<RefCell<MyCanvasEvent>>>) {
+    pub fn select1_MyCanvasEvent(&mut self, mut evt: Option<Rc<RefCell<MyCanvasEvent>>>) {
         { let java_arguments = (jcall!(evt).getTreeNode(),); self.select1(java_arguments.0) };
         jcall!(StatusFactory::getInstance()).setStatus(String::from("Frame Selected"));
     }
     
 
     pub fn rotate(&mut self, mut evt: Option<Rc<RefCell<MyCanvasEvent>>>) {
-        let mut canvasJPanelHashMap: Option<Rc<RefCell<HashMap>>> = self.getCanvasHashMap();
+        let mut canvasJPanelHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.getCanvasHashMap();
         let mut treeNode: Option<Rc<RefCell<MutableTreeNode>>> = jcall!(evt).getTreeNode();
-        let mut frameInt: Option<i32> = (jcall!(canvasJPanelHashMap).get(jcall!(evt).getTreeNode())).clone() /* as Integer */;
-        let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = ({ let java_receiver = self.canvasJPanelList.clone(); let java_arguments = (((frameInt).unwrap() as i32),); let java_result = jcall!(java_receiver).get(java_arguments.0); java_result }).clone() /* as CanvasJPanel */;
+        let mut frameInt: Option<i32> = { let java_object = (jcall!(canvasJPanelHashMap).get(crate::java_into_object(jcall!(evt).getTreeNode()))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
+        let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = ({ let java_receiver = self.canvasJPanelList.clone(); let java_arguments = (((frameInt).unwrap() as i32),); let java_result = jcall!(java_receiver).get(java_arguments.0); java_result }).clone();
         if canvasJPanel.is_some() {
             jcall!(canvasJPanel).addAngle(jcall!(evt).getAngle());
             { let java_arguments = (((frameInt).unwrap() as i32),); self.select1(java_arguments.0) };
@@ -496,7 +509,7 @@ impl WorkAreaJPanel {
 
     // throws Exception
     pub fn center(&mut self) {
-        let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (self.getCurrentFrame()).clone() /* as CanvasJPanel */;
+        let mut canvasJPanel: Option<Rc<RefCell<CanvasJPanel>>> = (self.getCurrentFrame()).clone();
         jcall!(canvasJPanel).center();
     }
     
@@ -528,7 +541,7 @@ impl WorkAreaJPanel {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             }
         }

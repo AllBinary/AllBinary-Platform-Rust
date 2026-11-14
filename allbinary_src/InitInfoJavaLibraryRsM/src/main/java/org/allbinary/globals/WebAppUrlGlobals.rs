@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::business::init::InitInfo::InitInfo;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
+use crate::java::lang::Exception::*;
 use super::UrlGlobalsInterface::UrlGlobalsInterface;
 
 // Borrows the object of a Java reference

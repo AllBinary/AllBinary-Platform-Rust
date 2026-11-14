@@ -38,6 +38,10 @@ impl HighScoresCanvasInputProcessorFactoryInterface for HighScoresCanvasChangeLe
 
 impl HighScoresCanvasChangeLevelInputProcessorFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -50,7 +54,7 @@ impl HighScoresCanvasChangeLevelInputProcessorFactory {
     
 
     pub fn getInstance(&mut self, mut highScoresCanvas: Option<Rc<RefCell<HighScoresCanvas>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScoresCanvasInputProcessor::HighScoresCanvasInputProcessorDyn>>> {
-        return HighScoresCanvasLevelChangeInputProcessor::new(highScoresCanvas.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::score::HighScoresCanvasInputProcessor::HighScoresCanvasInputProcessorDyn>>);
+        return HighScoresCanvasLevelChangeInputProcessor::new(highScoresCanvas.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::score::HighScoresCanvasInputProcessor::HighScoresCanvasInputProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::score::HighScoresCanvasInputProcessor::HighScoresCanvasInputProcessorDyn>>);
     }
 }
 

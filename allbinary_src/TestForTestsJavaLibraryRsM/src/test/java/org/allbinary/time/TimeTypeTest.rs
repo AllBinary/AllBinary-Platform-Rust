@@ -4,14 +4,12 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::Calendar;
 use super::*;
-// use crate::java::util::Calendar::Calendar;
+use crate::java::util::Calendar::Calendar;
 use crate::org::junit::jupiter::api::Assertions::Assertions;
 use crate::org::junit::jupiter::api::DisplayName::DisplayName;
 use crate::org::junit::jupiter::api::Test::Test;
 use super::TimeTypeUtil::TimeTypeUtil;
-use super::TestableTimeTypeUtil::TestableTimeTypeUtil;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -25,6 +23,10 @@ pub struct TimeTypeTest {
 
 
 impl TimeTypeTest {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -63,10 +65,10 @@ impl TimeTypeTest {
     
 
     pub fn getNightOrDay_returns_expected_label(&mut self) {
-        let mut nightUtil: Option<Rc<RefCell<TimeTypeUtil>>> = TestableTimeTypeUtil::new(0);
-        Assertions::assertEquals(jcall!(nightUtil).NIGHT.clone(), jcall!(nightUtil).getNightOrDay());
-        let mut dayUtil: Option<Rc<RefCell<TimeTypeUtil>>> = TestableTimeTypeUtil::new(12);
-        Assertions::assertEquals(jcall!(dayUtil).DAY.clone(), jcall!(dayUtil).getNightOrDay());
+        let mut nightUtil: Option<Rc<RefCell<TimeTypeUtil>>> = TestableTimeTypeUtil::new(0).map(|reference| Rc::new(RefCell::new(Rc::try_unwrap(reference).ok().expect("new object is not shared").into_inner().base)));
+        Assertions::assertEquals({ let java_field = jcall!(nightUtil).NIGHT.clone(); java_field }.clone(), jcall!(nightUtil).getNightOrDay());
+        let mut dayUtil: Option<Rc<RefCell<TimeTypeUtil>>> = TestableTimeTypeUtil::new(12).map(|reference| Rc::new(RefCell::new(Rc::try_unwrap(reference).ok().expect("new object is not shared").into_inner().base)));
+        Assertions::assertEquals({ let java_field = jcall!(dayUtil).DAY.clone(); java_field }.clone(), jcall!(dayUtil).getNightOrDay());
     }
     
 
@@ -87,8 +89,8 @@ impl TimeTypeTest {
         let mut util: Option<Rc<RefCell<TimeTypeUtil>>> = TimeTypeUtil::new();
         let mut nightMillis: i64 = TimeTypeTest::millisForHourLocal(0);
         let mut dayMillis: i64 = TimeTypeTest::millisForHourLocal(12);
-        Assertions::assertEquals(jcall!(util).NIGHT.clone(), jcall!(util).getNightOrDay(nightMillis.clone()));
-        Assertions::assertEquals(jcall!(util).DAY.clone(), jcall!(util).getNightOrDay(dayMillis.clone()));
+        Assertions::assertEquals({ let java_field = jcall!(util).NIGHT.clone(); java_field }.clone(), jcall!(util).getNightOrDay(nightMillis.clone()));
+        Assertions::assertEquals({ let java_field = jcall!(util).DAY.clone(); java_field }.clone(), jcall!(util).getNightOrDay(dayMillis.clone()));
     }
     
 
@@ -100,8 +102,8 @@ impl TimeTypeTest {
 
     pub fn constants_accessible_and_stable(&mut self) {
         let mut util: Option<Rc<RefCell<TimeTypeUtil>>> = TimeTypeUtil::new();
-        Assertions::assertEquals(String::from("Night"), jcall!(util).NIGHT.clone());
-        Assertions::assertEquals(String::from("Day"), jcall!(util).DAY.clone());
+        Assertions::assertEquals(String::from("Night"), { let java_field = jcall!(util).NIGHT.clone(); java_field }.clone());
+        Assertions::assertEquals(String::from("Day"), { let java_field = jcall!(util).DAY.clone(); java_field }.clone());
     }
     
 

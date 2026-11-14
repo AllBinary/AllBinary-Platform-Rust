@@ -47,6 +47,10 @@ thread_local! { pub static ComponentFactory_instance: Option<Rc<RefCell<Componen
 
 impl ComponentFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             VGA: None,
@@ -75,7 +79,7 @@ impl ComponentFactory {
         this.SMBUS = Component::new(String::from("SMBus"));
         this.PIC = Component::new(String::from("PIC"));
         this.Class = Component::new(String::from("Class"));
-        this.UNKNOWN = Component::new(jcall!(CommonStrings::getInstance()).UNKNOWN.clone());
+        this.UNKNOWN = Component::new({ let java_field = jcall!(CommonStrings::getInstance()).UNKNOWN.clone(); java_field }.clone());
         this
     }
 

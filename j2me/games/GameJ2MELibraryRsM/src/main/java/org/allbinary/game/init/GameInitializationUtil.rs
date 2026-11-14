@@ -25,6 +25,7 @@ use crate::org::allbinary::game::configuration::feature::MainFeatureFactory::Mai
 use crate::org::allbinary::game::resource::ResourceLoadingLevelFactory::ResourceLoadingLevelFactory;
 use crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
+use crate::java::lang::Exception::*;
 use super::GameInitializationInterface::GameInitializationInterface;
 use super::BasicBuildGameInitializerFactory::BasicBuildGameInitializerFactory;
 
@@ -43,11 +44,14 @@ thread_local! { pub static GameInitializationUtil_instance: Option<Rc<RefCell<Ga
 
 impl GameInitializationUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             EVENT: None,
         };
-        this.EVENT = GameInitializedEvent::new(this);
         this
     }
 
@@ -59,32 +63,32 @@ impl GameInitializationUtil {
     // throws Exception
     pub fn initDemo(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut canvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn>>>, mut gameInitializationInterfaceFactoryInterface: Option<Rc<RefCell<BasicBuildGameInitializerFactory>>>) {
         let mut mainFeatureFactory: Option<Rc<RefCell<MainFeatureFactory>>> = MainFeatureFactory::getInstance();
-        if jcall!(ChangedGameFeatureListener::getInstance()).isChangedFeature(jcall!(mainFeatureFactory).STATIC.clone()) {
+        if jcall!(ChangedGameFeatureListener::getInstance()).isChangedFeature({ let java_field = jcall!(mainFeatureFactory).STATIC.clone(); java_field }.clone()) {
             let mut gameInitializationInterface: Option<Rc<RefCell<dyn GameInitializationInterface>>> = jcall!(gameInitializationInterfaceFactoryInterface).getInstance();
             let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
-            if jcall!(features).isFeature(jcall!(mainFeatureFactory).LOAD_ALL.clone()) {
+            if jcall!(features).isFeature({ let java_field = jcall!(mainFeatureFactory).LOAD_ALL.clone(); java_field }.clone()) {
                 self.initGame(abeClientInformation.clone(), canvas.clone(), gameInitializationInterfaceFactoryInterface.clone());
-            } else if jcall!(features).isFeature(jcall!(mainFeatureFactory).LOAD_ONDEMAND.clone()) {
+            } else if jcall!(features).isFeature({ let java_field = jcall!(mainFeatureFactory).LOAD_ONDEMAND.clone(); java_field }.clone()) {
                 let mut resourceLoadingLevelFactory: Option<Rc<RefCell<ResourceLoadingLevelFactory>>> = ResourceLoadingLevelFactory::getInstance();
-                jcall!(gameInitializationInterface).init(abeClientInformation.clone(), jcall!(canvas).getCustomCommandListener(), jcall!(jcall!(resourceLoadingLevelFactory).LOAD_EARLY).getLevel());
-                jcall!(self.EVENT).setResourceLoadingLevel(jcall!(resourceLoadingLevelFactory).LOAD_EARLY.clone());
+                jcall!(gameInitializationInterface).init(abeClientInformation.clone(), jcall!(canvas).getCustomCommandListener(), jcall!({ let java_field = jcall!(resourceLoadingLevelFactory).LOAD_EARLY.clone(); java_field }).getLevel());
+                jcall!(self.EVENT).setResourceLoadingLevel({ let java_field = jcall!(resourceLoadingLevelFactory).LOAD_EARLY.clone(); java_field }.clone());
             } else {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("No Loading Feature Available"))));
             }
-            jcall!(GameInitializedEventHandler::getInstance()).fireEvent(self.EVENT.clone());
+            jcall!(GameInitializedEventHandler::getInstance()).fireEvent(self.EVENT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
         }
     }
     
 
     // throws Exception
     pub fn initGame(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut canvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn>>>, mut gameInitializationInterfaceFactoryInterface: Option<Rc<RefCell<BasicBuildGameInitializerFactory>>>) {
-        if jcall!(ChangedGameFeatureListener::getInstance()).isChangedFeature(jcall!(MainFeatureFactory::getInstance()).STATIC.clone()) {
+        if jcall!(ChangedGameFeatureListener::getInstance()).isChangedFeature({ let java_field = jcall!(MainFeatureFactory::getInstance()).STATIC.clone(); java_field }.clone()) {
             let mut gameInitializationInterface: Option<Rc<RefCell<dyn GameInitializationInterface>>> = jcall!(gameInitializationInterfaceFactoryInterface).getInstance();
             let mut resourceLoadingLevelFactory: Option<Rc<RefCell<ResourceLoadingLevelFactory>>> = ResourceLoadingLevelFactory::getInstance();
-            jcall!(gameInitializationInterface).init(abeClientInformation.clone(), jcall!(canvas).getCustomCommandListener(), jcall!(jcall!(resourceLoadingLevelFactory).LOAD_ALL).getLevel());
-            jcall!(self.EVENT).setResourceLoadingLevel(jcall!(resourceLoadingLevelFactory).LOAD_ALL.clone());
-            jcall!(GameInitializedEventHandler::getInstance()).fireEvent(self.EVENT.clone());
-            jcall!(ChangedGameFeatureListener::getInstance()).remove(jcall!(MainFeatureFactory::getInstance()).STATIC.clone());
+            jcall!(gameInitializationInterface).init(abeClientInformation.clone(), jcall!(canvas).getCustomCommandListener(), jcall!({ let java_field = jcall!(resourceLoadingLevelFactory).LOAD_ALL.clone(); java_field }).getLevel());
+            jcall!(self.EVENT).setResourceLoadingLevel({ let java_field = jcall!(resourceLoadingLevelFactory).LOAD_ALL.clone(); java_field }.clone());
+            jcall!(GameInitializedEventHandler::getInstance()).fireEvent(self.EVENT.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
+            jcall!(ChangedGameFeatureListener::getInstance()).remove({ let java_field = jcall!(MainFeatureFactory::getInstance()).STATIC.clone(); java_field }.clone());
         }
     }
     

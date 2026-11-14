@@ -21,6 +21,7 @@ use super::*;
 // use crate::java::util::logging::Logger::Logger;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::LogFormatUtil::LogFormatUtil;
 use super::Log::Log;
 
@@ -40,6 +41,10 @@ pub struct LogUtil {
 thread_local! { pub static LogUtil_instance: Option<Rc<RefCell<LogUtil>>> = LogUtil::new(); }
 
 impl LogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogUtil>>> {
@@ -72,21 +77,21 @@ impl LogUtil {
     
 
     pub fn putF(&mut self, mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String) {
-        { let java_arguments = (specialMessage.clone(), anyType.clone(), functionName.clone(), jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(),); self.put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3) };
+        { let java_arguments = (specialMessage.clone(), anyType.clone(), functionName.clone(), { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone(),); self.put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3) };
     }
     
 
     pub fn putFS(&mut self, mut specialMessage: String, mut className: String, mut functionName: String) {
-        { let java_arguments = (specialMessage.clone(), className.clone(), functionName.clone(), jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(),); self.putS(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3) };
+        { let java_arguments = (specialMessage.clone(), className.clone(), functionName.clone(), { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone(),); self.putS(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3) };
     }
     
 
     pub fn put(&mut self, mut specialMessage: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut functionName: String, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut className: String = jcall!(CommonStrings::getInstance()).EMPTY.clone();
+            let mut className: String = { let java_field = jcall!(CommonStrings::getInstance()).EMPTY.clone(); java_field }.clone();
             let mut clazz: &'static str = std::any::type_name_of_val(&anyType);
             if true {
-                className = clazz.to_string();
+                className = { let java_value = (clazz.to_string()).clone(); java_value };
             }
             let mut message: String = jcall!(self.logFormatUtil).getS(className.clone(), functionName.clone(), specialMessage.clone());
             if exception.is_some() {
@@ -97,7 +102,7 @@ impl LogUtil {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             }
         }
@@ -115,7 +120,7 @@ impl LogUtil {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             }
         }

@@ -40,6 +40,10 @@ thread_local! { pub static DropCellPositionHistory_SINGLETON: Option<Rc<RefCell<
 
 impl DropCellPositionHistory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             cellPositionFactory: None,
@@ -47,8 +51,8 @@ impl DropCellPositionHistory {
             layerList: None,
         };
         this.cellPositionFactory = CellPositionFactory::getInstance();
-        this.positionList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.layerList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.positionList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.layerList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -69,7 +73,7 @@ impl DropCellPositionHistory {
     
 
     pub fn addAll(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) {
-        for index in (0..=jcall!(list).size() - 1).rev() {
+        for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
             { let java_arguments = ({ let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>>().expect("ClassCastException").clone()) }, layerInterface.clone(),); self.add(java_arguments.0, java_arguments.1) };
         }
     }
@@ -87,7 +91,7 @@ impl DropCellPositionHistory {
     pub fn removeAll(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) {
         let mut index: i32 = 0;
         while index != -1 {
-            index = jcall!(self.layerList).indexOf(crate::java_into_object(layerInterface.clone()));
+            index = { let java_value = (jcall!(self.layerList).indexOf(crate::java_into_object(layerInterface.clone()))).clone(); java_value };
             if index >= 0 {
                 jcall!(self.positionList).removeAt(index.clone());
                 jcall!(self.layerList).removeAt(index.clone());
@@ -108,7 +112,7 @@ impl DropCellPositionHistory {
     
 
     pub fn anyCellPositionWithDrop(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> bool {
-        for index in (0..=jcall!(list).size() - 1).rev() {
+        for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
             if { let java_arguments = ({ let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>>().expect("ClassCastException").clone()) },); self.isCellPositionWithDrop(java_arguments.0) } {
                 return true;
             }
@@ -119,13 +123,13 @@ impl DropCellPositionHistory {
 
     pub fn getCellPositionWithDrop(&mut self, mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>> {
         let mut cellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>> = None;
-        for index in (0..=jcall!(list).size() - 1).rev() {
-            cellPosition = { let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>>().expect("ClassCastException").clone()) };
+        for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
+            cellPosition = { let java_value = ({ let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             if self.isCellPositionWithDrop(cellPosition.clone()) {
                 return cellPosition.clone();
             }
         }
-        return jcall!(self.cellPositionFactory).NONE.clone();
+        return { let java_field = jcall!(self.cellPositionFactory).NONE.clone(); java_field }.clone();
     }
     
 

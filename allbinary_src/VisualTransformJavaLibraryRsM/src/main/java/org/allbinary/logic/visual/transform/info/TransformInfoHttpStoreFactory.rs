@@ -16,10 +16,10 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
+use crate::java::lang::Exception::*;
 use super::TransformInfoFactoryInterface::TransformInfoFactoryInterface;
 use super::TransformInfoHttpStore::TransformInfoHttpStore;
 use super::TransformInfoInterface::TransformInfoInterface;
@@ -36,10 +36,14 @@ pub struct TransformInfoHttpStoreFactory {
 
 thread_local! { pub static TransformInfoHttpStoreFactory_instance: Option<Rc<RefCell<TransformInfoHttpStoreFactory>>> = TransformInfoHttpStoreFactory::new(); }
 impl TransformInfoFactoryInterface for TransformInfoHttpStoreFactory {
-    fn getInstance(&mut self, mut databaseHashMap: Option<Rc<RefCell<HashMap>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<dyn TransformInfoInterface>>> { Self::getInstance3(self, databaseHashMap, propertiesHashMap, pageContext) }
+    fn getInstance(&mut self, mut databaseHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<dyn TransformInfoInterface>>> { Self::getInstance3(self, databaseHashMap, propertiesHashMap, pageContext) }
 }
 
 impl TransformInfoHttpStoreFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<TransformInfoHttpStoreFactory>>> {
@@ -60,8 +64,8 @@ impl TransformInfoHttpStoreFactory {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn getInstance3(&mut self, mut databaseHashMap: Option<Rc<RefCell<HashMap>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<dyn TransformInfoInterface>>> {
-        return TransformInfoHttpStore::new3(databaseHashMap.clone(), propertiesHashMap.clone(), pageContext.clone()).map(|reference| reference as Rc<RefCell<dyn TransformInfoInterface>>);
+    pub fn getInstance3(&mut self, mut databaseHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<dyn TransformInfoInterface>>> {
+        return TransformInfoHttpStore::new3(databaseHashMap.clone(), propertiesHashMap.clone(), pageContext.clone()).map(|reference| reference as Rc<RefCell<dyn TransformInfoInterface>>).map(|_java_reference| -> Rc<RefCell<dyn TransformInfoInterface>> { panic!("ClassCastException: the Rust trait of TransformInfoHttpStore does not have TransformInfoInterface as a base trait") });
     }
 }
 

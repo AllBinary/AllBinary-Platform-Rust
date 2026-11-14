@@ -16,15 +16,15 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::user::commerce::money::payment::gateway::PaymentGatewayData::PaymentGatewayData;
 use crate::org::allbinary::business::user::commerce::money::payment::gateway::processor::PaymentProcessorInterfaceFactoryInterface::PaymentProcessorInterfaceFactoryInterface;
 use crate::org::allbinary::business::user::commerce::money::payment::gateway::transaction::PaymentTransactionInterfaceFactoryInterface::PaymentTransactionInterfaceFactoryInterface;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
+use crate::java::lang::Exception::*;
 use super::BasicPaymentType::BasicPaymentType;
 
 // Borrows the object of a Java reference
@@ -42,6 +42,10 @@ pub struct PaymentType {
 
 
 impl PaymentType {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut basicPaymentType: Option<Rc<RefCell<BasicPaymentType>>>) -> Self {
@@ -57,8 +61,8 @@ impl PaymentType {
     }
 
     pub fn new1(mut basicPaymentType: Option<Rc<RefCell<BasicPaymentType>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct1(basicPaymentType))));
-            jcall!(PaymentTypeUtil::PaymentTypeUtil::getInstance()).add((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct1(basicPaymentType.clone()))));
+            jcall!(PaymentTypeUtil::PaymentTypeUtil::getInstance()).add(this.clone());
         this
     }
     
@@ -76,8 +80,8 @@ impl PaymentType {
     }
 
     pub fn new3(mut basicPaymentType: Option<Rc<RefCell<BasicPaymentType>>>, mut paymentTransactionInterfaceFactoryInterface: Option<Rc<RefCell<dyn PaymentTransactionInterfaceFactoryInterface>>>, mut paymentProcessorInterfaceFactoryInterface: Option<Rc<RefCell<dyn PaymentProcessorInterfaceFactoryInterface>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct3(basicPaymentType, paymentTransactionInterfaceFactoryInterface, paymentProcessorInterfaceFactoryInterface))));
-            jcall!(PaymentTypeUtil::PaymentTypeUtil::getInstance()).add((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct3(basicPaymentType.clone(), paymentTransactionInterfaceFactoryInterface.clone(), paymentProcessorInterfaceFactoryInterface.clone()))));
+            jcall!(PaymentTypeUtil::PaymentTypeUtil::getInstance()).add(this.clone());
         this
     }
     
@@ -101,8 +105,8 @@ impl PaymentType {
     
 
     pub fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        jcall!(vector).addAllList(jcall!(self.getBasicPaymentType()).toVector());
+        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        jcall!(vector).addAllList({ let java_argument = jcall!(self.getBasicPaymentType()).toVector(); java_argument });
         if self.paymentTransactionInterfaceFactoryInterface.is_some() {
             jcall!(vector).add(crate::java_into_object(std::any::type_name_of_val(&self.paymentTransactionInterfaceFactoryInterface).to_string()));
         }
@@ -113,14 +117,14 @@ impl PaymentType {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).putAll(jcall!(self.getBasicPaymentType()).toHashMap());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).putAll({ let java_argument = jcall!(self.getBasicPaymentType()).toHashMap(); java_argument });
         if self.paymentTransactionInterfaceFactoryInterface.is_some() {
-            jcall!(hashMap).put(jcall!(crate::org::allbinary::business::user::commerce::money::payment::gateway::PaymentGatewayData::PaymentGatewayData_PAYMENTTRANSACTIONINTERFACEFACTORYINTERFACE.with(Clone::clone)).toString(), std::any::type_name_of_val(&self.paymentTransactionInterfaceFactoryInterface).to_string());
+            jcall!(hashMap).put(crate::java_into_object(jcall!(crate::org::allbinary::business::user::commerce::money::payment::gateway::PaymentGatewayData::PaymentGatewayData_PAYMENTTRANSACTIONINTERFACEFACTORYINTERFACE.with(Clone::clone)).toString()), crate::java_into_object(std::any::type_name_of_val(&self.paymentTransactionInterfaceFactoryInterface).to_string()));
         }
         if self.paymentProcessorInterfaceFactoryInterface.is_some() {
-            jcall!(hashMap).put(jcall!(crate::org::allbinary::business::user::commerce::money::payment::gateway::PaymentGatewayData::PaymentGatewayData_PAYMENTPROCESSORINTERFACEFACTORYINTERFACE.with(Clone::clone)).toString(), std::any::type_name_of_val(&self.paymentProcessorInterfaceFactoryInterface).to_string());
+            jcall!(hashMap).put(crate::java_into_object(jcall!(crate::org::allbinary::business::user::commerce::money::payment::gateway::PaymentGatewayData::PaymentGatewayData_PAYMENTPROCESSORINTERFACEFACTORYINTERFACE.with(Clone::clone)).toString()), crate::java_into_object(std::any::type_name_of_val(&self.paymentProcessorInterfaceFactoryInterface).to_string()));
         }
         return hashMap.clone();
     }

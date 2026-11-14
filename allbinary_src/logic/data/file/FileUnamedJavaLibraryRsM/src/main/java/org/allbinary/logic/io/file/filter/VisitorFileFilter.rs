@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::File::File;
-// use crate::java::io::FileFilter::FileFilter;
+use crate::java::io::File::File;
+use crate::java::io::FileFilter::FileFilter;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::logic::io::file::FileWrapperUtil::FileWrapperUtil;
 use crate::org::allbinary::logic::util::visitor::VisitorInterface::VisitorInterface;
@@ -37,6 +37,10 @@ pub struct VisitorFileFilter {
 // impl FileFilter for VisitorFileFilter with the methods of the trait
 
 impl VisitorFileFilter {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut booleanVisitorInterface: Option<Rc<RefCell<dyn VisitorInterface>>>) -> Self {
@@ -54,14 +58,14 @@ impl VisitorFileFilter {
 
     pub fn accept(&mut self, mut file: Option<Rc<RefCell<File>>>) -> bool {
         let mut abFile: Option<Rc<RefCell<AbFile>>> = FileWrapperUtil::wrapFile(file.clone());
-        let mut isFileAcceptable: bool = ({ let java_object = jcall!(self.booleanVisitorInterface).visit(crate::java_into_object(abFile.clone())); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) }).unwrap();
+        let mut isFileAcceptable: bool = ({ let java_object = (jcall!(self.booleanVisitorInterface).visit(crate::java_into_object(abFile.clone()))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) }).unwrap();
         return isFileAcceptable || jcall!(file).isDirectory();
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn accept(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> bool {
-        let mut isFileAcceptable: bool = ({ let java_object = jcall!(self.booleanVisitorInterface).visit(crate::java_into_object(file.clone())); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) }).unwrap();
+    pub fn accept_AbFile(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> bool {
+        let mut isFileAcceptable: bool = ({ let java_object = (jcall!(self.booleanVisitorInterface).visit(crate::java_into_object(file.clone()))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) }).unwrap();
         return isFileAcceptable || jcall!(file).isDirectory();
     }
 }

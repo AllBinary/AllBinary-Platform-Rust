@@ -25,6 +25,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
 use crate::taghelpers::OrderHistoryHelperFactory::OrderHistoryHelperFactory;
 use crate::tags::StoreValidationTransformTag::StoreValidationTransformTag;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -65,48 +66,50 @@ impl OrderHistoryTag {
 
     // throws LicensingException
     pub fn setOrderStatus(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(OrderHistoryHelperFactory::new()).getInstance(self.getPropertiesHashMap(), self.base.pageContext.clone());
             let mut helperClass: &'static str = std::any::type_name_of_val(&anyType);
             let mut method: Option<Rc<RefCell<Method>>> = jcall!(helperClass).getMethod(String::from("setOrderStatus"), None);
             let mut result: String = (jcall!(method).invoke(anyType.clone(), None)).clone() /* as String */;
-            return result.clone();
+            return Some(result.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws JspTagException
     pub fn doStartTag(&mut self) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             self.setName(String::from("Basic Order History View"));
             self.setObjectFile(String::from("views.generic.order.history.ValidationView"));
-            if self.getCommand().is_some() {
-                if jcall!(self.getCommand()).compareTo(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SETSTATUS.with(Clone::clone).clone()) == 0 {
-                    jcall!(self.getPropertiesHashMap()).put(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_STATUS.with(Clone::clone).clone(), self.status.clone());
+            if true {
+                if { let java_value = (self.getCommand().cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SETSTATUS.with(Clone::clone).clone()) as i32); java_value } == 0 {
+                    jcall!(self.getPropertiesHashMap()).put(crate::java_into_object(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_STATUS.with(Clone::clone).clone()), crate::java_into_object(self.status.clone()));
                     jcall!(jcall!(self.base.pageContext).getOut()).print(self.setOrderStatus());
-                } else if jcall!(self.getCommand()).compareTo(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).GLOBALS2).VIEW.clone()) == 0 {
+                } else if { let java_value = (self.getCommand().cmp(&{ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).GLOBALS2.clone(); java_field }).VIEW.clone(); java_field }.clone()) as i32); java_value } == 0 {
                 } else {
                     panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("No Such View Command: "), self.getCommand()))));
                 }
-                return self.base.doStartTag();
+                return Some(self.base.doStartTag());
             }
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Command Null"))));
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             AbResponseHandler::sendJspTagLicensingRedirect(self.pageContext.clone(), e.clone());
             return SKIP_BODY.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for OrderHistoryTag {
@@ -133,6 +136,23 @@ impl crate::tags::TransformTag::TransformTagDyn for OrderHistoryTag {
 impl crate::tags::ValidationTransformTag::ValidationTransformTagDyn for OrderHistoryTag {
     fn as_ValidationTransformTag(&self) -> &crate::tags::ValidationTransformTag::ValidationTransformTag { &self.base.base }
     fn as_ValidationTransformTag_mut(&mut self) -> &mut crate::tags::ValidationTransformTag::ValidationTransformTag { &mut self.base.base }
+}
+impl crate::tags::CommandTag::CommandTagDyn for OrderHistoryTag {
+    fn as_CommandTag(&self) -> &crate::tags::CommandTag::CommandTag { &self.base.base.base.base.base.base.base.base }
+    fn as_CommandTag_mut(&mut self) -> &mut crate::tags::CommandTag::CommandTag { &mut self.base.base.base.base.base.base.base.base }
+}
+impl crate::tags::CustomTagSupport::CustomTagSupportDyn for OrderHistoryTag {
+    fn as_CustomTagSupport(&self) -> &crate::tags::CustomTagSupport::CustomTagSupport { &self.base.base.base.base.base.base.base.base.base }
+    fn as_CustomTagSupport_mut(&mut self) -> &mut crate::tags::CustomTagSupport::CustomTagSupport { &mut self.base.base.base.base.base.base.base.base.base }
+}
+impl crate::tags::HelperTag::HelperTagDyn for OrderHistoryTag {
+    fn as_HelperTag(&self) -> &crate::tags::HelperTag::HelperTag { &self.base.base.base.base.base.base }
+    fn as_HelperTag_mut(&mut self) -> &mut crate::tags::HelperTag::HelperTag { &mut self.base.base.base.base.base.base }
+}
+impl crate::tags::PropertiesTag::PropertiesTagDyn for OrderHistoryTag {
+    fn as_PropertiesTag(&self) -> &crate::tags::PropertiesTag::PropertiesTag { &self.base.base.base.base.base.base.base }
+    fn as_PropertiesTag_mut(&mut self) -> &mut crate::tags::PropertiesTag::PropertiesTag { &mut self.base.base.base.base.base.base.base }
+    fn doEndTag(&mut self) -> i32 { crate::tags::ValidationTransformTag::ValidationTransformTag::doEndTag(crate::tags::ValidationTransformTag::ValidationTransformTagDyn::as_ValidationTransformTag_mut(self)) }
 }
 impl crate::tags::transform::info::TransformInfoTag::TransformInfoTagDyn for OrderHistoryTag {
     fn as_TransformInfoTag(&self) -> &crate::tags::transform::info::TransformInfoTag::TransformInfoTag { &self.base.base.base.base }

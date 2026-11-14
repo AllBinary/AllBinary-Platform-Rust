@@ -21,6 +21,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::AllBinaryLayer::AllBinaryLayer;
 use super::AllBinaryLayerManager::AllBinaryLayerManager;
 
@@ -39,6 +40,10 @@ pub struct BasicLayerProcessor {
 thread_local! { pub static BasicLayerProcessor_NULL_LAYER_PROCESSOR: Option<Rc<RefCell<dyn BasicLayerProcessorDyn>>> = BasicLayerProcessor::new().map(|reference| reference as Rc<RefCell<dyn BasicLayerProcessorDyn>>); }
 
 impl BasicLayerProcessor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -47,7 +52,7 @@ impl BasicLayerProcessor {
             list: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -65,7 +70,7 @@ impl BasicLayerProcessor {
 
     // throws Exception
     pub fn process(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) {
-        panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone())));
+        panic!("{:?}", format!("{}: {:?}", "Exception", ({ let java_field = jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone(); java_field }.clone())));
     }
     
 
@@ -73,7 +78,7 @@ impl BasicLayerProcessor {
         return self.list.clone();
     }
 }
-pub trait BasicLayerProcessorDyn {
+pub trait BasicLayerProcessorDyn: std::any::Any {
     fn as_BasicLayerProcessor(&self) -> &BasicLayerProcessor;
     fn as_BasicLayerProcessor_mut(&mut self) -> &mut BasicLayerProcessor;
     fn add(&mut self, mut layerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>) { BasicLayerProcessor::add(self.as_BasicLayerProcessor_mut(), layerInterface) }

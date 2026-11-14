@@ -25,15 +25,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait RestGameObjectInterface {
+pub trait RestGameObjectInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn isRestNeeded(&mut self) -> bool;
     
 
     fn isAGoodTimeToRest(&mut self) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

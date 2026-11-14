@@ -35,6 +35,10 @@ pub struct TimeStampUtil {
 thread_local! { pub static TimeStampUtil_instance: Option<Rc<RefCell<TimeStampUtil>>> = TimeStampUtil::new(); }
 
 impl TimeStampUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<TimeStampUtil>>> {

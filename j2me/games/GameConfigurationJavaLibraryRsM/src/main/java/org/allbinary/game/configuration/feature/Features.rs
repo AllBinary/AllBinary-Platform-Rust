@@ -29,6 +29,7 @@ use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::Feature::Feature;
 use super::GameFeatureFactory::GameFeatureFactory;
 use super::InputFeatureFactory::InputFeatureFactory;
@@ -49,16 +50,20 @@ pub struct Features {
     pub defaultList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-pub static mut Features_SINGLETON: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut Features_SINGLETON: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl Features {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<Features>>> {
-        if match (&unsafe { Features_SINGLETON.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *Features_SINGLETON = Features::new() };
+        if match (&unsafe { Features_SINGLETON.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *Features_SINGLETON = crate::java_into_object(Features::new()) };
         }
-        return (unsafe { Features_SINGLETON.clone() }).clone() /* as Features */;
+        return { let java_object = (unsafe { Features_SINGLETON.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<Features>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -94,16 +99,16 @@ impl Features {
     // throws Exception
     pub fn add(&mut self, mut gameFeature: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>>) {
         if !jcall!(self.list).contains(crate::java_into_object(gameFeature.clone())) {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).START_LABEL.clone()).append(jcall!(gameFeature).toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).ADD.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).START_LABEL.clone(); java_field }.clone()).append(jcall!(gameFeature).toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).ADD.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             jcall!(self.list).add(crate::java_into_object(gameFeature.clone()));
-            jcall!(GameFeatureEventHandler::getInstance()).fireEvent(GameFeatureEvent::new(gameFeature.clone(), jcall!(gameFeature).toString()));
+            jcall!(GameFeatureEventHandler::getInstance()).fireEvent(GameFeatureEvent::new(crate::java_into_object(gameFeature.clone()), jcall!(gameFeature).toString()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
         }
     }
     
 
     // throws Exception
     pub fn removeDefault(&mut self, mut gameFeature: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).START_LABEL.clone()).append(jcall!(gameFeature).toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeDefault"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).START_LABEL.clone(); java_field }.clone()).append(jcall!(gameFeature).toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("removeDefault"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         self.remove(gameFeature.clone());
         jcall!(self.defaultList).remove(crate::java_into_object(gameFeature.clone()));
     }
@@ -112,9 +117,9 @@ impl Features {
     // throws Exception
     pub fn remove(&mut self, mut gameFeature: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>>) {
         if jcall!(self.list).contains(crate::java_into_object(gameFeature.clone())) {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).REMOVE.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).REMOVE.clone(); java_field }.clone());
             jcall!(self.list).remove(crate::java_into_object(gameFeature.clone()));
-            jcall!(GameFeatureEventHandler::getInstance()).fireEvent(GameFeatureEvent::new(gameFeature.clone(), jcall!(gameFeature).toString()));
+            jcall!(GameFeatureEventHandler::getInstance()).fireEvent(GameFeatureEvent::new(crate::java_into_object(gameFeature.clone()), jcall!(gameFeature).toString()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
         }
     }
     
@@ -125,31 +130,31 @@ impl Features {
             let mut inputFeatureFactory: Option<Rc<RefCell<InputFeatureFactory>>> = InputFeatureFactory::getInstance();
             let mut sensorFeatureFactory: Option<Rc<RefCell<SensorFeatureFactory>>> = SensorFeatureFactory::getInstance();
             let mut touchFeatureFactory: Option<Rc<RefCell<TouchFeatureFactory>>> = TouchFeatureFactory::getInstance();
-            self.addDefault(jcall!(gameFeatureFactory).ARTIFICIAL_INTELLEGENCE_PROCESSOR.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-            self.addDefault(jcall!(gameFeatureFactory).COLLIDABLE_INTERFACE_LAYER_PROCESSOR.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-            self.addDefault(jcall!(gameFeatureFactory).GAME_INPUT_LAYER_PROCESSOR.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-            self.addDefault(jcall!(gameFeatureFactory).TICKABLE_LAYER_PROCESSOR.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-            self.addDefault(jcall!(inputFeatureFactory).MULTI_KEY_PRESS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-            self.addDefault(jcall!(inputFeatureFactory).REMOVE_DUPLICATE_KEY_PRESSES.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-            self.addDefault(jcall!(gameFeatureFactory).SCREEN_SHAKE.clone());
-            self.addDefault(jcall!(gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone());
+            { let java_arguments = ({ let java_field = jcall!(gameFeatureFactory).ARTIFICIAL_INTELLEGENCE_PROCESSOR.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>),); self.addDefault(java_arguments.0) };
+            { let java_arguments = ({ let java_field = jcall!(gameFeatureFactory).COLLIDABLE_INTERFACE_LAYER_PROCESSOR.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>),); self.addDefault(java_arguments.0) };
+            { let java_arguments = ({ let java_field = jcall!(gameFeatureFactory).GAME_INPUT_LAYER_PROCESSOR.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>),); self.addDefault(java_arguments.0) };
+            { let java_arguments = ({ let java_field = jcall!(gameFeatureFactory).TICKABLE_LAYER_PROCESSOR.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>),); self.addDefault(java_arguments.0) };
+            { let java_arguments = ({ let java_field = jcall!(inputFeatureFactory).MULTI_KEY_PRESS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>),); self.addDefault(java_arguments.0) };
+            { let java_arguments = ({ let java_field = jcall!(inputFeatureFactory).REMOVE_DUPLICATE_KEY_PRESSES.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>),); self.addDefault(java_arguments.0) };
+            { let java_arguments = ({ let java_field = jcall!(gameFeatureFactory).SCREEN_SHAKE.clone(); java_field }.clone(),); self.addDefault(java_arguments.0) };
+            { let java_arguments = ({ let java_field = jcall!(gameFeatureFactory).POST_IMAGE_LOADING_MODIFICATION.clone(); java_field }.clone(),); self.addDefault(java_arguments.0) };
             let mut operatingSystemInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>> = jcall!(OperatingSystemFactory::getInstance()).getOperatingSystemInstance();
-            if jcall!(operatingSystemInterface).isOverScan() {
-                self.addDefault(jcall!(sensorFeatureFactory).NO_ORIENTATION.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-                self.addDefault(jcall!(touchFeatureFactory).HIDE_SCREEN_BUTTONS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
+            if jcall!(operatingSystemInterface).as_GenericOperatingSystem_mut().isOverScan() {
+                { let java_arguments = ({ let java_field = jcall!(sensorFeatureFactory).NO_ORIENTATION.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>),); self.addDefault(java_arguments.0) };
+                { let java_arguments = ({ let java_field = jcall!(touchFeatureFactory).HIDE_SCREEN_BUTTONS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>),); self.addDefault(java_arguments.0) };
             } else {
-                self.addDefault(jcall!(sensorFeatureFactory).ORIENTATION_SENSORS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-                self.addDefault(jcall!(touchFeatureFactory).AUTO_HIDE_SHOW_SCREEN_BUTTONS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
+                { let java_arguments = ({ let java_field = jcall!(sensorFeatureFactory).ORIENTATION_SENSORS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>),); self.addDefault(java_arguments.0) };
+                { let java_arguments = ({ let java_field = jcall!(touchFeatureFactory).AUTO_HIDE_SHOW_SCREEN_BUTTONS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>),); self.addDefault(java_arguments.0) };
             }
-            self.addDefault(jcall!(touchFeatureFactory).TOUCH_ENABLED.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-            { let java_arguments = (jcall!(MainFeatureFactory::MainFeatureFactory::getInstance()).FULL_SCREEN.clone(),); self.addDefault(java_arguments.0) };
-            { let java_arguments = (jcall!(MainFeatureFactory::MainFeatureFactory::getInstance()).LOAD_ONDEMAND.clone(),); self.addDefault(java_arguments.0) };
+            { let java_arguments = ({ let java_field = jcall!(touchFeatureFactory).TOUCH_ENABLED.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>),); self.addDefault(java_arguments.0) };
+            { let java_arguments = ({ let java_field = jcall!(MainFeatureFactory::MainFeatureFactory::getInstance()).FULL_SCREEN.clone(); java_field }.clone(),); self.addDefault(java_arguments.0) };
+            { let java_arguments = ({ let java_field = jcall!(MainFeatureFactory::MainFeatureFactory::getInstance()).LOAD_ONDEMAND.clone(); java_field }.clone(),); self.addDefault(java_arguments.0) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putOE(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(), e.clone());
+            PreLogUtil::putOE({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

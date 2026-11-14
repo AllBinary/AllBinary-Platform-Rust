@@ -21,8 +21,8 @@ use crate::Hashtable;
 use super::*;
 // use crate::java::util::Enumeration::Enumeration;
 // use crate::java::util::Hashtable::Hashtable;
-// use crate::java::util::Map::Map;
-// use crate::java::util::Set::Set;
+use crate::java::util::Map::Map;
+use crate::java::util::Set::Set;
 use crate::jsinterop::annotations::JsType;
 
 // Borrows the object of a Java reference
@@ -73,22 +73,22 @@ impl<K, V> ABHashtable<K, V> {
     
 
     pub fn contains(&mut self, mut value: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> bool {
-        return self.base.contains(value.clone());
+        return { let java_arguments = (value.clone(),); self.base.contains(java_arguments.0) };
     }
     
 
     pub fn containsValue(&mut self, mut value: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> bool {
-        return self.base.containsValue(value.clone());
+        return { let java_arguments = (value.clone(),); self.base.containsValue(java_arguments.0) };
     }
     
 
     pub fn containsKey(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> bool {
-        return self.base.containsKey(key.clone());
+        return { let java_arguments = (key.clone(),); self.base.containsKey(java_arguments.0) };
     }
     
 
     pub fn get(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> V {
-        return self.base.get(key.clone());
+        return { let java_arguments = (key.clone(),); self.base.get(java_arguments.0) };
     }
     
 
@@ -98,7 +98,7 @@ impl<K, V> ABHashtable<K, V> {
     
 
     pub fn clone(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return self.base.clone();
+        return crate::java_into_object(self.base.clone());
     }
     
 
@@ -108,7 +108,7 @@ impl<K, V> ABHashtable<K, V> {
     
 
     pub fn equals(&mut self, mut obj: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> bool {
-        return self.base.equals(obj.clone());
+        return { let java_arguments = (obj.clone(),); self.base.equals(java_arguments.0) };
     }
     
 

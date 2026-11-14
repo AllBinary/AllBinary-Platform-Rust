@@ -22,6 +22,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystem;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::HardwareInterface::HardwareInterface;
 
 // Borrows the object of a Java reference
@@ -40,6 +41,10 @@ pub struct SystemHardwareFactory {
 thread_local! { pub static SystemHardwareFactory_instance: Option<Rc<RefCell<SystemHardwareFactory>>> = SystemHardwareFactory::new(); }
 
 impl SystemHardwareFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<SystemHardwareFactory>>> {
@@ -68,15 +73,15 @@ impl SystemHardwareFactory {
     pub fn getInstance1(&mut self, mut operatingSystemInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>>) -> Option<Rc<RefCell<dyn HardwareInterface>>> {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if match (&self.hardwareInterface, &NoHardware::NoHardware::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                self.hardwareInterface = jcall!(HardwareFactory::HardwareFactory::getInstance()).getInstance1(operatingSystemInterface.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::os::OperatingSystemInterface::OperatingSystemInterface>>));
+                self.hardwareInterface = { let java_value = (jcall!(HardwareFactory::HardwareFactory::getInstance()).getInstance1(operatingSystemInterface.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::os::OperatingSystemInterface::OperatingSystemInterface>>))).clone(); java_value };
             }
-            jcall!(self.logUtil).putF(String::from("Found Hardware"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone());
+            jcall!(self.logUtil).putF(String::from("Found Hardware"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         return self.hardwareInterface.clone();
@@ -87,10 +92,10 @@ impl SystemHardwareFactory {
         let mut systemHardwareFactory: Option<Rc<RefCell<SystemHardwareFactory>>> = SystemHardwareFactory::getInstance();
         let mut osBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(osBuffer).append(String::from("Hardware Info: \n"));
-        if jcall!(systemHardwareFactory).hardwareInterface.is_some() {
-            jcall!(osBuffer).append(jcall!(jcall!(systemHardwareFactory).hardwareInterface).toString());
+        if { let java_field = jcall!(systemHardwareFactory).hardwareInterface.clone(); java_field }.is_some() {
+            jcall!(osBuffer).append(jcall!({ let java_field = jcall!(systemHardwareFactory).hardwareInterface.clone(); java_field }).toString());
         } else {
-            jcall!(osBuffer).append(jcall!(StringUtil::getInstance()).NULL_STRING.clone());
+            jcall!(osBuffer).append({ let java_field = jcall!(StringUtil::getInstance()).NULL_STRING.clone(); java_field }.clone());
         }
         return jcall!(osBuffer).toString();
     }

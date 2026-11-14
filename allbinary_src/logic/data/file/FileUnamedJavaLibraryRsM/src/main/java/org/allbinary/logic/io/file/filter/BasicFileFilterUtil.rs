@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::FileFilter::FileFilter;
+use crate::java::io::FileFilter::FileFilter;
 use crate::org::allbinary::logic::io::file::visitor::IncludeFileExtensionsBooleanFileVisitor::IncludeFileExtensionsBooleanFileVisitor;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
@@ -35,6 +35,10 @@ pub struct BasicFileFilterUtil {
 
 
 impl BasicFileFilterUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -48,11 +52,11 @@ impl BasicFileFilterUtil {
     }
     
 
-    pub fn getInstance(mut extension: String) -> Option<Rc<RefCell<FileFilter>>> {
-        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+    pub fn getInstance(mut extension: String) -> Option<Rc<RefCell<dyn FileFilter>>> {
+        let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         jcall!(vector).add(crate::java_into_object(extension.clone()));
         let mut includeFileExtensionsBooleanFileVisitor: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::file::visitor::IncludeFileExtensionsBooleanFileVisitor::IncludeFileExtensionsBooleanFileVisitorDyn>>> = IncludeFileExtensionsBooleanFileVisitor::new(vector.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::file::visitor::IncludeFileExtensionsBooleanFileVisitor::IncludeFileExtensionsBooleanFileVisitorDyn>>);
-        return (VisitorFileFilter::new(includeFileExtensionsBooleanFileVisitor.clone())).clone() /* as FileFilter */;
+        return (VisitorFileFilter::new(includeFileExtensionsBooleanFileVisitor.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::VisitorInterface::VisitorInterface>> { panic!("ClassCastException: the Rust trait of IncludeFileExtensionsBooleanFileVisitor does not have VisitorInterface as a base trait") }))).clone() /* as FileFilter */;
     }
 }
 

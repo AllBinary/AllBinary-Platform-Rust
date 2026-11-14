@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait PointsCompositeInterface {
+pub trait PointsCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getPointsInterface(&mut self) -> Option<Rc<RefCell<dyn PointsInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

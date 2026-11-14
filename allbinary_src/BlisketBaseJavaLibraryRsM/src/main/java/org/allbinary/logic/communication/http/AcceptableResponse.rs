@@ -35,6 +35,10 @@ pub struct AcceptableResponse {
 
 
 impl AcceptableResponse {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut candidate: String, mut tagName: String, mut index: i32) -> Self {
@@ -44,10 +48,10 @@ impl AcceptableResponse {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        jcall!(this.logUtil).putF(tagName.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF(tagName.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         let mut acceptableResponseUtil: Option<Rc<RefCell<AcceptableResponseUtil>>> = AcceptableResponseUtil::getInstance();
-        jcall!(jcall!(acceptableResponseUtil).candidateVector).addAt(index.clone(), crate::java_into_object(candidate.clone()));
-        jcall!(jcall!(acceptableResponseUtil).tagNameVector).addAt(index.clone(), crate::java_into_object(tagName.clone()));
+        jcall!({ let java_field = jcall!(acceptableResponseUtil).candidateVector.clone(); java_field }).addAt(index.clone(), crate::java_into_object(candidate.clone()));
+        jcall!({ let java_field = jcall!(acceptableResponseUtil).tagNameVector.clone(); java_field }).addAt(index.clone(), crate::java_into_object(tagName.clone()));
         this
     }
 

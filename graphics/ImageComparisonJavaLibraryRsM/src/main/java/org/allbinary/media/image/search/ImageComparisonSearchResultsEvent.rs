@@ -38,7 +38,7 @@ impl ImageComparisonSearchResultsEvent {
 
     pub fn new_struct(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut imageComparisonSearch: Option<Rc<RefCell<ImageComparisonSearch>>>) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(anyType.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(anyType.clone())),
             imageComparisonSearch: None,
         };
         // super(...) is in the struct literal above

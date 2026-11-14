@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::communication::smtp::EmailInterface::EmailInte
 use crate::org::allbinary::logic::communication::smtp::event::EmailEvent::EmailEvent;
 use crate::org::allbinary::logic::communication::smtp::event::UserEmailEventListenerInterface::UserEmailEventListenerInterface;
 use crate::org::allbinary::logic::communication::smtp::queue::EmailQueueFactory::EmailQueueFactory;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,9 +38,15 @@ pub struct UserEmailEventListenerModule {
     pub userInterface: Option<Rc<RefCell<dyn UserInterface>>>,
 }
 
-// impl UserEmailEventListenerInterface for UserEmailEventListenerModule with the methods of the trait
+impl UserEmailEventListenerInterface for UserEmailEventListenerModule {
+    fn onEmailSendRequest(&mut self, mut emailEvent: Option<Rc<RefCell<EmailEvent>>>) { Self::onEmailSendRequest(self, emailEvent) }
+}
 
 impl UserEmailEventListenerModule {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut userInterface: Option<Rc<RefCell<dyn UserInterface>>>) -> Self {
@@ -61,18 +68,18 @@ impl UserEmailEventListenerModule {
     pub fn onEmailSendFailure(&mut self, mut emailEvent: Option<Rc<RefCell<EmailEvent>>>) {
         let mut to: String = jcall!(self.userInterface).getSecondaryEmail();
         let mut email: Option<Rc<RefCell<BasicEmail>>> = BasicEmail::new(jcall!(emailEvent).getEmailInfo(), to.clone());
-        jcall!(EmailQueueFactory::getInstance()).offer((jcall!(email).getEmail()).clone() /* as EmailInterface */);
+        jcall!(EmailQueueFactory::getInstance()).offer((jcall!(email).getEmail()).clone().map(|reference| reference as Rc<RefCell<dyn EmailInterface>>));
     }
     
 
     // throws Exception
     pub fn onEmailSendRequest(&mut self, mut emailEvent: Option<Rc<RefCell<EmailEvent>>>) {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).EMAILLOGGING.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).EMAILLOGGING.clone(); java_field }.clone()) {
             { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Add Email To Que For Sending: "), jcall!(emailEvent).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onEmailSendRequest"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
         let mut to: String = jcall!(self.userInterface).getMainEmail();
         let mut email: Option<Rc<RefCell<BasicEmail>>> = BasicEmail::new(jcall!(emailEvent).getEmailInfo(), to.clone());
-        jcall!(EmailQueueFactory::getInstance()).offer((jcall!(email).getEmail()).clone() /* as EmailInterface */);
+        jcall!(EmailQueueFactory::getInstance()).offer((jcall!(email).getEmail()).clone().map(|reference| reference as Rc<RefCell<dyn EmailInterface>>));
     }
 }
 

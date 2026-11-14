@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait AccelerateableInterface {
+pub trait AccelerateableInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn accelerate(&mut self, accelerate: Option<Rc<RefCell<BasicDecimal>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

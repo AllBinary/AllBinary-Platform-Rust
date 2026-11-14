@@ -17,11 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use crate::Runnable;
-use std::collections::HashMap;
 use super::*;
 // use crate::java::awt::*;
-// use crate::java::io::File::File;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::io::File::File;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::swing::*;
 use crate::org::allbinary::data::tree::dom::XslHelper::XslHelper;
 use crate::org::allbinary::dom::DomHelper::DomHelper;
@@ -45,6 +44,7 @@ use crate::org::allbinary::string::CommonLabels::CommonLabels;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -122,7 +122,7 @@ impl FileJDialogListenerInterface for MyFrame {
     fn onFiles(&mut self, mut files: Vec<Option<Rc<RefCell<File>>>>) { Self::onFiles(self, files) }
 }
 impl HashMapJDialogListenerInterface for MyFrame {
-    fn onHashMap(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) { Self::onHashMap(self, hashMap) }
+    fn onHashMap(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) { Self::onHashMap(self, hashMap) }
 }
 // impl KeyListener for MyFrame with the methods of the trait
 
@@ -200,13 +200,13 @@ impl MyFrame {
         jcall!(this.mainJPanel).setSize(Dimension::new(550, 400));
         jcall!(this.jTabbedPane).setSize(Dimension::new(550, 400));
         this.fileJDialog = FileJDialog::new();
-        jcall!(this.fileJDialog).addFinishedListener((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        jcall!(this.fileJDialog).addFinishedListener(this.clone().map(|reference| reference as Rc<RefCell<dyn FileJDialogListenerInterface>>));
         this
     }
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
         let this = Some(Rc::new(RefCell::new(Self::new_struct())));
-            this.rotateJDialog = RotateJDialog::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), false);
+            jcall!(this).rotateJDialog = RotateJDialog::new((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), false);
         this
     }
     
@@ -330,7 +330,7 @@ impl MyFrame {
             }
 */,); jcall!(java_receiver).addMouseListener(java_arguments.0); };
         jcall!(self.jToolBar1).add(self.stopJjButton.clone());
-        jcall!(self.getContentPane()).add(self.jToolBar1.clone(), jcall!(jcall!(unsafe { java_awt.clone() }).BorderLayout).NORTH.clone());
+        jcall!(self.getContentPane()).add(self.jToolBar1.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { java_awt.clone() }).BorderLayout.clone(); java_field }).NORTH.clone(); java_field }.clone());
         jcall!(self.jPanel1).setLayout(GridLayout::new(1, 0));
         jcall!(self.mainJPanel).setLayout(GridLayout::new(1, 0));
         jcall!(self.jTabbedPane).setMinimumSize(Dimension::new(550, 400));
@@ -343,11 +343,11 @@ impl MyFrame {
 */,); jcall!(java_receiver).addChangeListener(java_arguments.0); };
         jcall!(self.mainJPanel).add(self.jTabbedPane.clone());
         jcall!(self.jPanel1).add(self.mainJPanel.clone());
-        jcall!(self.getContentPane()).add(self.jPanel1.clone(), jcall!(jcall!(unsafe { java_awt.clone() }).BorderLayout).CENTER.clone());
+        jcall!(self.getContentPane()).add(self.jPanel1.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { java_awt.clone() }).BorderLayout.clone(); java_field }).CENTER.clone(); java_field }.clone());
         jcall!(self.statusJPanel).setLayout(GridLayout::new(1, 0));
         jcall!(unsafe { MyFrame_statusJLabel.clone() }).setText(String::from("Status Bar"));
         jcall!(self.statusJPanel).add(unsafe { MyFrame_statusJLabel.clone() }.clone());
-        jcall!(self.getContentPane()).add(self.statusJPanel.clone(), jcall!(jcall!(unsafe { java_awt.clone() }).BorderLayout).SOUTH.clone());
+        jcall!(self.getContentPane()).add(self.statusJPanel.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { java_awt.clone() }).BorderLayout.clone(); java_field }).SOUTH.clone(); java_field }.clone());
         jcall!(self.fileJMenu).setText(String::from("File"));
         { let java_receiver = self.fileJMenu.clone(); let java_arguments = (ActionListener::new() /* Java anonymous class body: implement it as a named type
             
@@ -445,7 +445,7 @@ impl MyFrame {
 */,); jcall!(java_receiver).addActionListener(java_arguments.0); };
         jcall!(self.previousFrameJMenuItem).setText(String::from("Previous"));
         jcall!(self.frameJMenu).add(self.previousFrameJMenuItem.clone());
-        { let java_receiver = self.nextFrameJMenuItem.clone(); let java_arguments = (jcall!(CommonLabels::getInstance()).NEXT.clone(),); jcall!(java_receiver).setText(java_arguments.0); };
+        { let java_receiver = self.nextFrameJMenuItem.clone(); let java_arguments = ({ let java_field = jcall!(CommonLabels::getInstance()).NEXT.clone(); java_field }.clone(),); jcall!(java_receiver).setText(java_arguments.0); };
         jcall!(self.frameJMenu).add(self.nextFrameJMenuItem.clone());
         jcall!(self.removeJMenuItem).setText(String::from("Remove"));
         jcall!(self.frameJMenu).add(self.removeJMenuItem.clone());
@@ -504,20 +504,20 @@ impl MyFrame {
         jcall!(self.menuJMenuBar).add(self.generateJMenu.clone());
         jcall!(self.jMenu1).setText(String::from("Help"));
         jcall!(self.menuJMenuBar).add(self.jMenu1.clone());
-        self.setJMenuBar(self.menuJMenuBar.clone());
+        { let java_arguments = (self.menuJMenuBar.clone(),); self.setJMenuBar(java_arguments.0) };
         self.pack();
     }
     
 
     pub fn explodeAllJMenuItemMousePressed(&mut self, mut evt: Option<Rc<RefCell<MouseEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            MyCanvasEventService::fire(MyCanvasEvent::new((MyCanvasEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::canvas::event::MyCanvasEventService::MyCanvasEventService_EXPLODE.clone() }.clone(), None)).clone() /* as Any */));
+            MyCanvasEventService::fire(MyCanvasEvent::new(crate::java_into_object(crate::java_into_object((MyCanvasEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::canvas::event::MyCanvasEventService::MyCanvasEventService_EXPLODE.clone() }.clone(), None)).clone()))));
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("explodeAllJMenuItemMousePressed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("explodeAllJMenuItemMousePressed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -525,13 +525,13 @@ impl MyFrame {
 
     pub fn autoExplodeJMenuItemMousePressed(&mut self, mut evt: Option<Rc<RefCell<MouseEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            MyCanvasEventService::fire(MyCanvasEvent::new((MyCanvasEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::canvas::event::MyCanvasEventService::MyCanvasEventService_AUTOEXPLODE.clone() }.clone(), None)).clone() /* as Any */));
+            MyCanvasEventService::fire(MyCanvasEvent::new(crate::java_into_object(crate::java_into_object((MyCanvasEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::canvas::event::MyCanvasEventService::MyCanvasEventService_AUTOEXPLODE.clone() }.clone(), None)).clone()))));
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("autoExplodeJMenuItemMousePressed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("autoExplodeJMenuItemMousePressed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -617,13 +617,13 @@ impl MyFrame {
 
     pub fn centerJMenuItemActionPerformed(&mut self, mut evt: Option<Rc<RefCell<ActionEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            MyCanvasEventService::fire(MyCanvasEvent::new((MyCanvasEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::canvas::event::MyCanvasEventService::MyCanvasEventService_CENTER.clone() }.clone(), None)).clone() /* as Any */));
+            MyCanvasEventService::fire(MyCanvasEvent::new(crate::java_into_object(crate::java_into_object((MyCanvasEventSource::new2(unsafe { crate::org::allbinary::graphics::j2me::workarea::canvas::event::MyCanvasEventService::MyCanvasEventService_CENTER.clone() }.clone(), None)).clone()))));
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("centerJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("centerJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -645,9 +645,9 @@ impl MyFrame {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("centerJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("centerJMenuItemActionPerformed"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -660,15 +660,15 @@ impl MyFrame {
                 let mut document: Option<Rc<RefCell<Document>>> = jcall!(DomHelper::getInstance()).createDocument1(files[(index) as usize].clone());
                 let mut workAreaJPanel: Option<Rc<RefCell<WorkAreaJPanel>>> = WorkAreaJPanel::new2(WorkAreaDom::new(document.clone()), self.getSize());
                 jcall!(workAreaJPanel).setLayout(GridLayout::new(1, 1));
-                self.add((workAreaJPanel).clone() /* as WorkAreaJPanelInterface */);
+                self.add((workAreaJPanel).clone().map(|reference| reference as Rc<RefCell<dyn WorkAreaJPanelInterface>>));
             }
             jcall!(self.fileJDialog).setVisible(false);
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onFiles"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onFiles"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -682,10 +682,10 @@ impl MyFrame {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             if LOGGING::contains(crate::org::allbinary::log::LOGGING::LOGGING_MENUEVENT.with(Clone::clone).clone()) {
-                jcall!(self.guiLog).put4(jcall!(self.commonStrings).EXCEPTION.clone(), None /* Java this: a &mut self method has no Rc of itself */, String::from("newJMenuItemActionPerformed"), e.clone());
+                jcall!(self.guiLog).put4_String_String_String_Exception({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), None /* Java this: a &mut self method has no Rc of itself */, String::from("newJMenuItemActionPerformed"), e.clone());
             }
             }
         }
@@ -699,10 +699,10 @@ impl MyFrame {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             if LOGGING::contains(crate::org::allbinary::log::LOGGING::LOGGING_MENUEVENT.with(Clone::clone).clone()) {
-                jcall!(self.guiLog).put4(jcall!(self.commonStrings).EXCEPTION.clone(), None /* Java this: a &mut self method has no Rc of itself */, String::from("open"), e.clone());
+                jcall!(self.guiLog).put4_String_String_String_Exception({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), None /* Java this: a &mut self method has no Rc of itself */, String::from("open"), e.clone());
             }
             }
         }
@@ -711,18 +711,18 @@ impl MyFrame {
 
     pub fn export(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut workAreaJPanel: Option<Rc<RefCell<dyn WorkAreaJPanelInterface>>> = (jcall!(self.jTabbedPane).getSelectedComponent()).clone() /* as WorkAreaJPanelInterface */;
-            let mut file: Option<Rc<RefCell<File>>> = File::new(format!("{}{}", format!("{}{}", format!("{}{}", MyFrame_SAVE_PATH.with(Clone::clone), String::from("/")), jcall!(workAreaJPanel).getName()), self.JAVAEXTENSION));
+            let mut workAreaJPanel: Option<Rc<RefCell<dyn WorkAreaJPanelInterface>>> = (jcall!(self.jTabbedPane).getSelectedComponent()).clone();
+            let mut file: Option<Rc<RefCell<File>>> = File::new1(format!("{}{}", format!("{}{}", format!("{}{}", MyFrame_SAVE_PATH.with(Clone::clone), String::from("/")), jcall!(workAreaJPanel).getName()), self.JAVAEXTENSION));
             let mut document: Option<Rc<RefCell<Document>>> = jcall!(workAreaJPanel).toDocument();
             { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Export: "), jcall!(DomHelper::getInstance()).toString(document.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("exportJMenuItem1ActionPerformed"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             jcall!(self.xslHelper).export(file.clone(), format!("{}{}", format!("{}{}", MyFrame_TEMPLATE_EXPORT_PATH.with(Clone::clone), String::from("/")), self.JAVA_TEMPLATE), document.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             if LOGGING::contains(crate::org::allbinary::log::LOGGING::LOGGING_MENUEVENT.with(Clone::clone).clone()) {
-                jcall!(self.guiLog).put4(jcall!(self.commonStrings).EXCEPTION.clone(), None /* Java this: a &mut self method has no Rc of itself */, String::from("export"), e.clone());
+                jcall!(self.guiLog).put4_String_String_String_Exception({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), None /* Java this: a &mut self method has no Rc of itself */, String::from("export"), e.clone());
             }
             }
         }
@@ -731,15 +731,15 @@ impl MyFrame {
 
     pub fn save(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut workAreaJPanel: Option<Rc<RefCell<dyn WorkAreaJPanelInterface>>> = (jcall!(self.jTabbedPane).getSelectedComponent()).clone() /* as WorkAreaJPanelInterface */;
-            jcall!(DomHelper::getInstance()).save(File::new(format!("{}{}", format!("{}{}", format!("{}{}", MyFrame_SAVE_PATH.with(Clone::clone), String::from("/")), jcall!(workAreaJPanel).getName()), self.SAVEEXTENSION)), jcall!(workAreaJPanel).toDocument());
+            let mut workAreaJPanel: Option<Rc<RefCell<dyn WorkAreaJPanelInterface>>> = (jcall!(self.jTabbedPane).getSelectedComponent()).clone();
+            jcall!(DomHelper::getInstance()).save(File::new1(format!("{}{}", format!("{}{}", format!("{}{}", MyFrame_SAVE_PATH.with(Clone::clone), String::from("/")), jcall!(workAreaJPanel).getName()), self.SAVEEXTENSION)), jcall!(workAreaJPanel).toDocument());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             if LOGGING::contains(crate::org::allbinary::log::LOGGING::LOGGING_MENUEVENT.with(Clone::clone).clone()) {
-                jcall!(self.guiLog).put4(jcall!(self.commonStrings).EXCEPTION.clone(), None /* Java this: a &mut self method has no Rc of itself */, jcall!(self.commonStrings).SAVE.clone(), e.clone());
+                jcall!(self.guiLog).put4({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), None /* Java this: a &mut self method has no Rc of itself */, { let java_field = jcall!(self.commonStrings).SAVE.clone(); java_field }.clone(), e.clone());
             }
             }
         }
@@ -747,25 +747,25 @@ impl MyFrame {
     
 
     // throws Exception
-    pub fn onHashMap(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) {
-        let mut angleIncrementInteger: Option<i32> = (jcall!(hashMap).get((0).to_string())).clone() /* as Integer */;
-        let mut totalRotationInteger: Option<i32> = (jcall!(hashMap).get((1).to_string())).clone() /* as Integer */;
+    pub fn onHashMap(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
+        let mut angleIncrementInteger: Option<i32> = { let java_object = (jcall!(hashMap).get(crate::java_into_object(Some((0) as i32)))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
+        let mut totalRotationInteger: Option<i32> = { let java_object = (jcall!(hashMap).get(crate::java_into_object(Some((1) as i32)))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
         jcall!(self.getSelectedWorkArea()).autoRotate(((angleIncrementInteger).unwrap() as i32), ((totalRotationInteger).unwrap() as i32));
     }
     
 
     pub fn getSelectedWorkArea(&mut self) -> Option<Rc<RefCell<dyn WorkAreaJPanelInterface>>> {
-        return (jcall!(self.jTabbedPane).getSelectedComponent()).clone() /* as WorkAreaJPanelInterface */;
+        return (jcall!(self.jTabbedPane).getSelectedComponent()).clone();
     }
     
 
     pub fn updateSelectedWorkArea(&mut self) {
         let mut numberOfTabs: i32 = jcall!(self.jTabbedPane).getTabCount();
         for index in (0..numberOfTabs) {
-            let mut workAreaJPanel: Option<Rc<RefCell<dyn WorkAreaJPanelInterface>>> = (jcall!(self.jTabbedPane).getComponentAt(index.clone())).clone() /* as WorkAreaJPanelInterface */;
+            let mut workAreaJPanel: Option<Rc<RefCell<dyn WorkAreaJPanelInterface>>> = (jcall!(self.jTabbedPane).getComponentAt(index.clone())).clone();
             jcall!(workAreaJPanel).deselect();
         }
-        let mut workAreaJPanel: Option<Rc<RefCell<dyn WorkAreaJPanelInterface>>> = (jcall!(self.jTabbedPane).getSelectedComponent()).clone() /* as WorkAreaJPanelInterface */;
+        let mut workAreaJPanel: Option<Rc<RefCell<dyn WorkAreaJPanelInterface>>> = (jcall!(self.jTabbedPane).getSelectedComponent()).clone();
         if workAreaJPanel.is_some() {
             jcall!(workAreaJPanel).select();
         }
@@ -781,16 +781,16 @@ impl MyFrame {
             }
             { let java_receiver = self.jTabbedPane.clone(); let java_arguments = (jcall!(newCanvasInterface).getName(), (newCanvasInterface).clone() /* as JPanel */,); jcall!(java_receiver).addTab(java_arguments.0, java_arguments.1); };
             jcall!(self.jTabbedPane).setSelectedComponent((newCanvasInterface).clone() /* as JPanel */);
-            let mut animationThread: Option<Rc<RefCell<Thread>>> = Thread::new1(panic!("ClassCastException: a Rust dyn WorkAreaJPanelInterface cannot be cast to dyn Runnable"));
+            let mut animationThread: Option<Rc<RefCell<Thread>>> = Thread::new1((|| -> Option<Rc<RefCell<dyn Runnable>>> { panic!("ClassCastException: a Rust dyn WorkAreaJPanelInterface cannot be cast to dyn Runnable") })());
             jcall!(animationThread).start();
             self.updateSelectedWorkArea();
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             if LOGGING::contains(crate::org::allbinary::log::LOGGING::LOGGING_GRAPHICSCREATION.with(Clone::clone).clone()) {
-                jcall!(self.guiLog).put4(jcall!(self.commonStrings).EXCEPTION.clone(), None /* Java this: a &mut self method has no Rc of itself */, String::from("addNewCanvas"), e.clone());
+                jcall!(self.guiLog).put4_String_String_String_Exception({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), None /* Java this: a &mut self method has no Rc of itself */, String::from("addNewCanvas"), e.clone());
             }
             }
         }
@@ -818,10 +818,10 @@ impl MyFrame {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-            jcall!(logUtil).put(jcall!(CommonStrings::getInstance()).EXCEPTION.clone(), None, String::from("main"), crate::java_into_object(e.clone()));
+            jcall!(logUtil).put({ let java_field = jcall!(CommonStrings::getInstance()).EXCEPTION.clone(); java_field }.clone(), None, String::from("main"), crate::java_into_object(e.clone()));
             }
         }
     }

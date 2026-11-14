@@ -22,6 +22,7 @@ use crate::org::allbinary::graphics::GPointCircularPool::GPointCircularPool;
 use crate::org::allbinary::input::motion::button::TouchButtonRecognizer::TouchButtonRecognizer;
 use crate::org::allbinary::input::motion::gesture::MotionGestureRecognizer::MotionGestureRecognizer;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 use super::MotionRecognizer::MotionRecognizer;
 
 // Borrows the object of a Java reference
@@ -61,7 +62,7 @@ impl AllMotionRecognizer {
         };
         this.logUtil = LogUtil::getInstance();
         this.touchButtonProcessing = false;
-        this.id = unsafe { let value = AllMotionRecognizer_index.clone(); *AllMotionRecognizer_index += 1; value };
+        this.id = { let java_value = (unsafe { let value = AllMotionRecognizer_index.clone(); *AllMotionRecognizer_index += 1; value }).clone(); java_value };
         this.motionGestureRecognizer = MotionGestureRecognizer::new(this.id.clone());
         this.touchButtonRecognizer = TouchButtonRecognizer::new();
         this

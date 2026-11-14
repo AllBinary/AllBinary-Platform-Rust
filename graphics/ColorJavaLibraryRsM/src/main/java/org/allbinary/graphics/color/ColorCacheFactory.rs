@@ -23,6 +23,7 @@ use crate::org::allbinary::logic::util::cache::AutomaticCacheInterfaceFactory::A
 use crate::org::allbinary::logic::util::cache::CachePolicyFactory::CachePolicyFactory;
 use crate::org::allbinary::logic::util::cache::CacheTypeFactory::CacheTypeFactory;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::ColorCacheableFactory::ColorCacheableFactory;
 
 // Borrows the object of a Java reference
@@ -38,6 +39,10 @@ pub struct ColorCacheFactory {
 pub static mut ColorCacheFactory_cacheInterface: std::cell::LazyCell<Option<Rc<RefCell<dyn AutomaticCacheInterface>>>> = std::cell::LazyCell::new(|| None);
 
 impl ColorCacheFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     // Java static initializer: call this once at startup
@@ -46,15 +51,15 @@ impl ColorCacheFactory {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
         let mut STATIC_BLOCK: String = String::from("Static Block");
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(std::any::type_name::<ColorCacheFactory>()), STATIC_BLOCK.clone());
-            unsafe { *ColorCacheFactory_cacheInterface = AutomaticCacheInterfaceFactory::getInstance(ColorCacheableFactory::new(), jcall!(CacheTypeFactory::getInstance()).CACHE.clone(), jcall!(CachePolicyFactory::getInstance()).THIRTY_MINUTES_TEN_THOUSAND_MAX.clone()) };
-            jcall!(logUtil).putF(jcall!(commonStrings).END.clone(), crate::java_into_object(std::any::type_name::<ColorCacheFactory>()), STATIC_BLOCK.clone());
+            jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(std::any::type_name::<ColorCacheFactory>()), STATIC_BLOCK.clone());
+            unsafe { *ColorCacheFactory_cacheInterface = AutomaticCacheInterfaceFactory::getInstance(ColorCacheableFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::cache::CacheableInterfaceFactoryInterface::CacheableInterfaceFactoryInterface>>), { let java_field = jcall!(CacheTypeFactory::getInstance()).CACHE.clone(); java_field }.clone(), { let java_field = jcall!(CachePolicyFactory::getInstance()).THIRTY_MINUTES_TEN_THOUSAND_MAX.clone(); java_field }.clone()) };
+            jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).END.clone(); java_field }.clone(), crate::java_into_object(std::any::type_name::<ColorCacheFactory>()), STATIC_BLOCK.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(std::any::type_name::<ColorCacheFactory>()), STATIC_BLOCK.clone(), crate::java_into_object(e.clone()));
+            jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(std::any::type_name::<ColorCacheFactory>()), STATIC_BLOCK.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

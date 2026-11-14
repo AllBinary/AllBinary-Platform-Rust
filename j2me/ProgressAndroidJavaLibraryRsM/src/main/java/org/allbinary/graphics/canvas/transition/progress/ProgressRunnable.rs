@@ -46,8 +46,8 @@ impl ProgressRunnable {
             midletActivity: None,
             progressCanvas: None,
         };
-        let mut midletActivity2: Option<Rc<RefCell<dyn crate::org::allbinary::android::activity::MidletActivityBase::MidletActivityBaseDyn>>> = (midletActivity).clone() /* as MidletActivityBase */;
-        this.midletActivity = (midletActivity2).clone() /* as SimpleProgressActivityInterface */;
+        let mut midletActivity2: Option<Rc<RefCell<dyn crate::org::allbinary::android::activity::MidletActivityBase::MidletActivityBaseDyn>>> = (midletActivity).clone();
+        this.midletActivity = (|| -> Option<Rc<RefCell<dyn SimpleProgressActivityInterface>>> { panic!("ClassCastException: a Rust dyn MidletActivityBase cannot be cast to SimpleProgressActivityInterface") })();
         this.progressCanvas = progressCanvas.clone();
         this
     }

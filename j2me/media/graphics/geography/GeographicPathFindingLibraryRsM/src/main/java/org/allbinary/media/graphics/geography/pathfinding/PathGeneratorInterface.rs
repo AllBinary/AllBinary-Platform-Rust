@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellHistory::GeographicMapCellHistory;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::PathFindingInfo::PathFindingInfo;
 
 // Borrows the object of a Java reference
@@ -29,13 +30,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait PathGeneratorInterface {
+pub trait PathGeneratorInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn createList(&mut self, geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, geographicMapCellHistory: Option<Rc<RefCell<GeographicMapCellHistory>>>, pathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>>, totalPaths: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

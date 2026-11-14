@@ -25,12 +25,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait HealthListenerInterface {
+pub trait HealthListenerInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn onHealthChange(&mut self);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

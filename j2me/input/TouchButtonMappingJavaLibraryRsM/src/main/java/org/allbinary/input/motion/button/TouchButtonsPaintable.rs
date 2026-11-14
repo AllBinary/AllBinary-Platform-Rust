@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::color::BasicColorSetUtil::BasicColorSetUtil;
 use crate::org::allbinary::graphics::paint::Paintable::Paintable;
@@ -55,7 +55,7 @@ impl TouchButtonsPaintable {
         this.basicSetColorUtil = BasicColorSetUtil::getInstance();
         this.touchButtonFactory = TouchButtonFactory::getInstance();
         this.foregroundBasicColor = basicColor.clone();
-        this.foregroundColor = jcall!(basicColor).intValue();
+        this.foregroundColor = { let java_value = (jcall!(basicColor).intValue()).clone(); java_value };
         this
     }
 
@@ -64,21 +64,21 @@ impl TouchButtonsPaintable {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(self.touchButtonFactory).getList();
         jcall!(self.basicSetColorUtil).setBasicColorP3(graphics.clone(), self.foregroundBasicColor.clone(), self.foregroundColor.clone());
         let mut touchButton: Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButton::TouchButtonDyn>>> = None;
         {
             let mut index: i32 = jcall!(list).size();
             while { index -= 1; index } >= 0 {
-            touchButton = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButton::TouchButtonDyn>>>>().expect("ClassCastException").clone()) };
-            jcall!(touchButton).paint(graphics.clone());
+            touchButton = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButton::TouchButtonDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            jcall!(touchButton).as_TouchButton_mut().paint(graphics.clone());
             }
         }
         {
             let mut index: i32 = jcall!(list).size();
             while { index -= 1; index } >= 0 {
-            touchButton = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButton::TouchButtonDyn>>>>().expect("ClassCastException").clone()) };
+            touchButton = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButton::TouchButtonDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             jcall!(touchButton).paintHint(graphics.clone());
             }
         }
@@ -95,7 +95,10 @@ impl std::ops::DerefMut for TouchButtonsPaintable {
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for TouchButtonsPaintable {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for TouchButtonsPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

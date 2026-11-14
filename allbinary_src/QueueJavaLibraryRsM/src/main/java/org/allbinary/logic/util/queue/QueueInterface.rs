@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -25,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait QueueInterface {
+pub trait QueueInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
@@ -39,8 +40,6 @@ pub trait QueueInterface {
     // throws Exception
     // Java overloaded method: Rust needs a different name
     fn remove(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

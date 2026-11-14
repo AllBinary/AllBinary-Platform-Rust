@@ -33,6 +33,10 @@ pub struct LogConfigTypeData {
 thread_local! { pub static LogConfigTypeData_instance: Option<Rc<RefCell<LogConfigTypeData>>> = LogConfigTypeData::new(); }
 
 impl LogConfigTypeData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogConfigTypeData>>> {

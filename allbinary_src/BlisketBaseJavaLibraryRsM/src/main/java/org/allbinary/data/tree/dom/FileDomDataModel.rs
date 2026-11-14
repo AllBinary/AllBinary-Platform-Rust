@@ -16,13 +16,13 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::DomNodeInterface::DomNodeInterface;
 use super::FileTableMapping::FileTableMapping;
 
@@ -42,6 +42,10 @@ impl DomNodeInterface for FileDomDataModel {
 }
 
 impl FileDomDataModel {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut file: Option<Rc<RefCell<AbFile>>>) -> Self {
@@ -60,7 +64,7 @@ impl FileDomDataModel {
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
         let mut tableMappingInterface: Option<Rc<RefCell<dyn TableMappingInterface>>> = (FileTableMapping::new(self.file.clone())).clone() /* as TableMappingInterface */;
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(tableMappingInterface).toHashMap();
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(tableMappingInterface).toHashMap();
         return ModDomHelper::ModDomHelper::createNodeWithValueNodes(document.clone(), String::from("file"), hashMap.clone());
     }
 }

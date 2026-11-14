@@ -21,6 +21,7 @@ use crate::org::allbinary::animation::VectorRotationGenerator::VectorRotationGen
 use crate::org::allbinary::graphics::GPoint::GPoint;
 use crate::org::allbinary::math::AngleFactory::AngleFactory;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -35,6 +36,10 @@ pub struct PointsUtil {
 thread_local! { pub static PointsUtil_instance: Option<Rc<RefCell<PointsUtil>>> = PointsUtil::new(); }
 
 impl PointsUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

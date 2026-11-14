@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use crate::Runnable;
 use super::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -26,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait SimpleProgressActivityInterface {
+pub trait SimpleProgressActivityInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn runOnUiThread(&mut self, action: Option<Rc<RefCell<dyn Runnable>>>);
@@ -42,8 +43,6 @@ pub trait SimpleProgressActivityInterface {
 
     // throws Exception
     fn onShowProgress(&mut self, indeterminate: bool, animationSequence: Vec<i32>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -41,6 +41,7 @@ use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
+use crate::java::lang::Exception::*;
 use super::UnitLayer::UnitLayer;
 
 // Borrows the object of a Java reference
@@ -80,7 +81,10 @@ impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventLis
     fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, eventObject) }
 }
 impl crate::org::allbinary::layer::NamedInterface::NamedInterface for UnitWaypointBehavior {
-    fn getName(&mut self) -> String { self.base.getName() }
+    fn getName(&mut self) -> String { crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBase::getName(crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn::as_WaypointBehaviorBase_mut(self)) }
+}
+impl crate::org::allbinary::game::tick::TickableInterface::TickableInterface for UnitWaypointBehavior {
+    fn processTick(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBase::processTick(crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn::as_WaypointBehaviorBase_mut(self), p1) }
 }
 
 impl UnitWaypointBehavior {
@@ -110,7 +114,7 @@ impl UnitWaypointBehavior {
         };
         this.commonSeps = CommonSeps::getInstance();
         this.longWeaponRange = 0;
-        this.sensorAction = jcall!(SensorActionFactory::getInstance()).ATTACK.clone();
+        this.sensorAction = { let java_field = jcall!(SensorActionFactory::getInstance()).ATTACK.clone(); java_field }.clone();
         this.lastPathGeographicMapCellPosition = crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone).clone();
         this.currentPathGeographicMapCellPosition = crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone).clone();
         this.moving = false;
@@ -140,14 +144,14 @@ impl UnitWaypointBehavior {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
     // throws Exception
     pub fn onWaypointEvent(&mut self, mut event: Option<Rc<RefCell<RTSLayerEvent>>>) {
-        let mut advancedRTSGameLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>> = (jcall!(event).getRtsLayer()).clone() /* as AdvancedRTSGameLayer */;
-        jcall!(jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP).onWaypointEvent(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), advancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>));
+        let mut advancedRTSGameLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>> { panic!("ClassCastException: a Rust dyn PathFindingLayerInterface cannot be cast to AdvancedRTSGameLayer") })();
+        jcall!({ let java_field = jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP.clone(); java_field }).onWaypointEvent(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), advancedRTSGameLayer.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of AdvancedRTSGameLayer does not have PathFindingLayerInterface as a base trait") }));
         if jcall!(self.associatedAdvancedRTSGameLayer).isSelected() {
             self.addWaypointFromUser(advancedRTSGameLayer.clone());
         } else if jcall!(advancedRTSGameLayer).shouldAddWaypointFromBuilding() {
@@ -165,12 +169,12 @@ impl UnitWaypointBehavior {
     pub fn addWaypointFromBuilding(&mut self, mut advancedRTSGameLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AdvancedRTSGameLayer::AdvancedRTSGameLayerDyn>>>) {
         if match (&advancedRTSGameLayer, &jcall!(PrimaryWaypointHelper::getInstance()).getWaypointLayer()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&jcall!(advancedRTSGameLayer).getParentLayer(), &jcall!(self.associatedAdvancedRTSGameLayer).getParentLayer()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             if !jcall!(self.targetList).contains(crate::java_into_object(advancedRTSGameLayer.clone())) {
-                jcall!(jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP).addWaypointFromBuilding(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), advancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>));
+                jcall!({ let java_field = jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP.clone(); java_field }).addWaypointFromBuilding(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), advancedRTSGameLayer.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of AdvancedRTSGameLayer does not have PathFindingLayerInterface as a base trait") }));
                 if jcall!(advancedRTSGameLayer).isDestroyed() {
                     panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Trying to add a dead: "), advancedRTSGameLayer))));
                 }
                 jcall!(self.targetList).add(crate::java_into_object(advancedRTSGameLayer.clone()));
-                jcall!(jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP).addWaypointFromBuildingList(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), advancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), self.targetList.clone());
+                jcall!({ let java_field = jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP.clone(); java_field }).addWaypointFromBuildingList(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), advancedRTSGameLayer.clone().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>> { panic!("ClassCastException: the Rust trait of AdvancedRTSGameLayer does not have PathFindingLayerInterface as a base trait") }), self.targetList.clone());
             }
         }
     }
@@ -184,12 +188,12 @@ impl UnitWaypointBehavior {
     // throws Exception
     pub fn insertWaypoint(&mut self, mut index: i32, mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>>) -> bool {
         if self.canInsertWaypoint(index.clone(), rtsLayer.clone()) {
-            jcall!(jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP).insertWaypoint(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), index.clone(), rtsLayer.clone(), self.getName());
+            jcall!({ let java_field = jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP.clone(); java_field }).insertWaypoint(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), index.clone(), rtsLayer.clone(), self.getName());
             if jcall!(rtsLayer).isDestroyed() {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Trying to add a dead: "), rtsLayer))));
             }
             jcall!(self.targetList).addAt(index.clone(), crate::java_into_object(rtsLayer.clone()));
-            jcall!(jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP).insertWaypointList(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), index.clone(), rtsLayer.clone(), self.getName(), self.targetList.clone());
+            jcall!({ let java_field = jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP.clone(); java_field }).insertWaypointList(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), index.clone(), rtsLayer.clone(), self.getName(), self.targetList.clone());
             return true;
         }
         return false;
@@ -209,7 +213,7 @@ impl UnitWaypointBehavior {
     // throws Exception
     pub fn setRandomGeographicMapCellHistory(&mut self, mut pathsList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         let mut size: i32 = jcall!(pathsList).size();
-        jcall!(jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP).setRandomGeographicMapCellHistoryList(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), pathsList.clone());
+        jcall!({ let java_field = jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP.clone(); java_field }).setRandomGeographicMapCellHistoryList(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), pathsList.clone());
         if size > 0 {
             let mut geographicMapCellPositionBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_object = (jcall!(BasicArrayListUtil::getInstance()).getRandom(pathsList.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
             self.setGeographicMapCellHistoryPath(geographicMapCellPositionBasicArrayList.clone());
@@ -219,9 +223,9 @@ impl UnitWaypointBehavior {
 
     // throws Exception
     pub fn setGeographicMapCellHistoryPath(&mut self, mut geographicMapCellPositionBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
-        self.lastPathGeographicMapCellPosition = crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone).clone();
-        if jcall!(self.associatedAdvancedRTSGameLayer).showMoreCaptionStates {
-            jcall!(jcall!(self.associatedAdvancedRTSGameLayer).getCaptionAnimationHelper()).update(UnitWaypointBehavior_PATHING.with(Clone::clone).clone(), jcall!(BasicColorFactory::getInstance()).GREEN.clone());
+        self.lastPathGeographicMapCellPosition = { let java_value = (crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone)).clone(); java_value }.clone();
+        if { let java_field = jcall!(self.associatedAdvancedRTSGameLayer).showMoreCaptionStates.clone(); java_field } {
+            jcall!(jcall!(self.associatedAdvancedRTSGameLayer).getCaptionAnimationHelper()).update(UnitWaypointBehavior_PATHING.with(Clone::clone).clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).GREEN.clone(); java_field }.clone());
         }
         jcall!(self.currentGeographicMapCellHistoryP).init();
         jcall!(self.associatedAdvancedRTSGameLayer).init(self.currentGeographicMapCellHistoryP.clone(), geographicMapCellPositionBasicArrayList.clone());
@@ -248,11 +252,11 @@ impl UnitWaypointBehavior {
     // throws Exception
     pub fn moveAwayFromBuilding(&mut self, mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>>) {
         let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = jcall!(self.associatedAdvancedRTSGameLayer).getCurrentGeographicMapCellPosition();
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(jcall!(buildingLayer).geographicMapCellPositionAreaBase).getOccupyingGeographicMapCellPositionList();
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!({ let java_field = jcall!(buildingLayer).geographicMapCellPositionAreaBase.clone(); java_field }).as_GeographicMapCellPositionAreaBase_mut().getOccupyingGeographicMapCellPositionList();
         if jcall!(list).contains(crate::java_into_object(geographicMapCellPosition.clone())) {
-            if self.insertWaypoint(0, self.FAKE_WAYPOINT_LAYER.clone()) {
-                jcall!(jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP).moveAwayFromBuilding(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>));
-                self.setCurrentTargetLayerInterface((self.FAKE_WAYPOINT_LAYER).clone() /* as CollidableDestroyableDamageableLayer */);
+            if { let java_arguments = (0, self.FAKE_WAYPOINT_LAYER.clone(),); self.insertWaypoint(java_arguments.0, java_arguments.1) } {
+                jcall!({ let java_field = jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP.clone(); java_field }).moveAwayFromBuilding(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>));
+                { let java_arguments = ((self.FAKE_WAYPOINT_LAYER).clone(),); self.setCurrentTargetLayerInterface(java_arguments.0) };
                 let mut pathsList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(buildingLayer).getMoveOutOfBuildAreaPath(geographicMapCellPosition.clone());
                 jcall!(self.associatedAdvancedRTSGameLayer).setClosestGeographicMapCellHistory(pathsList.clone());
             }
@@ -261,14 +265,14 @@ impl UnitWaypointBehavior {
     
 
     pub fn needToMove(&mut self) -> bool {
-        jcall!(jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP).needToMove(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), None /* Java this: a &mut self method has no Rc of itself */);
-        if self.isTrackingWaypoint() || match (&self.sensorAction, &jcall!(SensorActionFactory::getInstance()).EVADE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || (!match (&self.currentTargetLayerInterfaceP, &CollidableDestroyableDamageableLayer::getNullInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } && self.getCurrentTargetDistance() >= self.longWeaponRange + jcall!(self.currentTargetLayerInterfaceP).getHalfHeight()) {
+        jcall!({ let java_field = jcall!(self.associatedAdvancedRTSGameLayer).waypointLogHelperP.clone(); java_field }).needToMove(self.associatedAdvancedRTSGameLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::PathFindingLayerInterface::PathFindingLayerInterface>>), None /* Java this: a &mut self method has no Rc of itself */);
+        if self.isTrackingWaypoint() || match (&self.sensorAction, &{ let java_field = jcall!(SensorActionFactory::getInstance()).EVADE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || (!match (&self.currentTargetLayerInterfaceP, &CollidableDestroyableDamageableLayer::getNullInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } && self.getCurrentTargetDistance() >= self.longWeaponRange + jcall!(self.currentTargetLayerInterfaceP).getHalfHeight()) {
             jcall!(self.repeatedToLong).setStartTimeTNT();
             return true;
         }
         if jcall!(self.repeatedToLong).isTimeTNT() {
             let mut message: String = format!("{}{}", String::from("Repeating too long: "), self.getMovementLogicAsString());
-            ForcedLogUtil::log(message.clone(), self.associatedAdvancedRTSGameLayer.clone());
+            ForcedLogUtil::log(message.clone(), crate::java_into_object(self.associatedAdvancedRTSGameLayer.clone()));
         }
         return false;
     }
@@ -279,7 +283,7 @@ impl UnitWaypointBehavior {
         jcall!(stringBuffer).append(String::from("isTrackingWaypoint: "));
         jcall!(stringBuffer).appendboolean(self.isTrackingWaypoint());
         jcall!(stringBuffer).append(String::from(" sensorAction: "));
-        jcall!(stringBuffer).append(jcall!(self.sensorAction).name.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.sensorAction).name.clone(); java_field }.clone());
         jcall!(stringBuffer).append(String::from(" getCurrentTargetLayerInterface: "));
         jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.currentTargetLayerInterfaceP.clone())));
         if !match (&self.currentTargetLayerInterfaceP, &CollidableDestroyableDamageableLayer::getNullInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {

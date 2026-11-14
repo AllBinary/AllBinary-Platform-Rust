@@ -32,6 +32,10 @@ pub struct DemoSetup {
 
 impl DemoSetup {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -46,7 +50,7 @@ impl DemoSetup {
     pub fn init(&mut self, mut gameMidlet: Option<Rc<RefCell<dyn crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn>>>) {
     }
 }
-pub trait DemoSetupDyn {
+pub trait DemoSetupDyn: std::any::Any {
     fn as_DemoSetup(&self) -> &DemoSetup;
     fn as_DemoSetup_mut(&mut self) -> &mut DemoSetup;
     fn init(&mut self, mut gameMidlet: Option<Rc<RefCell<dyn crate::org::allbinary::game::midlet::GameMidlet::GameMidletDyn>>>) { DemoSetup::init(self.as_DemoSetup_mut(), gameMidlet) }

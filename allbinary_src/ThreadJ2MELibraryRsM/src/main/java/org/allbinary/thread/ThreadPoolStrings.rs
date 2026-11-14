@@ -35,6 +35,10 @@ thread_local! { pub static ThreadPoolStrings_instance: Option<Rc<RefCell<ThreadP
 
 impl ThreadPoolStrings {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             ADD_TASK: String::new(),

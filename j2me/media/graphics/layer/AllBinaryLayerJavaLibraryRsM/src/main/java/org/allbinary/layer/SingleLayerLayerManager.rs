@@ -36,7 +36,7 @@ impl SingleLayerLayerManager {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: LayerManager::new_struct(LayerManagerNoDebug::LayerManagerNoDebug::getInstance()),
+            base: LayerManager::new_struct(LayerManagerNoDebug::LayerManagerNoDebug::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::LayerManagerLoggingBase::LayerManagerLoggingBaseDyn>>)),
         };
         // super(...) is in the struct literal above
         this

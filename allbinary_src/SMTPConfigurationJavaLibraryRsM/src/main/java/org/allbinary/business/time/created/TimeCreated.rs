@@ -47,16 +47,16 @@ impl TimeCreated {
     }
     
 
-    pub fn new_struct1(mut time: i64) -> Self {
+    pub fn new_struct1_long(mut time: i64) -> Self {
         let mut this = Self {
-            base: Time::new_struct1(time.clone()),
+            base: Time::new_struct1_long(time.clone()),
         };
         // super(...) is in the struct literal above
         this
     }
 
-    pub fn new1(mut time: i64) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(time))))
+    pub fn new1_long(mut time: i64) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_long(time))))
     }
 }
 impl std::ops::Deref for TimeCreated {

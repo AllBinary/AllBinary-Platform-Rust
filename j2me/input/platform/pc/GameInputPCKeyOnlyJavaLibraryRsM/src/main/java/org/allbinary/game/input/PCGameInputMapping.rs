@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::configuration::persistance::GamePersistanceStrings::GamePersistanceStrings;
 use crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMapping;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
+use crate::java::lang::Exception::*;
 use super::Input::Input;
 
 // Borrows the object of a Java reference
@@ -39,7 +40,7 @@ impl PCGameInputMapping {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: PersistentInputMapping::new_struct1(jcall!(GamePersistanceStrings::getInstance()).SAVED_INPUT_CONFIGURATION_RECORD_ID.clone()),
+            base: PersistentInputMapping::new_struct({ let java_field = jcall!(GamePersistanceStrings::getInstance()).SAVED_INPUT_CONFIGURATION_RECORD_ID.clone(); java_field }.clone()),
         };
         // super(...) is in the struct literal above
         this
@@ -52,9 +53,9 @@ impl PCGameInputMapping {
 
     // throws Exception
     pub fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), None /* Java this: a &mut self method has no Rc of itself */, jcall!(self.commonStrings).INIT.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone());
         PCKeyFactory::PCKeyFactory::getInstance();
-        self.base.init(abeClientInformation.clone());
+        { let java_arguments = (abeClientInformation.clone(),); self.base.init(java_arguments.0) };
         if self.getTotalMapped() == 0 || self.isDefaultNew() {
             jcall!(self.getInputMapping()).addMapping(self.getDefault());
             self.save(abeClientInformation.clone());
@@ -62,8 +63,8 @@ impl PCGameInputMapping {
     }
     
 
-    pub fn isDelete(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
-        if match (&input, &jcall!(PCKeyFactory::PCKeyFactory::getInstance()).DEL) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+    pub fn isDelete(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
+        if match (&input, &{ let java_field = jcall!(PCKeyFactory::PCKeyFactory::getInstance()).DEL.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         } else {
             return false;
@@ -71,7 +72,7 @@ impl PCGameInputMapping {
     }
     
 
-    pub fn isSystemInput(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isSystemInput(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         return false;
     }
 }
@@ -83,17 +84,21 @@ impl std::ops::DerefMut for PCGameInputMapping {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait PCGameInputMappingDyn {
+pub trait PCGameInputMappingDyn: crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMappingDyn {
     fn as_PCGameInputMapping(&self) -> &PCGameInputMapping;
     fn as_PCGameInputMapping_mut(&mut self) -> &mut PCGameInputMapping;
-    fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>) { PCGameInputMapping::init(self.as_PCGameInputMapping_mut(), abeClientInformation) }
-    fn isDelete(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool { PCGameInputMapping::isDelete(self.as_PCGameInputMapping_mut(), input) }
-    fn isSystemInput(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool { PCGameInputMapping::isSystemInput(self.as_PCGameInputMapping_mut(), input) }
 }
 impl PCGameInputMappingDyn for PCGameInputMapping {
     fn as_PCGameInputMapping(&self) -> &PCGameInputMapping { self }
     fn as_PCGameInputMapping_mut(&mut self) -> &mut PCGameInputMapping { self }
 }
 
+impl crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMappingDyn for PCGameInputMapping {
+    fn as_PersistentInputMapping(&self) -> &crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMapping { &self.base }
+    fn as_PersistentInputMapping_mut(&mut self) -> &mut crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMapping { &mut self.base }
+    fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>) { Self::init(self, abeClientInformation) }
+    fn isDelete(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool { Self::isDelete(self, input) }
+    fn isSystemInput(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool { Self::isSystemInput(self, input) }
+}
 
 

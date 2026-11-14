@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::category::hierarchy::CategoryHierarchy::CategoryHierarchy;
@@ -34,6 +33,7 @@ use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::CategoryInterface::CategoryInterface;
 
 // Borrows the object of a Java reference
@@ -74,7 +74,7 @@ impl CategoryInterface for Category {
 impl crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface for Category {
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getKey(self) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::toVector(self) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::toHashMap(self) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toHashMap(self) }
 }
 impl crate::org::allbinary::logic::control::validate::ValidationInterface::ValidationInterface for Category {
     fn isValid(&mut self) -> Option<bool> { Self::isValid(self) }
@@ -84,6 +84,10 @@ impl crate::org::allbinary::logic::control::validate::ValidationInterface::Valid
 }
 
 impl Category {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut categoryPropertiesFactoryInterface: Option<Rc<RefCell<dyn CategoryPropertiesFactoryInterface>>>) -> Self {
@@ -99,21 +103,21 @@ impl Category {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        this.childCategoryVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.typeVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.childCategoryVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.typeVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.PROPERTIES = Some((1) as i32);
         this.CATEGORY = Some((0) as i32);
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).CATEGORY.clone()) {
-            jcall!(this.logUtil).putF(jcall!(this.commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Category(CategoryPropertiesFactoryInterface)"));
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).CATEGORY.clone(); java_field }.clone()) {
+            jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Category(CategoryPropertiesFactoryInterface)"));
         }
-        this.categoryPropertiesInterface = jcall!(categoryPropertiesFactoryInterface).getInstance();
-        this.log();
+        this.categoryPropertiesInterface = { let java_value = (jcall!(categoryPropertiesFactoryInterface).getInstance()).clone(); java_value };
         this
     }
 
     pub fn new1(mut categoryPropertiesFactoryInterface: Option<Rc<RefCell<dyn CategoryPropertiesFactoryInterface>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct1(categoryPropertiesFactoryInterface))));
-            this.categoryHierarchyInterface = (CategoryHierarchy::new2((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()))).clone() /* as CategoryHierarchyInterface */;
+        let this = Some(Rc::new(RefCell::new(Self::new_struct1(categoryPropertiesFactoryInterface.clone()))));
+            jcall!(this).categoryHierarchyInterface = (CategoryHierarchy::new2(this.clone().map(|reference| reference as Rc<RefCell<dyn CategoryInterface>>), this.clone().map(|reference| reference as Rc<RefCell<dyn CategoryInterface>>))).clone() /* as CategoryHierarchyInterface */;
+            jcall!(this).log();
         this
     }
     
@@ -131,18 +135,18 @@ impl Category {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        this.childCategoryVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.typeVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.childCategoryVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.typeVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.PROPERTIES = Some((1) as i32);
         this.CATEGORY = Some((0) as i32);
-        this.categoryPropertiesInterface = jcall!(categoryPropertiesFactoryInterface).getInstance();
-        this.log();
+        this.categoryPropertiesInterface = { let java_value = (jcall!(categoryPropertiesFactoryInterface).getInstance()).clone(); java_value };
         this
     }
 
     pub fn new2(mut categoryPropertiesFactoryInterface: Option<Rc<RefCell<dyn CategoryPropertiesFactoryInterface>>>, mut level: i32) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct2(categoryPropertiesFactoryInterface, level))));
-            this.categoryHierarchyInterface = (CategoryHierarchy::new3((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), level.clone())).clone() /* as CategoryHierarchyInterface */;
+        let this = Some(Rc::new(RefCell::new(Self::new_struct2(categoryPropertiesFactoryInterface.clone(), level.clone()))));
+            jcall!(this).categoryHierarchyInterface = (CategoryHierarchy::new3((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), level.clone())).clone() /* as CategoryHierarchyInterface */;
+            jcall!(this).log();
         this
     }
     
@@ -160,11 +164,11 @@ impl Category {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        this.childCategoryVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.typeVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.childCategoryVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.typeVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.PROPERTIES = Some((1) as i32);
         this.CATEGORY = Some((0) as i32);
-        this.categoryPropertiesInterface = (jcall!(categoryPropertiesFactoryInterface).getInstance()).clone() /* as CategoryPropertiesInterface */;
+        this.categoryPropertiesInterface = { let java_value = ((jcall!(categoryPropertiesFactoryInterface).getInstance()).clone()).clone(); java_value };
         this.categoryHierarchyInterface = (CategoryHierarchy::new2(rootCategoryInterface.clone(), parentCategoryInterface.clone())).clone() /* as CategoryHierarchyInterface */;
         this.log();
         this
@@ -177,17 +181,17 @@ impl Category {
 
     // throws Exception
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return jcall!(self.categoryPropertiesInterface).getKey();
+        return crate::java_into_object(jcall!(self.categoryPropertiesInterface).getKey());
     }
     
 
     // throws Exception
     pub fn getRootFilePath(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> {
-        let mut rootAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(Category_NOT_ROOT.with(Clone::clone).clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        let mut rootAbPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(Category_NOT_ROOT.with(Clone::clone).clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
         let mut categoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>> = jcall!(self.categoryHierarchyInterface).getRoot();
         if jcall!(jcall!(categoryInterface).getProperties()).isRoot() {
-            let mut rootCategoryPropertiesInterface: Option<Rc<RefCell<dyn RootCategoryPropertiesInterface>>> = (jcall!(categoryInterface).getProperties()).clone() /* as RootCategoryPropertiesInterface */;
-            rootAbPath = jcall!(rootCategoryPropertiesInterface).getRootFilePath();
+            let mut rootCategoryPropertiesInterface: Option<Rc<RefCell<dyn RootCategoryPropertiesInterface>>> = (|| -> Option<Rc<RefCell<dyn RootCategoryPropertiesInterface>>> { panic!("ClassCastException: a Rust dyn CategoryPropertiesInterface cannot be cast to dyn RootCategoryPropertiesInterface") })();
+            rootAbPath = { let java_value = (jcall!(rootCategoryPropertiesInterface).getRootFilePath()).clone(); java_value };
         }
         return rootAbPath.clone();
     }
@@ -195,7 +199,7 @@ impl Category {
 
     // throws Exception
     pub fn getFilePath(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> {
-        return AbPath::new(format!("{}{}", jcall!(self.getRootFilePath()).toString(), jcall!(jcall!(self.getProperties()).getPath(self.getHierarchy())).toString()), jcall!(self.getProperties()).getFileName()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        return AbPath::new(format!("{}{}", { let java_value = jcall!(self.getRootFilePath()).toString(); java_value }, { let java_value = jcall!(jcall!(self.getProperties()).getPath(self.getHierarchy())).toString(); java_value }), { let java_argument = jcall!(self.getProperties()).getFileName(); java_argument }).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
     }
     
 
@@ -222,12 +226,12 @@ impl Category {
     // synchronized
     pub fn addChild(&mut self, mut categoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>) -> bool {
         self.removeDuplicateChild(categoryInterface.clone());
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).CATEGORY.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).CATEGORY.clone(); java_field }.clone()) {
             jcall!(self.logUtil).putF(String::from("adding"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("addChild"));
         }
         let mut childCategoryHierarchyInterface: Option<Rc<RefCell<dyn CategoryHierarchyInterface>>> = jcall!(categoryInterface).getHierarchy();
         jcall!(childCategoryHierarchyInterface).setParent(None /* Java this: a &mut self method has no Rc of itself */);
-        jcall!(childCategoryHierarchyInterface).setRoot(jcall!(self.getHierarchy()).getRoot());
+        jcall!(childCategoryHierarchyInterface).setRoot({ let java_argument = jcall!(self.getHierarchy()).getRoot(); java_argument });
         jcall!(categoryInterface).setHierarchy(childCategoryHierarchyInterface.clone());
         jcall!(self.typeVector).add(crate::java_into_object((self.CATEGORY.clone()).expect("NullPointerException")));
         return jcall!(self.childCategoryVector).add(crate::java_into_object(categoryInterface.clone()));
@@ -241,14 +245,14 @@ impl Category {
 
     // synchronized
     pub fn removeChild(&mut self, mut categoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>) -> bool {
-        let mut removalVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut removalVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut bool_return: bool = false;
         let mut size: i32 = jcall!(self.childCategoryVector).size();
         for index in (0..size) {
-            if match (&self.CATEGORY, &jcall!(self.typeVector).get(index.clone())) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if self.CATEGORY == jcall!(self.typeVector).get(index.clone()) {
                 let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(self.childCategoryVector).get(index.clone());
-                let mut currentCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>> = (anyType).clone() /* as CategoryInterface */;
-                if jcall!(jcall!(jcall!(currentCategoryInterface).getProperties()).getValue()).compareTo(jcall!(jcall!(categoryInterface).getProperties()).getValue()) == 0 {
+                let mut currentCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>> = { let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn CategoryInterface>>>>().expect("ClassCastException").clone()) };
+                if (jcall!(jcall!(currentCategoryInterface).getProperties()).getValue().cmp(&jcall!(jcall!(categoryInterface).getProperties()).getValue()) as i32) == 0 {
                     jcall!(removalVector).add(crate::java_into_object(currentCategoryInterface.clone()));
                     bool_return = true;
                 }
@@ -272,22 +276,22 @@ impl Category {
 
     // synchronized
     pub fn removeDuplicateChild(&mut self, mut categoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>>) -> bool {
-        let mut removalVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut removalVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut bool_return: bool = false;
         let mut size: i32 = jcall!(self.childCategoryVector).size();
         for index in (0..size) {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(self.childCategoryVector).get(index.clone());
-            if match (&self.PROPERTIES, &jcall!(self.typeVector).get(index.clone())) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                let mut categoryPropertiesInterface: Option<Rc<RefCell<dyn CategoryPropertiesInterface>>> = (anyType).clone() /* as CategoryPropertiesInterface */;
-                if jcall!(jcall!(jcall!(categoryInterface).getProperties()).getValue()).compareTo(jcall!(categoryPropertiesInterface).getValue()) == 0 {
+            if self.PROPERTIES == jcall!(self.typeVector).get(index.clone()) {
+                let mut categoryPropertiesInterface: Option<Rc<RefCell<dyn CategoryPropertiesInterface>>> = { let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn CategoryPropertiesInterface>>>>().expect("ClassCastException").clone()) };
+                if (jcall!(jcall!(categoryInterface).getProperties()).getValue().cmp(&jcall!(categoryPropertiesInterface).getValue()) as i32) == 0 {
                     jcall!(removalVector).add(crate::java_into_object(categoryPropertiesInterface.clone()));
                     bool_return = true;
                     break;
                 }
-            } else if match (&self.CATEGORY, &jcall!(self.typeVector).get(index.clone())) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                let mut existingCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>> = (anyType).clone() /* as CategoryInterface */;
+            } else if self.CATEGORY == jcall!(self.typeVector).get(index.clone()) {
+                let mut existingCategoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>> = { let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn CategoryInterface>>>>().expect("ClassCastException").clone()) };
                 let mut categoryPropertiesInterface: Option<Rc<RefCell<dyn CategoryPropertiesInterface>>> = jcall!(existingCategoryInterface).getProperties();
-                if jcall!(jcall!(jcall!(categoryInterface).getProperties()).getValue()).compareTo(jcall!(categoryPropertiesInterface).getValue()) == 0 {
+                if (jcall!(jcall!(categoryInterface).getProperties()).getValue().cmp(&jcall!(categoryPropertiesInterface).getValue()) as i32) == 0 {
                     jcall!(removalVector).add(crate::java_into_object(existingCategoryInterface.clone()));
                     bool_return = true;
                     break;
@@ -341,13 +345,13 @@ impl Category {
         let mut size: i32 = jcall!(self.childCategoryVector).size();
         for index in (0..size) {
             let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(self.childCategoryVector).get(index.clone());
-            if match (&self.PROPERTIES, &jcall!(self.typeVector).get(index.clone())) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                let mut categoryPropertiesInterface: Option<Rc<RefCell<dyn CategoryPropertiesInterface>>> = (anyType).clone() /* as CategoryPropertiesInterface */;
+            if self.PROPERTIES == jcall!(self.typeVector).get(index.clone()) {
+                let mut categoryPropertiesInterface: Option<Rc<RefCell<dyn CategoryPropertiesInterface>>> = { let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn CategoryPropertiesInterface>>>>().expect("ClassCastException").clone()) };
                 if !jcall!(categoryPropertiesInterface).isValid().unwrap() {
                     return false;
                 }
-            } else if match (&self.CATEGORY, &jcall!(self.typeVector).get(index.clone())) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                let mut categoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>> = (anyType).clone() /* as CategoryInterface */;
+            } else if self.CATEGORY == jcall!(self.typeVector).get(index.clone()) {
+                let mut categoryInterface: Option<Rc<RefCell<dyn CategoryInterface>>> = { let java_object = (anyType).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn CategoryInterface>>>>().expect("ClassCastException").clone()) };
                 if !jcall!(categoryInterface).isValid().unwrap() {
                     return false;
                 }
@@ -376,8 +380,8 @@ impl Category {
     
 
     // throws Exception
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut categoryHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(self.categoryPropertiesInterface).toHashMap();
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut categoryHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(self.categoryPropertiesInterface).toHashMap();
         return categoryHashMap.clone();
     }
     
@@ -392,19 +396,19 @@ impl Category {
 
     // throws Exception
     pub fn log(&mut self) {
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).CATEGORY.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).CATEGORY.clone(); java_field }.clone()) {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(String::from("Category Name: "));
             jcall!(stringBuffer).append(jcall!(self.categoryPropertiesInterface).getValue());
             jcall!(stringBuffer).append(String::from("\nPath = "));
-            jcall!(stringBuffer).append(jcall!(self.getPath()).toString());
+            jcall!(stringBuffer).append({ let java_argument = jcall!(self.getPath()).toString(); java_argument });
             jcall!(stringBuffer).append(String::from("\nFile Path: "));
-            jcall!(stringBuffer).append(jcall!(self.getFilePath()).toString());
+            jcall!(stringBuffer).append({ let java_argument = jcall!(self.getFilePath()).toString(); java_argument });
             { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("log()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
     }
 }
-pub trait CategoryDyn {
+pub trait CategoryDyn: std::any::Any {
     fn as_Category(&self) -> &Category;
     fn as_Category_mut(&mut self) -> &mut Category;
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Category::getKey(self.as_Category_mut()) }
@@ -427,7 +431,7 @@ pub trait CategoryDyn {
     fn toValidationInfoDoc(&mut self) -> Option<Rc<RefCell<Document>>> { Category::toValidationInfoDoc(self.as_Category_mut()) }
     fn toValidationInfoNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { Category::toValidationInfoNode(self.as_Category_mut(), document) }
     fn validationInfo(&mut self) -> String { Category::validationInfo(self.as_Category_mut()) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Category::toHashMap(self.as_Category_mut()) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Category::toHashMap(self.as_Category_mut()) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Category::toVector(self.as_Category_mut()) }
     fn log(&mut self) { Category::log(self.as_Category_mut()) }
 }

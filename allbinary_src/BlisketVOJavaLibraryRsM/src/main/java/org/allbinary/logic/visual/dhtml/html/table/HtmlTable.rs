@@ -119,10 +119,10 @@ impl HtmlTable {
         this.cellspacing = cellspacing.clone();
         this.after = after.clone();
         this.htmlRowsVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        { let java_arguments = (this.BORDER.clone(), jcall!(CommonPhoneStrings::getInstance()).ZERO.clone(),); this.addAttribute(java_arguments.0, java_arguments.1) };
-        this.addAttribute(this.CELLPADDING.clone(), this.cellpadding.clone());
-        this.addAttribute(this.CELLSPACING.clone(), this.cellspacing.clone());
-        this.addAttribute(this.STYLE.clone(), this.BORDERCOLLAPSE.clone());
+        { let java_arguments = (this.BORDER.clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).ZERO.clone(); java_field }.clone(),); this.addAttribute(java_arguments.0, java_arguments.1) };
+        { let java_arguments = (this.CELLPADDING.clone(), this.cellpadding.clone(),); this.addAttribute(java_arguments.0, java_arguments.1) };
+        { let java_arguments = (this.CELLSPACING.clone(), this.cellspacing.clone(),); this.addAttribute(java_arguments.0, java_arguments.1) };
+        { let java_arguments = (this.STYLE.clone(), this.BORDERCOLLAPSE.clone(),); this.addAttribute(java_arguments.0, java_arguments.1) };
         this
     }
 
@@ -133,7 +133,7 @@ impl HtmlTable {
 
     pub fn addRow(&mut self, mut htmlRow: Option<Rc<RefCell<HtmlRow>>>) {
         if self.numberOfColumns < jcall!(htmlRow).getNumberOfColumns() {
-            self.numberOfColumns = jcall!(htmlRow).getNumberOfColumns();
+            self.numberOfColumns = { let java_value = (jcall!(htmlRow).getNumberOfColumns()).clone(); java_value };
         }
         jcall!(self.htmlRowsVector).add(crate::java_into_object(htmlRow.clone()));
     }
@@ -141,15 +141,15 @@ impl HtmlTable {
 
     pub fn toString(&mut self) -> String {
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        let mut result: String = jcall!(stringUtil).EMPTY_STRING.clone();
+        let mut result: String = { let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone();
         let mut attributeKeys: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(jcall!(self.otherAttributes).keySet()).toArray();
         result = self.before.clone();
         result += &self.START.clone();
         result += &String::from(" ");
         for i in (0..(attributeKeys.len() as i32)) {
-            let mut key: String = (attributeKeys[(i) as usize]).clone() /* as String */;
-            let mut value: String = (jcall!(self.base.otherAttributes).get(key.clone())).clone() /* as String */;
-            if true && (value.cmp(&jcall!(stringUtil).EMPTY_STRING.clone()) as i32) != 0 {
+            let mut key: String = { let java_object = (attributeKeys[(i) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut value: String = { let java_object = (jcall!(self.base.otherAttributes).get(crate::java_into_object(key.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            if true && (value.cmp(&{ let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone()) as i32) != 0 {
                 result += &key.clone();
                 result += &String::from("=\"");
                 result += &value.clone();
@@ -159,7 +159,7 @@ impl HtmlTable {
         result += &self.END.clone();
         let mut size: i32 = jcall!(self.htmlRowsVector).size();
         for i in (0..size) {
-            result += &jcall!(jcall!(self.htmlRowsVector).get(i.clone())).toString();
+            result += &{ let java_object = (jcall!(self.htmlRowsVector).get(i.clone())).clone(); let value = jcall!(java_object); value.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", value.as_ref().type_id())) };
             result += &String::from(" ");
         }
         result += &self.ENDTAG.clone();

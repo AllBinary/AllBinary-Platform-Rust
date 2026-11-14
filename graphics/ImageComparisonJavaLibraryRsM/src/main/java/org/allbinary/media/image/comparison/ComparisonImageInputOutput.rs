@@ -28,6 +28,7 @@ use crate::org::allbinary::media::image::ImagePersistanceUtil::ImagePersistanceU
 use crate::org::allbinary::media::image::cache::BufferedImageCacheable::BufferedImageCacheable;
 use crate::org::allbinary::media::image::io::ImageIOInterface::ImageIOInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::ImageComparisonResultFrameCacheable::ImageComparisonResultFrameCacheable;
 use super::ImageComparisonResult::ImageComparisonResult;
 
@@ -48,6 +49,10 @@ impl ImageIOInterface for ComparisonImageInputOutput {
 }
 
 impl ComparisonImageInputOutput {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -67,15 +72,15 @@ impl ComparisonImageInputOutput {
     pub fn save(&mut self, mut frame: Option<i64>) {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
         if frame > 0 {
-            let mut imageComparisonResultFrameCacheable: Option<Rc<RefCell<ImageComparisonResultFrameCacheable>>> = (jcall!(((ImageComparisonResultCacheSingleton::ImageComparisonResultCacheSingleton::getInstance()).clone() /* as AutomaticCacheInterface */)).get(frame.clone())).clone() /* as ImageComparisonResultFrameCacheable */;
+            let mut imageComparisonResultFrameCacheable: Option<Rc<RefCell<ImageComparisonResultFrameCacheable>>> = (jcall!(((|| -> Option<Rc<RefCell<dyn AutomaticCacheInterface>>> { panic!("ClassCastException: a Rust dyn CacheInterface cannot be cast to dyn AutomaticCacheInterface") })())).get(crate::java_into_object((frame.clone()).expect("NullPointerException")))).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<ImageComparisonResultFrameCacheable>() }, "ClassCastException: not a ImageComparisonResultFrameCacheable"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<ImageComparisonResultFrameCacheable>) } });
             if imageComparisonResultFrameCacheable.is_some() {
                 let mut imageComparisonResult: Option<Rc<RefCell<ImageComparisonResult>>> = jcall!(imageComparisonResultFrameCacheable).getImageComparisonResult();
                 { let java_arguments = (imageComparisonResult.clone(), jcall!(imageComparisonResultFrameCacheable).getFrame(),); self.save2(java_arguments.0, java_arguments.1) };
             } else {
-                jcall!(self.logUtil).putF(format!("{}{}", String::from("Comparison Results Not Available for Output: "), frame), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).SAVE.clone());
+                jcall!(self.logUtil).putF(format!("{}{}", String::from("Comparison Results Not Available for Output: "), frame), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).SAVE.clone(); java_field }.clone());
             }
         } else {
-            jcall!(self.logUtil).putF(format!("{}{}", String::from("No Comparison Results: for first frame: "), frame), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).SAVE.clone());
+            jcall!(self.logUtil).putF(format!("{}{}", String::from("No Comparison Results: for first frame: "), frame), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).SAVE.clone(); java_field }.clone());
         }
     }
     
@@ -91,16 +96,16 @@ impl ComparisonImageInputOutput {
         let mut filePathStringBuffer1: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(filePathStringBuffer1).append(jcall!(filePathStringBuffer).toString());
         jcall!(filePathStringBuffer1).append(String::from("_1"));
-        jcall!(filePathStringBuffer1).append(jcall!(jcall!(MediaDataFactory::getInstance()).JPG).getExtension());
+        jcall!(filePathStringBuffer1).append(jcall!({ let java_field = jcall!(MediaDataFactory::getInstance()).JPG.clone(); java_field }).getExtension());
         let mut filePath1: String = jcall!(filePathStringBuffer1).toString();
         let mut filePathStringBuffer2: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(filePathStringBuffer2).append(jcall!(filePathStringBuffer).toString());
         jcall!(filePathStringBuffer2).append(String::from("_2"));
-        jcall!(filePathStringBuffer2).append(jcall!(jcall!(MediaDataFactory::getInstance()).JPG).getExtension());
+        jcall!(filePathStringBuffer2).append(jcall!({ let java_field = jcall!(MediaDataFactory::getInstance()).JPG.clone(); java_field }).getExtension());
         let mut filePath2: String = jcall!(filePathStringBuffer2).toString();
         let mut bufferedImageCacheables: Vec<Option<Rc<RefCell<BufferedImageCacheable>>>> = ChangedPixelsUtil::ChangedPixelsUtil::generateBufferedImageChacheables(imageComparisonResult.clone());
-        jcall!(self.logUtil).putF(format!("{}{}", String::from("Comparison Image File Path 1: "), filePath1), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).SAVE.clone());
-        jcall!(self.logUtil).putF(format!("{}{}", String::from("Comparison Image File Path 2: "), filePath2), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).SAVE.clone());
+        jcall!(self.logUtil).putF(format!("{}{}", String::from("Comparison Image File Path 1: "), filePath1), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).SAVE.clone(); java_field }.clone());
+        jcall!(self.logUtil).putF(format!("{}{}", String::from("Comparison Image File Path 2: "), filePath2), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).SAVE.clone(); java_field }.clone());
         let mut bufferedImageArray: Vec<Option<Rc<RefCell<BufferedImage>>>> = vec![None; (2) as usize];
         bufferedImageArray[(0) as usize] = jcall!(bufferedImageCacheables[(0) as usize]).getBufferedImage();
         bufferedImageArray[(1) as usize] = jcall!(bufferedImageCacheables[(1) as usize]).getBufferedImage();

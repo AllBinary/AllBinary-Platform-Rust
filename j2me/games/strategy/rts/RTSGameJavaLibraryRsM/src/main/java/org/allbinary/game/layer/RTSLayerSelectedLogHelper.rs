@@ -78,8 +78,8 @@ impl RTSLayerSelectedLogHelper {
     pub fn setClosestGeographicMapCellHistory(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut pathsList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(CommonLabels::getInstance()).START.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonLabels::getInstance()).START.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(jcall!(pathsList).size());
         jcall!(stringBuffer).append(String::from(" -> "));
         jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(pathsList.clone())));
@@ -90,14 +90,14 @@ impl RTSLayerSelectedLogHelper {
     pub fn trackTo(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut nextUnvisitedPathGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>, mut dx: i32, mut dy: i32, mut reason: String) {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(nextUnvisitedPathGeographicMapCellPosition.clone())));
-        jcall!(stringBuffer).append(jcall!(self.positionStrings).DX_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.positionStrings).DX_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(dx.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(self.positionStrings).DY_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.positionStrings).DY_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(dy.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
         jcall!(stringBuffer).append(reason.clone());
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("selected: trackTo"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
@@ -107,16 +107,16 @@ impl RTSLayerSelectedLogHelper {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(jcall!(associatedAdvancedRTSGameLayer).getName());
         jcall!(stringBuffer).append(String::from(" steering - "));
-        jcall!(stringBuffer).append(jcall!(self.positionStrings).DX_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.positionStrings).DX_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(dx.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(self.positionStrings).DY_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.positionStrings).DY_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(dy.clone());
         jcall!(stringBuffer).append(String::from(" angle: "));
         jcall!(stringBuffer).appendint(angle.clone());
         jcall!(stringBuffer).append(String::from(" movementAngle: "));
-        jcall!(stringBuffer).append(jcall!(movementAngle).name.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).FORWARD_SLASH.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(movementAngle).name.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).FORWARD_SLASH.clone(); java_field }.clone());
         jcall!(stringBuffer).appendshort(jcall!(movementAngle).getValue());
         if angleInfo.is_some() {
             let mut angleIncrement: i16 = jcall!(jcall!(angleInfo).getAngleIncrementInfo()).getAngleIncrement();
@@ -180,7 +180,7 @@ impl RTSLayerSelectedLogHelper {
     
 
     pub fn handle(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut movementAngle: Option<Rc<RefCell<NamedAngle>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(associatedAdvancedRTSGameLayer).getName()).append(String::from(" steering - movementAngle: ")).append(jcall!(movementAngle).name.clone()).append(jcall!(self.commonSeps).FORWARD_SLASH.clone()).appendshort(jcall!(movementAngle).getValue()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.TRACKTO_TURNTO.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(associatedAdvancedRTSGameLayer).getName()).append(String::from(" steering - movementAngle: ")).append({ let java_field = jcall!(movementAngle).name.clone(); java_field }.clone()).append({ let java_field = jcall!(self.commonSeps).FORWARD_SLASH.clone(); java_field }.clone()).appendshort(jcall!(movementAngle).getValue()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.TRACKTO_TURNTO.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
@@ -191,7 +191,7 @@ impl RTSLayerSelectedLogHelper {
 
     pub fn notOnPath(&mut self, mut associatedAdvancedRTSGameLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>, mut geographicMapCellHistory: Option<Rc<RefCell<GeographicMapCellHistory>>>, mut currentGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>, mut pathList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) {
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(associatedAdvancedRTSGameLayer).getName()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).appendint(jcall!(geographicMapCellHistory).getTotalVisited()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(jcall!(stringUtil).toString(crate::java_into_object(currentGeographicMapCellPosition.clone()))).append(String::from(" - trying to move but not on path: ")).append(jcall!(stringUtil).toString(crate::java_into_object(pathList.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("turnTo"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(associatedAdvancedRTSGameLayer).getName()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).appendint(jcall!(geographicMapCellHistory).getTotalVisited()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(jcall!(stringUtil).toString(crate::java_into_object(currentGeographicMapCellPosition.clone()))).append(String::from(" - trying to move but not on path: ")).append(jcall!(stringUtil).toString(crate::java_into_object(pathList.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("turnTo"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
 }
 impl std::ops::Deref for RTSLayerSelectedLogHelper {

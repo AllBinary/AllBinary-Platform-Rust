@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::rms::RecordStore::RecordStore;
+use crate::javax::microedition::rms::RecordStore::RecordStore;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
@@ -26,6 +26,7 @@ use crate::org::allbinary::persistance::PlatformRecordIdUtil::PlatformRecordIdUt
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::PersistanceStrings::PersistanceStrings;
 
 // Borrows the object of a Java reference
@@ -47,6 +48,10 @@ pub struct BasicPersitance {
 
 
 impl BasicPersitance {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut recordId: String) -> Self {
@@ -63,8 +68,8 @@ impl BasicPersitance {
         this.commonStrings = CommonStrings::getInstance();
         this.persistanceStrings = PersistanceStrings::getInstance();
         this.platformRecordIdUtil = PlatformRecordIdUtil::getInstance();
-        this.valueList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.idList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.valueList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.idList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.recordId = recordId.clone();
         this
     }
@@ -84,7 +89,7 @@ impl BasicPersitance {
     pub fn deleteAll(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>) {
         let mut size: i32 = jcall!(self.idList).size();
         for index in (0..size) {
-            let mut integer: Option<i32> = { let java_object = jcall!(self.idList).as_BasicArrayList_mut().objectArray[(index) as usize]; java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
+            let mut integer: Option<i32> = { let java_object = (jcall!(self.idList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
             { let java_arguments = (abeClientInformation.clone(), ((integer).unwrap() as i32),); self.delete(java_arguments.0, java_arguments.1) };
         }
         self.clear();
@@ -93,22 +98,22 @@ impl BasicPersitance {
 
     // throws Exception
     pub fn delete(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut deleteId: i32) {
-        let mut recordStore: Option<Rc<RefCell<RecordStore>>> = unsafe { NullRecordStore_NULL_RECORD_STORE.clone() }.clone();
+        let mut recordStore: Option<Rc<RefCell<dyn crate::javax::microedition::rms::RecordStore::RecordStoreDyn>>> = unsafe { NullRecordStore_NULL_RECORD_STORE.clone() }.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::rms::RecordStore::RecordStoreDyn>>);
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.persistanceStrings).DELETING_WITH_ID.clone()).appendint(deleteId.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).delete.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            recordStore = RecordStore::openRecordStore(self.getRecordId(abeClientInformation.clone()), true);
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.persistanceStrings).DELETING_WITH_ID.clone(); java_field }.clone()).appendint(deleteId.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).delete.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            recordStore = { let java_value = (RecordStore::openRecordStore(self.getRecordId(abeClientInformation.clone()), true)).clone(); java_value };
             jcall!(recordStore).deleteRecord(deleteId.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
             }
         }
         { // finally
             if recordStore.is_some() {
-                PreLogUtil::put(jcall!(self.persistanceStrings).CLOSING_RECORDSTORE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).delete.clone());
+                PreLogUtil::put({ let java_field = jcall!(self.persistanceStrings).CLOSING_RECORDSTORE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).delete.clone(); java_field }.clone());
                 jcall!(recordStore).closeRecordStore();
             }
         }
@@ -135,7 +140,7 @@ impl BasicPersitance {
         jcall!(self.idList).clear();
     }
 }
-pub trait BasicPersitanceDyn {
+pub trait BasicPersitanceDyn: std::any::Any {
     fn as_BasicPersitance(&self) -> &BasicPersitance;
     fn as_BasicPersitance_mut(&mut self) -> &mut BasicPersitance;
     fn deleteRecoreStore(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>) { BasicPersitance::deleteRecoreStore(self.as_BasicPersitance_mut(), abeClientInformation) }

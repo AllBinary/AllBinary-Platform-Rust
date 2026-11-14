@@ -35,6 +35,10 @@ pub struct TransformInfoEntityBuilder {
 
 impl TransformInfoEntityBuilder {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -47,7 +51,7 @@ impl TransformInfoEntityBuilder {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<TransformInfoEntity>>> {
-        return TransformInfoEntityFactory::TransformInfoEntityFactory::getInstance(TransformInfoObjectConfigGeneratorFactory::getInstance(), TransformInfoObjectConfigAndManipulatorFactory::getInstance(), TransformInfoHttpStoreFactory::getInstance());
+        return TransformInfoEntityFactory::TransformInfoEntityFactory::getInstance(TransformInfoObjectConfigGeneratorFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::objectConfig::generator::TransformInfoObjectConfigGeneratorFactoryInterface::TransformInfoObjectConfigGeneratorFactoryInterface>>), TransformInfoObjectConfigAndManipulatorFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::objectConfig::TransformInfoObjectConfigAndManipulatorFactoryBase::TransformInfoObjectConfigAndManipulatorFactoryBaseDyn>>), TransformInfoHttpStoreFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoFactoryInterface::TransformInfoFactoryInterface>>));
     }
 }
 

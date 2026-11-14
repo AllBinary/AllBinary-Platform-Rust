@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +34,10 @@ pub struct NullServiceReference {
 
 impl NullServiceReference {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -45,7 +50,7 @@ impl NullServiceReference {
     
 
     pub fn getProperty(&mut self, mut key: String) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return jcall!(NullUtil::getInstance()).NULL_OBJECT.clone();
+        return { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone();
     }
     
 

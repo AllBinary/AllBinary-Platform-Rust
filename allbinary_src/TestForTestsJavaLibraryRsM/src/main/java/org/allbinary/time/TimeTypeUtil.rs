@@ -4,10 +4,9 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::Calendar;
 use super::*;
-// use crate::java::util::Calendar::Calendar;
-// use crate::java::util::TimeZone::TimeZone;
+use crate::java::util::Calendar::Calendar;
+use crate::java::util::TimeZone::TimeZone;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -24,6 +23,10 @@ pub struct TimeTypeUtil {
 thread_local! { pub static TimeTypeUtil_instance: Option<Rc<RefCell<TimeTypeUtil>>> = TimeTypeUtil::new(); }
 
 impl TimeTypeUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -58,7 +61,7 @@ impl TimeTypeUtil {
     
 
     pub fn getNightOrDay(&mut self) -> String {
-        return (if self.isNight() { self.NIGHT } else { self.DAY });
+        return (if self.isNight() { self.NIGHT.clone() } else { self.DAY.clone() });
     }
     
 
@@ -79,7 +82,7 @@ impl TimeTypeUtil {
 
     // Java overloaded method: Rust needs a different name
     pub fn getNightOrDay1(&mut self, mut timeInMillis: i64) -> String {
-        return (if self.isNight1(timeInMillis.clone()) { self.NIGHT } else { self.DAY });
+        return (if self.isNight1(timeInMillis.clone()) { self.NIGHT.clone() } else { self.DAY.clone() });
     }
 }
 

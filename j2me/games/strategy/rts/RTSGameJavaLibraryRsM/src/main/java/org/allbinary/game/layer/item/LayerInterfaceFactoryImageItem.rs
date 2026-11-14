@@ -17,12 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::graphics::form::item::ABCustomImageItem::ABCustomImageItem;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::layer::LayerInterfaceFactoryInterface::LayerInterfaceFactoryInterface;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -41,7 +42,7 @@ pub struct LayerInterfaceFactoryImageItem {
 impl LayerInterfaceFactoryImageItem {
     
 
-    pub fn new_struct(mut label: String, mut img: Option<Rc<RefCell<Image>>>, mut layout: i32, mut altText: String, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut animationArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>>, mut layerInterfaceFactoryInterface: Option<Rc<RefCell<dyn LayerInterfaceFactoryInterface>>>) -> Self {
+    pub fn new_struct(mut label: String, mut img: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut layout: i32, mut altText: String, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut animationArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>>, mut layerInterfaceFactoryInterface: Option<Rc<RefCell<dyn LayerInterfaceFactoryInterface>>>) -> Self {
         let mut this = Self {
             base: ABCustomImageItem::new_struct(label.clone(), img.clone(), layout.clone(), altText.clone(), basicColor.clone(), 0),
             animationArray: Vec::new(),
@@ -53,7 +54,7 @@ impl LayerInterfaceFactoryImageItem {
         this
     }
 
-    pub fn new(mut label: String, mut img: Option<Rc<RefCell<Image>>>, mut layout: i32, mut altText: String, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut animationArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>>, mut layerInterfaceFactoryInterface: Option<Rc<RefCell<dyn LayerInterfaceFactoryInterface>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut label: String, mut img: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut layout: i32, mut altText: String, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut animationArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>>, mut layerInterfaceFactoryInterface: Option<Rc<RefCell<dyn LayerInterfaceFactoryInterface>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(label, img, layout, altText, basicColor, animationArray, layerInterfaceFactoryInterface))))
     }
     
@@ -63,8 +64,8 @@ impl LayerInterfaceFactoryImageItem {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
-        self.base.paintXY(graphics.clone(), x.clone(), y.clone());
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
+        { let java_arguments = (graphics.clone(), x.clone(), y.clone(),); self.base.paintXY(java_arguments.0, java_arguments.1, java_arguments.2) };
         {
             let mut index: i32 = (self.animationArray.len() as i32).clone();
             while { index -= 1; index } >= 0 {
@@ -84,6 +85,11 @@ impl std::ops::DerefMut for LayerInterfaceFactoryImageItem {
 impl crate::org::allbinary::graphics::form::item::ABCustomImageItem::ABCustomImageItemDyn for LayerInterfaceFactoryImageItem {
     fn as_ABCustomImageItem(&self) -> &crate::org::allbinary::graphics::form::item::ABCustomImageItem::ABCustomImageItem { &self.base }
     fn as_ABCustomImageItem_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::item::ABCustomImageItem::ABCustomImageItem { &mut self.base }
+}
+impl crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn for LayerInterfaceFactoryImageItem {
+    fn as_ABCustomItem(&self) -> &crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItem { &self.base.base }
+    fn as_ABCustomItem_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItem { &mut self.base.base }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 

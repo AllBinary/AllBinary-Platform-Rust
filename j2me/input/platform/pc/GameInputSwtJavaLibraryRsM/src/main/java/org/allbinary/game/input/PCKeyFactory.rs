@@ -117,6 +117,10 @@ thread_local! { pub static PCKeyFactory_SINGLETON: Option<Rc<RefCell<PCKeyFactor
 
 impl PCKeyFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             UNKNOWN: None,
@@ -251,23 +255,23 @@ impl PCKeyFactory {
         this.u = PCGameKey::new(117, String::from("u"));
         this.v = PCGameKey::new(118, String::from("v"));
         this.w = PCGameKey::new(119, String::from("w"));
-        this.x = PCGameKey::new(120, jcall!(PositionStrings::getInstance()).X.clone());
-        this.y = PCGameKey::new(121, jcall!(PositionStrings::getInstance()).Y.clone());
+        this.x = PCGameKey::new(120, { let java_field = jcall!(PositionStrings::getInstance()).X.clone(); java_field }.clone());
+        this.y = PCGameKey::new(121, { let java_field = jcall!(PositionStrings::getInstance()).Y.clone(); java_field }.clone());
         this.z = PCGameKey::new(122, String::from("z"));
-        this.ZERO = PCGameKey::new(48, jcall!(CommonPhoneStrings::getInstance()).ZERO.clone());
-        this.ONE = PCGameKey::new(49, jcall!(CommonPhoneStrings::getInstance()).ONE.clone());
-        this.TWO = PCGameKey::new(50, jcall!(CommonPhoneStrings::getInstance()).TWO.clone());
-        this.THREE = PCGameKey::new(51, jcall!(CommonPhoneStrings::getInstance()).THREE.clone());
-        this.FOUR = PCGameKey::new(52, jcall!(CommonPhoneStrings::getInstance()).FOUR.clone());
-        this.FIVE = PCGameKey::new(53, jcall!(CommonPhoneStrings::getInstance()).FIVE.clone());
-        this.SIX = PCGameKey::new(54, jcall!(CommonPhoneStrings::getInstance()).SIX.clone());
-        this.SEVEN = PCGameKey::new(55, jcall!(CommonPhoneStrings::getInstance()).SEVEN.clone());
-        this.EIGHT = PCGameKey::new(56, jcall!(CommonPhoneStrings::getInstance()).EIGHT.clone());
-        this.NINE = PCGameKey::new(57, jcall!(CommonPhoneStrings::getInstance()).NINE.clone());
-        this.DPAD_UP = PCGameKey::new(38, jcall!(CommonPhoneStrings::getInstance()).UP.clone());
-        this.DPAD_DOWN = PCGameKey::new(40, jcall!(CommonPhoneStrings::getInstance()).DOWN.clone());
-        this.DPAD_LEFT = PCGameKey::new(37, jcall!(CommonPhoneStrings::getInstance()).LEFT.clone());
-        this.DPAD_RIGHT = PCGameKey::new(39, jcall!(CommonPhoneStrings::getInstance()).RIGHT.clone());
+        this.ZERO = PCGameKey::new(48, { let java_field = jcall!(CommonPhoneStrings::getInstance()).ZERO.clone(); java_field }.clone());
+        this.ONE = PCGameKey::new(49, { let java_field = jcall!(CommonPhoneStrings::getInstance()).ONE.clone(); java_field }.clone());
+        this.TWO = PCGameKey::new(50, { let java_field = jcall!(CommonPhoneStrings::getInstance()).TWO.clone(); java_field }.clone());
+        this.THREE = PCGameKey::new(51, { let java_field = jcall!(CommonPhoneStrings::getInstance()).THREE.clone(); java_field }.clone());
+        this.FOUR = PCGameKey::new(52, { let java_field = jcall!(CommonPhoneStrings::getInstance()).FOUR.clone(); java_field }.clone());
+        this.FIVE = PCGameKey::new(53, { let java_field = jcall!(CommonPhoneStrings::getInstance()).FIVE.clone(); java_field }.clone());
+        this.SIX = PCGameKey::new(54, { let java_field = jcall!(CommonPhoneStrings::getInstance()).SIX.clone(); java_field }.clone());
+        this.SEVEN = PCGameKey::new(55, { let java_field = jcall!(CommonPhoneStrings::getInstance()).SEVEN.clone(); java_field }.clone());
+        this.EIGHT = PCGameKey::new(56, { let java_field = jcall!(CommonPhoneStrings::getInstance()).EIGHT.clone(); java_field }.clone());
+        this.NINE = PCGameKey::new(57, { let java_field = jcall!(CommonPhoneStrings::getInstance()).NINE.clone(); java_field }.clone());
+        this.DPAD_UP = PCGameKey::new(38, { let java_field = jcall!(CommonPhoneStrings::getInstance()).UP.clone(); java_field }.clone());
+        this.DPAD_DOWN = PCGameKey::new(40, { let java_field = jcall!(CommonPhoneStrings::getInstance()).DOWN.clone(); java_field }.clone());
+        this.DPAD_LEFT = PCGameKey::new(37, { let java_field = jcall!(CommonPhoneStrings::getInstance()).LEFT.clone(); java_field }.clone());
+        this.DPAD_RIGHT = PCGameKey::new(39, { let java_field = jcall!(CommonPhoneStrings::getInstance()).RIGHT.clone(); java_field }.clone());
         this.DPAD_UP2 = this.DPAD_UP.clone();
         this.DPAD_DOWN2 = this.DPAD_DOWN.clone();
         this.DPAD_LEFT2 = this.DPAD_LEFT.clone();
@@ -275,9 +279,9 @@ impl PCKeyFactory {
         this.COMMA = PCGameKey::new(44, String::from("COMMA"));
         this.SPACE = PCGameKey::new(32, String::from("SPACE"));
         this.DEL = PCGameKey::new(46, String::from("DEL"));
-        this.STAR = PCGameKey::new(42, jcall!(CommonPhoneStrings::getInstance()).STAR.clone());
+        this.STAR = PCGameKey::new(42, { let java_field = jcall!(CommonPhoneStrings::getInstance()).STAR.clone(); java_field }.clone());
         this.QUESTION = PCGameKey::new(47, String::from("?"));
-        this.PERIOD = PCGameKey::new(46, jcall!(CommonSeps::getInstance()).PERIOD.clone());
+        this.PERIOD = PCGameKey::new(46, { let java_field = jcall!(CommonSeps::getInstance()).PERIOD.clone(); java_field }.clone());
         this.ESCAPE = PCGameKey::new(27, String::from("Esc"));
         this.BACK_SPACE = PCGameKey::new(8, String::from("Backspace"));
         this
@@ -293,7 +297,7 @@ impl PCKeyFactory {
     }
     
 
-    pub fn isSubmission(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isSubmission(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.ENTER) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }
@@ -301,7 +305,7 @@ impl PCKeyFactory {
     }
     
 
-    pub fn isDelete(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isDelete(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.DEL) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }
@@ -309,7 +313,7 @@ impl PCKeyFactory {
     }
     
 
-    pub fn isBackSpace(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isBackSpace(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.BACK_SPACE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }
@@ -317,7 +321,7 @@ impl PCKeyFactory {
     }
     
 
-    pub fn isUp(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isUp(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.DPAD_UP) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&input, &self.DPAD_UP2) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }
@@ -325,7 +329,7 @@ impl PCKeyFactory {
     }
     
 
-    pub fn isDown(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isDown(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.DPAD_DOWN) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&input, &self.DPAD_DOWN2) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }
@@ -333,7 +337,7 @@ impl PCKeyFactory {
     }
     
 
-    pub fn isLeft(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isLeft(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.DPAD_LEFT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&input, &self.DPAD_LEFT2) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }
@@ -341,7 +345,7 @@ impl PCKeyFactory {
     }
     
 
-    pub fn isRight(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isRight(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.DPAD_RIGHT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } || match (&input, &self.DPAD_RIGHT2) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }
@@ -349,7 +353,7 @@ impl PCKeyFactory {
     }
     
 
-    pub fn isEnter(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isEnter(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.ENTER) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }

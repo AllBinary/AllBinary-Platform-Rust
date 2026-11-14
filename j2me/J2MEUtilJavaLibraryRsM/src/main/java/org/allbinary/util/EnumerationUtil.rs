@@ -39,6 +39,10 @@ thread_local! { pub static EnumerationUtil_instance: Option<Rc<RefCell<Enumerati
 
 impl EnumerationUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -66,7 +70,7 @@ impl EnumerationUtil {
     
 
     pub fn getAsArray(&mut self, mut enumeration: Option<Rc<RefCell<dyn Enumeration>>>) -> Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> {
-        let mut basicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut basicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         while self.hasMoreElements(enumeration.clone()) {
             jcall!(basicArrayList).add(crate::java_into_object(self.nextElement(enumeration.clone())));
         }

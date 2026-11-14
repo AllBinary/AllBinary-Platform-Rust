@@ -32,6 +32,10 @@ pub struct BasicAccelerationProperties {
 
 
 impl BasicAccelerationProperties {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut forward: i32, mut reverse: i32) -> Self {

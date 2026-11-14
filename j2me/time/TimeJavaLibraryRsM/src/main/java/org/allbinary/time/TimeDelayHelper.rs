@@ -141,20 +141,20 @@ impl TimeDelayHelper {
     
 
     pub fn setStartTimeTNT(&mut self) {
-        self.startTime = (std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64);
+        self.startTime = { let java_value = ((std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64)).clone(); java_value };
     }
     
 
     pub fn pause(&mut self) {
         self.elapsedTimeAtPause = self.getElapsedTNT();
-        self.startTime = i64::MAX.clone();
+        self.startTime = { let java_value = (i64::MAX).clone(); java_value }.clone();
     }
     
 
     pub fn resume(&mut self) -> bool {
         if self.elapsedTimeAtPause != i64::MIN {
-            self.startTime = (std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64) + self.elapsedTimeAtPause;
-            self.elapsedTimeAtPause = i64::MIN.clone();
+            self.startTime = { let java_value = ((std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64) + self.elapsedTimeAtPause).clone(); java_value };
+            self.elapsedTimeAtPause = { let java_value = (i64::MIN).clone(); java_value }.clone();
             self.setStartTimeTNT();
             return true;
         }
@@ -167,9 +167,9 @@ impl TimeDelayHelper {
         if elapsed > 0_i64 {
             let mut commonLabels: Option<Rc<RefCell<CommonLabels>>> = CommonLabels::getInstance();
             let mut elapsedAsString: String = (elapsed.clone()).to_string();
-            return jcall!(StringMaker::new()).append(jcall!(commonLabels).START.clone()).appendlong(self.startTime.clone()).append(jcall!(commonLabels).CURRENT.clone()).appendlong(currentTime.clone()).append(jcall!(commonLabels).ELAPSED.clone()).append(elapsedAsString.clone()).toString();
+            return jcall!(StringMaker::new()).append({ let java_field = jcall!(commonLabels).START.clone(); java_field }.clone()).appendlong(self.startTime.clone()).append({ let java_field = jcall!(commonLabels).CURRENT.clone(); java_field }.clone()).appendlong(currentTime.clone()).append({ let java_field = jcall!(commonLabels).ELAPSED.clone(); java_field }.clone()).append(elapsedAsString.clone()).toString();
         } else {
-            return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         }
     }
     
@@ -180,13 +180,13 @@ impl TimeDelayHelper {
         if elapsed > 0_i64 {
             let mut commonLabels: Option<Rc<RefCell<CommonLabels>>> = CommonLabels::getInstance();
             let mut elapsedAsString: String = (elapsed.clone()).to_string();
-            return jcall!(StringMaker::new()).append(jcall!(commonLabels).START.clone()).appendlong(self.startTime.clone()).append(jcall!(commonLabels).CURRENT.clone()).appendlong(currentTime.clone()).append(jcall!(commonLabels).ELAPSED.clone()).append(elapsedAsString.clone()).toString();
+            return jcall!(StringMaker::new()).append({ let java_field = jcall!(commonLabels).START.clone(); java_field }.clone()).appendlong(self.startTime.clone()).append({ let java_field = jcall!(commonLabels).CURRENT.clone(); java_field }.clone()).appendlong(currentTime.clone()).append({ let java_field = jcall!(commonLabels).ELAPSED.clone(); java_field }.clone()).append(elapsedAsString.clone()).toString();
         } else {
-            return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         }
     }
 }
-pub trait TimeDelayHelperDyn {
+pub trait TimeDelayHelperDyn: std::any::Any {
     fn as_TimeDelayHelper(&self) -> &TimeDelayHelper;
     fn as_TimeDelayHelper_mut(&mut self) -> &mut TimeDelayHelper;
     fn isTimeTNT(&mut self) -> bool { TimeDelayHelper::isTimeTNT(self.as_TimeDelayHelper_mut()) }

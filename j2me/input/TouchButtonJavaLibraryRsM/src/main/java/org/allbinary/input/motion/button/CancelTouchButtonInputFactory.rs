@@ -33,16 +33,20 @@ pub struct CancelTouchButtonInputFactory {
     pub cancelInputArray: Vec<Option<Rc<RefCell<TouchButtonInput>>>>,
 }
 
-pub static mut CancelTouchButtonInputFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut CancelTouchButtonInputFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl CancelTouchButtonInputFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<CancelTouchButtonInputFactory>>> {
-        if match (&unsafe { CancelTouchButtonInputFactory_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *CancelTouchButtonInputFactory_instance = CancelTouchButtonInputFactory::new() };
+        if match (&unsafe { CancelTouchButtonInputFactory_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *CancelTouchButtonInputFactory_instance = crate::java_into_object(CancelTouchButtonInputFactory::new()) };
         }
-        return (unsafe { CancelTouchButtonInputFactory_instance.clone() }).clone() /* as CancelTouchButtonInputFactory */;
+        return { let java_object = (unsafe { CancelTouchButtonInputFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<CancelTouchButtonInputFactory>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -50,15 +54,15 @@ impl CancelTouchButtonInputFactory {
         let mut this = Self {
             cancelInputArray: Vec::new(),
         };
-        this.cancelInputArray = vec![None; (jcall!(InputFactory::getInstance()).MAX) as usize];
+        this.cancelInputArray = vec![None; ({ let java_field = jcall!(InputFactory::getInstance()).MAX.clone(); java_field }) as usize];
         let mut basicTouchInputFactory: Option<Rc<RefCell<BasicTouchInputFactory>>> = BasicTouchInputFactory::getInstance();
         for index in (0..=(this.cancelInputArray.len() as i32) - 1).rev() {
-            this.cancelInputArray[(index) as usize] = jcall!(basicTouchInputFactory).NONE.clone();
+            { let java_index = (index) as usize; this.cancelInputArray[java_index] = { let java_field = jcall!(basicTouchInputFactory).NONE.clone(); java_field }.clone(); };
         }
-        this.cancelInputArray[(jcall!(jcall!(basicTouchInputFactory).UP).getSourceId()) as usize] = jcall!(basicTouchInputFactory).DOWN.clone();
-        this.cancelInputArray[(jcall!(jcall!(basicTouchInputFactory).DOWN).getSourceId()) as usize] = jcall!(basicTouchInputFactory).UP.clone();
-        this.cancelInputArray[(jcall!(jcall!(basicTouchInputFactory).LEFT).getSourceId()) as usize] = jcall!(basicTouchInputFactory).RIGHT.clone();
-        this.cancelInputArray[(jcall!(jcall!(basicTouchInputFactory).RIGHT).getSourceId()) as usize] = jcall!(basicTouchInputFactory).LEFT.clone();
+        { let java_index = (jcall!({ let java_field = jcall!(basicTouchInputFactory).UP.clone(); java_field }).getSourceId()) as usize; this.cancelInputArray[java_index] = { let java_field = jcall!(basicTouchInputFactory).DOWN.clone(); java_field }.clone(); };
+        { let java_index = (jcall!({ let java_field = jcall!(basicTouchInputFactory).DOWN.clone(); java_field }).getSourceId()) as usize; this.cancelInputArray[java_index] = { let java_field = jcall!(basicTouchInputFactory).UP.clone(); java_field }.clone(); };
+        { let java_index = (jcall!({ let java_field = jcall!(basicTouchInputFactory).LEFT.clone(); java_field }).getSourceId()) as usize; this.cancelInputArray[java_index] = { let java_field = jcall!(basicTouchInputFactory).RIGHT.clone(); java_field }.clone(); };
+        { let java_index = (jcall!({ let java_field = jcall!(basicTouchInputFactory).RIGHT.clone(); java_field }).getSourceId()) as usize; this.cancelInputArray[java_index] = { let java_field = jcall!(basicTouchInputFactory).LEFT.clone(); java_field }.clone(); };
         this
     }
 

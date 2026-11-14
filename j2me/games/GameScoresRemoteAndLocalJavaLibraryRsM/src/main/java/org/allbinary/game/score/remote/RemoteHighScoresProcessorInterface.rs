@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::GameInfo::GameInfo;
 use crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface;
+use crate::java::lang::Exception::*;
 use super::RemoteHighScores::RemoteHighScores;
 
 // Borrows the object of a Java reference
@@ -28,13 +29,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait RemoteHighScoresProcessorInterface {
+pub trait RemoteHighScoresProcessorInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn process(&mut self, remoteHighScores: Option<Rc<RefCell<RemoteHighScores>>>, abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, gameInfo: Option<Rc<RefCell<GameInfo>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

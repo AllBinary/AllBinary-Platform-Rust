@@ -33,10 +33,14 @@ pub struct ThirdPartyStoreFactory {
 thread_local! { pub static ThirdPartyStoreFactory_instance: Option<Rc<RefCell<NoThirdPartyStore>>> = NoThirdPartyStore::new(); }
 
 impl ThirdPartyStoreFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn crate::org::allbinary::thirdparty::store::ThirdPartyStore::ThirdPartyStoreDyn>>> {
-        return ThirdPartyStoreFactory_instance.with(Clone::clone).clone();
+        return ThirdPartyStoreFactory_instance.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thirdparty::store::ThirdPartyStore::ThirdPartyStoreDyn>>);
     }
     
 

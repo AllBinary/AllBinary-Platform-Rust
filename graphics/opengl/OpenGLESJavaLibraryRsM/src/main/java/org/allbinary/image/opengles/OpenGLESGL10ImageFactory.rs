@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::platform::graphics::PlatformBitmapBaseFactory::PlatformBitmapBaseFactory;
 use crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactory;
 use super::OpenGLImageFactory::OpenGLImageFactory;
@@ -49,8 +49,8 @@ impl OpenGLESGL10ImageFactory {
     }
     
 
-    pub fn getInstance(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut bitmapFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::graphics::PlatformBitmapBaseFactory::PlatformBitmapBaseFactoryDyn>>>, mut textureFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactoryDyn>>>) -> Option<Rc<RefCell<Image>>> {
-        return OpenGLESGL10Image::new(image.clone(), bitmapFactory.clone(), textureFactory.clone()).map(|reference| Rc::new(RefCell::new(Rc::try_unwrap(reference).ok().expect("new object is not shared").into_inner().base.base)));
+    pub fn getInstance(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut bitmapFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::graphics::PlatformBitmapBaseFactory::PlatformBitmapBaseFactoryDyn>>>, mut textureFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactoryDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        return OpenGLESGL10Image::new(image.clone(), bitmapFactory.clone(), textureFactory.clone()).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>);
     }
 }
 impl std::ops::Deref for OpenGLESGL10ImageFactory {
@@ -64,7 +64,7 @@ impl std::ops::DerefMut for OpenGLESGL10ImageFactory {
 impl crate::org::allbinary::image::opengles::OpenGLImageFactory::OpenGLImageFactoryDyn for OpenGLESGL10ImageFactory {
     fn as_OpenGLImageFactory(&self) -> &crate::org::allbinary::image::opengles::OpenGLImageFactory::OpenGLImageFactory { &self.base }
     fn as_OpenGLImageFactory_mut(&mut self) -> &mut crate::org::allbinary::image::opengles::OpenGLImageFactory::OpenGLImageFactory { &mut self.base }
-    fn getInstance(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut bitmapFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::graphics::PlatformBitmapBaseFactory::PlatformBitmapBaseFactoryDyn>>>, mut textureFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactoryDyn>>>) -> Option<Rc<RefCell<Image>>> { Self::getInstance(self, image, bitmapFactory, textureFactory) }
+    fn getInstance(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut bitmapFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::graphics::PlatformBitmapBaseFactory::PlatformBitmapBaseFactoryDyn>>>, mut textureFactory: Option<Rc<RefCell<dyn crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactoryDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { Self::getInstance(self, image, bitmapFactory, textureFactory) }
 }
 
 

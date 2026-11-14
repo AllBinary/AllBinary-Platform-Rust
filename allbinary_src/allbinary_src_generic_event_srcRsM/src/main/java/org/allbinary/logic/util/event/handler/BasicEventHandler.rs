@@ -26,6 +26,7 @@ use crate::org::allbinary::logic::util::event::EventStrings::EventStrings;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::BasicEventHandlerInterface::BasicEventHandlerInterface;
 
 // Borrows the object of a Java reference
@@ -70,16 +71,16 @@ impl BasicEventHandler {
         let mut index: i32 = 0;
         while index < jcall!(self.eventListenerInterfaceList).size() {
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                eventListenerInterface = { let java_object = (jcall!(self.eventListenerInterfaceList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EventListenerInterface>>>>().expect("ClassCastException").clone()) };
+                eventListenerInterface = { let java_value = ({ let java_object = (jcall!(self.eventListenerInterfaceList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EventListenerInterface>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 jcall!(stringBuffer).append(LISTENER.clone());
                 jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(eventListenerInterface.clone())));
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).TOSTRING.clone(), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).TOSTRING.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                 }
             }
             index += 1;
@@ -127,15 +128,15 @@ impl BasicEventHandler {
         let mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>> = None;
         while index < jcall!(self.eventListenerInterfaceList).size() {
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                eventListenerInterface = { let java_object = (jcall!(self.eventListenerInterfaceList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EventListenerInterface>>>>().expect("ClassCastException").clone()) };
+                eventListenerInterface = { let java_value = ({ let java_object = (jcall!(self.eventListenerInterfaceList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EventListenerInterface>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 self.process(eventObject.clone(), eventListenerInterface.clone());
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                 let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
                 }
             }
             index += 1;
@@ -153,13 +154,9 @@ impl BasicEventHandler {
         return self.eventListenerInterfaceList.clone();
     }
 }
-pub trait BasicEventHandlerDyn: crate::org::allbinary::logic::util::event::handler::BasicEventHandlerInterface::BasicEventHandlerInterface {
+pub trait BasicEventHandlerDyn: std::any::Any + crate::org::allbinary::logic::util::event::handler::BasicEventHandlerInterface::BasicEventHandlerInterface {
     fn as_BasicEventHandler(&self) -> &BasicEventHandler;
     fn as_BasicEventHandler_mut(&mut self) -> &mut BasicEventHandler;
-    fn addListenerSingleThreaded(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) { BasicEventHandler::addListenerSingleThreaded(self.as_BasicEventHandler_mut(), eventListenerInterface) }
-    fn removeListenerSingleThreaded(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) { BasicEventHandler::removeListenerSingleThreaded(self.as_BasicEventHandler_mut(), eventListenerInterface) }
-    fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) { BasicEventHandler::process(self.as_BasicEventHandler_mut(), eventObject, eventListenerInterface) }
-    fn getEventListenerInterfaceListP(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { BasicEventHandler::getEventListenerInterfaceListP(self.as_BasicEventHandler_mut()) }
     fn addListenerSingleThreaded(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) { BasicEventHandler::addListenerSingleThreaded(self.as_BasicEventHandler_mut(), eventListenerInterface) }
     fn removeListenerSingleThreaded(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) { BasicEventHandler::removeListenerSingleThreaded(self.as_BasicEventHandler_mut(), eventListenerInterface) }
     fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) { BasicEventHandler::process(self.as_BasicEventHandler_mut(), eventObject, eventListenerInterface) }

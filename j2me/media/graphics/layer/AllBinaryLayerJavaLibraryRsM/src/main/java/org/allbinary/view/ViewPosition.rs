@@ -72,22 +72,22 @@ impl ViewPosition {
     
 
     pub fn getX2(&mut self) -> i32 {
-        return self.getX() + jcall!(self.allbinaryLayer).getWidth();
+        return self.getX() + { let java_value = jcall!(self.allbinaryLayer).getWidth(); java_value };
     }
     
 
     pub fn getY2(&mut self) -> i32 {
-        return self.getY() + jcall!(self.allbinaryLayer).getHeight();
+        return self.getY() + { let java_value = jcall!(self.allbinaryLayer).getHeight(); java_value };
     }
     
 
     pub fn getZ2(&mut self) -> i32 {
-        return (((((self.getZ()) as i64) + jcall!(self.allbinaryLayer).getDepth())) as i32);
+        return (((((self.getZ()) as i64) + { let java_value = jcall!(self.allbinaryLayer).getDepth(); java_value })) as i32);
     }
     
 
     pub fn setAllbinaryLayer(&mut self, mut allbinaryLayer: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {
-        self.allbinaryLayer = (allbinaryLayer).clone() /* as AllBinaryLayer */;
+        self.allbinaryLayer = { let java_object = (allbinaryLayer).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>>().expect("ClassCastException").clone()) };
     }
 }
 impl std::ops::Deref for ViewPosition {

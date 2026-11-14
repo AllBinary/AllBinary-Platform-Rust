@@ -45,6 +45,10 @@ thread_local! { pub static BasicArrayListUtil_instance: Option<Rc<RefCell<BasicA
 
 impl BasicArrayListUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             NULL_ARRAY_OF_ARRAY: Vec::new(),
@@ -53,7 +57,7 @@ impl BasicArrayListUtil {
         };
         this.NULL_ARRAY_OF_ARRAY = vec![vec![None; (0) as usize]; (0) as usize];
         this.myRandomFactory = MyRandomFactory::getInstance();
-        this.immutableInstance = ImmutableBasicArrayList::new(String::from("Immutable"), 0).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.immutableInstance = ImmutableBasicArrayList::new(String::from("Immutable"), 0).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -85,7 +89,7 @@ impl BasicArrayListUtil {
         let mut secondSwapIndex: i32 = 0;
         for index in (0..=size) {
             secondSwapIndex = lastMinusOneIndex - index;
-            temp = jcall!(list).removeAt(index.clone());
+            temp = { let java_value = (jcall!(list).removeAt(index.clone())).clone(); java_value };
             jcall!(list).addAt(index.clone(), crate::java_into_object(jcall!(list).removeAt(secondSwapIndex.clone())));
             jcall!(list).addAt(secondSwapIndex + 1, crate::java_into_object(temp.clone()));
         }
@@ -96,7 +100,7 @@ impl BasicArrayListUtil {
         let mut S_LABEL: String = String::from(" s: ");
         let mut size: i32 = jcall!(list).size();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(jcall!(CommonLabels::getInstance()).TOTAL_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonLabels::getInstance()).TOTAL_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(size.clone());
         for index in (0..=size - 1).rev() {
             let mut usedList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>>().expect("ClassCastException").clone()) };
@@ -114,16 +118,16 @@ impl BasicArrayListUtil {
 
     pub fn main(mut args: Vec<String>) {
         let mut commonPhoneStrings: Option<Rc<RefCell<CommonPhoneStrings>>> = CommonPhoneStrings::getInstance();
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        jcall!(list).add(crate::java_into_object(jcall!(commonPhoneStrings).ONE.clone()));
-        jcall!(list).add(crate::java_into_object(jcall!(commonPhoneStrings).TWO.clone()));
-        jcall!(list).add(crate::java_into_object(jcall!(commonPhoneStrings).THREE.clone()));
-        jcall!(list).add(crate::java_into_object(jcall!(commonPhoneStrings).FOUR.clone()));
-        jcall!(list).add(crate::java_into_object(jcall!(commonPhoneStrings).FIVE.clone()));
-        jcall!(list).add(crate::java_into_object(jcall!(commonPhoneStrings).SIX.clone()));
-        jcall!(list).add(crate::java_into_object(jcall!(commonPhoneStrings).SEVEN.clone()));
-        jcall!(list).add(crate::java_into_object(jcall!(commonPhoneStrings).EIGHT.clone()));
-        jcall!(list).add(crate::java_into_object(jcall!(commonPhoneStrings).NINE.clone()));
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        jcall!(list).add(crate::java_into_object({ let java_field = jcall!(commonPhoneStrings).ONE.clone(); java_field }.clone()));
+        jcall!(list).add(crate::java_into_object({ let java_field = jcall!(commonPhoneStrings).TWO.clone(); java_field }.clone()));
+        jcall!(list).add(crate::java_into_object({ let java_field = jcall!(commonPhoneStrings).THREE.clone(); java_field }.clone()));
+        jcall!(list).add(crate::java_into_object({ let java_field = jcall!(commonPhoneStrings).FOUR.clone(); java_field }.clone()));
+        jcall!(list).add(crate::java_into_object({ let java_field = jcall!(commonPhoneStrings).FIVE.clone(); java_field }.clone()));
+        jcall!(list).add(crate::java_into_object({ let java_field = jcall!(commonPhoneStrings).SIX.clone(); java_field }.clone()));
+        jcall!(list).add(crate::java_into_object({ let java_field = jcall!(commonPhoneStrings).SEVEN.clone(); java_field }.clone()));
+        jcall!(list).add(crate::java_into_object({ let java_field = jcall!(commonPhoneStrings).EIGHT.clone(); java_field }.clone()));
+        jcall!(list).add(crate::java_into_object({ let java_field = jcall!(commonPhoneStrings).NINE.clone(); java_field }.clone()));
         jcall!(BasicArrayListUtil::getInstance()).reverse(list.clone());
         println!("{}", jcall!(list).toString());
     }

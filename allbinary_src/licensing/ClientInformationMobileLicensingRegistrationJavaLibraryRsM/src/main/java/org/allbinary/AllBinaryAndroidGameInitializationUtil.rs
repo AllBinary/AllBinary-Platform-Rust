@@ -35,6 +35,10 @@ pub struct AllBinaryAndroidGameInitializationUtil {
 
 impl AllBinaryAndroidGameInitializationUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -50,8 +54,8 @@ impl AllBinaryAndroidGameInitializationUtil {
         let mut resourceUtil: Option<Rc<RefCell<ResourceUtil>>> = ResourceUtil::getInstance();
         let mut androidResources: Option<Rc<RefCell<AndroidResources>>> = AndroidResources::getInstance();
         let mut licenseInitInfoUtil: Option<Rc<RefCell<LicenseInitInfoUtil>>> = LicenseInitInfoUtil::getInstance();
-        jcall!(resourceUtil).addResource(jcall!(licenseInitInfoUtil).INITFILENAME.clone(), (jcall!(jcall!(androidResources).raw).licenseinitdata.clone()).to_string());
-        jcall!(resourceUtil).addResource(jcall!(PartnerIdentifierFileUtil::getInstance()).FILE_NAME.clone(), (jcall!(jcall!(androidResources).raw).partner.clone()).to_string());
+        jcall!(resourceUtil).addResource({ let java_field = jcall!(licenseInitInfoUtil).INITFILENAME.clone(); java_field }.clone(), Some(({ let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).licenseinitdata.clone(); java_field }.clone()) as i32));
+        jcall!(resourceUtil).addResource({ let java_field = jcall!(PartnerIdentifierFileUtil::getInstance()).FILE_NAME.clone(); java_field }.clone(), Some(({ let java_field = jcall!({ let java_field = jcall!(androidResources).raw.clone(); java_field }).partner.clone(); java_field }.clone()) as i32));
     }
 }
 

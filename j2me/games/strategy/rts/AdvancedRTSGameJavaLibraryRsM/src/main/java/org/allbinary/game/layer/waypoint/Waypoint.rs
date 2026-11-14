@@ -41,6 +41,8 @@ use crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingI
 use crate::org::allbinary::media::graphics::geography::pathfinding::PathGenerator::PathGenerator;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::WaypointBase::WaypointBase;
 
 // Borrows the object of a Java reference
@@ -81,7 +83,7 @@ impl Waypoint {
         this.logUtil = LogUtil::getInstance();
         this.basicArrayListUtil = BasicArrayListUtil::getInstance();
         this.endList = jcall!(this.basicArrayListUtil).getImmutableInstance();
-        this.paths = jcall!(this.basicArrayListUtil).NULL_ARRAY_OF_ARRAY.clone();
+        this.paths = { let java_field = jcall!(this.basicArrayListUtil).NULL_ARRAY_OF_ARRAY.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this.ownerLayer = ownerLayer.clone();
         this
@@ -94,15 +96,15 @@ impl Waypoint {
 
     // throws Exception
     pub fn setAllBinaryGameLayerManager(&mut self, mut allBinaryGameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>) {
-        self.base.setAllBinaryGameLayerManager(allBinaryGameLayerManager.clone());
-        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (allBinaryGameLayerManager).clone() /* as GeographicMapCompositeInterface */;
+        { let java_arguments = (allBinaryGameLayerManager.clone(),); self.base.setAllBinaryGameLayerManager(java_arguments.0) };
+        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryGameLayerManager cannot be cast to GeographicMapCompositeInterface") })();
         let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
         let mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(geographicMapInterface).getAllBinaryTiledLayer();
-        if !match (&self.paths, &jcall!(self.basicArrayListUtil).NULL_ARRAY_OF_ARRAY) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if !match (&self.paths, &{ let java_field = jcall!(self.basicArrayListUtil).NULL_ARRAY_OF_ARRAY.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
         }
-        self.endList = jcall!(self.ownerLayer).getEndGeographicMapCellPositionList();
-        self.paths = vec![vec![None; (jcall!(tiledLayer).getRows()) as usize]; (jcall!(tiledLayer).getColumns()) as usize];
+        self.endList = { let java_value = (jcall!(self.ownerLayer).getEndGeographicMapCellPositionList()).clone(); java_value };
+        self.paths = { let java_value = (vec![vec![None; (jcall!(tiledLayer).getRows()) as usize]; (jcall!(tiledLayer).getColumns()) as usize]).clone(); java_value };
         self.clearPaths();
     }
     
@@ -136,7 +138,7 @@ impl Waypoint {
         let mut pathsList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.paths[(jcall!(geographicMapCellPosition).getColumn()) as usize][(jcall!(geographicMapCellPosition).getRow()) as usize].clone();
         if match (&pathsList, &jcall!(self.basicArrayListUtil).getImmutableInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             pathsList = self.createPaths(geographicMapCellPosition.clone());
-            self.paths[(jcall!(geographicMapCellPosition).getColumn()) as usize][(jcall!(geographicMapCellPosition).getRow()) as usize] = pathsList.clone();
+            { let java_index = (jcall!(geographicMapCellPosition).getRow()) as usize; self.paths[(jcall!(geographicMapCellPosition).getColumn()) as usize][java_index] = pathsList.clone(); };
         }
         return pathsList.clone();
     }
@@ -145,8 +147,8 @@ impl Waypoint {
     pub fn getEndGeographicMapCellPosition(&mut self, mut startGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> {
         let mut endGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = { let java_object = (jcall!(self.basicArrayListUtil).getRandom(self.endList.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) };
         if match (&startGeographicMapCellPosition, &endGeographicMapCellPosition) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            for index in (0..=jcall!(self.endList).size() - 1).rev() {
-                endGeographicMapCellPosition = { let java_object = (jcall!(self.endList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) };
+            for index in (0..={ let java_bound = jcall!(self.endList).size() - 1; java_bound }).rev() {
+                endGeographicMapCellPosition = { let java_value = ({ let java_object = (jcall!(self.endList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 if !match (&startGeographicMapCellPosition, &endGeographicMapCellPosition) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                     break;
                 }
@@ -172,11 +174,11 @@ impl Waypoint {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Start should not be End: "), jcall!(self.endList).size()))));
             }
         }
-        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (self.allBinaryGameLayerManagerP).clone() /* as GeographicMapCompositeInterface */;
+        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryGameLayerManager cannot be cast to GeographicMapCompositeInterface") })();
         let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
-        let mut raceTrackGeographicMap: Option<Rc<RefCell<RaceTrackGeographicMap>>> = (geographicMapInterface).clone() /* as RaceTrackGeographicMap */;
+        let mut raceTrackGeographicMap: Option<Rc<RefCell<RaceTrackGeographicMap>>> = (geographicMapInterface).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<RaceTrackGeographicMap>() }, "ClassCastException: not a RaceTrackGeographicMap"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<RaceTrackGeographicMap>) } });
         let mut raceTrackGeographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellTypeFactory::GeographicMapCellTypeFactoryDyn>>> = jcall!(raceTrackGeographicMap).getGeographicMapCellTypeFactory();
-        let mut customMapGenerator: Option<Rc<RefCell<CustomMapGenerator>>> = (jcall!(raceTrackGeographicMap).getCustomMapGenerator()).clone() /* as CustomMapGenerator */;
+        let mut customMapGenerator: Option<Rc<RefCell<CustomMapGenerator>>> = (jcall!(raceTrackGeographicMap).getCustomMapGenerator()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<CustomMapGenerator>() }, "ClassCastException: not a CustomMapGenerator"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<CustomMapGenerator>) } });
         jcall!(customMapGenerator).copyMapIntoCustomMap();
         let mut customMapArray: Vec<Vec<i32>> = jcall!(customMapGenerator).getCustomMapArray();
         customMapArray[(jcall!(startGeographicMapCellPosition).getRow()) as usize][(jcall!(startGeographicMapCellPosition).getColumn()) as usize] = jcall!(raceTrackGeographicMapCellTypeFactory).getStartType();
@@ -191,7 +193,7 @@ impl Waypoint {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
@@ -208,7 +210,7 @@ impl Waypoint {
             {
                 let mut rowIndex: i32 = (self.paths.len() as i32).clone();
                 while { rowIndex -= 1; rowIndex } >= 0 {
-                self.paths[(columnIndex) as usize][(rowIndex) as usize] = jcall!(self.basicArrayListUtil).getImmutableInstance();
+                { let java_index = (rowIndex) as usize; self.paths[(columnIndex) as usize][java_index] = jcall!(self.basicArrayListUtil).getImmutableInstance(); };
                 }
             }
             }
@@ -229,11 +231,11 @@ impl Waypoint {
         }
         let mut size: i32 = jcall!(self.getConnectedWaypointList()).size();
         if size > 0 {
-            let mut unitWaypointBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::unit::UnitWaypointBehavior::UnitWaypointBehaviorDyn>>> = (jcall!(unitLayer).getWaypointBehavior()).clone() /* as UnitWaypointBehavior */;
-            while jcall!(self.getConnectedWaypointList()).size() > 0 {
-                let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (jcall!(self.getConnectedWaypointList()).get(0)).clone() /* as CollidableDestroyableDamageableLayer */;
+            let mut unitWaypointBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::unit::UnitWaypointBehavior::UnitWaypointBehaviorDyn>>> = (jcall!(unitLayer).getWaypointBehavior()).clone();
+            while { let java_value = jcall!(self.getConnectedWaypointList()).size(); java_value } > 0 {
+                let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = { let java_object = (jcall!(self.getConnectedWaypointList()).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>>>().expect("ClassCastException").clone()) };
                 if jcall!(rtsLayer).isDestroyed() {
-                    jcall!(self.getConnectedWaypointList()).remove(rtsLayer.clone());
+                    jcall!(self.getConnectedWaypointList()).remove(crate::java_into_object(rtsLayer.clone()));
                 } else {
                     jcall!(unitLayer).handleCost(self.ownerLayer.clone());
                     jcall!(unitWaypointBehavior).insertWaypoint(0, rtsLayer.clone());

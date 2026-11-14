@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
+use crate::java::lang::Exception::*;
 use super::AbFileOutputStream::AbFileOutputStream;
 use super::AbDataOutputStream::AbDataOutputStream;
 use super::FileStreamFactory::FileStreamFactory;
@@ -35,6 +36,10 @@ pub struct DataOutputStreamFactory {
 thread_local! { pub static DataOutputStreamFactory_instance: Option<Rc<RefCell<DataOutputStreamFactory>>> = DataOutputStreamFactory::new(); }
 
 impl DataOutputStreamFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -55,7 +60,7 @@ impl DataOutputStreamFactory {
     // throws Exception
     pub fn getInstanceForAbFile(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<AbDataOutputStream>>> {
         let mut idFileOutputStream: Option<Rc<RefCell<AbFileOutputStream>>> = AbFileOutputStream::createFromAbFile(file.clone());
-        let mut idOutData: Option<Rc<RefCell<AbDataOutputStream>>> = AbDataOutputStream::new(idFileOutputStream.clone());
+        let mut idOutData: Option<Rc<RefCell<AbDataOutputStream>>> = AbDataOutputStream::new(idFileOutputStream.clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>));
         return idOutData.clone();
     }
     
@@ -65,7 +70,7 @@ impl DataOutputStreamFactory {
     pub fn getInstance2(&mut self, mut filePath: String, mut fileName: String) -> Option<Rc<RefCell<AbDataOutputStream>>> {
         let mut fileStreamFactory: Option<Rc<RefCell<FileStreamFactory>>> = FileStreamFactory::getInstance();
         let mut fileOutputStream: Option<Rc<RefCell<AbFileOutputStream>>> = jcall!(fileStreamFactory).getFileOutputStreamInstance(filePath.clone(), fileName.clone());
-        let mut idOutData: Option<Rc<RefCell<AbDataOutputStream>>> = AbDataOutputStream::new(fileOutputStream.clone());
+        let mut idOutData: Option<Rc<RefCell<AbDataOutputStream>>> = AbDataOutputStream::new(fileOutputStream.clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::OutputStream::OutputStreamDyn>>));
         return idOutData.clone();
     }
 }

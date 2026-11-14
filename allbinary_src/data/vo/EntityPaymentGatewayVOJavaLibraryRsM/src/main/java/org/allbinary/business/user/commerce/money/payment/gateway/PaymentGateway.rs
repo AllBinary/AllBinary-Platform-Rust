@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontData::StoreFrontData;
@@ -28,6 +27,7 @@ use crate::org::allbinary::business::user::commerce::money::payment::PaymentData
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::control::crypt::SuperCrypt::SuperCrypt;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 use super::PaymentGatewayInterface::PaymentGatewayInterface;
 use super::PaymentGatewayPrimaryKey::PaymentGatewayPrimaryKey;
 
@@ -144,19 +144,23 @@ impl PaymentGatewayInterface for PaymentGateway {
     fn setSpecial9(&mut self, mut value: String) { Self::setSpecial9(self, value) }
     fn setLastModified(&mut self, mut value: String) { Self::setLastModified(self, value) }
     fn setTimeEntered(&mut self, mut value: String) { Self::setTimeEntered(self, value) }
-    fn toHashMap(&mut self, mut isEncrypted: bool) -> Option<Rc<RefCell<HashMap>>> { Self::toHashMap1(self, isEncrypted) }
+    fn toHashMap(&mut self, mut isEncrypted: bool) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toHashMap1(self, isEncrypted) }
     fn toVector(&mut self, mut isEncrypted: bool) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::toVector1(self, isEncrypted) }
 }
 impl crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface for PaymentGateway {
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getKey(self) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::toVector(self) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::toHashMap(self) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toHashMap(self) }
 }
 
 impl PaymentGateway {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
-    pub fn new_struct(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             storeName: String::new(),
             name: String::new(),
@@ -197,123 +201,123 @@ impl PaymentGateway {
         this
     }
 
-    pub fn new(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(hashMap))))
     }
     
 
-    pub fn getFormData(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) {
+    pub fn getFormData(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
-        let mut empty: String = jcall!(stringUtil).EMPTY_STRING.clone();
-        self.storeName = (jcall!(hashMap).get(jcall!(StoreFrontData::getInstance()).NAME.clone())).clone() /* as String */;
-        self.name = (jcall!(hashMap).get(jcall!(PaymentGatewayData_NAME.with(Clone::clone)).toString())).clone() /* as String */;
-        self.enable = jcall!(stringUtil).getNonNull((jcall!(hashMap).get(jcall!(EntryData::getInstance()).ENABLE.clone())).clone() /* as String */);
-        self.paymentMethod = jcall!(stringUtil).getNonNull((jcall!(hashMap).get(crate::org::allbinary::business::user::commerce::money::payment::PaymentData::PaymentData_METHOD.with(Clone::clone).clone())).clone() /* as String */);
-        self.mode = jcall!(stringUtil).getNonNull((jcall!(hashMap).get(jcall!(PaymentGatewayData_MODE.with(Clone::clone)).toString())).clone() /* as String */);
-        self.testProtocol = jcall!(stringUtil).getNonNull((jcall!(hashMap).get(jcall!(PaymentGatewayData_TESTPROTOCOL.with(Clone::clone)).toString())).clone() /* as String */);
-        self.testServer = jcall!(stringUtil).getNonNull((jcall!(hashMap).get(jcall!(PaymentGatewayData_TESTSERVER.with(Clone::clone)).toString())).clone() /* as String */);
-        self.testPort = jcall!(stringUtil).getNonNull((jcall!(hashMap).get(jcall!(PaymentGatewayData_TESTPORT.with(Clone::clone)).toString())).clone() /* as String */);
-        self.testPath = (jcall!(hashMap).get(jcall!(PaymentGatewayData_TESTPATH.with(Clone::clone)).toString())).clone() /* as String */;
+        let mut empty: String = { let java_field = jcall!(stringUtil).EMPTY_STRING.clone(); java_field }.clone();
+        self.storeName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.name = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_NAME.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.enable = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).ENABLE.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.paymentMethod = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(hashMap).get(crate::java_into_object(crate::org::allbinary::business::user::commerce::money::payment::PaymentData::PaymentData_METHOD.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.mode = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_MODE.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.testProtocol = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_TESTPROTOCOL.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.testServer = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_TESTSERVER.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.testPort = { let java_value = (jcall!(stringUtil).getNonNull({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_TESTPORT.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        self.testPath = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_TESTPATH.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.testPath = empty.clone();
         }
-        self.serverProtocol = (jcall!(hashMap).get(jcall!(PaymentGatewayData_SERVERPROTOCOL.with(Clone::clone)).toString())).clone() /* as String */;
+        self.serverProtocol = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_SERVERPROTOCOL.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.serverProtocol = empty.clone();
         }
-        self.server = (jcall!(hashMap).get(jcall!(PaymentGatewayData_SERVER.with(Clone::clone)).toString())).clone() /* as String */;
+        self.server = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_SERVER.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.server = empty.clone();
         }
-        self.serverPort = (jcall!(hashMap).get(jcall!(PaymentGatewayData_SERVERPORT.with(Clone::clone)).toString())).clone() /* as String */;
+        self.serverPort = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_SERVERPORT.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.serverPort = empty.clone();
         }
-        self.serverPath = (jcall!(hashMap).get(jcall!(PaymentGatewayData_SERVERPATH.with(Clone::clone)).toString())).clone() /* as String */;
+        self.serverPath = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_SERVERPATH.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.serverPath = empty.clone();
         }
-        self.userName = (jcall!(hashMap).get(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone())).clone() /* as String */;
+        self.userName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.userName = empty.clone();
         }
-        self.password = (jcall!(hashMap).get(crate::org::allbinary::business::user::UserData::UserData_PASSWORD.with(Clone::clone).clone())).clone() /* as String */;
+        self.password = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_PASSWORD.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.password = empty.clone();
         }
-        self.timeout = (jcall!(hashMap).get(jcall!(PaymentGatewayData_TIMEOUT.with(Clone::clone)).toString())).clone() /* as String */;
+        self.timeout = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_TIMEOUT.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.timeout = empty.clone();
         }
-        self.proxyProtocol = (jcall!(hashMap).get(jcall!(PaymentGatewayData_PROXYPROTOCOL.with(Clone::clone)).toString())).clone() /* as String */;
+        self.proxyProtocol = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_PROXYPROTOCOL.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.proxyProtocol = empty.clone();
         }
-        self.proxyServer = (jcall!(hashMap).get(jcall!(PaymentGatewayData_PROXYSERVER.with(Clone::clone)).toString())).clone() /* as String */;
+        self.proxyServer = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_PROXYSERVER.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.proxyServer = empty.clone();
         }
-        self.proxyPort = (jcall!(hashMap).get(jcall!(PaymentGatewayData_PROXYPORT.with(Clone::clone)).toString())).clone() /* as String */;
+        self.proxyPort = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_PROXYPORT.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.proxyPort = empty.clone();
         }
-        self.proxyPath = (jcall!(hashMap).get(jcall!(PaymentGatewayData_PROXYPATH.with(Clone::clone)).toString())).clone() /* as String */;
+        self.proxyPath = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_PROXYPATH.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.proxyPath = empty.clone();
         }
-        self.proxyUserName = (jcall!(hashMap).get(jcall!(PaymentGatewayData_PROXYUSERNAME.with(Clone::clone)).toString())).clone() /* as String */;
+        self.proxyUserName = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_PROXYUSERNAME.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.proxyUserName = empty.clone();
         }
-        self.proxyPassword = (jcall!(hashMap).get(jcall!(PaymentGatewayData_PROXYPASSWORD.with(Clone::clone)).toString())).clone() /* as String */;
+        self.proxyPassword = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_PROXYPASSWORD.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.proxyPassword = empty.clone();
         }
-        self.proxyTimeout = (jcall!(hashMap).get(jcall!(PaymentGatewayData_PROXYTIMEOUT.with(Clone::clone)).toString())).clone() /* as String */;
+        self.proxyTimeout = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_PROXYTIMEOUT.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.proxyTimeout = empty.clone();
         }
-        self.special1 = (jcall!(hashMap).get(jcall!(PaymentGatewayData_SPECIAL1.with(Clone::clone)).toString())).clone() /* as String */;
+        self.special1 = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL1.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.special1 = empty.clone();
         }
-        self.special2 = (jcall!(hashMap).get(jcall!(PaymentGatewayData_SPECIAL2.with(Clone::clone)).toString())).clone() /* as String */;
+        self.special2 = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL2.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.special2 = empty.clone();
         }
-        self.special3 = (jcall!(hashMap).get(jcall!(PaymentGatewayData_SPECIAL3.with(Clone::clone)).toString())).clone() /* as String */;
+        self.special3 = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL3.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.special3 = empty.clone();
         }
-        self.special4 = (jcall!(hashMap).get(jcall!(PaymentGatewayData_SPECIAL4.with(Clone::clone)).toString())).clone() /* as String */;
+        self.special4 = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL4.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.special4 = empty.clone();
         }
-        self.special5 = (jcall!(hashMap).get(jcall!(PaymentGatewayData_SPECIAL5.with(Clone::clone)).toString())).clone() /* as String */;
+        self.special5 = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL5.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.special5 = empty.clone();
         }
-        self.special6 = (jcall!(hashMap).get(jcall!(PaymentGatewayData_SPECIAL6.with(Clone::clone)).toString())).clone() /* as String */;
+        self.special6 = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL6.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.special6 = empty.clone();
         }
-        self.special7 = (jcall!(hashMap).get(jcall!(PaymentGatewayData_SPECIAL7.with(Clone::clone)).toString())).clone() /* as String */;
+        self.special7 = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL7.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.special7 = empty.clone();
         }
-        self.special8 = (jcall!(hashMap).get(jcall!(PaymentGatewayData_SPECIAL8.with(Clone::clone)).toString())).clone() /* as String */;
+        self.special8 = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL8.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.special8 = empty.clone();
         }
-        self.special9 = (jcall!(hashMap).get(jcall!(PaymentGatewayData_SPECIAL9.with(Clone::clone)).toString())).clone() /* as String */;
+        self.special9 = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL9.with(Clone::clone)).toString()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.special9 = empty.clone();
         }
-        self.lastModified = (jcall!(hashMap).get(jcall!(EntryData::getInstance()).LASTMODIFIED.clone())).clone() /* as String */;
+        self.lastModified = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.lastModified = empty.clone();
         }
-        self.timeEntered = (jcall!(hashMap).get(jcall!(EntryData::getInstance()).TIMECREATED.clone())).clone() /* as String */;
+        self.timeEntered = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).TIMECREATED.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
         if false {
             self.timeEntered = empty.clone();
         }
@@ -661,66 +665,66 @@ impl PaymentGateway {
     
 
     // throws Exception
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return self.toHashMap1(true);
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn toHashMap1(&mut self, mut isEncrypted: bool) -> Option<Rc<RefCell<HashMap>>> {
-        let mut paymentGatewayHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(paymentGatewayHashMap).put(jcall!(EntryData::getInstance()).ENABLE.clone(), self.enable.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(StoreFrontData::getInstance()).NAME.clone(), self.storeName.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_NAME.with(Clone::clone)).toString(), self.getName());
-        jcall!(paymentGatewayHashMap).put(crate::org::allbinary::business::user::commerce::money::payment::PaymentData::PaymentData_METHOD.with(Clone::clone).clone(), self.paymentMethod.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_MODE.with(Clone::clone)).toString(), self.mode.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_TESTPROTOCOL.with(Clone::clone)).toString(), self.testProtocol.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_TESTSERVER.with(Clone::clone)).toString(), self.testServer.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_TESTPORT.with(Clone::clone)).toString(), self.testPort.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_TESTPATH.with(Clone::clone)).toString(), self.testPath.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SERVERPROTOCOL.with(Clone::clone)).toString(), self.serverProtocol.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SERVER.with(Clone::clone)).toString(), self.server.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SERVERPORT.with(Clone::clone)).toString(), self.serverPort.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SERVERPATH.with(Clone::clone)).toString(), self.serverPath.clone());
+    pub fn toHashMap1(&mut self, mut isEncrypted: bool) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut paymentGatewayHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).ENABLE.clone(); java_field }.clone()), crate::java_into_object(self.enable.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object({ let java_field = jcall!(StoreFrontData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(self.storeName.clone()));
+        jcall!(paymentGatewayHashMap).put({ let java_argument = crate::java_into_object(jcall!(PaymentGatewayData_NAME.with(Clone::clone)).toString()); java_argument }, crate::java_into_object(self.getName()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(crate::org::allbinary::business::user::commerce::money::payment::PaymentData::PaymentData_METHOD.with(Clone::clone).clone()), crate::java_into_object(self.paymentMethod.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_MODE.with(Clone::clone)).toString()), crate::java_into_object(self.mode.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_TESTPROTOCOL.with(Clone::clone)).toString()), crate::java_into_object(self.testProtocol.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_TESTSERVER.with(Clone::clone)).toString()), crate::java_into_object(self.testServer.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_TESTPORT.with(Clone::clone)).toString()), crate::java_into_object(self.testPort.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_TESTPATH.with(Clone::clone)).toString()), crate::java_into_object(self.testPath.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SERVERPROTOCOL.with(Clone::clone)).toString()), crate::java_into_object(self.serverProtocol.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SERVER.with(Clone::clone)).toString()), crate::java_into_object(self.server.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SERVERPORT.with(Clone::clone)).toString()), crate::java_into_object(self.serverPort.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SERVERPATH.with(Clone::clone)).toString()), crate::java_into_object(self.serverPath.clone()));
         if isEncrypted {
             let mut superCrypt: Option<Rc<RefCell<SuperCrypt>>> = SuperCrypt::new(PaymentGatewayData_CRYPTNUM.with(Clone::clone).clone());
-            jcall!(paymentGatewayHashMap).put(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), jcall!(superCrypt).encrypt(self.userName.clone()));
-            jcall!(paymentGatewayHashMap).put(crate::org::allbinary::business::user::UserData::UserData_PASSWORD.with(Clone::clone).clone(), jcall!(superCrypt).encrypt(self.password.clone()));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()), crate::java_into_object(jcall!(superCrypt).encrypt(self.userName.clone())));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_PASSWORD.with(Clone::clone).clone()), crate::java_into_object(jcall!(superCrypt).encrypt(self.password.clone())));
         } else {
-            jcall!(paymentGatewayHashMap).put(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone(), self.userName.clone());
-            jcall!(paymentGatewayHashMap).put(crate::org::allbinary::business::user::UserData::UserData_PASSWORD.with(Clone::clone).clone(), self.password.clone());
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_USERNAME.with(Clone::clone).clone()), crate::java_into_object(self.userName.clone()));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(crate::org::allbinary::business::user::UserData::UserData_PASSWORD.with(Clone::clone).clone()), crate::java_into_object(self.password.clone()));
         }
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_TIMEOUT.with(Clone::clone)).toString(), self.timeout.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_PROXYPROTOCOL.with(Clone::clone)).toString(), self.proxyProtocol.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_PROXYSERVER.with(Clone::clone)).toString(), self.proxyServer.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_PROXYPORT.with(Clone::clone)).toString(), self.proxyPort.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_PROXYPATH.with(Clone::clone)).toString(), self.proxyPath.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_PROXYUSERNAME.with(Clone::clone)).toString(), self.proxyUserName.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_PROXYPASSWORD.with(Clone::clone)).toString(), self.proxyPassword.clone());
-        jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_PROXYTIMEOUT.with(Clone::clone)).toString(), self.proxyTimeout.clone());
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_TIMEOUT.with(Clone::clone)).toString()), crate::java_into_object(self.timeout.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_PROXYPROTOCOL.with(Clone::clone)).toString()), crate::java_into_object(self.proxyProtocol.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_PROXYSERVER.with(Clone::clone)).toString()), crate::java_into_object(self.proxyServer.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_PROXYPORT.with(Clone::clone)).toString()), crate::java_into_object(self.proxyPort.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_PROXYPATH.with(Clone::clone)).toString()), crate::java_into_object(self.proxyPath.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_PROXYUSERNAME.with(Clone::clone)).toString()), crate::java_into_object(self.proxyUserName.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_PROXYPASSWORD.with(Clone::clone)).toString()), crate::java_into_object(self.proxyPassword.clone()));
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_PROXYTIMEOUT.with(Clone::clone)).toString()), crate::java_into_object(self.proxyTimeout.clone()));
         if isEncrypted {
             let mut superCrypt: Option<Rc<RefCell<SuperCrypt>>> = SuperCrypt::new(PaymentGatewayData_CRYPTNUM.with(Clone::clone).clone());
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL1.with(Clone::clone)).toString(), jcall!(superCrypt).encrypt(self.special1.clone()));
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL2.with(Clone::clone)).toString(), jcall!(superCrypt).encrypt(self.special2.clone()));
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL3.with(Clone::clone)).toString(), jcall!(superCrypt).encrypt(self.special3.clone()));
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL4.with(Clone::clone)).toString(), jcall!(superCrypt).encrypt(self.special4.clone()));
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL5.with(Clone::clone)).toString(), jcall!(superCrypt).encrypt(self.special5.clone()));
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL6.with(Clone::clone)).toString(), jcall!(superCrypt).encrypt(self.special6.clone()));
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL7.with(Clone::clone)).toString(), jcall!(superCrypt).encrypt(self.special7.clone()));
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL8.with(Clone::clone)).toString(), jcall!(superCrypt).encrypt(self.special8.clone()));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL1.with(Clone::clone)).toString()), crate::java_into_object(jcall!(superCrypt).encrypt(self.special1.clone())));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL2.with(Clone::clone)).toString()), crate::java_into_object(jcall!(superCrypt).encrypt(self.special2.clone())));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL3.with(Clone::clone)).toString()), crate::java_into_object(jcall!(superCrypt).encrypt(self.special3.clone())));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL4.with(Clone::clone)).toString()), crate::java_into_object(jcall!(superCrypt).encrypt(self.special4.clone())));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL5.with(Clone::clone)).toString()), crate::java_into_object(jcall!(superCrypt).encrypt(self.special5.clone())));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL6.with(Clone::clone)).toString()), crate::java_into_object(jcall!(superCrypt).encrypt(self.special6.clone())));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL7.with(Clone::clone)).toString()), crate::java_into_object(jcall!(superCrypt).encrypt(self.special7.clone())));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL8.with(Clone::clone)).toString()), crate::java_into_object(jcall!(superCrypt).encrypt(self.special8.clone())));
         } else {
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL1.with(Clone::clone)).toString(), self.special1.clone());
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL2.with(Clone::clone)).toString(), self.special2.clone());
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL3.with(Clone::clone)).toString(), self.special3.clone());
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL4.with(Clone::clone)).toString(), self.special4.clone());
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL5.with(Clone::clone)).toString(), self.special5.clone());
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL6.with(Clone::clone)).toString(), self.special6.clone());
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL7.with(Clone::clone)).toString(), self.special7.clone());
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL8.with(Clone::clone)).toString(), self.special8.clone());
-            jcall!(paymentGatewayHashMap).put(jcall!(PaymentGatewayData_SPECIAL9.with(Clone::clone)).toString(), self.special9.clone());
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL1.with(Clone::clone)).toString()), crate::java_into_object(self.special1.clone()));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL2.with(Clone::clone)).toString()), crate::java_into_object(self.special2.clone()));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL3.with(Clone::clone)).toString()), crate::java_into_object(self.special3.clone()));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL4.with(Clone::clone)).toString()), crate::java_into_object(self.special4.clone()));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL5.with(Clone::clone)).toString()), crate::java_into_object(self.special5.clone()));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL6.with(Clone::clone)).toString()), crate::java_into_object(self.special6.clone()));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL7.with(Clone::clone)).toString()), crate::java_into_object(self.special7.clone()));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL8.with(Clone::clone)).toString()), crate::java_into_object(self.special8.clone()));
+            jcall!(paymentGatewayHashMap).put(crate::java_into_object(jcall!(PaymentGatewayData_SPECIAL9.with(Clone::clone)).toString()), crate::java_into_object(self.special9.clone()));
         }
-        jcall!(paymentGatewayHashMap).put(jcall!(EntryData::getInstance()).LASTMODIFIED.clone(), self.lastModified.clone());
+        jcall!(paymentGatewayHashMap).put(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone()), crate::java_into_object(self.lastModified.clone()));
         return paymentGatewayHashMap.clone();
     }
     
@@ -732,7 +736,7 @@ impl PaymentGateway {
 
     // Java overloaded method: Rust needs a different name
     pub fn toVector1(&mut self, mut isEncrypted: bool) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut updateVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut updateVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         jcall!(updateVector).add(crate::java_into_object(self.enable.clone()));
         jcall!(updateVector).add(crate::java_into_object(self.storeName.clone()));
         jcall!(updateVector).add(crate::java_into_object(self.getName()));
@@ -790,7 +794,7 @@ impl PaymentGateway {
 
     // throws Exception
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return (PaymentGatewayPrimaryKey::new(self.getStoreName(), self.getName())).clone() /* as Any */;
+        return crate::java_into_object(crate::java_into_object((PaymentGatewayPrimaryKey::new(self.getStoreName(), self.getName())).clone()));
     }
 }
 

@@ -41,6 +41,10 @@ thread_local! { pub static LevelLayersFinder_instance: Option<Rc<RefCell<LevelLa
 
 impl LevelLayersFinder {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             enumerationUtil: None,
@@ -59,17 +63,17 @@ impl LevelLayersFinder {
     }
     
 
-    pub fn get(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+    pub fn get(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
         let mut smallIntegerSingletonFactory: Option<Rc<RefCell<SmallIntegerSingletonFactory>>> = SmallIntegerSingletonFactory::getInstance();
-        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut enumeration: Option<Rc<RefCell<dyn Enumeration>>> = jcall!(hashtable).keys();
-        let mut layerHashtableCanBeNull: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = None;
+        let mut layerHashtableCanBeNull: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = None;
         let mut integerCanBeNull: Option<i32> = None;
         let mut cachedIntegerCanBeNull: Option<i32> = None;
         while jcall!(self.enumerationUtil).hasMoreElements(enumeration.clone()) {
-            layerHashtableCanBeNull = { let java_object = (jcall!(hashtable).get(crate::java_into_object((jcall!(self.enumerationUtil).nextElement(enumeration.clone())).clone() /* as Any */))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ABHashtable>>>>().expect("ClassCastException").clone()) };
-            integerCanBeNull = { let java_object = jcall!(layerHashtableCanBeNull).get(crate::java_into_object((crate::org::allbinary::layer::Layer::Layer_ID.with(Clone::clone)).clone() /* as Any */)); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
-            cachedIntegerCanBeNull = jcall!(smallIntegerSingletonFactory).getAt(((integerCanBeNull).unwrap() as i32));
+            layerHashtableCanBeNull = { let java_value = ({ let java_object = (jcall!(hashtable).get(crate::java_into_object((jcall!(self.enumerationUtil).nextElement(enumeration.clone())).clone() /* as Any */))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            integerCanBeNull = { let java_value = ({ let java_object = (jcall!(layerHashtableCanBeNull).get(crate::java_into_object(crate::java_into_object((crate::org::allbinary::layer::Layer::Layer_ID.with(Clone::clone)).clone())))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) }).clone(); java_value };
+            cachedIntegerCanBeNull = { let java_value = (jcall!(smallIntegerSingletonFactory).getAt(((integerCanBeNull).unwrap() as i32))).clone(); java_value };
             if !jcall!(list).contains(crate::java_into_object((cachedIntegerCanBeNull.clone()).expect("NullPointerException"))) {
                 jcall!(list).add(crate::java_into_object((cachedIntegerCanBeNull.clone()).expect("NullPointerException")));
             }

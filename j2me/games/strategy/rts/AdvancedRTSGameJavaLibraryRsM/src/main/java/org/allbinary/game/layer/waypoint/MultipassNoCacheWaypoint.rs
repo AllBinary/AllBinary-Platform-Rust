@@ -41,6 +41,7 @@ use crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingI
 use crate::org::allbinary::media::graphics::geography::pathfinding::PathGenerator::PathGenerator;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
+use crate::java::lang::Exception::*;
 use super::WaypointBase::WaypointBase;
 
 // Borrows the object of a Java reference
@@ -85,7 +86,7 @@ impl MultipassNoCacheWaypoint {
 
     // throws Exception
     pub fn setAllBinaryGameLayerManager(&mut self, mut allBinaryGameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>) {
-        self.base.setAllBinaryGameLayerManager(allBinaryGameLayerManager.clone());
+        { let java_arguments = (allBinaryGameLayerManager.clone(),); self.base.setAllBinaryGameLayerManager(java_arguments.0) };
     }
     
 
@@ -107,11 +108,11 @@ impl MultipassNoCacheWaypoint {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Start should not be End: "), endGeographicMapCellPosition))));
             }
         }
-        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (self.allBinaryGameLayerManagerP).clone() /* as GeographicMapCompositeInterface */;
+        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryGameLayerManager cannot be cast to GeographicMapCompositeInterface") })();
         let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
-        let mut raceTrackGeographicMap: Option<Rc<RefCell<RaceTrackGeographicMap>>> = (geographicMapInterface).clone() /* as RaceTrackGeographicMap */;
+        let mut raceTrackGeographicMap: Option<Rc<RefCell<RaceTrackGeographicMap>>> = (geographicMapInterface).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<RaceTrackGeographicMap>() }, "ClassCastException: not a RaceTrackGeographicMap"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<RaceTrackGeographicMap>) } });
         let mut raceTrackGeographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellTypeFactory::GeographicMapCellTypeFactoryDyn>>> = jcall!(raceTrackGeographicMap).getGeographicMapCellTypeFactory();
-        let mut customMapGenerator: Option<Rc<RefCell<CustomMapGenerator>>> = (jcall!(raceTrackGeographicMap).getCustomMapGenerator()).clone() /* as CustomMapGenerator */;
+        let mut customMapGenerator: Option<Rc<RefCell<CustomMapGenerator>>> = (jcall!(raceTrackGeographicMap).getCustomMapGenerator()).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<CustomMapGenerator>() }, "ClassCastException: not a CustomMapGenerator"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<CustomMapGenerator>) } });
         jcall!(customMapGenerator).copyMapIntoCustomMap();
         let mut customMapArray: Vec<Vec<i32>> = jcall!(customMapGenerator).getCustomMapArray();
         customMapArray[(jcall!(startGeographicMapCellPosition).getRow()) as usize][(jcall!(startGeographicMapCellPosition).getColumn()) as usize] = jcall!(raceTrackGeographicMapCellTypeFactory).getStartType();
@@ -123,31 +124,32 @@ impl MultipassNoCacheWaypoint {
 
     // throws Exception
     pub fn getPathsList(&mut self, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>, mut pathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>>, mut multipassState: Option<Rc<RefCell<MultipassState>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             if pathFindingInfo.is_none() {
                 jcall!(self.logUtil).putF(format!("{}{}", String::from("pathFindingInfo: "), pathFindingInfo), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getPathsList"));
-                return jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance();
+                return Some(jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance());
             }
-            let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (self.allBinaryGameLayerManagerP).clone() /* as GeographicMapCompositeInterface */;
+            let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryGameLayerManager cannot be cast to GeographicMapCompositeInterface") })();
             let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
             let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(PathGenerator::getInstance()).createN(geographicMapInterface.clone(), pathFindingInfo.clone(), 2, multipassState.clone());
             if list.is_some() && !match (&list, &jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 if jcall!(list).size() < 1 {
                     panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Path may have been cleared by clearing caching"))));
                 }
-                return list.clone();
+                return Some(list.clone());
             }
-            return jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance();
+            return Some(jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getPathsList"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getPathsList"), crate::java_into_object(e.clone()));
             return jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -156,8 +158,8 @@ impl MultipassNoCacheWaypoint {
         let mut endList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(self.ownerLayer).getEndGeographicMapCellPositionList();
         let mut endGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = { let java_object = (jcall!(BasicArrayListUtil::getInstance()).getRandom(endList.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) };
         if match (&startGeographicMapCellPosition, &endGeographicMapCellPosition) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            for index in (0..=jcall!(endList).size() - 1).rev() {
-                endGeographicMapCellPosition = { let java_object = (jcall!(endList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) };
+            for index in (0..={ let java_bound = jcall!(endList).size() - 1; java_bound }).rev() {
+                endGeographicMapCellPosition = { let java_value = ({ let java_object = (jcall!(endList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 if !match (&startGeographicMapCellPosition, &endGeographicMapCellPosition) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                     break;
                 }
@@ -168,7 +170,7 @@ impl MultipassNoCacheWaypoint {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
@@ -189,11 +191,11 @@ impl MultipassNoCacheWaypoint {
         }
         let mut size: i32 = jcall!(self.getConnectedWaypointList()).size();
         if size > 0 {
-            let mut unitWaypointBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::unit::UnitWaypointBehavior::UnitWaypointBehaviorDyn>>> = (jcall!(unitLayer).getWaypointBehavior()).clone() /* as UnitWaypointBehavior */;
-            while jcall!(self.getConnectedWaypointList()).size() > 0 {
-                let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (jcall!(self.getConnectedWaypointList()).get(0)).clone() /* as CollidableDestroyableDamageableLayer */;
+            let mut unitWaypointBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::unit::UnitWaypointBehavior::UnitWaypointBehaviorDyn>>> = (jcall!(unitLayer).getWaypointBehavior()).clone();
+            while { let java_value = jcall!(self.getConnectedWaypointList()).size(); java_value } > 0 {
+                let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = { let java_object = (jcall!(self.getConnectedWaypointList()).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>>>().expect("ClassCastException").clone()) };
                 if jcall!(rtsLayer).isDestroyed() {
-                    jcall!(self.getConnectedWaypointList()).remove(rtsLayer.clone());
+                    jcall!(self.getConnectedWaypointList()).remove(crate::java_into_object(rtsLayer.clone()));
                 } else {
                     jcall!(unitLayer).handleCost(self.ownerLayer.clone());
                     jcall!(unitWaypointBehavior).insertWaypoint(0, rtsLayer.clone());

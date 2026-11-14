@@ -17,12 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::InputStream::InputStream;
-// use crate::java::io::InputStreamReader::InputStreamReader;
+use crate::java::io::InputStream::InputStream;
+use crate::java::io::InputStreamReader::InputStreamReader;
 use crate::org::allbinary::data::resource::ResourceUtil::ResourceUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,6 +40,10 @@ pub struct PartnerIdentifierFileUtil {
 thread_local! { pub static PartnerIdentifierFileUtil_instance: Option<Rc<RefCell<PartnerIdentifierFileUtil>>> = PartnerIdentifierFileUtil::new(); }
 
 impl PartnerIdentifierFileUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -61,28 +66,29 @@ impl PartnerIdentifierFileUtil {
     
 
     pub fn get(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut resourceUtil: Option<Rc<RefCell<ResourceUtil>>> = ResourceUtil::getInstance();
-            let mut inputStream: Option<Rc<RefCell<InputStream>>> = jcall!(resourceUtil).getResourceAsStream(self.FILE_NAME.clone());
+            let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = jcall!(resourceUtil).getResourceAsStream(self.FILE_NAME.clone());
             let mut inputStreamReader: Option<Rc<RefCell<InputStreamReader>>> = InputStreamReader::new(inputStream.clone());
             let mut chars: Vec<char> = vec!['\0'; (30) as usize];
-            let mut size: i32 = jcall!(inputStreamReader).read(chars.clone());
-            let mut partnerString: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            let mut size: i32 = jcall!(inputStreamReader).read1(chars.clone());
+            let mut partnerString: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
             if size > 0 {
                 partnerString = chars[(0) as usize..(0 + size) as usize].iter().collect::<String>();
             }
             jcall!(inputStreamReader).close();
-            return partnerString.clone();
+            return Some(partnerString.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET.clone(), crate::java_into_object(e.clone()));
-            return jcall!(StringUtil::getInstance()).NULL_STRING.clone();
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
+            return { let java_field = jcall!(StringUtil::getInstance()).NULL_STRING.clone(); java_field }.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

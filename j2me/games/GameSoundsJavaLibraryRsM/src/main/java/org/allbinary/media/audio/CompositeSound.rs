@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::Sound::Sound;
 use super::PlayerComposite::PlayerComposite;
 
@@ -50,7 +51,7 @@ impl CompositeSound {
 
     // throws Exception
     pub fn init(&mut self) {
-        { let java_arguments = (PlayerComposite::new(AllBinaryMediaManager::AllBinaryMediaManager::createPlayer(self.getResource()), 570),); self.setPlayerP(java_arguments.0) };
+        { let java_arguments = (PlayerComposite::new({ let java_argument = AllBinaryMediaManager::AllBinaryMediaManager::createPlayer(self.getResource()); java_argument }, 570).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::media::Player::Player>>),); self.setPlayerP(java_arguments.0) };
     }
 }
 impl std::ops::Deref for CompositeSound {
@@ -73,6 +74,10 @@ impl CompositeSoundDyn for CompositeSound {
 impl crate::org::allbinary::media::audio::Sound::SoundDyn for CompositeSound {
     fn as_Sound(&self) -> &crate::org::allbinary::media::audio::Sound::Sound { &self.base }
     fn as_Sound_mut(&mut self) -> &mut crate::org::allbinary::media::audio::Sound::Sound { &mut self.base }
+}
+impl crate::org::allbinary::media::audio::SoundInterface::SoundInterface for CompositeSound {
+    fn getResource(&mut self) -> String { crate::org::allbinary::media::audio::Sound::Sound::getResource(crate::org::allbinary::media::audio::Sound::SoundDyn::as_Sound_mut(self)) }
+    fn getPlayerP(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::media::Player::Player>>> { crate::org::allbinary::media::audio::Sound::Sound::getPlayerP(crate::org::allbinary::media::audio::Sound::SoundDyn::as_Sound_mut(self)) }
     fn init(&mut self) { Self::init(self) }
 }
 impl crate::Runnable for CompositeSound {

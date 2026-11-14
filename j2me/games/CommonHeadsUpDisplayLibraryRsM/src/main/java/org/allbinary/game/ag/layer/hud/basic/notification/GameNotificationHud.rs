@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud;
 use crate::org::allbinary::game::graphics::hud::BasicHudFactory::BasicHudFactory;
 use crate::org::allbinary::game::layer::hud::event::GameNotificationEvent::GameNotificationEvent;
@@ -27,6 +27,7 @@ use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory
 use crate::org::allbinary::logic::communication::log::ForcedLogUtil::ForcedLogUtil;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventStrings::EventStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -41,7 +42,7 @@ pub struct GameNotificationHud {
     pub lastGameNotificationEvent: Option<Rc<RefCell<GameNotificationEvent>>>,
 }
 
-thread_local! { pub static GameNotificationHud_NULL_GAME_NOTIFICATION: Option<Rc<RefCell<dyn GameNotificationHudDyn>>> = GameNotificationHud::new(jcall!(BasicHudFactory::getInstance()).TOPCENTER.clone(), jcall!(BasicHudFactory::getInstance()).HORIZONTAL.clone(), 0, jcall!(BasicColorFactory::getInstance()).RED.clone()).map(|reference| reference as Rc<RefCell<dyn GameNotificationHudDyn>>); }
+thread_local! { pub static GameNotificationHud_NULL_GAME_NOTIFICATION: Option<Rc<RefCell<dyn GameNotificationHudDyn>>> = GameNotificationHud::new({ let java_field = jcall!(BasicHudFactory::getInstance()).TOPCENTER.clone(); java_field }.clone(), { let java_field = jcall!(BasicHudFactory::getInstance()).HORIZONTAL.clone(); java_field }.clone(), 0, { let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn GameNotificationHudDyn>>); }
 impl GameNotificationListenerInterface for GameNotificationHud {
     fn onGameNotificationEvent(&mut self, mut gameNotificationEvent: Option<Rc<RefCell<GameNotificationEvent>>>) { Self::onGameNotificationEvent(self, gameNotificationEvent) }
 }
@@ -70,7 +71,7 @@ impl GameNotificationHud {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
@@ -93,7 +94,7 @@ impl GameNotificationHud {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 
@@ -114,7 +115,7 @@ pub trait GameNotificationHudDyn: crate::org::allbinary::game::graphics::hud::Ba
     fn onGameNotificationEvent(&mut self, mut gameNotificationEvent: Option<Rc<RefCell<GameNotificationEvent>>>) { GameNotificationHud::onGameNotificationEvent(self.as_GameNotificationHud_mut(), gameNotificationEvent) }
     fn add(&mut self, mut string: String, mut seconds: Option<i32>, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut permanent: Option<bool>) { GameNotificationHud::add(self.as_GameNotificationHud_mut(), string, seconds, basicColor, permanent) }
     fn processTick(&mut self) { GameNotificationHud::processTick(self.as_GameNotificationHud_mut()) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { GameNotificationHud::paint(self.as_GameNotificationHud_mut(), graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { GameNotificationHud::paint(self.as_GameNotificationHud_mut(), graphics) }
     fn clear(&mut self) { GameNotificationHud::clear(self.as_GameNotificationHud_mut()) }
 }
 impl GameNotificationHudDyn for GameNotificationHud {
@@ -126,6 +127,9 @@ impl crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn for GameN
     fn as_BasicHud(&self) -> &crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &self.base }
     fn as_BasicHud_mut(&mut self) -> &mut crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud { &mut self.base }
     fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, eventObject) }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for GameNotificationHud {
+    fn updateMeasurement(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::graphics::hud::BasicHud::BasicHud::updateMeasurement(crate::org::allbinary::game::graphics::hud::BasicHud::BasicHudDyn::as_BasicHud_mut(self), p1) }
 }
 
 

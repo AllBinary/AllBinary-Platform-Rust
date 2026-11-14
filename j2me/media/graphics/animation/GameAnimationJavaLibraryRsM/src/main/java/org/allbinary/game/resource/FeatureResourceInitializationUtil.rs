@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::animation::FeaturedAnimationInterfaceFactoryInterfaceFactory::FeaturedAnimationInterfaceFactoryInterfaceFactory;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::FeaturedResourceFactory::FeaturedResourceFactory;
 
 // Borrows the object of a Java reference
@@ -36,6 +37,10 @@ pub struct FeatureResourceInitializationUtil {
 thread_local! { pub static FeatureResourceInitializationUtil_instance: Option<Rc<RefCell<FeatureResourceInitializationUtil>>> = FeatureResourceInitializationUtil::new(); }
 
 impl FeatureResourceInitializationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -58,7 +63,7 @@ impl FeatureResourceInitializationUtil {
     // throws Exception
     pub fn init(&mut self, mut level: i32) {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(self.logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone());
         let mut featuredResourceFactory: Option<Rc<RefCell<dyn crate::org::allbinary::game::resource::FeaturedResourceFactory::FeaturedResourceFactoryDyn>>> = FeaturedAnimationInterfaceFactoryInterfaceFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::resource::FeaturedResourceFactory::FeaturedResourceFactoryDyn>>);
         jcall!(featuredResourceFactory).init(level.clone());
         jcall!(FeaturedResourceRelativeRelationshipFactory::FeaturedResourceRelativeRelationshipFactory::getInstance()).init(level.clone());

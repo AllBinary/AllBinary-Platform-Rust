@@ -25,9 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait UsbInterface {
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+pub trait UsbInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
 }
 
 

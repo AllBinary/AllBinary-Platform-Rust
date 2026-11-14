@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::graphics::Anchor::Anchor;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
@@ -29,8 +29,7 @@ use crate::org::microemu::device::ResourceCallbackStrings::ResourceCallbackStrin
 use crate::playn::core::Canvas::Canvas;
 use crate::playn::core::CanvasImage::CanvasImage;
 use crate::playn::core::util::Callback::Callback;
-use super::core::core;
-use super::playn::playn;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -48,6 +47,10 @@ pub struct ImageModifierUtil {
 
 
 impl ImageModifierUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -72,66 +75,66 @@ impl ImageModifierUtil {
     }
     
 
-    pub fn setColor(&mut self, mut unusedOriginalImage: Option<Rc<RefCell<Image>>>, mut image: Option<Rc<RefCell<Image>>>, mut imageIndex: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
+    pub fn setColor(&mut self, mut unusedOriginalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageIndex: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
     }
     
 
-    pub fn changeColor(&mut self, mut unusedOriginalImage: Option<Rc<RefCell<Image>>>, mut image: Option<Rc<RefCell<Image>>>, mut imageIndex: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
+    pub fn changeColor(&mut self, mut unusedOriginalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageIndex: i32, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
     }
     
 
-    pub fn setAlpha(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut image: Option<Rc<RefCell<Image>>>, mut imageIndex: i32, mut alpha: i32) {
+    pub fn setAlpha(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageIndex: i32, mut alpha: i32) {
         let mut alphaF: f32 = ((alpha) as f32).clone();
         let mut alphaFloat: f32 = alphaF / 255.0_f32;
         self.setAlphaF(originalImage.clone(), image.clone(), imageIndex.clone(), alphaFloat.clone());
     }
     
 
-    pub fn setAlphaF(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut image: Option<Rc<RefCell<Image>>>, mut imageIndex: i32, mut alpha: f32) {
+    pub fn setAlphaF(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageIndex: i32, mut alpha: f32) {
         if self.alphaArray[(imageIndex) as usize] {
-            self.alphaArray[(imageIndex) as usize] = false;
+            { let java_index = (imageIndex) as usize; self.alphaArray[java_index] = false; };
             self.setAlpha2(originalImage.clone(), image.clone(), imageIndex.clone(), alpha.clone());
         }
     }
     
 
-    pub fn setAlpha2(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut image: Option<Rc<RefCell<Image>>>, mut imageIndex: i32, mut alpha: f32) {
+    pub fn setAlpha2(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut imageIndex: i32, mut alpha: f32) {
         let mut htmlImage: Option<Rc<RefCell<PlaynImage>>> = (image).clone() /* as PlaynImage */;
         let mut canvasImage: Option<Rc<RefCell<CanvasImage>>> = (jcall!(htmlImage).getImage()).clone() /* as CanvasImage */;
-        let mut originalPlaynImage: Option<Rc<RefCell<Image>>> = (jcall!(((originalImage).clone() /* as PlaynImage */)).getImage()).clone() /* as Image */;
-        let mut canvas: Option<Rc<RefCell<Canvas>>> = jcall!(canvasImage).canvas();
-        jcall!(canvas).clear();
-        jcall!(canvas).setAlpha(alpha.clone());
-        jcall!(canvas).drawImage(originalPlaynImage.clone(), 0, 0);
+        let mut originalPlaynImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = (jcall!(((originalImage).clone() /* as PlaynImage */)).getImage()).clone();
+        let mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>> = jcall!(canvasImage).canvas();
+        jcall!(canvas).as_Canvas_mut().clear();
+        jcall!(canvas).as_Canvas_mut().setAlpha(alpha.clone());
+        jcall!(canvas).as_Canvas_mut().drawImage(originalPlaynImage.clone(), 0, 0);
     }
     
 
-    pub fn setAlpha3(&mut self, mut image: Option<Rc<RefCell<Image>>>, mut alpha: f32) {
+    pub fn setAlpha3(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut alpha: f32) {
         let mut alphaF: f32 = alpha.clone();
         let mut alphaFloat: f32 = alphaF / 255.0_f32;
         let mut htmlImage: Option<Rc<RefCell<PlaynImage>>> = (image).clone() /* as PlaynImage */;
         let mut canvasImage: Option<Rc<RefCell<CanvasImage>>> = (jcall!(htmlImage).getImage()).clone() /* as CanvasImage */;
-        let mut canvas: Option<Rc<RefCell<Canvas>>> = jcall!(canvasImage).canvas();
-        jcall!(canvas).setAlpha(alphaFloat.clone());
+        let mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>> = jcall!(canvasImage).canvas();
+        jcall!(canvas).as_Canvas_mut().setAlpha(alphaFloat.clone());
     }
     
 
-    pub fn getImageArray(&mut self, mut originalImageArray: Vec<Option<Rc<RefCell<Image>>>>) -> Vec<Option<Rc<RefCell<Image>>>> {
+    pub fn getImageArray(&mut self, mut originalImageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>) -> Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> {
         let mut size: i32 = (originalImageArray.len() as i32).clone();
         self.alphaArray = vec![false; (size) as usize];
-        let mut imageArray: Vec<Option<Rc<RefCell<Image>>>> = vec![None; (size) as usize];
+        let mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> = vec![None; (size) as usize];
         for index in (0..size) {
-            imageArray[(index) as usize] = originalImageArray[(index) as usize].clone();
+            imageArray[(index) as usize] = { let java_value = (originalImageArray[(index) as usize]).clone(); java_value }.clone();
             self.handleImage(imageArray.clone(), index.clone(), originalImageArray[(index) as usize].clone());
         }
         return imageArray.clone();
     }
     
 
-    pub fn handleImage(&mut self, mut imageArray: Vec<Option<Rc<RefCell<Image>>>>, mut index: i32, mut image: Option<Rc<RefCell<Image>>>) {
-        let mut image3: Option<Rc<RefCell<Image>>> = (jcall!(((image).clone() /* as PlaynImage */)).getImage()).clone() /* as Image */;
+    pub fn handleImage(&mut self, mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut index: i32, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) {
+        let mut image3: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = (jcall!(((image).clone() /* as PlaynImage */)).getImage()).clone();
         if image3.is_some() {
-            if jcall!(image3).isReady() || jcall!(image3).width() + jcall!(image3).height() <= 0 || jcall!(image).getName() == jcall!(self.resourceCallbackStrings).FROM_DATA {
+            if jcall!(image3).as_Image_mut().isReady() || jcall!(image3).as_Image_mut().width() + jcall!(image3).as_Image_mut().height() <= 0 || jcall!(image).getName() == { let java_field = jcall!(self.resourceCallbackStrings).FROM_DATA.clone(); java_field } {
                 self.copy(imageArray.clone(), index.clone(), image.clone(), image3.clone());
             } else {
                 let mut callback: Option<Rc<RefCell<Callback>>> = Callback::new() /* Java anonymous class body: implement it as a named type
@@ -139,36 +142,36 @@ impl ImageModifierUtil {
 
                     pub fn onSuccess(&mut self, mut resource: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {
                         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-                        jcall!(logUtil).putF(format!("{}{}", jcall!(self.resourceCallbackStrings).DONE, jcall!(image).getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.resourceCallbackStrings).HANDLE_IMAGE.clone());
+                        jcall!(logUtil).putF(format!("{}{}", { let java_field = jcall!(self.resourceCallbackStrings).DONE.clone(); java_field }, jcall!(image).getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.resourceCallbackStrings).HANDLE_IMAGE.clone(); java_field }.clone());
                         self.copy(imageArray.clone(), index.clone(), image.clone(), image3.clone());
                     }
                     
 
                     pub fn onFailure(&mut self, mut e: String) {
                         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
-                        jcall!(logUtil).putF(jcall!(StringMaker::new()).append(jcall!(self.commonStrings).EXCEPTION_LABEL.clone()).append(jcall!(self.resourceCallbackStrings).ERROR.clone()).append(jcall!(image).getName()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.resourceCallbackStrings).HANDLE_IMAGE.clone());
+                        jcall!(logUtil).putF(jcall!(StringMaker::new()).append({ let java_field = jcall!(self.commonStrings).EXCEPTION_LABEL.clone(); java_field }.clone()).append({ let java_field = jcall!(self.resourceCallbackStrings).ERROR.clone(); java_field }.clone()).append(jcall!(image).getName()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.resourceCallbackStrings).HANDLE_IMAGE.clone(); java_field }.clone());
                     }
 */;
-                jcall!(image3).addCallback(callback.clone());
+                jcall!(image3).as_Image_mut().addCallback(callback.clone());
             }
         } else {
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.resourceCallbackStrings).NULL + jcall!(image).isMutable(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.resourceCallbackStrings).HANDLE_IMAGE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.resourceCallbackStrings).NULL.clone(); java_field } + jcall!(image).isMutable(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.resourceCallbackStrings).HANDLE_IMAGE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
     }
     
 
-    pub fn copy(&mut self, mut imageArray: Vec<Option<Rc<RefCell<Image>>>>, mut index: i32, mut image: Option<Rc<RefCell<Image>>>, mut image3: Option<Rc<RefCell<Image>>>) {
+    pub fn copy(&mut self, mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>, mut index: i32, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut image3: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut image2: Option<Rc<RefCell<Image>>> = Image::createImage(jcall!(image3).width(), jcall!(image3).height());
-            let mut graphics: Option<Rc<RefCell<Graphics>>> = jcall!(image2).getGraphics();
+            let mut image2: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = Image::createImageWH(jcall!(image3).as_Image_mut().width(), jcall!(image3).as_Image_mut().height());
+            let mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>> = jcall!(image2).getGraphics();
             jcall!(graphics).drawImage(image.clone(), 0, 0, unsafe { crate::org::allbinary::graphics::Anchor::Anchor_TOP_LEFT.clone() }.clone());
             imageArray[(index) as usize] = image2.clone();
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).EXCEPTION_LABEL + jcall!(self.resourceCallbackStrings).DONE, crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.resourceCallbackStrings).HANDLE_IMAGE.clone());
+            jcall!(self.logUtil).putF(format!("{}{}", { let java_field = jcall!(self.commonStrings).EXCEPTION_LABEL.clone(); java_field }, { let java_field = jcall!(self.resourceCallbackStrings).DONE.clone(); java_field }), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.resourceCallbackStrings).HANDLE_IMAGE.clone(); java_field }.clone());
             }
         }
     }
@@ -177,7 +180,7 @@ impl ImageModifierUtil {
     pub fn reset(&mut self) {
         let mut size: i32 = (self.alphaArray.len() as i32).clone();
         for index in (0..size) {
-            self.alphaArray[(index) as usize] = true;
+            { let java_index = (index) as usize; self.alphaArray[java_index] = true; };
         }
     }
 }

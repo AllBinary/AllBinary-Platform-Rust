@@ -22,6 +22,7 @@ use crate::org::allbinary::logic::control::validate::ValidationComponentInterfac
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::BillingAddressesView::BillingAddressesView;
 
 // Borrows the object of a Java reference
@@ -36,6 +37,9 @@ pub struct ValidationView {
 }
 
 // impl ValidationComponentInterface for ValidationView with the methods of the trait
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for ValidationView {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }
+}
 
 impl ValidationView {
     
@@ -54,8 +58,8 @@ impl ValidationView {
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        let mut billingAddressesEntity: Option<Rc<RefCell<BillingAddressesEntity>>> = BillingAddressesEntity::new(jcall!(self.getWeblisketSession()).getUserName());
-        self.streetAddresses = jcall!(billingAddressesEntity).get();
+        let mut billingAddressesEntity: Option<Rc<RefCell<BillingAddressesEntity>>> = BillingAddressesEntity::new({ let java_argument = jcall!(self.getWeblisketSession()).getUserName(); java_argument });
+        self.streetAddresses = { let java_value = (jcall!(billingAddressesEntity).get()).clone(); java_value };
         if self.streetAddresses.is_none() {
             return false;
         }
@@ -91,6 +95,10 @@ impl std::ops::DerefMut for ValidationView {
 impl crate::views::generic::address::billing::BillingAddressesView::BillingAddressesViewDyn for ValidationView {
     fn as_BillingAddressesView(&self) -> &crate::views::generic::address::billing::BillingAddressesView::BillingAddressesView { &self.base }
     fn as_BillingAddressesView_mut(&mut self) -> &mut crate::views::generic::address::billing::BillingAddressesView::BillingAddressesView { &mut self.base }
+}
+impl crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn for ValidationView {
+    fn as_TransformInfoHttpComposite(&self) -> &crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &self.base.base.base.base }
+    fn as_TransformInfoHttpComposite_mut(&mut self) -> &mut crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &mut self.base.base.base.base }
 }
 impl crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentViewDyn for ValidationView {
     fn as_HttpStoreComponentView(&self) -> &crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &self.base.base }

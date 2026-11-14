@@ -39,8 +39,8 @@ impl UpdateOrderTag {
         let mut this = Self {
             base: TableTag::new_struct(),
         };
-        this.setTagHelperFactory(UpdateOrderHelperFactory::new());
-        this.setTagRequestHelperFactory(UpdateOrderHelperFactory::new());
+        this.setTagHelperFactory(UpdateOrderHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(UpdateOrderHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 

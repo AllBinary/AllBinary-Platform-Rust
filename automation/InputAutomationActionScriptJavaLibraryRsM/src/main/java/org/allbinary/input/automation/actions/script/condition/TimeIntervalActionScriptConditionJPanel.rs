@@ -20,18 +20,13 @@ use super::*;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use super::JPanel::JPanel;
-use super::swing::swing;
-use super::javax::javax;
 use super::TimeIntervalActionScriptConditionInterface::TimeIntervalActionScriptConditionInterface;
 use super::JTextField::JTextField;
 use super::JDialog::JDialog;
 use super::JLabel::JLabel;
 use super::JButton::JButton;
 use super::Dimension::Dimension;
-use super::awt::awt;
-use super::java::java;
 use super::ActionListener::ActionListener;
-use super::event::event;
 use super::ActionEvent::ActionEvent;
 use super::GroupLayout::GroupLayout;
 
@@ -76,7 +71,7 @@ impl TimeIntervalActionScriptConditionJPanel {
         };
         this.logUtil = LogUtil::getInstance();
         this.commonStrings = CommonStrings::getInstance();
-        jcall!(this.logUtil).putF(jcall!(this.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+        jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
         this.initComponents();
         this.timeIntervalActionScriptConditionInterface = timeIntervalActionScriptConditionInterface.clone();
         this.set();
@@ -89,13 +84,13 @@ impl TimeIntervalActionScriptConditionJPanel {
     
 
     pub fn set(&mut self) {
-        jcall!(self.getTimeIntervalJTextField()).setText((jcall!(jcall!(self.timeIntervalActionScriptConditionInterface).getTimeDelayHelper()).delay.clone()).to_string());
+        jcall!(self.getTimeIntervalJTextField()).setText(({ let java_field = jcall!(jcall!(self.timeIntervalActionScriptConditionInterface).getTimeDelayHelper()).as_TimeDelayHelper_mut().delay.clone(); java_field }.clone()).to_string());
         jcall!(self.timeIntervalActionScriptConditionInterface).log();
     }
     
 
     pub fn update(&mut self) {
-        jcall!(jcall!(self.timeIntervalActionScriptConditionInterface).getTimeDelayHelper()).delay = (jcall!(self.getTimeIntervalJTextField()).getText()).to_string();
+        jcall!(jcall!(self.timeIntervalActionScriptConditionInterface).getTimeDelayHelper()).as_TimeDelayHelper_mut().delay = Some(({ let java_argument = jcall!(self.getTimeIntervalJTextField()).getText(); java_argument }) as i32);
         jcall!(self.timeIntervalActionScriptConditionInterface).log();
     }
     
@@ -141,8 +136,8 @@ impl TimeIntervalActionScriptConditionJPanel {
         jcall!(self.jLabel2).setText(String::from("Time (ms):"));
         let mut timeIntervalActionJDialogLayout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(jcall!(self.timeIntervalActionJDialog).getContentPane());
         jcall!(jcall!(self.timeIntervalActionJDialog).getContentPane()).setLayout(timeIntervalActionJDialogLayout.clone());
-        jcall!(timeIntervalActionJDialogLayout).setHorizontalGroup(jcall!(jcall!(timeIntervalActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createSequentialGroup()).addGroup(jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).TRAILING.clone())).addGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone(), jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createSequentialGroup()).addGap(82, 82, 82)).addComponent(self.okJButton.clone()))).addGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone(), jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createSequentialGroup()).addGap(32, 32, 32)).addGroup(jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createSequentialGroup()).addComponent(self.jLabel2.clone())).addGap(16, 16, 16)).addComponent(self.timeIntervalJTextField.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), 85, i16::MAX.clone()))).addComponent(self.titleJLabel.clone()))))).addContainerGap(36, i16::MAX.clone())));
-        jcall!(timeIntervalActionJDialogLayout).setVerticalGroup(jcall!(jcall!(timeIntervalActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createSequentialGroup()).addContainerGap()).addComponent(self.titleJLabel.clone())).addGap(20, 20, 20)).addGroup(jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).BASELINE.clone())).addComponent(self.jLabel2.clone())).addComponent(self.timeIntervalJTextField.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone()))).addGap(15, 15, 15)).addComponent(self.okJButton.clone())).addContainerGap()));
+        jcall!(timeIntervalActionJDialogLayout).setHorizontalGroup(jcall!(jcall!(timeIntervalActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createSequentialGroup()).addGroup(jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).TRAILING.clone(); java_field }.clone())).addGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone(), jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createSequentialGroup()).addGap(82, 82, 82)).addComponent(self.okJButton.clone()))).addGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone(), jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createSequentialGroup()).addGap(32, 32, 32)).addGroup(jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createSequentialGroup()).addComponent(self.jLabel2.clone())).addGap(16, 16, 16)).addComponent(self.timeIntervalJTextField.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), 85, i16::MAX.clone()))).addComponent(self.titleJLabel.clone()))))).addContainerGap(36, i16::MAX.clone())));
+        jcall!(timeIntervalActionJDialogLayout).setVerticalGroup(jcall!(jcall!(timeIntervalActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createSequentialGroup()).addContainerGap()).addComponent(self.titleJLabel.clone())).addGap(20, 20, 20)).addGroup(jcall!(jcall!(jcall!(timeIntervalActionJDialogLayout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).BASELINE.clone(); java_field }.clone())).addComponent(self.jLabel2.clone())).addComponent(self.timeIntervalJTextField.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone()))).addGap(15, 15, 15)).addComponent(self.okJButton.clone())).addContainerGap()));
         self.setMinimumSize(Dimension::new(100, 0));
         jcall!(self.timeIntervalActionJButton).setText(String::from("Edit"));
         { let java_receiver = self.timeIntervalActionJButton.clone(); let java_arguments = (ActionListener::new() /* Java anonymous class body: implement it as a named type
@@ -155,8 +150,8 @@ impl TimeIntervalActionScriptConditionJPanel {
         jcall!(self.jLabel1).setText(String::from("Time Interval:"));
         let mut layout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(None /* Java this: a &mut self method has no Rc of itself */);
         self.setLayout(layout.clone());
-        jcall!(layout).setHorizontalGroup(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addComponent(self.jLabel1.clone())).addPreferredGap(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).LayoutStyle).ComponentPlacement).RELATED.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), i16::MAX.clone())).addComponent(self.timeIntervalActionJButton.clone())));
-        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).BASELINE.clone())).addComponent(self.jLabel1.clone())).addComponent(self.timeIntervalActionJButton.clone())));
+        jcall!(layout).setHorizontalGroup(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addComponent(self.jLabel1.clone())).addPreferredGap({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).LayoutStyle.clone(); java_field }).ComponentPlacement.clone(); java_field }).RELATED.clone(); java_field }.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), i16::MAX.clone())).addComponent(self.timeIntervalActionJButton.clone())));
+        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).BASELINE.clone(); java_field }.clone())).addComponent(self.jLabel1.clone())).addComponent(self.timeIntervalActionJButton.clone())));
     }
     
 

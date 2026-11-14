@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationInterface::AnimationInterface;
 use crate::org::allbinary::graphics::CellPosition::CellPosition;
@@ -30,6 +30,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::TouchButtonInput::TouchButtonInput;
 
 // Borrows the object of a Java reference
@@ -77,13 +78,13 @@ impl TouchButton {
         this.commonStrings = CommonStrings::getInstance();
         this.rectangle = crate::org::allbinary::graphics::RectangleFactory::RectangleFactory_SINGLETON.with(Clone::clone).clone();
         this.touchButtonInput = touchButtonInput.clone();
-        this.animationInterface = (animationInterface).clone() /* as Animation */;
+        this.animationInterface = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { panic!("ClassCastException: a Rust dyn AnimationInterface cannot be cast to Animation") })();
         this.rawRectangle = rawRectangle.clone();
         this.cellPosition = cellPosition.clone();
         this.xBorder = xBorder.clone();
         this.yBorder = yBorder.clone();
         this.updateRectangle();
-        { let java_receiver = this.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Created: ")).append(this.toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = this.logUtil.clone(); let java_arguments = ({ let java_argument = jcall!(StringMaker::new()).append(String::from("Created: ")).append(this.toString()).toString(); java_argument }, crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         this
     }
 
@@ -92,7 +93,7 @@ impl TouchButton {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.animationInterface).paintXY(graphics.clone(), self.animationX.clone(), self.animationY.clone());
     }
     
@@ -102,16 +103,16 @@ impl TouchButton {
             let mut x: i32 = jcall!(self.rawRectangle).getWidth() * jcall!(self.cellPosition).getColumn();
             let mut y: i32 = jcall!(self.rawRectangle).getHeight() * jcall!(self.cellPosition).getRow();
             let mut pointFactory: Option<Rc<RefCell<PointFactory>>> = PointFactory::getInstance();
-            self.rectangle = Rectangle::new(jcall!(pointFactory).createXY(x + self.xBorder, y + self.yBorder), jcall!(self.rawRectangle).getWidth(), jcall!(self.rawRectangle).getHeight());
+            self.rectangle = { let java_value = (Rectangle::new(jcall!(pointFactory).createXY(x + self.xBorder, y + self.yBorder), jcall!(self.rawRectangle).getWidth(), jcall!(self.rawRectangle).getHeight())).clone(); java_value };
             let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(self.rectangle).getPoint();
-            self.animationX = jcall!(point).getX();
-            self.animationY = jcall!(point).getY();
+            self.animationX = { let java_value = (jcall!(point).getX()).clone(); java_value };
+            self.animationY = { let java_value = (jcall!(point).getY()).clone(); java_value };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateRectangle"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("updateRectangle"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -161,7 +162,6 @@ pub trait TouchButtonDyn: crate::org::allbinary::graphics::paint::Paintable::Pai
     fn getCellPositionP(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>> { TouchButton::getCellPositionP(self.as_TouchButton_mut()) }
     fn getRectangleP(&mut self) -> Option<Rc<RefCell<Rectangle>>> { TouchButton::getRectangleP(self.as_TouchButton_mut()) }
     fn getTouchButtonInput(&mut self) -> Option<Rc<RefCell<TouchButtonInput>>> { TouchButton::getTouchButtonInput(self.as_TouchButton_mut()) }
-    fn toString(&mut self) -> String { TouchButton::toString(self.as_TouchButton_mut()) }
 }
 impl TouchButtonDyn for TouchButton {
     fn as_TouchButton(&self) -> &TouchButton { self }
@@ -171,7 +171,10 @@ impl TouchButtonDyn for TouchButton {
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for TouchButton {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for TouchButton {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

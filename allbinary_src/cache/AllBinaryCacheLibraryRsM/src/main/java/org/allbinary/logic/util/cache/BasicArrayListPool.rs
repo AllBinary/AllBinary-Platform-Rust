@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::AbstractArrayListPool::AbstractArrayListPool;
 use super::CacheableInterfaceFactoryInterface::CacheableInterfaceFactoryInterface;
 use super::CacheableInterface::CacheableInterface;
@@ -36,6 +37,11 @@ pub struct BasicArrayListPool {
 
 impl crate::org::allbinary::logic::util::cache::PoolInterface::PoolInterface for BasicArrayListPool {
     fn remove(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn CacheableInterface>>> { Self::remove(self, key) }
+}
+impl crate::org::allbinary::logic::util::cache::CacheInterface::CacheInterface for BasicArrayListPool {
+    fn add(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::cache::CacheableInterface::CacheableInterface>>>) { crate::org::allbinary::logic::util::cache::AbstractArrayListPool::AbstractArrayListPool::add(crate::org::allbinary::logic::util::cache::AbstractArrayListPool::AbstractArrayListPoolDyn::as_AbstractArrayListPool_mut(self), p1) }
+    fn addArray(&mut self, p1: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::cache::CacheableInterface::CacheableInterface>>>>) { crate::org::allbinary::logic::util::cache::AbstractArrayListPool::AbstractArrayListPool::addArray(crate::org::allbinary::logic::util::cache::AbstractArrayListPool::AbstractArrayListPoolDyn::as_AbstractArrayListPool_mut(self), p1) }
+    fn clear(&mut self) { Self::clear(self) }
 }
 
 impl BasicArrayListPool {
@@ -63,7 +69,7 @@ impl BasicArrayListPool {
     pub fn remove(&mut self, mut key: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<dyn CacheableInterface>>> {
         let mut size: i32 = jcall!(self.buffers).size();
         if size > 0 {
-            return { let java_object = jcall!(self.buffers).removeAt(size - 1); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn CacheableInterface>>>>().expect("ClassCastException").clone()) };
+            return { let java_object = (jcall!(self.buffers).removeAt(size - 1)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn CacheableInterface>>>>().expect("ClassCastException").clone()) };
         } else {
             return jcall!(self.cacheableInterfaceFactoryInterface).getInstance(crate::java_into_object(key.clone()));
         }
@@ -91,7 +97,7 @@ impl BasicArrayListPool {
             let mut list: Option<Rc<RefCell<BasicArrayListCacheable>>> = { let java_object = (jcall!(usedList).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<BasicArrayListCacheable>>>>().expect("ClassCastException").clone()) };
             if jcall!(list).size() == 0 {
                 jcall!(usedList).removeAt(index.clone());
-                self.add(list.clone());
+                self.add(list.clone().map(|reference| reference as Rc<RefCell<dyn CacheableInterface>>));
             }
             }
         }

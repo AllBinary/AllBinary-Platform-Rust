@@ -54,23 +54,23 @@ impl BasicArrayList {
     pub fn addAt(&mut self, mut index: i32, mut element: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) {
         if index > self.currentIndex || index < 0 {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-            jcall!(stringBuffer).append(jcall!(CommonLabels::getInstance()).INDEX_LABEL.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonLabels::getInstance()).INDEX_LABEL.clone(); java_field }.clone());
             jcall!(stringBuffer).appendint(index.clone());
             jcall!(stringBuffer).append(BasicArrayList_SIZE.with(Clone::clone).clone());
             jcall!(stringBuffer).appendint(self.currentIndex.clone());
             panic!("{:?}", format!("{}: {:?}", "IndexOutOfBoundsException", (jcall!(stringBuffer).toString())));
         }
-        self.ensureCapacity(self.currentIndex + 1);
+        { let java_arguments = (self.currentIndex + 1,); self.ensureCapacity(java_arguments.0) };
         
                 { let java_copy_source = self.objectArray[(index) as usize..(index + self.currentIndex - index) as usize].to_vec(); self.objectArray[(index + 1) as usize..(index + 1 + self.currentIndex - index) as usize].clone_from_slice(&java_copy_source); };
-        self.objectArray[(index) as usize] = element.clone();
+        { let java_index = (index) as usize; self.objectArray[java_index] = element.clone(); };
         self.currentIndex += 1;
     }
     
 
     pub fn add(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> bool {
-        self.ensureCapacity(self.currentIndex + 1);
-        self.objectArray[({ let value = self.currentIndex; self.currentIndex += 1; value }) as usize] = anyType.clone();
+        { let java_arguments = (self.currentIndex + 1,); self.ensureCapacity(java_arguments.0) };
+        { let java_index = ({ let value = self.currentIndex; self.currentIndex += 1; value }) as usize; self.objectArray[java_index] = anyType.clone(); };
         return true;
     }
     
@@ -78,7 +78,7 @@ impl BasicArrayList {
     pub fn removeAt(&mut self, mut index: i32) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
         if index >= self.currentIndex {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-            jcall!(stringBuffer).append(jcall!(CommonLabels::getInstance()).INDEX_LABEL.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonLabels::getInstance()).INDEX_LABEL.clone(); java_field }.clone());
             jcall!(stringBuffer).appendint(index.clone());
             jcall!(stringBuffer).append(BasicArrayList_SIZE.with(Clone::clone).clone());
             jcall!(stringBuffer).appendint(self.currentIndex.clone());
@@ -90,7 +90,7 @@ impl BasicArrayList {
             
                 { let java_copy_source = self.objectArray[(index + 1) as usize..(index + 1 + numMoved) as usize].to_vec(); self.objectArray[(index) as usize..(index + numMoved) as usize].clone_from_slice(&java_copy_source); };
         }
-        self.objectArray[({ self.currentIndex -= 1; self.currentIndex }) as usize] = None;
+        { let java_index = ({ self.currentIndex -= 1; self.currentIndex }) as usize; self.objectArray[java_index] = None; };
         return oldValue.clone();
     }
     
@@ -104,7 +104,7 @@ impl BasicArrayList {
                         
                 { let java_copy_source = self.objectArray[(index + 1) as usize..(index + 1 + numMoved) as usize].to_vec(); self.objectArray[(index) as usize..(index + numMoved) as usize].clone_from_slice(&java_copy_source); };
                     }
-                    self.objectArray[({ self.currentIndex -= 1; self.currentIndex }) as usize] = None;
+                    { let java_index = ({ self.currentIndex -= 1; self.currentIndex }) as usize; self.objectArray[java_index] = None; };
                     return true;
                 }
             }
@@ -116,7 +116,7 @@ impl BasicArrayList {
                         
                 { let java_copy_source = self.objectArray[(index + 1) as usize..(index + 1 + numMoved) as usize].to_vec(); self.objectArray[(index) as usize..(index + numMoved) as usize].clone_from_slice(&java_copy_source); };
                     }
-                    self.objectArray[({ self.currentIndex -= 1; self.currentIndex }) as usize] = None;
+                    { let java_index = ({ self.currentIndex -= 1; self.currentIndex }) as usize; self.objectArray[java_index] = None; };
                     return true;
                 }
             }
@@ -139,10 +139,10 @@ impl BasicArrayList {
     
 
     pub fn addAll2(&mut self, mut list: Option<Rc<RefCell<dyn BasicArrayListDyn>>>) -> bool {
-        self.ensureCapacity(self.currentIndex + jcall!(list).as_BasicArrayList_mut().currentIndex);
-        let mut listSize: i32 = jcall!(list).as_BasicArrayList_mut().currentIndex.clone();
+        { let java_arguments = (self.currentIndex + { let java_field = jcall!(list).as_BasicArrayList_mut().currentIndex.clone(); java_field },); self.ensureCapacity(java_arguments.0) };
+        let mut listSize: i32 = { let java_field = jcall!(list).as_BasicArrayList_mut().currentIndex.clone(); java_field }.clone();
         for index in (0..listSize) {
-            self.objectArray[({ let value = self.currentIndex; self.currentIndex += 1; value }) as usize] = jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize].clone();
+            { let java_index = ({ let value = self.currentIndex; self.currentIndex += 1; value }) as usize; self.objectArray[java_index] = { let java_value = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_value }.clone(); };
         }
         return true;
     }
@@ -156,7 +156,7 @@ impl BasicArrayList {
 
     pub fn addAll(&mut self, mut newObjectArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>>) -> bool {
         let mut numSize: i32 = (newObjectArray.len() as i32).clone();
-        self.ensureCapacity(self.currentIndex + numSize);
+        { let java_arguments = (self.currentIndex + numSize,); self.ensureCapacity(java_arguments.0) };
         
                 { let java_copy_source = newObjectArray[(0) as usize..(0 + numSize) as usize].to_vec(); self.objectArray[(self.currentIndex) as usize..(self.currentIndex + numSize) as usize].clone_from_slice(&java_copy_source); };
         self.currentIndex += numSize.clone();
@@ -171,7 +171,7 @@ impl BasicArrayList {
             if newCapacity < minSize {
                 newCapacity = minSize.clone();
             }
-            self.objectArray = jcall!(self.arrayUtil).copyOf(self.objectArray.clone(), newCapacity.clone());
+            self.objectArray = { let java_value = (jcall!(self.arrayUtil).copyOf(self.objectArray.clone(), newCapacity.clone())).clone(); java_value };
         }
     }
     
@@ -179,7 +179,7 @@ impl BasicArrayList {
     pub fn trimToSize(&mut self) {
         let mut oldCapacity: i32 = (self.objectArray.len() as i32).clone();
         if self.currentIndex < oldCapacity {
-            self.objectArray = jcall!(self.arrayUtil).copyOf(self.objectArray.clone(), self.currentIndex.clone());
+            self.objectArray = { let java_value = (jcall!(self.arrayUtil).copyOf(self.objectArray.clone(), self.currentIndex.clone())).clone(); java_value };
         }
     }
     
@@ -223,7 +223,7 @@ impl BasicArrayList {
     pub fn get(&mut self, mut index: i32) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
         if index >= self.currentIndex {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-            jcall!(stringBuffer).append(jcall!(CommonLabels::getInstance()).INDEX_LABEL.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonLabels::getInstance()).INDEX_LABEL.clone(); java_field }.clone());
             jcall!(stringBuffer).appendint(index.clone());
             jcall!(stringBuffer).append(BasicArrayList_SIZE.with(Clone::clone).clone());
             jcall!(stringBuffer).appendint(self.currentIndex.clone());
@@ -236,21 +236,21 @@ impl BasicArrayList {
     pub fn set(&mut self, mut index: i32, mut element: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
         if index >= self.currentIndex {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-            jcall!(stringBuffer).append(jcall!(CommonLabels::getInstance()).INDEX_LABEL.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonLabels::getInstance()).INDEX_LABEL.clone(); java_field }.clone());
             jcall!(stringBuffer).appendint(index.clone());
             jcall!(stringBuffer).append(BasicArrayList_SIZE.with(Clone::clone).clone());
             jcall!(stringBuffer).appendint(self.currentIndex.clone());
             panic!("{:?}", format!("{}: {:?}", "IndexOutOfBoundsException", (jcall!(stringBuffer).toString())));
         }
         let mut oldValue: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = self.objectArray[(index) as usize].clone();
-        self.objectArray[(index) as usize] = element.clone();
+        { let java_index = (index) as usize; self.objectArray[java_index] = element.clone(); };
         return oldValue.clone();
     }
     
 
     pub fn clear(&mut self) {
         for i in (0..self.currentIndex) {
-            self.objectArray[(i) as usize] = None;
+            { let java_index = (i) as usize; self.objectArray[java_index] = None; };
         }
         self.currentIndex = 0;
     }
@@ -291,10 +291,10 @@ impl BasicArrayList {
 
     pub fn clone(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
         let mut size: i32 = self.size();
-        let mut list: Option<Rc<RefCell<dyn BasicArrayListDyn>>> = BasicArrayListS::new(size.clone()).map(|reference| reference as Rc<RefCell<dyn BasicArrayListDyn>>);
+        let mut list: Option<Rc<RefCell<dyn BasicArrayListDyn>>> = BasicArrayListS::new(size.clone()).map(|reference| reference as Rc<RefCell<dyn BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn BasicArrayListDyn>>);
         let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = None;
         for index in (0..size) {
-            anyType = self.objectArray[(index) as usize].clone();
+            anyType = { let java_value = (self.objectArray[(index) as usize]).clone(); java_value }.clone();
             jcall!(list).add(crate::java_into_object(anyType.clone()));
         }
         return (|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(list.clone());
@@ -302,16 +302,16 @@ impl BasicArrayList {
     
 
     pub fn toString(&mut self) -> String {
-        let mut COMMA_SEP: String = jcall!(CommonSeps::getInstance()).COMMA_SEP.clone();
+        let mut COMMA_SEP: String = { let java_field = jcall!(CommonSeps::getInstance()).COMMA_SEP.clone(); java_field }.clone();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         for index in (0..self.currentIndex) {
-            jcall!(stringBuffer).append({ let value = jcall!(self.objectArray[(index) as usize]); value.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", value.as_ref().type_id())) });
+            jcall!(stringBuffer).append({ let java_object = (self.objectArray[(index) as usize]).clone(); let value = jcall!(java_object); value.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", value.as_ref().type_id())) });
             jcall!(stringBuffer).append(COMMA_SEP.clone());
         }
         return jcall!(stringBuffer).toString();
     }
 }
-pub trait BasicArrayListDyn {
+pub trait BasicArrayListDyn: std::any::Any {
     fn as_BasicArrayList(&self) -> &BasicArrayList;
     fn as_BasicArrayList_mut(&mut self) -> &mut BasicArrayList;
     fn addAt(&mut self, mut index: i32, mut element: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { BasicArrayList::addAt(self.as_BasicArrayList_mut(), index, element) }

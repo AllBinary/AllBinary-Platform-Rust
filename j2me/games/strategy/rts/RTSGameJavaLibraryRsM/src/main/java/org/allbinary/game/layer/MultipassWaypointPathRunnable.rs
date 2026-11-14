@@ -27,10 +27,9 @@ use crate::org::allbinary::media::graphics::geography::pathfinding::MultipassSta
 use crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingInfo::PathFindingInfo;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::WaypointPathRunnableBase::WaypointPathRunnableBase;
-use super::FirstRunnable::FirstRunnable;
-use super::SecondRunnable::SecondRunnable;
-use super::EndRunnable::EndRunnable;
 use super::WaypointBehaviorBase::WaypointBehaviorBase;
 
 // Borrows the object of a Java reference
@@ -56,9 +55,14 @@ pub struct MultipassWaypointPathRunnable {
 }
 
 impl crate::org::allbinary::thread::PriorityRunnable::PriorityRunnable for MultipassWaypointPathRunnable {
-    fn getPriority(&mut self) -> i32 { self.base.getPriority() }
+    fn getPriority(&mut self) -> i32 { crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBase::getPriority(crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBaseDyn::as_WaypointPathRunnableBase_mut(self)) }
     fn isDone(&mut self) -> bool { Self::isDone(self) }
     fn reset(&mut self) { Self::reset(self) }
+}
+impl crate::org::allbinary::thread::RunnableInterface::RunnableInterface for MultipassWaypointPathRunnable {
+    fn isRunning(&mut self) -> bool { crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBase::isRunning(crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBaseDyn::as_WaypointPathRunnableBase_mut(self)) }
+    fn setRunning(&mut self, mut isRunning: bool) { Self::setRunning(self, isRunning) }
+    fn setThread(&mut self, p1: Option<Rc<RefCell<crate::java::lang::Thread::Thread>>>) { crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBase::setThread(crate::org::allbinary::game::layer::WaypointPathRunnableBase::WaypointPathRunnableBaseDyn::as_WaypointPathRunnableBase_mut(self), p1) }
 }
 impl Runnable for MultipassWaypointPathRunnable {
     fn run(&mut self) { Self::run(self) }
@@ -87,23 +91,24 @@ impl MultipassWaypointPathRunnable {
         this.multipassState = MultipassState::new();
         this.done = false;
         this.list = jcall!(this.basicArrayListUtil).getImmutableInstance();
-        this.pathFindingInfo = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone();
-        this.FIRST_RUNNABLE = FirstRunnable::new(this).map(|reference| reference as Rc<RefCell<dyn Runnable>>);
-        this.SECOND_RUNNABLE = SecondRunnable::new(this).map(|reference| reference as Rc<RefCell<dyn Runnable>>);
-        this.END_RUNNABLE = EndRunnable::new(this).map(|reference| reference as Rc<RefCell<dyn Runnable>>);
+        this.pathFindingInfo = { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone();
         this.ALREADY_ENDED_RUNNABLE = ARunnable::new() /* Java anonymous class body: implement it as a named type
         
 
         pub fn run(&mut self) {
             panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
         }
-*/;
+*/.map(|reference| reference as Rc<RefCell<dyn Runnable>>).map(|reference| reference as Rc<RefCell<dyn Runnable>>);
         this.currentPassRunnable = this.FIRST_RUNNABLE.clone();
         this
     }
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct())))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct())));
+        jcall!(this).FIRST_RUNNABLE = FirstRunnable::new(this.clone()).map(|reference| reference as Rc<RefCell<dyn Runnable>>);
+        jcall!(this).SECOND_RUNNABLE = SecondRunnable::new(this.clone()).map(|reference| reference as Rc<RefCell<dyn Runnable>>);
+        jcall!(this).END_RUNNABLE = EndRunnable::new(this.clone()).map(|reference| reference as Rc<RefCell<dyn Runnable>>);
+        this
     }
     
 
@@ -123,10 +128,10 @@ impl MultipassWaypointPathRunnable {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             self.setRunning(false);
             }
         }
@@ -137,7 +142,7 @@ impl MultipassWaypointPathRunnable {
         jcall!(self.multipassState).step = 0;
         jcall!(self.multipassState).iteration = 0;
         jcall!(self.multipassState).iteration2 = 0;
-        self.pathFindingInfo = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone();
+        self.pathFindingInfo = { let java_value = ({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }).clone(); java_value }.clone();
     }
     
 
@@ -168,9 +173,9 @@ impl MultipassWaypointPathRunnable {
             if geographicMapCellPosition.is_none() {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Should never be running here"))));
             }
-            self.pathFindingInfo = jcall!(jcall!(jcall!(self.targetPathFindingLayer).getWaypointBehavior()).getWaypoint()).getPathFindingInfo(geographicMapCellPosition.clone());
-            let mut localPathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>> = (self.pathFindingInfo).clone() /* as PathFindingInfo */;
-            self.list = jcall!(jcall!(jcall!(self.targetPathFindingLayer).getWaypointBehavior()).getWaypoint()).getPathsList(geographicMapCellPosition.clone(), localPathFindingInfo.clone(), self.multipassState.clone());
+            self.pathFindingInfo = crate::java_into_object({ let java_value = (jcall!(jcall!(jcall!(self.targetPathFindingLayer).getWaypointBehavior()).getWaypoint()).getPathFindingInfo(geographicMapCellPosition.clone())).clone(); java_value });
+            let mut localPathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>> = { let java_object = (self.pathFindingInfo).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<PathFindingInfo>>>>().expect("ClassCastException").clone()) };
+            self.list = { let java_value = (jcall!(jcall!(jcall!(self.targetPathFindingLayer).getWaypointBehavior()).getWaypoint()).getPathsList(geographicMapCellPosition.clone(), localPathFindingInfo.clone(), self.multipassState.clone())).clone(); java_value };
             if !match (&self.list, &jcall!(self.basicArrayListUtil).getImmutableInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 jcall!(self.END_RUNNABLE).run();
             } else {
@@ -179,10 +184,10 @@ impl MultipassWaypointPathRunnable {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             self.setRunning(false);
             self.finish();
             }
@@ -193,18 +198,18 @@ impl MultipassWaypointPathRunnable {
     pub fn processSecondRunnable(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = jcall!(self.pathFindingLayer).getCurrentGeographicMapCellPosition();
-            let mut localPathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>> = (self.pathFindingInfo).clone() /* as PathFindingInfo */;
-            self.list = jcall!(jcall!(jcall!(self.targetPathFindingLayer).getWaypointBehavior()).getWaypoint()).getPathsList(geographicMapCellPosition.clone(), localPathFindingInfo.clone(), self.multipassState.clone());
+            let mut localPathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>> = { let java_object = (self.pathFindingInfo).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<PathFindingInfo>>>>().expect("ClassCastException").clone()) };
+            self.list = { let java_value = (jcall!(jcall!(jcall!(self.targetPathFindingLayer).getWaypointBehavior()).getWaypoint()).getPathsList(geographicMapCellPosition.clone(), localPathFindingInfo.clone(), self.multipassState.clone())).clone(); java_value };
             if !match (&self.list, &jcall!(self.basicArrayListUtil).getImmutableInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 jcall!(self.END_RUNNABLE).run();
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             self.setRunning(false);
             self.finish();
             }
@@ -220,10 +225,10 @@ impl MultipassWaypointPathRunnable {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             self.setRunning(false);
             }
         }
@@ -284,8 +289,8 @@ impl std::ops::DerefMut for FirstRunnable {
 }
 
 impl crate::org::allbinary::thread::ARunnable::ARunnableDyn for FirstRunnable {
-    fn as_ARunnable(&self) -> &crate::org::allbinary::thread::ARunnable::ARunnable { &self }
-    fn as_ARunnable_mut(&mut self) -> &mut crate::org::allbinary::thread::ARunnable::ARunnable { &mut self }
+    fn as_ARunnable(&self) -> &crate::org::allbinary::thread::ARunnable::ARunnable { &self.base }
+    fn as_ARunnable_mut(&mut self) -> &mut crate::org::allbinary::thread::ARunnable::ARunnable { &mut self.base }
 }
 impl crate::Runnable for FirstRunnable {
     fn run(&mut self) { Self::run(self) }
@@ -329,8 +334,8 @@ impl std::ops::DerefMut for SecondRunnable {
 }
 
 impl crate::org::allbinary::thread::ARunnable::ARunnableDyn for SecondRunnable {
-    fn as_ARunnable(&self) -> &crate::org::allbinary::thread::ARunnable::ARunnable { &self }
-    fn as_ARunnable_mut(&mut self) -> &mut crate::org::allbinary::thread::ARunnable::ARunnable { &mut self }
+    fn as_ARunnable(&self) -> &crate::org::allbinary::thread::ARunnable::ARunnable { &self.base }
+    fn as_ARunnable_mut(&mut self) -> &mut crate::org::allbinary::thread::ARunnable::ARunnable { &mut self.base }
 }
 impl crate::Runnable for SecondRunnable {
     fn run(&mut self) { Self::run(self) }
@@ -373,8 +378,8 @@ impl std::ops::DerefMut for EndRunnable {
 }
 
 impl crate::org::allbinary::thread::ARunnable::ARunnableDyn for EndRunnable {
-    fn as_ARunnable(&self) -> &crate::org::allbinary::thread::ARunnable::ARunnable { &self }
-    fn as_ARunnable_mut(&mut self) -> &mut crate::org::allbinary::thread::ARunnable::ARunnable { &mut self }
+    fn as_ARunnable(&self) -> &crate::org::allbinary::thread::ARunnable::ARunnable { &self.base }
+    fn as_ARunnable_mut(&mut self) -> &mut crate::org::allbinary::thread::ARunnable::ARunnable { &mut self.base }
 }
 impl crate::Runnable for EndRunnable {
     fn run(&mut self) { Self::run(self) }

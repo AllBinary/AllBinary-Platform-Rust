@@ -45,6 +45,10 @@ pub struct MotionGestureConfiguration {
 
 
 impl MotionGestureConfiguration {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -61,11 +65,11 @@ impl MotionGestureConfiguration {
         this.diagonalMotionGestureAllowed = true;
         this.diagonalTolerance = 7;
         this.minimumMotionGesture = 9;
-        this.button = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.color = jcall!(BasicColorFactory::getInstance()).BLUE.clone();
+        this.button = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.color = { let java_field = jcall!(BasicColorFactory::getInstance()).BLUE.clone(); java_field }.clone();
         this.executingActions = true;
         this.mouseButtonMask = 0;
-        this.activeCommands = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.activeCommands = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 

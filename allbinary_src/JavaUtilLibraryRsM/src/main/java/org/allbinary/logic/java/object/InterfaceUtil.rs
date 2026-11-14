@@ -32,6 +32,10 @@ pub struct InterfaceUtil {
 
 
 impl InterfaceUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -61,7 +65,7 @@ impl InterfaceUtil {
     
 
     pub fn getClass(mut interfaceName: String, mut interfaces: Vec<&'static str>) -> &'static str {
-        if true && interfaces.is_some() && (interfaces.len() as i32) > 0 {
+        if true && !interfaces.is_empty() && (interfaces.len() as i32) > 0 {
             for index in (0..(interfaces.len() as i32)) {
                 if jcall!(interfaces[(index) as usize].to_string()).indexOf(interfaceName.clone()) >= 0 {
                     return interfaces[(index) as usize].clone();
@@ -84,7 +88,7 @@ impl InterfaceUtil {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn isImplemented(mut className: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> bool {
+    pub fn isImplemented_String_Any(mut className: String, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> bool {
         let mut classes: Vec<&'static str> = jcall!(std::any::type_name_of_val(&anyType)).getInterfaces();
         for index in (0..(classes.len() as i32)) {
             if jcall!(classes[(index) as usize].to_string()).indexOf(className.clone()) == 0 {
@@ -104,7 +108,7 @@ impl InterfaceUtil {
             jcall!(stringBuffer).append(String::from(" should be = "));
             jcall!(stringBuffer).append(classes[(index) as usize].to_string());
             jcall!(stringBuffer).append(classes[(index) as usize].to_string());
-            jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
         }
         return jcall!(stringBuffer).toString();
     }

@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::canvas::Processor::Processor;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::AllBinaryGameCanvas::AllBinaryGameCanvas;
 
 // Borrows the object of a Java reference
@@ -63,9 +64,9 @@ impl StartIntermissionProcessor {
 
     // throws Exception
     pub fn process(&mut self) {
-        if jcall!(jcall!(jcall!(self.gameCanvas).getStartIntermissionInterface()).getTimeDelayHelper()).isElapsedTNT(self.WAIT.clone()) {
-            jcall!(self.logUtil).putF(String::from("Intermission End"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).PROCESS.clone());
-            jcall!(jcall!(self.gameCanvas).getStartIntermissionInterface()).setEnabled(false);
+        if jcall!(jcall!(jcall!(self.gameCanvas).as_AllBinaryGameCanvas_mut().getStartIntermissionInterface()).getTimeDelayHelper()).isElapsedTNT(self.WAIT.clone()) {
+            jcall!(self.logUtil).putF(String::from("Intermission End"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).PROCESS.clone(); java_field }.clone());
+            jcall!(jcall!(self.gameCanvas).as_AllBinaryGameCanvas_mut().getStartIntermissionInterface()).setEnabled(false);
         }
     }
 }

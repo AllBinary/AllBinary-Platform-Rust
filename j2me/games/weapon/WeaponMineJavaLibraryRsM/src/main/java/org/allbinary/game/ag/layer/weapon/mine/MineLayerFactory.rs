@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerFactoryInterface::AllBinaryLayerFactoryInterface;
 use crate::org::allbinary::view::ViewPositionFactoryInterface::ViewPositionFactoryInterface;
+use crate::java::lang::Exception::*;
 use super::MineLayer::MineLayer;
 
 // Borrows the object of a Java reference
@@ -38,6 +39,10 @@ impl AllBinaryLayerFactoryInterface for MineLayerFactory {
 }
 
 impl MineLayerFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut viewPositionFactoryInterface: Option<Rc<RefCell<dyn ViewPositionFactoryInterface>>>) -> Self {
@@ -55,7 +60,7 @@ impl MineLayerFactory {
 
     // throws Exception
     pub fn getInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> {
-        return MineLayer::new(jcall!(self.viewPositionFactoryInterface).getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>);
+        return MineLayer::new(jcall!(self.viewPositionFactoryInterface).getInstance()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>);
     }
 }
 

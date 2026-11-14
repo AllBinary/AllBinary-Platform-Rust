@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use crate::Calendar;
 use super::*;
-// use crate::java::util::Calendar::Calendar;
+use crate::java::util::Calendar::Calendar;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
@@ -39,6 +38,7 @@ use crate::org::allbinary::time::TimeUtil::TimeUtil;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -80,6 +80,9 @@ pub struct DateRangeOrderHistoryView {
 // impl ValidationComponentInterface for DateRangeOrderHistoryView with the methods of the trait
 impl DomNodeInterface for DateRangeOrderHistoryView {
     fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { Self::toXmlNode(self, document) }
+}
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for DateRangeOrderHistoryView {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }
 }
 
 impl DateRangeOrderHistoryView {
@@ -124,7 +127,7 @@ impl DateRangeOrderHistoryView {
         this.ON = String::from("on");
         this.MAXLEN = 15;
         // super(...) is in the struct literal above
-        this.request = (jcall!(this.getPageContext()).getRequest()).clone() /* as HttpServletRequest */;
+        this.request = { let java_value = ((jcall!(this.getPageContext()).getRequest()).clone() /* as HttpServletRequest */).clone(); java_value };
         this.getFormData();
         this
     }
@@ -135,51 +138,52 @@ impl DateRangeOrderHistoryView {
     
 
     pub fn getFormData(&mut self) {
-        self.dateType = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_DATETYPE.with(Clone::clone).clone());
-        self.preprocessing = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PREPROCESSINGNAME.with(Clone::clone).clone());
-        self.shipped = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPEDNAME.with(Clone::clone).clone());
-        self.partiallyShipped = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PARTIALLYSHIPPEDNAME.with(Clone::clone).clone());
-        self.processing = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PROCESSINGNAME.with(Clone::clone).clone());
-        self.cancelled = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELLEDNAME.with(Clone::clone).clone());
-        self.fromYear = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_FROMYEAR.with(Clone::clone).clone());
-        self.fromMonth = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_FROMMONTH.with(Clone::clone).clone());
-        self.fromDay = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_FROMDAY.with(Clone::clone).clone());
-        self.fromHour = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_FROMHOUR.with(Clone::clone).clone());
-        self.toYear = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TOYEAR.with(Clone::clone).clone());
-        self.toMonth = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TOMONTH.with(Clone::clone).clone());
-        self.toDay = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TODAY.with(Clone::clone).clone());
-        self.toHour = jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TOHOUR.with(Clone::clone).clone());
-        self.command = jcall!(self.request).getParameter(crate::org::allbinary::globals::GLOBALS2::GLOBALS2_ADMINCOMMAND.with(Clone::clone).clone());
+        self.dateType = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_DATETYPE.with(Clone::clone).clone())).clone(); java_value };
+        self.preprocessing = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PREPROCESSINGNAME.with(Clone::clone).clone())).clone(); java_value };
+        self.shipped = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPEDNAME.with(Clone::clone).clone())).clone(); java_value };
+        self.partiallyShipped = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PARTIALLYSHIPPEDNAME.with(Clone::clone).clone())).clone(); java_value };
+        self.processing = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PROCESSINGNAME.with(Clone::clone).clone())).clone(); java_value };
+        self.cancelled = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELLEDNAME.with(Clone::clone).clone())).clone(); java_value };
+        self.fromYear = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_FROMYEAR.with(Clone::clone).clone())).clone(); java_value };
+        self.fromMonth = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_FROMMONTH.with(Clone::clone).clone())).clone(); java_value };
+        self.fromDay = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_FROMDAY.with(Clone::clone).clone())).clone(); java_value };
+        self.fromHour = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_FROMHOUR.with(Clone::clone).clone())).clone(); java_value };
+        self.toYear = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TOYEAR.with(Clone::clone).clone())).clone(); java_value };
+        self.toMonth = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TOMONTH.with(Clone::clone).clone())).clone(); java_value };
+        self.toDay = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TODAY.with(Clone::clone).clone())).clone(); java_value };
+        self.toHour = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TOHOUR.with(Clone::clone).clone())).clone(); java_value };
+        self.command = { let java_value = (jcall!(self.request).getParameter(crate::org::allbinary::globals::GLOBALS2::GLOBALS2_ADMINCOMMAND.with(Clone::clone).clone())).clone(); java_value };
     }
     
 
     pub fn addDomNodeInterfaces(&mut self) {
-        self.addDomNodeInterface((self).clone() /* as DomNodeInterface */);
+        self.addDomNodeInterface(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
 
     // throws Exception
     pub fn view(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             self.addDomNodeInterfaces();
-            return self.base.view();
+            return Some(self.base.view());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).TAGHELPERERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("view()"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).TAGHELPERERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("view()"), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                 jcall!(stringBuffer).append(String::from("Attempt to View orders in (fromDate="));
                 jcall!(stringBuffer).append(self.fromDate.clone());
@@ -190,10 +194,10 @@ impl DateRangeOrderHistoryView {
             }
             let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(crate::org::allbinary::business::user::commerce::inventory::order::OrderData::OrderData_ORDERS.with(Clone::clone).clone());
             if true && (self.preprocessing.cmp(&self.ON.clone()) as i32) == 0 {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                     jcall!(self.logUtil).putF(String::from("Adding Preprocessing Orders"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toXmlNode"));
                 }
-                let mut orderHistoryVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(OrderHistoryEntityFactory::getInstance()).getOrders(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PREPROCESSING.with(Clone::clone).clone(), self.fromDate.clone(), self.toDate.clone());
+                let mut orderHistoryVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(OrderHistoryEntityFactory::getInstance()).getOrders3(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PREPROCESSING.with(Clone::clone).clone(), self.fromDate.clone(), self.toDate.clone());
                 let mut size: i32 = jcall!(orderHistoryVector).size();
                 for index in (0..size) {
                     let mut orderHistory: Option<Rc<RefCell<OrderHistory>>> = { let java_object = (jcall!(orderHistoryVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<OrderHistory>>>>().expect("ClassCastException").clone()) };
@@ -201,10 +205,10 @@ impl DateRangeOrderHistoryView {
                 }
             }
             if true && (self.shipped.cmp(&self.ON.clone()) as i32) == 0 {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                     jcall!(self.logUtil).putF(String::from("Adding Shipped Orders"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toXmlNode"));
                 }
-                let mut orderHistoryVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(OrderHistoryEntityFactory::getInstance()).getOrders(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPED.with(Clone::clone).clone(), self.fromDate.clone(), self.toDate.clone());
+                let mut orderHistoryVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(OrderHistoryEntityFactory::getInstance()).getOrders3(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPED.with(Clone::clone).clone(), self.fromDate.clone(), self.toDate.clone());
                 let mut size: i32 = jcall!(orderHistoryVector).size();
                 for index in (0..size) {
                     let mut orderHistory: Option<Rc<RefCell<OrderHistory>>> = { let java_object = (jcall!(orderHistoryVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<OrderHistory>>>>().expect("ClassCastException").clone()) };
@@ -212,10 +216,10 @@ impl DateRangeOrderHistoryView {
                 }
             }
             if true && (self.partiallyShipped.cmp(&self.ON.clone()) as i32) == 0 {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                     jcall!(self.logUtil).putF(String::from("Adding Partially Shipped Orders"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toDomNode"));
                 }
-                let mut orderHistoryVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(OrderHistoryEntityFactory::getInstance()).getOrders(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PARTIALLYSHIPPED.with(Clone::clone).clone(), self.fromDate.clone(), self.toDate.clone());
+                let mut orderHistoryVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(OrderHistoryEntityFactory::getInstance()).getOrders3(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PARTIALLYSHIPPED.with(Clone::clone).clone(), self.fromDate.clone(), self.toDate.clone());
                 let mut size: i32 = jcall!(orderHistoryVector).size();
                 for index in (0..size) {
                     let mut orderHistory: Option<Rc<RefCell<OrderHistory>>> = { let java_object = (jcall!(orderHistoryVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<OrderHistory>>>>().expect("ClassCastException").clone()) };
@@ -223,10 +227,10 @@ impl DateRangeOrderHistoryView {
                 }
             }
             if true && (self.processing.cmp(&self.ON.clone()) as i32) == 0 {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                     jcall!(self.logUtil).putF(String::from("Adding Processing Orders"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toXmlNode"));
                 }
-                let mut orderHistoryVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(OrderHistoryEntityFactory::getInstance()).getOrders(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PROCESSING.with(Clone::clone).clone(), self.fromDate.clone(), self.toDate.clone());
+                let mut orderHistoryVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(OrderHistoryEntityFactory::getInstance()).getOrders3(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PROCESSING.with(Clone::clone).clone(), self.fromDate.clone(), self.toDate.clone());
                 let mut size: i32 = jcall!(orderHistoryVector).size();
                 for index in (0..size) {
                     let mut orderHistory: Option<Rc<RefCell<OrderHistory>>> = { let java_object = (jcall!(orderHistoryVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<OrderHistory>>>>().expect("ClassCastException").clone()) };
@@ -234,102 +238,104 @@ impl DateRangeOrderHistoryView {
                 }
             }
             if true && (self.cancelled.cmp(&self.ON.clone()) as i32) == 0 {
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                     jcall!(self.logUtil).putF(String::from("Adding Cancelled Orders"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("view"));
                 }
-                let mut orderHistoryVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(OrderHistoryEntityFactory::getInstance()).getOrders(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELLED.with(Clone::clone).clone(), self.fromDate.clone(), self.toDate.clone());
+                let mut orderHistoryVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(OrderHistoryEntityFactory::getInstance()).getOrders3(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELLED.with(Clone::clone).clone(), self.fromDate.clone(), self.toDate.clone());
                 let mut size: i32 = jcall!(orderHistoryVector).size();
                 for index in (0..size) {
                     let mut orderHistory: Option<Rc<RefCell<OrderHistory>>> = { let java_object = (jcall!(orderHistoryVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<OrderHistory>>>>().expect("ClassCastException").clone()) };
                     jcall!(node).appendChild(jcall!(orderHistory).toXmlNode(document.clone()));
                 }
             }
-            jcall!(node).appendChild(ModDomHelper::createNameValueNodes(document.clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PREPROCESSINGNAME.with(Clone::clone).clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PREPROCESSING.with(Clone::clone).clone()));
-            jcall!(node).appendChild(ModDomHelper::createNameValueNodes(document.clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PROCESSINGNAME.with(Clone::clone).clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PROCESSING.with(Clone::clone).clone()));
-            jcall!(node).appendChild(ModDomHelper::createNameValueNodes(document.clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELLEDNAME.with(Clone::clone).clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELLED.with(Clone::clone).clone()));
-            jcall!(node).appendChild(ModDomHelper::createNameValueNodes(document.clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PARTIALLYSHIPPEDNAME.with(Clone::clone).clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PARTIALLYSHIPPED.with(Clone::clone).clone()));
-            jcall!(node).appendChild(ModDomHelper::createNameValueNodes(document.clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPEDNAME.with(Clone::clone).clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPED.with(Clone::clone).clone()));
-            jcall!(node).appendChild(ModDomHelper::createNameValueNodes(document.clone(), crate::org::allbinary::globals::GLOBALS2::GLOBALS2_VIEWNAME.with(Clone::clone).clone(), crate::org::allbinary::globals::GLOBALS2::GLOBALS2_VIEW.with(Clone::clone).clone()));
-            return node.clone();
+            jcall!(node).appendChild(ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PREPROCESSINGNAME.with(Clone::clone).clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PREPROCESSING.with(Clone::clone).clone()));
+            jcall!(node).appendChild(ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PROCESSINGNAME.with(Clone::clone).clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PROCESSING.with(Clone::clone).clone()));
+            jcall!(node).appendChild(ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELLEDNAME.with(Clone::clone).clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELLED.with(Clone::clone).clone()));
+            jcall!(node).appendChild(ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PARTIALLYSHIPPEDNAME.with(Clone::clone).clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PARTIALLYSHIPPED.with(Clone::clone).clone()));
+            jcall!(node).appendChild(ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPEDNAME.with(Clone::clone).clone(), crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPED.with(Clone::clone).clone()));
+            jcall!(node).appendChild(ModDomHelper::createNameValueNodes_Document_String_HashMap(document.clone(), crate::org::allbinary::globals::GLOBALS2::GLOBALS2_VIEWNAME.with(Clone::clone).clone(), crate::org::allbinary::globals::GLOBALS2::GLOBALS2_VIEW.with(Clone::clone).clone()));
+            return Some(node.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).XSLLOGGINGERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).FAILURE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toXmlNode"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).XSLLOGGINGERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).FAILURE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toXmlNode"), crate::java_into_object(e.clone()));
             }
             return None;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn isValid(&mut self) -> Option<bool> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut isValid: Option<bool> = true;
             if false || ((self.dateType.cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TYPELONG.with(Clone::clone).clone()) as i32) != 0 && (self.dateType.cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TYPECAESAR.with(Clone::clone).clone()) as i32) != 0) {
-                isValid = false;
+                isValid = { let java_value = (false).clone(); java_value }.clone();
             }
             if true {
                 if (self.dateType.cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TYPELONG.with(Clone::clone).clone()) as i32) == 0 {
                     let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
                     let mut currentTime: i64 = jcall!(calendar).getTimeInMillis();
-                    let mut rangeDate: String = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+                    let mut rangeDate: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
                     if (self.command.cmp(&self.VIEWORDERSINLASTHOUR.clone()) as i32) == 0 {
                         let mut oneHour: i64 = 60_i64 * 60_i64 * 1000_i64;
-                        rangeDate = jcall!(Some((oneHour.clone()) as i64)).toString();
+                        rangeDate = { let java_value = ((Some((oneHour.clone()) as i64)).expect("NullPointerException").to_string()).clone(); java_value };
                     } else if (self.command.cmp(&self.VIEWORDERSINLASTDAY.clone()) as i32) == 0 {
                         let mut oneDay: i64 = 24_i64 * 60_i64 * 60_i64 * 1000_i64;
-                        rangeDate = jcall!(Some((oneDay.clone()) as i64)).toString();
+                        rangeDate = { let java_value = ((Some((oneDay.clone()) as i64)).expect("NullPointerException").to_string()).clone(); java_value };
                     } else if (self.command.cmp(&self.VIEWORDERSINLASTWEEK.clone()) as i32) == 0 {
                         let mut oneWeek: i64 = 7_i64 * 24_i64 * 60_i64 * 60_i64 * 1000_i64;
-                        rangeDate = jcall!(Some((oneWeek.clone()) as i64)).toString();
+                        rangeDate = { let java_value = ((Some((oneWeek.clone()) as i64)).expect("NullPointerException").to_string()).clone(); java_value };
                     } else if (self.command.cmp(&self.VIEWORDERSINLAST30DAYS.clone()) as i32) == 0 {
                         let mut thirtyDays: i64 = 30_i64 * 24_i64 * 60_i64 * 60_i64 * 1000_i64;
-                        rangeDate = jcall!(Some((thirtyDays.clone()) as i64)).toString();
+                        rangeDate = { let java_value = ((Some((thirtyDays.clone()) as i64)).expect("NullPointerException").to_string()).clone(); java_value };
                     } else if (self.command.cmp(&self.VIEWALLORDERS.clone()) as i32) == 0 {
-                        rangeDate = jcall!(Some((currentTime.clone()) as i64)).toString();
+                        rangeDate = { let java_value = ((Some((currentTime.clone()) as i64)).expect("NullPointerException").to_string()).clone(); java_value };
                     }
-                    let mut rangeDateLong: i64 = ((Some((rangeDate.clone()) as i64)).unwrap() as i64);
-                    self.fromDate = jcall!(Some((currentTime - rangeDateLong) as i64)).toString();
-                    let mut time: String = jcall!(Some((currentTime.clone()) as i64)).toString().clone();
+                    let mut rangeDateLong: i64 = ((Some((rangeDate.clone()).trim().parse::<i64>().expect("NumberFormatException"))).unwrap() as i64);
+                    self.fromDate = { let java_value = ((Some((currentTime - rangeDateLong) as i64)).expect("NullPointerException").to_string()).clone(); java_value };
+                    let mut time: String = (Some((currentTime.clone()) as i64)).expect("NullPointerException").to_string().clone();
                     self.toDate = time.clone();
                 } else if (self.dateType.cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TYPECAESAR.with(Clone::clone).clone()) as i32) == 0 {
                     let mut calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance();
                     jcall!(TimeUtil::getInstance()).setCalendar(calendar.clone(), self.fromYear.clone(), self.fromMonth.clone(), self.fromDay.clone(), self.fromHour.clone());
-                    self.fromDate = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString();
+                    self.fromDate = { let java_value = ((Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string()).clone(); java_value };
                     jcall!(TimeUtil::getInstance()).setCalendar(calendar.clone(), self.toYear.clone(), self.toMonth.clone(), self.toDay.clone(), self.toHour.clone());
-                    self.toDate = jcall!(Some((jcall!(calendar).getTimeInMillis()) as i64)).toString();
+                    self.toDate = { let java_value = ((Some((jcall!(calendar).getTimeInMillis()) as i64)).expect("NullPointerException").to_string()).clone(); java_value };
                 }
                 if jcall!(StringValidationUtil::getInstance()).isEmpty(self.toDate.clone()) || (self.toDate.chars().count() as i32) > self.MAXLEN {
-                    isValid = false;
+                    isValid = { let java_value = (false).clone(); java_value }.clone();
                 }
                 if jcall!(StringValidationUtil::getInstance()).isEmpty(self.fromDate.clone()) || (self.fromDate.chars().count() as i32) > self.MAXLEN {
-                    isValid = false;
+                    isValid = { let java_value = (false).clone(); java_value }.clone();
                 }
             }
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                 jcall!(stringBuffer).append(String::from("Attempt to View orders in (fromDate="));
                 jcall!(stringBuffer).append(self.fromDate.clone());
                 jcall!(stringBuffer).append(String::from(",toDate="));
                 jcall!(stringBuffer).append(self.toDate.clone());
                 jcall!(stringBuffer).append(String::from(")"));
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
-            return isValid.clone();
+            return Some(isValid.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
-                jcall!(self.logUtil).put(String::from("Exception in validation"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).IS_VALID.clone(), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put(String::from("Exception in validation"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).IS_VALID.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -345,7 +351,7 @@ impl DateRangeOrderHistoryView {
 
     // throws Exception
     pub fn validationInfo(&mut self) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut result: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             if false || ((self.dateType.cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TYPELONG.with(Clone::clone).clone()) as i32) != 0 && (self.dateType.cmp(&crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_TYPECAESAR.with(Clone::clone).clone()) as i32) != 0) {
                 jcall!(result).append(String::from("DATETYPE not recognized"));
@@ -356,18 +362,19 @@ impl DateRangeOrderHistoryView {
             if jcall!(StringValidationUtil::getInstance()).isEmpty(self.fromDate.clone()) || (self.fromDate.chars().count() as i32) > self.MAXLEN {
                 jcall!(result).append(String::from("Invalid From Date"));
             }
-            return jcall!(result).toString();
+            return Some(jcall!(result).toString());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEWERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEWERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).put(String::from("Failed to generate validation error info"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("validationInfo()"), crate::java_into_object(e.clone()));
             }
             return String::from("Error Getting Validation Info");
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for DateRangeOrderHistoryView {
@@ -378,6 +385,10 @@ impl std::ops::DerefMut for DateRangeOrderHistoryView {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn for DateRangeOrderHistoryView {
+    fn as_TransformInfoHttpComposite(&self) -> &crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &self.base.base.base }
+    fn as_TransformInfoHttpComposite_mut(&mut self) -> &mut crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &mut self.base.base.base }
+}
 impl crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentViewDyn for DateRangeOrderHistoryView {
     fn as_HttpStoreComponentView(&self) -> &crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &self.base }
     fn as_HttpStoreComponentView_mut(&mut self) -> &mut crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &mut self.base }

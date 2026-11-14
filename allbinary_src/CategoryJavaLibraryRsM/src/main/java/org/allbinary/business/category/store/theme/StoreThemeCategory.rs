@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::category::Category::Category;
@@ -32,6 +31,7 @@ use crate::org::allbinary::logic::visual::theme::ThemesData::ThemesData;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::StoreThemeCategoryInterface::StoreThemeCategoryInterface;
 
 // Borrows the object of a Java reference
@@ -48,6 +48,11 @@ pub struct StoreThemeCategory {
 }
 
 // impl StoreThemeCategoryInterface for StoreThemeCategory with the methods of the trait
+impl crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface for StoreThemeCategory {
+    fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { crate::org::allbinary::business::category::Category::Category::getKey(crate::org::allbinary::business::category::Category::CategoryDyn::as_Category_mut(self)) }
+    fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::toVector(self) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toHashMap(self) }
+}
 
 impl StoreThemeCategory {
     
@@ -86,7 +91,7 @@ impl StoreThemeCategory {
     }
     
 
-    pub fn new_struct4(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut node: Option<Rc<RefCell<Node>>>, mut categoryPropertiesFactoryInterface: Option<Rc<RefCell<dyn CategoryPropertiesFactoryInterface>>>, mut level: i32) -> Self {
+    pub fn new_struct4_TransformInfoInterface_Node_CategoryPropertiesFactoryInterface_int(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut node: Option<Rc<RefCell<Node>>>, mut categoryPropertiesFactoryInterface: Option<Rc<RefCell<dyn CategoryPropertiesFactoryInterface>>>, mut level: i32) -> Self {
         let mut this = Self {
             base: Category::new_struct2(categoryPropertiesFactoryInterface.clone(), level.clone()),
             transformInfoInterface: None,
@@ -99,8 +104,8 @@ impl StoreThemeCategory {
         this
     }
 
-    pub fn new4(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut node: Option<Rc<RefCell<Node>>>, mut categoryPropertiesFactoryInterface: Option<Rc<RefCell<dyn CategoryPropertiesFactoryInterface>>>, mut level: i32) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct4(transformInfoInterface, node, categoryPropertiesFactoryInterface, level))))
+    pub fn new4_TransformInfoInterface_Node_CategoryPropertiesFactoryInterface_int(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut node: Option<Rc<RefCell<Node>>>, mut categoryPropertiesFactoryInterface: Option<Rc<RefCell<dyn CategoryPropertiesFactoryInterface>>>, mut level: i32) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct4_TransformInfoInterface_Node_CategoryPropertiesFactoryInterface_int(transformInfoInterface, node, categoryPropertiesFactoryInterface, level))))
     }
     
 
@@ -129,12 +134,12 @@ impl StoreThemeCategory {
 
     // throws Exception
     pub fn addThemes(&mut self, mut node: Option<Rc<RefCell<Node>>>) {
-        let mut themesNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(ThemesData::getInstance()).NAME.clone(), jcall!(node).getChildNodes());
+        let mut themesNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(ThemesData::getInstance()).NAME.clone(); java_field }.clone(), jcall!(node).getChildNodes());
         let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(themesNode).getChildNodes();
-        for index in (0..jcall!(nodeList).getLength()) {
+        for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
             let mut themeNode: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
-            if jcall!(jcall!(themeNode).getNodeName()).compareTo(jcall!(ThemeData::getInstance()).NAME.clone()) == 0 {
-                jcall!(self.themeVector).add(crate::java_into_object(ThemeValidation::new2(None /* Java this: a &mut self method has no Rc of itself */, themeNode.clone())));
+            if jcall!(jcall!(themeNode).getNodeName()).compareTo({ let java_field = jcall!(ThemeData::getInstance()).NAME.clone(); java_field }.clone()) == 0 {
+                jcall!(self.themeVector).add(crate::java_into_object(ThemeValidation::new2_StoreThemeCategoryInterface_Node(None /* Java this: a &mut self method has no Rc of itself */, themeNode.clone())));
             }
         }
     }
@@ -160,9 +165,9 @@ impl StoreThemeCategory {
     
 
     // throws Exception
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut categoryHashMap: Option<Rc<RefCell<HashMap>>> = self.base.toHashMap();
-        jcall!(categoryHashMap).put(jcall!(ThemesData::getInstance()).NAME.clone(), self.themeVector.clone());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut categoryHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = self.base.toHashMap();
+        jcall!(categoryHashMap).put(crate::java_into_object({ let java_field = jcall!(ThemesData::getInstance()).NAME.clone(); java_field }.clone()), crate::java_into_object(self.themeVector.clone()));
         return categoryHashMap.clone();
     }
     
@@ -185,7 +190,7 @@ impl crate::org::allbinary::business::category::Category::CategoryDyn for StoreT
     fn as_Category(&self) -> &crate::org::allbinary::business::category::Category::Category { &self.base }
     fn as_Category_mut(&mut self) -> &mut crate::org::allbinary::business::category::Category::Category { &mut self.base }
     fn isValid(&mut self) -> Option<bool> { Self::isValid(self) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::toHashMap(self) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toHashMap(self) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::toVector(self) }
 }
 

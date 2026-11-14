@@ -21,6 +21,7 @@ use crate::org::allbinary::logic::system::os::android::AndroidOperatingSystemFac
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::GenericOperatingSystem::GenericOperatingSystem;
 use super::SystemProperties::SystemProperties;
 
@@ -40,6 +41,10 @@ pub struct OperatingSystemFactory {
 thread_local! { pub static OperatingSystemFactory_instance: Option<Rc<RefCell<OperatingSystemFactory>>> = OperatingSystemFactory::new(); }
 
 impl OperatingSystemFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<OperatingSystemFactory>>> {
@@ -72,14 +77,14 @@ impl OperatingSystemFactory {
             let mut osName: String = jcall!(systemProperties).getName();
             if !self.hasDetected {
                 self.hasDetected = true;
-                if osName.find(&jcall!(OperatingSystems::OperatingSystems::getInstance()).ANDROID.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-                    jcall!(self.logUtil).putF(String::from("Found a Android OS"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone());
-                    self.genericOperatingSystem = jcall!(AndroidOperatingSystemFactory::getInstance()).getOperatingSystemInstance();
-                    { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Operating System Info: ")).append(jcall!(self.genericOperatingSystem).toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-                } else if osName.find(&jcall!(OperatingSystems::OperatingSystems::getInstance()).HARMONY.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-                    jcall!(self.logUtil).putF(String::from("Found a Harmony OS"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone());
-                    self.genericOperatingSystem = jcall!(AndroidOperatingSystemFactory::getInstance()).getOperatingSystemInstance();
-                    { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Operating System Info: ")).append(jcall!(self.genericOperatingSystem).toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                if osName.find(&{ let java_field = jcall!(OperatingSystems::OperatingSystems::getInstance()).ANDROID.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+                    jcall!(self.logUtil).putF(String::from("Found a Android OS"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone());
+                    self.genericOperatingSystem = { let java_value = (jcall!(AndroidOperatingSystemFactory::getInstance()).getOperatingSystemInstance()).clone(); java_value };
+                    { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Operating System Info: ")).append(jcall!(self.genericOperatingSystem).as_GenericOperatingSystem_mut().toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                } else if osName.find(&{ let java_field = jcall!(OperatingSystems::OperatingSystems::getInstance()).HARMONY.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+                    jcall!(self.logUtil).putF(String::from("Found a Harmony OS"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone());
+                    self.genericOperatingSystem = { let java_value = (jcall!(AndroidOperatingSystemFactory::getInstance()).getOperatingSystemInstance()).clone(); java_value };
+                    { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Operating System Info: ")).append(jcall!(self.genericOperatingSystem).as_GenericOperatingSystem_mut().toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 } else {
                     panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(StringMaker::new()).append(String::from("OS Not Supported: ")).append(osName.clone()).toString())));
                 }
@@ -87,10 +92,10 @@ impl OperatingSystemFactory {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            self.genericOperatingSystem = NoOperatingSystem_NO_OPERATING_SYSTEM.with(Clone::clone).clone();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
+            self.genericOperatingSystem = { let java_value = (NoOperatingSystem_NO_OPERATING_SYSTEM.with(Clone::clone)).clone(); java_value }.clone();
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         return self.genericOperatingSystem.clone();

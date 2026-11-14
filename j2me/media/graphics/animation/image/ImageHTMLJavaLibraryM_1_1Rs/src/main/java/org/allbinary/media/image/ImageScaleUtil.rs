@@ -17,14 +17,13 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::image::ImageCache::ImageCache;
 use crate::org::microemu::device::playn::PlaynImmutableImage::PlaynImmutableImage;
 use crate::org::microemu::device::playn::PlaynMutableImage::PlaynMutableImage;
 use crate::playn::core::CanvasImage::CanvasImage;
 use crate::playn::core::CanvasSurface::CanvasSurface;
-use super::core::core;
-use super::playn::playn;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,6 +38,10 @@ pub struct ImageScaleUtil {
 thread_local! { pub static ImageScaleUtil_instance: Option<Rc<RefCell<ImageScaleUtil>>> = ImageScaleUtil::new(); }
 
 impl ImageScaleUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ImageScaleUtil>>> {
@@ -58,13 +61,13 @@ impl ImageScaleUtil {
     
 
     // throws Exception
-    pub fn createImage2(&mut self, mut imageCache: Option<Rc<RefCell<ImageCache>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut scaleNominatorX: f32, mut scaleDenominatorX: f32, mut scaleNominatorY: f32, mut scaleDenominatorY: f32, mut cached: bool) -> Option<Rc<RefCell<Image>>> {
+    pub fn createImage2(&mut self, mut imageCache: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut scaleNominatorX: f32, mut scaleDenominatorX: f32, mut scaleNominatorY: f32, mut scaleDenominatorY: f32, mut cached: bool) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return self.createImage3(imageCache.clone(), originalImage.clone(), scaleNominatorX.clone(), scaleDenominatorX.clone(), scaleNominatorY.clone(), scaleDenominatorY.clone(), cached.clone(), true);
     }
     
 
     // throws Exception
-    pub fn createImage3(&mut self, mut imageCache: Option<Rc<RefCell<ImageCache>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut scaleNominatorX: f32, mut scaleDenominatorX: f32, mut scaleNominatorY: f32, mut scaleDenominatorY: f32, mut cached: bool, mut mutable: bool) -> Option<Rc<RefCell<Image>>> {
+    pub fn createImage3(&mut self, mut imageCache: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut scaleNominatorX: f32, mut scaleDenominatorX: f32, mut scaleNominatorY: f32, mut scaleDenominatorY: f32, mut cached: bool, mut mutable: bool) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         let mut scaleX: f32 = scaleNominatorX / scaleDenominatorX;
         let mut scaleY: f32 = scaleNominatorY / scaleDenominatorY;
         return self.createImage(imageCache.clone(), originalImage.clone(), scaleX.clone(), scaleY.clone(), cached.clone());
@@ -72,22 +75,22 @@ impl ImageScaleUtil {
     
 
     // throws Exception
-    pub fn createImage(&mut self, mut imageCache: Option<Rc<RefCell<ImageCache>>>, mut originalImage: Option<Rc<RefCell<Image>>>, mut scaleX: f32, mut scaleY: f32, mut cached: bool) -> Option<Rc<RefCell<Image>>> {
+    pub fn createImage(&mut self, mut imageCache: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>>, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut scaleX: f32, mut scaleY: f32, mut cached: bool) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return self.createImageInternal(originalImage.clone(), scaleX.clone(), scaleY.clone());
     }
     
 
     // throws Exception
-    pub fn createImageInternal(&mut self, mut originalImage: Option<Rc<RefCell<Image>>>, mut scaleX: f32, mut scaleY: f32) -> Option<Rc<RefCell<Image>>> {
-        let mut image: Option<Rc<RefCell<Image>>> = jcall!(ImageCreationUtil::ImageCreationUtil::getInstance()).createImageWH((((jcall!(originalImage).getWidth() * scaleX)) as i32), (((jcall!(originalImage).getHeight() * scaleY)) as i32));
+    pub fn createImageInternal(&mut self, mut originalImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut scaleX: f32, mut scaleY: f32) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
+        let mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = jcall!(ImageCreationUtil::ImageCreationUtil::getInstance()).createImageWH((((((jcall!(originalImage).getWidth()) as f32) * scaleX)) as i32), (((((jcall!(originalImage).getHeight()) as f32) * scaleY)) as i32));
         if jcall!(image).isMutable() {
-            let mut originalPlayNImage: Option<Rc<RefCell<Image>>> = None;
+            let mut originalPlayNImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> = None;
             if jcall!(originalImage).isMutable() {
                 let mut originalHTMLImage: Option<Rc<RefCell<PlaynMutableImage>>> = (originalImage).clone() /* as PlaynMutableImage */;
-                originalPlayNImage = (jcall!(originalHTMLImage).getImage()).clone() /* as Image */;
+                originalPlayNImage = { let java_value = ((jcall!(originalHTMLImage).getImage()).clone()).clone(); java_value };
             } else {
                 let mut originalHTMLImage: Option<Rc<RefCell<PlaynImmutableImage>>> = (originalImage).clone() /* as PlaynImmutableImage */;
-                originalPlayNImage = (jcall!(originalHTMLImage).getImage()).clone() /* as Image */;
+                originalPlayNImage = { let java_value = ((jcall!(originalHTMLImage).getImage()).clone()).clone(); java_value };
             }
             let mut htmlImage: Option<Rc<RefCell<PlaynMutableImage>>> = (image).clone() /* as PlaynMutableImage */;
             let mut canvasImage: Option<Rc<RefCell<CanvasImage>>> = (jcall!(htmlImage).getImage()).clone() /* as CanvasImage */;

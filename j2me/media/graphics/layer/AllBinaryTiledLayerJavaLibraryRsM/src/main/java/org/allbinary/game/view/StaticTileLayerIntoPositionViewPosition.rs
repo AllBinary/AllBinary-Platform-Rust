@@ -69,7 +69,7 @@ impl StaticTileLayerIntoPositionViewPosition {
     
 
     pub fn setTiledLayer(mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>>) {
-        unsafe { *StaticTileLayerIntoPositionViewPosition_tiledLayer = tiledLayer.clone() };
+        unsafe { *StaticTileLayerIntoPositionViewPosition_tiledLayer = tiledLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::Layer::LayerDyn>>) };
     }
 }
 impl std::ops::Deref for StaticTileLayerIntoPositionViewPosition {

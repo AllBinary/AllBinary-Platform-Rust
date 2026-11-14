@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait GameLayerPlacementInterfaceBasicArrayListFactoryInterfaceFactory {
+pub trait GameLayerPlacementInterfaceBasicArrayListFactoryInterfaceFactory: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getInstance(&mut self, level: i32) -> Option<Rc<RefCell<dyn LayerPlacementInterfaceBasicArrayListFactoryInterface>>>;
     
 
     fn size(&mut self) -> i32;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

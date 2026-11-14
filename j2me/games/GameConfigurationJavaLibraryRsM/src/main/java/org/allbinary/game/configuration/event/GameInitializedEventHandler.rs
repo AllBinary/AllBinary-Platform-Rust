@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
+use crate::java::lang::Exception::*;
 use super::GameInitializedListenerInterface::GameInitializedListenerInterface;
 use super::GameInitializedEvent::GameInitializedEvent;
 
@@ -58,8 +59,8 @@ impl GameInitializedEventHandler {
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut gameInitializedListenerInterface: Option<Rc<RefCell<dyn GameInitializedListenerInterface>>> = (panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn GameInitializedListenerInterface"));
-        jcall!(gameInitializedListenerInterface).onGameInitialized((eventObject).clone() /* as GameInitializedEvent */);
+        let mut gameInitializedListenerInterface: Option<Rc<RefCell<dyn GameInitializedListenerInterface>>> = ((|| -> Option<Rc<RefCell<dyn GameInitializedListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn GameInitializedListenerInterface") })());
+        jcall!(gameInitializedListenerInterface).onGameInitialized((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<GameInitializedEvent>() }, "ClassCastException: not a GameInitializedEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<GameInitializedEvent>) } }));
     }
 }
 impl std::ops::Deref for GameInitializedEventHandler {

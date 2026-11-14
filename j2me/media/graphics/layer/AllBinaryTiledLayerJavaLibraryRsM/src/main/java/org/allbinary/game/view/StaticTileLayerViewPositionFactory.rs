@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::view::ViewPositionBase::ViewPositionBase;
 use crate::org::allbinary::view::ViewPositionFactoryInterface::ViewPositionFactoryInterface;
+use crate::java::lang::Exception::*;
 use super::StaticTileLayerIntoPositionViewPosition::StaticTileLayerIntoPositionViewPosition;
 
 // Borrows the object of a Java reference
@@ -37,6 +38,10 @@ impl ViewPositionFactoryInterface for StaticTileLayerViewPositionFactory {
 
 impl StaticTileLayerViewPositionFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -50,7 +55,7 @@ impl StaticTileLayerViewPositionFactory {
 
     // throws Exception
     pub fn getInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>> {
-        return StaticTileLayerIntoPositionViewPosition::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>);
+        return StaticTileLayerIntoPositionViewPosition::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>);
     }
 }
 

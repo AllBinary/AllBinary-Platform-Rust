@@ -37,6 +37,10 @@ thread_local! { pub static TsUtil_instance: Option<Rc<RefCell<TsUtil>>> = TsUtil
 
 impl TsUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -60,7 +64,7 @@ impl TsUtil {
 
     // throws InterruptedException
     pub fn waitFor(&mut self, mut any: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut timeoutMillis: i64) {
-        let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = (any).clone() /* as Any */;
+        let mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = (any).clone();
         std::thread::sleep(std::time::Duration::from_millis((timeoutMillis.clone()) as u64));
     }
     

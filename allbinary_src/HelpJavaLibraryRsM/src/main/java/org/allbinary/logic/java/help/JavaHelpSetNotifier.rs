@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::net::URL::URL;
+use crate::java::net::URL::URL;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 // use crate::javax::help::HelpSet::HelpSet;
@@ -32,9 +32,13 @@ macro_rules! jcall {
 pub struct JavaHelpSetNotifier {
 }
 
-pub static mut JavaHelpSetNotifier_vector: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = std::cell::LazyCell::new(|| BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
+pub static mut JavaHelpSetNotifier_vector: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = std::cell::LazyCell::new(|| BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
 
 impl JavaHelpSetNotifier {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -59,7 +63,7 @@ impl JavaHelpSetNotifier {
         let mut size: i32 = jcall!(unsafe { JavaHelpSetNotifier_vector.clone() }).size();
         let mut urlArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(unsafe { JavaHelpSetNotifier_vector.clone() }).toArray();
         for i in (0..size) {
-            let mut nextURL: Option<Rc<RefCell<URL>>> = (urlArray[(i) as usize]).clone() /* as URL */;
+            let mut nextURL: Option<Rc<RefCell<URL>>> = { let java_object = (urlArray[(i) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<URL>>>>().expect("ClassCastException").clone()) };
             if (jcall!(url).toString().cmp(&jcall!(nextURL).toString()) as i32) == 0 {
                 isNotified = true;
             }

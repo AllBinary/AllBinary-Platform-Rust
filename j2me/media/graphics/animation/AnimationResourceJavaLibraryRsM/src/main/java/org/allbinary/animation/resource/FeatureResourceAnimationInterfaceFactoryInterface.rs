@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub trait FeatureResourceAnimationInterfaceFactoryInterface: ResourceAnimationInterfaceFactoryInterface + RectangleResourceFactoryInterface + GameFeatureControlledInterface {
     
 
-    fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>;
+    fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>;
 }
 
 

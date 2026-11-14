@@ -48,7 +48,7 @@ impl<E> ABStack<E> {
     
 
     pub fn push(&mut self, mut item: E) -> E {
-        return self.base.push(item.clone());
+        return { let java_arguments = (crate::java_into_object(item.clone()),); self.base.push(java_arguments.0) };
     }
     
 
@@ -68,12 +68,12 @@ impl<E> ABStack<E> {
     
 
     pub fn search(&mut self, mut obj: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> i32 {
-        return self.base.search(obj.clone());
+        return { let java_arguments = (obj.clone(),); self.base.search(java_arguments.0) };
     }
     
 
     pub fn removeElement(&mut self, mut obj: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> bool {
-        return self.base.removeElement(obj.clone());
+        return { let java_arguments = (obj.clone(),); self.base.removeElement(java_arguments.0) };
     }
 }
 impl<E> std::ops::Deref for ABStack<E> {

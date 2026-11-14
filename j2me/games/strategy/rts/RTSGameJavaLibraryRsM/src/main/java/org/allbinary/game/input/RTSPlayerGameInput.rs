@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::input::form::RTSFormInput::RTSFormInput;
 use crate::org::allbinary::game::layer::RTSLayer::RTSLayer;
 use crate::org::allbinary::game::layer::RTSLayerInfoPaintable::RTSLayerInfoPaintable;
@@ -49,6 +49,7 @@ use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPos
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCompositeInterface::GeographicMapCompositeInterface;
 use crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
+use crate::java::lang::Exception::*;
 use super::PlayerGameInput::PlayerGameInput;
 use super::GameInputProcessor::GameInputProcessor;
 use super::ScrollMapPlayerGameInput::ScrollMapPlayerGameInput;
@@ -82,15 +83,13 @@ pub struct RTSPlayerGameInput {
     pub selectedRtsFormInput: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::form::RTSFormInput::RTSFormInputDyn>>>,
 }
 
-impl crate::org::allbinary::game::input::event::GameKeyEventListenerInterface::GameKeyEventListenerInterface for RTSPlayerGameInput {
-}
 
 impl RTSPlayerGameInput {
     
 
     pub fn new_struct(mut gameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>, mut inputList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut playerInputId: i32, mut towerInfoPaintable: Option<Rc<RefCell<RTSLayerInfoPaintable>>>, mut rtsPlayerLayerInterface: Option<Rc<RefCell<dyn RTSPlayerLayerInterface>>>, mut layerPositionFinderInterface: Option<Rc<RefCell<dyn LayerPositionFinderInterface>>>, mut selectRTSLayerVisitorFactoryInterface: Option<Rc<RefCell<dyn SelectRTSLayerVisitorFactoryInterface>>>) -> Self {
         let mut this = Self {
-            base: PlayerGameInput::new_struct(inputList.clone(), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>), playerInputId.clone()),
+            base: PlayerGameInput::new_struct(inputList.clone(), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>), playerInputId.clone()),
             inputProcessorArray: Vec::new(),
             removeInputProcessorArray: Vec::new(),
             inputList: None,
@@ -104,10 +103,10 @@ impl RTSPlayerGameInput {
             layerPositionFinderInterface: None,
             selectedRtsFormInput: None,
         };
-        this.inputProcessorArray = vec![None; (jcall!(InputFactory::InputFactory::getInstance()).MAX) as usize];
-        this.removeInputProcessorArray = vec![None; (jcall!(InputFactory::InputFactory::getInstance()).MAX) as usize];
-        this.isSingleKeyProcessing = jcall!(Features::getInstance()).isFeature(jcall!(InputFeatureFactory::getInstance()).SINGLE_KEY_REPEAT_PRESS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(Features::getInstance()).isFeature(jcall!(InputFeatureFactory::getInstance()).SINGLE_KEY_PRESS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
-        this.motionGestureInputList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.inputProcessorArray = vec![None; ({ let java_field = jcall!(InputFactory::InputFactory::getInstance()).MAX.clone(); java_field }) as usize];
+        this.removeInputProcessorArray = vec![None; ({ let java_field = jcall!(InputFactory::InputFactory::getInstance()).MAX.clone(); java_field }) as usize];
+        this.isSingleKeyProcessing = jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(InputFeatureFactory::getInstance()).SINGLE_KEY_REPEAT_PRESS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) || jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(InputFeatureFactory::getInstance()).SINGLE_KEY_PRESS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
+        this.motionGestureInputList = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.selectedRtsFormInput = NullRTSFormInputFactory::getInstance();
         // super(...) is in the struct literal above
         this.initInputProcessors();
@@ -119,7 +118,7 @@ impl RTSPlayerGameInput {
         if !match (&this.rtsPlayerLayerInterface, &crate::org::allbinary::game::layer::NullRTSLayer::NullRTSLayer_NULL_RTS_LAYER.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             { let java_arguments = (jcall!(this.rtsPlayerLayerInterface).getRTSFormInput(),); this.setSelectedRtsFormInput(java_arguments.0) };
         }
-        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (jcall!(this.gameCanvas).getLayerManager()).clone() /* as GeographicMapCompositeInterface */;
+        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryGameLayerManager cannot be cast to GeographicMapCompositeInterface") })();
         let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
         this.scrollPlayerGameInput = ScrollMapPlayerGameInput::new(geographicMapInterface.clone(), this.inputList.clone(), playerInputId.clone());
         this.layerPositionFinderInterface = layerPositionFinderInterface.clone();
@@ -142,14 +141,14 @@ impl RTSPlayerGameInput {
 
     pub fn onDisplayChangeEvent(&mut self, mut displayChangeEvent: Option<Rc<RefCell<DisplayChangeEvent>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onDisplayChangeEvent"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onDisplayChangeEvent"));
             jcall!(self.getRTSLayerInfoPaintable()).update();
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onDisplayChangeEvent"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onDisplayChangeEvent"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -157,28 +156,28 @@ impl RTSPlayerGameInput {
 
     // throws Exception
     pub fn left(&mut self) {
-        jcall!(jcall!(self.rtsPlayerLayerInterface).getCurrentScrollSelectionForm()).processInputKey(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }.clone());
+        jcall!(jcall!(self.rtsPlayerLayerInterface).getCurrentScrollSelectionForm()).processInputKey(crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone).clone());
     }
     
 
     // throws Exception
     pub fn right(&mut self) {
-        jcall!(jcall!(self.rtsPlayerLayerInterface).getCurrentScrollSelectionForm()).processInputKey(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }.clone());
+        jcall!(jcall!(self.rtsPlayerLayerInterface).getCurrentScrollSelectionForm()).processInputKey(crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone).clone());
     }
     
 
     pub fn initInputProcessors(&mut self) {
-        self.inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }) as usize] = RTSPlayerLeftGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */);
-        self.inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM0.clone() }) as usize] = self.inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }) as usize].clone();
-        self.inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }) as usize] = RTSPlayerRightGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */);
-        self.inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_POUND.clone() }) as usize] = self.inputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }) as usize].clone();
-        self.removeInputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }) as usize] = RTSPlayerFireGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */);
-        self.removeInputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM3.clone() }) as usize] = self.removeInputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }) as usize].clone();
-        self.removeInputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM3.clone() }) as usize] = self.removeInputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }) as usize].clone();
-        self.removeInputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() }) as usize] = self.removeInputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }) as usize].clone();
-        self.removeInputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() }) as usize] = self.removeInputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }) as usize].clone();
-        self.removeInputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM0.clone() }) as usize] = self.removeInputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }) as usize].clone();
-        self.removeInputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_POUND.clone() }) as usize] = self.removeInputProcessorArray[(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.clone() }) as usize].clone();
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone)) as usize; self.inputProcessorArray[java_index] = RTSPlayerLeftGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>); };
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM0.with(Clone::clone)) as usize; self.inputProcessorArray[java_index] = { let java_value = (self.inputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone)) as usize]).clone(); java_value }.clone(); };
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone)) as usize; self.inputProcessorArray[java_index] = RTSPlayerRightGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>); };
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_POUND.with(Clone::clone)) as usize; self.inputProcessorArray[java_index] = { let java_value = (self.inputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone)) as usize]).clone(); java_value }.clone(); };
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone)) as usize; self.removeInputProcessorArray[java_index] = RTSPlayerFireGameInputProcessor::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameInputProcessor::GameInputProcessorDyn>>); };
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM3.with(Clone::clone)) as usize; self.removeInputProcessorArray[java_index] = { let java_value = (self.removeInputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone)) as usize]).clone(); java_value }.clone(); };
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM3.with(Clone::clone)) as usize; self.removeInputProcessorArray[java_index] = { let java_value = (self.removeInputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone)) as usize]).clone(); java_value }.clone(); };
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone)) as usize; self.removeInputProcessorArray[java_index] = { let java_value = (self.removeInputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone)) as usize]).clone(); java_value }.clone(); };
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone)) as usize; self.removeInputProcessorArray[java_index] = { let java_value = (self.removeInputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone)) as usize]).clone(); java_value }.clone(); };
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM0.with(Clone::clone)) as usize; self.removeInputProcessorArray[java_index] = { let java_value = (self.removeInputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone)) as usize]).clone(); java_value }.clone(); };
+        { let java_index = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_POUND.with(Clone::clone)) as usize; self.removeInputProcessorArray[java_index] = { let java_value = (self.removeInputProcessorArray[(crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM1.with(Clone::clone)) as usize]).clone(); java_value }.clone(); };
         GameInputProcessorUtil::GameInputProcessorUtil::init(self.inputProcessorArray.clone());
         GameInputProcessorUtil::GameInputProcessorUtil::init(self.removeInputProcessorArray.clone());
     }
@@ -192,7 +191,7 @@ impl RTSPlayerGameInput {
             let mut key: i32 = 0;
             for index in (0..size) {
                 let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = { let java_object = (jcall!(self.inputList).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameKeyEvent>>>>().expect("ClassCastException").clone()) };
-                key = jcall!(gameKeyEvent).getKey();
+                key = { let java_value = (jcall!(gameKeyEvent).getKey()).clone(); java_value };
                 jcall!(self.getScrollPlayerGameInput()).processInputKey(key.clone());
                 jcall!(self.getSelectedBuildingPlayerGameInput()).processInputKey(key.clone());
                 jcall!(self.inputProcessorArray[(key) as usize]).processEvent(layerManager.clone(), gameKeyEvent.clone());
@@ -206,9 +205,9 @@ impl RTSPlayerGameInput {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).PROCESS_INPUT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).PROCESS_INPUT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -222,7 +221,7 @@ impl RTSPlayerGameInput {
     // throws Exception
     pub fn select(&mut self, mut motionGestureEvent: Option<Rc<RefCell<MotionGestureEvent>>>) {
         let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(motionGestureEvent).getCurrentPoint();
-        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (jcall!(self.gameCanvas).getLayerManager()).clone() /* as GeographicMapCompositeInterface */;
+        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryGameLayerManager cannot be cast to GeographicMapCompositeInterface") })();
         let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
         let mut allBinaryTiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(geographicMapInterface).getAllBinaryTiledLayer();
         let mut x: i32 = jcall!(point).getX() + jcall!(allBinaryTiledLayer).getXP();
@@ -232,15 +231,15 @@ impl RTSPlayerGameInput {
             jcall!(SecondaryPlayerQueueFactory::getInstance()).add(SelectSound::getInstance());
             let mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = jcall!(self.layerPositionFinderInterface).getLayerInterface(geographicMapCellPosition.clone());
             if match (&layer, &crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                layer = CollidableDestroyableDamageableLayer::getNullInstance();
+                layer = { let java_value = (CollidableDestroyableDamageableLayer::getNullInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>);
             } else {
-                geographicMapCellPosition = jcall!(geographicMapInterface).getCellPositionAtXY(jcall!(layer).getXP(), jcall!(layer).getYP());
+                geographicMapCellPosition = { let java_value = (jcall!(geographicMapInterface).getCellPositionAtXY(jcall!(layer).getXP(), jcall!(layer).getYP())).clone(); java_value };
             }
-            let mut foundRTSLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (layer).clone() /* as CollidableDestroyableDamageableLayer */;
+            let mut foundRTSLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to CollidableDestroyableDamageableLayer") })();
             self.setSelectedRTSLayer(foundRTSLayer.clone(), geographicMapCellPosition.clone());
         } else {
             let mut commonLabels: Option<Rc<RefCell<CommonLabels>>> = CommonLabels::getInstance();
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Off Of Map -")).append(jcall!(commonLabels).WIDTH_LABEL.clone()).appendint(jcall!(allBinaryTiledLayer).getWidth()).append(jcall!(commonLabels).HEIGHT_LABEL.clone()).appendint(jcall!(allBinaryTiledLayer).getHeight()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("select"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(String::from("Off Of Map -")).append({ let java_field = jcall!(commonLabels).WIDTH_LABEL.clone(); java_field }.clone()).appendint(jcall!(allBinaryTiledLayer).getWidth()).append({ let java_field = jcall!(commonLabels).HEIGHT_LABEL.clone(); java_field }.clone()).appendint(jcall!(allBinaryTiledLayer).getHeight()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("select"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
     }
     
@@ -251,26 +250,26 @@ impl RTSPlayerGameInput {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         let mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = jcall!(self.getSelectedRtsFormInput()).getSelectedGeographicCellPosition();
-        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (jcall!(self.gameCanvas).getLayerManager()).clone() /* as GeographicMapCompositeInterface */;
+        let mut geographicMapCompositeInterface: Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn GeographicMapCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryGameLayerManager cannot be cast to GeographicMapCompositeInterface") })();
         let mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> = jcall!(geographicMapCompositeInterface).getGeographicMapInterface()[(0) as usize].clone();
         let mut allBinaryTiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryTiledLayer::AllBinaryTiledLayerDyn>>> = jcall!(geographicMapInterface).getAllBinaryTiledLayer();
-        jcall!(graphics).setColor(jcall!(jcall!(BasicColorFactory::getInstance()).GREEN).intValue());
+        jcall!(graphics).setColor(jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).GREEN.clone(); java_field }).intValue());
         let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(self.getSelectedBuildingPlayerGameInput()).getPaintSelectedRTSLayersList();
         let mut width: i32 = 0;
         let mut height: i32 = 0;
         if jcall!(list).size() > 0 {
-            for index in (0..=jcall!(list).size() - 1).rev() {
+            for index in (0..={ let java_bound = jcall!(list).size() - 1; java_bound }).rev() {
                 let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = { let java_object = (jcall!(list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>>().expect("ClassCastException").clone()) };
-                width = jcall!(rtsLayer).getWidth();
-                height = jcall!(rtsLayer).getHeight();
+                width = { let java_value = (jcall!(rtsLayer).getWidth()).clone(); java_value };
+                height = { let java_value = (jcall!(rtsLayer).getHeight()).clone(); java_value };
                 jcall!(graphics).drawRect(jcall!(rtsLayer).getXP() - jcall!(allBinaryTiledLayer).getXP(), jcall!(rtsLayer).getYP() - jcall!(allBinaryTiledLayer).getYP(), width.clone(), height.clone());
             }
         } else if !match (&geographicMapCellPosition, &crate::org::allbinary::media::graphics::geography::map::SimpleGeographicMapCellPositionFactory::SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(geographicMapCellPosition).getPoint();
-            width = jcall!(allBinaryTiledLayer).getCellWidth();
-            height = jcall!(allBinaryTiledLayer).getCellHeight();
+            width = { let java_value = (jcall!(allBinaryTiledLayer).getCellWidth()).clone(); java_value };
+            height = { let java_value = (jcall!(allBinaryTiledLayer).getCellHeight()).clone(); java_value };
             jcall!(graphics).drawRect(jcall!(point).getX() - jcall!(allBinaryTiledLayer).getXP(), jcall!(point).getY() - jcall!(allBinaryTiledLayer).getYP(), width.clone(), height.clone());
         }
     }
@@ -345,7 +344,7 @@ pub trait RTSPlayerGameInputDyn: crate::org::allbinary::game::input::PlayerGameI
     fn processMotionInput(&mut self, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { RTSPlayerGameInput::processMotionInput(self.as_RTSPlayerGameInput_mut(), layerManager) }
     fn select(&mut self, mut motionGestureEvent: Option<Rc<RefCell<MotionGestureEvent>>>) { RTSPlayerGameInput::select(self.as_RTSPlayerGameInput_mut(), motionGestureEvent) }
     fn setSelectedRTSLayer(&mut self, mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>>, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) { RTSPlayerGameInput::setSelectedRTSLayer(self.as_RTSPlayerGameInput_mut(), rtsLayer, geographicMapCellPosition) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { RTSPlayerGameInput::paint(self.as_RTSPlayerGameInput_mut(), graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { RTSPlayerGameInput::paint(self.as_RTSPlayerGameInput_mut(), graphics) }
     fn updatePaintable(&mut self) { RTSPlayerGameInput::updatePaintable(self.as_RTSPlayerGameInput_mut()) }
     fn getSelectedBuildingPlayerGameInput(&mut self) -> Option<Rc<RefCell<SelectedRTSLayersPlayerGameInput>>> { RTSPlayerGameInput::getSelectedBuildingPlayerGameInput(self.as_RTSPlayerGameInput_mut()) }
     fn getSelectedRtsFormInput(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::input::form::RTSFormInput::RTSFormInputDyn>>> { RTSPlayerGameInput::getSelectedRtsFormInput(self.as_RTSPlayerGameInput_mut()) }

@@ -38,6 +38,10 @@ thread_local! { pub static ColorFillPaintableFactory_instance: Option<Rc<RefCell
 
 impl ColorFillPaintableFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -57,10 +61,10 @@ impl ColorFillPaintableFactory {
     // Java overloaded method: Rust needs a different name
     pub fn getInstance2(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>, mut forThreedCanvas: bool) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::paint::ColorFillBasePaintable::ColorFillBasePaintableDyn>>> {
         let mut operatingSystem: Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>> = jcall!(OperatingSystemFactory::getInstance()).getOperatingSystemInstance();
-        if jcall!(operatingSystem).isOverScan() {
-            return OverScanColorFillPaintable::new(basicColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::paint::ColorFillBasePaintable::ColorFillBasePaintableDyn>>);
+        if jcall!(operatingSystem).as_GenericOperatingSystem_mut().isOverScan() {
+            return OverScanColorFillPaintable::new(basicColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::paint::ColorFillBasePaintable::ColorFillBasePaintableDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::paint::ColorFillBasePaintable::ColorFillBasePaintableDyn>>);
         } else {
-            return ColorFillPaintable::new(basicColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::paint::ColorFillBasePaintable::ColorFillBasePaintableDyn>>);
+            return ColorFillPaintable::new(basicColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::paint::ColorFillBasePaintable::ColorFillBasePaintableDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::paint::ColorFillBasePaintable::ColorFillBasePaintableDyn>>);
         }
     }
 }

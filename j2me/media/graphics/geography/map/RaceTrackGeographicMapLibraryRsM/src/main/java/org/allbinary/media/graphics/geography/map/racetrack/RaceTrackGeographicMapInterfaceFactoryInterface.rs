@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::RaceTrackGeographicMap::RaceTrackGeographicMap;
 
 // Borrows the object of a Java reference
@@ -26,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait RaceTrackGeographicMapInterfaceFactoryInterface {
+pub trait RaceTrackGeographicMapInterfaceFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
@@ -35,8 +36,6 @@ pub trait RaceTrackGeographicMapInterfaceFactoryInterface {
 
     // throws Exception
     fn getTrackInstance(&mut self, id: Option<i32>) -> Option<Rc<RefCell<RaceTrackGeographicMap>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

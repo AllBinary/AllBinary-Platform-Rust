@@ -26,6 +26,7 @@ use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,6 +40,10 @@ pub struct DatabaseEncoder {
 
 
 impl DatabaseEncoder {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -53,59 +58,53 @@ impl DatabaseEncoder {
     
 
     pub fn encode(mut value: Vec<i8>) -> String {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut array: Vec<i8> = value.clone();
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             for index in (0..(array.len() as i32)) {
-                jcall!(stringBuffer).append(jcall!(Some((array[(index) as usize].clone()) as i8)).toString());
+                jcall!(stringBuffer).append((Some((array[(index) as usize].clone()) as i8)).expect("NullPointerException").to_string());
                 if index < (array.len() as i32) - 1 {
-                    jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
+                    jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
                 }
             }
-            return jcall!(stringBuffer).toString();
+            return Some(jcall!(stringBuffer).toString());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            PreLogUtil::putOE(jcall!(commonStrings).EXCEPTION.clone(), String::from("DatabaseEncoder"), String::from("decode"), e.clone());
-            return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            PreLogUtil::putOE({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from("DatabaseEncoder")), String::from("decode"), crate::java_into_object(e.clone()));
+            return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn decode(mut value: String) -> Vec<i8> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut tokenizer: Option<Rc<RefCell<Tokenizer>>> = Tokenizer::new(jcall!(CommonSeps::getInstance()).SPACE.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut tokenizer: Option<Rc<RefCell<Tokenizer>>> = Tokenizer::new({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
             let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(tokenizer).getTokensFromString(value.clone(), BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
-            let mut byteVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
             let mut size: i32 = jcall!(vector).size();
+            let mut decode: Vec<i8> = vec![0; (size) as usize];
             let mut byteOfData: String = String::new();
             for index in (0..size) {
-                byteOfData = (jcall!(vector).as_BasicArrayList_mut().objectArray[(index) as usize]).clone() /* as String */;
-                jcall!(byteVector).add(crate::java_into_object((Some((byteOfData.clone()) as i8)).expect("NullPointerException")));
+                byteOfData = { let java_value = ({ let java_object = (jcall!(vector).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+                decode[(index) as usize] = byteOfData.clone().trim().parse::<i8>().expect("NumberFormatException");
             }
-            let mut decode: Vec<i8> = vec![0; (jcall!(byteVector).size()) as usize];
-            let mut decodeIndex: i32 = 0;
-            let mut aByte: Option<i8> = None;
-            for index in (0..size) {
-                aByte = { let java_object = jcall!(byteVector).as_BasicArrayList_mut().objectArray[(index) as usize]; java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i8>().copied().or_else(|| object.downcast_ref::<Option<i8>>().copied().flatten()).expect("ClassCastException") }) };
-                decode[(decodeIndex) as usize] = jcall!(aByte).byteValue();
-                decodeIndex += 1;
-            }
-            return decode.clone();
+            return Some(decode.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            PreLogUtil::putSE(jcall!(commonStrings).EXCEPTION.clone(), String::from("DatabaseEncoder"), String::from("decode"), e.clone());
-            return jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone();
+            PreLogUtil::putSE({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), String::from("DatabaseEncoder"), String::from("decode"), crate::java_into_object(e.clone()));
+            return { let java_field = jcall!(NullUtil::getInstance()).NULL_BYTE_ARRAY.clone(); java_field }.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

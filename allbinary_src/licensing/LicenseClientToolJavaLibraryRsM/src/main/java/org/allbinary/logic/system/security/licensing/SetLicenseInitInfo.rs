@@ -17,16 +17,17 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::BufferedReader::BufferedReader;
-// use crate::java::io::InputStreamReader::InputStreamReader;
+use crate::java::io::BufferedReader::BufferedReader;
+use crate::java::io::InputStreamReader::InputStreamReader;
 use crate::org::allbinary::business::init::LicenseInitInfo::LicenseInitInfo;
 use crate::org::allbinary::business::init::LicenseInitInfoUtil::LicenseInitInfoUtil;
 use crate::org::allbinary::logic::io::file::FileFactory::FileFactory;
 use crate::org::allbinary::globals::PATH_GLOBALS::PATH_GLOBALS;
-// use crate::java::io::File::File;
-// use crate::java::io::FileReader::FileReader;
+use crate::java::io::File::File;
+use crate::java::io::FileReader::FileReader;
 // use crate::java::io::LineNumberReader::LineNumberReader;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::BasicArrayListD::BasicArrayListD;
 
 // Borrows the object of a Java reference
@@ -43,14 +44,18 @@ pub struct SetLicenseInitInfo {
 pub static mut SetLicenseInitInfo_stdinput: std::cell::LazyCell<Option<Rc<RefCell<BufferedReader>>>> = std::cell::LazyCell::new(|| BufferedReader::new(InputStreamReader::new(unsafe { System_in.clone() }.clone())));
 
 impl SetLicenseInitInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut options: Vec<String>) -> Self {
         let mut this = Self {
             vector: None,
         };
-        this.vector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        jcall!(LicenseInitInfoUtil::getInstance()).setFilePath(format!("{}{}", PrintLicenseInitInfo_PATH.with(Clone::clone), jcall!(PATH_GLOBALS::getInstance()).INIT_PATH));
+        this.vector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        jcall!(LicenseInitInfoUtil::getInstance()).setFilePath(format!("{}{}", PrintLicenseInitInfo_PATH.with(Clone::clone), { let java_field = jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field }));
         for index in (1..(options.len() as i32)) {
             jcall!(this.vector).add(crate::java_into_object(options[(index) as usize].clone()));
         }
@@ -65,7 +70,7 @@ impl SetLicenseInitInfo {
     // throws Exception
     pub fn getLicenseInitInfo(&mut self) -> Option<Rc<RefCell<LicenseInitInfo>>> {
         let mut licenseInitInfoUtil: Option<Rc<RefCell<LicenseInitInfoUtil>>> = LicenseInitInfoUtil::getInstance();
-        if jcall!(FileFactory::getInstance()).isFile(jcall!(licenseInitInfoUtil).INITFILENAME.clone()) {
+        if jcall!(FileFactory::getInstance()).isFile({ let java_field = jcall!(licenseInitInfoUtil).INITFILENAME.clone(); java_field }.clone()) {
             return jcall!(licenseInitInfoUtil).read();
         } else {
             return LicenseInitInfo::new();
@@ -81,7 +86,7 @@ impl SetLicenseInitInfo {
             let mut licenseInitInfo: Option<Rc<RefCell<LicenseInitInfo>>> = self.getLicenseInitInfo();
             println!("{}", String::from("License Serv Example: http://www.dartstatistics.com/LicServ/serverssl.php"));
             jcall!(licenseInitInfo).clearServers();
-            let mut file: Option<Rc<RefCell<File>>> = File::new(format!("{}{}", PrintLicenseInitInfo_PATH.with(Clone::clone), String::from("licenseservers.txt")));
+            let mut file: Option<Rc<RefCell<File>>> = File::new1(format!("{}{}", PrintLicenseInitInfo_PATH.with(Clone::clone), String::from("licenseservers.txt")));
             let mut reader: Option<Rc<RefCell<FileReader>>> = FileReader::new(file.clone());
             let mut lineNumberReader: Option<Rc<RefCell<LineNumberReader>>> = LineNumberReader::new(reader.clone());
             while true {
@@ -97,7 +102,7 @@ impl SetLicenseInitInfo {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             print!("{}", format!("{}{}", String::from("Error: "), e));
             eprintln!("{:?}", e);

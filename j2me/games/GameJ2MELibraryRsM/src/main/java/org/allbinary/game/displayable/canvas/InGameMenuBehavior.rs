@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::graphics::displayable::event::DisplayChangeEvent::DisplayChangeEvent;
+use crate::java::lang::Exception::*;
 use super::BaseMenuBehavior::BaseMenuBehavior;
 use super::AllBinaryGameCanvas::AllBinaryGameCanvas;
 use super::GameCanvasNonBotPaintable::GameCanvasNonBotPaintable;

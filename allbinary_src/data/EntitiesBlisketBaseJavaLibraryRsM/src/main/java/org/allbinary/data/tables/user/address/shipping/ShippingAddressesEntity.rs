@@ -31,6 +31,10 @@ pub struct ShippingAddressesEntity {
     pub TABLENAME: String,
 }
 
+impl crate::org::allbinary::data::tables::BasicDataTableInterface::BasicDataTableInterface for ShippingAddressesEntity {
+    fn createTable(&mut self) -> String { crate::org::allbinary::data::tables::user::address::StreetAddressesEntity::StreetAddressesEntity::createTable(crate::org::allbinary::data::tables::user::address::StreetAddressesEntity::StreetAddressesEntityDyn::as_StreetAddressesEntity_mut(self)) }
+    fn dropTable(&mut self) -> String { crate::org::allbinary::logic::communication::sql::AbSqlTable::AbSqlTable::dropTable(crate::org::allbinary::logic::communication::sql::AbSqlTable::AbSqlTableDyn::as_AbSqlTable_mut(self)) }
+}
 
 impl ShippingAddressesEntity {
     
@@ -42,7 +46,7 @@ impl ShippingAddressesEntity {
         };
         this.TABLENAME = String::from("shipping");
         // super(...) is in the struct literal above
-        this.setTableName(this.TABLENAME.clone());
+        { let java_arguments = (this.TABLENAME.clone(),); this.setTableName(java_arguments.0) };
         this
     }
 

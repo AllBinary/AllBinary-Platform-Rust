@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-use super::ClassLoader::ClassLoader;
+use crate::java::lang::ClassLoader::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,7 +37,7 @@ impl NativeLibraryClassLoader {
 
     pub fn new_struct(mut parent: Option<Rc<RefCell<ClassLoader>>>) -> Self {
         let mut this = Self {
-            base: ClassLoader::new_struct1(parent.clone()),
+            base: ClassLoader::new_struct(parent.clone()),
             message: String::new(),
         };
         this.message = String::from("This Class Loader Does Not Load Classes - Only For Loading and Unloading of Native Libraries");

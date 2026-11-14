@@ -37,6 +37,7 @@ use crate::org::allbinary::logic::system::hardware::components::interfaces::UsbI
 use crate::org::allbinary::logic::system::hardware::components::interfaces::VideoInterface::VideoInterface;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -67,7 +68,7 @@ impl HardwareInterface for WindowsHardware {
     fn getComponent(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn HardwareComponentInterface>>> { Self::getComponent(self, index) }
     fn toString(&mut self) -> String { Self::toString(self) }
     fn compareTo(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> bool { Self::compareTo(self, hardwareInterface) }
-    fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { Self::difference(self, hardwareInterface) }
+    fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { Self::difference(self, hardwareInterface) }
 }
 
 impl WindowsHardware {
@@ -113,7 +114,7 @@ impl WindowsHardware {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
             }
@@ -127,20 +128,20 @@ impl WindowsHardware {
     
 
     pub fn getComponentType(&mut self, mut component: String) -> String {
-        if component.find(&jcall!(jcall!(self.componentFactory).ETHERNET).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            return jcall!(jcall!(self.componentFactory).ETHERNET).toString();
-        } else if component.find(&jcall!(jcall!(self.componentFactory).BRIDGE).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            return jcall!(jcall!(self.componentFactory).BRIDGE).toString();
-        } else if component.find(&jcall!(jcall!(self.componentFactory).IDE).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            return jcall!(jcall!(self.componentFactory).IDE).toString();
-        } else if component.find(&jcall!(jcall!(self.componentFactory).MULTIMEDIA).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            return jcall!(jcall!(self.componentFactory).MULTIMEDIA).toString();
-        } else if component.find(&jcall!(jcall!(self.componentFactory).SCSI).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            return jcall!(jcall!(self.componentFactory).SCSI).toString();
-        } else if component.find(&jcall!(jcall!(self.componentFactory).USB).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            return jcall!(jcall!(self.componentFactory).USB).toString();
-        } else if component.find(&jcall!(jcall!(self.componentFactory).VGA).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            return jcall!(jcall!(self.componentFactory).VGA).toString();
+        if component.find(&jcall!({ let java_field = jcall!(self.componentFactory).ETHERNET.clone(); java_field }).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).ETHERNET.clone(); java_field }).toString();
+        } else if component.find(&jcall!({ let java_field = jcall!(self.componentFactory).BRIDGE.clone(); java_field }).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).BRIDGE.clone(); java_field }).toString();
+        } else if component.find(&jcall!({ let java_field = jcall!(self.componentFactory).IDE.clone(); java_field }).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).IDE.clone(); java_field }).toString();
+        } else if component.find(&jcall!({ let java_field = jcall!(self.componentFactory).MULTIMEDIA.clone(); java_field }).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).MULTIMEDIA.clone(); java_field }).toString();
+        } else if component.find(&jcall!({ let java_field = jcall!(self.componentFactory).SCSI.clone(); java_field }).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).SCSI.clone(); java_field }).toString();
+        } else if component.find(&jcall!({ let java_field = jcall!(self.componentFactory).USB.clone(); java_field }).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).USB.clone(); java_field }).toString();
+        } else if component.find(&jcall!({ let java_field = jcall!(self.componentFactory).VGA.clone(); java_field }).toString()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+            return jcall!({ let java_field = jcall!(self.componentFactory).VGA.clone(); java_field }).toString();
         } else {
             return None;
         }
@@ -148,62 +149,62 @@ impl WindowsHardware {
     
 
     pub fn getMultimedia(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn MediaInterface>>> {
-        return { let java_object = jcall!(self.multimediaInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MediaInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.multimediaInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MediaInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getBridge(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn BridgeInterface>>> {
-        return { let java_object = jcall!(self.bridgeInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn BridgeInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.bridgeInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn BridgeInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getCpu(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn CpuInterface>>> {
-        return { let java_object = jcall!(self.cpuInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn CpuInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.cpuInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn CpuInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getEthernet(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn EthernetInterface>>> {
-        return { let java_object = jcall!(self.ethernetInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EthernetInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.ethernetInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn EthernetInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getFireWire(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn FireWireInterface>>> {
-        return { let java_object = jcall!(self.fireWireInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn FireWireInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.fireWireInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn FireWireInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getHardDriveController(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn HardDriveControllerInterface>>> {
-        return { let java_object = jcall!(self.hardDriveControllerInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardDriveControllerInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.hardDriveControllerInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardDriveControllerInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getHardDrive(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn HardDriveInterface>>> {
-        return { let java_object = jcall!(self.hardDriveInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardDriveInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.hardDriveInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardDriveInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getMachineAccessControlAddress(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn MachineAccessControlAddressInterface>>> {
-        return { let java_object = jcall!(self.macInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MachineAccessControlAddressInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.macInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MachineAccessControlAddressInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getMonitor(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn MonitorInterface>>> {
-        return { let java_object = jcall!(self.monitorInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MonitorInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.monitorInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MonitorInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getUsb(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn UsbInterface>>> {
-        return { let java_object = jcall!(self.usbInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn UsbInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.usbInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn UsbInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getVideo(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn VideoInterface>>> {
-        return { let java_object = jcall!(self.videoInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn VideoInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.videoInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn VideoInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn getComponent(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn HardwareComponentInterface>>> {
-        return { let java_object = jcall!(self.componentInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardwareComponentInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.componentInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardwareComponentInterface>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -211,9 +212,9 @@ impl WindowsHardware {
         let mut hardwareBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut size: i32 = jcall!(self.componentInterfaceVector).size();
         for index in (0..size) {
-            let mut componentInterface: Option<Rc<RefCell<dyn HardwareComponentInterface>>> = { let java_object = jcall!(self.componentInterfaceVector).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardwareComponentInterface>>>>().expect("ClassCastException").clone()) };
+            let mut componentInterface: Option<Rc<RefCell<dyn HardwareComponentInterface>>> = { let java_object = (jcall!(self.componentInterfaceVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn HardwareComponentInterface>>>>().expect("ClassCastException").clone()) };
             jcall!(hardwareBuffer).append(jcall!(componentInterface).toString());
-            jcall!(hardwareBuffer).append(jcall!(CommonSeps::getInstance()).NEW_LINE.clone());
+            jcall!(hardwareBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).NEW_LINE.clone(); java_field }.clone());
         }
         return jcall!(hardwareBuffer).toString();
     }
@@ -224,8 +225,8 @@ impl WindowsHardware {
     }
     
 
-    pub fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        return jcall!(StdUtil::getInstance()).NULL_TABLE.clone();
+    pub fn difference(&mut self, mut hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        return { let java_field = jcall!(StdUtil::getInstance()).NULL_TABLE.clone(); java_field }.clone();
     }
 }
 

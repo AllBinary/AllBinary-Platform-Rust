@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::AllBinaryOrientationSensor::AllBinaryOrientationSensor;
 use super::NoGyroSensor::NoGyroSensor;
 
@@ -34,6 +35,10 @@ pub static mut GyroSensorFactory_allBinaryGyroSensor: std::cell::LazyCell<Option
 
 impl GyroSensorFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -47,7 +52,7 @@ impl GyroSensorFactory {
 
     // throws Exception
     pub fn init() {
-        unsafe { *GyroSensorFactory_allBinaryGyroSensor = NoGyroSensor::new() };
+        unsafe { *GyroSensorFactory_allBinaryGyroSensor = NoGyroSensor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::gyro::AllBinaryOrientationSensor::AllBinaryOrientationSensorDyn>>) };
     }
     
 

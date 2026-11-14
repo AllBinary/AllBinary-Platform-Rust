@@ -30,13 +30,17 @@ macro_rules! jcall {
 
 //ActualPlatform
 pub struct StdUtil {
-    pub EMPTY_VECTOR: Option<Rc<RefCell<ABVector<Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
-    pub NULL_TABLE: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub EMPTY_VECTOR: Option<Rc<RefCell<ABVector<crate::JavaObject>>>>,
+    pub NULL_TABLE: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 thread_local! { pub static StdUtil_instance: Option<Rc<RefCell<StdUtil>>> = StdUtil::new(); }
 
 impl StdUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -58,17 +62,17 @@ impl StdUtil {
     }
     
 
-    pub fn createStack(&mut self) -> Option<Rc<RefCell<ABStack<Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn createStack(&mut self) -> Option<Rc<RefCell<ABStack<crate::JavaObject>>>> {
         return ABStack::new();
     }
     
 
-    pub fn createVector(&mut self) -> Option<Rc<RefCell<ABVector<Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn createVector(&mut self) -> Option<Rc<RefCell<ABVector<crate::JavaObject>>>> {
         return ABVector::new();
     }
     
 
-    pub fn createHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn createHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
         return ABHashtable::new();
     }
 }

@@ -18,9 +18,9 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::io::FileNotFoundException::FileNotFoundException;
-// use crate::java::io::FileOutputStream::FileOutputStream;
-// use crate::java::io::IOException::IOException;
-// use crate::java::io::OutputStream::OutputStream;
+use crate::java::io::FileOutputStream::FileOutputStream;
+use crate::java::io::IOException::IOException;
+use crate::java::io::OutputStream::OutputStream;
 // use crate::java::nio::channels::FileChannel::FileChannel;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::logic::io::file::AbFileNativeUtil::AbFileNativeUtil;
@@ -34,38 +34,41 @@ macro_rules! jcall {
 
 pub struct AbFileOutputStream {
     pub base: OutputStream,
-    pub fileOutputStream: Option<Rc<RefCell<FileOutputStream>>>,
+    pub fileOutputStream: Option<Rc<RefCell<dyn crate::java::io::FileOutputStream::FileOutputStreamDyn>>>,
 }
 
+impl crate::java::io::Closeable::Closeable for AbFileOutputStream {
+    fn close(&mut self) { Self::close(self) }
+}
 
 impl AbFileOutputStream {
     
 
     // throws FileNotFoundException
     pub fn createFromAbFile(mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<AbFileOutputStream>>> {
-        return AbFileOutputStream::new(FileOutputStream::new(AbFileNativeUtil::get(file.clone())));
+        return AbFileOutputStream::new(FileOutputStream::new1(AbFileNativeUtil::get(file.clone())).map(|reference| reference as Rc<RefCell<dyn crate::java::io::FileOutputStream::FileOutputStreamDyn>>));
     }
     
 
     // throws FileNotFoundException
     pub fn createFromAbFileAppend(mut file: Option<Rc<RefCell<AbFile>>>, mut append: bool) -> Option<Rc<RefCell<AbFileOutputStream>>> {
-        return AbFileOutputStream::new(FileOutputStream::new(jcall!(file).getPath()));
+        return AbFileOutputStream::new(FileOutputStream::new1(jcall!(file).getPath()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::FileOutputStream::FileOutputStreamDyn>>));
     }
     
 
     // throws FileNotFoundException
     pub fn createFromFilePath(mut name: String) -> Option<Rc<RefCell<AbFileOutputStream>>> {
-        return AbFileOutputStream::new(FileOutputStream::new(name.clone()));
+        return AbFileOutputStream::new(FileOutputStream::new1(name.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::FileOutputStream::FileOutputStreamDyn>>));
     }
     
 
     // throws FileNotFoundException
     pub fn createFromFilePathAppend(mut name: String, mut append: bool) -> Option<Rc<RefCell<AbFileOutputStream>>> {
-        return AbFileOutputStream::new(FileOutputStream::new(name.clone()));
+        return AbFileOutputStream::new(FileOutputStream::new1(name.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::FileOutputStream::FileOutputStreamDyn>>));
     }
     
 
-    pub fn new_struct(mut fileOutputStream: Option<Rc<RefCell<FileOutputStream>>>) -> Self {
+    pub fn new_struct(mut fileOutputStream: Option<Rc<RefCell<dyn crate::java::io::FileOutputStream::FileOutputStreamDyn>>>) -> Self {
         let mut this = Self {
             base: OutputStream::new_struct(),
             fileOutputStream: None,
@@ -74,39 +77,39 @@ impl AbFileOutputStream {
         this
     }
 
-    pub fn new(mut fileOutputStream: Option<Rc<RefCell<FileOutputStream>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut fileOutputStream: Option<Rc<RefCell<dyn crate::java::io::FileOutputStream::FileOutputStreamDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(fileOutputStream))))
     }
     
 
     // throws IOException
     pub fn close(&mut self) {
-        jcall!(self.fileOutputStream).close();
+        jcall!(self.fileOutputStream).as_FileOutputStream_mut().close();
     }
     
 
     pub fn getChannel(&mut self) -> Option<Rc<RefCell<FileChannel>>> {
-        return jcall!(self.fileOutputStream).getChannel();
+        return jcall!(self.fileOutputStream).as_FileOutputStream_mut().getChannel();
     }
     
 
     // throws IOException
     pub fn write(&mut self, mut buffer: Vec<i8>) {
-        jcall!(self.fileOutputStream).write(buffer.clone());
+        jcall!(self.fileOutputStream).as_FileOutputStream_mut().write_byteArray(buffer.clone());
     }
     
 
     // throws IOException
     // Java overloaded method: Rust needs a different name
     pub fn write3(&mut self, mut buffer: Vec<i8>, mut offset: i32, mut count: i32) {
-        jcall!(self.fileOutputStream).write(buffer.clone(), offset.clone(), count.clone());
+        jcall!(self.fileOutputStream).as_FileOutputStream_mut().write3(buffer.clone(), offset.clone(), count.clone());
     }
     
 
     // throws IOException
     // Java overloaded method: Rust needs a different name
-    pub fn write(&mut self, mut b: i32) {
-        jcall!(self.fileOutputStream).write(b.clone());
+    pub fn write_int(&mut self, mut b: i32) {
+        jcall!(self.fileOutputStream).as_FileOutputStream_mut().write(b.clone());
     }
 }
 impl std::ops::Deref for AbFileOutputStream {
@@ -117,5 +120,9 @@ impl std::ops::DerefMut for AbFileOutputStream {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::java::io::OutputStream::OutputStreamDyn for AbFileOutputStream {
+    fn as_OutputStream(&self) -> &crate::java::io::OutputStream::OutputStream { &self.base }
+    fn as_OutputStream_mut(&mut self) -> &mut crate::java::io::OutputStream::OutputStream { &mut self.base }
+}
 
 

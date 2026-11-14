@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::system::SoftwareInformation::SoftwareInformation;
+use crate::java::lang::Exception::*;
 use super::GameAdStateBase::GameAdStateBase;
 
 // Borrows the object of a Java reference
@@ -27,13 +28,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait GameAdStateFactoryInterface {
+pub trait GameAdStateFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn getInstanceForApp(&mut self, softwareInformation: Option<Rc<RefCell<SoftwareInformation>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::GameAdStateBase::GameAdStateBaseDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

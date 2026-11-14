@@ -63,7 +63,7 @@ impl NoHardwareComponent {
     
 
     pub fn toString(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).NULL_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).NULL_STRING.clone(); java_field }.clone();
     }
 }
 

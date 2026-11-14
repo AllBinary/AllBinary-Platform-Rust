@@ -17,8 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::File::File;
+use crate::java::io::File::File;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
+use crate::java::lang::Exception::*;
 use super::AbFile::AbFile;
 
 // Borrows the object of a Java reference
@@ -34,6 +35,10 @@ pub struct FileWrapperUtil {
 
 impl FileWrapperUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -46,36 +51,38 @@ impl FileWrapperUtil {
     
 
     pub fn wrapFiles(mut files: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>>) -> Vec<Option<Rc<RefCell<AbFile>>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut abFileArray: Vec<Option<Rc<RefCell<AbFile>>>> = vec![None; ((files.len() as i32)) as usize];
             for index in (0..=(files.len() as i32) - 1).rev() {
-                abFileArray[(index) as usize] = AbFile::new((files[(index) as usize]).clone() /* as File */);
+                abFileArray[(index) as usize] = AbFile::new({ let java_object = (files[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<File>>>>().expect("ClassCastException").clone()) });
             }
-            return abFileArray.clone();
+            return Some(abFileArray.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putSE(String::from("Exception Wrapping Files"), String::from("FileWrapperUtil"), String::from("wrapFiles"), e.clone());
+            PreLogUtil::putSE(String::from("Exception Wrapping Files"), String::from("FileWrapperUtil"), String::from("wrapFiles"), crate::java_into_object(e.clone()));
             return vec![None; (0) as usize];
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     pub fn wrapFile(mut file: Option<Rc<RefCell<File>>>) -> Option<Rc<RefCell<AbFile>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            return AbFile::new(file.clone());
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            return Some(AbFile::new(file.clone()));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putSE(String::from("Exception Wrapping File"), String::from("FileWrapperUtil"), String::from("wrapFile"), e.clone());
+            PreLogUtil::putSE(String::from("Exception Wrapping File"), String::from("FileWrapperUtil"), String::from("wrapFile"), crate::java_into_object(e.clone()));
             return AbFile_NULL_FILE.with(Clone::clone).clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

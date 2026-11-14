@@ -16,14 +16,13 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::io::DataOutputStream::DataOutputStream;
-// use crate::java::io::File::File;
-// use crate::java::io::FileInputStream::FileInputStream;
-// use crate::java::io::FileOutputStream::FileOutputStream;
-// use crate::java::util::HashMap::HashMap;
-// use crate::java::util::Set::Set;
+use crate::java::io::DataOutputStream::DataOutputStream;
+use crate::java::io::File::File;
+use crate::java::io::FileInputStream::FileInputStream;
+use crate::java::io::FileOutputStream::FileOutputStream;
+use crate::java::util::HashMap::HashMap;
+use crate::java::util::Set::Set;
 use crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface;
 use crate::org::allbinary::data::tree::dom::document::DomDocumentHelper::DomDocumentHelper;
 use crate::org::allbinary::data::tree::dom::document::XmlDocumentHelper::XmlDocumentHelper;
@@ -37,6 +36,7 @@ use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::GenericProfileActionsJPanel::GenericProfileActionsJPanel;
 use super::GenericProfileAction::GenericProfileAction;
 
@@ -53,7 +53,7 @@ pub struct GenericProfileActions {
     pub name: String,
     pub genericProfileActionsJPanel: Option<Rc<RefCell<GenericProfileActionsJPanel>>>,
     pub actionsDefaultListModelHelper: Option<Rc<RefCell<DefaultListModelHelper>>>,
-    pub hashMap: Option<Rc<RefCell<HashMap>>>,
+    pub hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 thread_local! { pub static GenericProfileActions_DEFAULT_PROFILE_ACTIONS_PATH: String = format!("{}{}", crate::org::allbinary::input::automation::module::generic::configuration::profile::GenericProfiles::GenericProfiles_DEFAULT_PROFILES_PATH.with(Clone::clone), String::from("actions/")); }
@@ -65,6 +65,10 @@ impl DomDocumentMappingInterface for GenericProfileActions {
 }
 
 impl GenericProfileActions {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct2(mut genericProfileActionsJPanel: Option<Rc<RefCell<GenericProfileActionsJPanel>>>, mut name: String) -> Self {
@@ -111,7 +115,7 @@ impl GenericProfileActions {
     }
     
 
-    pub fn new_struct3(mut genericProfileActionsJPanel: Option<Rc<RefCell<GenericProfileActionsJPanel>>>, mut fileInputStream: Option<Rc<RefCell<FileInputStream>>>, mut name: String) -> Self {
+    pub fn new_struct3_GenericProfileActionsJPanel_FileInputStream_String(mut genericProfileActionsJPanel: Option<Rc<RefCell<GenericProfileActionsJPanel>>>, mut fileInputStream: Option<Rc<RefCell<dyn crate::java::io::FileInputStream::FileInputStreamDyn>>>, mut name: String) -> Self {
         let mut this = Self {
             logUtil: None,
             commonFileStrings: None,
@@ -128,8 +132,8 @@ impl GenericProfileActions {
         this
     }
 
-    pub fn new3(mut genericProfileActionsJPanel: Option<Rc<RefCell<GenericProfileActionsJPanel>>>, mut fileInputStream: Option<Rc<RefCell<FileInputStream>>>, mut name: String) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct3(genericProfileActionsJPanel, fileInputStream, name))))
+    pub fn new3_GenericProfileActionsJPanel_FileInputStream_String(mut genericProfileActionsJPanel: Option<Rc<RefCell<GenericProfileActionsJPanel>>>, mut fileInputStream: Option<Rc<RefCell<dyn crate::java::io::FileInputStream::FileInputStreamDyn>>>, mut name: String) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct3_GenericProfileActionsJPanel_FileInputStream_String(genericProfileActionsJPanel, fileInputStream, name))))
     }
     
 
@@ -143,15 +147,15 @@ impl GenericProfileActions {
 
     // throws Exception
     pub fn save(&mut self) {
-        let mut idFile: Option<Rc<RefCell<FileOutputStream>>> = FileOutputStream::new(format!("{}{}", format!("{}{}", GenericProfileActions_DEFAULT_PROFILE_ACTIONS_PATH.with(Clone::clone), self.getName()), jcall!(self.commonFileStrings)._XML));
+        let mut idFile: Option<Rc<RefCell<dyn crate::java::io::FileOutputStream::FileOutputStreamDyn>>> = FileOutputStream::new1(format!("{}{}", format!("{}{}", GenericProfileActions_DEFAULT_PROFILE_ACTIONS_PATH.with(Clone::clone), self.getName()), { let java_field = jcall!(self.commonFileStrings)._XML.clone(); java_field })).map(|reference| reference as Rc<RefCell<dyn crate::java::io::FileOutputStream::FileOutputStreamDyn>>);
         let mut idOutData: Option<Rc<RefCell<DataOutputStream>>> = DataOutputStream::new(idFile.clone());
-        jcall!(idOutData).writeBytes(XmlDocumentHelper::toString(self.toXmlDoc()));
+        jcall!(idOutData).writeBytes({ let java_argument = XmlDocumentHelper::toString(self.toXmlDoc()); java_argument });
     }
     
 
     pub fn getFile(&mut self, mut name: String) -> Option<Rc<RefCell<File>>> {
-        let mut fileName: String = format!("{}{}", format!("{}{}", GenericProfileActions_DEFAULT_PROFILE_ACTIONS_PATH.with(Clone::clone), name), jcall!(self.commonFileStrings)._XML);
-        return File::new(fileName.clone());
+        let mut fileName: String = format!("{}{}", format!("{}{}", GenericProfileActions_DEFAULT_PROFILE_ACTIONS_PATH.with(Clone::clone), name), { let java_field = jcall!(self.commonFileStrings)._XML.clone(); java_field });
+        return File::new1(fileName.clone());
     }
     
 
@@ -159,7 +163,7 @@ impl GenericProfileActions {
     pub fn load(&mut self) {
         let mut file: Option<Rc<RefCell<File>>> = { let java_arguments = (self.getName(),); self.getFile(java_arguments.0) };
         if jcall!(file).isFile() {
-            let mut idFile: Option<Rc<RefCell<FileInputStream>>> = FileInputStream::new(file.clone());
+            let mut idFile: Option<Rc<RefCell<dyn crate::java::io::FileInputStream::FileInputStreamDyn>>> = FileInputStream::new(file.clone()).map(|reference| reference as Rc<RefCell<dyn crate::java::io::FileInputStream::FileInputStreamDyn>>);
             self.fileInit(idFile.clone());
         } else {
             { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("No Profile: "), jcall!(file).getAbsolutePath()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Contructor"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
@@ -168,15 +172,15 @@ impl GenericProfileActions {
     
 
     // throws Exception
-    pub fn fileInit(&mut self, mut fileInputStream: Option<Rc<RefCell<FileInputStream>>>) {
+    pub fn fileInit(&mut self, mut fileInputStream: Option<Rc<RefCell<dyn crate::java::io::FileInputStream::FileInputStreamDyn>>>) {
         let mut bytes: Vec<i8> = vec![0; (100000) as usize];
-        let mut length: i32 = jcall!(fileInputStream).read(bytes.clone());
+        let mut length: i32 = jcall!(fileInputStream).as_FileInputStream_mut().read1(bytes.clone());
         let mut data: String = String::from_utf8(bytes.clone().iter().map(|value| *value as u8).collect()).unwrap();
         let mut endIndex: i32 = data.rfind('>').map(|index| index as i32).unwrap_or(-1);
         let mut document: Option<Rc<RefCell<Document>>> = DomDocumentHelper::create1(data[(0) as usize..(endIndex + 1) as usize].to_string());
         let mut nameNodeList: Option<Rc<RefCell<NodeList>>> = jcall!(document).getElementsByTagName(unsafe { GenericProfileActionsData_NAME.clone() }.clone());
         { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Number Of Profiles Specified: "), jcall!(nameNodeList).getLength()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Contructor"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        for index in (0..jcall!(nameNodeList).getLength()) {
+        for index in (0..{ let java_bound = jcall!(nameNodeList).getLength(); java_bound }) {
             let mut node: Option<Rc<RefCell<Node>>> = jcall!(nameNodeList).item(index.clone());
             let mut nodeList: Option<Rc<RefCell<NodeList>>> = jcall!(node).getChildNodes();
             if nodeList.is_some() {
@@ -185,18 +189,18 @@ impl GenericProfileActions {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", unsafe { GenericProfileActionData_NAME.clone() }, String::from(" Name Node Node Children")))));
             }
         }
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", String::from("Loaded: "), jcall!(self.getHashMap()).size()), String::from(" Configuration Profile Action(s)")), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Contructor"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", format!("{}{}", String::from("Loaded: "), { let java_value = jcall!(self.getHashMap()).size(); java_value }), String::from(" Configuration Profile Action(s)")), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("Contructor"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         jcall!(self.getDefaultListModelHelper()).initDefaultModelList();
     }
     
 
     // throws Exception
     pub fn initActions(&mut self, mut nodeList: Option<Rc<RefCell<NodeList>>>) {
-        for index in (0..jcall!(nodeList).getLength()) {
+        for index in (0..{ let java_bound = jcall!(nodeList).getLength(); java_bound }) {
             let mut actionNode: Option<Rc<RefCell<Node>>> = jcall!(nodeList).item(index.clone());
             if actionNode.is_some() {
-                let mut genericConfigurationProfileAction: Option<Rc<RefCell<GenericProfileAction>>> = GenericProfileAction::new2(jcall!(self.getGenericProfileActionsJPanel()).getGenericProfileActionJPanel(), actionNode.clone());
-                jcall!(self.getHashMap()).put(jcall!(genericConfigurationProfileAction).getName(), genericConfigurationProfileAction.clone());
+                let mut genericConfigurationProfileAction: Option<Rc<RefCell<GenericProfileAction>>> = GenericProfileAction::new2({ let java_argument = jcall!(self.getGenericProfileActionsJPanel()).getGenericProfileActionJPanel(); java_argument }, actionNode.clone());
+                jcall!(self.getHashMap()).put(crate::java_into_object(jcall!(genericConfigurationProfileAction).getName()), crate::java_into_object(genericConfigurationProfileAction.clone()));
                 jcall!(self.getDefaultListModelHelper()).add(jcall!(genericConfigurationProfileAction).getName());
             } else {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", unsafe { GenericProfileActionData_NAME.clone() }, String::from(" Node Null")))));
@@ -211,14 +215,14 @@ impl GenericProfileActions {
     
 
     pub fn getAction(&mut self, mut string: String) -> Option<Rc<RefCell<GenericProfileAction>>> {
-        return (jcall!(self.getHashMap()).get(string.clone())).clone() /* as GenericProfileAction */;
+        return { let java_object = (jcall!(self.getHashMap()).get(crate::java_into_object(string.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GenericProfileAction>>>>().expect("ClassCastException").clone()) };
     }
     
 
     // throws Exception
     pub fn add(&mut self, mut name: String) {
         let mut genericProfileAction: Option<Rc<RefCell<GenericProfileAction>>> = GenericProfileAction::new1(name.clone());
-        jcall!(self.getHashMap()).put(jcall!(genericProfileAction).getName(), genericProfileAction.clone());
+        jcall!(self.getHashMap()).put(crate::java_into_object(jcall!(genericProfileAction).getName()), crate::java_into_object(genericProfileAction.clone()));
         jcall!(self.getDefaultListModelHelper()).add(jcall!(genericProfileAction).getName());
         jcall!(self.getDefaultListModelHelper()).initDefaultModelList();
         self.save();
@@ -227,15 +231,15 @@ impl GenericProfileActions {
 
     // throws Exception
     pub fn remove(&mut self, mut name: String) {
-        jcall!(self.getHashMap()).remove(name.clone());
+        jcall!(self.getHashMap()).remove(crate::java_into_object(name.clone()));
         jcall!(self.getDefaultListModelHelper()).remove(name.clone());
         jcall!(self.getDefaultListModelHelper()).initDefaultModelList();
         self.save();
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
         { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("HashMap: "), jcall!(hashMap).toString()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("toHashMap()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         return hashMap.clone();
     }
@@ -248,8 +252,8 @@ impl GenericProfileActions {
         let mut actionNameArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(set).toArray();
         let mut size: i32 = (actionNameArray.len() as i32).clone();
         for index in (0..size) {
-            let mut nextActionName: String = (actionNameArray[(index) as usize]).clone() /* as String */;
-            let mut nextGenericProfileAction: Option<Rc<RefCell<GenericProfileAction>>> = (self.getAction(nextActionName.clone())).clone() /* as GenericProfileAction */;
+            let mut nextActionName: String = { let java_object = (actionNameArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
+            let mut nextGenericProfileAction: Option<Rc<RefCell<GenericProfileAction>>> = (self.getAction(nextActionName.clone())).clone();
             jcall!(node).appendChild(jcall!(nextGenericProfileAction).toXmlNode(document.clone()));
         }
         return node.clone();
@@ -275,12 +279,12 @@ impl GenericProfileActions {
     }
     
 
-    pub fn getHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn getHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return self.hashMap.clone();
     }
     
 
-    pub fn setHashMap(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) {
+    pub fn setHashMap(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
         self.hashMap = hashMap.clone();
     }
     

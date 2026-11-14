@@ -53,6 +53,10 @@ thread_local! { pub static SearchData_SEARCH: String = String::from("search"); }
 thread_local! { pub static SearchData_MAKEPUBLIC: String = String::from("Make Public"); }
 
 impl SearchData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

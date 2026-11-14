@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::color::ColorCompositeInterface::ColorCompositeInterface;
@@ -38,12 +38,21 @@ pub struct LineAnimation {
     pub line: Vec<Vec<i32>>,
 }
 
-// impl ColorCompositeInterface for LineAnimation with the methods of the trait
+impl ColorCompositeInterface for LineAnimation {
+    fn getBasicColorP(&mut self) -> Option<Rc<RefCell<BasicColor>>> { Self::getBasicColorP(self) }
+}
+impl crate::org::allbinary::graphics::color::BasicColorCompositeSetterInterface::BasicColorCompositeSetterInterface for LineAnimation {
+    fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::setBasicColorP(self, basicColor) }
+}
 impl PositionInterface for LineAnimation {
     fn setPosition(&mut self, mut x: i32, mut y: i32, mut z: i32) { Self::setPosition(self, x, y, z) }
 }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for LineAnimation {
+    fn nextFrame(&mut self) { Self::nextFrame(self) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
+}
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for LineAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 impl LineAnimation {
@@ -57,7 +66,7 @@ impl LineAnimation {
             line: Vec::new(),
         };
         this.newLine = vec![vec![0; (2) as usize]; (2) as usize];
-        this.tempLine = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY.clone();
+        this.tempLine = { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY.clone(); java_field }.clone();
         this.line = vec![vec![0; (2) as usize]; (2) as usize];
         this.setBasicColorP(basicColor.clone());
         this
@@ -80,8 +89,8 @@ impl LineAnimation {
     
 
     pub fn setPosition(&mut self, mut x: i32, mut y: i32, mut z: i32) {
-        self.newLine[(0) as usize][(0) as usize] = self.line[(1) as usize][(0) as usize].clone();
-        self.newLine[(0) as usize][(1) as usize] = self.line[(1) as usize][(1) as usize].clone();
+        self.newLine[(0) as usize][(0) as usize] = { let java_value = (self.line[(1) as usize][(0) as usize]).clone(); java_value }.clone();
+        self.newLine[(0) as usize][(1) as usize] = { let java_value = (self.line[(1) as usize][(1) as usize]).clone(); java_value }.clone();
         self.newLine[(1) as usize][(0) as usize] = x.clone();
         self.newLine[(1) as usize][(1) as usize] = y.clone();
         self.tempLine = self.line.clone();
@@ -90,7 +99,7 @@ impl LineAnimation {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         let mut currentLine: Vec<Vec<i32>> = self.line.clone();
         { let java_receiver = self.basicSetColorUtil.clone(); let java_arguments = (graphics.clone(), self.getBasicColorP(), self.getColor(),); jcall!(java_receiver).setBasicColorP3(java_arguments.0, java_arguments.1, java_arguments.2); };
         jcall!(graphics).drawLine(currentLine[(0) as usize][(0) as usize].clone(), currentLine[(0) as usize][(1) as usize].clone(), currentLine[(1) as usize][(0) as usize].clone(), currentLine[(1) as usize][(1) as usize].clone());
@@ -98,6 +107,16 @@ impl LineAnimation {
     
 
     pub fn nextFrame(&mut self) {
+    }
+    
+
+    pub fn getBasicColorP(&mut self) -> Option<Rc<RefCell<BasicColor>>> {
+        return self.base.getBasicColorP();
+    }
+    
+
+    pub fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
+        { let java_arguments = (basicColor.clone(),); self.base.setBasicColorP(java_arguments.0) };
     }
 }
 impl std::ops::Deref for LineAnimation {
@@ -112,7 +131,9 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for LineAnimation
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base }
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn getBasicColorP(&mut self) -> Option<Rc<RefCell<BasicColor>>> { Self::getBasicColorP(self) }
+    fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::setBasicColorP(self, basicColor) }
 }
 impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface for LineAnimation {
     fn set(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::khronos::opengles::GL::GL>>>) { crate::org::allbinary::animation::Animation::Animation::set(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1) }

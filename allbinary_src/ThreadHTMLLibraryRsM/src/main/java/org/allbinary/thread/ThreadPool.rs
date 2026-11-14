@@ -22,6 +22,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::NullRunnable::NullRunnable;
 use super::ThreadPoolStrings::ThreadPoolStrings;
 use super::ThreadObjectUtil::ThreadObjectUtil;
@@ -50,6 +51,10 @@ pub struct ThreadPool {
 thread_local! { pub static ThreadPool_NORMAL_PRIORITY: i32 = 5; }
 
 impl ThreadPool {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut poolName: String, mut numThreads: i32, mut priority: i32) -> Self {
@@ -70,8 +75,8 @@ impl ThreadPool {
         this.NULL_RUNNABLE = NullRunnable::getInstance();
         this.threadPoolStrings = ThreadPoolStrings::getInstance();
         this.threadObjectUtil = ThreadObjectUtil::getInstance();
-        this.taskQueue = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.currentPriorityRunnable = jcall!(this.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone();
+        this.taskQueue = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.currentPriorityRunnable = { let java_field = jcall!(this.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone(); java_field }.clone();
         this
     }
 
@@ -89,8 +94,8 @@ impl ThreadPool {
             if match (&runnable, &self.NULL_RUNNABLE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 return;
             }
-            self.currentPriorityRunnable = panic!("ClassCastException: a Rust dyn Runnable cannot be cast to dyn PriorityRunnable");
-            if !(match (&self.currentPriorityRunnable, &jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false }) {
+            self.currentPriorityRunnable = (|| -> Option<Rc<RefCell<dyn PriorityRunnable>>> { panic!("ClassCastException: a Rust dyn Runnable cannot be cast to dyn PriorityRunnable") })();
+            if !(match (&self.currentPriorityRunnable, &{ let java_field = jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false }) {
                 jcall!(self.currentPriorityRunnable).reset();
                 jcall!(self.currentPriorityRunnable).run();
             }
@@ -123,15 +128,15 @@ impl ThreadPool {
         if task.is_some() {
             let mut size: i32 = jcall!(self.taskQueue).size();
             let mut runnable: Option<Rc<RefCell<dyn PriorityRunnable>>> = None;
-            let mut lowerPriorityRunnable: Option<Rc<RefCell<dyn PriorityRunnable>>> = jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone();
+            let mut lowerPriorityRunnable: Option<Rc<RefCell<dyn PriorityRunnable>>> = { let java_field = jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone(); java_field }.clone();
             for index in (0..size) {
-                runnable = { let java_object = jcall!(self.taskQueue).get(index.clone()); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn PriorityRunnable>>>>().expect("ClassCastException").clone()) };
+                runnable = { let java_value = ({ let java_object = (jcall!(self.taskQueue).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn PriorityRunnable>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
                 if jcall!(runnable).getPriority() > jcall!(task).getPriority() {
                     lowerPriorityRunnable = runnable.clone();
                     break;
                 }
             }
-            if match (&lowerPriorityRunnable, &jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if match (&lowerPriorityRunnable, &{ let java_field = jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 jcall!(self.taskQueue).add(crate::java_into_object(task.clone()));
             } else {
                 let mut index: i32 = jcall!(self.taskQueue).indexOf(crate::java_into_object(lowerPriorityRunnable.clone()));
@@ -158,7 +163,7 @@ impl ThreadPool {
         if jcall!(self.taskQueue).isEmpty() {
             return self.NULL_RUNNABLE.clone().map(|reference| reference as Rc<RefCell<dyn Runnable>>);
         }
-        return { let java_object = jcall!(self.taskQueue).removeAt(0); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn Runnable>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.taskQueue).removeAt(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn Runnable>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -173,7 +178,7 @@ impl ThreadPool {
         if self.isAlive {
             self.isAlive = false;
             jcall!(self.taskQueue).clear();
-            self.currentPriorityRunnable = jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone();
+            self.currentPriorityRunnable = { let java_value = ({ let java_field = jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone(); java_field }).clone(); java_value }.clone();
         }
     }
     
@@ -181,7 +186,7 @@ impl ThreadPool {
     pub fn join(&mut self) {
         self.isAlive = false;
         jcall!(self.taskQueue).clear();
-        self.currentPriorityRunnable = jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone();
+        self.currentPriorityRunnable = { let java_value = ({ let java_field = jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone(); java_field }).clone(); java_value }.clone();
     }
     
 
@@ -207,7 +212,7 @@ impl ThreadPool {
         if self.numThreads == 1 {
             self.isAlive = false;
             jcall!(self.taskQueue).clear();
-            self.currentPriorityRunnable = jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone();
+            self.currentPriorityRunnable = { let java_value = ({ let java_field = jcall!(self.threadObjectUtil).NULL_PRIORITY_RUNNABLE.clone(); java_field }).clone(); java_value }.clone();
         }
     }
     
@@ -219,7 +224,7 @@ impl ThreadPool {
     pub fn completedTask(&mut self, mut task: Option<Rc<RefCell<dyn Runnable>>>) {
     }
 }
-pub trait ThreadPoolDyn {
+pub trait ThreadPoolDyn: std::any::Any {
     fn as_ThreadPool(&self) -> &ThreadPool;
     fn as_ThreadPool_mut(&mut self) -> &mut ThreadPool;
     fn runAPriorityTask(&mut self) { ThreadPool::runAPriorityTask(self.as_ThreadPool_mut()) }

@@ -22,6 +22,7 @@ use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -65,19 +66,19 @@ impl ConsolidateMotionRectangles {
     pub fn consolidateMotionRectangles(&mut self) {
         let mut vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getVector();
         { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Start - Size Before: "), jcall!(vector).size()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("consolidateMotionRectangleConstraints"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        let mut removeVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        let mut removeVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut size: i32 = jcall!(vector).size();
         for index in (0..size) {
             let mut motionRectangle: Option<Rc<RefCell<MotionRectangle>>> = { let java_object = (jcall!(vector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<MotionRectangle>>>>().expect("ClassCastException").clone()) };
-            for i in (index + 1..jcall!(vector).size()) {
+            for i in (index + 1..{ let java_bound = jcall!(vector).size(); java_bound }) {
                 let mut motionRectangle2: Option<Rc<RefCell<MotionRectangle>>> = { let java_object = (jcall!(vector).get(i.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<MotionRectangle>>>>().expect("ClassCastException").clone()) };
                 let mut rectangle: Option<Rc<RefCell<Rectangle>>> = jcall!(motionRectangle).getRectangle();
                 let mut rectangle2: Option<Rc<RefCell<Rectangle>>> = jcall!(motionRectangle2).getRectangle();
-                let mut x2: i32 = jcall!(rectangle).x + jcall!(rectangle).width;
-                let mut y2: i32 = jcall!(rectangle).y + jcall!(rectangle).height;
-                let mut rightX: i32 = jcall!(rectangle2).x + jcall!(rectangle2).width;
-                let mut bottomY: i32 = jcall!(rectangle2).y + jcall!(rectangle2).height;
-                if jcall!(rectangle).x <= jcall!(rectangle2).x && jcall!(rectangle).y <= jcall!(rectangle2).y && x2 >= rightX && y2 >= bottomY {
+                let mut x2: i32 = { let java_field = jcall!(rectangle).x.clone(); java_field } + { let java_field = jcall!(rectangle).width.clone(); java_field };
+                let mut y2: i32 = { let java_field = jcall!(rectangle).y.clone(); java_field } + { let java_field = jcall!(rectangle).height.clone(); java_field };
+                let mut rightX: i32 = { let java_field = jcall!(rectangle2).x.clone(); java_field } + { let java_field = jcall!(rectangle2).width.clone(); java_field };
+                let mut bottomY: i32 = { let java_field = jcall!(rectangle2).y.clone(); java_field } + { let java_field = jcall!(rectangle2).height.clone(); java_field };
+                if { let java_field = jcall!(rectangle).x.clone(); java_field } <= { let java_field = jcall!(rectangle2).x.clone(); java_field } && { let java_field = jcall!(rectangle).y.clone(); java_field } <= { let java_field = jcall!(rectangle2).y.clone(); java_field } && x2 >= rightX && y2 >= bottomY {
                     jcall!(removeVector).add(crate::java_into_object(motionRectangle2.clone()));
                 }
             }

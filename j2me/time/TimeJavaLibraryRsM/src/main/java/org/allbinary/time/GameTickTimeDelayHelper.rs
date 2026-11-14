@@ -33,6 +33,10 @@ pub struct GameTickTimeDelayHelper {
 
 
 impl GameTickTimeDelayHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut startTime: i64) -> Self {
@@ -52,7 +56,7 @@ impl GameTickTimeDelayHelper {
     
 
     pub fn setStartTime(&mut self) -> i64 {
-        self.startTime = (std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64);
+        self.startTime = { let java_value = ((std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64)).clone(); java_value };
         return self.startTime.clone();
     }
     
@@ -61,7 +65,7 @@ impl GameTickTimeDelayHelper {
         if self.lastStartTime == i64::MIN {
             self.timeDelta = 0_i64;
         } else {
-            self.timeDelta = (std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64) - self.lastStartTime;
+            self.timeDelta = { let java_value = ((std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64) - self.lastStartTime).clone(); java_value };
         }
     }
     

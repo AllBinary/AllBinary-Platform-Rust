@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::android::os::Parcelable::Parcelable;
 use crate::android::os::Parcel::Parcel;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -34,6 +35,10 @@ thread_local! { pub static NullParcelable_NULL_PARCELABLE: Option<Rc<RefCell<Nul
 // impl Parcelable for NullParcelable with the methods of the trait
 
 impl NullParcelable {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

@@ -17,9 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::FilenameFilter::FilenameFilter;
-// use crate::java::io::IOException::IOException;
-// use crate::java::net::URI::URI;
+use crate::java::io::FilenameFilter::FilenameFilter;
+use crate::java::io::IOException::IOException;
+use crate::java::net::URI::URI;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -28,7 +28,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AbFileInterface {
+pub trait AbFileInterface: std::any::Any {
     
 
     fn canRead(&mut self) -> bool;
@@ -85,7 +85,7 @@ pub trait AbFileInterface {
     fn list(&mut self) -> Vec<String>;
     
 
-    fn listWithFilter(&mut self, filter: Option<Rc<RefCell<FilenameFilter>>>) -> Vec<String>;
+    fn listWithFilter(&mut self, filter: Option<Rc<RefCell<dyn FilenameFilter>>>) -> Vec<String>;
     
 
     fn mkdir(&mut self) -> bool;

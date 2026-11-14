@@ -31,6 +31,7 @@ use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::system::security::crypt::DatabaseEncoder::DatabaseEncoder;
 use crate::org::allbinary::logic::system::security::crypt::WeakCrypt::WeakCrypt;
 use crate::org::allbinary::string::CommonLabels::CommonLabels;
+use crate::java::lang::Exception::*;
 use super::LicenseInitInfo::LicenseInitInfo;
 
 // Borrows the object of a Java reference
@@ -53,6 +54,10 @@ thread_local! { pub static LicenseInitInfoUtil_instance: Option<Rc<RefCell<Licen
 
 impl LicenseInitInfoUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,
@@ -67,7 +72,7 @@ impl LicenseInitInfoUtil {
         this.INITFILENAME = String::from("licenseinitdata.dat");
         this.ABOUT = String::from("about");
         this.PRIVACY_POLICY = String::from("privacy_policy");
-        this.filePath = jcall!(this.stringUtil).EMPTY_STRING.clone();
+        this.filePath = { let java_field = jcall!(this.stringUtil).EMPTY_STRING.clone(); java_field }.clone();
         this
     }
 
@@ -90,8 +95,8 @@ impl LicenseInitInfoUtil {
     // throws Exception
     // synchronized
     pub fn write(&mut self, mut initData: Option<Rc<RefCell<LicenseInitInfo>>>) {
-        if self.filePath == jcall!(self.stringUtil).EMPTY_STRING {
-            self.filePath = format!("{}{}", URLGLOBALS::getMainPath(), jcall!(PATH_GLOBALS::getInstance()).INIT_PATH);
+        if self.filePath == { let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field } {
+            self.filePath = { let java_value = (format!("{}{}", URLGLOBALS::getMainPath(), { let java_field = jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field })).clone(); java_value };
         }
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut tsUtil: Option<Rc<RefCell<TsUtil>>> = TsUtil::getInstance();
@@ -102,13 +107,13 @@ impl LicenseInitInfoUtil {
             jcall!(dataOutputStream).writeInt(numberOfLicenseServers.clone());
             let mut licenseServerCrypted: Vec<i8> = Vec::new();
             for index in (0..numberOfLicenseServers) {
-                licenseServerCrypted = jcall!(tsUtil).getByteArray(jcall!(WeakCrypt::new(3)).encrypt(jcall!(initData).getServer(index.clone())));
+                licenseServerCrypted = { let java_value = (jcall!(tsUtil).getByteArray(jcall!(WeakCrypt::new(3)).encrypt(jcall!(initData).getServer(index.clone())))).clone(); java_value };
                 jcall!(dataOutputStream).writeUTF(DatabaseEncoder::encode(licenseServerCrypted.clone()));
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             jcall!(self.logUtil).put(format!("{}{}", String::from("Command Failed: "), self.INITFILENAME), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("write"), crate::java_into_object(e.clone()));
             jcall!(FileStreamFactory::getInstance()).delete(self.filePath.clone(), self.INITFILENAME.clone());
@@ -129,50 +134,51 @@ impl LicenseInitInfoUtil {
     // synchronized
     pub fn readAgain(&mut self, mut initializeCounter: i32) -> Option<Rc<RefCell<LicenseInitInfo>>> {
         let mut METHOD_NAME: String = String::from("readAgain");
-        if self.filePath == jcall!(self.stringUtil).EMPTY_STRING {
-            self.filePath = format!("{}{}", URLGLOBALS::getMainPath(), jcall!(PATH_GLOBALS::getInstance()).INIT_PATH);
+        if self.filePath == { let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field } {
+            self.filePath = { let java_value = (format!("{}{}", URLGLOBALS::getMainPath(), { let java_field = jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field })).clone(); java_value };
         }
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             jcall!(self.logUtil).putF(format!("{}{}", String::from("LicenseInitInfo File: "), self.INITFILENAME), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone());
             let mut fileStreamFactory: Option<Rc<RefCell<FileStreamFactory>>> = FileStreamFactory::getInstance();
             let mut iFile: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStreamDyn>>> = jcall!(fileStreamFactory).getFileInputStreamInstance(self.filePath.clone(), self.INITFILENAME.clone());
             if iFile.is_some() {
-                let mut iData: Option<Rc<RefCell<AbDataInputStream>>> = AbDataInputStream::new(iFile.clone());
+                let mut iData: Option<Rc<RefCell<AbDataInputStream>>> = AbDataInputStream::new(iFile.clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>));
                 let mut initInfo: Option<Rc<RefCell<LicenseInitInfo>>> = LicenseInitInfo::new();
                 let mut decodedByteArray: Vec<i8> = DatabaseEncoder::decode(jcall!(iData).readUTF());
                 let mut licenseIdDecoded: String = String::from_utf8(decodedByteArray.clone().iter().map(|value| *value as u8).collect()).unwrap();
                 jcall!(initInfo).setLicenseId(jcall!(WeakCrypt::new(1)).decrypt(licenseIdDecoded.clone()));
                 let mut numberOfLicenseServers: i32 = jcall!(iData).readInt();
-                let mut NEXT_FILE: String = jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).NEXT.clone()).append(String::from(" License Server From File: ")).toString();
+                let mut NEXT_FILE: String = jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).NEXT.clone(); java_field }.clone()).append(String::from(" License Server From File: ")).toString();
                 let mut licenseServerDecoded: String = String::new();
                 for index in (0..numberOfLicenseServers) {
-                    decodedByteArray = DatabaseEncoder::decode(jcall!(iData).readUTF());
+                    decodedByteArray = { let java_value = (DatabaseEncoder::decode(jcall!(iData).readUTF())).clone(); java_value };
                     licenseServerDecoded = String::from_utf8(decodedByteArray.clone().iter().map(|value| *value as u8).collect()).unwrap();
                     jcall!(initInfo).setServer(jcall!(WeakCrypt::new(3)).decrypt(licenseServerDecoded.clone()), index.clone());
                     { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", NEXT_FILE, jcall!(initInfo).getServer(index.clone())), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
-                return initInfo.clone();
+                return Some(initInfo.clone());
             } else {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Could Not Load License InitInfo: "), self.INITFILENAME))));
-            }
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                 jcall!(self.logUtil).put(format!("{}{}", String::from("Command Failed: "), self.INITFILENAME), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone(), crate::java_into_object(e.clone()));
             })) {
                 Ok(_) => {}
                 Err(e2) => {
-            let e2: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e2 as Box<dyn std::any::Any>)));
+            let e2: String = crate::java::lang::Exception::java_panic_message(&e2);
 
                 jcall!(self.logUtil).put(format!("{}{}", String::from("LicenseInitInfo Read Retry: "), self.INITFILENAME), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("readAgain()"), crate::java_into_object(e2.clone()));
                 }
             }
             panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("LicenseInitInfo Read Error: "), self.INITFILENAME))));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 

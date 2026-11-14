@@ -17,10 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::NullCommandListener::NullCommandListener;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::NullCommandListener::NullCommandListener;
 use crate::org::allbinary::canvas::Processor::Processor;
 use crate::org::allbinary::game::commands::GameCommandsFactory::GameCommandsFactory;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
@@ -68,6 +68,8 @@ use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEv
 use crate::org::allbinary::logic::util::event::EventStrings::EventStrings;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::MenuListener::MenuListener;
 use super::BasicMenuInputProcessor::BasicMenuInputProcessor;
 use super::ImmediateCommandFormInputProcessor::ImmediateCommandFormInputProcessor;
@@ -117,15 +119,15 @@ impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventLis
     fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, eventObject) }
 }
 impl UpdateMyFontInterface for GameCommandCanvas {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 impl GameCommandCanvas {
     
 
-    pub fn new_struct(mut cmdListener: Option<Rc<RefCell<CommandListener>>>, mut name: String, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Self {
+    pub fn new_struct(mut cmdListener: Option<Rc<RefCell<dyn CommandListener>>>, mut name: String, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Self {
         let mut this = Self {
-            base: MyCanvas::new_struct(name.clone(), jcall!(CanvasStrings::getInstance()).EMPTY_CHILD_NAME_LIST.clone()),
+            base: MyCanvas::new_struct(name.clone(), { let java_field = jcall!(CanvasStrings::getInstance()).EMPTY_CHILD_NAME_LIST.clone(); java_field }.clone()),
             repaintProcessor: None,
             gameInputStrings: None,
             foregroundBasicColor: None,
@@ -146,26 +148,24 @@ impl GameCommandCanvas {
             isSingleKeyRepeatableProcessing: false,
             fontHeight: 0,
         };
-        this.repaintProcessor = jcall!(ScreenRepaintProcessorFactory::getInstance()).create(this);
         this.gameInputStrings = GameInputStrings::getInstance();
         this.inputToGameKeyMapping = jcall!(jcall!(PlatformInputMappingFactory::getInstance()).getPersistentInputMappingInstance()).getInputMapping();
         this.gameKeyFactory = GameKeyFactory::getInstance();
         this.gameKeyEventFactory = GameKeyEventFactory::getInstance();
         this.downGameKeyEventHandler = DownGameKeyEventHandler::getInstance();
         this.upGameKeyEventHandler = UpGameKeyEventHandler::getInstance();
-        this.updateMyFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
         this.myFontProcessor = this.updateMyFontProcessor.clone();
-        this.menuInputProcessor = NoMenuInputProcessor::NoMenuInputProcessor::getInstance();
+        this.menuInputProcessor = NoMenuInputProcessor::NoMenuInputProcessor::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn>>);
         this.menuPaintable = NullPaintable::getInstance();
         this.menuForm = PaintableForm::getNullPaintableForm();
-        this.isSingleKeyRepeatableProcessing = jcall!(Features::getInstance()).isFeature(jcall!(InputFeatureFactory::getInstance()).SINGLE_KEY_REPEAT_PRESS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
+        this.isSingleKeyRepeatableProcessing = jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(InputFeatureFactory::getInstance()).SINGLE_KEY_REPEAT_PRESS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
         this.fontHeight = 0;
         // super(...) is in the struct literal above
-        this.repaintBehavior = RepaintBehavior::getInstance();
+        this.repaintBehavior = { let java_value = (RepaintBehavior::getInstance()).clone(); java_value };
         this.foregroundBasicColor = foregroundBasicColor.clone();
         this.backgroundBasicColor = backgroundBasicColor.clone();
-        this.foregroundColor = jcall!(this.foregroundBasicColor).intValue();
-        this.backgroundColor = jcall!(this.backgroundBasicColor).intValue();
+        this.foregroundColor = { let java_value = (jcall!(this.foregroundBasicColor).intValue()).clone(); java_value };
+        this.backgroundColor = { let java_value = (jcall!(this.backgroundBasicColor).intValue()).clone(); java_value };
         this.initCommands(cmdListener.clone());
         if !match (&cmdListener, &crate::javax::microedition::lcdui::NullCommandListener::NullCommandListener_NULL_COMMAND_LISTENER.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
@@ -174,7 +174,7 @@ impl GameCommandCanvas {
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                 panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
                 }
@@ -183,45 +183,48 @@ impl GameCommandCanvas {
         this
     }
 
-    pub fn new(mut cmdListener: Option<Rc<RefCell<CommandListener>>>, mut name: String, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(cmdListener, name, backgroundBasicColor, foregroundBasicColor))))
+    pub fn new(mut cmdListener: Option<Rc<RefCell<dyn CommandListener>>>, mut name: String, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Self>>> {
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(cmdListener.clone(), name.clone(), backgroundBasicColor.clone(), foregroundBasicColor.clone()))));
+        jcall!(this).repaintProcessor = jcall!(ScreenRepaintProcessorFactory::getInstance()).create(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>));
+        jcall!(this).updateMyFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.commonStrings).START.clone()).append(jcall!(self.canvasStrings).FD_WIDTH.clone()).appendint(((MyFontProcessor::defaultCharWidth(font.clone())) as i32)).append(jcall!(self.canvasStrings).FD_HEIGHT.clone()).appendint(((jcall!(font).getHeight()) as i32)).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.canvasStrings).UPDATE_MEASUREMENT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-            self.fontHeight = jcall!(font).getHeight();
-            let mut rectangle: Option<Rc<RefCell<Rectangle>>> = { let java_arguments = (jcall!(self.menuForm).as_PaintableForm_mut().size(),); self.createRectangle(java_arguments.0) };
-            { let java_receiver = self.menuForm.clone(); let java_arguments = (rectangle.clone(), jcall!(FormTypeFactory::getInstance()).VERTICAL_CENTER_FORM.clone(),); jcall!(java_receiver).init(java_arguments.0, java_arguments.1); };
+            let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone()).append({ let java_field = jcall!(self.canvasStrings).FD_WIDTH.clone(); java_field }.clone()).appendint(MyFontProcessor::defaultCharWidth(font.clone())).append({ let java_field = jcall!(self.canvasStrings).FD_HEIGHT.clone(); java_field }.clone()).appendint(jcall!(font).getHeight()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.canvasStrings).UPDATE_MEASUREMENT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            self.fontHeight = { let java_value = (jcall!(font).getHeight()).clone(); java_value };
+            let mut rectangle: Option<Rc<RefCell<Rectangle>>> = { let java_arguments = (jcall!(self.menuForm).size(),); self.createRectangle(java_arguments.0) };
+            { let java_receiver = self.menuForm.clone(); let java_arguments = (rectangle.clone(), { let java_field = jcall!(FormTypeFactory::getInstance()).VERTICAL_CENTER_FORM.clone(); java_field }.clone(),); jcall!(java_receiver).init(java_arguments.0, java_arguments.1); };
             self.update();
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.canvasStrings).ON_DISPLAY_CHANGE_EVENT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.canvasStrings).ON_DISPLAY_CHANGE_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
-        self.myFontProcessor = MyFontProcessor::getInstance();
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
     pub fn onDisplayChangeEvent(&mut self, mut displayChangeEvent: Option<Rc<RefCell<DisplayChangeEvent>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.commonStrings).START.clone()).append(jcall!(DisplayInfoSingleton::getInstance()).toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.canvasStrings).ON_DISPLAY_CHANGE_EVENT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone()).append(jcall!(DisplayInfoSingleton::getInstance()).toString()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.canvasStrings).ON_DISPLAY_CHANGE_EVENT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         self.myFontProcessor = self.updateMyFontProcessor.clone();
     }
     
 
-    pub fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<CommandListener>>>) {
+    pub fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<dyn CommandListener>>>) {
         self.removeAllCommands();
-        { let java_arguments = (jcall!(GameCommandsFactory::getInstance()).CLOSE_AND_SHOW_GAME_CANVAS.clone(),); self.addCommand(java_arguments.0) };
+        { let java_arguments = ({ let java_field = jcall!(GameCommandsFactory::getInstance()).CLOSE_AND_SHOW_GAME_CANVAS.clone(); java_field }.clone(),); self.addCommand(java_arguments.0) };
         self.setCommandListener(cmdListener.clone());
     }
     
@@ -231,8 +234,8 @@ impl GameCommandCanvas {
         let mut form: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn>>> = self.createForm();
         self.menuForm = form.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::PaintableForm::PaintableFormDyn>>);
         if !match (&form, &ScrollSelectionFormNoneFactory::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            self.setMenuInputProcessor(ImmediateCommandFormInputProcessor::new(BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>), -1, None /* Java this: a &mut self method has no Rc of itself */, form.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn>>));
-            self.menuPaintable = FormPaintable::new(form.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>);
+            self.setMenuInputProcessor(ImmediateCommandFormInputProcessor::new(BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayListD::BasicArrayListDDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>), -1, None /* Java this: a &mut self method has no Rc of itself */, form.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn>>));
+            self.menuPaintable = FormPaintable::new(form.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::form::PaintableForm::PaintableFormDyn>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>);
         }
         jcall!(self.repaintBehavior).onChangeRepaint(None /* Java this: a &mut self method has no Rc of itself */);
     }
@@ -240,9 +243,9 @@ impl GameCommandCanvas {
 
     // throws Exception
     pub fn createForm(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn>>> {
-        let mut items: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>> = jcall!(CommandTextItemArrayFactory::new(AllCommandsVisitor::new())).getInstance(self.getCommandStack(), self.backgroundBasicColor.clone(), self.foregroundBasicColor.clone());
+        let mut items: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>> = jcall!(CommandTextItemArrayFactory::new(AllCommandsVisitor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>))).getInstance(crate::java_into_object(self.getCommandStack()), self.backgroundBasicColor.clone(), self.foregroundBasicColor.clone());
         let mut rectangle: Option<Rc<RefCell<Rectangle>>> = self.createRectangle((items.len() as i32).clone());
-        return CommandCurrentSelectionFormFactory::getInstance(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), items.clone(), rectangle.clone(), jcall!(FormTypeFactory::getInstance()).VERTICAL_CENTER_FORM.clone(), 15, false, self.backgroundBasicColor.clone(), self.foregroundBasicColor.clone());
+        return CommandCurrentSelectionFormFactory::getInstance({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), items.clone(), rectangle.clone(), { let java_field = jcall!(FormTypeFactory::getInstance()).VERTICAL_CENTER_FORM.clone(); java_field }.clone(), 15, false, self.backgroundBasicColor.clone(), self.foregroundBasicColor.clone());
     }
     
 
@@ -256,18 +259,18 @@ impl GameCommandCanvas {
     
 
     pub fn open(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("open"));
-        jcall!(BasicMotionGesturesHandler::getInstance()).addListenerInterface(self.getMenuInputProcessor());
-        jcall!(GameKeyEventHandler::getInstance()).addListener(self.getMenuInputProcessor().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("open"));
+        jcall!(BasicMotionGesturesHandler::getInstance()).addListenerInterface(self.getMenuInputProcessor().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of BasicMenuInputProcessor does not have EventListenerInterface as a base trait") }));
+        jcall!(GameKeyEventHandler::getInstance()).addListener(self.getMenuInputProcessor().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of BasicMenuInputProcessor does not have EventListenerInterface as a base trait") }));
         jcall!(DisplayChangeEventHandler::getInstance()).addListenerInterface(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
 
     // throws Exception
     pub fn close(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).CLOSE.clone());
-        jcall!(BasicMotionGesturesHandler::getInstance()).removeListener(self.getMenuInputProcessor());
-        jcall!(GameKeyEventHandler::getInstance()).removeListener(self.getMenuInputProcessor().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).CLOSE.clone(); java_field }.clone());
+        jcall!(BasicMotionGesturesHandler::getInstance()).removeListener(self.getMenuInputProcessor().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of BasicMenuInputProcessor does not have EventListenerInterface as a base trait") }));
+        jcall!(GameKeyEventHandler::getInstance()).removeListener(self.getMenuInputProcessor().map(|_java_reference| -> Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>> { panic!("ClassCastException: the Rust trait of BasicMenuInputProcessor does not have EventListenerInterface as a base trait") }));
         jcall!(DisplayChangeEventHandler::getInstance()).removeListener(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
@@ -299,7 +302,7 @@ impl GameCommandCanvas {
     
 
     pub fn keyPressedByDevice(&mut self, mut keyCode: i32, mut deviceId: i32) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).appendint(keyCode.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).KEY_PRESSED.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).appendint(keyCode.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).KEY_PRESSED.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         self.addGameKeyEvent(keyCode.clone(), 0, false);
     }
     
@@ -319,19 +322,19 @@ impl GameCommandCanvas {
     pub fn addGameKeyEvent(&mut self, mut keyCode: i32, mut deviceId: i32, mut repeated: bool) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut gameKey: Option<Rc<RefCell<GameKey>>> = jcall!(self.inputToGameKeyMapping).getInstanceForCanvas(None /* Java this: a &mut self method has no Rc of itself */, keyCode.clone());
-            if !match (&gameKey, &jcall!(self.gameKeyFactory).NONE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if !match (&gameKey, &{ let java_field = jcall!(self.gameKeyFactory).NONE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = jcall!(self.gameKeyEventFactory).getInstanceForInput(None /* Java this: a &mut self method has no Rc of itself */, gameKey.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
-                jcall!(self.downGameKeyEventHandler).fireEvent(gameKeyEvent.clone());
-                jcall!(jcall!(self.downGameKeyEventHandler).getInstanceForDevice(deviceId.clone())).fireEvent(gameKeyEvent.clone());
+                jcall!(self.downGameKeyEventHandler).fireEvent(gameKeyEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
+                jcall!(jcall!(self.downGameKeyEventHandler).getInstanceForDevice(deviceId.clone())).as_DownGameKeyEventHandlerBase_mut().fireEvent(gameKeyEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
             } else {
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.gameInputStrings).NO_KEY.clone()).appendint(keyCode.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).ADD_KEY_EVENT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.gameInputStrings).NO_KEY.clone(); java_field }.clone()).appendint(keyCode.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).ADD_KEY_EVENT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(String::from("Key Event Error"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).ADD_KEY_EVENT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put(String::from("Key Event Error"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).ADD_KEY_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -340,27 +343,27 @@ impl GameCommandCanvas {
     pub fn removeGameKeyEvent(&mut self, mut keyCode: i32, mut deviceId: i32, mut repeated: bool) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut gameKey: Option<Rc<RefCell<GameKey>>> = jcall!(self.inputToGameKeyMapping).getInstanceForCanvas(None /* Java this: a &mut self method has no Rc of itself */, keyCode.clone());
-            if !match (&gameKey, &jcall!(self.gameKeyFactory).NONE) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if !match (&gameKey, &{ let java_field = jcall!(self.gameKeyFactory).NONE.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = jcall!(self.gameKeyEventFactory).getInstanceForInput(None /* Java this: a &mut self method has no Rc of itself */, gameKey.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
-                jcall!(self.upGameKeyEventHandler).fireEvent(gameKeyEvent.clone());
-                jcall!(jcall!(self.upGameKeyEventHandler).getInstanceForDevice(deviceId.clone())).fireEvent(gameKeyEvent.clone());
+                jcall!(self.upGameKeyEventHandler).fireEvent(gameKeyEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
+                jcall!(jcall!(self.upGameKeyEventHandler).getInstanceForDevice(deviceId.clone())).as_UpGameKeyEventHandlerBase_mut().fireEvent(gameKeyEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
             } else {
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.gameInputStrings).NO_KEY.clone()).appendint(keyCode.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).REMOVE_KEY_EVENT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.gameInputStrings).NO_KEY.clone(); java_field }.clone()).appendint(keyCode.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).REMOVE_KEY_EVENT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(String::from("Key Event Error"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).REMOVE_KEY_EVENT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put(String::from("Key Event Error"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).REMOVE_KEY_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.myFontProcessor).process(graphics.clone());
-        jcall!(self.menuPaintable).paint(graphics.clone());
+        jcall!(self.menuPaintable).as_Paintable_mut().paint(graphics.clone());
         jcall!(self.repaintBehavior).repaint(None /* Java this: a &mut self method has no Rc of itself */);
     }
     
@@ -382,13 +385,12 @@ impl std::ops::DerefMut for GameCommandCanvas {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait GameCommandCanvasDyn: crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn {
+pub trait GameCommandCanvasDyn: crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn + crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface {
     fn as_GameCommandCanvas(&self) -> &GameCommandCanvas;
     fn as_GameCommandCanvas_mut(&mut self) -> &mut GameCommandCanvas;
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { GameCommandCanvas::updateMeasurement(self.as_GameCommandCanvas_mut(), graphics) }
     fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { GameCommandCanvas::onEvent(self.as_GameCommandCanvas_mut(), eventObject) }
     fn onDisplayChangeEvent(&mut self, mut displayChangeEvent: Option<Rc<RefCell<DisplayChangeEvent>>>) { GameCommandCanvas::onDisplayChangeEvent(self.as_GameCommandCanvas_mut(), displayChangeEvent) }
-    fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<CommandListener>>>) { GameCommandCanvas::initCommands(self.as_GameCommandCanvas_mut(), cmdListener) }
+    fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<dyn CommandListener>>>) { GameCommandCanvas::initCommands(self.as_GameCommandCanvas_mut(), cmdListener) }
     fn initMenu(&mut self) { GameCommandCanvas::initMenu(self.as_GameCommandCanvas_mut()) }
     fn createForm(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn>>> { GameCommandCanvas::createForm(self.as_GameCommandCanvas_mut()) }
     fn createRectangle(&mut self, mut size: i32) -> Option<Rc<RefCell<Rectangle>>> { GameCommandCanvas::createRectangle(self.as_GameCommandCanvas_mut(), size) }
@@ -396,9 +398,6 @@ pub trait GameCommandCanvasDyn: crate::org::allbinary::graphics::displayable::My
     fn close(&mut self) { GameCommandCanvas::close(self.as_GameCommandCanvas_mut()) }
     fn update(&mut self) { GameCommandCanvas::update(self.as_GameCommandCanvas_mut()) }
     fn getSourceId(&mut self) -> i32 { GameCommandCanvas::getSourceId(self.as_GameCommandCanvas_mut()) }
-    fn keyPressed(&mut self, mut keyCode: i32) { GameCommandCanvas::keyPressed(self.as_GameCommandCanvas_mut(), keyCode) }
-    fn keyReleased(&mut self, mut keyCode: i32) { GameCommandCanvas::keyReleased(self.as_GameCommandCanvas_mut(), keyCode) }
-    fn keyRepeated(&mut self, mut keyCode: i32) { GameCommandCanvas::keyRepeated(self.as_GameCommandCanvas_mut(), keyCode) }
     fn addGameKeyEvent(&mut self, mut keyCode: i32, mut deviceId: i32, mut repeated: bool) { GameCommandCanvas::addGameKeyEvent(self.as_GameCommandCanvas_mut(), keyCode, deviceId, repeated) }
     fn removeGameKeyEvent(&mut self, mut keyCode: i32, mut deviceId: i32, mut repeated: bool) { GameCommandCanvas::removeGameKeyEvent(self.as_GameCommandCanvas_mut(), keyCode, deviceId, repeated) }
     fn setMenuInputProcessor(&mut self, mut menuInputProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn>>>) { GameCommandCanvas::setMenuInputProcessor(self.as_GameCommandCanvas_mut(), menuInputProcessor) }
@@ -409,13 +408,49 @@ impl GameCommandCanvasDyn for GameCommandCanvas {
     fn as_GameCommandCanvas_mut(&mut self) -> &mut GameCommandCanvas { self }
 }
 
+impl crate::javax::microedition::lcdui::Canvas::CanvasDyn for GameCommandCanvas {
+    fn as_Canvas(&self) -> &crate::javax::microedition::lcdui::Canvas::Canvas { &self.base.base }
+    fn as_Canvas_mut(&mut self) -> &mut crate::javax::microedition::lcdui::Canvas::Canvas { &mut self.base.base }
+}
+impl crate::javax::microedition::lcdui::Displayable::DisplayableDyn for GameCommandCanvas {
+    fn as_Displayable(&self) -> &crate::javax::microedition::lcdui::Displayable::Displayable { &self.base.base.base }
+    fn as_Displayable_mut(&mut self) -> &mut crate::javax::microedition::lcdui::Displayable::Displayable { &mut self.base.base.base }
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn removeCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getWidth(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getHeight(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn setCommandListener(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::CommandListener::CommandListener>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setCommandListener(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn setFullScreenMode(&mut self, p1: bool) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setFullScreenMode(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn hideNotify(&mut self) { crate::javax::microedition::lcdui::Canvas::Canvas::hideNotify(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+    fn keyPressed(&mut self, mut keyCode: i32) { Self::keyPressed(self, keyCode) }
+    fn keyRepeated(&mut self, mut keyCode: i32) { Self::keyRepeated(self, keyCode) }
+    fn keyReleased(&mut self, mut keyCode: i32) { Self::keyReleased(self, keyCode) }
+    fn pointerPressed(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerPressed(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn pointerReleased(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerReleased(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn pointerDragged(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerDragged(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn repaint(&mut self) { crate::javax::microedition::lcdui::Canvas::Canvas::repaint(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+    fn repaintXYWH(&mut self, p1: i32, p2: i32, p3: i32, p4: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::repaintXYWH(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1, p2, p3, p4) }
+    fn sizeChanged(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::sizeChanged(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn showNotify(&mut self) { crate::javax::microedition::lcdui::Canvas::Canvas::showNotify(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+}
 impl crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn for GameCommandCanvas {
     fn as_MyCanvas(&self) -> &crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas { &self.base }
     fn as_MyCanvas_mut(&mut self) -> &mut crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas { &mut self.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
     fn keyPressedByDevice(&mut self, mut keyCode: i32, mut deviceId: i32) { Self::keyPressedByDevice(self, keyCode, deviceId) }
     fn keyRepeatedByDevice(&mut self, mut keyCode: i32, mut deviceId: i32) { Self::keyRepeatedByDevice(self, keyCode, deviceId) }
     fn keyReleasedByDevice(&mut self, mut keyCode: i32, mut deviceId: i32) { Self::keyReleasedByDevice(self, keyCode, deviceId) }
+}
+impl crate::org::allbinary::graphics::displayable::DisplayableInterface::DisplayableInterface for GameCommandCanvas {
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getHeight(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getWidth(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn removeCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn setCommandListener(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::CommandListener::CommandListener>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setCommandListener(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::displayable::command::MyCommandInterface::MyCommandInterface for GameCommandCanvas {
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn removeAllCommands(&mut self) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeAllCommands(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
 }
 
 

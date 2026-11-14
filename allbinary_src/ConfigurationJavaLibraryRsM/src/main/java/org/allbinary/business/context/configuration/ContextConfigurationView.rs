@@ -25,6 +25,7 @@ use crate::org::allbinary::logic::communication::smtp::configuration::server::Em
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
 use crate::org::w3c::dom::NodeList::NodeList;
+use crate::java::lang::Exception::*;
 use super::ContextConfigurationInterface::ContextConfigurationInterface;
 use super::ContextConfiguration::ContextConfiguration;
 
@@ -44,6 +45,10 @@ impl DomNodeInterface for ContextConfigurationView {
 }
 
 impl ContextConfigurationView {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct1(mut node: Option<Rc<RefCell<Node>>>) -> Self {
@@ -54,7 +59,7 @@ impl ContextConfigurationView {
         this.contextConfigurationInterface = ContextConfiguration::new().map(|reference| reference as Rc<RefCell<dyn ContextConfigurationInterface>>);
         let mut emailConfigurationNode: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(crate::org::allbinary::logic::communication::smtp::configuration::server::EmailServerConfigurationData::EmailServerConfigurationData_NAME.with(Clone::clone).clone(), childNodeList.clone());
         let mut emailServerConfigurationView: Option<Rc<RefCell<EmailServerConfigurationView>>> = EmailServerConfigurationView::new1(emailConfigurationNode.clone());
-        { let java_receiver = this.contextConfigurationInterface.clone(); let java_arguments = ((jcall!(emailServerConfigurationView).getEmailConfigurationInterface()).clone() /* as EmailServerConfigurationInterface */,); jcall!(java_receiver).setEmailServerConfigurationInterface(java_arguments.0); };
+        { let java_receiver = this.contextConfigurationInterface.clone(); let java_arguments = ((jcall!(emailServerConfigurationView).getEmailConfigurationInterface()).clone(),); jcall!(java_receiver).setEmailServerConfigurationInterface(java_arguments.0); };
         this
     }
 
@@ -63,7 +68,7 @@ impl ContextConfigurationView {
     }
     
 
-    pub fn new_struct1(mut contextConfigurationInterface: Option<Rc<RefCell<dyn ContextConfigurationInterface>>>) -> Self {
+    pub fn new_struct1_ContextConfigurationInterface(mut contextConfigurationInterface: Option<Rc<RefCell<dyn ContextConfigurationInterface>>>) -> Self {
         let mut this = Self {
             contextConfigurationInterface: None,
         };
@@ -71,8 +76,8 @@ impl ContextConfigurationView {
         this
     }
 
-    pub fn new1(mut contextConfigurationInterface: Option<Rc<RefCell<dyn ContextConfigurationInterface>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct1(contextConfigurationInterface))))
+    pub fn new1_ContextConfigurationInterface(mut contextConfigurationInterface: Option<Rc<RefCell<dyn ContextConfigurationInterface>>>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Self::new_struct1_ContextConfigurationInterface(contextConfigurationInterface))))
     }
     
 
@@ -83,8 +88,8 @@ impl ContextConfigurationView {
 
     // throws Exception
     pub fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> {
-        let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(jcall!(ContextConfigurationData::ContextConfigurationData::getInstance()).NAME.clone());
-        let mut emailServerConfigurationView: Option<Rc<RefCell<EmailServerConfigurationView>>> = EmailServerConfigurationView::new1(jcall!(self.getContextConfigurationInterface()).getEmailServerConfigurationInterface());
+        let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement({ let java_field = jcall!(ContextConfigurationData::ContextConfigurationData::getInstance()).NAME.clone(); java_field }.clone());
+        let mut emailServerConfigurationView: Option<Rc<RefCell<EmailServerConfigurationView>>> = EmailServerConfigurationView::new1({ let java_argument = jcall!(self.getContextConfigurationInterface()).getEmailServerConfigurationInterface(); java_argument });
         jcall!(node).appendChild(jcall!(emailServerConfigurationView).toXmlNode(document.clone()));
         return node.clone();
     }

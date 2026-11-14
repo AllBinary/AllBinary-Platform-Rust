@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::data::tree::dom::DomSearchHelper::DomSearchHelper;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::ProfileActionScriptOutputInterface::ProfileActionScriptOutputInterface;
 use super::ImageActionScriptOutput::ImageActionScriptOutput;
 
@@ -34,6 +35,10 @@ pub struct ProfileActionScriptOutputFactory {
 
 
 impl ProfileActionScriptOutputFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

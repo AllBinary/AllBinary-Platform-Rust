@@ -45,6 +45,10 @@ thread_local! { pub static HtmlTableData_instance: Option<Rc<RefCell<HtmlTableDa
 
 impl HtmlTableData {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             LEFT: String::new(),
@@ -60,8 +64,8 @@ impl HtmlTableData {
             ROWS: String::new(),
             FRAMES: Vec::new(),
         };
-        this.LEFT = jcall!(CommonStrings::getInstance()).LEFT.clone();
-        this.RIGHT = jcall!(CommonStrings::getInstance()).RIGHT.clone();
+        this.LEFT = { let java_field = jcall!(CommonStrings::getInstance()).LEFT.clone(); java_field }.clone();
+        this.RIGHT = { let java_field = jcall!(CommonStrings::getInstance()).RIGHT.clone(); java_field }.clone();
         this.NONE = String::from("none");
         this.TOP = String::from("top");
         this.BOTTOM = String::from("bottom");

@@ -27,6 +27,7 @@ use crate::org::allbinary::logic::io::DataOutputStreamFactory::DataOutputStreamF
 use crate::org::allbinary::logic::io::StreamUtil::StreamUtil;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::w3c::dom::Document::Document;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -40,6 +41,10 @@ pub struct DomDocumentFileHelper {
 
 
 impl DomDocumentFileHelper {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -55,16 +60,17 @@ impl DomDocumentFileHelper {
 
     // throws Exception
     pub fn createDocument(mut xmlFile: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<Document>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            return DomDocumentHelper::DomDocumentHelper::create1(AbFileInputStream::new1(xmlFile.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStreamDyn>>));
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            return Some(DomDocumentHelper::DomDocumentHelper::create1(AbFileInputStream::new(xmlFile.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::AbFileInputStream::AbFileInputStreamDyn>>)));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -79,20 +85,20 @@ impl DomDocumentFileHelper {
                 jcall!(file).delete();
             }
             jcall!(file).createNewFile();
-            dataOutputStream = jcall!(DataOutputStreamFactory::getInstance()).getInstanceForAbFile(file.clone());
+            dataOutputStream = { let java_value = (jcall!(DataOutputStreamFactory::getInstance()).getInstanceForAbFile(file.clone())).clone(); java_value };
             let mut streamResult: Option<Rc<RefCell<StreamResult>>> = StreamResult::new(dataOutputStream.clone());
             jcall!(copyTransformer).transform(domSource.clone(), streamResult.clone());
             jcall!(dataOutputStream).flush();
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", e);
             }
         }
         { // finally
-            jcall!(StreamUtil::getInstance()).close(dataOutputStream.clone());
+            jcall!(StreamUtil::getInstance()).close(dataOutputStream.clone().map(|reference| reference as Rc<RefCell<dyn crate::java::io::Closeable::Closeable>>));
         }
     }
 }

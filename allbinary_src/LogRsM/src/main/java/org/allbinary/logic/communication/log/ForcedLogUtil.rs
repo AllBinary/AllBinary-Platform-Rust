@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,6 +33,10 @@ pub struct ForcedLogUtil {
 
 
 impl ForcedLogUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -50,9 +55,9 @@ impl ForcedLogUtil {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putOE(jcall!(CommonStrings::getInstance()).EXCEPTION.clone(), anyType.clone(), String::from("log"), e.clone());
+            PreLogUtil::putOE({ let java_field = jcall!(CommonStrings::getInstance()).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(anyType.clone()), String::from("log"), crate::java_into_object(e.clone()));
             }
         }
     }

@@ -63,5 +63,13 @@ impl crate::org::allbinary::game::input::PCGameInputMapping::PCGameInputMappingD
     fn as_PCGameInputMapping(&self) -> &crate::org::allbinary::game::input::PCGameInputMapping::PCGameInputMapping { &self.base }
     fn as_PCGameInputMapping_mut(&mut self) -> &mut crate::org::allbinary::game::input::PCGameInputMapping::PCGameInputMapping { &mut self.base }
 }
+impl crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMappingDyn for DesktopGameInputMapping {
+    fn as_PersistentInputMapping(&self) -> &crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMapping { &self.base.base }
+    fn as_PersistentInputMapping_mut(&mut self) -> &mut crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMapping { &mut self.base.base }
+    fn getDefault(&mut self) -> Option<Rc<RefCell<InputToGameKeyMapping>>> { Self::getDefault(self) }
+    fn init(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface>>>) { crate::org::allbinary::game::input::PCGameInputMapping::PCGameInputMapping::init(crate::org::allbinary::game::input::PCGameInputMapping::PCGameInputMappingDyn::as_PCGameInputMapping_mut(self), p1) }
+    fn isDelete(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool { crate::org::allbinary::game::input::PCGameInputMapping::PCGameInputMapping::isDelete(crate::org::allbinary::game::input::PCGameInputMapping::PCGameInputMappingDyn::as_PCGameInputMapping_mut(self), p1) }
+    fn isSystemInput(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool { crate::org::allbinary::game::input::PCGameInputMapping::PCGameInputMapping::isSystemInput(crate::org::allbinary::game::input::PCGameInputMapping::PCGameInputMappingDyn::as_PCGameInputMapping_mut(self), p1) }
+}
 
 

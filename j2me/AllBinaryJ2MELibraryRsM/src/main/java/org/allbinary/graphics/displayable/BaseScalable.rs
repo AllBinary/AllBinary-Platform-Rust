@@ -38,6 +38,10 @@ impl ScalableListener for BaseScalable {
 
 impl BaseScalable {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -67,7 +71,7 @@ impl BaseScalable {
     pub fn scale(&mut self, mut ratio: f32) {
     }
 }
-pub trait BaseScalableDyn: crate::org::allbinary::graphics::displayable::ScalableListener::ScalableListener {
+pub trait BaseScalableDyn: std::any::Any + crate::org::allbinary::graphics::displayable::ScalableListener::ScalableListener {
     fn as_BaseScalable(&self) -> &BaseScalable;
     fn as_BaseScalable_mut(&mut self) -> &mut BaseScalable;
 }

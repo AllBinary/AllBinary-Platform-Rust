@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 // use crate::javax::servlet::jsp::JspTagException::JspTagException;
@@ -29,6 +28,7 @@ use crate::org::allbinary::logic::communication::http::request::AbResponseHandle
 use crate::org::allbinary::logic::system::security::licensing::LicensingException::LicensingException;
 use crate::tags::CustomTagSupport::CustomTagSupport;
 use crate::tags::HelperTag::HelperTag;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -79,23 +79,24 @@ impl MultipartRequestParamForwardTag {
 
     // throws JspTagException
     pub fn doStartTag(&mut self) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut parentTag: Option<Rc<RefCell<dyn crate::tags::HelperTag::HelperTagDyn>>> = (self.getParent()).clone() /* as HelperTag */;
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut parentTag: Option<Rc<RefCell<dyn crate::tags::HelperTag::HelperTagDyn>>> = (self.getParent()).clone();
             jcall!(ParentInventoryTagHelper::ParentInventoryTagHelper::getInstance()).isValid(None /* Java this: a &mut self method has no Rc of itself */, parentTag.clone());
-            let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-            jcall!(hashMap).put(AbTagData_PARENT.with(Clone::clone).clone(), parentTag.clone());
+            let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+            jcall!(hashMap).put(crate::java_into_object(AbTagData_PARENT.with(Clone::clone).clone()), crate::java_into_object(parentTag.clone()));
             let mut multipartRequestParamForwardHelper: Option<Rc<RefCell<MultipartRequestParamForwardHelper>>> = MultipartRequestParamForwardHelper::new(parentTag.clone(), self.page.clone(), self.command.clone(), self.paramVector.clone(), self.pageContext.clone());
             jcall!(multipartRequestParamForwardHelper).forward();
-            return unsafe { crate::javax::servlet::jsp::tagext::Tag::Tag_SKIP_BODY.clone() }.clone();
+            return Some(unsafe { crate::javax::servlet::jsp::tagext::Tag::Tag_SKIP_BODY.clone() }.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             AbResponseHandler::sendJspTagLicensingRedirect(self.pageContext.clone(), e.clone());
             return unsafe { crate::javax::servlet::jsp::tagext::Tag::Tag_SKIP_BODY.clone() }.clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 impl std::ops::Deref for MultipartRequestParamForwardTag {

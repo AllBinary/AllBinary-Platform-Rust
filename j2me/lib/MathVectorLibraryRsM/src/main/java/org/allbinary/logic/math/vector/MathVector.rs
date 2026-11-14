@@ -40,6 +40,10 @@ impl MathVectorInterface for MathVector {
 }
 
 impl MathVector {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut magnitudeBasicDecimal: Option<Rc<RefCell<BasicDecimal>>>, mut direction: i32) -> Self {
@@ -72,7 +76,7 @@ impl MathVector {
         return self.resultBasicDecimal.clone();
     }
 }
-pub trait MathVectorDyn {
+pub trait MathVectorDyn: std::any::Any {
     fn as_MathVector(&self) -> &MathVector;
     fn as_MathVector_mut(&mut self) -> &mut MathVector;
     fn getMagnitude(&mut self) -> Option<Rc<RefCell<BasicDecimal>>> { MathVector::getMagnitude(self.as_MathVector_mut()) }

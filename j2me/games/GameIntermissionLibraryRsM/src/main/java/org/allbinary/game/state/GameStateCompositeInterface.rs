@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::GameState::GameState;
 
 // Borrows the object of a Java reference
@@ -26,7 +27,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait GameStateCompositeInterface {
+pub trait GameStateCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
@@ -34,8 +35,6 @@ pub trait GameStateCompositeInterface {
     
 
     fn getGameState(&mut self) -> Option<Rc<RefCell<GameState>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

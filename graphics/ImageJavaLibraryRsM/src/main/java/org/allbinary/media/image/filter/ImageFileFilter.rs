@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::File::File;
+use crate::java::io::File::File;
 // use crate::javax::swing::filechooser::FileFilter::FileFilter;
 
 // Borrows the object of a Java reference

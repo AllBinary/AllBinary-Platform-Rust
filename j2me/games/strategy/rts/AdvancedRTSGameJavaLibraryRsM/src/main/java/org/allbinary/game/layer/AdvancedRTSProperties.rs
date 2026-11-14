@@ -43,15 +43,19 @@ pub struct AdvancedRTSProperties {
 
 
 impl AdvancedRTSProperties {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn createPropertiesSimulated() -> Option<Rc<RefCell<AdvancedRTSProperties>>> {
-        return AdvancedRTSProperties::new(crate::org::allbinary::animation::transition::shake::NoShakeAnimationListener::NoShakeAnimationListener_NO_SHAKE_ANIMATION_LISTENER.with(Clone::clone).clone(), unsafe { crate::org::allbinary::media::AllBinaryNoVibration::AllBinaryNoVibration_NO_VIBRATION.clone() }.clone(), 0, WaypointBehaviorBase::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>));
+        return AdvancedRTSProperties::new(crate::org::allbinary::animation::transition::shake::NoShakeAnimationListener::NoShakeAnimationListener_NO_SHAKE_ANIMATION_LISTENER.with(Clone::clone).clone(), unsafe { crate::org::allbinary::media::AllBinaryNoVibration::AllBinaryNoVibration_NO_VIBRATION.clone() }.clone(), 0, WaypointBehaviorBase::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>).map(|_java_reference| -> Rc<RefCell<dyn TickableInterface>> { panic!("ClassCastException: the Rust trait of WaypointBehaviorBase does not have TickableInterface as a base trait") }));
     }
     
 
     pub fn createProperties() -> Option<Rc<RefCell<AdvancedRTSProperties>>> {
-        return AdvancedRTSProperties::new(ShakeAnimationListenerFactory::getInstance(), AllBinaryVibration::getInstance(), ((jcall!(jcall!(GameConfigurationCentral::getInstance()).VIBRATION).getValue()).unwrap() as i32) * 100, WaypointBehaviorBase::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>));
+        return AdvancedRTSProperties::new(ShakeAnimationListenerFactory::getInstance(), AllBinaryVibration::getInstance(), ((jcall!({ let java_field = jcall!(GameConfigurationCentral::getInstance()).VIBRATION.clone(); java_field }).getValue()).unwrap() as i32) * 100, WaypointBehaviorBase::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn>>).map(|_java_reference| -> Rc<RefCell<dyn TickableInterface>> { panic!("ClassCastException: the Rust trait of WaypointBehaviorBase does not have TickableInterface as a base trait") }));
     }
     
 

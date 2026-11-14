@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
-// use crate::javax::microedition::lcdui::ImageItem::ImageItem;
+use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::ImageItem::ImageItem;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::displayable::DisplayInfoSingleton::DisplayInfoSingleton;
 use crate::org::allbinary::graphics::form::ScreenInfo::ScreenInfo;
@@ -44,6 +44,10 @@ pub struct CommandTextItemArrayFactory {
 
 
 impl CommandTextItemArrayFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut visitorInterface: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>>) -> Self {
@@ -51,7 +55,7 @@ impl CommandTextItemArrayFactory {
             list: None,
             visitorInterface: None,
         };
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.visitorInterface = visitorInterface.clone();
         this
     }
@@ -68,17 +72,17 @@ impl CommandTextItemArrayFactory {
         let mut textItem: Option<Rc<RefCell<CommandTextItem>>> = None;
         let mut priorityLimit: i32 = 7;
         let mut displayInfo: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
-        let mut isLargeEnoughDisplayForBigMenu: bool = (jcall!(displayInfo).isPortrait() && jcall!(displayInfo).getLastHeight() >= jcall!(ScreenInfo::getInstance()).MEDIUM_WIDTH) || (!jcall!(displayInfo).isPortrait() && jcall!(displayInfo).getLastWidth() >= jcall!(ScreenInfo::getInstance()).MEDIUM_WIDTH);
+        let mut isLargeEnoughDisplayForBigMenu: bool = (jcall!(displayInfo).isPortrait() && jcall!(displayInfo).getLastHeight() >= { let java_field = jcall!(ScreenInfo::getInstance()).MEDIUM_WIDTH.clone(); java_field }) || (!jcall!(displayInfo).isPortrait() && jcall!(displayInfo).getLastWidth() >= { let java_field = jcall!(ScreenInfo::getInstance()).MEDIUM_WIDTH.clone(); java_field });
         if !isLargeEnoughDisplayForBigMenu && size > 3 {
             priorityLimit = 3;
         }
-        let mut command: Option<Rc<RefCell<Command>>> = None;
+        let mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>> = None;
         for index in (0..size) {
-            command = (jcall!(vectorUtil).elementAt(crate::java_into_object(vector.clone()), index.clone())).clone() /* as Command */;
+            command = { let java_value = ({ let java_object = (jcall!(vectorUtil).elementAt(crate::java_into_object(vector.clone()), index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             if jcall!(command).getPriority() < priorityLimit {
-                let mut aBoolean: Option<bool> = { let java_object = jcall!(self.visitorInterface).visit(crate::java_into_object(command.clone())); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) };
+                let mut aBoolean: Option<bool> = { let java_object = (jcall!(self.visitorInterface).as_Visitor_mut().visit(crate::java_into_object(command.clone()))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<bool>().copied().or_else(|| object.downcast_ref::<Option<bool>>().copied().flatten()).expect("ClassCastException") }) };
                 if aBoolean.unwrap() {
-                    textItem = CommandTextItem::new(command.clone(), unsafe { crate::javax::microedition::lcdui::ImageItem::ImageItem_LAYOUT_DEFAULT.clone() }.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), backgroundBasicColor.clone(), foregroundBasicColor.clone());
+                    textItem = { let java_value = (CommandTextItem::new(command.clone(), crate::javax::microedition::lcdui::ImageItem::ImageItem_LAYOUT_DEFAULT.with(Clone::clone).clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), backgroundBasicColor.clone(), foregroundBasicColor.clone())).clone(); java_value };
                     jcall!(self.list).add(crate::java_into_object(textItem.clone()));
                 }
             }

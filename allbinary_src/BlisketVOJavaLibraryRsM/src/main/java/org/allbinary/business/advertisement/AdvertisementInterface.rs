@@ -30,7 +30,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AdvertisementInterface {
+pub trait AdvertisementInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getArtist(&mut self) -> String;
@@ -100,8 +100,6 @@ pub trait AdvertisementInterface {
     
 
     fn setThumbnail(&mut self, AdvertisementThumbnailInterface: Option<Rc<RefCell<dyn AdvertisementThumbnailInterface>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

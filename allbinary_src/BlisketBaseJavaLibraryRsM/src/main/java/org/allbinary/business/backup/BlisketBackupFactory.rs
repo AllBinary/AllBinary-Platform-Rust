@@ -33,6 +33,7 @@ use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -51,6 +52,10 @@ pub struct BlisketBackupFactory {
 thread_local! { pub static BlisketBackupFactory_instance: Option<Rc<RefCell<BlisketBackupFactory>>> = BlisketBackupFactory::new(); }
 
 impl BlisketBackupFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -78,28 +83,28 @@ impl BlisketBackupFactory {
 
     // throws Exception
     pub fn getFileBasicArrayList(&mut self, mut pathString: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut path: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(pathString.clone(), jcall!(self.stringUtil).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+        let mut path: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(pathString.clone(), { let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
         let mut file: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFileFromAbPath(path.clone());
-        return jcall!(self.directory).search2(file.clone(), true);
+        return jcall!(self.directory).search2_AbFile_boolean(file.clone(), true);
     }
     
 
     pub fn backup(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backup()"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backup()"));
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(URLGLOBALS::getWebappPath());
-            jcall!(stringBuffer).append(jcall!(PATH_GLOBALS::getInstance()).BACKUP_PATH.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(PATH_GLOBALS::getInstance()).BACKUP_PATH.clone(); java_field }.clone());
             let mut backupPath: String = jcall!(stringBuffer).toString();
-            let mut path: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(backupPath.clone(), jcall!(self.stringUtil).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+            let mut path: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(backupPath.clone(), { let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
             let mut fileBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getFileBasicArrayList(backupPath.clone());
             { let java_arguments = (fileBasicArrayList.clone(), format!("{}{}", jcall!(path).toFileSystemString(), String::from("backup.zip")),); self.backup2(java_arguments.0, java_arguments.1) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backup()"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backup()"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -107,25 +112,25 @@ impl BlisketBackupFactory {
 
     pub fn backupViews(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backupViews()"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backupViews()"));
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(URLGLOBALS::getWebappPath());
-            jcall!(stringBuffer).append(jcall!(PATH_GLOBALS::getInstance()).BACKUP_PATH.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(PATH_GLOBALS::getInstance()).BACKUP_PATH.clone(); java_field }.clone());
             let mut backupPath: String = jcall!(stringBuffer).toString();
-            let mut path: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(backupPath.clone(), jcall!(self.stringUtil).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-            let mut fileBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            let mut path: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(backupPath.clone(), { let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+            let mut fileBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
             let mut storeFrontsEntity: Option<Rc<RefCell<StoreFrontsEntity>>> = jcall!(StoreFrontsEntityFactory::getInstance()).getStoreFrontsEntityInstance();
             let mut storeFrontNamesBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(storeFrontsEntity).getStoreFrontNames();
             let mut size: i32 = jcall!(storeFrontNamesBasicArrayList).size();
             let mut nextStore: String = String::new();
             let mut viewsPath: String = String::new();
             for index in (0..size) {
-                nextStore = (jcall!(storeFrontNamesBasicArrayList).get(index.clone())).clone() /* as String */;
+                nextStore = { let java_value = ({ let java_object = (jcall!(storeFrontNamesBasicArrayList).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
                 jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
                 jcall!(stringBuffer).append(URLGLOBALS::getWebappPath());
-                jcall!(stringBuffer).append(jcall!(PATH_GLOBALS::getInstance()).VIEWS_PATH.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(PATH_GLOBALS::getInstance()).VIEWS_PATH.clone(); java_field }.clone());
                 jcall!(stringBuffer).append(nextStore.clone());
-                viewsPath = jcall!(stringBuffer).toString();
+                viewsPath = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
                 jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
                 jcall!(stringBuffer).append(String::from("Backup Store Views: "));
                 jcall!(stringBuffer).append(nextStore.clone());
@@ -138,9 +143,9 @@ impl BlisketBackupFactory {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backupViews()"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backupViews()"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -148,13 +153,13 @@ impl BlisketBackupFactory {
 
     pub fn backupResources(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backupResources()"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backupResources()"));
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(URLGLOBALS::getWebappPath());
-            jcall!(stringBuffer).append(jcall!(PATH_GLOBALS::getInstance()).BACKUP_PATH.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(PATH_GLOBALS::getInstance()).BACKUP_PATH.clone(); java_field }.clone());
             let mut backupPath: String = jcall!(stringBuffer).toString();
-            let mut path: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(backupPath.clone(), jcall!(self.stringUtil).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-            let mut fileBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            let mut path: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(backupPath.clone(), { let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+            let mut fileBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
             let mut storeFrontsEntity: Option<Rc<RefCell<StoreFrontsEntity>>> = jcall!(StoreFrontsEntityFactory::getInstance()).getStoreFrontsEntityInstance();
             let mut storeFrontNamesBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(storeFrontsEntity).getStoreFrontNames();
             let mut size: i32 = jcall!(storeFrontNamesBasicArrayList).size();
@@ -162,13 +167,13 @@ impl BlisketBackupFactory {
             let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = None;
             let mut resourcesPath: String = String::new();
             for index in (0..size) {
-                nextStore = (jcall!(storeFrontNamesBasicArrayList).get(index.clone())).clone() /* as String */;
-                storeFrontInterface = jcall!(storeFrontsEntity).getStoreFrontInterface(nextStore.clone());
+                nextStore = { let java_value = ({ let java_object = (jcall!(storeFrontNamesBasicArrayList).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+                storeFrontInterface = { let java_value = (jcall!(storeFrontsEntity).getStoreFrontInterface(nextStore.clone())).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
                 jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
                 jcall!(stringBuffer).append(URLGLOBALS::getWebappPath());
                 jcall!(stringBuffer).append(jcall!(storeFrontInterface).getCurrentHostNamePath());
                 jcall!(stringBuffer).append(jcall!(storeFrontInterface).getCategoryPath());
-                resourcesPath = jcall!(stringBuffer).toString();
+                resourcesPath = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
                 jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
                 jcall!(stringBuffer).append(String::from("Backup Store Resrouces: "));
                 jcall!(stringBuffer).append(nextStore.clone());
@@ -181,9 +186,9 @@ impl BlisketBackupFactory {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backupResources()"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backupResources()"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -191,19 +196,19 @@ impl BlisketBackupFactory {
 
     pub fn backupJsps(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backupJsps()"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backupJsps()"));
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(URLGLOBALS::getWebappPath());
-            jcall!(stringBuffer).append(jcall!(PATH_GLOBALS::getInstance()).BACKUP_PATH.clone());
+            jcall!(stringBuffer).append({ let java_field = jcall!(PATH_GLOBALS::getInstance()).BACKUP_PATH.clone(); java_field }.clone());
             let mut backupPath: String = jcall!(stringBuffer).toString();
-            let mut path: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(backupPath.clone(), jcall!(self.stringUtil).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-            let mut fileBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+            let mut path: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> = AbPath::new(backupPath.clone(), { let java_field = jcall!(self.stringUtil).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+            let mut fileBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
             let mut storeFrontsEntity: Option<Rc<RefCell<StoreFrontsEntity>>> = jcall!(StoreFrontsEntityFactory::getInstance()).getStoreFrontsEntityInstance();
             let mut storeFrontNamesBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(storeFrontsEntity).getStoreFrontNames();
             let mut size: i32 = jcall!(storeFrontNamesBasicArrayList).size();
             let mut nextStore: String = String::new();
             for index in (0..size) {
-                nextStore = (jcall!(storeFrontNamesBasicArrayList).get(index.clone())).clone() /* as String */;
+                nextStore = { let java_value = ({ let java_object = (jcall!(storeFrontNamesBasicArrayList).get(index.clone())).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
                 PreLogUtil::put(format!("{}{}", String::from("Backup Store Jsps: "), nextStore), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backupJsps()"));
                 jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
                 jcall!(stringBuffer).append(URLGLOBALS::getWebappPath());
@@ -214,9 +219,9 @@ impl BlisketBackupFactory {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backupJsps()"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backupJsps()"), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -237,9 +242,9 @@ impl BlisketBackupFactory {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backup()"), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("backup()"), crate::java_into_object(e.clone()));
             }
         }
     }

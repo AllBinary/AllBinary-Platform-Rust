@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::NullAnimationFactory::NullAnimationFactory;
@@ -59,12 +59,12 @@ pub struct SelectionHudPaintable {
 }
 
 impl UpdateMyFontInterface for SelectionHudPaintable {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintableInterface::InitUpdatePaintableInterface for SelectionHudPaintable {
 }
 impl crate::org::allbinary::init::InitInterface::InitInterface for SelectionHudPaintable {
-    fn init(&mut self) { self.base.init() }
+    fn init(&mut self) { crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintable::init(crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn::as_InitUpdatePaintable_mut(self)) }
 }
 impl crate::org::allbinary::init::UpdateInterface::UpdateInterface for SelectionHudPaintable {
     fn update(&mut self) { Self::update(self) }
@@ -91,28 +91,29 @@ impl SelectionHudPaintable {
             animationInterface: None,
             backgroundColor: 0,
         };
-        this.y = jcall!(CommonButtons::getInstance()).STANDARD_BUTTON_SIZE + 17;
-        this.updateMyFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this.y = { let java_field = jcall!(CommonButtons::getInstance()).STANDARD_BUTTON_SIZE.clone(); java_field } + 17;
         this.myFontProcessor = this.updateMyFontProcessor.clone();
-        this.basicColor = jcall!(BasicColorFactory::getInstance()).BLACK.clone();
-        this.name = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.basicColor = { let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone();
+        this.name = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.animationInterface = jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0);
-        this.backgroundColor = jcall!(jcall!(BasicColorFactory::getInstance()).GREY).intValue();
+        this.backgroundColor = jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).GREY.clone(); java_field }).intValue();
         this.update();
-        this.primitiveLongUtil = PrimitiveLongUtil::createPowerOfTen(10000);
+        this.primitiveLongUtil = { let java_value = (PrimitiveLongUtil::createPowerOfTen(10000)).clone(); java_value };
         this
     }
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct())))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct())));
+        jcall!(this).updateMyFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         let mut commonButtons: Option<Rc<RefCell<CommonButtons>>> = CommonButtons::getInstance();
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        { let java_arguments = (jcall!(commonButtons).STANDARD_BUTTON_SIZE + jcall!(font).getHeight(),); self.setHeight(java_arguments.0) };
-        self.myFontProcessor = MyFontProcessor::getInstance();
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        { let java_arguments = ({ let java_field = jcall!(commonButtons).STANDARD_BUTTON_SIZE.clone(); java_field } + jcall!(font).getHeight(),); self.setHeight(java_arguments.0) };
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
@@ -120,10 +121,10 @@ impl SelectionHudPaintable {
         let mut commonButtons: Option<Rc<RefCell<CommonButtons>>> = CommonButtons::getInstance();
         let mut touchButtonLocationHelper: Option<Rc<RefCell<TouchButtonLocationHelper>>> = TouchButtonLocationHelper::new();
         let mut displayInfoSingleton: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
-        self.x = jcall!(commonButtons).STANDARD_BUTTON_SIZE + jcall!(touchButtonLocationHelper).getColumnsRemainderHalf();
+        self.x = { let java_value = ({ let java_field = jcall!(commonButtons).STANDARD_BUTTON_SIZE.clone(); java_field } + jcall!(touchButtonLocationHelper).getColumnsRemainderHalf()).clone(); java_value };
         self.textX = self.getX() + 4;
-        self.width = jcall!(displayInfoSingleton).getLastWidth() - self.getX() * 2;
-        self.imageX = self.getWidth() + jcall!(touchButtonLocationHelper).getColumnsRemainderHalf() - 10;
+        self.width = { let java_value = ({ let java_value = jcall!(displayInfoSingleton).getLastWidth(); java_value } - self.getX() * 2).clone(); java_value };
+        self.imageX = { let java_value = (self.getWidth() + { let java_value = jcall!(touchButtonLocationHelper).getColumnsRemainderHalf(); java_value } - 10).clone(); java_value };
         self.myFontProcessor = self.updateMyFontProcessor.clone();
     }
     
@@ -202,7 +203,7 @@ impl SelectionHudPaintable {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         jcall!(graphics).setColor(self.backgroundColor.clone());
         jcall!(graphics).drawRect(self.getX(), self.y.clone(), self.getWidth(), self.getHeight());
@@ -218,10 +219,9 @@ impl std::ops::DerefMut for SelectionHudPaintable {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait SelectionHudPaintableDyn: crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn {
+pub trait SelectionHudPaintableDyn: crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn + crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface {
     fn as_SelectionHudPaintable(&self) -> &SelectionHudPaintable;
     fn as_SelectionHudPaintable_mut(&mut self) -> &mut SelectionHudPaintable;
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { SelectionHudPaintable::updateMeasurement(self.as_SelectionHudPaintable_mut(), graphics) }
     fn updateSelectionInfo(&mut self) { SelectionHudPaintable::updateSelectionInfo(self.as_SelectionHudPaintable_mut()) }
     fn updateInfo(&mut self) { SelectionHudPaintable::updateInfo(self.as_SelectionHudPaintable_mut()) }
     fn getPrimitiveLongUtil(&mut self) -> Option<Rc<RefCell<PrimitiveLongUtil>>> { SelectionHudPaintable::getPrimitiveLongUtil(self.as_SelectionHudPaintable_mut()) }
@@ -251,7 +251,10 @@ impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for Selecti
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base }
     fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) { Self::setBasicColorP(self, basicColor) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for SelectionHudPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

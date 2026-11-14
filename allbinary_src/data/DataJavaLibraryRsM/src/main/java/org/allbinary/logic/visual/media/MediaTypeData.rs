@@ -33,6 +33,10 @@ pub struct MediaTypeData {
 thread_local! { pub static MediaTypeData_instance: Option<Rc<RefCell<MediaTypeData>>> = MediaTypeData::new(); }
 
 impl MediaTypeData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<MediaTypeData>>> {

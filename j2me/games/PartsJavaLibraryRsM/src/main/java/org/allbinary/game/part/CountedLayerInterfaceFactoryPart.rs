@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::NullAnimationFactory::NullAnimationFactory;
 use crate::org::allbinary::game::layer::pickup::CountedPickedUpLayerInterfaceFactory::CountedPickedUpLayerInterfaceFactory;
@@ -29,6 +29,7 @@ use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::logic::math::PrimitiveLongUtil::PrimitiveLongUtil;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::PartInterface::PartInterface;
 
 // Borrows the object of a Java reference
@@ -56,14 +57,18 @@ impl crate::org::allbinary::animation::AnimationInterfaceCompositeInterface::Ani
     fn getAnimationInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { Self::getAnimationInterface(self) }
 }
 impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for CountedLayerInterfaceFactoryPart {
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paintThreed(self, graphics) }
 }
 impl UpdateMyFontInterface for CountedLayerInterfaceFactoryPart {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 impl CountedLayerInterfaceFactoryPart {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut total: i32, mut countedPickedUpLayerInterfaceFactory: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::pickup::CountedPickedUpLayerInterfaceFactory::CountedPickedUpLayerInterfaceFactoryDyn>>>) -> Self {
@@ -77,25 +82,26 @@ impl CountedLayerInterfaceFactoryPart {
             countedPickedUpLayerInterfaceFactory: None,
             primitiveLongUtil: None,
         };
-        this.updateMyFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
         this.myFontProcessor = this.updateMyFontProcessor.clone();
         this.animationInterface = jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0);
-        this.totalString = jcall!(NullUtil::getInstance()).NULL_CHAR_ARRAY.clone();
+        this.totalString = { let java_field = jcall!(NullUtil::getInstance()).NULL_CHAR_ARRAY.clone(); java_field }.clone();
         this.countedPickedUpLayerInterfaceFactory = crate::org::allbinary::game::layer::pickup::CountedPickedUpLayerInterfaceFactory::CountedPickedUpLayerInterfaceFactory_NULL_COUNTED_PICKUP_LAYER_FACTORY.with(Clone::clone).clone();
-        this.primitiveLongUtil = PrimitiveLongUtil::createPowerOfTen(1000);
+        this.primitiveLongUtil = { let java_value = (PrimitiveLongUtil::createPowerOfTen(1000)).clone(); java_value };
         this.init(total.clone(), countedPickedUpLayerInterfaceFactory.clone());
         this
     }
 
     pub fn new(mut total: i32, mut countedPickedUpLayerInterfaceFactory: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::pickup::CountedPickedUpLayerInterfaceFactory::CountedPickedUpLayerInterfaceFactoryDyn>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(total, countedPickedUpLayerInterfaceFactory))))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(total.clone(), countedPickedUpLayerInterfaceFactory.clone()))));
+        jcall!(this).updateMyFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
         { let java_arguments = (jcall!(font).charsWidth(self.totalString.clone(), 0, jcall!(self.primitiveLongUtil).getCurrentTotalDigits()) + (jcall!(font).getSize() >> 1),); self.setXOffset(java_arguments.0) };
-        self.myFontProcessor = MyFontProcessor::getInstance();
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
@@ -106,9 +112,9 @@ impl CountedLayerInterfaceFactoryPart {
     
 
     // throws Exception
-    pub fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>, mut x: i32, mut y: i32, mut z: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> {
+    pub fn getInstance(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>, mut x: i32, mut y: i32, mut z: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> {
         if self.total > 0 {
-            self.setTotal(self.total - 1);
+            { let java_arguments = (self.total - 1,); self.setTotal(java_arguments.0) };
             return jcall!(self.getCountedPickedUpLayerInterfaceFactory()).getNextInstance(hashtable.clone(), x.clone(), y.clone(), z.clone());
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("No more left. Could use a listener to automatically remove"))));
@@ -123,17 +129,17 @@ impl CountedLayerInterfaceFactoryPart {
 
     pub fn setTotal(&mut self, mut total: i32) {
         self.total = total.clone();
-        self.totalString = jcall!(self.primitiveLongUtil).getCharArray(total.clone());
+        self.totalString = { let java_value = (jcall!(self.primitiveLongUtil).getCharArray(total.clone())).clone(); java_value };
         self.myFontProcessor = self.updateMyFontProcessor.clone();
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.myFontProcessor).process(graphics.clone());
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 

@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
 use crate::org::allbinary::graphics::displayable::DisplayInfoSingleton::DisplayInfoSingleton;
 use crate::org::allbinary::graphics::draw::CanvasDrawLineString::CanvasDrawLineString;
@@ -41,7 +41,7 @@ pub struct PreGameSelectorPaintable {
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintableInterface::InitUpdatePaintableInterface for PreGameSelectorPaintable {
 }
 impl crate::org::allbinary::init::InitInterface::InitInterface for PreGameSelectorPaintable {
-    fn init(&mut self) { self.base.init() }
+    fn init(&mut self) { crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintable::init(crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn::as_InitUpdatePaintable_mut(self)) }
 }
 impl crate::org::allbinary::init::UpdateInterface::UpdateInterface for PreGameSelectorPaintable {
     fn update(&mut self) { Self::update(self) }
@@ -59,7 +59,7 @@ impl PreGameSelectorPaintable {
         };
         this.title = title.clone();
         let mut displayInfo: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
-        this.canvasDrawLineString = CanvasDrawLineString::new(jcall!(displayInfo).getLastHalfWidth(), 0);
+        this.canvasDrawLineString = { let java_value = (CanvasDrawLineString::new(jcall!(displayInfo).getLastHalfWidth(), 0)).clone(); java_value };
         this.preGameScrollSelectionForm = preGameScrollSelectionForm.clone();
         this
     }
@@ -71,12 +71,12 @@ impl PreGameSelectorPaintable {
 
     pub fn update(&mut self) {
         let mut displayInfo: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
-        self.canvasDrawLineString = CanvasDrawLineString::new(jcall!(displayInfo).getLastHalfWidth(), 0);
+        self.canvasDrawLineString = { let java_value = (CanvasDrawLineString::new(jcall!(displayInfo).getLastHalfWidth(), 0)).clone(); java_value };
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        jcall!(graphics).setColor(jcall!(jcall!(BasicColorFactory::getInstance()).WHITE).intValue());
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        jcall!(graphics).setColor(jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }).intValue());
         jcall!(self.canvasDrawLineString).paint(graphics.clone(), self.title.clone(), 0);
         jcall!(self.getPreGameSelectionForm()).paint(graphics.clone());
     }
@@ -102,7 +102,10 @@ impl crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePain
 impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for PreGameSelectorPaintable {
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for PreGameSelectorPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

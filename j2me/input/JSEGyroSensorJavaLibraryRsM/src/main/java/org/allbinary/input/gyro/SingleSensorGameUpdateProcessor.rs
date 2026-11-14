@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::canvas::Processor::Processor;
+use crate::java::lang::Exception::*;
 use super::SensorGameUpdateProcessor::SensorGameUpdateProcessor;
 use super::AccelerometerSensorUpdateProcessor::AccelerometerSensorUpdateProcessor;
 use super::GyroSensorUpdateProcessor::GyroSensorUpdateProcessor;
@@ -44,8 +45,8 @@ impl SingleSensorGameUpdateProcessor {
             accelerometerSensorUpdateProcessor: None,
             gyroSensorUpdateProcessor: None,
         };
-        this.accelerometerSensorUpdateProcessor = AccelerometerSensorUpdateProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
-        this.gyroSensorUpdateProcessor = GyroSensorUpdateProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
+        this.accelerometerSensorUpdateProcessor = AccelerometerSensorUpdateProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
+        this.gyroSensorUpdateProcessor = GyroSensorUpdateProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
         this
     }
 
@@ -75,8 +76,6 @@ impl std::ops::DerefMut for SingleSensorGameUpdateProcessor {
 impl crate::org::allbinary::input::gyro::SensorGameUpdateProcessor::SensorGameUpdateProcessorDyn for SingleSensorGameUpdateProcessor {
     fn as_SensorGameUpdateProcessor(&self) -> &crate::org::allbinary::input::gyro::SensorGameUpdateProcessor::SensorGameUpdateProcessor { &self.base }
     fn as_SensorGameUpdateProcessor_mut(&mut self) -> &mut crate::org::allbinary::input::gyro::SensorGameUpdateProcessor::SensorGameUpdateProcessor { &mut self.base }
-    fn process(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { Self::process(self, anyType) }
-    fn sendNotifications(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { Self::sendNotifications(self, anyType) }
     fn process(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { Self::process(self, anyType) }
     fn sendNotifications(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { Self::sendNotifications(self, anyType) }
 }

@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::util::visitor::Visitor::Visitor;
+use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use super::IntPermutationVisitor::IntPermutationVisitor;
 
 // Borrows the object of a Java reference
@@ -35,6 +36,10 @@ pub struct OrderedIntArrayPermutationUtil {
 thread_local! { pub static OrderedIntArrayPermutationUtil_instance: Option<Rc<RefCell<OrderedIntArrayPermutationUtil>>> = OrderedIntArrayPermutationUtil::new(); }
 
 impl OrderedIntArrayPermutationUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<OrderedIntArrayPermutationUtil>>> {
@@ -80,7 +85,7 @@ impl OrderedIntArrayPermutationUtil {
 
     pub fn swap(&mut self, mut data: Vec<i32>, mut a: i32, mut b: i32) {
         let mut temp: i32 = data[(a) as usize].clone();
-        data[(a) as usize] = data[(b) as usize].clone();
+        data[(a) as usize] = { let java_value = (data[(b) as usize]).clone(); java_value }.clone();
         data[(b) as usize] = temp.clone();
     }
     
@@ -102,7 +107,7 @@ impl OrderedIntArrayPermutationUtil {
         println!("{}", iterations.clone());
         for count in (0..iterations - 1_i64) {
             self.getNext(data.clone());
-            jcall!(visitor).visit(None /* Java this: a &mut self method has no Rc of itself */);
+            jcall!(visitor).as_Visitor_mut().visit(None /* Java this: a &mut self method has no Rc of itself */);
         }
         println!("{}", self.FINISHED.clone());
     }
@@ -117,7 +122,7 @@ impl OrderedIntArrayPermutationUtil {
         let mut permutationVisitor: Option<Rc<RefCell<dyn crate::org::allbinary::logic::math::permutations::IntPermutationVisitor::IntPermutationVisitorDyn>>> = IntPermutationVisitor::new(data.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::math::permutations::IntPermutationVisitor::IntPermutationVisitorDyn>>);
         let mut ORIGINAL_DATA_LABEL: String = String::from("Original Data: ");
         print!("{}", ORIGINAL_DATA_LABEL.clone());
-        jcall!(permutationVisitor).print(data.clone());
+        jcall!(permutationVisitor).print2(data.clone(), StringMaker::new());
         jcall!(OrderedIntArrayPermutationUtil::getInstance()).generate(data.clone(), permutationVisitor.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>));
     }
 }

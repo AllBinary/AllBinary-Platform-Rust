@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::game::input::GameKey::GameKey;
 use crate::org::allbinary::game::input::GameKeyEventSourceInterface::GameKeyEventSourceInterface;
 use crate::org::allbinary::game::input::GameKeyFactory::GameKeyFactory;
@@ -34,6 +34,7 @@ use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::AllBinaryGameCanvas::AllBinaryGameCanvas;
 
 // Borrows the object of a Java reference
@@ -89,38 +90,38 @@ impl FormInputProcessor {
 
     pub fn keyPressedByDevice(&mut self, mut keyCode: i32, mut deviceId: i32) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            PreLogUtil::put(jcall!(StringMaker::new()).append(jcall!(self.inputFactory).KEY_CODE_LABEL.clone()).appendint(keyCode.clone()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(jcall!(self.inputFactory).DEVICE_ID_LABEL.clone()).appendint(deviceId.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).KEY_PRESSED.clone());
+            PreLogUtil::put(jcall!(StringMaker::new()).append({ let java_field = jcall!(self.inputFactory).KEY_CODE_LABEL.clone(); java_field }.clone()).appendint(keyCode.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append({ let java_field = jcall!(self.inputFactory).DEVICE_ID_LABEL.clone(); java_field }.clone()).appendint(deviceId.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).KEY_PRESSED.clone(); java_field }.clone());
             let mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>> = jcall!(self.inputFactory).getInstanceById(keyCode.clone());
-            let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = jcall!(self.gameKeyEventFactory).getInstanceForInput(self.allBinaryGameCanvas.clone().map(|reference| reference as Rc<RefCell<dyn GameKeyEventSourceInterface>>), input.clone());
+            let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = jcall!(self.gameKeyEventFactory).getInstanceForInput(self.allBinaryGameCanvas.clone().map(|_java_reference| -> Rc<RefCell<dyn GameKeyEventSourceInterface>> { panic!("ClassCastException: the Rust trait of AllBinaryGameCanvas does not have GameKeyEventSourceInterface as a base trait") }), input.clone());
             jcall!(self.downKeyEventHandler).fireEventForGameKeyEvent(gameKeyEvent.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).ADD_KEY_EVENT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).ADD_KEY_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
     
 
-    pub fn keyReleasedByDevice(&mut self, mut canvas: Option<Rc<RefCell<Canvas>>>, mut keyCode: i32, mut deviceId: i32) {
+    pub fn keyReleasedByDevice(&mut self, mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>, mut keyCode: i32, mut deviceId: i32) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>> = jcall!(self.inputFactory).getInstanceById(keyCode.clone());
             if jcall!(self.platformKeyFactory).isEnter(input.clone()) {
-                PreLogUtil::put(jcall!(StringMaker::new()).append(jcall!(self.inputFactory).KEY_CODE_LABEL.clone()).appendint(keyCode.clone()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(jcall!(self.inputFactory).DEVICE_ID_LABEL.clone()).appendint(deviceId.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).KEY_RELEASED.clone());
-                let mut gameKey: Option<Rc<RefCell<GameKey>>> = jcall!(GameKeyFactory::getInstance()).KEY_NUM0.clone();
-                let mut gameKeyEventSourceInterface: Option<Rc<RefCell<dyn GameKeyEventSourceInterface>>> = (canvas).clone() /* as GameKeyEventSourceInterface */;
+                PreLogUtil::put(jcall!(StringMaker::new()).append({ let java_field = jcall!(self.inputFactory).KEY_CODE_LABEL.clone(); java_field }.clone()).appendint(keyCode.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append({ let java_field = jcall!(self.inputFactory).DEVICE_ID_LABEL.clone(); java_field }.clone()).appendint(deviceId.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).KEY_RELEASED.clone(); java_field }.clone());
+                let mut gameKey: Option<Rc<RefCell<GameKey>>> = { let java_field = jcall!(GameKeyFactory::getInstance()).KEY_NUM0.clone(); java_field }.clone();
+                let mut gameKeyEventSourceInterface: Option<Rc<RefCell<dyn GameKeyEventSourceInterface>>> = (|| -> Option<Rc<RefCell<dyn GameKeyEventSourceInterface>>> { panic!("ClassCastException: a Rust dyn Canvas cannot be cast to GameKeyEventSourceInterface") })();
                 let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = jcall!(self.gameKeyEventFactory).getInstanceForInput(gameKeyEventSourceInterface.clone(), gameKey.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>));
-                jcall!(self.upGameKeyEventHandler).fireEvent(gameKeyEvent.clone());
-                jcall!(jcall!(self.upGameKeyEventHandler).getInstanceForDevice(deviceId.clone())).fireEvent(gameKeyEvent.clone());
+                jcall!(self.upGameKeyEventHandler).fireEvent(gameKeyEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
+                jcall!(jcall!(self.upGameKeyEventHandler).getInstanceForDevice(deviceId.clone())).as_UpGameKeyEventHandlerBase_mut().fireEvent(gameKeyEvent.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>));
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).ADD_KEY_EVENT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).ADD_KEY_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -137,7 +138,7 @@ impl crate::org::allbinary::game::input::InputProcessor::InputProcessorDyn for F
     fn as_InputProcessor(&self) -> &crate::org::allbinary::game::input::InputProcessor::InputProcessor { &self.base }
     fn as_InputProcessor_mut(&mut self) -> &mut crate::org::allbinary::game::input::InputProcessor::InputProcessor { &mut self.base }
     fn keyPressedByDevice(&mut self, mut keyCode: i32, mut deviceId: i32) { Self::keyPressedByDevice(self, keyCode, deviceId) }
-    fn keyReleasedByDevice(&mut self, mut canvas: Option<Rc<RefCell<Canvas>>>, mut keyCode: i32, mut deviceId: i32) { Self::keyReleasedByDevice(self, canvas, keyCode, deviceId) }
+    fn keyReleasedByDevice(&mut self, mut canvas: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>>, mut keyCode: i32, mut deviceId: i32) { Self::keyReleasedByDevice(self, canvas, keyCode, deviceId) }
 }
 
 

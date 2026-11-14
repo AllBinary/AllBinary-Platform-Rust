@@ -26,6 +26,8 @@ use crate::org::allbinary::collision::RectangleCollisionUtil::RectangleCollision
 use crate::org::allbinary::graphics::GPoint::GPoint;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::media::image::comparison::ImageComparatorConstraintsInterface::ImageComparatorConstraintsInterface;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -44,6 +46,10 @@ pub struct ImageComparatorConstraints {
 // impl ImageComparatorConstraintsInterface for ImageComparatorConstraints with the methods of the trait
 
 impl ImageComparatorConstraints {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut doImageComparisonEveryNthFrame: i32) -> Self {
@@ -79,8 +85,8 @@ impl ImageComparatorConstraints {
         let mut avoidVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getAvoidVector();
         let mut size: i32 = jcall!(avoidVector).size();
         for index in (0..size) {
-            let mut avoidRectangle: Option<Rc<RefCell<Rectangle>>> = (jcall!(avoidVector).get(index.clone())).clone() /* as Rectangle */;
-            if RectangleCollisionUtil::isCollision(avoidRectangle.clone(), rectangle.clone()) {
+            let mut avoidRectangle: Option<Rc<RefCell<Rectangle>>> = { let java_object = (jcall!(avoidVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<Rectangle>>>>().expect("ClassCastException").clone()) };
+            if RectangleCollisionUtil::isCollision_Rectangle_Rectangle(avoidRectangle.clone(), rectangle.clone()) {
                 isCollsionWithAvoidRectangles = true;
             }
         }
@@ -89,12 +95,12 @@ impl ImageComparatorConstraints {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn isCollisionWithAvoidRectangles(&mut self, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) -> bool {
+    pub fn isCollisionWithAvoidRectangles_GPoint(&mut self, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>) -> bool {
         let mut isCollsionWithAvoidRectangles: bool = false;
         let mut avoidVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getAvoidVector();
         let mut size: i32 = jcall!(avoidVector).size();
         for index in (0..size) {
-            let mut avoidRectangle: Option<Rc<RefCell<Rectangle>>> = (jcall!(avoidVector).get(index.clone())).clone() /* as Rectangle */;
+            let mut avoidRectangle: Option<Rc<RefCell<Rectangle>>> = { let java_object = (jcall!(avoidVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<Rectangle>>>>().expect("ClassCastException").clone()) };
             if RectangleCollisionUtil::isCollision(avoidRectangle.clone(), point.clone()) {
                 isCollsionWithAvoidRectangles = true;
                 break;
@@ -140,12 +146,12 @@ impl ImageComparatorConstraints {
         let mut avoidVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getAvoidVector();
         let mut size: i32 = jcall!(avoidVector).size();
         for index in (0..size) {
-            let mut avoidRectangle: Option<Rc<RefCell<Rectangle>>> = (jcall!(avoidVector).get(index.clone())).clone() /* as Rectangle */;
+            let mut avoidRectangle: Option<Rc<RefCell<Rectangle>>> = { let java_object = (jcall!(avoidVector).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<Rectangle>>>>().expect("ClassCastException").clone()) };
             jcall!(self.logUtil).putF(format!("{}{}", String::from("Avoid Rectangle: "), avoidRectangle), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("log"));
         }
     }
 }
-pub trait ImageComparatorConstraintsDyn {
+pub trait ImageComparatorConstraintsDyn: std::any::Any {
     fn as_ImageComparatorConstraints(&self) -> &ImageComparatorConstraints;
     fn as_ImageComparatorConstraints_mut(&mut self) -> &mut ImageComparatorConstraints;
     fn getAvoidVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { ImageComparatorConstraints::getAvoidVector(self.as_ImageComparatorConstraints_mut()) }

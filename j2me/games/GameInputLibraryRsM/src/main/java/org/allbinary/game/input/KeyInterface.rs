@@ -25,7 +25,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait KeyInterface {
+pub trait KeyInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn keyPressed(&mut self, keyCode: i32);
@@ -38,8 +38,6 @@ pub trait KeyInterface {
     
 
     fn keyReleasedByDevice(&mut self, keyCode: i32, deviceId: i32);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -17,11 +17,11 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::CommandListener::CommandListener;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::NullCanvas::NullCanvas;
-// use crate::javax::microedition::lcdui::NullCommandListener::NullCommandListener;
+use crate::javax::microedition::lcdui::CommandListener::CommandListener;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::NullCanvas::NullCanvas;
+use crate::javax::microedition::lcdui::NullCommandListener::NullCommandListener;
 use crate::org::allbinary::canvas::Processor::Processor;
 use crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas;
 use crate::org::allbinary::game::commands::GameCommandsFactory::GameCommandsFactory;
@@ -41,6 +41,7 @@ use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::midlet::AllBinaryMidlet::AllBinaryMidlet;
 use crate::org::allbinary::thread::PathFindingThreadPool::PathFindingThreadPool;
 use crate::org::allbinary::thread::ThreadPool::ThreadPool;
+use crate::java::lang::Exception::*;
 use super::ProgressPaintable::ProgressPaintable;
 use super::ProgressEndListener::ProgressEndListener;
 
@@ -77,14 +78,19 @@ pub struct ProgressCanvas {
 }
 
 impl PaintableInterface for ProgressCanvas {
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paintThreed(self, graphics) }
 }
 impl UpdateMyFontInterface for ProgressCanvas {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
+}
+impl crate::org::allbinary::thread::RunnableInterface::RunnableInterface for ProgressCanvas {
+    fn isRunning(&mut self) -> bool { crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas::isRunning(crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn::as_RunnableCanvas_mut(self)) }
+    fn setRunning(&mut self, p1: bool) { crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas::setRunning(crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn::as_RunnableCanvas_mut(self), p1) }
+    fn setThread(&mut self, p1: Option<Rc<RefCell<crate::java::lang::Thread::Thread>>>) { crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas::setThread(crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn::as_RunnableCanvas_mut(self), p1) }
 }
 impl crate::Runnable for ProgressCanvas {
-    fn run(&mut self) { self.base.run() }
+    fn run(&mut self) { crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas::run(crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn::as_RunnableCanvas_mut(self)) }
 }
 
 impl ProgressCanvas {
@@ -92,7 +98,7 @@ impl ProgressCanvas {
 
     pub fn new_struct(mut title: String, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Self {
         let mut this = Self {
-            base: RunnableCanvas::new_struct(crate::javax::microedition::lcdui::NullCommandListener::NullCommandListener_NULL_COMMAND_LISTENER.with(Clone::clone).clone(), jcall!(CanvasStrings::getInstance()).EMPTY_CHILD_NAME_LIST.clone(), false),
+            base: RunnableCanvas::new_struct(crate::javax::microedition::lcdui::NullCommandListener::NullCommandListener_NULL_COMMAND_LISTENER.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn CommandListener>>), { let java_field = jcall!(CanvasStrings::getInstance()).EMPTY_CHILD_NAME_LIST.clone(); java_field }.clone(), false),
             hasPainted: false,
             backgroundBasicColor: None,
             GAUGE_PAINTABLE: None,
@@ -115,25 +121,23 @@ impl ProgressCanvas {
             ADD_PORTION: String::new(),
             ADD_EARLY_PORTION: String::new(),
         };
-        this.GAUGE_PAINTABLE = ProgressPaintable::new(this);
         this.maxValue = 100.0_f32;
-        this.TEXT = jcall!(this.commonStrings).LOADING.clone();
-        this.updateMyFontProcessor = UpdateMyFontProcessor::new(this).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this.TEXT = { let java_field = jcall!(this.commonStrings).LOADING.clone(); java_field }.clone();
         this.myFontProcessor = this.updateMyFontProcessor.clone();
         this.allbinaryMidlet = AllBinaryMidlet::getNullInstance();
         this.text = this.TEXT.clone();
         this.background = true;
-        this.paintable = this.GAUGE_PAINTABLE.clone();
+        this.paintable = this.GAUGE_PAINTABLE.clone().map(|reference| reference as Rc<RefCell<dyn PaintableInterface>>);
         this.inProgress = false;
         this.IN_GAME_PROCESSOR = Processor::new() /* Java anonymous class body: implement it as a named type
-        pathFindingThreadPool: PathFindingThreadPool::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>),
+        pathFindingThreadPool: PathFindingThreadPool::getInstance(),
         
 
         // throws Exception
         pub fn process(&mut self) {
             jcall!(this.pathFindingThreadPool).runAPriorityTask();
         }
-*/;
+*/.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::Processor::ProcessorDyn>>);
         this.inGameProcessor = Processor::getInstance();
         this.progressEndListener = ProgressEndListener_instance.with(Clone::clone).clone();
         this.backgroundLabel = String::from("Background AI Game Loading...");
@@ -142,19 +146,22 @@ impl ProgressCanvas {
         this.ADD_EARLY_PORTION = String::from("addEarlyPortion");
         // super(...) is in the struct literal above
         this.backgroundBasicColor = backgroundBasicColor.clone();
-        this.gauge = ABCustomGaugeItem::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), ((this.maxValue) as i32), 0, backgroundBasicColor.clone(), foregroundBasicColor.clone());
+        this.gauge = { let java_value = (ABCustomGaugeItem::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), ((this.maxValue) as i32), 0, backgroundBasicColor.clone(), foregroundBasicColor.clone())).clone(); java_value };
         this
     }
 
     pub fn new(mut title: String, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(title, backgroundBasicColor, foregroundBasicColor))))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(title.clone(), backgroundBasicColor.clone(), foregroundBasicColor.clone()))));
+        jcall!(this).GAUGE_PAINTABLE = ProgressPaintable::new(this.clone().map(|reference| reference as Rc<RefCell<dyn ProgressCanvasDyn>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>);
+        jcall!(this).updateMyFontProcessor = UpdateMyFontProcessor::new(this.clone().map(|reference| reference as Rc<RefCell<dyn UpdateMyFontInterface>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::font::MyFontProcessor::MyFontProcessorDyn>>);
+        this
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
         { let java_receiver = self.gauge.clone(); let java_arguments = (jcall!(font).getHeight() + 2,); jcall!(java_receiver).setHeight(java_arguments.0); };
-        self.myFontProcessor = MyFontProcessor::getInstance();
+        self.myFontProcessor = { let java_value = (MyFontProcessor::getInstance()).clone(); java_value };
     }
     
 
@@ -164,11 +171,11 @@ impl ProgressCanvas {
     
 
     // throws Exception
-    pub fn update(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn update(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 
-    pub fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<CommandListener>>>) {
+    pub fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<dyn CommandListener>>>) {
     }
     
 
@@ -178,32 +185,32 @@ impl ProgressCanvas {
     
 
     pub fn start(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).START_METHOD_NAME.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).START_METHOD_NAME.clone(); java_field }.clone());
         self.setBackground(true);
         jcall!(self.gauge).setHeight(30);
-        jcall!(self.gauge).setLabel(jcall!(self.commonStrings).PLEASE_WAIT.clone());
-        self.setText(self.TEXT.clone());
+        jcall!(self.gauge).setLabel({ let java_field = jcall!(self.commonStrings).PLEASE_WAIT.clone(); java_field }.clone());
+        { let java_arguments = (self.TEXT.clone(),); self.setText(java_arguments.0) };
         self.setValue(0);
-        self.inGameProcessor = Processor::getInstance();
+        self.inGameProcessor = { let java_value = (Processor::getInstance()).clone(); java_value };
         self.paintable = self.GAUGE_PAINTABLE.clone().map(|reference| reference as Rc<RefCell<dyn PaintableInterface>>);
         self.inProgress = true;
     }
     
 
     pub fn startBackground(&mut self, mut background: bool) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.START_BACKGROUND.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.START_BACKGROUND.clone());
         self.setBackground(background.clone());
         self.myFontProcessor = self.updateMyFontProcessor.clone();
         jcall!(self.gauge).setLabel(self.backgroundLabel.clone());
-        self.setText(self.TEXT.clone());
+        { let java_arguments = (self.TEXT.clone(),); self.setText(java_arguments.0) };
         self.setValue(0);
-        self.inGameProcessor = Processor::getInstance();
+        self.inGameProcessor = { let java_value = (Processor::getInstance()).clone(); java_value };
         self.paintable = self.GAUGE_PAINTABLE.clone().map(|reference| reference as Rc<RefCell<dyn PaintableInterface>>);
     }
     
 
     pub fn endActual(&mut self) {
-        { let java_receiver = self.allbinaryMidlet.clone(); let java_arguments = (jcall!(GameCommandsFactory::getInstance()).SHOW_GAME_CANVAS.clone(), crate::javax::microedition::lcdui::NullCanvas::NullCanvas_NULL_CANVAS.with(Clone::clone).clone(),); jcall!(java_receiver).commandAction(java_arguments.0, java_arguments.1); };
+        { let java_receiver = self.allbinaryMidlet.clone(); let java_arguments = ({ let java_field = jcall!(GameCommandsFactory::getInstance()).SHOW_GAME_CANVAS.clone(); java_field }.clone(), crate::javax::microedition::lcdui::NullCanvas::NullCanvas_NULL_CANVAS.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>),); jcall!(java_receiver).as_AllBinaryMidlet_mut().commandAction(java_arguments.0, java_arguments.1); };
         self.inProgress = false;
         self.inGame();
     }
@@ -216,10 +223,10 @@ impl ProgressCanvas {
     
 
     pub fn end(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).END_METHOD_NAME.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).END_METHOD_NAME.clone(); java_field }.clone());
         { let java_receiver = self.gauge.clone(); let java_arguments = (self.getMaxValue(),); jcall!(java_receiver).setValue(java_arguments.0); };
         self.endActual();
-        self.paintable = NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn PaintableInterface>>);
+        self.paintable = { let java_value = (NullPaintable::getInstance()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn PaintableInterface>>);
     }
     
 
@@ -243,15 +250,15 @@ impl ProgressCanvas {
     
 
     pub fn addEarlyPortion(&mut self, mut value: i32, mut text: String, mut index: i32) {
-        { let java_arguments = (jcall!(StringMaker::new()).append(text.clone()).append(jcall!(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(index.clone())).toString()).toString(),); self.setText(java_arguments.0) };
-        { let java_receiver = self.gauge.clone(); let java_arguments = (jcall!(self.gauge).getValue() + self.getMaxValue() / ((value) as f32),); jcall!(java_receiver).setValue(java_arguments.0); };
+        { let java_arguments = (jcall!(StringMaker::new()).append(text.clone()).append((jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(index.clone())).expect("NullPointerException").to_string()).toString(),); self.setText(java_arguments.0) };
+        { let java_receiver = self.gauge.clone(); let java_arguments = ({ let java_value = jcall!(self.gauge).getValue(); java_value } + self.getMaxValue() / ((value) as f32),); jcall!(java_receiver).setValue(java_arguments.0); };
     }
     
 
     pub fn addPortion(&mut self, mut value: i32, mut text: String, mut index: i32) {
-        { let java_arguments = (jcall!(StringMaker::new()).append(text.clone()).append(jcall!(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(index.clone())).toString()).toString(),); self.setText(java_arguments.0) };
+        { let java_arguments = (jcall!(StringMaker::new()).append(text.clone()).append((jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(index.clone())).expect("NullPointerException").to_string()).toString(),); self.setText(java_arguments.0) };
         PreLogUtil::put(self.text.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ADD_PORTION.clone());
-        { let java_receiver = self.gauge.clone(); let java_arguments = (jcall!(self.gauge).getValue() + self.getMaxValue() / ((value) as f32),); jcall!(java_receiver).setValue(java_arguments.0); };
+        { let java_receiver = self.gauge.clone(); let java_arguments = ({ let java_value = jcall!(self.gauge).getValue(); java_value } + self.getMaxValue() / ((value) as f32),); jcall!(java_receiver).setValue(java_arguments.0); };
     }
     
 
@@ -260,7 +267,7 @@ impl ProgressCanvas {
             PreLogUtil::put(text.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.ADD_PORTION.clone());
         }
         self.setText(text.clone());
-        { let java_receiver = self.gauge.clone(); let java_arguments = (jcall!(self.gauge).getValue() + self.getMaxValue() / ((value) as f32),); jcall!(java_receiver).setValue(java_arguments.0); };
+        { let java_receiver = self.gauge.clone(); let java_arguments = ({ let java_value = jcall!(self.gauge).getValue(); java_value } + self.getMaxValue() / ((value) as f32),); jcall!(java_receiver).setValue(java_arguments.0); };
     }
     
 
@@ -270,12 +277,12 @@ impl ProgressCanvas {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.paintable).paint(graphics.clone());
     }
     
 
-    pub fn paint2(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint2(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.myFontProcessor).process(graphics.clone());
         jcall!(graphics).setColor(jcall!(self.backgroundBasicColor).intValue());
         jcall!(graphics).fillRect(0, 0, jcall!(self.displayInfo).getLastWidth(), jcall!(self.displayInfo).getLastHeight());
@@ -284,7 +291,7 @@ impl ProgressCanvas {
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 
@@ -320,12 +327,11 @@ impl std::ops::DerefMut for ProgressCanvas {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait ProgressCanvasDyn: crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn {
+pub trait ProgressCanvasDyn: crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn + crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface + crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface {
     fn as_ProgressCanvas(&self) -> &ProgressCanvas;
     fn as_ProgressCanvas_mut(&mut self) -> &mut ProgressCanvas;
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { ProgressCanvas::updateMeasurement(self.as_ProgressCanvas_mut(), graphics) }
     fn init(&mut self, mut gameMidlet: Option<Rc<RefCell<dyn crate::org::allbinary::midlet::AllBinaryMidlet::AllBinaryMidletDyn>>>) { ProgressCanvas::init(self.as_ProgressCanvas_mut(), gameMidlet) }
-    fn update(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { ProgressCanvas::update(self.as_ProgressCanvas_mut(), graphics) }
+    fn update(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { ProgressCanvas::update(self.as_ProgressCanvas_mut(), graphics) }
     fn getMaxValue(&mut self) -> f32 { ProgressCanvas::getMaxValue(self.as_ProgressCanvas_mut()) }
     fn start(&mut self) { ProgressCanvas::start(self.as_ProgressCanvas_mut()) }
     fn startBackground(&mut self, mut background: bool) { ProgressCanvas::startBackground(self.as_ProgressCanvas_mut(), background) }
@@ -339,8 +345,7 @@ pub trait ProgressCanvasDyn: crate::org::allbinary::canvas::RunnableCanvas::Runn
     fn addPortion(&mut self, mut value: i32, mut text: String, mut index: i32) { ProgressCanvas::addPortion(self.as_ProgressCanvas_mut(), value, text, index) }
     fn addNormalPortion(&mut self, mut value: i32, mut text: String) { ProgressCanvas::addNormalPortion(self.as_ProgressCanvas_mut(), value, text) }
     fn setValue(&mut self, mut value: i32) { ProgressCanvas::setValue(self.as_ProgressCanvas_mut(), value) }
-    fn paint2(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { ProgressCanvas::paint2(self.as_ProgressCanvas_mut(), graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { ProgressCanvas::paintThreed(self.as_ProgressCanvas_mut(), graphics) }
+    fn paint2(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { ProgressCanvas::paint2(self.as_ProgressCanvas_mut(), graphics) }
     fn getValue(&mut self) -> f32 { ProgressCanvas::getValue(self.as_ProgressCanvas_mut()) }
     fn setText(&mut self, mut text: String) { ProgressCanvas::setText(self.as_ProgressCanvas_mut(), text) }
     fn getText(&mut self) -> String { ProgressCanvas::getText(self.as_ProgressCanvas_mut()) }
@@ -352,57 +357,51 @@ impl ProgressCanvasDyn for ProgressCanvas {
     fn as_ProgressCanvas_mut(&mut self) -> &mut ProgressCanvas { self }
 }
 
+impl crate::javax::microedition::lcdui::Canvas::CanvasDyn for ProgressCanvas {
+    fn as_Canvas(&self) -> &crate::javax::microedition::lcdui::Canvas::Canvas { &self.base.base.base }
+    fn as_Canvas_mut(&mut self) -> &mut crate::javax::microedition::lcdui::Canvas::Canvas { &mut self.base.base.base }
+}
+impl crate::javax::microedition::lcdui::Displayable::DisplayableDyn for ProgressCanvas {
+    fn as_Displayable(&self) -> &crate::javax::microedition::lcdui::Displayable::Displayable { &self.base.base.base.base }
+    fn as_Displayable_mut(&mut self) -> &mut crate::javax::microedition::lcdui::Displayable::Displayable { &mut self.base.base.base.base }
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn removeCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getWidth(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getHeight(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn setCommandListener(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::CommandListener::CommandListener>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setCommandListener(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn setFullScreenMode(&mut self, p1: bool) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setFullScreenMode(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn hideNotify(&mut self) { crate::javax::microedition::lcdui::Canvas::Canvas::hideNotify(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+    fn keyPressed(&mut self, p1: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::keyPressed(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1) }
+    fn keyRepeated(&mut self, p1: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::keyRepeated(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1) }
+    fn keyReleased(&mut self, p1: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::keyReleased(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1) }
+    fn pointerPressed(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerPressed(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn pointerReleased(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerReleased(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn pointerDragged(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::pointerDragged(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn repaint(&mut self) { crate::javax::microedition::lcdui::Canvas::Canvas::repaint(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self)) }
+    fn repaintXYWH(&mut self, p1: i32, p2: i32, p3: i32, p4: i32) { crate::javax::microedition::lcdui::Canvas::Canvas::repaintXYWH(crate::javax::microedition::lcdui::Canvas::CanvasDyn::as_Canvas_mut(self), p1, p2, p3, p4) }
+    fn sizeChanged(&mut self, p1: i32, p2: i32) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::sizeChanged(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1, p2) }
+    fn showNotify(&mut self) { crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas::showNotify(crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn::as_RunnableCanvas_mut(self)) }
+}
 impl crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvasDyn for ProgressCanvas {
     fn as_RunnableCanvas(&self) -> &crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas { &self.base }
     fn as_RunnableCanvas_mut(&mut self) -> &mut crate::org::allbinary::canvas::RunnableCanvas::RunnableCanvas { &mut self.base }
-    fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<CommandListener>>>) { Self::initCommands(self, cmdListener) }
+    fn initCommands(&mut self, mut cmdListener: Option<Rc<RefCell<dyn CommandListener>>>) { Self::initCommands(self, cmdListener) }
 }
 impl crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn for ProgressCanvas {
     fn as_MyCanvas(&self) -> &crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas { &self.base.base }
     fn as_MyCanvas_mut(&mut self) -> &mut crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas { &mut self.base.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
 }
-
-
-pub struct ProgressPaintable {
-    pub base: Paintable,
-    pub progressCanvas: Option<Rc<RefCell<dyn ProgressCanvasDyn>>>,
+impl crate::org::allbinary::graphics::displayable::DisplayableInterface::DisplayableInterface for ProgressCanvas {
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn getHeight(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getHeight(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn getWidth(&mut self) -> i32 { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::getWidth(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
+    fn removeCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn setCommandListener(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::CommandListener::CommandListener>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::setCommandListener(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
 }
-
-
-impl ProgressPaintable {
-        
-
-        pub fn new_struct(mut progressCanvas: Option<Rc<RefCell<dyn ProgressCanvasDyn>>>) -> Self {
-            let mut this = Self {
-            base: Paintable::new_struct(),
-            progressCanvas: None,
-            };
-            this.progressCanvas = progressCanvas.clone();
-            this
-        }
-
-        pub fn new(mut progressCanvas: Option<Rc<RefCell<dyn ProgressCanvasDyn>>>) -> Option<Rc<RefCell<Self>>> {
-            Some(Rc::new(RefCell::new(Self::new_struct(progressCanvas))))
-        }
-        
-
-        pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-            jcall!(self.progressCanvas).paint2(graphics.clone());
-        }
-}
-impl std::ops::Deref for ProgressPaintable {
-    type Target = Paintable;
-    fn deref(&self) -> &Self::Target { &self.base }
-}
-impl std::ops::DerefMut for ProgressPaintable {
-    fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
-}
-
-impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for ProgressPaintable {
-    fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self }
-    fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+impl crate::org::allbinary::graphics::displayable::command::MyCommandInterface::MyCommandInterface for ProgressCanvas {
+    fn addCommand(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::addCommand(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self), p1) }
+    fn removeAllCommands(&mut self) { crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvas::removeAllCommands(crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn::as_MyCanvas_mut(self)) }
 }
 
 

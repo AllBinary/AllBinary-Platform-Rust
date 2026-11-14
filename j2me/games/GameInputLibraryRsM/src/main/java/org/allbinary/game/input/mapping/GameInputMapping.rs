@@ -34,6 +34,10 @@ pub struct GameInputMapping {
 
 
 impl GameInputMapping {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut name: String, mut gameKey: Option<Rc<RefCell<GameKey>>>) -> Self {
@@ -41,7 +45,7 @@ impl GameInputMapping {
             name: String::new(),
             gameKey: None,
         };
-        this.name = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.name = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.gameKey = crate::org::allbinary::game::input::GameKey::GameKey_NULL_GAME_KEY.with(Clone::clone).clone();
         this.setName(name.clone());
         this.setGameKey(gameKey.clone());

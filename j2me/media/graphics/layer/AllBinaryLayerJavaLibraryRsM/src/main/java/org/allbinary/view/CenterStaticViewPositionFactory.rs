@@ -33,6 +33,10 @@ pub struct CenterStaticViewPositionFactory {
 
 
 impl CenterStaticViewPositionFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -48,10 +52,10 @@ impl CenterStaticViewPositionFactory {
 
     pub fn getInstance(&mut self, mut z: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>> {
         let mut displayInfoSingleton: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
-        return StaticViewPosition::new((jcall!(displayInfoSingleton).getLastWidth() >> 1).clone(), (jcall!(displayInfoSingleton).getLastHeight() >> 1).clone(), z.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>);
+        return StaticViewPosition::new((jcall!(displayInfoSingleton).getLastWidth() >> 1).clone(), (jcall!(displayInfoSingleton).getLastHeight() >> 1).clone(), z.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>);
     }
 }
-pub trait CenterStaticViewPositionFactoryDyn {
+pub trait CenterStaticViewPositionFactoryDyn: std::any::Any {
     fn as_CenterStaticViewPositionFactory(&self) -> &CenterStaticViewPositionFactory;
     fn as_CenterStaticViewPositionFactory_mut(&mut self) -> &mut CenterStaticViewPositionFactory;
     fn getInstance(&mut self, mut z: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>> { CenterStaticViewPositionFactory::getInstance(self.as_CenterStaticViewPositionFactory_mut(), z) }

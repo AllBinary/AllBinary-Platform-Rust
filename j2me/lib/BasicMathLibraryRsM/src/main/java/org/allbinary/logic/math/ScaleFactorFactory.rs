@@ -34,6 +34,10 @@ thread_local! { pub static ScaleFactorFactory_instance: Option<Rc<RefCell<ScaleF
 
 impl ScaleFactorFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             DEFAULT_SCALE_FACTOR: 0,

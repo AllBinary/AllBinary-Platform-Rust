@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,6 +32,10 @@ pub struct CustomMapGeneratorBase {
 
 
 impl CustomMapGeneratorBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -49,7 +54,7 @@ impl CustomMapGeneratorBase {
     
 
     pub fn getCustomMapArray(&mut self) -> Vec<Vec<i32>> {
-        return jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY.clone();
+        return { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY.clone(); java_field }.clone();
     }
     
 
@@ -58,7 +63,7 @@ impl CustomMapGeneratorBase {
         return -1;
     }
 }
-pub trait CustomMapGeneratorBaseDyn {
+pub trait CustomMapGeneratorBaseDyn: std::any::Any {
     fn as_CustomMapGeneratorBase(&self) -> &CustomMapGeneratorBase;
     fn as_CustomMapGeneratorBase_mut(&mut self) -> &mut CustomMapGeneratorBase;
     fn copyMapIntoCustomMap(&mut self) { CustomMapGeneratorBase::copyMapIntoCustomMap(self.as_CustomMapGeneratorBase_mut()) }

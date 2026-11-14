@@ -43,11 +43,11 @@ impl DestroyedEvent {
 
     pub fn new_struct(mut combatGameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>>) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(DestroyedEventHandler::DestroyedEventHandler::getInstance()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(DestroyedEventHandler::DestroyedEventHandler::getInstance())),
             allBinaryGameCanvas: None,
             allBinaryLayerInterface: None,
         };
-        this.allBinaryGameCanvas = NullGameCanvas::getInstance();
+        this.allBinaryGameCanvas = NullGameCanvas::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn>>);
         this.allBinaryLayerInterface = crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone).clone();
         // super(...) is in the struct literal above
         this.setAllBinaryGameCanvas(combatGameCanvas.clone());
@@ -85,7 +85,7 @@ impl DestroyedEvent {
         jcall!(stringBuffer).append(String::from("AllBinaryLayerInterface: "));
         jcall!(stringBuffer).append(jcall!(self.allBinaryLayerInterface).toString());
         jcall!(stringBuffer).append(String::from("\nAllBinaryGameCanvas: "));
-        jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getAllBinaryGameCanvas())));
+        jcall!(stringBuffer).append({ let java_argument = jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getAllBinaryGameCanvas())); java_argument });
         return jcall!(stringBuffer).toString();
     }
 }

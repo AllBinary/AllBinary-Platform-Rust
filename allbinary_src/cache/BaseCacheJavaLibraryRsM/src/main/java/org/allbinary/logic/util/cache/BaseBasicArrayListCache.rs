@@ -38,11 +38,15 @@ pub struct BaseBasicArrayListCache {
 
 impl BaseBasicArrayListCache {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             list: None,
         };
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -58,7 +62,7 @@ impl BaseBasicArrayListCache {
         return jcall!(stringBuffer).toString();
     }
 }
-pub trait BaseBasicArrayListCacheDyn {
+pub trait BaseBasicArrayListCacheDyn: std::any::Any {
     fn as_BaseBasicArrayListCache(&self) -> &BaseBasicArrayListCache;
     fn as_BaseBasicArrayListCache_mut(&mut self) -> &mut BaseBasicArrayListCache;
     fn log(&mut self) -> String { BaseBasicArrayListCache::log(self.as_BaseBasicArrayListCache_mut()) }

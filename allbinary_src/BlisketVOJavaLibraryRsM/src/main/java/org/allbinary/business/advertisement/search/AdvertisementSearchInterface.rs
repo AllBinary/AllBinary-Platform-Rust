@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::advertisement::search::category::AdvertisementCategoryInterface::AdvertisementCategoryInterface;
 use crate::org::allbinary::business::advertisement::search::website::AdvertisementWebsiteInterface::AdvertisementWebsiteInterface;
 use crate::org::allbinary::logic::control::contraints::price::PriceConstraintInterface::PriceConstraintInterface;
@@ -31,7 +30,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait AdvertisementSearchInterface {
+pub trait AdvertisementSearchInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getWebSite(&mut self) -> Option<Rc<RefCell<dyn AdvertisementWebsiteInterface>>>;
@@ -52,7 +51,7 @@ pub trait AdvertisementSearchInterface {
     fn getProductsPerPage(&mut self) -> i32;
     
 
-    fn getSearchParams(&mut self) -> Option<Rc<RefCell<HashMap>>>;
+    fn getSearchParams(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>;
     
 
     fn setCategory(&mut self, advertisementCategoryInterface: Option<Rc<RefCell<dyn AdvertisementCategoryInterface>>>);
@@ -70,9 +69,7 @@ pub trait AdvertisementSearchInterface {
     fn setProductsPerPage(&mut self, productsPerPage: i32);
     
 
-    fn setSearchParams(&mut self, columnAndKeywordHashMap: Option<Rc<RefCell<HashMap>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
+    fn setSearchParams(&mut self, columnAndKeywordHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>);
 }
 
 

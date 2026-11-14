@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::business::error::ErrorData::ErrorData;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -33,6 +34,10 @@ pub struct BasicErrorNodeUtil {
 
 
 impl BasicErrorNodeUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -48,18 +53,19 @@ impl BasicErrorNodeUtil {
 
     // throws Exception
     pub fn get(mut document: Option<Rc<RefCell<Document>>>, mut errorText: String) -> Option<Rc<RefCell<Node>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement(jcall!(ErrorData::getInstance()).NAME.clone());
-            jcall!(node).appendChild(ModDomHelper::ModDomHelper::createNameValueNodes(document.clone(), jcall!(ErrorData::getInstance()).TEXT.clone(), errorText.clone()));
-            return node.clone();
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut node: Option<Rc<RefCell<Node>>> = jcall!(document).createElement({ let java_field = jcall!(ErrorData::getInstance()).NAME.clone(); java_field }.clone());
+            jcall!(node).appendChild(ModDomHelper::ModDomHelper::createNameValueNodes(document.clone(), { let java_field = jcall!(ErrorData::getInstance()).TEXT.clone(); java_field }.clone(), errorText.clone()));
+            return Some(node.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Error Node Creation Failure"))));
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

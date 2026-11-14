@@ -32,6 +32,10 @@ pub struct LogConfigType {
 
 
 impl LogConfigType {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut name: String, mut description: String) -> Self {

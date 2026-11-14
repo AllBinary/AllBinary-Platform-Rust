@@ -184,18 +184,18 @@ impl BasicVelocityProperties {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance();
         jcall!(stringBuffer).append(String::from("Velocity "));
-        jcall!(stringBuffer).append(jcall!(positionStrings).X_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).X_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(stringUtil).toString(crate::java_into_object(self.velocityXBasicDecimal.clone())));
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).Y_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).Y_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(stringUtil).toString(crate::java_into_object(self.velocityYBasicDecimal.clone())));
-        jcall!(stringBuffer).append(jcall!(commonSeps).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).Z_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).Z_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(stringUtil).toString(crate::java_into_object(self.velocityZBasicDecimal.clone())));
         return jcall!(stringBuffer).toString();
     }
 }
-pub trait BasicVelocityPropertiesDyn: crate::org::allbinary::game::physics::velocity::BasicVelocityInterface::BasicVelocityInterface {
+pub trait BasicVelocityPropertiesDyn: std::any::Any + crate::org::allbinary::game::physics::velocity::BasicVelocityInterface::BasicVelocityInterface {
     fn as_BasicVelocityProperties(&self) -> &BasicVelocityProperties;
     fn as_BasicVelocityProperties_mut(&mut self) -> &mut BasicVelocityProperties;
     fn getVelocityZBasicDecimalP(&mut self) -> Option<Rc<RefCell<BasicDecimal>>> { BasicVelocityProperties::getVelocityZBasicDecimalP(self.as_BasicVelocityProperties_mut()) }

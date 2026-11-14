@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use super::PlatformBitmapBase::PlatformBitmapBase;
 
 // Borrows the object of a Java reference
@@ -34,6 +34,10 @@ thread_local! { pub static PlatformBitmapBaseFactory_NULL_PLATFORM_BITMAP_BASE_F
 
 impl PlatformBitmapBaseFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -45,14 +49,14 @@ impl PlatformBitmapBaseFactory {
     }
     
 
-    pub fn createBitmap(&mut self, mut image: Option<Rc<RefCell<Image>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::platform::graphics::PlatformBitmapBase::PlatformBitmapBaseDyn>>> {
+    pub fn createBitmap(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::platform::graphics::PlatformBitmapBase::PlatformBitmapBaseDyn>>> {
         return PlatformBitmapBase_NULL_PLATFORM_BITMAP_BASE.with(Clone::clone).clone();
     }
 }
-pub trait PlatformBitmapBaseFactoryDyn {
+pub trait PlatformBitmapBaseFactoryDyn: std::any::Any {
     fn as_PlatformBitmapBaseFactory(&self) -> &PlatformBitmapBaseFactory;
     fn as_PlatformBitmapBaseFactory_mut(&mut self) -> &mut PlatformBitmapBaseFactory;
-    fn createBitmap(&mut self, mut image: Option<Rc<RefCell<Image>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::platform::graphics::PlatformBitmapBase::PlatformBitmapBaseDyn>>> { PlatformBitmapBaseFactory::createBitmap(self.as_PlatformBitmapBaseFactory_mut(), image) }
+    fn createBitmap(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::platform::graphics::PlatformBitmapBase::PlatformBitmapBaseDyn>>> { PlatformBitmapBaseFactory::createBitmap(self.as_PlatformBitmapBaseFactory_mut(), image) }
 }
 impl PlatformBitmapBaseFactoryDyn for PlatformBitmapBaseFactory {
     fn as_PlatformBitmapBaseFactory(&self) -> &PlatformBitmapBaseFactory { self }

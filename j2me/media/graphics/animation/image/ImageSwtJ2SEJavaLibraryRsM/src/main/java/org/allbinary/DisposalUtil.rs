@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::eclipse::swt::graphics::Resource::Resource;
 use crate::org::microemu::device::swt::SwtMutableImage::SwtMutableImage;
@@ -37,6 +37,10 @@ thread_local! { pub static DisposalUtil_instance: Option<Rc<RefCell<DisposalUtil
 
 impl DisposalUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             commonStrings: None,
@@ -55,13 +59,13 @@ impl DisposalUtil {
     }
     
 
-    pub fn disposeImage(&mut self, mut image: Option<Rc<RefCell<Image>>>) {
+    pub fn disposeImage(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) {
         if image.is_none() {
             return;
         }
         if jcall!(image).isMutable() {
-            let mut mutableImage: Option<Rc<RefCell<SwtMutableImage>>> = (image).clone() /* as SwtMutableImage */;
-            { let java_arguments = ((jcall!(mutableImage).getImage()).clone() /* as Resource */,); self.disposeResource(java_arguments.0) };
+            let mut mutableImage: Option<Rc<RefCell<SwtMutableImage>>> = (image).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<SwtMutableImage>() }, "ClassCastException: not a SwtMutableImage"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<SwtMutableImage>) } });
+            { let java_arguments = ({ let java_object = (jcall!(mutableImage).getImage()).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::eclipse::swt::graphics::Resource::ResourceDyn>>>>().expect("ClassCastException").clone()) },); self.disposeResource(java_arguments.0) };
         } else {
         }
     }
@@ -69,7 +73,7 @@ impl DisposalUtil {
 
     pub fn disposeResource(&mut self, mut resource: Option<Rc<RefCell<dyn crate::org::eclipse::swt::graphics::Resource::ResourceDyn>>>) {
         if !jcall!(resource).isDisposed() {
-            println!("{}", jcall!(self.commonStrings).CLOSE.clone());
+            println!("{}", { let java_field = jcall!(self.commonStrings).CLOSE.clone(); java_field }.clone());
             jcall!(resource).dispose();
         }
     }

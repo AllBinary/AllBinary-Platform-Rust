@@ -35,9 +35,13 @@ pub struct GroupCommonFactory {
     pub TO_LABEL: String,
 }
 
-pub static mut GroupCommonFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut GroupCommonFactory_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl GroupCommonFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -61,10 +65,10 @@ impl GroupCommonFactory {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GroupCommonFactory>>> {
-        if match (&unsafe { GroupCommonFactory_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *GroupCommonFactory_instance = GroupCommonFactory::new() };
+        if match (&unsafe { GroupCommonFactory_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *GroupCommonFactory_instance = crate::java_into_object(GroupCommonFactory::new()) };
         }
-        return (unsafe { GroupCommonFactory_instance.clone() }).clone() /* as GroupCommonFactory */;
+        return { let java_object = (unsafe { GroupCommonFactory_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GroupCommonFactory>>>>().expect("ClassCastException").clone()) };
     }
 }
 

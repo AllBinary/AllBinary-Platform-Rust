@@ -58,7 +58,7 @@ impl MachineAccessControlAddress {
     
 
     pub fn toString(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
 }
 

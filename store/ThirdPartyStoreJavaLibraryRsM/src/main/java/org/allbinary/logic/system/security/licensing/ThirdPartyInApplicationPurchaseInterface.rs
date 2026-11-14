@@ -26,7 +26,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait ThirdPartyInApplicationPurchaseInterface {
+pub trait ThirdPartyInApplicationPurchaseInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn isPurchased(&mut self, lockableFeature: Option<Rc<RefCell<LockableFeature>>>) -> bool;
@@ -63,8 +63,6 @@ pub trait ThirdPartyInApplicationPurchaseInterface {
     
 
     fn isEnabled(&mut self) -> bool;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

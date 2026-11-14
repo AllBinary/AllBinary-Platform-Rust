@@ -35,6 +35,10 @@ pub struct TouchScreenFactory {
 thread_local! { pub static TouchScreenFactory_SINGLETON: Option<Rc<RefCell<TouchScreenFactory>>> = TouchScreenFactory::new(); }
 
 impl TouchScreenFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -43,7 +47,7 @@ impl TouchScreenFactory {
             touch: false,
             touchScreenType: None,
         };
-        this.touchScreenType = jcall!(TouchScreenTypesFactory::TouchScreenTypesFactory::getInstance()).NOTOUCH.clone();
+        this.touchScreenType = { let java_field = jcall!(TouchScreenTypesFactory::TouchScreenTypesFactory::getInstance()).NOTOUCH.clone(); java_field }.clone();
         this
     }
 

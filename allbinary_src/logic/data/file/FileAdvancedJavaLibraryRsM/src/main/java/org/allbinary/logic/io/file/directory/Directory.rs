@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::FileFilter::FileFilter;
+use crate::java::io::FileFilter::FileFilter;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::logic::io::file::AbFile::AbFile;
 use crate::org::allbinary::logic::io::file::FileFactory::FileFactory;
@@ -25,6 +25,7 @@ use crate::org::allbinary::logic::io::file::FileWrapperUtil::FileWrapperUtil;
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,6 +40,10 @@ pub struct Directory {
 thread_local! { pub static Directory_instance: Option<Rc<RefCell<Directory>>> = Directory::new(); }
 
 impl Directory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<Directory>>> {
@@ -69,37 +74,38 @@ impl Directory {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn create(&mut self, mut directory: String) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+    pub fn create_String(&mut self, mut directory: String) -> bool {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut directoryFile: Option<Rc<RefCell<AbFile>>> = jcall!(FileFactory::getInstance()).getInstance1(directory.clone());
             if !jcall!(directoryFile).isDirectory() {
                 PreLogUtil::put(format!("{}{}", String::from("Creating Directories: "), directory), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("create"));
                 if !jcall!(directoryFile).mkdirs() {
-                    return false;
+                    return Some(false);
                 }
             }
-            return true;
+            return Some(true);
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            PreLogUtil::putOE(format!("{}{}", String::from("Error Creating Directories: "), directory), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("create"), e.clone());
+            PreLogUtil::putOE(format!("{}{}", String::from("Error Creating Directories: "), directory), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("create"), crate::java_into_object(e.clone()));
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn remove(&mut self, mut existingDirectory: String) {
+    pub fn remove_String(&mut self, mut existingDirectory: String) {
         let mut existingDirectoryFile: Option<Rc<RefCell<AbFile>>> = jcall!(FileFactory::getInstance()).getInstance1(existingDirectory.clone());
         if jcall!(existingDirectoryFile).isDirectory() {
             if (jcall!(existingDirectoryFile).list().len() as i32) > 0 {
                 panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", format!("{}{}", String::from("Did not remove category: "), existingDirectory), String::from(" because files exist")))));
             } else if jcall!(existingDirectoryFile).delete() {
-                PreLogUtil::put(format!("{}{}", String::from("Successfully Removed: "), existingDirectory), String::from("Directory"), String::from("remove"));
+                PreLogUtil::put(format!("{}{}", String::from("Successfully Removed: "), existingDirectory), crate::java_into_object(String::from("Directory")), String::from("remove"));
             }
         } else {
             panic!("{:?}", format!("{}: {:?}", "Exception", (format!("{}{}", String::from("Category Directory Is Missing:"), existingDirectory))));
@@ -107,22 +113,22 @@ impl Directory {
     }
     
 
-    pub fn search2(&mut self, mut fileFilter: Option<Rc<RefCell<FileFilter>>>, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+    pub fn search2(&mut self, mut fileFilter: Option<Rc<RefCell<dyn FileFilter>>>, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
         return self.search3(fileFilter.clone(), file.clone(), false);
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn search3(&mut self, mut fileFilter: Option<Rc<RefCell<FileFilter>>>, mut file: Option<Rc<RefCell<AbFile>>>, mut isRecursiveSearch: bool) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut fileList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+    pub fn search3(&mut self, mut fileFilter: Option<Rc<RefCell<dyn FileFilter>>>, mut file: Option<Rc<RefCell<AbFile>>>, mut isRecursiveSearch: bool) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+        let mut fileList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut recursiveFileList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
         if jcall!(file).isDirectory() {
             let mut fileArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(file).listFilesFileFilter(fileFilter.clone());
-            if fileArray.is_none() {
+            if fileArray.is_empty() {
                 return fileList.clone();
             }
             let mut files: Vec<Option<Rc<RefCell<AbFile>>>> = FileWrapperUtil::wrapFiles(fileArray.clone());
-            if files.is_none() {
+            if files.is_empty() {
                 return fileList.clone();
             }
             let mut size: i32 = (files.len() as i32).clone();
@@ -140,21 +146,21 @@ impl Directory {
 
     // Java overloaded method: Rust needs a different name
     pub fn search(&mut self, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        return self.search2(file.clone(), false);
+        return self.search2_AbFile_boolean(file.clone(), false);
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn search2(&mut self, mut file: Option<Rc<RefCell<AbFile>>>, mut isRecursiveSearch: bool) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut fileList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+    pub fn search2_AbFile_boolean(&mut self, mut file: Option<Rc<RefCell<AbFile>>>, mut isRecursiveSearch: bool) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+        let mut fileList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut recursiveFileList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
         if jcall!(file).isDirectory() {
             let mut fileArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(file).listFiles();
-            if fileArray.is_none() {
+            if fileArray.is_empty() {
                 return fileList.clone();
             }
             let mut files: Vec<Option<Rc<RefCell<AbFile>>>> = FileWrapperUtil::wrapFiles(fileArray.clone());
-            if files.is_none() {
+            if files.is_empty() {
                 return fileList.clone();
             }
             for index in (0..(files.len() as i32)) {
@@ -170,26 +176,26 @@ impl Directory {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn search2(&mut self, mut searchValue: String, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        return self.search3(searchValue.clone(), file.clone(), false);
+    pub fn search2_String_AbFile(&mut self, mut searchValue: String, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+        return self.search3_String_AbFile_boolean(searchValue.clone(), file.clone(), false);
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn search3(&mut self, mut searchValue: String, mut file: Option<Rc<RefCell<AbFile>>>, mut isRecursiveSearch: bool) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut fileList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+    pub fn search3_String_AbFile_boolean(&mut self, mut searchValue: String, mut file: Option<Rc<RefCell<AbFile>>>, mut isRecursiveSearch: bool) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+        let mut fileList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut recursiveFileList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
         if jcall!(file).isDirectory() {
             let mut fileArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(file).listFiles();
-            if fileArray.is_none() {
+            if fileArray.is_empty() {
                 return fileList.clone();
             }
             let mut files: Vec<Option<Rc<RefCell<AbFile>>>> = FileWrapperUtil::wrapFiles(fileArray.clone());
-            if files.is_none() {
+            if files.is_empty() {
                 return fileList.clone();
             }
             for index in (0..(files.len() as i32)) {
-                if jcall!(jcall!(files[(index) as usize]).getPath()).indexOf(searchValue.clone()) >= 0 {
+                if jcall!(files[(index) as usize]).getPath().find(&searchValue.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
                     jcall!(fileList).add(crate::java_into_object(files[(index) as usize].clone()));
                 }
                 if isRecursiveSearch {
@@ -203,22 +209,22 @@ impl Directory {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn search2(&mut self, mut level: i32, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        return self.search3(level.clone(), file.clone(), false);
+    pub fn search2_int_AbFile(&mut self, mut level: i32, mut file: Option<Rc<RefCell<AbFile>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+        return self.search3_int_AbFile_boolean(level.clone(), file.clone(), false);
     }
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn search3(&mut self, mut level: i32, mut file: Option<Rc<RefCell<AbFile>>>, mut isRecursiveSearch: bool) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
-        let mut fileList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+    pub fn search3_int_AbFile_boolean(&mut self, mut level: i32, mut file: Option<Rc<RefCell<AbFile>>>, mut isRecursiveSearch: bool) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> {
+        let mut fileList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut recursiveFileList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = None;
         if jcall!(file).isDirectory() {
             let mut fileArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(file).listFiles();
-            if fileArray.is_none() {
+            if fileArray.is_empty() {
                 return fileList.clone();
             }
             let mut files: Vec<Option<Rc<RefCell<AbFile>>>> = FileWrapperUtil::wrapFiles(fileArray.clone());
-            if files.is_none() {
+            if files.is_empty() {
                 return fileList.clone();
             }
             for index in (0..(files.len() as i32)) {

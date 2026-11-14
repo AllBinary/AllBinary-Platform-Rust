@@ -49,7 +49,7 @@ pub struct GameInfo {
     pub NEXT_GAME_LEVEL: String,
 }
 
-thread_local! { pub static GameInfo_NONE: Option<Rc<RefCell<GameInfo>>> = GameInfo::new(jcall!(GameTypeFactory::GameTypeFactory::getInstance()).NONE.clone(), unsafe { GameMode_NONE.clone() }.clone(), jcall!(PlayerTypesFactory::PlayerTypesFactory::getInstance()).PLAYER_TYPE_ONE.clone(), -1, -1); }
+thread_local! { pub static GameInfo_NONE: Option<Rc<RefCell<GameInfo>>> = GameInfo::new({ let java_field = jcall!(GameTypeFactory::GameTypeFactory::getInstance()).NONE.clone(); java_field }.clone(), unsafe { GameMode_NONE.clone() }.clone(), { let java_field = jcall!(PlayerTypesFactory::PlayerTypesFactory::getInstance()).PLAYER_TYPE_ONE.clone(); java_field }.clone(), -1, -1); }
 thread_local! { pub static GameInfo_LEVEL_NAME: String = String::from("LEVEL"); }
 
 impl GameInfo {
@@ -118,7 +118,7 @@ impl GameInfo {
 
     pub fn setCurrentLevel(&mut self, mut currentLevel: i32) {
         self.currentLevel = currentLevel.clone();
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(self.NEW_LEVEL.clone()).appendint(self.getCurrentLevel()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_CURRENT_LEVEL.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_argument = jcall!(StringMaker::new()).append(self.NEW_LEVEL.clone()).appendint(self.getCurrentLevel()).toString(); java_argument }, crate::java_into_object(String::from(std::any::type_name::<Self>())), self.SET_CURRENT_LEVEL.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
@@ -126,7 +126,7 @@ impl GameInfo {
         if self.getCurrentLevel() < self.getHighestLevel() {
             self.currentLevel += 1;
         }
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).NEXT.clone()).append(jcall!(CommonSeps::getInstance()).SPACE.clone()).append(self.NEW_LEVEL.clone()).appendint(self.getCurrentLevel()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.NEXT_GAME_LEVEL.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_argument = jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).NEXT.clone(); java_field }.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone()).append(self.NEW_LEVEL.clone()).appendint(self.getCurrentLevel()).toString(); java_argument }, crate::java_into_object(String::from(std::any::type_name::<Self>())), self.NEXT_GAME_LEVEL.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
@@ -146,13 +146,13 @@ impl GameInfo {
     }
     
 
-    pub fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
-        let mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> = jcall!(StdUtil::getInstance()).createHashtable();
-        jcall!(hashtable).put(crate::java_into_object(jcall!(self.gameInfoData).GAME_TYPE.clone()), crate::java_into_object(jcall!(self.getGameType()).toString()));
-        jcall!(hashtable).put(crate::java_into_object(jcall!(self.gameInfoData).GAME_MODE.clone()), crate::java_into_object(jcall!(self.gameMode).toString()));
-        jcall!(hashtable).put(crate::java_into_object(jcall!(self.gameInfoData).PLAYER_TYPE.clone()), crate::java_into_object(jcall!(self.playerType).toString()));
-        jcall!(hashtable).put(crate::java_into_object(jcall!(self.gameInfoData).HIGHEST_LEVEL.clone()), crate::java_into_object((self.getHighestLevel()).to_string()));
-        jcall!(hashtable).put(crate::java_into_object(jcall!(self.gameInfoData).CURRENT_LEVEL.clone()), crate::java_into_object((self.currentLevel.clone()).to_string()));
+    pub fn toHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashtable();
+        jcall!(hashtable).put(crate::java_into_object({ let java_field = jcall!(self.gameInfoData).GAME_TYPE.clone(); java_field }.clone()), { let java_argument = crate::java_into_object(jcall!(self.getGameType()).toString()); java_argument });
+        jcall!(hashtable).put(crate::java_into_object({ let java_field = jcall!(self.gameInfoData).GAME_MODE.clone(); java_field }.clone()), crate::java_into_object(jcall!(self.gameMode).toString()));
+        jcall!(hashtable).put(crate::java_into_object({ let java_field = jcall!(self.gameInfoData).PLAYER_TYPE.clone(); java_field }.clone()), crate::java_into_object(jcall!(self.playerType).toString()));
+        jcall!(hashtable).put(crate::java_into_object({ let java_field = jcall!(self.gameInfoData).HIGHEST_LEVEL.clone(); java_field }.clone()), { let java_argument = crate::java_into_object((self.getHighestLevel()).to_string()); java_argument });
+        jcall!(hashtable).put(crate::java_into_object({ let java_field = jcall!(self.gameInfoData).CURRENT_LEVEL.clone(); java_field }.clone()), crate::java_into_object((self.currentLevel.clone()).to_string()));
         return hashtable.clone();
     }
     
@@ -160,24 +160,24 @@ impl GameInfo {
     pub fn toString(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
-        jcall!(stringBuffer).append(jcall!(self.gameInfoData).GAME_TYPE.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).EQUALS.clone());
-        jcall!(stringBuffer).append(jcall!(self.getGameType()).toString());
-        jcall!(stringBuffer).append(jcall!(commonSeps).COMMA_SEP.clone());
-        jcall!(stringBuffer).append(jcall!(self.gameInfoData).GAME_MODE.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).EQUALS.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.gameInfoData).GAME_TYPE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).EQUALS.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_argument = jcall!(self.getGameType()).toString(); java_argument });
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).COMMA_SEP.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.gameInfoData).GAME_MODE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).EQUALS.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(self.gameMode).toString());
-        jcall!(stringBuffer).append(jcall!(commonSeps).COMMA_SEP.clone());
-        jcall!(stringBuffer).append(jcall!(self.gameInfoData).PLAYER_TYPE.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).EQUALS.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).COMMA_SEP.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.gameInfoData).PLAYER_TYPE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).EQUALS.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.playerType.clone())));
-        jcall!(stringBuffer).append(jcall!(commonSeps).COMMA_SEP.clone());
-        jcall!(stringBuffer).append(jcall!(self.gameInfoData).HIGHEST_LEVEL.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).EQUALS.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).COMMA_SEP.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.gameInfoData).HIGHEST_LEVEL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).EQUALS.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.getHighestLevel());
-        jcall!(stringBuffer).append(jcall!(commonSeps).COMMA_SEP.clone());
-        jcall!(stringBuffer).append(jcall!(self.gameInfoData).CURRENT_LEVEL.clone());
-        jcall!(stringBuffer).append(jcall!(commonSeps).EQUALS.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).COMMA_SEP.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.gameInfoData).CURRENT_LEVEL.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(commonSeps).EQUALS.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(self.currentLevel.clone());
         return jcall!(stringBuffer).toString();
     }

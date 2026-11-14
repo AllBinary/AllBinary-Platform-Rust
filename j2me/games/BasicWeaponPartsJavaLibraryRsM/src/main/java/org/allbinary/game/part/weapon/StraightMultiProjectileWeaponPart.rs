@@ -27,6 +27,7 @@ use crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationship;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::math::NoDecimalTrigTable::NoDecimalTrigTable;
+use crate::java::lang::Exception::*;
 use super::BasicWeaponPart::BasicWeaponPart;
 
 // Borrows the object of a Java reference
@@ -43,14 +44,21 @@ pub struct StraightMultiProjectileWeaponPart {
     pub noDecimalTrigTable: Option<Rc<RefCell<NoDecimalTrigTable>>>,
 }
 
+impl crate::org::allbinary::animation::AnimationInterfaceCompositeInterface::AnimationInterfaceCompositeInterface for StraightMultiProjectileWeaponPart {
+    fn getAnimationInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPart::getAnimationInterface(crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn::as_BasicWeaponPart_mut(self)) }
+}
 impl crate::org::allbinary::game::part::PartInterface::PartInterface for StraightMultiProjectileWeaponPart {
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for StraightMultiProjectileWeaponPart {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPart::paint(crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn::as_BasicWeaponPart_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPart::paintThreed(crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn::as_BasicWeaponPart_mut(self), p1) }
 }
 
 impl StraightMultiProjectileWeaponPart {
     
 
     pub fn createStraightMultiProjectileWeaponPart(mut animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>, mut weaponLayerCircularStaticPool: Option<Rc<RefCell<WeaponLayerCircularPool>>>) -> Option<Rc<RefCell<StraightMultiProjectileWeaponPart>>> {
-        return StraightMultiProjectileWeaponPart::new(animationInterface.clone(), crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone).clone(), weaponLayerCircularStaticPool.clone(), 2, crate::org::allbinary::game::combat::weapon::WeaponProperties::WeaponProperties_NULL_WEAPON_PROPERTIES.with(Clone::clone).clone(), NoScoreable::getInstance(), crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationship_NULL_RELATIVE_RELATIONSHIP.with(Clone::clone).clone());
+        return StraightMultiProjectileWeaponPart::new(animationInterface.clone(), crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone).clone(), weaponLayerCircularStaticPool.clone(), 2, crate::org::allbinary::game::combat::weapon::WeaponProperties::WeaponProperties_NULL_WEAPON_PROPERTIES.with(Clone::clone).clone(), NoScoreable::getInstance().map(|reference| reference as Rc<RefCell<dyn ScoreableInterface>>), crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationship_NULL_RELATIVE_RELATIONSHIP.with(Clone::clone).clone());
     }
     
 
@@ -88,12 +96,12 @@ impl StraightMultiProjectileWeaponPart {
         let mut increment: i32 = reducedWidth / (self.total - 1);
         let mut next: i32 = -halfWidth;
         for index in (0..self.total) {
-            sine = (((next) as i64) * jcall!(self.noDecimalTrigTable).sin(((angle) as i32)));
-            beamX = (((sine / ((jcall!(self.noDecimalTrigTable).SCALE) as i64))) as i32);
-            cosine = (((next) as i64) * jcall!(self.noDecimalTrigTable).cos(((angle) as i32)));
-            beamY = -(((cosine / ((jcall!(self.noDecimalTrigTable).SCALE) as i64))) as i32);
-            weaponLayer = jcall!(self.weaponLayerCircularStaticPool).getInstanceWeaponLayer(sourceLayerInterface.clone(), x + beamX, y + beamY, 0, ((angle) as i32), ((otherAngle) as i32), weaponProperties.clone(), scoreableInterface.clone());
-            jcall!(allbinaryLayerManager).append(weaponLayer.clone());
+            sine = { let java_value = ((((next) as i64) * jcall!(self.noDecimalTrigTable).sin(((angle) as i32)))).clone(); java_value };
+            beamX = { let java_value = ((((sine / (({ let java_field = jcall!(self.noDecimalTrigTable).SCALE.clone(); java_field }) as i64))) as i32)).clone(); java_value };
+            cosine = { let java_value = ((((next) as i64) * jcall!(self.noDecimalTrigTable).cos(((angle) as i32)))).clone(); java_value };
+            beamY = { let java_value = (-(((cosine / (({ let java_field = jcall!(self.noDecimalTrigTable).SCALE.clone(); java_field }) as i64))) as i32)).clone(); java_value };
+            weaponLayer = { let java_value = (jcall!(self.weaponLayerCircularStaticPool).getInstanceWeaponLayer(sourceLayerInterface.clone(), x + beamX, y + beamY, 0, ((angle) as i32), ((otherAngle) as i32), weaponProperties.clone(), scoreableInterface.clone())).clone(); java_value };
+            jcall!(allbinaryLayerManager).append(weaponLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>));
             next += increment.clone();
         }
     }

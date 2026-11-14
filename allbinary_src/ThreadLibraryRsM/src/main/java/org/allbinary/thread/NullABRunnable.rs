@@ -31,8 +31,13 @@ pub struct NullABRunnable {
 }
 
 thread_local! { pub static NullABRunnable_instance: Option<Rc<RefCell<NullABRunnable>>> = NullABRunnable::new(); }
+impl crate::org::allbinary::thread::RunnableInterface::RunnableInterface for NullABRunnable {
+    fn isRunning(&mut self) -> bool { Self::isRunning(self) }
+    fn setRunning(&mut self, p1: bool) { crate::org::allbinary::thread::ABRunnable::ABRunnable::setRunning(crate::org::allbinary::thread::ABRunnable::ABRunnableDyn::as_ABRunnable_mut(self), p1) }
+    fn setThread(&mut self, p1: Option<Rc<RefCell<crate::java::lang::Thread::Thread>>>) { crate::org::allbinary::thread::ABRunnable::ABRunnable::setThread(crate::org::allbinary::thread::ABRunnable::ABRunnableDyn::as_ABRunnable_mut(self), p1) }
+}
 impl crate::Runnable for NullABRunnable {
-    fn run(&mut self) { self.base.run() }
+    fn run(&mut self) { crate::org::allbinary::thread::ABRunnable::ABRunnable::run(crate::org::allbinary::thread::ABRunnable::ABRunnableDyn::as_ABRunnable_mut(self)) }
 }
 
 impl NullABRunnable {

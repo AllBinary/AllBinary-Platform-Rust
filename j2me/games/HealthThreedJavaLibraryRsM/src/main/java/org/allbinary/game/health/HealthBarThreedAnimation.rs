@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::min3d::core::ColorBufferList::ColorBufferList;
 use crate::min3d::core::Number3dBufferList::Number3dBufferList;
 use crate::min3d::objectPrimitives::Rectangle::Rectangle;
@@ -29,6 +29,7 @@ use crate::org::allbinary::graphics::threed::min3d::renderer::Object3dProcessorU
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::view::ViewPositionBase::ViewPositionBase;
+use crate::java::lang::Exception::*;
 use super::HealthBarAnimation::HealthBarAnimation;
 
 // Borrows the object of a Java reference
@@ -46,8 +47,11 @@ pub struct HealthBarThreedAnimation {
 }
 
 impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for HealthBarThreedAnimation {
-    fn nextFrame(&mut self) { self.base.nextFrame() }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::Animation::Animation::nextFrame(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self)) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
+}
+impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for HealthBarThreedAnimation {
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::animation::Animation::Animation::paintXY(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3) }
 }
 
 impl HealthBarThreedAnimation {
@@ -63,8 +67,8 @@ impl HealthBarThreedAnimation {
         this.basicColorFactory = BasicColorFactory::getInstance();
         this.object3dProcessor = jcall!(Object3dProcessorUtil::getInstance()).getInstanceObject3dProcessor();
         // super(...) is in the struct literal above
-        this.basicColor = jcall!(this.basicColorFactory).GREEN.clone();
-        this.colorP = jcall!(this.basicColor).intValue();
+        this.basicColor = { let java_value = ({ let java_field = jcall!(this.basicColorFactory).GREEN.clone(); java_field }).clone(); java_value }.clone();
+        this.colorP = { let java_value = (jcall!(this.basicColor).intValue()).clone(); java_value };
         this.rectangle = Rectangle::new(0, 0, 1, 1, this.basicColor.clone());
         jcall!(this.rectangle).setDoubleSidedEnabled(true);
         jcall!(this.rectangle).setNormalsEnabled(false);
@@ -111,21 +115,21 @@ impl HealthBarThreedAnimation {
     
 
     pub fn onHealthChange(&mut self, mut newX2: i32) {
-        self.base.onHealthChange(newX2.clone());
+        { let java_arguments = (newX2.clone(),); self.base.onHealthChange(java_arguments.0) };
         self.updateColor();
         self.updateSize();
     }
     
 
-    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) {
-        let mut openGLESGraphics: Option<Rc<RefCell<dyn crate::org::allbinary::device::OpenGLESGraphics::OpenGLESGraphicsDyn>>> = (graphics).clone() /* as OpenGLESGraphics */;
+    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) {
+        let mut openGLESGraphics: Option<Rc<RefCell<dyn crate::org::allbinary::device::OpenGLESGraphics::OpenGLESGraphicsDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::device::OpenGLESGraphics::OpenGLESGraphicsDyn>>> { panic!("ClassCastException: a Rust dyn Graphics cannot be cast to OpenGLESGraphics") })();
         let mut gl: Option<Rc<RefCell<dyn GL10>>> = jcall!(openGLESGraphics).getGl10();
         let mut viewPosition: Option<Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>> = jcall!(self.allbinaryLayer).getViewPosition();
         let mut positionNumber3d: Option<Rc<RefCell<Number3d>>> = jcall!(self.rectangle).getPosition();
         jcall!(positionNumber3d).x = -(((jcall!(viewPosition).getX()) as f32));
         jcall!(positionNumber3d).z = -(((jcall!(viewPosition).getY()) as f32));
         jcall!(positionNumber3d).y = ((jcall!(viewPosition).getZ() + jcall!(self.allbinaryLayer).getHeight()) as f32);
-        jcall!(self.object3dProcessor).drawObject(gl.clone(), crate::java_into_object(self.rectangle.clone()));
+        jcall!(self.object3dProcessor).as_Object3dProcessor_mut().drawObject(gl.clone(), crate::java_into_object(self.rectangle.clone()));
     }
 }
 impl std::ops::Deref for HealthBarThreedAnimation {
@@ -144,7 +148,7 @@ impl crate::org::allbinary::game::health::HealthBarAnimation::HealthBarAnimation
 impl crate::org::allbinary::animation::Animation::AnimationDyn for HealthBarThreedAnimation {
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
 }
 impl crate::org::allbinary::image::opengles::OpenGLSurfaceChangedInterface::OpenGLSurfaceChangedInterface for HealthBarThreedAnimation {
     fn set(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::khronos::opengles::GL::GL>>>) { crate::org::allbinary::animation::Animation::Animation::set(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1) }

@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::android::app::Activity::Activity;
+use crate::java::lang::Exception::*;
 use super::ProgressRunnable::ProgressRunnable;
 use super::ProgressCanvas::ProgressCanvas;
 use super::AndroidBasicTitleProgressBar::AndroidBasicTitleProgressBar;
@@ -57,15 +58,15 @@ impl TitleProgressBarPortionSetProgressRunnable {
 
     pub fn run(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut progressCanvas: Option<Rc<RefCell<AndroidBasicTitleProgressBar>>> = (self.progressCanvas).clone() /* as AndroidBasicTitleProgressBar */;
-            { let java_receiver = self.midletActivity.clone(); let java_arguments = ((((jcall!(self.progressCanvas).getValue() + jcall!(self.progressCanvas).getMaxValue() / jcall!(progressCanvas).as_ProgressCanvas_mut().getPortion())) as i32), jcall!(self.progressCanvas).getText(),); jcall!(java_receiver).onSetProgress(java_arguments.0, java_arguments.1); };
+            let mut progressCanvas: Option<Rc<RefCell<AndroidBasicTitleProgressBar>>> = (self.progressCanvas).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<AndroidBasicTitleProgressBar>() }, "ClassCastException: not a AndroidBasicTitleProgressBar"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<AndroidBasicTitleProgressBar>) } });
+            { let java_receiver = self.midletActivity.clone(); let java_arguments = ((((jcall!(self.progressCanvas).getValue() + jcall!(self.progressCanvas).getMaxValue() / ((jcall!(progressCanvas).getPortion()) as f32))) as i32), jcall!(self.progressCanvas).getText(),); jcall!(java_receiver).onSetProgress(java_arguments.0, java_arguments.1); };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).RUN.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).RUN.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

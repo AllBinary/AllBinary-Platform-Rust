@@ -17,11 +17,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::java::io::InputStream::InputStream;
+use crate::java::io::InputStream::InputStream;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,6 +39,10 @@ pub struct ResourceUtil {
 pub static mut ResourceUtil_instance: std::cell::LazyCell<Option<Rc<RefCell<ResourceUtil>>>> = std::cell::LazyCell::new(|| ResourceUtil::new());
 
 impl ResourceUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ResourceUtil>>> {
@@ -59,13 +64,13 @@ impl ResourceUtil {
     
 
     pub fn setLoadingPaths(&mut self, mut path: String, mut ext: String) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setLoadingPaths"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setLoadingPaths"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
     // throws Exception
-    pub fn getResourceAsStream(&mut self, mut resource: String) -> Option<Rc<RefCell<InputStream>>> {
-        let mut inputStream: Option<Rc<RefCell<InputStream>>> = jcall!(std::any::type_name_of_val(&resource)).getResourceAsStream(resource.clone());
+    pub fn getResourceAsStream(&mut self, mut resource: String) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
+        let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = crate::java::lang::ClassLoader::ClassLoader::getSystemResourceAsStream(resource.clone());
         if inputStream.is_none() {
             inputStream = self.getResourceAsStreamAtStart(resource.clone(), 2);
             if inputStream.is_none() {
@@ -74,36 +79,36 @@ impl ResourceUtil {
                     let mut stringMaker: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
                     let mut index: i32 = resource.rfind('/').map(|index| index as i32).unwrap_or(-1);
                     let mut resourcePath: String = resource[(index + 1) as usize..].to_string();
-                    inputStream = jcall!(std::any::type_name_of_val(&resource)).getResourceAsStream(resourcePath.clone());
+                    inputStream = { let java_value = (crate::java::lang::ClassLoader::ClassLoader::getSystemResourceAsStream(resourcePath.clone())).clone(); java_value };
                     if inputStream.is_none() {
-                        resourcePath = resource[(index.clone()) as usize..].to_string();
-                        inputStream = jcall!(std::any::type_name_of_val(&resource)).getResourceAsStream(resourcePath.clone());
+                        resourcePath = { let java_value = (resource[(index.clone()) as usize..].to_string()).clone(); java_value };
+                        inputStream = { let java_value = (crate::java::lang::ClassLoader::ClassLoader::getSystemResourceAsStream(resourcePath.clone())).clone(); java_value };
                         if inputStream.is_none() {
                             let mut RES: String = String::from("res");
-                            resourcePath = jcall!(stringMaker).append(RES.clone()).append(resource[(index.clone()) as usize..].to_string()).toString();
-                            inputStream = jcall!(std::any::type_name_of_val(&resource)).getResourceAsStream(resourcePath.clone());
+                            resourcePath = { let java_value = (jcall!(stringMaker).append(RES.clone()).append(resource[(index.clone()) as usize..].to_string()).toString()).clone(); java_value };
+                            inputStream = { let java_value = (crate::java::lang::ClassLoader::ClassLoader::getSystemResourceAsStream(resourcePath.clone())).clone(); java_value };
                             if inputStream.is_none() {
                                 jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                                resourcePath = jcall!(stringMaker).append(String::from("/")).append(RES.clone()).append(resource[(index.clone()) as usize..].to_string()).toString();
-                                inputStream = jcall!(std::any::type_name_of_val(&resource)).getResourceAsStream(resourcePath.clone());
-                                let mut COLON: String = jcall!(CommonSeps::getInstance()).COLON.clone();
+                                resourcePath = { let java_value = (jcall!(stringMaker).append(String::from("/")).append(RES.clone()).append(resource[(index.clone()) as usize..].to_string()).toString()).clone(); java_value };
+                                inputStream = { let java_value = (crate::java::lang::ClassLoader::ClassLoader::getSystemResourceAsStream(resourcePath.clone())).clone(); java_value };
+                                let mut COLON: String = { let java_field = jcall!(CommonSeps::getInstance()).COLON.clone(); java_field }.clone();
                                 if inputStream.is_none() {
                                     jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                                    resourcePath = jcall!(stringMaker).append(RES.clone()).append(COLON.clone()).append(resource[(index.clone()) as usize..].to_string()).toString();
-                                    inputStream = jcall!(std::any::type_name_of_val(&resource)).getResourceAsStream(resourcePath.clone());
+                                    resourcePath = { let java_value = (jcall!(stringMaker).append(RES.clone()).append(COLON.clone()).append(resource[(index.clone()) as usize..].to_string()).toString()).clone(); java_value };
+                                    inputStream = { let java_value = (crate::java::lang::ClassLoader::ClassLoader::getSystemResourceAsStream(resourcePath.clone())).clone(); java_value };
                                     if inputStream.is_none() {
                                         jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                                        resourcePath = jcall!(stringMaker).append(RES.clone()).append(COLON.clone()).append(resource[(index + 1) as usize..].to_string()).toString();
-                                        inputStream = jcall!(std::any::type_name_of_val(&resource)).getResourceAsStream(resourcePath.clone());
+                                        resourcePath = { let java_value = (jcall!(stringMaker).append(RES.clone()).append(COLON.clone()).append(resource[(index + 1) as usize..].to_string()).toString()).clone(); java_value };
+                                        inputStream = { let java_value = (crate::java::lang::ClassLoader::ClassLoader::getSystemResourceAsStream(resourcePath.clone())).clone(); java_value };
                                         if inputStream.is_none() {
                                             let mut RESOURCE_STRING: String = String::from("resource");
                                             jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                                            resourcePath = jcall!(stringMaker).append(RESOURCE_STRING.clone()).append(COLON.clone()).append(resource[(index.clone()) as usize..].to_string()).toString();
-                                            inputStream = jcall!(std::any::type_name_of_val(&resource)).getResourceAsStream(resourcePath.clone());
+                                            resourcePath = { let java_value = (jcall!(stringMaker).append(RESOURCE_STRING.clone()).append(COLON.clone()).append(resource[(index.clone()) as usize..].to_string()).toString()).clone(); java_value };
+                                            inputStream = { let java_value = (crate::java::lang::ClassLoader::ClassLoader::getSystemResourceAsStream(resourcePath.clone())).clone(); java_value };
                                             if inputStream.is_none() {
                                                 jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                                                resourcePath = jcall!(stringMaker).append(RESOURCE_STRING.clone()).append(COLON.clone()).append(resource[(index + 1) as usize..].to_string()).toString();
-                                                inputStream = jcall!(std::any::type_name_of_val(&resource)).getResourceAsStream(resourcePath.clone());
+                                                resourcePath = { let java_value = (jcall!(stringMaker).append(RESOURCE_STRING.clone()).append(COLON.clone()).append(resource[(index + 1) as usize..].to_string()).toString()).clone(); java_value };
+                                                inputStream = { let java_value = (crate::java::lang::ClassLoader::ClassLoader::getSystemResourceAsStream(resourcePath.clone())).clone(); java_value };
                                                 if inputStream.is_none() {
                                                     jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
                                                     panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(stringMaker).append(String::from("Unable to obtain: ")).append(resource.clone()).toString())));
@@ -123,11 +128,11 @@ impl ResourceUtil {
     
 
     // throws Exception
-    pub fn getResourceAsStreamAtStart(&mut self, mut resource: String, mut startIndex: i32) -> Option<Rc<RefCell<InputStream>>> {
+    pub fn getResourceAsStreamAtStart(&mut self, mut resource: String, mut startIndex: i32) -> Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> {
         let mut stringMaker: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        let mut index: i32 = resource.find(&jcall!(CommonSeps::getInstance()).COLON.clone()).map(|index| index as i32).unwrap_or(-1);
+        let mut index: i32 = resource.find(&{ let java_field = jcall!(CommonSeps::getInstance()).COLON.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1);
         let mut resourcePath: String = resource[(index + startIndex) as usize..].to_string();
-        let mut inputStream: Option<Rc<RefCell<InputStream>>> = jcall!(std::any::type_name_of_val(&resource)).getResourceAsStream(resourcePath.clone());
+        let mut inputStream: Option<Rc<RefCell<dyn crate::java::io::InputStream::InputStreamDyn>>> = crate::java::lang::ClassLoader::ClassLoader::getSystemResourceAsStream(resourcePath.clone());
         if inputStream.is_some() {
             return inputStream.clone();
         }

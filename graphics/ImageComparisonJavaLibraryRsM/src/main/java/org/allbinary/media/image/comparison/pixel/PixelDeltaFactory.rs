@@ -27,6 +27,7 @@ use crate::org::allbinary::logic::util::cache::CacheTypeFactory::CacheTypeFactor
 use crate::org::allbinary::media::image::comparison::color::ColorDelta::ColorDelta;
 use crate::org::allbinary::media::image::comparison::color::ColorDeltaFactory::ColorDeltaFactory;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::PixelDelta::PixelDelta;
 
 // Borrows the object of a Java reference
@@ -43,6 +44,10 @@ pub struct PixelDeltaFactory {
 pub static mut PixelDeltaFactory_cacheInterface: std::cell::LazyCell<Option<Rc<RefCell<dyn AutomaticCacheInterface>>>> = std::cell::LazyCell::new(|| None);
 
 impl PixelDeltaFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     // Java static initializer: call this once at startup
@@ -52,15 +57,15 @@ impl PixelDeltaFactory {
         let mut STATIC_BLOCK: String = String::from("Static Block");
         let mut instance: String = String::from("PixelDeltaFactory");
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
-            unsafe { *PixelDeltaFactory_cacheInterface = (CacheInterfaceFactory::getInstance(jcall!(CacheTypeFactory::getInstance()).CACHE.clone(), jcall!(CachePolicyFactory::getInstance()).THIRTY_MINUTES_TEN_THOUSAND_MAX.clone())).clone() /* as AutomaticCacheInterface */ };
-            jcall!(logUtil).putF(jcall!(commonStrings).END.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
+            jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
+            unsafe { *PixelDeltaFactory_cacheInterface = (|| -> Option<Rc<RefCell<dyn AutomaticCacheInterface>>> { panic!("ClassCastException: a Rust dyn CacheInterface cannot be cast to dyn AutomaticCacheInterface") })() };
+            jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).END.clone(); java_field }.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone(), crate::java_into_object(e.clone()));
+            jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -83,7 +88,7 @@ impl PixelDeltaFactory {
     pub fn getInstance(mut x: i32, mut y: i32, mut rgb1: i32, mut rgb2: i32) -> Option<Rc<RefCell<PixelDelta>>> {
         let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(PointFactory::getInstance()).createXY(x.clone(), y.clone());
         let mut colorDelta: Option<Rc<RefCell<ColorDelta>>> = ColorDeltaFactory::getInstance(rgb1.clone(), rgb2.clone());
-        let mut pixelDelta: Option<Rc<RefCell<PixelDelta>>> = (jcall!(unsafe { PixelDeltaFactory_cacheInterface.clone() }).get(crate::java_into_object(PixelDelta::getKey2(point.clone(), colorDelta.clone())))).clone() /* as PixelDelta */;
+        let mut pixelDelta: Option<Rc<RefCell<PixelDelta>>> = (jcall!(unsafe { PixelDeltaFactory_cacheInterface.clone() }).get(crate::java_into_object(PixelDelta::getKey2(point.clone(), colorDelta.clone())))).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<PixelDelta>() }, "ClassCastException: not a PixelDelta"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<PixelDelta>) } });
         if pixelDelta.is_none() {
             pixelDelta = PixelDelta::new(point.clone(), colorDelta.clone());
         }

@@ -44,7 +44,7 @@ impl CloseLoopRaceTrackGeographicMapCellTypeFactory {
         let mut this = Self {
             base: RaceTrackGeographicMapCellTypeFactory::new_struct(),
         };
-        this.EMPTY_CELL_TYPE = jcall!(EmptyRaceRaceTrackGeographicMapCellTypeFactory::EmptyRaceRaceTrackGeographicMapCellTypeFactory::getInstance()).EMPTY_CELL_TYPE.clone();
+        this.EMPTY_CELL_TYPE = { let java_value = ({ let java_field = jcall!(EmptyRaceRaceTrackGeographicMapCellTypeFactory::EmptyRaceRaceTrackGeographicMapCellTypeFactory::getInstance()).EMPTY_CELL_TYPE.clone(); java_field }).clone(); java_value }.clone();
         this.EASY_CELL_TYPE = this.EMPTY_CELL_TYPE.clone();
         this.FINISH_LINE_ROAD_CELL_TYPE = this.START_LINE_ROAD_CELL_TYPE.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>);
         this

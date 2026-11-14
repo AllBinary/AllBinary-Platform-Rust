@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMap;
+use crate::java::lang::RuntimeException::*;
 use super::PathFinderGraphVisitorBase::PathFinderGraphVisitorBase;
 
 // Borrows the object of a Java reference
@@ -32,6 +33,10 @@ pub struct PathFinderGraphVisitorFactoryBase {
 
 
 impl PathFinderGraphVisitorFactoryBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -48,7 +53,7 @@ impl PathFinderGraphVisitorFactoryBase {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait PathFinderGraphVisitorFactoryBaseDyn {
+pub trait PathFinderGraphVisitorFactoryBaseDyn: std::any::Any {
     fn as_PathFinderGraphVisitorFactoryBase(&self) -> &PathFinderGraphVisitorFactoryBase;
     fn as_PathFinderGraphVisitorFactoryBase_mut(&mut self) -> &mut PathFinderGraphVisitorFactoryBase;
     fn getInstance(&mut self, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFinderGraphVisitorBase::PathFinderGraphVisitorBaseDyn>>> { PathFinderGraphVisitorFactoryBase::getInstance(self.as_PathFinderGraphVisitorFactoryBase_mut(), geographicMapInterface) }

@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::business::entry::EntryData::EntryData;
 use crate::org::allbinary::business::time::created::TimeCreated::TimeCreated;
 use crate::org::allbinary::business::time::modified::TimeLastModified::TimeLastModified;
@@ -49,6 +48,10 @@ impl UserConfigurationInterface for UserConfiguration {
 }
 
 impl UserConfiguration {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -68,19 +71,19 @@ impl UserConfiguration {
     }
     
 
-    pub fn new_struct1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Self {
+    pub fn new_struct1(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Self {
         let mut this = Self {
             userEmailConfigurationInterface: None,
             timeCreated: None,
             timeLastModified: None,
         };
         this.userEmailConfigurationInterface = (UserEmailConfiguration::new1(hashMap.clone())).clone() /* as UserEmailConfigurationInterface */;
-        this.timeCreated = TimeCreated::new1((jcall!(hashMap).get(jcall!(EntryData::getInstance()).TIMECREATED.clone())).clone() /* as String */);
-        this.timeLastModified = TimeLastModified::new1((jcall!(hashMap).get(jcall!(EntryData::getInstance()).LASTMODIFIED.clone())).clone() /* as String */);
+        this.timeCreated = { let java_value = (TimeCreated::new1({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).TIMECREATED.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
+        this.timeLastModified = { let java_value = (TimeLastModified::new1({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(EntryData::getInstance()).LASTMODIFIED.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() })).clone(); java_value };
         this
     }
 
-    pub fn new1(mut hashMap: Option<Rc<RefCell<HashMap>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new1(mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct1(hashMap))))
     }
     

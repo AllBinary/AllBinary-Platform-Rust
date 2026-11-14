@@ -33,13 +33,17 @@ pub struct JvmStatistics {
 
 
 impl JvmStatistics {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
         let mut this = Self {
             runtime: None,
         };
-        this.runtime = Runtime::getRuntime();
+        this.runtime = { let java_value = (Runtime::getRuntime()).clone(); java_value };
         this
     }
 
@@ -139,47 +143,47 @@ impl JvmStatistics {
     
 
     pub fn getFreeMemoryBytesString(&mut self) -> String {
-        return jcall!(self.getFreeMemoryBytesLong()).toString();
+        return (self.getFreeMemoryBytesLong()).expect("NullPointerException").to_string();
     }
     
 
     pub fn getFreeMemoryKilobytesString(&mut self) -> String {
-        return jcall!(self.getFreeMemoryKilobytesLong()).toString();
+        return (self.getFreeMemoryKilobytesLong()).expect("NullPointerException").to_string();
     }
     
 
     pub fn getFreeMemoryMegabytesString(&mut self) -> String {
-        return jcall!(self.getFreeMemoryMegabytesLong()).toString();
+        return (self.getFreeMemoryMegabytesLong()).expect("NullPointerException").to_string();
     }
     
 
     pub fn getMaxMemoryBytesString(&mut self) -> String {
-        return jcall!(self.getMaxMemoryBytesLong()).toString();
+        return (self.getMaxMemoryBytesLong()).expect("NullPointerException").to_string();
     }
     
 
     pub fn getMaxMemoryKilobytesString(&mut self) -> String {
-        return jcall!(self.getMaxMemoryKilobytesLong()).toString();
+        return (self.getMaxMemoryKilobytesLong()).expect("NullPointerException").to_string();
     }
     
 
     pub fn getMaxMemoryMegabytesString(&mut self) -> String {
-        return jcall!(self.getMaxMemoryMegabytesLong()).toString();
+        return (self.getMaxMemoryMegabytesLong()).expect("NullPointerException").to_string();
     }
     
 
     pub fn getTotalMemoryBytesString(&mut self) -> String {
-        return jcall!(self.getTotalMemoryBytesLong()).toString();
+        return (self.getTotalMemoryBytesLong()).expect("NullPointerException").to_string();
     }
     
 
     pub fn getTotalMemoryKilobytesString(&mut self) -> String {
-        return jcall!(self.getTotalMemoryKilobytesLong()).toString();
+        return (self.getTotalMemoryKilobytesLong()).expect("NullPointerException").to_string();
     }
     
 
     pub fn getTotalMemoryMegabytesString(&mut self) -> String {
-        return jcall!(self.getTotalMemoryMegabytesLong()).toString();
+        return (self.getTotalMemoryMegabytesLong()).expect("NullPointerException").to_string();
     }
     
 
@@ -194,7 +198,7 @@ impl JvmStatistics {
     
 
     pub fn getNumberOfThreadsString(&mut self) -> String {
-        return jcall!(self.getNumberOfThreadsLong()).toString();
+        return (self.getNumberOfThreadsLong()).expect("NullPointerException").to_string();
     }
     
 
@@ -202,7 +206,7 @@ impl JvmStatistics {
         jcall!(self.runtime).gc();
     }
 }
-pub trait JvmStatisticsDyn {
+pub trait JvmStatisticsDyn: std::any::Any {
     fn as_JvmStatistics(&self) -> &JvmStatistics;
     fn as_JvmStatistics_mut(&mut self) -> &mut JvmStatistics;
     fn getFreeMemoryBytes(&mut self) -> i64 { JvmStatistics::getFreeMemoryBytes(self.as_JvmStatistics_mut()) }

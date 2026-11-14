@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::control::contraints::size::TwoDimensionalConst
 use crate::org::allbinary::logic::control::contraints::size::TwoDimensionalConstraintInterface::TwoDimensionalConstraintInterface;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::AdvertisementAreaConstraintsInterface::AdvertisementAreaConstraintsInterface;
 
 // Borrows the object of a Java reference
@@ -44,6 +45,10 @@ impl AdvertisementAreaConstraintsInterface for AdvertisementAreaConstraints {
 }
 
 impl AdvertisementAreaConstraints {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut document: Option<Rc<RefCell<Document>>>) -> Self {
@@ -51,7 +56,7 @@ impl AdvertisementAreaConstraints {
             displayInBrowserContraintsInterface: None,
             twoDimensionConstraintsInterface: None,
         };
-        let mut node: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode(jcall!(AdvertisementAreaData::AdvertisementAreaData::getInstance()).NAME.clone(), jcall!(document).getChildNodes());
+        let mut node: Option<Rc<RefCell<Node>>> = DomSearchHelper::getNode({ let java_field = jcall!(AdvertisementAreaData::AdvertisementAreaData::getInstance()).NAME.clone(); java_field }.clone(), jcall!(document).getChildNodes());
         this.displayInBrowserContraintsInterface = DisplayInBrowserContraints::new(node.clone()).map(|reference| reference as Rc<RefCell<dyn DisplayInBrowserContraintsInterface>>);
         this.twoDimensionConstraintsInterface = TwoDimensionalConstraint::new(node.clone()).map(|reference| reference as Rc<RefCell<dyn TwoDimensionalConstraintInterface>>);
         this

@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 use super::SoundsFactoryInterface::SoundsFactoryInterface;
 
 // Borrows the object of a Java reference
@@ -33,6 +34,10 @@ pub struct AllBinaryMediaManagerShutdown {
 thread_local! { pub static AllBinaryMediaManagerShutdown_instance: Option<Rc<RefCell<AllBinaryMediaManagerShutdown>>> = AllBinaryMediaManagerShutdown::new(); }
 
 impl AllBinaryMediaManagerShutdown {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

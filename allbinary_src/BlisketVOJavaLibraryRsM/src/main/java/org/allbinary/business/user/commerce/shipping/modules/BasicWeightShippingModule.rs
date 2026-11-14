@@ -43,6 +43,10 @@ impl ShippingInterface for BasicWeightShippingModule {
 }
 
 impl BasicWeightShippingModule {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -66,8 +70,8 @@ impl BasicWeightShippingModule {
         let mut basket: Option<Rc<RefCell<dyn BasketInterface>>> = jcall!(order).getBasket();
         let mut money: Option<Rc<RefCell<Money>>> = Money::new();
         jcall!(money).add(jcall!(basket).getTotalWeight());
-        jcall!(money).multiply(1);
-        jcall!(money).add(String::from("3.50"));
+        jcall!(money).multiply_int(1);
+        jcall!(money).add_String(String::from("3.50"));
         return money.clone();
     }
     
@@ -81,7 +85,7 @@ impl BasicWeightShippingModule {
         return self.name.clone();
     }
 }
-pub trait BasicWeightShippingModuleDyn: crate::org::allbinary::business::user::commerce::shipping::modules::ShippingInterface::ShippingInterface {
+pub trait BasicWeightShippingModuleDyn: std::any::Any + crate::org::allbinary::business::user::commerce::shipping::modules::ShippingInterface::ShippingInterface {
     fn as_BasicWeightShippingModule(&self) -> &BasicWeightShippingModule;
     fn as_BasicWeightShippingModule_mut(&mut self) -> &mut BasicWeightShippingModule;
 }

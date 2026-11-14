@@ -17,11 +17,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation;
 use crate::org::allbinary::logic::math::PrimitiveIntUtil::PrimitiveIntUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,19 +38,10 @@ pub struct SimultaneousCompoundIndexedAnimation {
 
 impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for SimultaneousCompoundIndexedAnimation {
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
-}
-impl crate::org::allbinary::animation::IndexedAnimationInterface::IndexedAnimationInterface for SimultaneousCompoundIndexedAnimation {
-    fn reset(&mut self) { self.base.reset() }
-    fn setFrame(&mut self, mut frameIndex: i32) { Self::setFrame(self, frameIndex) }
-    fn getFrame(&mut self) -> i32 { Self::getFrame(self) }
-}
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for SimultaneousCompoundIndexedAnimation {
-    fn getSize(&mut self) -> i32 { Self::getSize(self) }
-    fn previousFrame(&mut self) { Self::previousFrame(self) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
 }
 impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for SimultaneousCompoundIndexedAnimation {
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }
 
 impl SimultaneousCompoundIndexedAnimation {
@@ -75,7 +67,7 @@ impl SimultaneousCompoundIndexedAnimation {
         {
             let mut index: i32 = (self.animationInterfaceArray.len() as i32).clone();
             while { index -= 1; index } >= 0 {
-            indexedAnimation = (self.animationInterfaceArray[(index) as usize]).clone() /* as IndexedAnimation */;
+            indexedAnimation = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> { panic!("ClassCastException: a Rust dyn Animation cannot be cast to IndexedAnimation") })();
             jcall!(indexedAnimation).setFrame(frameIndex.clone());
             }
         }
@@ -83,13 +75,13 @@ impl SimultaneousCompoundIndexedAnimation {
     
 
     pub fn getFrame(&mut self) -> i32 {
-        let mut indexedAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> = (self.animationInterfaceArray[(0) as usize]).clone() /* as IndexedAnimation */;
+        let mut indexedAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> { panic!("ClassCastException: a Rust dyn Animation cannot be cast to IndexedAnimation") })();
         return jcall!(indexedAnimation).getFrame();
     }
     
 
     pub fn getSize(&mut self) -> i32 {
-        let mut indexedAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> = (self.animationInterfaceArray[(0) as usize]).clone() /* as IndexedAnimation */;
+        let mut indexedAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> { panic!("ClassCastException: a Rust dyn Animation cannot be cast to IndexedAnimation") })();
         return jcall!(indexedAnimation).getSize();
     }
     
@@ -99,7 +91,7 @@ impl SimultaneousCompoundIndexedAnimation {
         {
             let mut index: i32 = (self.animationInterfaceArray.len() as i32).clone();
             while { index -= 1; index } >= 0 {
-            indexedAnimation = (self.animationInterfaceArray[(index) as usize]).clone() /* as IndexedAnimation */;
+            indexedAnimation = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>> { panic!("ClassCastException: a Rust dyn Animation cannot be cast to IndexedAnimation") })();
             jcall!(indexedAnimation).previousFrame();
             }
         }
@@ -126,7 +118,7 @@ impl SimultaneousCompoundIndexedAnimation {
     }
     
 
-    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) {
+    pub fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) {
         let mut size: i32 = (self.animationInterfaceArray.len() as i32).clone();
         for index in (0..size) {
             jcall!(self.animationInterfaceArray[(index) as usize]).paintXY(graphics.clone(), x.clone(), y.clone());
@@ -134,7 +126,7 @@ impl SimultaneousCompoundIndexedAnimation {
     }
     
 
-    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) {
+    pub fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) {
         let mut size: i32 = (self.animationInterfaceArray.len() as i32).clone();
         for index in (0..size) {
             jcall!(self.animationInterfaceArray[(index) as usize]).paintThreedXYZ(graphics.clone(), x.clone(), y.clone(), z.clone());
@@ -163,8 +155,8 @@ impl crate::org::allbinary::animation::Animation::AnimationDyn for SimultaneousC
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base }
     fn nextFrame(&mut self) { Self::nextFrame(self) }
-    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
-    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
+    fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
+    fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }
 }
 impl crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn for SimultaneousCompoundIndexedAnimation {
     fn as_IndexedAnimation(&self) -> &crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &self.base }

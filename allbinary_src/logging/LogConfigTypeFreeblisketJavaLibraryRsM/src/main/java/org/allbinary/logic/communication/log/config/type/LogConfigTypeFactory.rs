@@ -103,6 +103,10 @@ pub struct LogConfigTypeFactory {
 thread_local! { pub static LogConfigTypeFactory_instance: Option<Rc<RefCell<LogConfigTypeFactory>>> = LogConfigTypeFactory::new(); }
 
 impl LogConfigTypeFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogConfigTypeFactory>>> {
@@ -251,7 +255,7 @@ impl LogConfigTypeFactory {
         this.SQLLOGGINGPOOLERROR = LogConfigType::new(String::from("SQL Pool Error"), this.NO_DESCRIPTION.clone());
         this.STATICPAGEGENERATIONLOGGING = LogConfigType::new(String::from("Static Page Generation Logging"), this.NO_DESCRIPTION.clone());
         this.STATICPAGEGENERATIONLOGGINGERROR = LogConfigType::new(String::from("Static Page Generation Logging Error"), this.NO_DESCRIPTION.clone());
-        PreLogUtil::put(String::from("FreeBlisket"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(CommonStrings::getInstance()).CONSTRUCTOR.clone());
+        PreLogUtil::put(String::from("FreeBlisket"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(CommonStrings::getInstance()).CONSTRUCTOR.clone(); java_field }.clone());
         this
     }
 

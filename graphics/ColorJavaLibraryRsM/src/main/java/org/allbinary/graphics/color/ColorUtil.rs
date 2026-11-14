@@ -33,6 +33,10 @@ thread_local! { pub static ColorUtil_instance: Option<Rc<RefCell<ColorUtil>>> = 
 
 impl ColorUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -58,7 +62,7 @@ impl ColorUtil {
     
 
     pub fn isDark(&mut self, mut color: Option<Rc<RefCell<Color>>>) -> bool {
-        if jcall!(color).getRed() < 0x77_u32 as i32 && jcall!(color).getRed() < 0x77_u32 as i32 && jcall!(color).getRed() < 0x77_u32 as i32 {
+        if jcall!(color).getRed() < 0x77 && jcall!(color).getRed() < 0x77 && jcall!(color).getRed() < 0x77 {
             return true;
         }
         return false;

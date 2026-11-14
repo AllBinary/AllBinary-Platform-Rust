@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::game::layer::RTSLayer::RTSLayer;
 use crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionForm;
+use crate::java::lang::RuntimeException::*;
 use super::RTSLayerFormFactoryInterface::RTSLayerFormFactoryInterface;
 
 // Borrows the object of a Java reference
@@ -37,6 +38,10 @@ impl RTSLayerFormFactoryInterface for RTSLayerFormFactory {
 
 impl RTSLayerFormFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -52,7 +57,7 @@ impl RTSLayerFormFactory {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait RTSLayerFormFactoryDyn: crate::org::allbinary::game::input::RTSLayerFormFactoryInterface::RTSLayerFormFactoryInterface {
+pub trait RTSLayerFormFactoryDyn: std::any::Any + crate::org::allbinary::game::input::RTSLayerFormFactoryInterface::RTSLayerFormFactoryInterface {
     fn as_RTSLayerFormFactory(&self) -> &RTSLayerFormFactory;
     fn as_RTSLayerFormFactory_mut(&mut self) -> &mut RTSLayerFormFactory;
 }

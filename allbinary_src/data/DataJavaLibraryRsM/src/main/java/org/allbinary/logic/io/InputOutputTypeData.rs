@@ -42,6 +42,10 @@ pub struct InputOutputTypeData {
 thread_local! { pub static InputOutputTypeData_instance: Option<Rc<RefCell<InputOutputTypeData>>> = InputOutputTypeData::new(); }
 
 impl InputOutputTypeData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<InputOutputTypeData>>> {

@@ -28,6 +28,7 @@ use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -53,6 +54,10 @@ pub struct FeaturedResourceFactory {
 
 
 impl FeaturedResourceFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -71,7 +76,7 @@ impl FeaturedResourceFactory {
             GAME_FEATURE_CONTROLLED: String::new(),
         };
         this.logUtil = LogUtil::getInstance();
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.commonStrings = CommonStrings::getInstance();
         this.ANIMATION_FEATURES = String::from("Animation Features: Vector: ");
         this.IMAGE_LABEL = String::from(" Image: ");
@@ -97,7 +102,7 @@ impl FeaturedResourceFactory {
             let mut featureInterface: Option<Rc<RefCell<dyn GameFeatureControlledInterface>>> = { let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn GameFeatureControlledInterface>>>>().expect("ClassCastException").clone()) };
             let mut isLoadingLevel: bool = jcall!(featureInterface).isLoadingLevel(level.clone());
             let mut isFeature: bool = jcall!(featureInterface).isFeature();
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(self.GAME_FEATURE_CONTROLLED.clone()).append(jcall!(featureInterface).toString()).append(self.IS_LOADING_LEVEL_LABEL.clone()).append(jcall!(ResourceLoadingLevelFactory::ResourceLoadingLevelFactory::getInstance()).getLevelString(level.clone())).append(jcall!(CommonSeps::getInstance()).COLON_SEP.clone()).appendboolean(isLoadingLevel.clone()).append(self.IS_FEATURE.clone()).appendboolean(isFeature.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(self.GAME_FEATURE_CONTROLLED.clone()).append(jcall!(featureInterface).toString()).append(self.IS_LOADING_LEVEL_LABEL.clone()).append(jcall!(ResourceLoadingLevelFactory::ResourceLoadingLevelFactory::getInstance()).getLevelString(level.clone())).append({ let java_field = jcall!(CommonSeps::getInstance()).COLON_SEP.clone(); java_field }.clone()).appendboolean(isLoadingLevel.clone()).append(self.IS_FEATURE.clone()).appendboolean(isFeature.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             if isLoadingLevel && isFeature {
                 jcall!(featureInterface).init(level.clone());
             }
@@ -106,21 +111,21 @@ impl FeaturedResourceFactory {
         let mut graphicsFeatureFactory: Option<Rc<RefCell<GraphicsFeatureFactory>>> = GraphicsFeatureFactory::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(self.ANIMATION_FEATURES.clone());
-        jcall!(stringBuffer).appendboolean(jcall!(features).isFeature(jcall!(graphicsFeatureFactory).VECTOR_GRAPHICS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)));
+        jcall!(stringBuffer).appendboolean(jcall!(features).isFeature({ let java_field = jcall!(graphicsFeatureFactory).VECTOR_GRAPHICS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)));
         jcall!(stringBuffer).append(self.IMAGE_LABEL.clone());
-        jcall!(stringBuffer).appendboolean(jcall!(features).isFeature(jcall!(graphicsFeatureFactory).IMAGE_GRAPHICS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)));
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        if jcall!(features).isFeature(jcall!(graphicsFeatureFactory).IMAGE_GRAPHICS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        jcall!(stringBuffer).appendboolean(jcall!(features).isFeature({ let java_field = jcall!(graphicsFeatureFactory).IMAGE_GRAPHICS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)));
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        if jcall!(features).isFeature({ let java_field = jcall!(graphicsFeatureFactory).IMAGE_GRAPHICS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             jcall!(stringBuffer).delete(0, jcall!(stringBuffer).length());
             jcall!(stringBuffer).append(self.IMAGE_GRAPHICS_ARRAY.clone());
-            jcall!(stringBuffer).appendboolean(jcall!(features).isFeature(jcall!(graphicsFeatureFactory).IMAGE_TO_ARRAY_GRAPHICS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)));
+            jcall!(stringBuffer).appendboolean(jcall!(features).isFeature({ let java_field = jcall!(graphicsFeatureFactory).IMAGE_TO_ARRAY_GRAPHICS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)));
             jcall!(stringBuffer).append(self.IMAGE_GRAPHICS_ROTATION.clone());
-            jcall!(stringBuffer).appendboolean(jcall!(features).isFeature(jcall!(graphicsFeatureFactory).IMAGE_TO_ARRAY_GRAPHICS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)));
+            jcall!(stringBuffer).appendboolean(jcall!(features).isFeature({ let java_field = jcall!(graphicsFeatureFactory).IMAGE_TO_ARRAY_GRAPHICS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)));
             jcall!(stringBuffer).append(self.SPRITE_QUARTER.clone());
-            jcall!(stringBuffer).appendboolean(jcall!(features).isFeature(jcall!(graphicsFeatureFactory).SPRITE_QUARTER_ROTATION_GRAPHICS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)));
+            jcall!(stringBuffer).appendboolean(jcall!(features).isFeature({ let java_field = jcall!(graphicsFeatureFactory).SPRITE_QUARTER_ROTATION_GRAPHICS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)));
             jcall!(stringBuffer).append(self.SPRITE_FULL.clone());
-            jcall!(stringBuffer).appendboolean(jcall!(features).isFeature(jcall!(graphicsFeatureFactory).SPRITE_FULL_GRAPHICS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)));
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).INIT.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            jcall!(stringBuffer).appendboolean(jcall!(features).isFeature({ let java_field = jcall!(graphicsFeatureFactory).SPRITE_FULL_GRAPHICS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)));
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(stringBuffer).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).INIT.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         }
     }
     
@@ -131,7 +136,7 @@ impl FeaturedResourceFactory {
     
 
     pub fn add(&mut self, mut featureInterface: Option<Rc<RefCell<dyn GameFeatureControlledInterface>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).START_LABEL.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(featureInterface.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).ADD.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).START_LABEL.clone(); java_field }.clone()).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(featureInterface.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).ADD.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         jcall!(self.list).add(crate::java_into_object(featureInterface.clone()));
     }
     
@@ -140,7 +145,7 @@ impl FeaturedResourceFactory {
         return self.list.clone();
     }
 }
-pub trait FeaturedResourceFactoryDyn {
+pub trait FeaturedResourceFactoryDyn: std::any::Any {
     fn as_FeaturedResourceFactory(&self) -> &FeaturedResourceFactory;
     fn as_FeaturedResourceFactory_mut(&mut self) -> &mut FeaturedResourceFactory;
     fn init(&mut self, mut level: i32) { FeaturedResourceFactory::init(self.as_FeaturedResourceFactory_mut(), level) }

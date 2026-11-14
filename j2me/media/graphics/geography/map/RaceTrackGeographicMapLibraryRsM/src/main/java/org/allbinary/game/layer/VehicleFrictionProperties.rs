@@ -47,10 +47,10 @@ impl VehicleFrictionProperties {
             AIR_FRICTION_NOMINATOR: 0,
             CRASH_FRICTION_NOMINATOR: 0,
         };
-        this.TIRE_FRICTION_NOMINATOR = FrictionData::getFrictionDenominator() - tireFriction;
-        this.BRAKE_FRICTION_NOMINATOR = FrictionData::getFrictionDenominator() - brakeFriction;
-        this.AIR_FRICTION_NOMINATOR = FrictionData::getFrictionDenominator() - airFriction;
-        this.CRASH_FRICTION_NOMINATOR = FrictionData::getFrictionDenominator() - crashFriction;
+        this.TIRE_FRICTION_NOMINATOR = { let java_value = (FrictionData::getFrictionDenominator() - tireFriction).clone(); java_value };
+        this.BRAKE_FRICTION_NOMINATOR = { let java_value = (FrictionData::getFrictionDenominator() - brakeFriction).clone(); java_value };
+        this.AIR_FRICTION_NOMINATOR = { let java_value = (FrictionData::getFrictionDenominator() - airFriction).clone(); java_value };
+        this.CRASH_FRICTION_NOMINATOR = { let java_value = (FrictionData::getFrictionDenominator() - crashFriction).clone(); java_value };
         this
     }
 

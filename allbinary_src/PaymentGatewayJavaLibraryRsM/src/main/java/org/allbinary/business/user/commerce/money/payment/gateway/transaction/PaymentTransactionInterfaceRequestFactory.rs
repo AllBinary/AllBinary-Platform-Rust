@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 // use crate::javax::servlet::http::HttpServletRequest::HttpServletRequest;
 // use crate::javax::servlet::jsp::PageContext::PageContext;
 use crate::org::allbinary::business::context::modules::storefront::StoreFrontFactory::StoreFrontFactory;
@@ -43,6 +42,7 @@ use crate::org::allbinary::logic::string::StringValidationUtil::StringValidation
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpInterface::TransformInfoHttpInterface;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::PaymentTransactionInterface::PaymentTransactionInterface;
 
 // Borrows the object of a Java reference
@@ -60,6 +60,10 @@ pub struct PaymentTransactionInterfaceRequestFactory {
 thread_local! { pub static PaymentTransactionInterfaceRequestFactory_instance: Option<Rc<RefCell<PaymentTransactionInterfaceRequestFactory>>> = PaymentTransactionInterfaceRequestFactory::new(); }
 
 impl PaymentTransactionInterfaceRequestFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<PaymentTransactionInterfaceRequestFactory>>> {
@@ -85,70 +89,71 @@ impl PaymentTransactionInterfaceRequestFactory {
     // throws Exception
     // Java overloaded method: Rust needs a different name
     pub fn getInstance1(&mut self, mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Option<Rc<RefCell<dyn PaymentTransactionInterface>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpInterface");
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (|| -> Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> { panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpInterface") })();
             let mut pageContext: Option<Rc<RefCell<PageContext>>> = jcall!(httpTransformInfoInterface).getPageContext();
             let mut httpServletRequest: Option<Rc<RefCell<HttpServletRequest>>> = (jcall!(pageContext).getRequest()).clone() /* as HttpServletRequest */;
-            let mut command: String = jcall!(httpServletRequest).getParameter(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).GLOBALS2).ADMINCOMMAND.clone());
-            if true && (command.cmp(&jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).globals).GLOBALS2).AUTHORIZEFORMEVALBODYONERROR.clone()) as i32) == 0 {
-                return self.generateFromTestData(transformInfoInterface.clone());
+            let mut command: String = jcall!(httpServletRequest).getParameter({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).GLOBALS2.clone(); java_field }).ADMINCOMMAND.clone(); java_field }.clone());
+            if true && (command.cmp(&{ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).globals.clone(); java_field }).GLOBALS2.clone(); java_field }).AUTHORIZEFORMEVALBODYONERROR.clone(); java_field }.clone()) as i32) == 0 {
+                return Some(self.generateFromTestData(transformInfoInterface.clone()));
             } else {
-                let mut propertiesHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(httpTransformInfoInterface).getPropertiesHashMap();
+                let mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(httpTransformInfoInterface).getPropertiesHashMap();
                 let mut weblisketSession: Option<Rc<RefCell<WeblisketSession>>> = WeblisketSession::new2(propertiesHashMap.clone(), pageContext.clone());
-                let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(weblisketSession).getStoreName());
+                let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(weblisketSession).getStoreName()).map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
                 let mut order: Option<Rc<RefCell<dyn OrderInterface>>> = jcall!(weblisketSession).getOrder();
                 let mut orderId: String = jcall!(order).getId();
                 let mut orderHistoryEntityInterface: Option<Rc<RefCell<dyn OrderHistoryEntityInterface>>> = OrderHistoryEntityFactory::getInstance().map(|reference| reference as Rc<RefCell<dyn OrderHistoryEntityInterface>>);
                 let mut orderReview: Option<Rc<RefCell<OrderHistory>>> = jcall!(orderHistoryEntityInterface).getOrder(orderId.clone());
                 let mut orderPaymentInfo: Option<Rc<RefCell<Payment>>> = jcall!(orderReview).getPaymentInfo();
-                jcall!(orderPaymentInfo).setTransactionType(jcall!(jcall!(TransactionTypeFactory::getInstance()).SALE).toString());
-                jcall!(orderPaymentInfo).setTenderType(jcall!(jcall!(TenderTypeFactory::getInstance()).CREDITCARD).toString());
+                jcall!(orderPaymentInfo).setTransactionType(jcall!({ let java_field = jcall!(TransactionTypeFactory::getInstance()).SALE.clone(); java_field }).toString());
+                jcall!(orderPaymentInfo).setTenderType(jcall!({ let java_field = jcall!(TenderTypeFactory::getInstance()).CREDITCARD.clone(); java_field }).toString());
                 jcall!(orderReview).setPaymentInfo(orderPaymentInfo.clone());
-                if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PAYMENT.clone()) {
+                if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PAYMENT.clone(); java_field }.clone()) {
                     { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(orderReview).getId(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getPaymentTransactionInterface()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
                 }
                 let mut paymentTransactionInterface: Option<Rc<RefCell<dyn PaymentTransactionInterface>>> = jcall!(PaymentTransactionInterfaceFactory::PaymentTransactionInterfaceFactory::getInstance()).getInstance1(orderReview.clone());
-                return paymentTransactionInterface.clone();
-            }
+                return Some(paymentTransactionInterface.clone());
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PAYMENTERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getPaymentTransactionInterface()"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PAYMENTERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getPaymentTransactionInterface()"), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
     // throws Exception
     pub fn generateFromTestData(&mut self, mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Option<Rc<RefCell<dyn PaymentTransactionInterface>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpInterface");
-            let mut propertiesHashMap: Option<Rc<RefCell<HashMap>>> = jcall!(httpTransformInfoInterface).getPropertiesHashMap();
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (|| -> Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> { panic!("ClassCastException: a Rust dyn TransformInfoInterface cannot be cast to dyn TransformInfoHttpInterface") })();
+            let mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(httpTransformInfoInterface).getPropertiesHashMap();
             let mut pageContext: Option<Rc<RefCell<PageContext>>> = jcall!(httpTransformInfoInterface).getPageContext();
             let mut weblisketSession: Option<Rc<RefCell<WeblisketSession>>> = WeblisketSession::new2(propertiesHashMap.clone(), pageContext.clone());
-            let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(weblisketSession).getStoreName());
+            let mut storeFrontInterface: Option<Rc<RefCell<dyn StoreFrontInterface>>> = StoreFrontFactory::getInstance(jcall!(weblisketSession).getStoreName()).map(|reference| reference as Rc<RefCell<dyn StoreFrontInterface>>);
             let mut httpServletRequest: Option<Rc<RefCell<HttpServletRequest>>> = (jcall!(pageContext).getRequest()).clone() /* as HttpServletRequest */;
             let mut gatewayName: String = (jcall!(weblisketSession).getPaymentMethod()).clone() /* as String */;
             if jcall!(StringValidationUtil::getInstance()).isEmpty(gatewayName.clone()) {
-                gatewayName = jcall!(httpServletRequest).getParameter(jcall!(crate::org::allbinary::business::user::commerce::money::payment::gateway::PaymentGatewayData::PaymentGatewayData_NAME.with(Clone::clone)).toString());
+                gatewayName = { let java_value = (jcall!(httpServletRequest).getParameter(jcall!(crate::org::allbinary::business::user::commerce::money::payment::gateway::PaymentGatewayData::PaymentGatewayData_NAME.with(Clone::clone)).toString())).clone(); java_value };
             }
             let mut transactionType: String = jcall!(httpServletRequest).getParameter(crate::org::allbinary::business::user::commerce::money::payment::PaymentData::PaymentData_TRANSACTIONTYPE.with(Clone::clone).clone());
             let mut tenderType: String = jcall!(httpServletRequest).getParameter(crate::org::allbinary::business::user::commerce::money::payment::PaymentData::PaymentData_TENDERTYPE.with(Clone::clone).clone());
             let mut payment: Option<Rc<RefCell<Payment>>> = Payment::new();
             jcall!(payment).setTransactionType(transactionType.clone());
             jcall!(payment).setTenderType(tenderType.clone());
-            let mut orderReview: Option<Rc<RefCell<OrderHistory>>> = OrderHistory::new1(Basket::new());
+            let mut orderReview: Option<Rc<RefCell<OrderHistory>>> = OrderHistory::new1(Basket::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::business::user::commerce::inventory::basket::BasketInterface::BasketInterface>>));
             jcall!(orderReview).setStoreName(jcall!(storeFrontInterface).getName());
             jcall!(orderReview).setPaymentMethod(gatewayName.clone());
             jcall!(orderReview).setUserName(String::from("testing"));
             let mut orderId: String = jcall!(httpServletRequest).getParameter(String::from("orderNumber"));
-            if false || (orderId.cmp(&jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()) as i32) == 0 {
-                orderId = jcall!(OrderIdGenerator::new()).getNext();
+            if false || (orderId.cmp(&{ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()) as i32) == 0 {
+                orderId = { let java_value = (jcall!(OrderIdGenerator::new()).getNext()).clone(); java_value };
                 jcall!(orderReview).setId(orderId.clone());
                 let mut account: String = jcall!(httpServletRequest).getParameter(String::from("account"));
                 let mut expirationDate: String = jcall!(httpServletRequest).getParameter(String::from("expirationDate"));
@@ -178,25 +183,26 @@ impl PaymentTransactionInterfaceRequestFactory {
                 jcall!(streetAddress).setCode(zip.clone());
                 let mut email: String = jcall!(httpServletRequest).getParameter(String::from("email"));
                 let mut amount: String = jcall!(httpServletRequest).getParameter(String::from("amount"));
-                jcall!(orderReview).setTotal(Money::new1(amount.clone()));
+                jcall!(orderReview).setTotal(Money::new1_String(amount.clone()));
                 jcall!(orderReview).setBillingAddress(streetAddress.clone());
             } else {
                 jcall!(orderReview).setId(orderId.clone());
             }
             jcall!(orderReview).setPaymentInfo(payment.clone());
             let mut paymentTransactionInterface: Option<Rc<RefCell<dyn PaymentTransactionInterface>>> = jcall!(PaymentTransactionInterfaceFactory::PaymentTransactionInterfaceFactory::getInstance()).getInstance1(orderReview.clone());
-            return paymentTransactionInterface.clone();
+            return Some(paymentTransactionInterface.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).PAYMENTERROR.clone()) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generatePaymentTransactionInterfaceFromTestData()"), crate::java_into_object(e.clone()));
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).PAYMENTERROR.clone(); java_field }.clone()) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generatePaymentTransactionInterfaceFromTestData()"), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", e);
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

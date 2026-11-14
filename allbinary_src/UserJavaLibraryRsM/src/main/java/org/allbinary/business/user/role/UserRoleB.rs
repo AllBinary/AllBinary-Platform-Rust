@@ -22,6 +22,7 @@ use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::user::UserFactoryInterface::UserFactoryInterface;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
+use crate::java::lang::Exception::*;
 use super::UserRole::UserRole;
 use super::BasicUserRole::BasicUserRole;
 
@@ -36,7 +37,7 @@ pub struct UserRoleB {
     pub base: UserRole,
 }
 
-pub static mut UserRoleB_roleVector: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = std::cell::LazyCell::new(|| BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
+pub static mut UserRoleB_roleVector: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = std::cell::LazyCell::new(|| BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
 
 impl UserRoleB {
     
@@ -50,7 +51,7 @@ impl UserRoleB {
     }
 
     pub fn new(mut aBasicUserRole: Option<Rc<RefCell<BasicUserRole>>>, mut aUserFactoryInterface: Option<Rc<RefCell<dyn UserFactoryInterface>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(aBasicUserRole, aUserFactoryInterface))));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(aBasicUserRole.clone(), aUserFactoryInterface.clone()))));
             jcall!(unsafe { UserRoleB_roleVector.clone() }).add((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
         this
     }

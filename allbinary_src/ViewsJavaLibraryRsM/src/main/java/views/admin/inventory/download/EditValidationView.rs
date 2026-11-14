@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::business::user::commerce::inventory::item::BasicItemData::BasicItemData;
@@ -36,6 +35,7 @@ use crate::org::allbinary::logic::string::StringValidationUtil::StringValidation
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::w3c::dom::Document::Document;
 use crate::org::w3c::dom::Node::Node;
+use crate::java::lang::Exception::*;
 use super::DownloadableInventoryItemView::DownloadableInventoryItemView;
 
 // Borrows the object of a Java reference
@@ -51,13 +51,16 @@ pub struct EditValidationView {
 }
 
 // impl ValidationComponentInterface for EditValidationView with the methods of the trait
+impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for EditValidationView {
+    fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }
+}
 
 impl EditValidationView {
     
 
     pub fn new_struct(mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Self {
         let mut this = Self {
-            base: DownloadableInventoryItemView::new_struct2(transformInfoInterface.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()),
+            base: DownloadableInventoryItemView::new_struct2(transformInfoInterface.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()),
             downloadItemId: String::new(),
         };
         // super(...) is in the struct literal above
@@ -72,12 +75,12 @@ impl EditValidationView {
 
     // throws Exception
     pub fn getFormData(&mut self) {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(RequestParams::new1(self.base.request.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParamsDyn>>)).toHashMap();
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(RequestParams::new1(self.base.request.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::communication::http::request::RequestParams::RequestParamsDyn>>)).toHashMap();
         if hashMap.is_none() {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("No Request Params Found"))));
         }
-        self.id = (jcall!(hashMap).get(jcall!(self.base.basicItemData).ID.clone())).clone() /* as String */;
-        self.downloadItemId = (jcall!(hashMap).get(crate::org::allbinary::business::user::commerce::inventory::item::download::DownloadItemData::DownloadItemData_ID.with(Clone::clone).clone())).clone() /* as String */;
+        self.id = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object({ let java_field = jcall!(self.base.basicItemData).ID.clone(); java_field }.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+        self.downloadItemId = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(crate::org::allbinary::business::user::commerce::inventory::item::download::DownloadItemData::DownloadItemData_ID.with(Clone::clone).clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
     }
     
 
@@ -86,7 +89,7 @@ impl EditValidationView {
         if false || !jcall!(StringValidationUtil::getInstance()).isNumber(self.id.clone()) {
             return false;
         }
-        self.itemInterface = jcall!(jcall!(InventoryEntityFactory::getInstance()).getInventoryEntityInstance()).getItem(self.id.clone());
+        self.itemInterface = { let java_value = (jcall!(jcall!(InventoryEntityFactory::getInstance()).getInventoryEntityInstance()).getItem(self.id.clone())).clone(); java_value };
         if self.itemInterface.is_none() {
             return false;
         }
@@ -97,7 +100,7 @@ impl EditValidationView {
             if jcall!(vector).size() != 1 {
                 return false;
             }
-            self.downloadableItem = { let java_object = (jcall!(vector).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<DownloadableItem>>>>().expect("ClassCastException").clone()) };
+            self.downloadableItem = { let java_value = ({ let java_object = (jcall!(vector).get(0)).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<DownloadableItem>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
         } else {
             return false;
         }
@@ -147,6 +150,10 @@ impl crate::views::admin::inventory::download::DownloadableInventoryItemView::Do
     fn as_DownloadableInventoryItemView(&self) -> &crate::views::admin::inventory::download::DownloadableInventoryItemView::DownloadableInventoryItemView { &self.base }
     fn as_DownloadableInventoryItemView_mut(&mut self) -> &mut crate::views::admin::inventory::download::DownloadableInventoryItemView::DownloadableInventoryItemView { &mut self.base }
     fn getFormData(&mut self) { Self::getFormData(self) }
+}
+impl crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn for EditValidationView {
+    fn as_TransformInfoHttpComposite(&self) -> &crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &self.base.base.base.base }
+    fn as_TransformInfoHttpComposite_mut(&mut self) -> &mut crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite { &mut self.base.base.base.base }
 }
 impl crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentViewDyn for EditValidationView {
     fn as_HttpStoreComponentView(&self) -> &crate::views::business::context::modules::storefront::HttpStoreComponentView::HttpStoreComponentView { &self.base.base }

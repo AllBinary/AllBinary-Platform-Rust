@@ -29,12 +29,16 @@ macro_rules! jcall {
 }
 
 pub struct BasicColorCacheFactory {
-    pub hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 thread_local! { pub static BasicColorCacheFactory_instance: Option<Rc<RefCell<BasicColorCacheFactory>>> = BasicColorCacheFactory::new(); }
 
 impl BasicColorCacheFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<BasicColorCacheFactory>>> {
@@ -64,7 +68,7 @@ impl BasicColorCacheFactory {
     pub fn getAndOrCreate(&mut self, mut integer: Option<i32>) -> Option<Rc<RefCell<BasicColor>>> {
         let mut basicColor: Option<Rc<RefCell<BasicColor>>> = { let java_object = (jcall!(self.hashtable).get(crate::java_into_object((integer.clone()).expect("NullPointerException")))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<BasicColor>>>>().expect("ClassCastException").clone()) };
         if basicColor.is_none() {
-            basicColor = jcall!(BasicColorFactory::BasicColorFactory::getInstance()).createInstance(((integer).unwrap() as i32));
+            basicColor = { let java_value = (jcall!(BasicColorFactory::BasicColorFactory::getInstance()).createInstance(((integer).unwrap() as i32))).clone(); java_value };
             jcall!(self.hashtable).put(crate::java_into_object((integer.clone()).expect("NullPointerException")), crate::java_into_object(basicColor.clone()));
         }
         return basicColor.clone();

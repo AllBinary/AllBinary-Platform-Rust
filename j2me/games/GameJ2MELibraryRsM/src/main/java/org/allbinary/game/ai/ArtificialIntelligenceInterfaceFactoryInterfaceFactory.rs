@@ -38,6 +38,10 @@ pub static mut ArtificialIntelligenceInterfaceFactoryInterfaceFactory_SINGLETON:
 
 impl ArtificialIntelligenceInterfaceFactoryInterfaceFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             list: None,
@@ -61,8 +65,8 @@ impl ArtificialIntelligenceInterfaceFactoryInterfaceFactory {
     }
     
 
-    pub fn getInstanceFromCollection(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterfaceFactoryInterface>>> {
-        let mut typeInteger: Option<i32> = { let java_object = jcall!(hashtable).get(crate::java_into_object((BasicAI_ID.with(Clone::clone)).clone() /* as Any */)); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
+    pub fn getInstanceFromCollection(&mut self, mut hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>) -> Option<Rc<RefCell<dyn ArtificialIntelligenceInterfaceFactoryInterface>>> {
+        let mut typeInteger: Option<i32> = { let java_object = (jcall!(hashtable).get(crate::java_into_object(crate::java_into_object((BasicAI_ID.with(Clone::clone)).clone())))).clone(); java_object.as_ref().map(|object| { let object = object.borrow(); object.downcast_ref::<i32>().copied().or_else(|| object.downcast_ref::<Option<i32>>().copied().flatten()).expect("ClassCastException") }) };
         let mut r#type: i32 = ((typeInteger).unwrap() as i32);
         let mut artificialIntelligenceInterfaceFactoryInterface: Option<Rc<RefCell<dyn ArtificialIntelligenceInterfaceFactoryInterface>>> = { let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(r#type - 1) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn ArtificialIntelligenceInterfaceFactoryInterface>>>>().expect("ClassCastException").clone()) };
         return artificialIntelligenceInterfaceFactoryInterface.clone();

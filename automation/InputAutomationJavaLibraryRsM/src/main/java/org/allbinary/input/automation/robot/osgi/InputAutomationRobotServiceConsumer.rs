@@ -39,7 +39,7 @@ impl InputAutomationRobotServiceConsumer {
 
     pub fn new_struct(mut bundleContext: Option<Rc<RefCell<dyn BundleContext>>>) -> Self {
         let mut this = Self {
-            base: InputAutomationServiceConsumer::new_struct(jcall!(std::any::type_name::<InputAutomationRobotServiceInterface>()).getName(), bundleContext.clone(), InputAutomationRobotOSGIServiceVisitor::new()),
+            base: InputAutomationServiceConsumer::new_struct(jcall!(std::any::type_name::<InputAutomationRobotServiceInterface>()).getName(), bundleContext.clone(), InputAutomationRobotOSGIServiceVisitor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::osgi::OSGIServiceVisitorInterface::OSGIServiceVisitorInterface>>)),
         };
         // super(...) is in the struct literal above
         this

@@ -18,7 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
-use super::ClassLoader::ClassLoader;
+use crate::java::lang::ClassLoader::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -30,9 +30,13 @@ macro_rules! jcall {
 pub struct WebappClassLoaderInfo {
 }
 
-pub static mut WebappClassLoaderInfo_classLoader: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut WebappClassLoaderInfo_classLoader: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 
 impl WebappClassLoaderInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -48,13 +52,13 @@ impl WebappClassLoaderInfo {
 
     // synchronized
     pub fn setLoader(mut classLoader: Option<Rc<RefCell<ClassLoader>>>) {
-        unsafe { *WebappClassLoaderInfo_classLoader = classLoader.clone() };
+        unsafe { *WebappClassLoaderInfo_classLoader = crate::java_into_object(classLoader.clone()) };
     }
     
 
     // synchronized
     pub fn getLoader() -> Option<Rc<RefCell<ClassLoader>>> {
-        return (unsafe { WebappClassLoaderInfo_classLoader.clone() }).clone() /* as ClassLoader */;
+        return { let java_object = (unsafe { WebappClassLoaderInfo_classLoader.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<ClassLoader>>>>().expect("ClassCastException").clone()) };
     }
 }
 

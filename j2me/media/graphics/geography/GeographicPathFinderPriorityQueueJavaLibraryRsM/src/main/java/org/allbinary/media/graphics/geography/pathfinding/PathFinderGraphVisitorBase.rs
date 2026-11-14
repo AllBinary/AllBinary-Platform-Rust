@@ -18,6 +18,8 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -32,6 +34,10 @@ pub struct PathFinderGraphVisitorBase {
 
 
 impl PathFinderGraphVisitorBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -65,7 +71,7 @@ impl PathFinderGraphVisitorBase {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait PathFinderGraphVisitorBaseDyn {
+pub trait PathFinderGraphVisitorBaseDyn: std::any::Any {
     fn as_PathFinderGraphVisitorBase(&self) -> &PathFinderGraphVisitorBase;
     fn as_PathFinderGraphVisitorBase_mut(&mut self) -> &mut PathFinderGraphVisitorBase;
     fn visit(&mut self, mut graph: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut startPathFindingNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut endPathFindingNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) { PathFinderGraphVisitorBase::visit(self.as_PathFinderGraphVisitorBase_mut(), graph, startPathFindingNodeList, endPathFindingNodeList) }

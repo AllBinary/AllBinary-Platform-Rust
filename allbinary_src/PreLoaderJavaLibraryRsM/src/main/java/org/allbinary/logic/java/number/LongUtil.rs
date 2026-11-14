@@ -32,6 +32,10 @@ pub struct LongUtil {
 
 
 impl LongUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -51,7 +55,7 @@ impl LongUtil {
             let mut commonPhoneStrings: Option<Rc<RefCell<CommonPhoneStrings>>> = CommonPhoneStrings::getInstance();
             let mut size: i32 = unsafe { LongData_MAX_LONG_LENGTH.clone() } - jcall!(frameStringBuffer).length();
             for index in (0..size) {
-                jcall!(frameStringBuffer).append(jcall!(commonPhoneStrings).ZERO.clone());
+                jcall!(frameStringBuffer).append({ let java_field = jcall!(commonPhoneStrings).ZERO.clone(); java_field }.clone());
             }
         }
         jcall!(frameStringBuffer).append(end.clone());

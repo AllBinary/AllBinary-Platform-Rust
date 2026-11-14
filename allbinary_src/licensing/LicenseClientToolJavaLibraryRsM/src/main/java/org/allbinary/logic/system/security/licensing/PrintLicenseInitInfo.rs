@@ -22,6 +22,7 @@ use crate::org::allbinary::business::init::LicenseInitInfoUtil::LicenseInitInfoU
 use crate::org::allbinary::logic::io::file::FileFactory::FileFactory;
 use crate::org::allbinary::globals::PATH_GLOBALS::PATH_GLOBALS;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,12 +37,16 @@ pub struct PrintLicenseInitInfo {
 thread_local! { pub static PrintLicenseInitInfo_PATH: String = String::from("G:\\mnt\\bc\\mydev\\work\\allbinary_src\\licensing\\data\\"); }
 
 impl PrintLicenseInitInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut options: Vec<String>) -> Self {
         let mut this = Self {
         };
-        jcall!(LicenseInitInfoUtil::getInstance()).setFilePath(format!("{}{}", PrintLicenseInitInfo_PATH.with(Clone::clone), jcall!(PATH_GLOBALS::getInstance()).INIT_PATH));
+        jcall!(LicenseInitInfoUtil::getInstance()).setFilePath(format!("{}{}", PrintLicenseInitInfo_PATH.with(Clone::clone), { let java_field = jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field }));
         this
     }
 
@@ -69,12 +74,12 @@ impl PrintLicenseInitInfo {
             let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = jcall!(licenseInitInfo).getServerList();
             let mut size: i32 = jcall!(list).size();
             for index in (0..size) {
-                println!("{}", format!("{}{}", String::from("Lic Serv: "), jcall!(list).get(index.clone())));
+                println!("{}", format!("{}{}", String::from("Lic Serv: "), crate::java::lang::Object::java_object_string(&jcall!(list).get(index.clone()))));
             }
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             print!("{}", format!("{}{}", String::from("Error: "), e));
             eprintln!("{:?}", e);

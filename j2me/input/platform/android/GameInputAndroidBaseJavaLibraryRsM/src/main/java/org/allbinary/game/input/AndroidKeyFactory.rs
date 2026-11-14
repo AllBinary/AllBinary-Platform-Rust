@@ -305,18 +305,18 @@ impl AndroidKeyFactory {
         this.BACK = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_BACK.clone() }.clone(), String::from("BACK"));
         this.CALL = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_CALL.clone() }.clone(), String::from("CALL"));
         this.ENDCALL = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_ENDCALL.clone() }.clone(), String::from("ENDCALL"));
-        this.ZERO = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_0.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).ZERO.clone());
-        this.ONE = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_1.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).ONE.clone());
-        this.TWO = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_2.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).TWO.clone());
-        this.THREE = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_3.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).THREE.clone());
-        this.FOUR = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_4.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).FOUR.clone());
-        this.FIVE = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_5.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).FIVE.clone());
-        this.SIX = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_6.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).SIX.clone());
-        this.SEVEN = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_7.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).SEVEN.clone());
-        this.EIGHT = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_8.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).EIGHT.clone());
-        this.NINE = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_9.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).NINE.clone());
-        this.STAR = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_STAR.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).STAR.clone());
-        this.POUND = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_POUND.clone() }.clone(), jcall!(CommonPhoneStrings::getInstance()).POUND.clone());
+        this.ZERO = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_0.clone() }.clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).ZERO.clone(); java_field }.clone());
+        this.ONE = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_1.clone() }.clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).ONE.clone(); java_field }.clone());
+        this.TWO = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_2.clone() }.clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).TWO.clone(); java_field }.clone());
+        this.THREE = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_3.clone() }.clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).THREE.clone(); java_field }.clone());
+        this.FOUR = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_4.clone() }.clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).FOUR.clone(); java_field }.clone());
+        this.FIVE = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_5.clone() }.clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).FIVE.clone(); java_field }.clone());
+        this.SIX = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_6.clone() }.clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).SIX.clone(); java_field }.clone());
+        this.SEVEN = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_7.clone() }.clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).SEVEN.clone(); java_field }.clone());
+        this.EIGHT = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_8.clone() }.clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).EIGHT.clone(); java_field }.clone());
+        this.NINE = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_9.clone() }.clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).NINE.clone(); java_field }.clone());
+        this.STAR = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_STAR.clone() }.clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).STAR.clone(); java_field }.clone());
+        this.POUND = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_POUND.clone() }.clone(), { let java_field = jcall!(CommonPhoneStrings::getInstance()).POUND.clone(); java_field }.clone());
         this.DPAD_UP = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_DPAD_UP.clone() }.clone(), String::from("UP"));
         this.DPAD_DOWN = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_DPAD_DOWN.clone() }.clone(), String::from("DOWN"));
         this.DPAD_LEFT = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_DPAD_LEFT.clone() }.clone(), String::from("LEFT"));
@@ -354,7 +354,7 @@ impl AndroidKeyFactory {
         this.Y = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_Y.clone() }.clone(), String::from("Y"));
         this.Z = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_Z.clone() }.clone(), String::from("Z"));
         this.COMMA = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_COMMA.clone() }.clone(), String::from("COMMA"));
-        this.PERIOD = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_PERIOD.clone() }.clone(), jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone());
+        this.PERIOD = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_PERIOD.clone() }.clone(), { let java_field = jcall!(AbPathData::getInstance()).EXTENSION_SEP.clone(); java_field }.clone());
         this.ALT_LEFT = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_ALT_LEFT.clone() }.clone(), String::from("ALT_LEFT"));
         this.ALT_RIGHT = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_ALT_RIGHT.clone() }.clone(), String::from("ALT_RIGHT"));
         this.SHIFT_LEFT = AndroidGameKey::new(unsafe { crate::android::view::KeyEvent::KeyEvent_KEYCODE_SHIFT_LEFT.clone() }.clone(), String::from("SHIFT_LEFT"));
@@ -393,11 +393,11 @@ impl AndroidKeyFactory {
 
     pub fn init(&mut self) {
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-        jcall!(self.logUtil).putF(String::from("Start/End"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).INIT.clone());
+        jcall!(self.logUtil).putF(String::from("Start/End"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).INIT.clone(); java_field }.clone());
     }
     
 
-    pub fn isSubmission(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isSubmission(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.ENTER) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         } else if match (&input, &self.DPAD_CENTER) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
@@ -407,12 +407,12 @@ impl AndroidKeyFactory {
     }
     
 
-    pub fn isDelete(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isDelete(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         return false;
     }
     
 
-    pub fn isBackSpace(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isBackSpace(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.DEL) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }
@@ -420,7 +420,7 @@ impl AndroidKeyFactory {
     }
     
 
-    pub fn isLeft(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isLeft(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.DPAD_LEFT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }
@@ -428,7 +428,7 @@ impl AndroidKeyFactory {
     }
     
 
-    pub fn isRight(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isRight(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.DPAD_RIGHT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }
@@ -436,7 +436,7 @@ impl AndroidKeyFactory {
     }
     
 
-    pub fn isUp(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isUp(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.DPAD_UP) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }
@@ -444,7 +444,7 @@ impl AndroidKeyFactory {
     }
     
 
-    pub fn isDown(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isDown(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.DPAD_DOWN) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         }
@@ -452,7 +452,7 @@ impl AndroidKeyFactory {
     }
     
 
-    pub fn isEnter(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool {
+    pub fn isEnter(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool {
         if match (&input, &self.DPAD_CENTER) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return true;
         } else if match (&input, &self.ENTER) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
@@ -471,23 +471,27 @@ impl std::ops::DerefMut for AndroidKeyFactory {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait AndroidKeyFactoryDyn {
+pub trait AndroidKeyFactoryDyn: crate::org::allbinary::android::ActivityFractureUtil::ActivityFractureUtilDyn {
     fn as_AndroidKeyFactory(&self) -> &AndroidKeyFactory;
     fn as_AndroidKeyFactory_mut(&mut self) -> &mut AndroidKeyFactory;
     fn init(&mut self) { AndroidKeyFactory::init(self.as_AndroidKeyFactory_mut()) }
-    fn isSubmission(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool { AndroidKeyFactory::isSubmission(self.as_AndroidKeyFactory_mut(), input) }
-    fn isDelete(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool { AndroidKeyFactory::isDelete(self.as_AndroidKeyFactory_mut(), input) }
-    fn isBackSpace(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool { AndroidKeyFactory::isBackSpace(self.as_AndroidKeyFactory_mut(), input) }
-    fn isLeft(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool { AndroidKeyFactory::isLeft(self.as_AndroidKeyFactory_mut(), input) }
-    fn isRight(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool { AndroidKeyFactory::isRight(self.as_AndroidKeyFactory_mut(), input) }
-    fn isUp(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool { AndroidKeyFactory::isUp(self.as_AndroidKeyFactory_mut(), input) }
-    fn isDown(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool { AndroidKeyFactory::isDown(self.as_AndroidKeyFactory_mut(), input) }
-    fn isEnter(&mut self, mut input: Option<Rc<RefCell<Input>>>) -> bool { AndroidKeyFactory::isEnter(self.as_AndroidKeyFactory_mut(), input) }
+    fn isSubmission(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool { AndroidKeyFactory::isSubmission(self.as_AndroidKeyFactory_mut(), input) }
+    fn isDelete(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool { AndroidKeyFactory::isDelete(self.as_AndroidKeyFactory_mut(), input) }
+    fn isBackSpace(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool { AndroidKeyFactory::isBackSpace(self.as_AndroidKeyFactory_mut(), input) }
+    fn isLeft(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool { AndroidKeyFactory::isLeft(self.as_AndroidKeyFactory_mut(), input) }
+    fn isRight(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool { AndroidKeyFactory::isRight(self.as_AndroidKeyFactory_mut(), input) }
+    fn isUp(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool { AndroidKeyFactory::isUp(self.as_AndroidKeyFactory_mut(), input) }
+    fn isDown(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool { AndroidKeyFactory::isDown(self.as_AndroidKeyFactory_mut(), input) }
+    fn isEnter(&mut self, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) -> bool { AndroidKeyFactory::isEnter(self.as_AndroidKeyFactory_mut(), input) }
 }
 impl AndroidKeyFactoryDyn for AndroidKeyFactory {
     fn as_AndroidKeyFactory(&self) -> &AndroidKeyFactory { self }
     fn as_AndroidKeyFactory_mut(&mut self) -> &mut AndroidKeyFactory { self }
 }
 
+impl crate::org::allbinary::android::ActivityFractureUtil::ActivityFractureUtilDyn for AndroidKeyFactory {
+    fn as_ActivityFractureUtil(&self) -> &crate::org::allbinary::android::ActivityFractureUtil::ActivityFractureUtil { &self.base }
+    fn as_ActivityFractureUtil_mut(&mut self) -> &mut crate::org::allbinary::android::ActivityFractureUtil::ActivityFractureUtil { &mut self.base }
+}
 
 

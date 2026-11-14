@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::business::user::commerce::money::payment::gateway::transaction::PaymentTransactionInterface::PaymentTransactionInterface;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
+use crate::java::lang::Exception::*;
 use super::PaymentProcessorInterface::PaymentProcessorInterface;
 
 // Borrows the object of a Java reference
@@ -28,13 +29,11 @@ macro_rules! jcall {
     };
 }
 
-pub trait PaymentProcessorInterfaceFactoryInterface {
+pub trait PaymentProcessorInterfaceFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
     fn getInstance(&mut self, transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, paymentTransactionInterface: Option<Rc<RefCell<dyn PaymentTransactionInterface>>>) -> Option<Rc<RefCell<dyn PaymentProcessorInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

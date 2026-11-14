@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::org::allbinary::MIDPUtil::MIDPUtil;
 use super::Image::Image;
 
 // Borrows the object of a Java reference
@@ -31,20 +32,25 @@ pub struct ChoiceGroupImageFactory {
     pub multiOn: Vec<i8>,
     pub radioOff: Vec<i8>,
     pub radioOn: Vec<i8>,
-    pub imgMultiOffO: Option<Rc<RefCell<Image>>>,
-    pub imgMultiOnO: Option<Rc<RefCell<Image>>>,
-    pub imgRadioOffO: Option<Rc<RefCell<Image>>>,
-    pub imgRadioOnO: Option<Rc<RefCell<Image>>>,
-    pub imgMultiOff: Option<Rc<RefCell<Image>>>,
-    pub imgMultiOn: Option<Rc<RefCell<Image>>>,
-    pub imgRadioOff: Option<Rc<RefCell<Image>>>,
-    pub imgRadioOn: Option<Rc<RefCell<Image>>>,
-    pub imageArray: Vec<Option<Rc<RefCell<Image>>>>,
+    pub midpUtil: Option<Rc<RefCell<MIDPUtil>>>,
+    pub imgMultiOffO: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
+    pub imgMultiOnO: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
+    pub imgRadioOffO: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
+    pub imgRadioOnO: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
+    pub imgMultiOff: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
+    pub imgMultiOn: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
+    pub imgRadioOff: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
+    pub imgRadioOn: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
+    pub imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>,
 }
 
 thread_local! { pub static ChoiceGroupImageFactory_instance: Option<Rc<RefCell<ChoiceGroupImageFactory>>> = ChoiceGroupImageFactory::new(); }
 
 impl ChoiceGroupImageFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -52,6 +58,7 @@ impl ChoiceGroupImageFactory {
             multiOn: Vec::new(),
             radioOff: Vec::new(),
             radioOn: Vec::new(),
+            midpUtil: None,
             imgMultiOffO: None,
             imgMultiOnO: None,
             imgRadioOffO: None,
@@ -66,10 +73,11 @@ impl ChoiceGroupImageFactory {
         this.multiOn = vec![((-119) as i8), 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 10, 0, 0, 0, 11, 2, 3, 0, 0, 0, 59, 0, ((-12) as i8), ((-117) as i8), 0, 0, 0, 12, 80, 76, 84, 69, ((-1) as i8), ((-1) as i8), ((-1) as i8), ((-69) as i8), ((-69) as i8), ((-69) as i8), 106, 106, 106, 2, 2, 2, 106, ((-103) as i8), 14, ((-47) as i8), 0, 0, 0, 53, 73, 68, 65, 84, 120, ((-38) as i8), 99, 96, 96, 124, ((-64) as i8), ((-16) as i8), ((-1) as i8), ((-77) as i8), 3, ((-45) as i8), 65, ((-111) as i8), 15, 76, 12, 108, 12, 76, 12, ((-4) as i8), 12, 76, 12, 18, 12, 76, ((-68) as i8), 127, 24, ((-104) as i8), 126, 45, 96, 96, ((-7) as i8), ((-11) as i8), ((-109) as i8), ((-127) as i8), ((-23) as i8), ((-65) as i8), 3, 3, ((-29) as i8), 127, ((-122) as i8), ((-113) as i8), 0, 5, 37, 12, ((-34) as i8), 1, ((-99) as i8), ((-83) as i8), 100, 0, 0, 0, 0, 73, 69, 78, 68, ((-82) as i8), 66, 96, ((-126) as i8)];
         this.radioOff = vec![((-119) as i8), 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 11, 0, 0, 0, 11, 2, 3, 0, 0, 0, ((-44) as i8), ((-62) as i8), ((-97) as i8), ((-75) as i8), 0, 0, 0, 9, 80, 76, 84, 69, ((-1) as i8), ((-1) as i8), ((-1) as i8), ((-69) as i8), ((-69) as i8), ((-69) as i8), 106, 106, 106, ((-44) as i8), 13, ((-1) as i8), ((-24) as i8), 0, 0, 0, 42, 73, 68, 65, 84, 120, ((-38) as i8), 99, 96, 90, ((-59) as i8), ((-64) as i8), 32, ((-63) as i8), 48, ((-127) as i8), 65, ((-127) as i8), 65, ((-127) as i8), 41, ((-127) as i8), ((-31) as i8), 5, 19, 3, 3, 3, 50, 102, 80, 96, 80, 96, ((-6) as i8), ((-63) as i8), 80, ((-64) as i8), ((-64) as i8), ((-76) as i8), ((-118) as i8), 1, 0, 113, 24, 5, 61, 73, ((-68) as i8), ((-100) as i8), 98, 0, 0, 0, 0, 73, 69, 78, 68, ((-82) as i8), 66, 96, ((-126) as i8)];
         this.radioOn = vec![((-119) as i8), 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 11, 0, 0, 0, 11, 2, 3, 0, 0, 0, ((-44) as i8), ((-62) as i8), ((-97) as i8), ((-75) as i8), 0, 0, 0, 12, 80, 76, 84, 69, ((-1) as i8), ((-1) as i8), ((-1) as i8), ((-69) as i8), ((-69) as i8), ((-69) as i8), 106, 106, 106, 2, 2, 2, 106, ((-103) as i8), 14, ((-47) as i8), 0, 0, 0, 50, 73, 68, 65, 84, 120, ((-38) as i8), 5, ((-63) as i8), 65, 13, 0, 32, 12, 4, ((-63) as i8), ((-19) as i8), ((-11) as i8), ((-117) as i8), 1, 18, 68, ((-100) as i8), 10, 52, 19, 94, 72, 64, 17, 101, ((-122) as i8), 44, ((-44) as i8), ((-29) as i8), 98, ((-52) as i8), 89, 77, ((-102) as i8), 40, 2, 85, ((-95) as i8), ((-73) as i8), ((-63) as i8), ((-104) as i8), ((-63) as i8), 37, ((-117) as i8), 15, ((-40) as i8), 119, 10, 41, 78, 26, ((-79) as i8), 59, 0, 0, 0, 0, 73, 69, 78, 68, ((-82) as i8), 66, 96, ((-126) as i8)];
-        this.imgMultiOffO = Image::createImage(this.multiOff.clone(), 0, (this.multiOff.len() as i32).clone());
-        this.imgMultiOnO = Image::createImage(this.multiOn.clone(), 0, (this.multiOn.len() as i32).clone());
-        this.imgRadioOffO = Image::createImage(this.radioOff.clone(), 0, (this.radioOff.len() as i32).clone());
-        this.imgRadioOnO = Image::createImage(this.radioOn.clone(), 0, (this.radioOn.len() as i32).clone());
+        this.midpUtil = MIDPUtil::getInstance();
+        this.imgMultiOffO = jcall!(this.midpUtil).createImageFromByteArray(this.multiOff.clone(), 0, (this.multiOff.len() as i32).clone());
+        this.imgMultiOnO = jcall!(this.midpUtil).createImageFromByteArray(this.multiOn.clone(), 0, (this.multiOn.len() as i32).clone());
+        this.imgRadioOffO = jcall!(this.midpUtil).createImageFromByteArray(this.radioOff.clone(), 0, (this.radioOff.len() as i32).clone());
+        this.imgRadioOnO = jcall!(this.midpUtil).createImageFromByteArray(this.radioOn.clone(), 0, (this.radioOn.len() as i32).clone());
         this.imgMultiOff = this.imgMultiOffO.clone();
         this.imgMultiOn = this.imgMultiOnO.clone();
         this.imgRadioOff = this.imgRadioOffO.clone();
@@ -88,19 +96,19 @@ impl ChoiceGroupImageFactory {
     }
     
 
-    pub fn getImageArray(&mut self) -> Vec<Option<Rc<RefCell<Image>>>> {
+    pub fn getImageArray(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> {
         return self.imageArray.clone();
     }
     
 
-    pub fn init(&mut self, mut imageArray: Vec<Option<Rc<RefCell<Image>>>>) {
-        self.imgMultiOff = imageArray[(0) as usize].clone();
+    pub fn init(&mut self, mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>) {
+        self.imgMultiOff = { let java_value = (imageArray[(0) as usize]).clone(); java_value }.clone();
         self.imageArray[(0) as usize] = self.imgMultiOff.clone();
-        self.imgMultiOn = imageArray[(1) as usize].clone();
+        self.imgMultiOn = { let java_value = (imageArray[(1) as usize]).clone(); java_value }.clone();
         self.imageArray[(1) as usize] = self.imgMultiOn.clone();
-        self.imgRadioOff = imageArray[(2) as usize].clone();
+        self.imgRadioOff = { let java_value = (imageArray[(2) as usize]).clone(); java_value }.clone();
         self.imageArray[(2) as usize] = self.imgRadioOff.clone();
-        self.imgRadioOn = imageArray[(3) as usize].clone();
+        self.imgRadioOn = { let java_value = (imageArray[(3) as usize]).clone(); java_value }.clone();
         self.imageArray[(3) as usize] = self.imgRadioOn.clone();
     }
 }

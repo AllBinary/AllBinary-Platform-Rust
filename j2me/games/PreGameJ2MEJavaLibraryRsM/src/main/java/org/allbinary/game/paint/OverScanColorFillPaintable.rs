@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use super::ColorFillPaintable::ColorFillPaintable;
 
@@ -32,6 +32,12 @@ pub struct OverScanColorFillPaintable {
     pub base: ColorFillPaintable,
 }
 
+impl crate::org::allbinary::graphics::color::BasicColorCompositeSetterInterface::BasicColorCompositeSetterInterface for OverScanColorFillPaintable {
+    fn setBasicColorP(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::game::paint::ColorFillBasePaintable::ColorFillBasePaintable::setBasicColorP(crate::org::allbinary::game::paint::ColorFillBasePaintable::ColorFillBasePaintableDyn::as_ColorFillBasePaintable_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::color::ColorCompositeInterface::ColorCompositeInterface for OverScanColorFillPaintable {
+    fn getBasicColorP(&mut self) -> Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>> { crate::org::allbinary::game::paint::ColorFillBasePaintable::ColorFillBasePaintable::getBasicColorP(crate::org::allbinary::game::paint::ColorFillBasePaintable::ColorFillBasePaintableDyn::as_ColorFillBasePaintable_mut(self)) }
+}
 
 impl OverScanColorFillPaintable {
     
@@ -49,7 +55,7 @@ impl OverScanColorFillPaintable {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(graphics).setColor(self.colorP.clone());
         jcall!(graphics).fillRect(-jcall!(graphics).getClipX(), -jcall!(graphics).getClipY(), jcall!(self.displayInfoSingleton).getLastWidth() + (jcall!(graphics).getClipX() * 2), jcall!(self.displayInfoSingleton).getLastHeight() + (jcall!(graphics).getClipY() * 2));
     }
@@ -74,7 +80,10 @@ impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for OverSca
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base.base }
     fn setBasicColorP(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::game::paint::ColorFillBasePaintable::ColorFillBasePaintable::setBasicColorP(crate::org::allbinary::game::paint::ColorFillBasePaintable::ColorFillBasePaintableDyn::as_ColorFillBasePaintable_mut(self), p1) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for OverScanColorFillPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

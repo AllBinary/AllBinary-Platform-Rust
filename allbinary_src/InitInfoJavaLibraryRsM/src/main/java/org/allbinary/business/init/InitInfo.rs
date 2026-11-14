@@ -16,9 +16,8 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypeFactory::LogConfigTypeFactory;
@@ -26,7 +25,9 @@ use crate::org::allbinary::logic::communication::log::config::r#type::LogConfigT
 use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::logic::java::bool::BooleanUtil::BooleanUtil;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
+use crate::java::lang::Exception::*;
 use super::InitInfoEntity::InitInfoEntity;
+use super::InitException::InitException;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -48,6 +49,10 @@ pub struct InitInfo {
 thread_local! { pub static InitInfo_instance: Option<Rc<RefCell<InitInfo>>> = InitInfo::new(); }
 
 impl InitInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<InitInfo>>> {
@@ -85,17 +90,17 @@ impl InitInfo {
     pub fn set(&mut self) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut initInfoEntity: Option<Rc<RefCell<InitInfoEntity>>> = InitInfoEntity::new();
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone())) {
-                PreLogUtil::put(String::from("created entity"), String::from("InitInfo"), String::from("set()"));
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone(); java_field }.clone())) {
+                PreLogUtil::put(String::from("created entity"), crate::java_into_object(String::from("InitInfo")), String::from("set()"));
             }
             if !jcall!(initInfoEntity).is() {
-                if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone())) {
-                    PreLogUtil::put(String::from("adding"), String::from("InitInfo"), String::from("set()"));
+                if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone(); java_field }.clone())) {
+                    PreLogUtil::put(String::from("adding"), crate::java_into_object(String::from("InitInfo")), String::from("set()"));
                 }
                 jcall!(initInfoEntity).add();
             } else {
-                if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone())) {
-                    PreLogUtil::put(String::from("update"), String::from("InitInfo"), String::from("set()"));
+                if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADER.clone(); java_field }.clone())) {
+                    PreLogUtil::put(String::from("update"), crate::java_into_object(String::from("InitInfo")), String::from("set()"));
                 }
                 jcall!(initInfoEntity).update();
             }
@@ -103,10 +108,10 @@ impl InitInfo {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone())) {
-                PreLogUtil::putOE(String::from("error"), String::from("InitInfo"), String::from("set()"), e.clone());
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone(); java_field }.clone())) {
+                PreLogUtil::putOE(String::from("error"), crate::java_into_object(String::from("InitInfo")), String::from("set()"), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -115,18 +120,18 @@ impl InitInfo {
 
     // Java overloaded method: Rust needs a different name
     // synchronized
-    pub fn set1(&mut self, mut hashMap: Option<Rc<RefCell<HashMap>>>) {
+    pub fn set1(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            self.testing = (jcall!(hashMap).get(self.TESTING.clone())).clone() /* as String */;
-            self.mainPath = AbPath::new((jcall!(hashMap).get(self.MAINPATH.clone())).clone() /* as String */, jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
-            self.testHtmlPath = AbPath::new((jcall!(hashMap).get(self.TESTHTMLPATH.clone())).clone() /* as String */, jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+            self.testing = { let java_value = ({ let java_object = (jcall!(hashMap).get(crate::java_into_object(self.TESTING.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }).clone(); java_value };
+            self.mainPath = { let java_value = (AbPath::new({ let java_object = (jcall!(hashMap).get(crate::java_into_object(self.MAINPATH.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
+            self.testHtmlPath = { let java_value = (AbPath::new({ let java_object = (jcall!(hashMap).get(crate::java_into_object(self.TESTHTMLPATH.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() }, { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>)).clone(); java_value };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone())) {
-                PreLogUtil::putOE(String::from("error"), String::from("InitInfo"), String::from("set()"), e.clone());
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone(); java_field }.clone())) {
+                PreLogUtil::putOE(String::from("error"), crate::java_into_object(String::from("InitInfo")), String::from("set()"), crate::java_into_object(e.clone()));
             }
             }
         }
@@ -144,10 +149,10 @@ impl InitInfo {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone())) {
-                PreLogUtil::putOE(String::from("error"), String::from("InitInfo"), String::from("set()"), e.clone());
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone(); java_field }.clone())) {
+                PreLogUtil::putOE(String::from("error"), crate::java_into_object(String::from("InitInfo")), String::from("set()"), crate::java_into_object(e.clone()));
             }
             return;
             }
@@ -171,10 +176,10 @@ impl InitInfo {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone())) {
-                PreLogUtil::putOE(String::from("error"), String::from("InitInfo"), String::from("updateIfNeeded()"), e.clone());
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone(); java_field }.clone())) {
+                PreLogUtil::putOE(String::from("error"), crate::java_into_object(String::from("InitInfo")), String::from("updateIfNeeded()"), crate::java_into_object(e.clone()));
             }
             return;
             }
@@ -183,20 +188,21 @@ impl InitInfo {
     
 
     pub fn isTesting(&mut self) -> bool {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             self.updateIfNeeded();
-            return jcall!(BooleanUtil::getInstance()).getFromString(self.testing.clone());
+            return Some(jcall!(BooleanUtil::getInstance()).getFromString(self.testing.clone()));
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone())) {
-                PreLogUtil::putOE(String::from("error"), String::from("InitInfo"), String::from("updateIfNeeded()"), e.clone());
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).PRELOADERERROR.clone(); java_field }.clone())) {
+                PreLogUtil::putOE(String::from("error"), crate::java_into_object(String::from("InitInfo")), String::from("updateIfNeeded()"), crate::java_into_object(e.clone()));
             }
             return false;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -257,11 +263,11 @@ impl InitInfo {
     }
     
 
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
-        let mut hashMap: Option<Rc<RefCell<HashMap>>> = jcall!(StdUtil::getInstance()).createHashMap();
-        jcall!(hashMap).put(self.TESTING.clone(), self.getTesting());
-        jcall!(hashMap).put(self.MAINPATH.clone(), self.getMainPath());
-        jcall!(hashMap).put(self.TESTHTMLPATH.clone(), self.getTestHtmlPath());
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
+        let mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashMap();
+        jcall!(hashMap).put(crate::java_into_object(self.TESTING.clone()), crate::java_into_object(self.getTesting()));
+        jcall!(hashMap).put(crate::java_into_object(self.MAINPATH.clone()), crate::java_into_object(self.getMainPath()));
+        jcall!(hashMap).put(crate::java_into_object(self.TESTHTMLPATH.clone()), crate::java_into_object(self.getTestHtmlPath()));
         return hashMap.clone();
     }
 }

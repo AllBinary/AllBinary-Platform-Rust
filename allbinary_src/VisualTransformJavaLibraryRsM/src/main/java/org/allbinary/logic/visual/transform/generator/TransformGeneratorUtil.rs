@@ -26,6 +26,7 @@ use crate::org::allbinary::logic::visual::transform::info::TransformInfoDomNode:
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpInterface::TransformInfoHttpInterface;
 use crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface;
 use crate::org::allbinary::logic::visual::transform::info::objectConfig::generator::StoreFileGenerator::StoreFileGenerator;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -41,6 +42,10 @@ pub struct TransformGeneratorUtil {
 thread_local! { pub static TransformGeneratorUtil_instance: Option<Rc<RefCell<TransformGeneratorUtil>>> = TransformGeneratorUtil::new(); }
 
 impl TransformGeneratorUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<TransformGeneratorUtil>>> {
@@ -64,25 +69,25 @@ impl TransformGeneratorUtil {
     // throws Exception
     pub fn generate(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>, mut ownerTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
                 { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Generating View: "), jcall!(transformInfoInterface).getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generate()"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             }
             let mut componentInterface: Option<Rc<RefCell<dyn TransformInterface>>> = jcall!(TransformFactory::getInstance()).getInstance3(abeClientInformation.clone(), jcall!(transformInfoInterface).getName(), ownerTransformInfoInterface.clone());
             let mut result: String = jcall!(componentInterface).view();
-            let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (jcall!(componentInterface).getTransformInfoInterface()).clone() /* as TransformInfoHttpInterface */;
+            let mut httpTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoHttpInterface>>> = (jcall!(componentInterface).getTransformInfoInterface()).clone();
             let mut inputOutputTypeData: Option<Rc<RefCell<InputOutputTypeData>>> = InputOutputTypeData::getInstance();
             if result.find(&String::from("<HTML>")).map(|index| index as i32).unwrap_or(-1) >= 0 {
-                jcall!(jcall!(httpTransformInfoInterface).getPropertiesHashMap()).put(jcall!(inputOutputTypeData).NAME.clone(), jcall!(inputOutputTypeData).DEFAULT.clone());
+                jcall!(jcall!(httpTransformInfoInterface).getPropertiesHashMap()).put(crate::java_into_object({ let java_field = jcall!(inputOutputTypeData).NAME.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(inputOutputTypeData).DEFAULT.clone(); java_field }.clone()));
             } else {
-                jcall!(jcall!(httpTransformInfoInterface).getPropertiesHashMap()).put(jcall!(inputOutputTypeData).NAME.clone(), jcall!(inputOutputTypeData).DEFAULT_FRAGMENT.clone());
+                jcall!(jcall!(httpTransformInfoInterface).getPropertiesHashMap()).put(crate::java_into_object({ let java_field = jcall!(inputOutputTypeData).NAME.clone(); java_field }.clone()), crate::java_into_object({ let java_field = jcall!(inputOutputTypeData).DEFAULT_FRAGMENT.clone(); java_field }.clone()));
             }
             jcall!(StoreFileGenerator::new(jcall!(componentInterface).getTransformInfoInterface())).process(result.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).SQLTAGSERROR.clone()) {
+            if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).SQLTAGSERROR.clone(); java_field }.clone()) {
                 jcall!(self.logUtil).put(String::from("Failed to generate a view"), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("generate()"), crate::java_into_object(e.clone()));
             }
             panic!("{:?}", e);
@@ -93,8 +98,8 @@ impl TransformGeneratorUtil {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn generate(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut transformInfoDomNode: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoDomNode::TransformInfoDomNodeDyn>>>, mut ownerTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) {
-        { let java_arguments = (abeClientInformation.clone(), jcall!(transformInfoDomNode).getTransformInfoInterface(), ownerTransformInfoInterface.clone(),); self.generate(java_arguments.0, java_arguments.1, java_arguments.2) };
+    pub fn generate_AbeClientInformationInterface_TransformInfoDomNode_TransformInfoInterface(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut transformInfoDomNode: Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoDomNode::TransformInfoDomNodeDyn>>>, mut ownerTransformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) {
+        { let java_arguments = (abeClientInformation.clone(), jcall!(transformInfoDomNode).getTransformInfoInterface(), ownerTransformInfoInterface.clone(),); self.generate_AbeClientInformationInterface_TransformInfoDomNode_TransformInfoInterface(java_arguments.0, java_arguments.1, java_arguments.2) };
     }
 }
 

@@ -28,7 +28,8 @@ use crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingI
 use crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNode;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionFactoryInitVisitorInterface::GeographicMapCellPositionFactoryInitVisitorInterface;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
-use super::RaceTrackGeographicMapCellPositionFactoryInitVisitor::RaceTrackGeographicMapCellPositionFactoryInitVisitor;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -43,6 +44,10 @@ pub struct BasePathFindingInfoFactory {
 
 
 impl BasePathFindingInfoFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -70,6 +75,10 @@ impl GeographicMapCellPositionFactoryInitVisitorInterface for RaceTrackGeographi
 }
 
 impl RaceTrackGeographicMapCellPositionFactoryInitVisitor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
             
 
             pub fn new_struct() -> Self {
@@ -78,8 +87,8 @@ impl RaceTrackGeographicMapCellPositionFactoryInitVisitor {
             finishLineId: 0,
                 };
                 let mut raceTrackGeographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellTypeFactory::GeographicMapCellTypeFactoryDyn>>> = jcall!(this.base.geographicMapInterface).getGeographicMapCellTypeFactory();
-                this.startLineId = jcall!(raceTrackGeographicMapCellTypeFactory).getStartType();
-                this.finishLineId = jcall!(raceTrackGeographicMapCellTypeFactory).getEndType();
+                this.startLineId = { let java_value = (jcall!(raceTrackGeographicMapCellTypeFactory).getStartType()).clone(); java_value };
+                this.finishLineId = { let java_value = (jcall!(raceTrackGeographicMapCellTypeFactory).getEndType()).clone(); java_value };
                 this
             }
 
@@ -114,10 +123,10 @@ impl RaceTrackGeographicMapCellPositionFactoryInitVisitor {
                 })) {
                     Ok(_) => {}
                     Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
                     let mut commonSeps: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
-                    jcall!(self.logUtil).put(jcall!(StringMaker::new()).append(jcall!(commonSeps).BRACKET_OPEN.clone()).appendint(row.clone()).append(jcall!(commonSeps).BRACKET_CLOSE.clone()).append(jcall!(commonSeps).BRACKET_OPEN.clone()).appendint(column.clone()).append(String::from("] in [")).appendint((self.base.mapArray.len() as i32).clone()).append(jcall!(commonSeps).BRACKET_CLOSE.clone()).append(jcall!(commonSeps).BRACKET_OPEN.clone()).appendint((self.base.mapArray[(0) as usize].len() as i32).clone()).append(jcall!(commonSeps).BRACKET_CLOSE.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("visit"), crate::java_into_object(e.clone()));
+                    jcall!(self.logUtil).put(jcall!(StringMaker::new()).append({ let java_field = jcall!(commonSeps).BRACKET_OPEN.clone(); java_field }.clone()).appendint(row.clone()).append({ let java_field = jcall!(commonSeps).BRACKET_CLOSE.clone(); java_field }.clone()).append({ let java_field = jcall!(commonSeps).BRACKET_OPEN.clone(); java_field }.clone()).appendint(column.clone()).append(String::from("] in [")).appendint((self.base.mapArray.len() as i32).clone()).append({ let java_field = jcall!(commonSeps).BRACKET_CLOSE.clone(); java_field }.clone()).append({ let java_field = jcall!(commonSeps).BRACKET_OPEN.clone(); java_field }.clone()).appendint((self.base.mapArray[(0) as usize].len() as i32).clone()).append({ let java_field = jcall!(commonSeps).BRACKET_CLOSE.clone(); java_field }.clone()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("visit"), crate::java_into_object(e.clone()));
                     panic!("{:?}", e);
                     }
                 }
@@ -130,13 +139,13 @@ impl RaceTrackGeographicMapCellPositionFactoryInitVisitor {
 
     // throws Exception
     pub fn addStartPathFindingNode(&mut self, mut pathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>>, mut startGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) {
-        jcall!(pathFindingInfo).addStartPathFindingNode(PathFindingNode::new(jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(), startGeographicMapCellPosition.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>));
+        jcall!(pathFindingInfo).addStartPathFindingNode(PathFindingNode::new(crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()), startGeographicMapCellPosition.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>));
     }
     
 
     // throws Exception
     pub fn addEndPathFindingNode(&mut self, mut pathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>>, mut endGeographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) {
-        jcall!(pathFindingInfo).addEndPathFindingNode(PathFindingNode::new(jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(), endGeographicMapCellPosition.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>));
+        jcall!(pathFindingInfo).addEndPathFindingNode(PathFindingNode::new(crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()), endGeographicMapCellPosition.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNode::PathFindingNodeDyn>>));
     }
     
 
@@ -145,7 +154,7 @@ impl RaceTrackGeographicMapCellPositionFactoryInitVisitor {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait BasePathFindingInfoFactoryDyn {
+pub trait BasePathFindingInfoFactoryDyn: std::any::Any {
     fn as_BasePathFindingInfoFactory(&self) -> &BasePathFindingInfoFactory;
     fn as_BasePathFindingInfoFactory_mut(&mut self) -> &mut BasePathFindingInfoFactory;
     fn init(&mut self, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, mut pathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>>, mut mapArray: Vec<Vec<i32>>) { BasePathFindingInfoFactory::init(self.as_BasePathFindingInfoFactory_mut(), geographicMapInterface, pathFindingInfo, mapArray) }

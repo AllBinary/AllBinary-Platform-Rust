@@ -17,13 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 use super::EventListenerList::EventListenerList;
-use super::event::event;
-use super::swing::swing;
-use super::javax::javax;
 use super::EventListener::EventListener;
-use super::util::util;
-use super::java::java;
 use super::MyCanvasEventListener::MyCanvasEventListener;
 use super::MyCanvasEvent::MyCanvasEvent;
 
@@ -47,6 +43,10 @@ pub static mut MyCanvasEventService_AUTOEXPLODE: std::cell::LazyCell<String> = s
 pub static mut MyCanvasEventService_CENTER: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("center"));
 
 impl MyCanvasEventService {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -78,20 +78,20 @@ impl MyCanvasEventService {
         let mut listeners: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(unsafe { MyCanvasEventService_listenerList.clone() }).getListenerList();
         for i in (0..(listeners.len() as i32)).step_by((2) as usize) {
             if match (&listeners[(i) as usize], &std::any::type_name_of_val(&listeners[(i + 1) as usize])) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-                if jcall!(jcall!(evt).getCommand()).compareTo(unsafe { MyCanvasEventService_DELETE.clone() }.clone()) == 0 {
-                    jcall!(((listeners[(i + 1) as usize]).clone() /* as MyCanvasEventListener */)).delete(evt.clone());
-                } else if jcall!(jcall!(evt).getCommand()).compareTo(unsafe { MyCanvasEventService_DUPLICATE.clone() }.clone()) == 0 {
-                    jcall!(((listeners[(i + 1) as usize]).clone() /* as MyCanvasEventListener */)).duplicate(evt.clone());
-                } else if jcall!(jcall!(evt).getCommand()).compareTo(unsafe { MyCanvasEventService_SELECT.clone() }.clone()) == 0 {
-                    jcall!(((listeners[(i + 1) as usize]).clone() /* as MyCanvasEventListener */)).select(evt.clone());
-                } else if jcall!(jcall!(evt).getCommand()).compareTo(unsafe { MyCanvasEventService_ROTATE.clone() }.clone()) == 0 {
-                    jcall!(((listeners[(i + 1) as usize]).clone() /* as MyCanvasEventListener */)).rotate(evt.clone());
-                } else if jcall!(jcall!(evt).getCommand()).compareTo(unsafe { MyCanvasEventService_EXPLODE.clone() }.clone()) == 0 {
-                    jcall!(((listeners[(i + 1) as usize]).clone() /* as MyCanvasEventListener */)).explode(evt.clone());
-                } else if jcall!(jcall!(evt).getCommand()).compareTo(unsafe { MyCanvasEventService_AUTOEXPLODE.clone() }.clone()) == 0 {
-                    jcall!(((listeners[(i + 1) as usize]).clone() /* as MyCanvasEventListener */)).autoExplode(evt.clone());
-                } else if jcall!(jcall!(evt).getCommand()).compareTo(unsafe { MyCanvasEventService_CENTER.clone() }.clone()) == 0 {
-                    jcall!(((listeners[(i + 1) as usize]).clone() /* as MyCanvasEventListener */)).center(evt.clone());
+                if (jcall!(evt).getCommand().cmp(&unsafe { MyCanvasEventService_DELETE.clone() }.clone()) as i32) == 0 {
+                    jcall!(({ let java_object = (listeners[(i + 1) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MyCanvasEventListener>>>>().expect("ClassCastException").clone()) })).delete(evt.clone());
+                } else if (jcall!(evt).getCommand().cmp(&unsafe { MyCanvasEventService_DUPLICATE.clone() }.clone()) as i32) == 0 {
+                    jcall!(({ let java_object = (listeners[(i + 1) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MyCanvasEventListener>>>>().expect("ClassCastException").clone()) })).duplicate(evt.clone());
+                } else if (jcall!(evt).getCommand().cmp(&unsafe { MyCanvasEventService_SELECT.clone() }.clone()) as i32) == 0 {
+                    jcall!(({ let java_object = (listeners[(i + 1) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MyCanvasEventListener>>>>().expect("ClassCastException").clone()) })).select(evt.clone());
+                } else if (jcall!(evt).getCommand().cmp(&unsafe { MyCanvasEventService_ROTATE.clone() }.clone()) as i32) == 0 {
+                    jcall!(({ let java_object = (listeners[(i + 1) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MyCanvasEventListener>>>>().expect("ClassCastException").clone()) })).rotate(evt.clone());
+                } else if (jcall!(evt).getCommand().cmp(&unsafe { MyCanvasEventService_EXPLODE.clone() }.clone()) as i32) == 0 {
+                    jcall!(({ let java_object = (listeners[(i + 1) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MyCanvasEventListener>>>>().expect("ClassCastException").clone()) })).explode(evt.clone());
+                } else if (jcall!(evt).getCommand().cmp(&unsafe { MyCanvasEventService_AUTOEXPLODE.clone() }.clone()) as i32) == 0 {
+                    jcall!(({ let java_object = (listeners[(i + 1) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MyCanvasEventListener>>>>().expect("ClassCastException").clone()) })).autoExplode(evt.clone());
+                } else if (jcall!(evt).getCommand().cmp(&unsafe { MyCanvasEventService_CENTER.clone() }.clone()) as i32) == 0 {
+                    jcall!(({ let java_object = (listeners[(i + 1) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn MyCanvasEventListener>>>>().expect("ClassCastException").clone()) })).center(evt.clone());
                 }
             }
         }

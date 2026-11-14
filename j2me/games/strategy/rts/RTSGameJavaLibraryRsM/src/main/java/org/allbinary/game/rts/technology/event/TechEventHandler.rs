@@ -19,6 +19,7 @@ use super::*;
 use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject;
 use crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface;
 use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::BasicEventHandler;
+use crate::java::lang::Exception::*;
 use super::TechEventListenerInterface::TechEventListenerInterface;
 
 // Borrows the object of a Java reference
@@ -56,7 +57,7 @@ impl TechEventHandler {
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut techEventListenerInterface: Option<Rc<RefCell<dyn TechEventListenerInterface>>> = (panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn TechEventListenerInterface"));
+        let mut techEventListenerInterface: Option<Rc<RefCell<dyn TechEventListenerInterface>>> = ((|| -> Option<Rc<RefCell<dyn TechEventListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn TechEventListenerInterface") })());
         jcall!(techEventListenerInterface).onTechEvent(eventObject.clone());
     }
 }

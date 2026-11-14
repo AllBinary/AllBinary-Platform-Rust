@@ -30,9 +30,13 @@ macro_rules! jcall {
 pub struct NullThread {
 }
 
-thread_local! { pub static NullThread_NULL_THREAD: Option<Rc<RefCell<Thread>>> = Thread::new2(NullRunnable::NullRunnable::getInstance(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()); }
+thread_local! { pub static NullThread_NULL_THREAD: Option<Rc<RefCell<Thread>>> = Thread::new2(NullRunnable::NullRunnable::getInstance(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()); }
 
 impl NullThread {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

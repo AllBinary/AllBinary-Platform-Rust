@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::J2MEUtil::J2MEUtil;
 use crate::org::allbinary::animation::Animation::Animation;
 use crate::org::allbinary::animation::NullAnimationFactory::NullAnimationFactory;
@@ -29,6 +29,7 @@ use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory
 use crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface;
 use crate::org::allbinary::graphics::form::item::CommandTextItem::CommandTextItem;
 use crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItem;
+use crate::java::lang::Exception::*;
 use super::ScrollCurrentSelectionForm::ScrollCurrentSelectionForm;
 
 // Borrows the object of a Java reference
@@ -40,12 +41,12 @@ macro_rules! jcall {
 
 pub struct CommandCurrentSelectionForm {
     pub base: ScrollCurrentSelectionForm,
-    pub selectedAnimationArray: Vec<Option<Rc<RefCell<Animation>>>>,
-    pub unSelectedAnimationArray: Vec<Option<Rc<RefCell<Animation>>>>,
+    pub selectedAnimationArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>>,
+    pub unSelectedAnimationArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>>,
 }
 
 impl UpdateMyFontInterface for CommandCurrentSelectionForm {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 impl CommandCurrentSelectionForm {
@@ -70,24 +71,24 @@ impl CommandCurrentSelectionForm {
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         { let java_arguments = (graphics.clone(), self.getAllitems(),); self.updateAll(java_arguments.0, java_arguments.1) };
-        self.base.updateMeasurement(graphics.clone());
+        { let java_arguments = (graphics.clone(),); self.base.updateMeasurement(java_arguments.0) };
     }
     
 
     pub fn initAnimations(&mut self) {
-        let mut nullAnimation: Option<Rc<RefCell<Animation>>> = jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0);
+        let mut nullAnimation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> = jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0);
         {
             let mut index: i32 = (self.selectedAnimationArray.len() as i32).clone();
             while { index -= 1; index } >= 0 {
-            self.selectedAnimationArray[(index) as usize] = nullAnimation.clone();
+            { let java_index = (index) as usize; self.selectedAnimationArray[java_index] = nullAnimation.clone(); };
             }
         }
         {
             let mut index: i32 = (self.unSelectedAnimationArray.len() as i32).clone();
             while { index -= 1; index } >= 0 {
-            self.unSelectedAnimationArray[(index) as usize] = nullAnimation.clone();
+            { let java_index = (index) as usize; self.unSelectedAnimationArray[java_index] = nullAnimation.clone(); };
             }
         }
     }
@@ -105,8 +106,8 @@ impl CommandCurrentSelectionForm {
 
     pub fn addAt(&mut self, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) {
         let mut basicColorFactory: Option<Rc<RefCell<BasicColorFactory>>> = BasicColorFactory::getInstance();
-        let mut buttonColor: Option<Rc<RefCell<BasicColor>>> = jcall!(basicColorFactory).TRANSPARENT_GREY.clone();
-        let mut selectedButtonColor: Option<Rc<RefCell<BasicColor>>> = jcall!(basicColorFactory).TRANSPARENT_RED.clone();
+        let mut buttonColor: Option<Rc<RefCell<BasicColor>>> = { let java_field = jcall!(basicColorFactory).TRANSPARENT_GREY.clone(); java_field }.clone();
+        let mut selectedButtonColor: Option<Rc<RefCell<BasicColor>>> = { let java_field = jcall!(basicColorFactory).TRANSPARENT_RED.clone(); java_field }.clone();
         let mut width: i32 = jcall!(item).getMinimumWidth();
         let mut height: i32 = jcall!(item).getMinimumHeight();
         let mut adjustedBorder: i32 = 3;
@@ -114,20 +115,20 @@ impl CommandCurrentSelectionForm {
         let mut rectWidth: i32 = width + self.border - adjustedBorder;
         let mut rectHeight: i32 = height + self.border - adjustedBorder;
         if J2MEUtil::isJ2ME() || J2MEUtil::isHTML() {
-            self.selectedAnimationArray[(index) as usize] = RectangleAdjustedAnimation::new(rectWidth.clone(), rectHeight.clone(), offset.clone(), offset.clone(), selectedButtonColor.clone());
+            { let java_index = (index) as usize; self.selectedAnimationArray[java_index] = RectangleAdjustedAnimation::new(rectWidth.clone(), rectHeight.clone(), offset.clone(), offset.clone(), selectedButtonColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>); };
         } else {
-            self.selectedAnimationArray[(index) as usize] = RectangleFilledAdjustedAnimation::new(rectWidth.clone(), rectHeight.clone(), offset.clone(), offset.clone(), selectedButtonColor.clone());
+            { let java_index = (index) as usize; self.selectedAnimationArray[java_index] = RectangleFilledAdjustedAnimation::new(rectWidth.clone(), rectHeight.clone(), offset.clone(), offset.clone(), selectedButtonColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>); };
         }
         adjustedBorder = 4;
         if J2MEUtil::isJ2ME() || J2MEUtil::isHTML() {
-            self.unSelectedAnimationArray[(index) as usize] = RectangleAdjustedAnimation::new(rectWidth.clone(), rectHeight.clone(), offset.clone(), offset.clone(), buttonColor.clone());
+            { let java_index = (index) as usize; self.unSelectedAnimationArray[java_index] = RectangleAdjustedAnimation::new(rectWidth.clone(), rectHeight.clone(), offset.clone(), offset.clone(), buttonColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>); };
         } else {
-            self.unSelectedAnimationArray[(index) as usize] = RectangleFilledAdjustedAnimation::new(rectWidth.clone(), rectHeight.clone(), offset.clone(), offset.clone(), buttonColor.clone());
+            { let java_index = (index) as usize; self.unSelectedAnimationArray[java_index] = RectangleFilledAdjustedAnimation::new(rectWidth.clone(), rectHeight.clone(), offset.clone(), offset.clone(), buttonColor.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>); };
         }
     }
     
 
-    pub fn updateAll(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut items: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>>) {
+    pub fn updateAll(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut items: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>>) {
         {
             let mut index: i32 = (items.len() as i32).clone();
             while { index -= 1; index } >= 0 {
@@ -140,8 +141,8 @@ impl CommandCurrentSelectionForm {
 
     pub fn updateAt(&mut self, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) {
         let mut basicColorFactory: Option<Rc<RefCell<BasicColorFactory>>> = BasicColorFactory::getInstance();
-        let mut buttonColor: Option<Rc<RefCell<BasicColor>>> = jcall!(basicColorFactory).TRANSPARENT_GREY.clone();
-        let mut selectedButtonColor: Option<Rc<RefCell<BasicColor>>> = jcall!(basicColorFactory).TRANSPARENT_RED.clone();
+        let mut buttonColor: Option<Rc<RefCell<BasicColor>>> = { let java_field = jcall!(basicColorFactory).TRANSPARENT_GREY.clone(); java_field }.clone();
+        let mut selectedButtonColor: Option<Rc<RefCell<BasicColor>>> = { let java_field = jcall!(basicColorFactory).TRANSPARENT_RED.clone(); java_field }.clone();
         let mut width: i32 = jcall!(item).getMinimumWidth();
         let mut height: i32 = jcall!(item).getMinimumHeight();
         let mut adjustedBorder: i32 = 3;
@@ -149,14 +150,14 @@ impl CommandCurrentSelectionForm {
         let mut rectWidth: i32 = width + self.border - adjustedBorder;
         let mut rectHeight: i32 = height + self.border - adjustedBorder;
         if J2MEUtil::isJ2ME() || J2MEUtil::isHTML() {
-            let mut rectangleAdjustedAnimation: Option<Rc<RefCell<RectangleAdjustedAnimation>>> = (self.selectedAnimationArray[(index) as usize]).clone() /* as RectangleAdjustedAnimation */;
+            let mut rectangleAdjustedAnimation: Option<Rc<RefCell<RectangleAdjustedAnimation>>> = (self.selectedAnimationArray[(index) as usize]).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<RectangleAdjustedAnimation>() }, "ClassCastException: not a RectangleAdjustedAnimation"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<RectangleAdjustedAnimation>) } });
             jcall!(rectangleAdjustedAnimation).setWidth(rectWidth.clone());
             jcall!(rectangleAdjustedAnimation).setHeight(rectHeight.clone());
             jcall!(rectangleAdjustedAnimation).setOffsetX(offset.clone());
             jcall!(rectangleAdjustedAnimation).setOffsetY(offset.clone());
             jcall!(rectangleAdjustedAnimation).setBasicColorP(selectedButtonColor.clone());
         } else {
-            let mut rectangleAdjustedAnimation: Option<Rc<RefCell<RectangleFilledAdjustedAnimation>>> = (self.selectedAnimationArray[(index) as usize]).clone() /* as RectangleFilledAdjustedAnimation */;
+            let mut rectangleAdjustedAnimation: Option<Rc<RefCell<RectangleFilledAdjustedAnimation>>> = (self.selectedAnimationArray[(index) as usize]).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<RectangleFilledAdjustedAnimation>() }, "ClassCastException: not a RectangleFilledAdjustedAnimation"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<RectangleFilledAdjustedAnimation>) } });
             jcall!(rectangleAdjustedAnimation).setWidth(rectWidth.clone());
             jcall!(rectangleAdjustedAnimation).setHeight(rectHeight.clone());
             jcall!(rectangleAdjustedAnimation).setOffsetX(offset.clone());
@@ -165,14 +166,14 @@ impl CommandCurrentSelectionForm {
         }
         adjustedBorder = 4;
         if J2MEUtil::isJ2ME() || J2MEUtil::isHTML() {
-            let mut rectangleAdjustedAnimation: Option<Rc<RefCell<RectangleAdjustedAnimation>>> = (self.unSelectedAnimationArray[(index) as usize]).clone() /* as RectangleAdjustedAnimation */;
+            let mut rectangleAdjustedAnimation: Option<Rc<RefCell<RectangleAdjustedAnimation>>> = (self.unSelectedAnimationArray[(index) as usize]).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<RectangleAdjustedAnimation>() }, "ClassCastException: not a RectangleAdjustedAnimation"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<RectangleAdjustedAnimation>) } });
             jcall!(rectangleAdjustedAnimation).setWidth(rectWidth.clone());
             jcall!(rectangleAdjustedAnimation).setHeight(rectHeight.clone());
             jcall!(rectangleAdjustedAnimation).setOffsetX(offset.clone());
             jcall!(rectangleAdjustedAnimation).setOffsetY(offset.clone());
             jcall!(rectangleAdjustedAnimation).setBasicColorP(buttonColor.clone());
         } else {
-            let mut rectangleAdjustedAnimation: Option<Rc<RefCell<RectangleFilledAdjustedAnimation>>> = (self.unSelectedAnimationArray[(index) as usize]).clone() /* as RectangleFilledAdjustedAnimation */;
+            let mut rectangleAdjustedAnimation: Option<Rc<RefCell<RectangleFilledAdjustedAnimation>>> = (self.unSelectedAnimationArray[(index) as usize]).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<RectangleFilledAdjustedAnimation>() }, "ClassCastException: not a RectangleFilledAdjustedAnimation"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<RectangleFilledAdjustedAnimation>) } });
             jcall!(rectangleAdjustedAnimation).setWidth(rectWidth.clone());
             jcall!(rectangleAdjustedAnimation).setHeight(rectHeight.clone());
             jcall!(rectangleAdjustedAnimation).setOffsetX(offset.clone());
@@ -182,22 +183,22 @@ impl CommandCurrentSelectionForm {
     }
     
 
-    pub fn getSelectedCommand(&mut self) -> Option<Rc<RefCell<Command>>> {
+    pub fn getSelectedCommand(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>> {
         let mut index: i32 = self.base.getSelectedIndex();
-        let mut commandTextItem: Option<Rc<RefCell<CommandTextItem>>> = (self.get(index.clone())).clone() /* as CommandTextItem */;
+        let mut commandTextItem: Option<Rc<RefCell<CommandTextItem>>> = (self.get(index.clone())).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<CommandTextItem>() }, "ClassCastException: not a CommandTextItem"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<CommandTextItem>) } });
         return jcall!(commandTextItem).getCommand();
     }
     
 
     pub fn append(&mut self, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) -> i32 {
-        let mut result: i32 = self.base.append(item.clone());
+        let mut result: i32 = { let java_arguments = (item.clone(),); self.base.append(java_arguments.0) };
         self.addAt(result.clone(), item.clone());
         return result.clone();
     }
     
 
     pub fn delete(&mut self, mut itemNum: i32) {
-        self.base.delete(itemNum.clone());
+        { let java_arguments = (itemNum.clone(),); self.base.delete(java_arguments.0) };
     }
     
 
@@ -208,32 +209,32 @@ impl CommandCurrentSelectionForm {
     
 
     pub fn insert(&mut self, mut itemNum: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) {
-        self.base.insert(itemNum.clone(), item.clone());
+        { let java_arguments = (itemNum.clone(), item.clone(),); self.base.insert(java_arguments.0, java_arguments.1) };
     }
     
 
     pub fn set(&mut self, mut itemNum: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) {
-        self.base.set(itemNum.clone(), item.clone());
+        { let java_arguments = (itemNum.clone(), item.clone(),); self.base.set(java_arguments.0, java_arguments.1) };
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(self.myFontProcessor).process(graphics.clone());
-        self.base.paint(graphics.clone());
+        { let java_arguments = (graphics.clone(),); self.base.paint(java_arguments.0) };
     }
     
 
     // throws Exception
-    pub fn paintItem(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 {
+    pub fn paintItem(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 {
         jcall!(self.selectedAnimationArray[(index) as usize]).paintXY(graphics.clone(), x.clone(), y.clone());
-        return self.base.paintItem(graphics.clone(), index.clone(), item.clone(), x.clone(), y.clone());
+        return { let java_arguments = (graphics.clone(), index.clone(), item.clone(), x.clone(), y.clone(),); self.base.paintItem(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4) };
     }
     
 
     // throws Exception
-    pub fn paintUnselectedItem(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 {
+    pub fn paintUnselectedItem(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 {
         jcall!(self.unSelectedAnimationArray[(index) as usize]).paintXY(graphics.clone(), x.clone(), y.clone());
-        return self.base.paintUnselectedItem(graphics.clone(), index.clone(), item.clone(), x.clone(), y.clone());
+        return { let java_arguments = (graphics.clone(), index.clone(), item.clone(), x.clone(), y.clone(),); self.base.paintUnselectedItem(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3, java_arguments.4) };
     }
 }
 impl std::ops::Deref for CommandCurrentSelectionForm {
@@ -252,13 +253,12 @@ impl crate::org::allbinary::graphics::form::PaintableForm::PaintableFormDyn for 
 impl crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionFormDyn for CommandCurrentSelectionForm {
     fn as_ScrollCurrentSelectionForm(&self) -> &crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionForm { &self.base }
     fn as_ScrollCurrentSelectionForm_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionForm { &mut self.base }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
 }
 impl crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn for CommandCurrentSelectionForm {
     fn as_ScrollSelectionForm(&self) -> &crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionForm { &self.base.base }
     fn as_ScrollSelectionForm_mut(&mut self) -> &mut crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionForm { &mut self.base.base }
-    fn paintItem(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 { Self::paintItem(self, graphics, index, item, x, y) }
-    fn paintUnselectedItem(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 { Self::paintUnselectedItem(self, graphics, index, item, x, y) }
+    fn paintItem(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 { Self::paintItem(self, graphics, index, item, x, y) }
+    fn paintUnselectedItem(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut index: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>, mut x: i32, mut y: i32) -> i32 { Self::paintUnselectedItem(self, graphics, index, item, x, y) }
     fn getDiffX(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) -> i32 { crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionForm::getDiffX(crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionFormDyn::as_ScrollCurrentSelectionForm_mut(self), p1) }
     fn getDx(&mut self) -> i32 { crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionForm::getDx(crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionFormDyn::as_ScrollCurrentSelectionForm_mut(self)) }
     fn getDy(&mut self) -> i32 { crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionForm::getDy(crate::org::allbinary::graphics::form::ScrollCurrentSelectionForm::ScrollCurrentSelectionFormDyn::as_ScrollCurrentSelectionForm_mut(self)) }
@@ -272,7 +272,7 @@ impl crate::org::allbinary::graphics::form::ABCustomForm::ABCustomFormDyn for Co
     fn insert(&mut self, mut itemNum: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) { Self::insert(self, itemNum, item) }
     fn set(&mut self, mut itemNum: i32, mut item: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>) { Self::set(self, itemNum, item) }
     fn getWidth(&mut self) -> i32 { crate::org::allbinary::graphics::form::PaintableForm::PaintableForm::getWidth(crate::org::allbinary::graphics::form::PaintableForm::PaintableFormDyn::as_PaintableForm_mut(self)) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
 }
 impl crate::org::allbinary::graphics::form::CustomDisplayable::CustomDisplayableDyn for CommandCurrentSelectionForm {
     fn as_CustomDisplayable(&self) -> &crate::org::allbinary::graphics::form::CustomDisplayable::CustomDisplayable { &self.base.base.base.base.base.base }

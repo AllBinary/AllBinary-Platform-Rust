@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait GameNotificationHudCompositeInterface {
+pub trait GameNotificationHudCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getGameNotificationHud(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::ag::layer::hud::basic::notification::GameNotificationHud::GameNotificationHudDyn>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

@@ -28,6 +28,7 @@ use crate::org::allbinary::logic::system::os::linux::LinuxOperatingSystemFactory
 use crate::org::allbinary::logic::system::os::solaris::SolarisOperatingSystemFactory::SolarisOperatingSystemFactory;
 use crate::org::allbinary::logic::system::os::windows::WindowsOperatingSystemFactory::WindowsOperatingSystemFactory;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::GenericOperatingSystem::GenericOperatingSystem;
 use super::OperatingSystems::OperatingSystems;
 use super::SystemProperties::SystemProperties;
@@ -49,6 +50,10 @@ pub struct OperatingSystemFactory {
 thread_local! { pub static OperatingSystemFactory_instance: Option<Rc<RefCell<OperatingSystemFactory>>> = OperatingSystemFactory::new(); }
 
 impl OperatingSystemFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<OperatingSystemFactory>>> {
@@ -77,49 +82,50 @@ impl OperatingSystemFactory {
 
     // synchronized
     pub fn getOperatingSystemInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>> {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut operatingSystems: Option<Rc<RefCell<OperatingSystems>>> = OperatingSystems::getInstance();
             let mut systemProperties: Option<Rc<RefCell<SystemProperties>>> = SystemProperties::getInstance();
             let mut osName: String = jcall!(systemProperties).getName();
             let mut osArch: String = jcall!(systemProperties).getArch();
             let mut osVersion: String = jcall!(systemProperties).getVersion();
             if !self.hasDetected {
-                jcall!(self.logUtil).putF(format!("{}{}", String::from("osName: "), osName), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET_INSTANCE.clone());
+                jcall!(self.logUtil).putF(format!("{}{}", String::from("osName: "), osName), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET_INSTANCE.clone(); java_field }.clone());
                 self.hasDetected = true;
-                if osName.find(&jcall!(operatingSystems).LINUX.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-                    if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).FACTORYERROR.clone())) {
-                        jcall!(self.logUtil).putF(String::from("Found a Linux OS"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET_INSTANCE.clone());
+                if osName.find(&{ let java_field = jcall!(operatingSystems).LINUX.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+                    if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).FACTORYERROR.clone(); java_field }.clone())) {
+                        jcall!(self.logUtil).putF(String::from("Found a Linux OS"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET_INSTANCE.clone(); java_field }.clone());
                     }
-                    self.genericOperatingSystem = jcall!(LinuxOperatingSystemFactory::getInstance()).getOperatingSystemInstance();
-                } else if osName.find(&jcall!(operatingSystems).WINDOWS.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-                    if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).FACTORYERROR.clone())) {
-                        jcall!(self.logUtil).putF(String::from("Found a Windows OS"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET_INSTANCE.clone());
+                    self.genericOperatingSystem = { let java_value = (jcall!(LinuxOperatingSystemFactory::getInstance()).getOperatingSystemInstance()).clone(); java_value };
+                } else if osName.find(&{ let java_field = jcall!(operatingSystems).WINDOWS.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+                    if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).FACTORYERROR.clone(); java_field }.clone())) {
+                        jcall!(self.logUtil).putF(String::from("Found a Windows OS"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET_INSTANCE.clone(); java_field }.clone());
                     }
-                    self.genericOperatingSystem = jcall!(WindowsOperatingSystemFactory::getInstance()).getOperatingSystemInstance();
-                } else if osName.find(&jcall!(operatingSystems).SOLARIS.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
-                    if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).FACTORYERROR.clone())) {
-                        jcall!(self.logUtil).putF(String::from("Found a Solaris OS"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET_INSTANCE.clone());
+                    self.genericOperatingSystem = { let java_value = (jcall!(WindowsOperatingSystemFactory::getInstance()).getOperatingSystemInstance()).clone(); java_value };
+                } else if osName.find(&{ let java_field = jcall!(operatingSystems).SOLARIS.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+                    if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).FACTORYERROR.clone(); java_field }.clone())) {
+                        jcall!(self.logUtil).putF(String::from("Found a Solaris OS"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET_INSTANCE.clone(); java_field }.clone());
                     }
-                    self.genericOperatingSystem = jcall!(SolarisOperatingSystemFactory::getInstance()).getOperatingSystemInstance();
+                    self.genericOperatingSystem = { let java_value = (jcall!(SolarisOperatingSystemFactory::getInstance()).getOperatingSystemInstance()).clone(); java_value };
                 } else {
                     panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(StringMaker::new()).append(String::from("OS Not Supported: ")).append(osName.clone()).toString())));
                 }
-                let mut log: Option<Rc<RefCell<Log>>> = LogFactory::getInstanceF(jcall!(StringMaker::new()).append(String::from("OperatingSystem Info: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.genericOperatingSystem.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET_INSTANCE.clone());
+                let mut log: Option<Rc<RefCell<Log>>> = LogFactory::getInstanceF(jcall!(StringMaker::new()).append(String::from("OperatingSystem Info: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.genericOperatingSystem.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET_INSTANCE.clone(); java_field }.clone());
                 println!("{}", jcall!(log).toString());
                 jcall!(self.logUtil).putL(log.clone());
             }
-            return self.genericOperatingSystem.clone();
+            return Some(self.genericOperatingSystem.clone());
         })) {
-            Ok(java_return) => return java_return,
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object(jcall!(LogConfigTypeFactory::getInstance()).FACTORYERROR.clone())) {
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
+            if jcall!(unsafe { crate::org::allbinary::logic::communication::log::config::r#type::LogConfigTypes::LogConfigTypes_LOGGING.clone() }).contains(crate::java_into_object({ let java_field = jcall!(LogConfigTypeFactory::getInstance()).FACTORYERROR.clone(); java_field }.clone())) {
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
             return NoOperatingSystem_NO_OPERATING_SYSTEM.with(Clone::clone).clone();
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
 }
 

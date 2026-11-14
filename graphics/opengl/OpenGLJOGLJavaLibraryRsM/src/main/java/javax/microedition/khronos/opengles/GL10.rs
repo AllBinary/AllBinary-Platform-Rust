@@ -6,13 +6,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use super::GL::GL;
-use super::opengles::opengles;
-use super::khronos::khronos;
-use super::microedition::microedition;
-use super::javax::javax;
 use super::Buffer::Buffer;
-use super::nio::nio;
-use super::java::java;
 use super::IntBuffer::IntBuffer;
 use super::FloatBuffer::FloatBuffer;
 

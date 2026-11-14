@@ -21,7 +21,7 @@ use super::*;
 // use crate::java::awt::GraphicsEnvironment::GraphicsEnvironment;
 // use crate::java::util::Collection::Collection;
 // use crate::java::util::Iterator::Iterator;
-// use crate::java::util::Set::Set;
+use crate::java::util::Set::Set;
 // use crate::javax::help::HelpSet::HelpSet;
 // use crate::javax::help::event::HelpSetEvent::HelpSetEvent;
 // use crate::javax::help::event::HelpSetListener::HelpSetListener;
@@ -32,6 +32,7 @@ use crate::org::allbinary::logic::java::anyType::InterfaceUtil::InterfaceUtil;
 use crate::org::allbinary::logic::system::loader::SecuredNativeLibraryInterface::SecuredNativeLibraryInterface;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::InputRobotInterface::InputRobotInterface;
 use super::InputRobot::InputRobot;
 
@@ -45,13 +46,17 @@ macro_rules! jcall {
 pub struct InputRobotFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
-    pub hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
     pub helpSetListenerInterface: Option<Rc<RefCell<HelpSetListener>>>,
 }
 
 thread_local! { pub static InputRobotFactory_inputRobotFactory: Option<Rc<RefCell<InputRobotFactory>>> = InputRobotFactory::new(); }
 
 impl InputRobotFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     // throws Exception
@@ -77,15 +82,15 @@ impl InputRobotFactory {
             for i in (0..(screens.len() as i32)) {
                 inputRobotInterface = (InputRobot::new(screens[(i) as usize].clone())).clone() /* as InputRobotInterface */;
                 { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Adding Robot: "), jcall!(inputRobotInterface).getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getRobots"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-                jcall!(this.get()).put(jcall!(inputRobotInterface).getName(), inputRobotInterface.clone());
+                jcall!(this.get()).put(crate::java_into_object(jcall!(inputRobotInterface).getName()), crate::java_into_object(inputRobotInterface.clone()));
             }
             { let java_receiver = this.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Number Of Robots: "), jcall!(this.hashtable).size()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getRobots"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(this.logUtil).putF(jcall!(this.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(this.commonStrings).CONSTRUCTOR.clone());
+            jcall!(this.logUtil).putF({ let java_field = jcall!(this.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(this.commonStrings).CONSTRUCTOR.clone(); java_field }.clone());
             }
         }
         this
@@ -104,7 +109,7 @@ impl InputRobotFactory {
     // throws Exception
     pub fn add(&mut self, mut inputRobotInterface: Option<Rc<RefCell<dyn InputRobotInterface>>>) {
         { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Adding InputRobotInterface: "), jcall!(inputRobotInterface).getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("add"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-        jcall!(self.get()).put(jcall!(inputRobotInterface).getName(), inputRobotInterface.clone());
+        jcall!(self.get()).put(crate::java_into_object(jcall!(inputRobotInterface).getName()), crate::java_into_object(inputRobotInterface.clone()));
         let mut helpSet: Option<Rc<RefCell<HelpSet>>> = jcall!(inputRobotInterface).getHelpSet();
         if self.helpSetListenerInterface.is_some() {
             if helpSet.is_some() {
@@ -128,7 +133,7 @@ impl InputRobotFactory {
         let mut nameArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(set).toArray();
         let mut size: i32 = (nameArray.len() as i32).clone();
         for index in (0..size) {
-            let mut inputRobotInterface: Option<Rc<RefCell<dyn InputRobotInterface>>> = jcall!(InputRobotFactory::getInstance()).get1((nameArray[(index) as usize]).clone() /* as String */);
+            let mut inputRobotInterface: Option<Rc<RefCell<dyn InputRobotInterface>>> = jcall!(InputRobotFactory::getInstance()).get1({ let java_object = (nameArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() });
             InputRobotFactory::loadLibrary(inputRobotInterface.clone());
         }
     }
@@ -141,7 +146,7 @@ impl InputRobotFactory {
         jcall!(logUtil).putF(String::from("Loading Libraries"), crate::java_into_object(String::from("InputRobotFactory")), String::from("loadLibraries"));
         let mut iterator: Option<Rc<RefCell<dyn Iterator>>> = jcall!(collection).iterator();
         while jcall!(iterator).hasNext() {
-            InputRobotFactory::loadLibrary((jcall!(iterator).next()).clone() /* as InputRobotInterface */);
+            InputRobotFactory::loadLibrary((jcall!(iterator).next()).clone());
         }
     }
     
@@ -151,7 +156,7 @@ impl InputRobotFactory {
         let mut logUtil: Option<Rc<RefCell<LogUtil>>> = LogUtil::getInstance();
         if InterfaceUtil::isImplemented(std::any::type_name::<SecuredNativeLibraryInterface>(), inputRobotInterface.clone()) {
             jcall!(logUtil).putF(format!("{}{}", String::from("Loading Library: "), jcall!(inputRobotInterface).getName()), crate::java_into_object(String::from("InputRobotFactory")), String::from("loadLibraries"));
-            let mut securedNativeLibraryInterface: Option<Rc<RefCell<dyn SecuredNativeLibraryInterface>>> = panic!("ClassCastException: a Rust dyn InputRobotInterface cannot be cast to dyn SecuredNativeLibraryInterface");
+            let mut securedNativeLibraryInterface: Option<Rc<RefCell<dyn SecuredNativeLibraryInterface>>> = (|| -> Option<Rc<RefCell<dyn SecuredNativeLibraryInterface>>> { panic!("ClassCastException: a Rust dyn InputRobotInterface cannot be cast to dyn SecuredNativeLibraryInterface") })();
             jcall!(securedNativeLibraryInterface).load();
         }
     }
@@ -165,10 +170,10 @@ impl InputRobotFactory {
         let mut inputRobotArray: Vec<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = jcall!(set).toArray();
         let mut size: i32 = (inputRobotArray.len() as i32).clone();
         for index in (0..size) {
-            inputRobotInterface = self.get1((inputRobotArray[(index) as usize]).clone() /* as String */);
+            inputRobotInterface = self.get1({ let java_object = (inputRobotArray[(index) as usize]).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() });
             if InterfaceUtil::isImplemented(std::any::type_name::<SecuredNativeLibraryInterface>(), inputRobotInterface.clone()) {
                 { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", String::from("Unloading Library: "), jcall!(inputRobotInterface).getName()), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("unloadLibraries"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
-                let mut securedNativeLibraryInterface: Option<Rc<RefCell<dyn SecuredNativeLibraryInterface>>> = panic!("ClassCastException: a Rust dyn InputRobotInterface cannot be cast to dyn SecuredNativeLibraryInterface");
+                let mut securedNativeLibraryInterface: Option<Rc<RefCell<dyn SecuredNativeLibraryInterface>>> = (|| -> Option<Rc<RefCell<dyn SecuredNativeLibraryInterface>>> { panic!("ClassCastException: a Rust dyn InputRobotInterface cannot be cast to dyn SecuredNativeLibraryInterface") })();
                 jcall!(securedNativeLibraryInterface).unload();
             }
         }
@@ -176,7 +181,7 @@ impl InputRobotFactory {
     
 
     // throws Exception
-    pub fn get(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn get(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
         return self.hashtable.clone();
     }
     
@@ -184,7 +189,7 @@ impl InputRobotFactory {
     // Java overloaded method: Rust needs a different name
     pub fn get1(&mut self, mut name: String) -> Option<Rc<RefCell<dyn InputRobotInterface>>> {
         jcall!(self.logUtil).putF(format!("{}{}", String::from("Getting Robot: "), name), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getRobots"));
-        return { let java_object = jcall!(self.hashtable).get(crate::java_into_object(name.clone())); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn InputRobotInterface>>>>().expect("ClassCastException").clone()) };
+        return { let java_object = (jcall!(self.hashtable).get(crate::java_into_object(name.clone()))).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn InputRobotInterface>>>>().expect("ClassCastException").clone()) };
     }
 }
 

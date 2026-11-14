@@ -40,8 +40,8 @@ impl XmlOptionItemsTag {
         let mut this = Self {
             base: TableTag::new_struct(),
         };
-        this.setTagHelperFactory(XmlOptionItemsHelperFactory::new());
-        this.setTagRequestHelperFactory(XmlOptionItemsRequestHelperFactory::new());
+        this.setTagHelperFactory(XmlOptionItemsHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
+        this.setTagRequestHelperFactory(XmlOptionItemsRequestHelperFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::admin::taghelpers::TagHelperFactoryInterface::TagHelperFactoryInterface>>));
         this
     }
 

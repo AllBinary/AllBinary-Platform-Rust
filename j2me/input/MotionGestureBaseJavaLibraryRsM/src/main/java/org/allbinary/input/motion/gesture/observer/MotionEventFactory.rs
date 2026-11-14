@@ -43,6 +43,10 @@ impl AllBinaryEventObjectFactoryInterface for MotionEventFactory {
 }
 
 impl MotionEventFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut source: Option<Rc<RefCell<Box<dyn std::any::Any>>>>, mut id: i32) -> Self {
@@ -52,7 +56,7 @@ impl MotionEventFactory {
         };
         this.source = source.clone();
         this.id = id.clone();
-        unsafe { *MotionEventFactory_index = jcall!(jcall!(TouchMotionGestureFactory::getInstance()).LAST_MOTION).getId() };
+        unsafe { *MotionEventFactory_index = jcall!({ let java_field = jcall!(TouchMotionGestureFactory::getInstance()).LAST_MOTION.clone(); java_field }).getId() };
         this
     }
 
@@ -64,10 +68,10 @@ impl MotionEventFactory {
     pub fn getInstance(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>> {
         let mut inputFactory: Option<Rc<RefCell<InputFactory>>> = InputFactory::getInstance();
         let mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>> = jcall!(inputFactory).getInstanceById(unsafe { let value = MotionEventFactory_index.clone(); *MotionEventFactory_index += 1; value });
-        if match (&input, &jcall!(inputFactory).NO_INPUT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            return MotionGestureEvent::new(self.source.clone(), self.id.clone(), (jcall!(TouchMotionGestureFactory::getInstance()).NO_MOTION).clone() /* as MotionGestureInput */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>);
+        if match (&input, &{ let java_field = jcall!(inputFactory).NO_INPUT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            return MotionGestureEvent::new(crate::java_into_object(self.source.clone()), self.id.clone(), ({ let java_field = jcall!(TouchMotionGestureFactory::getInstance()).NO_MOTION.clone(); java_field }).clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>);
         } else {
-            return MotionGestureEvent::new(self.source.clone(), self.id.clone(), (input).clone() /* as MotionGestureInput */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>);
+            return MotionGestureEvent::new(crate::java_into_object(self.source.clone()), self.id.clone(), (input).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<MotionGestureInput>() }, "ClassCastException: not a MotionGestureInput"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<MotionGestureInput>) } })).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>);
         }
     }
 }

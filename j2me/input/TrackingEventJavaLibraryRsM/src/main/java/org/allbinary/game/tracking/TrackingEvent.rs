@@ -39,13 +39,13 @@ impl TrackingEvent {
 
     pub fn new_struct(mut allBinaryLayerInterface: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Self {
         let mut this = Self {
-            base: AllBinaryEventObject::new_struct(allBinaryLayerInterface.clone()),
+            base: AllBinaryEventObject::new_struct(crate::java_into_object(allBinaryLayerInterface.clone())),
             layerInterface: None,
         };
         this.layerInterface = crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer_NULL_ALLBINARY_LAYER.with(Clone::clone).clone();
         // super(...) is in the struct literal above
         if !match (&allBinaryLayerInterface, &TrackingEventHandler::TrackingEventHandler::getInstance()) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            this.setLayerInterface((allBinaryLayerInterface).clone() /* as AllBinaryLayer */);
+            this.setLayerInterface({ let java_object = (allBinaryLayerInterface).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>>>().expect("ClassCastException").clone()) });
         }
         this
     }

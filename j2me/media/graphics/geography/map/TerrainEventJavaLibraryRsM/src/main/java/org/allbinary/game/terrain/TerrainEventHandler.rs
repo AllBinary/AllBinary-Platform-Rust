@@ -25,6 +25,7 @@ use crate::org::allbinary::logic::util::event::handler::BasicEventHandler::Basic
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
+use crate::java::lang::Exception::*;
 use super::TerrainEventListener::TerrainEventListener;
 use super::TerrainEvent::TerrainEvent;
 use super::TerrainEventListenerInterface::TerrainEventListenerInterface;
@@ -41,7 +42,7 @@ pub struct TerrainEventHandler {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-pub static mut TerrainEventHandler_hashtable: std::cell::LazyCell<Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).NULL_TABLE.clone());
+pub static mut TerrainEventHandler_hashtable: std::cell::LazyCell<Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(StdUtil::getInstance()).NULL_TABLE.clone(); java_field }.clone());
 
 impl TerrainEventHandler {
     
@@ -54,10 +55,10 @@ impl TerrainEventHandler {
     pub fn getInstance(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<TerrainEventHandler>>> {
         let mut eventHandlerCanBeNull: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = jcall!(unsafe { TerrainEventHandler_hashtable.clone() }).get(anyType.clone());
         if eventHandlerCanBeNull.is_none() {
-            eventHandlerCanBeNull = TerrainEventHandler::new();
+            eventHandlerCanBeNull = crate::java_into_object(TerrainEventHandler::new());
             jcall!(unsafe { TerrainEventHandler_hashtable.clone() }).put(anyType.clone(), eventHandlerCanBeNull.clone());
         }
-        return (eventHandlerCanBeNull).clone() /* as TerrainEventHandler */;
+        return { let java_object = (eventHandlerCanBeNull).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<TerrainEventHandler>>>>().expect("ClassCastException").clone()) };
     }
     
 
@@ -66,7 +67,7 @@ impl TerrainEventHandler {
             base: BasicEventHandler::new_struct(),
             list: None,
         };
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -90,7 +91,7 @@ impl TerrainEventHandler {
 
     pub fn removeListener(&mut self, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
         jcall!(self.list).remove(crate::java_into_object(eventListenerInterface.clone()));
-        self.base.removeListener(eventListenerInterface.clone());
+        { let java_arguments = (eventListenerInterface.clone(),); self.base.removeListener(java_arguments.0) };
     }
     
 
@@ -101,25 +102,25 @@ impl TerrainEventHandler {
             while { index -= 1; index } >= 0 {
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                 let mut terrainEventListener: Option<Rc<RefCell<TerrainEventListener>>> = { let java_object = (jcall!(self.list).get(index.clone())).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<TerrainEventListener>>>>().expect("ClassCastException").clone()) };
-                jcall!(terrainEventListener).onTerrainEvent((eventObject).clone() /* as TerrainEvent */);
+                jcall!(terrainEventListener).onTerrainEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<TerrainEvent>() }, "ClassCastException: not a TerrainEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<TerrainEvent>) } }));
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
+                { let java_receiver = self.logUtil.clone(); let java_arguments = ({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(EventStrings::getInstance()).FIRE_EVENT.clone(); java_field }.clone(), crate::java_into_object(e.clone()),); jcall!(java_receiver).put(java_arguments.0, java_arguments.1, java_arguments.2, java_arguments.3); };
                 }
             }
             }
         }
-        self.base.fireEvent(eventObject.clone());
+        { let java_arguments = (eventObject.clone(),); self.base.fireEvent(java_arguments.0) };
     }
     
 
     // throws Exception
     pub fn process(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>, mut eventListenerInterface: Option<Rc<RefCell<dyn EventListenerInterface>>>) {
-        let mut terrainEventListenerInterface: Option<Rc<RefCell<dyn TerrainEventListenerInterface>>> = panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn TerrainEventListenerInterface");
-        jcall!(terrainEventListenerInterface).onTerrainEvent((eventObject).clone() /* as TerrainEvent */);
+        let mut terrainEventListenerInterface: Option<Rc<RefCell<dyn TerrainEventListenerInterface>>> = (|| -> Option<Rc<RefCell<dyn TerrainEventListenerInterface>>> { panic!("ClassCastException: a Rust dyn EventListenerInterface cannot be cast to dyn TerrainEventListenerInterface") })();
+        jcall!(terrainEventListenerInterface).onTerrainEvent((eventObject).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<TerrainEvent>() }, "ClassCastException: not a TerrainEvent"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<TerrainEvent>) } }));
     }
 }
 impl std::ops::Deref for TerrainEventHandler {

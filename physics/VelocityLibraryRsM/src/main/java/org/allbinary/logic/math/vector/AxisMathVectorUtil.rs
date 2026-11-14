@@ -34,6 +34,10 @@ thread_local! { pub static AxisMathVectorUtil_instance: Option<Rc<RefCell<AxisMa
 
 impl AxisMathVectorUtil {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             noDecimalTrigTable: None,

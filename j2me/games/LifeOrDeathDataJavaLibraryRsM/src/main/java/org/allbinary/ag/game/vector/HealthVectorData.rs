@@ -32,6 +32,10 @@ pub static mut HealthVectorData_points: std::cell::LazyCell<Vec<Vec<Vec<i32>>>> 
 
 impl HealthVectorData {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };

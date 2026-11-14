@@ -32,6 +32,10 @@ pub struct BackgroundColorData {
 thread_local! { pub static BackgroundColorData_instance: Option<Rc<RefCell<BackgroundColorData>>> = BackgroundColorData::new(); }
 
 impl BackgroundColorData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<BackgroundColorData>>> {

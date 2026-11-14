@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Command::Command;
 use crate::android::app::Notification::Notification;
 use crate::android::app::Notification::Builder::Builder;
 use crate::android::app::PendingIntent::PendingIntent;
@@ -51,7 +51,7 @@ impl NotificationBuilderAPI23 {
     }
     
 
-    pub fn build(&mut self, mut context: Option<Rc<RefCell<Context>>>, mut command: Option<Rc<RefCell<Command>>>, mut message: String, mut integer: Option<i32>, mut pendingIntent: Option<Rc<RefCell<PendingIntent>>>) -> Option<Rc<RefCell<Parcelable>>> {
+    pub fn build(&mut self, mut context: Option<Rc<RefCell<Context>>>, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut message: String, mut integer: Option<i32>, mut pendingIntent: Option<Rc<RefCell<PendingIntent>>>) -> Option<Rc<RefCell<Parcelable>>> {
         let mut notification: Option<Rc<RefCell<Notification>>> = jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(Builder::new(context.clone())).setSmallIcon(((integer).unwrap() as i32))).setTicker(message.clone())).setWhen((std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64))).setContentTitle(jcall!(command).getLabel())).setContentText(message.clone())).setContentIntent(pendingIntent.clone())).build();
         return notification.clone();
     }
@@ -67,7 +67,7 @@ impl std::ops::DerefMut for NotificationBuilderAPI23 {
 impl crate::org::allbinary::content::NotificationBuilder::NotificationBuilderDyn for NotificationBuilderAPI23 {
     fn as_NotificationBuilder(&self) -> &crate::org::allbinary::content::NotificationBuilder::NotificationBuilder { &self.base }
     fn as_NotificationBuilder_mut(&mut self) -> &mut crate::org::allbinary::content::NotificationBuilder::NotificationBuilder { &mut self.base }
-    fn build(&mut self, mut context: Option<Rc<RefCell<Context>>>, mut command: Option<Rc<RefCell<Command>>>, mut message: String, mut integer: Option<i32>, mut pendingIntent: Option<Rc<RefCell<PendingIntent>>>) -> Option<Rc<RefCell<Parcelable>>> { Self::build(self, context, command, message, integer, pendingIntent) }
+    fn build(&mut self, mut context: Option<Rc<RefCell<Context>>>, mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut message: String, mut integer: Option<i32>, mut pendingIntent: Option<Rc<RefCell<PendingIntent>>>) -> Option<Rc<RefCell<Parcelable>>> { Self::build(self, context, command, message, integer, pendingIntent) }
 }
 
 

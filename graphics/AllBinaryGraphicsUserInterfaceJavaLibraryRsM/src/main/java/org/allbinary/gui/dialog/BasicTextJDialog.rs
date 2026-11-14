@@ -19,16 +19,11 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::thread::ARunnable::ARunnable;
 use super::JDialog::JDialog;
-use super::swing::swing;
-use super::javax::javax;
 use super::CloseJDialogListenerInterface::CloseJDialogListenerInterface;
 use super::Frame::Frame;
-use super::awt::awt;
-use super::java::java;
 use super::JButton::JButton;
 use super::JLabel::JLabel;
 use super::ActionListener::ActionListener;
-use super::event::event;
 use super::ActionEvent::ActionEvent;
 use super::GroupLayout::GroupLayout;
 use super::JFrame::JFrame;
@@ -99,7 +94,7 @@ impl BasicTextJDialog {
     pub fn initComponents(&mut self) {
         self.jButton1 = JButton::new();
         self.textJLabel = JLabel::new();
-        self.setDefaultCloseOperation(jcall!(jcall!(unsafe { javax_swing.clone() }).WindowConstants).DISPOSE_ON_CLOSE.clone());
+        { let java_arguments = ({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).WindowConstants.clone(); java_field }).DISPOSE_ON_CLOSE.clone(); java_field }.clone(),); self.setDefaultCloseOperation(java_arguments.0) };
         jcall!(self.jButton1).setText(String::from("OK"));
         jcall!(self.jButton1).addActionListener(ActionListener::new() /* Java anonymous class body: implement it as a named type
             
@@ -111,8 +106,8 @@ impl BasicTextJDialog {
         jcall!(self.textJLabel).setText(String::from("No Text Set"));
         let mut layout: Option<Rc<RefCell<GroupLayout>>> = GroupLayout::new(self.getContentPane());
         jcall!(self.getContentPane()).setLayout(layout.clone());
-        jcall!(layout).setHorizontalGroup(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addGroup(jcall!(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addGap(80, 80, 80)).addComponent(self.jButton1.clone()))).addGroup(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addContainerGap()).addComponent(self.textJLabel.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).DEFAULT_SIZE.clone(), 184, i16::MAX.clone())))).addContainerGap()));
-        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup(jcall!(jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).Alignment).LEADING.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addGap(20, 20, 20)).addComponent(self.textJLabel.clone(), jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone(), 20, jcall!(jcall!(unsafe { javax_swing.clone() }).GroupLayout).PREFERRED_SIZE.clone())).addGap(30, 30, 30)).addComponent(self.jButton1.clone())));
+        jcall!(layout).setHorizontalGroup(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addGroup(jcall!(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addGap(80, 80, 80)).addComponent(self.jButton1.clone()))).addGroup(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addContainerGap()).addComponent(self.textJLabel.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).DEFAULT_SIZE.clone(); java_field }.clone(), 184, i16::MAX.clone())))).addContainerGap()));
+        jcall!(layout).setVerticalGroup(jcall!(jcall!(layout).createParallelGroup({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).Alignment.clone(); java_field }).LEADING.clone(); java_field }.clone())).addGroup(jcall!(jcall!(jcall!(jcall!(jcall!(layout).createSequentialGroup()).addGap(20, 20, 20)).addComponent(self.textJLabel.clone(), { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone(), 20, { let java_field = jcall!({ let java_field = jcall!(unsafe { javax_swing.clone() }).GroupLayout.clone(); java_field }).PREFERRED_SIZE.clone(); java_field }.clone())).addGap(30, 30, 30)).addComponent(self.jButton1.clone())));
         self.pack();
     }
     
@@ -126,7 +121,7 @@ impl BasicTextJDialog {
     
 
     pub fn main(mut args: Vec<String>) {
-        jcall!(jcall!(unsafe { java_awt.clone() }).EventQueue).invokeLater(ARunnable::new() /* Java anonymous class body: implement it as a named type
+        jcall!({ let java_field = jcall!(unsafe { java_awt.clone() }).EventQueue.clone(); java_field }).invokeLater(ARunnable::new() /* Java anonymous class body: implement it as a named type
             
 
             pub fn run(&mut self) {

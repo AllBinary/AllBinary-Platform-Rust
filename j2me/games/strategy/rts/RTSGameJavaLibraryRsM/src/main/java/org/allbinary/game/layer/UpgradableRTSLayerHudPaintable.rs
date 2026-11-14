@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Font::Font;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Font::Font;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayer;
 use crate::org::allbinary::logic::java::character::CharArrayFactory::CharArrayFactory;
 use crate::org::allbinary::graphics::displayable::DisplayInfoSingleton::DisplayInfoSingleton;
@@ -55,11 +55,8 @@ pub struct UpgradableRTSLayerHudPaintable {
 thread_local! { pub static UpgradableRTSLayerHudPaintable_instance: Option<Rc<RefCell<UpgradableRTSLayerHudPaintable>>> = UpgradableRTSLayerHudPaintable::new(); }
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintableInterface::InitUpdatePaintableInterface for UpgradableRTSLayerHudPaintable {
 }
-impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for UpgradableRTSLayerHudPaintable {
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
-}
 impl crate::org::allbinary::init::InitInterface::InitInterface for UpgradableRTSLayerHudPaintable {
-    fn init(&mut self) { self.base.init() }
+    fn init(&mut self) { crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintable::init(crate::org::allbinary::graphics::paint::InitUpdatePaintable::InitUpdatePaintableDyn::as_InitUpdatePaintable_mut(self)) }
 }
 impl crate::org::allbinary::init::UpdateInterface::UpdateInterface for UpgradableRTSLayerHudPaintable {
     fn update(&mut self) { Self::update(self) }
@@ -100,20 +97,20 @@ impl UpgradableRTSLayerHudPaintable {
     }
     
 
-    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.updateMeasurement(graphics.clone());
-        let mut font: Option<Rc<RefCell<Font>>> = jcall!(graphics).getFont();
-        self.charHeight = jcall!(font).getHeight();
-        self.charWidth = MyFontProcessor::defaultCharWidth(font.clone());
+    pub fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(),); self.base.updateMeasurement(java_arguments.0) };
+        let mut font: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Font::FontDyn>>> = jcall!(graphics).getFont();
+        self.charHeight = { let java_value = (jcall!(font).getHeight()).clone(); java_value };
+        self.charWidth = { let java_value = (MyFontProcessor::defaultCharWidth(font.clone())).clone(); java_value };
     }
     
 
     pub fn update(&mut self) {
         self.base.update();
         let mut commonButtons: Option<Rc<RefCell<CommonButtons>>> = CommonButtons::getInstance();
-        self.costY = (self.y + jcall!(commonButtons).STANDARD_BUTTON_SIZE);
-        self.costY1 = (self.y + jcall!(commonButtons).STANDARD_BUTTON_SIZE - self.charHeight);
-        self.percentCompleteX2 = self.imageX + jcall!(commonButtons).STANDARD_BUTTON_SIZE - self.charWidth;
+        self.costY = { let java_value = ((self.y + { let java_field = jcall!(commonButtons).STANDARD_BUTTON_SIZE.clone(); java_field })).clone(); java_value };
+        self.costY1 = { let java_value = ((self.y + { let java_field = jcall!(commonButtons).STANDARD_BUTTON_SIZE.clone(); java_field } - self.charHeight)).clone(); java_value };
+        self.percentCompleteX2 = { let java_value = (self.imageX + { let java_field = jcall!(commonButtons).STANDARD_BUTTON_SIZE.clone(); java_field } - self.charWidth).clone(); java_value };
         let mut displayInfoSingleton: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
         if jcall!(displayInfoSingleton).getLastWidth() > 320 {
             self.rtsLayerCompositePaintableLateInit = UpgradableWideRTSLayerPaintable::new(None /* Java this: a &mut self method has no Rc of itself */).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayerCompositePaintable::RTSLayerCompositePaintableDyn>>);
@@ -124,16 +121,16 @@ impl UpgradableRTSLayerHudPaintable {
     
 
     pub fn updateSelectionInfo(&mut self) {
-        let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = (self.getRtsLayer()).clone() /* as RTSLayer */;
+        let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableDestroyableDamageableLayer cannot be cast to RTSLayer") })();
         jcall!(self.rtsLayerCompositePaintableLateInit).update(rtsLayer.clone());
-        { let java_arguments = (jcall!(rtsLayer).as_CollidableDestroyableDamageableLayer_mut().getVerticleBuildAnimationInterface(),); self.setAnimationInterface(java_arguments.0) };
+        { let java_arguments = (jcall!(rtsLayer).getVerticleBuildAnimationInterface(),); self.setAnimationInterface(java_arguments.0) };
         { let java_arguments = (jcall!(rtsLayer).getName(),); self.setName(java_arguments.0) };
     }
     
 
     pub fn updateInfo(&mut self) {
-        let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = (self.getRtsLayer()).clone() /* as RTSLayer */;
-        self.percentComplete = jcall!(rtsLayer).as_CollidableDestroyableDamageableLayer_mut().getPercentComplete();
+        let mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>> { panic!("ClassCastException: a Rust dyn CollidableDestroyableDamageableLayer cannot be cast to RTSLayer") })();
+        self.percentComplete = { let java_value = (jcall!(rtsLayer).as_RTSLayer_mut().getPercentComplete()).clone(); java_value };
         if self.percentComplete < 10 {
             self.percentCompleteX = 32;
         } else if self.percentComplete < 100 {
@@ -141,14 +138,14 @@ impl UpgradableRTSLayerHudPaintable {
         } else {
             self.percentCompleteX = 16;
         }
-        self.percentCompleteArray = jcall!(self.getPrimitiveLongUtil()).getCharArray(self.percentComplete.clone());
-        self.currentTotalDigits = jcall!(self.getPrimitiveLongUtil()).getCurrentTotalDigits();
+        self.percentCompleteArray = { let java_value = (jcall!(self.getPrimitiveLongUtil()).getCharArray(self.percentComplete.clone())).clone(); java_value };
+        self.currentTotalDigits = { let java_value = (jcall!(self.getPrimitiveLongUtil()).getCurrentTotalDigits()).clone(); java_value };
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
-        self.base.paint(graphics.clone());
-        jcall!(self.rtsLayerCompositePaintableLateInit).paint(graphics.clone());
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
+        { let java_arguments = (graphics.clone(),); self.base.paint(java_arguments.0) };
+        jcall!(self.rtsLayerCompositePaintableLateInit).as_RTSLayerCompositePaintable_mut().paint(graphics.clone());
         jcall!(graphics).drawChars(self.percentCompleteArray.clone(), 0, self.currentTotalDigits.clone(), self.imageX + self.percentCompleteX, self.costY.clone(), 0);
         jcall!(graphics).drawString(self.PERCENT.clone(), self.percentCompleteX2.clone(), self.costY.clone(), 0);
         jcall!(self.getAnimationInterface()).paintXY(graphics.clone(), self.imageX.clone(), self.y.clone());
@@ -156,7 +153,7 @@ impl UpgradableRTSLayerHudPaintable {
     
 
     pub fn setRtsLayer(&mut self, mut rtsLayer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::RTSLayer::RTSLayerDyn>>>) {
-        self.rtsLayer = rtsLayer.clone();
+        self.rtsLayer = rtsLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::special::CollidableDestroyableDamageableLayer::CollidableDestroyableDamageableLayerDyn>>);
     }
     
 
@@ -175,7 +172,6 @@ impl std::ops::DerefMut for UpgradableRTSLayerHudPaintable {
 impl crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn for UpgradableRTSLayerHudPaintable {
     fn as_SelectionHudPaintable(&self) -> &crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable { &self.base }
     fn as_SelectionHudPaintable_mut(&mut self) -> &mut crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable { &mut self.base }
-    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::updateMeasurement(self, graphics) }
     fn updateSelectionInfo(&mut self) { Self::updateSelectionInfo(self) }
     fn updateInfo(&mut self) { Self::updateInfo(self) }
 }
@@ -188,7 +184,13 @@ impl crate::org::allbinary::graphics::paint::Paintable::PaintableDyn for Upgrada
     fn as_Paintable(&self) -> &crate::org::allbinary::graphics::paint::Paintable::Paintable { &self.base.base.base }
     fn as_Paintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::Paintable::Paintable { &mut self.base.base.base }
     fn setBasicColorP(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::graphics::color::BasicColor::BasicColor>>>) { crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintable::setBasicColorP(crate::org::allbinary::game::layer::SelectionHudPaintable::SelectionHudPaintableDyn::as_SelectionHudPaintable_mut(self), p1) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for UpgradableRTSLayerHudPaintable {
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
+}
+impl crate::org::allbinary::graphics::font::UpdateMyFontInterface::UpdateMyFontInterface for UpgradableRTSLayerHudPaintable {
+    fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }
 
 

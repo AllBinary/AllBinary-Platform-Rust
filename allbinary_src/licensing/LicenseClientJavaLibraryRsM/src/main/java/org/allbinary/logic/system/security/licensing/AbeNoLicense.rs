@@ -38,13 +38,17 @@ pub static mut AbeNoLicense_abeNoLicense: std::cell::LazyCell<Option<Rc<RefCell<
 // impl AbeLicenseInterface for AbeNoLicense with the methods of the trait
 
 impl AbeNoLicense {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
         let mut this = Self {
             serverVector: None,
         };
-        this.serverVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.serverVector = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -64,17 +68,17 @@ impl AbeNoLicense {
     
 
     pub fn getKey(&mut self, mut keyName: String) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 
     pub fn getLicenseId(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 
     pub fn getSpecial(&mut self) -> String {
-        return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
     }
     
 
@@ -89,7 +93,7 @@ impl AbeNoLicense {
     
 
     pub fn getLicenseType(&mut self) -> Option<Rc<RefCell<LicenseType>>> {
-        return jcall!(LicenseTypeFactory::LicenseTypeFactory::getInstance()).UNKNOWN.clone();
+        return { let java_field = jcall!(LicenseTypeFactory::LicenseTypeFactory::getInstance()).UNKNOWN.clone(); java_field }.clone();
     }
 }
 

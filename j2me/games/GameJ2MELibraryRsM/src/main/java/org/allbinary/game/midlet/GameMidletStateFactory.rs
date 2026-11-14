@@ -27,6 +27,10 @@ pub struct GameMidletStateFactory {
 thread_local! { pub static GameMidletStateFactory_INSTANCE: Option<Rc<RefCell<GameMidletStateFactory>>> = GameMidletStateFactory::new(); }
 
 impl GameMidletStateFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -35,7 +39,7 @@ impl GameMidletStateFactory {
             currentGameState: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.currentGameState = jcall!(GameStateFactory::getInstance()).NO_GAME_STATE.clone();
+        this.currentGameState = { let java_field = jcall!(GameStateFactory::getInstance()).NO_GAME_STATE.clone(); java_field }.clone();
         this
     }
 
@@ -55,7 +59,7 @@ impl GameMidletStateFactory {
     
 
     pub fn setCurrentGameState(&mut self, mut currentGameState: Option<Rc<RefCell<GameState>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(CommonLabels::getInstance()).CURRENT.clone()).append(String::from(" GameState: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(currentGameState.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setCurrentGameState"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(CommonLabels::getInstance()).CURRENT.clone(); java_field }.clone()).append(String::from(" GameState: ")).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(currentGameState.clone()))).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("setCurrentGameState"),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         self.currentGameState = currentGameState.clone();
     }
 }

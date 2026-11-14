@@ -6,7 +6,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use crate::Runnable;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::Image::Image;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -21,6 +21,10 @@ pub struct OpenGLUtil {
 thread_local! { pub static OpenGLUtil_instance: Option<Rc<RefCell<OpenGLUtil>>> = OpenGLUtil::new(); }
 
 impl OpenGLUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -38,7 +42,7 @@ impl OpenGLUtil {
     }
     
 
-    pub fn addImage(&mut self, mut image: Option<Rc<RefCell<Image>>>) -> Option<Rc<RefCell<Image>>> {
+    pub fn addImage(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return image.clone();
     }
     

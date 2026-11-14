@@ -59,13 +59,13 @@ impl Vertex {
     pub fn toString(&mut self) -> String {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         let mut positionStrings: Option<Rc<RefCell<PositionStrings>>> = PositionStrings::getInstance();
-        jcall!(stringBuffer).append(jcall!(positionStrings).X_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).X_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(self.x).toString());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).Y_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).Y_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(self.y).toString());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(positionStrings).Z_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(positionStrings).Z_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(jcall!(self.z).toString());
         return jcall!(stringBuffer).toString();
     }

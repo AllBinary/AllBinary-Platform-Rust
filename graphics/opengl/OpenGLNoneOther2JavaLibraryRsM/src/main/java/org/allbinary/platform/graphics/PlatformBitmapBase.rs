@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::NullImage::NullImage;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::NullImage::NullImage;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use crate::org::allbinary::graphics::color::BasicColorFactory::BasicColorFactory;
 
@@ -38,13 +38,17 @@ thread_local! { pub static PlatformBitmapBase_NULL_PLATFORM_BITMAP_BASE: Option<
 
 impl PlatformBitmapBase {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             alpha: 0,
             basicColor: None,
         };
         this.alpha = 255;
-        this.basicColor = jcall!(BasicColorFactory::getInstance()).NULL_COLOR.clone();
+        this.basicColor = { let java_field = jcall!(BasicColorFactory::getInstance()).NULL_COLOR.clone(); java_field }.clone();
         this
     }
 
@@ -63,19 +67,16 @@ impl PlatformBitmapBase {
     }
     
 
-    pub fn getImage(&mut self) -> Option<Rc<RefCell<Image>>> {
+    pub fn getImage(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone).clone();
     }
 }
-pub trait PlatformBitmapBaseDyn {
+pub trait PlatformBitmapBaseDyn: std::any::Any {
     fn as_PlatformBitmapBase(&self) -> &PlatformBitmapBase;
     fn as_PlatformBitmapBase_mut(&mut self) -> &mut PlatformBitmapBase;
     fn getWidth(&mut self) -> i32 { PlatformBitmapBase::getWidth(self.as_PlatformBitmapBase_mut()) }
     fn getHeight(&mut self) -> i32 { PlatformBitmapBase::getHeight(self.as_PlatformBitmapBase_mut()) }
-    fn getImage(&mut self) -> Option<Rc<RefCell<Image>>> { PlatformBitmapBase::getImage(self.as_PlatformBitmapBase_mut()) }
-    fn getWidth(&mut self) -> i32 { PlatformBitmapBase::getWidth(self.as_PlatformBitmapBase_mut()) }
-    fn getHeight(&mut self) -> i32 { PlatformBitmapBase::getHeight(self.as_PlatformBitmapBase_mut()) }
-    fn getImage(&mut self) -> Option<Rc<RefCell<Image>>> { PlatformBitmapBase::getImage(self.as_PlatformBitmapBase_mut()) }
+    fn getImage(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> { PlatformBitmapBase::getImage(self.as_PlatformBitmapBase_mut()) }
 }
 impl PlatformBitmapBaseDyn for PlatformBitmapBase {
     fn as_PlatformBitmapBase(&self) -> &PlatformBitmapBase { self }

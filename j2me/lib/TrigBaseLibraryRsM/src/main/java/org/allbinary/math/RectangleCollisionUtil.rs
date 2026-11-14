@@ -34,6 +34,10 @@ pub struct RectangleCollisionUtil {
 thread_local! { pub static RectangleCollisionUtil_instance: Option<Rc<RefCell<RectangleCollisionUtil>>> = RectangleCollisionUtil::new(); }
 
 impl RectangleCollisionUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<RectangleCollisionUtil>>> {

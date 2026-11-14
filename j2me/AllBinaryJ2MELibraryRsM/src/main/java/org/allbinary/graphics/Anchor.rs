@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -29,9 +29,13 @@ macro_rules! jcall {
 pub struct Anchor {
 }
 
-pub static mut Anchor_TOP_LEFT: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_TOP.clone() } & unsafe { crate::javax::microedition::lcdui::Graphics::Graphics_LEFT.clone() });
+pub static mut Anchor_TOP_LEFT: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| crate::javax::microedition::lcdui::Graphics::Graphics_TOP.with(Clone::clone) & crate::javax::microedition::lcdui::Graphics::Graphics_LEFT.with(Clone::clone));
 
 impl Anchor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::graphics::CellPositionFactory::CellPositionFactory;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionTracking::GeographicMapCellPositionTracking;
+use crate::java::lang::Exception::*;
 use super::GeographicMapCellPositionEvent::GeographicMapCellPositionEvent;
 use super::GeographicMapCellPositionEventHandler::GeographicMapCellPositionEventHandler;
 
@@ -36,6 +37,10 @@ pub struct GeographicMapCellPositionEventUtil {
 
 
 impl GeographicMapCellPositionEventUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Self {
@@ -44,7 +49,7 @@ impl GeographicMapCellPositionEventUtil {
             geographicMapCellPositionEventHandler: None,
         };
         this.geographicMapCellPositionEventHandler = GeographicMapCellPositionEventHandler::getInstance();
-        this.geographicMapCellPositionEvent = GeographicMapCellPositionEvent::new(anyType.clone(), jcall!(CellPositionFactory::getInstance()).NONE.clone());
+        this.geographicMapCellPositionEvent = { let java_value = (GeographicMapCellPositionEvent::new(crate::java_into_object(anyType.clone()), { let java_field = jcall!(CellPositionFactory::getInstance()).NONE.clone(); java_field }.clone())).clone(); java_value };
         this
     }
 

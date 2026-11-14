@@ -17,8 +17,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Displayable::Displayable;
+use crate::javax::microedition::lcdui::Displayable::Displayable;
 use crate::org::allbinary::canvas::Processor::Processor;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -29,14 +30,14 @@ macro_rules! jcall {
 
 pub struct ScreenRepaintProcessor {
     pub base: Processor,
-    pub displayable: Option<Rc<RefCell<Displayable>>>,
+    pub displayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>,
 }
 
 
 impl ScreenRepaintProcessor {
     
 
-    pub fn new_struct(mut displayable: Option<Rc<RefCell<Displayable>>>) -> Self {
+    pub fn new_struct(mut displayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) -> Self {
         let mut this = Self {
             base: Processor::new_struct(),
             displayable: None,
@@ -45,7 +46,7 @@ impl ScreenRepaintProcessor {
         this
     }
 
-    pub fn new(mut displayable: Option<Rc<RefCell<Displayable>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut displayable: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(displayable))))
     }
     

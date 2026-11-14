@@ -27,12 +27,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait PaymentGatewayDomNodeFactoryInterface {
+pub trait PaymentGatewayDomNodeFactoryInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getInstance(&mut self, paymentGatewayInterface: Option<Rc<RefCell<dyn PaymentGatewayInterface>>>) -> Option<Rc<RefCell<dyn DomNodeInterface>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

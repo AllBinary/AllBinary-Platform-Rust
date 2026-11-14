@@ -27,12 +27,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait CacheableInterface {
+pub trait CacheableInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

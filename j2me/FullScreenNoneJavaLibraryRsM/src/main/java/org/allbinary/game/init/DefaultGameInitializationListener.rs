@@ -28,6 +28,7 @@ use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEv
 use crate::org::allbinary::logic::util::event::EventStrings::EventStrings;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -50,6 +51,10 @@ impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventLis
 }
 
 impl DefaultGameInitializationListener {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -63,17 +68,19 @@ impl DefaultGameInitializationListener {
         this.firstTime = true;
         let mut gameInitializedEventHandler: Option<Rc<RefCell<GameInitializedEventHandler>>> = GameInitializedEventHandler::getInstance();
         jcall!(gameInitializedEventHandler).removeAllListeners();
-        jcall!(gameInitializedEventHandler).addListenerInterface((this).clone() /* as GameInitializedListenerInterface */);
         this
     }
 
     pub fn new() -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct())))
+        let this = Some(Rc::new(RefCell::new(Self::new_struct())));
+            let mut gameInitializedEventHandler: Option<Rc<RefCell<GameInitializedEventHandler>>> = GameInitializedEventHandler::getInstance();
+            jcall!(gameInitializedEventHandler).addListenerInterface(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+        this
     }
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
@@ -81,9 +88,9 @@ impl DefaultGameInitializationListener {
         let mut ON_GAME_INITIALIZED: String = String::from("onGameInitialized");
         let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), ON_GAME_INITIALIZED.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), ON_GAME_INITIALIZED.clone());
             while !jcall!(self.swtJOGLProcessor).isHolderCreated() {
-                jcall!(self.logUtil).putF(jcall!(commonStrings).UPDATE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), ON_GAME_INITIALIZED.clone());
+                jcall!(self.logUtil).putF({ let java_field = jcall!(commonStrings).UPDATE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), ON_GAME_INITIALIZED.clone());
                 std::thread::sleep(std::time::Duration::from_millis((20) as u64));
             }
             jcall!(FeatureResourceInitializationUtil::getInstance()).init(jcall!(gameInitializedEvent).getLevel());
@@ -95,9 +102,9 @@ impl DefaultGameInitializationListener {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), ON_GAME_INITIALIZED.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), ON_GAME_INITIALIZED.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

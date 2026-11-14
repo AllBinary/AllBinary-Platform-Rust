@@ -38,7 +38,7 @@ impl NoThirdPartyStore {
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: ThirdPartyStore::new_struct(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()),
+            base: ThirdPartyStore::new_struct({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()),
         };
         // super(...) is in the struct literal above
         this

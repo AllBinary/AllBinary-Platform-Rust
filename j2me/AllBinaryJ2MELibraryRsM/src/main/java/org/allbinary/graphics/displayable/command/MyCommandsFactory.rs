@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Command::Command;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 
 // Borrows the object of a Java reference
@@ -28,16 +28,20 @@ macro_rules! jcall {
 }
 
 pub struct MyCommandsFactory {
-    pub NO_COMMAND: Option<Rc<RefCell<Command>>>,
-    pub GAUGE_CHANGE: Option<Rc<RefCell<Command>>>,
-    pub SET_DISPLAYABLE: Option<Rc<RefCell<Command>>>,
-    pub PAUSE_COMMAND: Option<Rc<RefCell<Command>>>,
-    pub RESUME_COMMAND: Option<Rc<RefCell<Command>>>,
+    pub NO_COMMAND: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub GAUGE_CHANGE: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub SET_DISPLAYABLE: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub PAUSE_COMMAND: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
+    pub RESUME_COMMAND: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
 }
 
 thread_local! { pub static MyCommandsFactory_instance: Option<Rc<RefCell<MyCommandsFactory>>> = MyCommandsFactory::new(); }
 
 impl MyCommandsFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<MyCommandsFactory>>> {
@@ -53,11 +57,11 @@ impl MyCommandsFactory {
             PAUSE_COMMAND: None,
             RESUME_COMMAND: None,
         };
-        this.NO_COMMAND = Command::new(jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), -1, -1);
-        this.GAUGE_CHANGE = Command::new(String::from("GAUGE_CHANGE"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_ITEM.clone() }.clone(), 1);
-        this.SET_DISPLAYABLE = Command::new(String::from("Display"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 2);
-        this.PAUSE_COMMAND = Command::new(String::from("Pause"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 0);
-        this.RESUME_COMMAND = Command::new(String::from("Resume"), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(), unsafe { crate::javax::microedition::lcdui::Command::Command_SCREEN.clone() }.clone(), 0);
+        this.NO_COMMAND = Command::new4({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), -1, -1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.GAUGE_CHANGE = Command::new4(String::from("GAUGE_CHANGE"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_ITEM.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.SET_DISPLAYABLE = Command::new4(String::from("Display"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 2).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.PAUSE_COMMAND = Command::new4(String::from("Pause"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 0).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
+        this.RESUME_COMMAND = Command::new4(String::from("Resume"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 0).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>);
         this
     }
 

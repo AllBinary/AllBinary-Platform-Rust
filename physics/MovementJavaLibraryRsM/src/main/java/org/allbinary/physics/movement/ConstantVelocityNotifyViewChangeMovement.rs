@@ -23,6 +23,7 @@ use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal;
 use crate::org::allbinary::logic::math::vector::AxisMathVectorUtil::AxisMathVectorUtil;
 use crate::org::allbinary::math::AngleFactory::AngleFactory;
+use crate::java::lang::Exception::*;
 use super::Movement::Movement;
 
 // Borrows the object of a Java reference
@@ -51,7 +52,7 @@ impl ConstantVelocityNotifyViewChangeMovement {
             axisMathVectorUtil: None,
         };
         this.axisMathVectorUtil = AxisMathVectorUtil::getInstance();
-        this.speedBasicDecimal = crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal_ZERO_BIGDECIMAL.with(Clone::clone).clone();
+        this.speedBasicDecimal = { let java_value = (crate::org::allbinary::logic::math::BasicDecimal::BasicDecimal_ZERO_BIGDECIMAL.with(Clone::clone)).clone(); java_value }.clone();
         this.basicVelocityProperties = BasicVelocityProperties::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::physics::velocity::BasicVelocityProperties::BasicVelocityPropertiesDyn>>);
         this
     }
@@ -64,7 +65,7 @@ impl ConstantVelocityNotifyViewChangeMovement {
     pub fn init(&mut self, mut speedBasicDecimal: Option<Rc<RefCell<BasicDecimal>>>, mut angle: i32, mut otherAngle: i32) {
         self.speedBasicDecimal = speedBasicDecimal.clone();
         let mut angleFactory: Option<Rc<RefCell<AngleFactory>>> = AngleFactory::getInstance();
-        { let java_receiver = self.basicVelocityProperties.clone(); let java_arguments = (speedBasicDecimal.clone(), jcall!(angleFactory).getAt(angle.clone()), jcall!(angleFactory).getAt(otherAngle.clone()),); jcall!(java_receiver).setVelocityWithBigDecimal(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.basicVelocityProperties.clone(); let java_arguments = (speedBasicDecimal.clone(), jcall!(angleFactory).getAt(angle.clone()), jcall!(angleFactory).getAt(otherAngle.clone()),); jcall!(java_receiver).as_BasicVelocityProperties_mut().setVelocityWithBigDecimal(java_arguments.0, java_arguments.1, java_arguments.2); };
     }
     
 
@@ -79,18 +80,18 @@ impl ConstantVelocityNotifyViewChangeMovement {
 
     // throws Exception
     pub fn process(&mut self, mut layer: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayer::AllBinaryGameLayerDyn>>>) {
-        let mut x: i32 = jcall!(jcall!(self.basicVelocityProperties).getVelocityXBasicDecimalP()).getScaled();
-        let mut y: i32 = jcall!(jcall!(self.basicVelocityProperties).getVelocityYBasicDecimalP()).getScaled();
+        let mut x: i32 = jcall!(jcall!(self.basicVelocityProperties).as_BasicVelocityProperties_mut().getVelocityXBasicDecimalP()).getScaled();
+        let mut y: i32 = jcall!(jcall!(self.basicVelocityProperties).as_BasicVelocityProperties_mut().getVelocityYBasicDecimalP()).getScaled();
         let mut z: i32 = jcall!(jcall!(self.basicVelocityProperties).getVelocityZBasicDecimalP()).getScaled();
         jcall!(layer).moveDXYZ(x.clone(), y.clone(), z.clone());
         if x != 0 || y != 0 || z != 0 {
-            jcall!(layer).as_AllBinaryLayer_mut().onViewPositionChangeEvent();
+            jcall!(layer).onViewPositionChangeEvent();
         }
     }
     
 
     pub fn stop(&mut self) {
-        jcall!(self.basicVelocityProperties).zero();
+        jcall!(self.basicVelocityProperties).as_BasicVelocityProperties_mut().zero();
     }
 }
 impl std::ops::Deref for ConstantVelocityNotifyViewChangeMovement {

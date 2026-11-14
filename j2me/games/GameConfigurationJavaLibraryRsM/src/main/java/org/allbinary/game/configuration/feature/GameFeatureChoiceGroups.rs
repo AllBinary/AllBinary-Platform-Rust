@@ -29,13 +29,17 @@ macro_rules! jcall {
 }
 
 pub struct GameFeatureChoiceGroups {
-    pub hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 pub static mut GameFeatureChoiceGroups_gameFeatureChoiceGroupsExclusive: std::cell::LazyCell<Option<Rc<RefCell<GameFeatureChoiceGroups>>>> = std::cell::LazyCell::new(|| GameFeatureChoiceGroups::new());
 pub static mut GameFeatureChoiceGroups_gameFeatureChoiceGroupsMultiple: std::cell::LazyCell<Option<Rc<RefCell<GameFeatureChoiceGroups>>>> = std::cell::LazyCell::new(|| GameFeatureChoiceGroups::new());
 
 impl GameFeatureChoiceGroups {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -61,7 +65,7 @@ impl GameFeatureChoiceGroups {
     }
     
 
-    pub fn get(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn get(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
         return self.hashtable.clone();
     }
     

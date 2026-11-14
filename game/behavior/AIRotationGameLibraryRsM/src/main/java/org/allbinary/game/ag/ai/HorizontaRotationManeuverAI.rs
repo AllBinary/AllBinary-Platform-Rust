@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
 use crate::org::allbinary::ai::ArtificialIntelligence::ArtificialIntelligence;
 use crate::org::allbinary::ai::ArtificialIntelligenceTransitionInterface::ArtificialIntelligenceTransitionInterface;
 use crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation;
@@ -33,6 +33,7 @@ use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
 use crate::org::allbinary::math::AngleIncrementInfo::AngleIncrementInfo;
 use crate::org::allbinary::util::CircularIndexUtil::CircularIndexUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -75,14 +76,14 @@ impl HorizontaRotationManeuverAI {
         this.circularIndexUtil = CircularIndexUtil::createInstanceAt(10, i32::MAX.clone());
         this.currentSpeedDivisor = 5;
         // super(...) is in the struct literal above
-        let mut rotationAnimationInterfaceCompositeInterface: Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> = (this.getOwnerLayerInterface()).clone() /* as RotationAnimationInterfaceCompositeInterface */;
-        this.rotationAnimationInterface = jcall!(rotationAnimationInterfaceCompositeInterface).getRotationAnimationInterface();
-        let mut velocityInterfaceCompositeInterface: Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> = (this.getOwnerLayerInterface()).clone() /* as VelocityInterfaceCompositeInterface */;
-        this.baseVelocityInterface = jcall!(velocityInterfaceCompositeInterface).getVelocityProperties();
-        this.velocityInterface = (this.baseVelocityInterface).clone() /* as VelocityInterface */;
-        let mut rotationAnimationInterface: Option<Rc<RefCell<dyn RotationAnimationInterface>>> = (this.rotationAnimationInterface).clone() /* as RotationAnimationInterface */;
-        let mut angleIncrementInfo: Option<Rc<RefCell<AngleIncrementInfo>>> = jcall!(jcall!(rotationAnimationInterface).as_IndexedAnimation_mut().getAngleInfoP()).getAngleIncrementInfo();
-        jcall!(rotationAnimationInterfaceCompositeInterface).setFrame(((jcall!(angleIncrementInfo).RIGHT_FRAME).unwrap() as i32));
+        let mut rotationAnimationInterfaceCompositeInterface: Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to RotationAnimationInterfaceCompositeInterface") })();
+        this.rotationAnimationInterface = { let java_value = (jcall!(rotationAnimationInterfaceCompositeInterface).getRotationAnimationInterface()).clone(); java_value }.map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>);
+        let mut velocityInterfaceCompositeInterface: Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn VelocityInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to VelocityInterfaceCompositeInterface") })();
+        this.baseVelocityInterface = { let java_value = (jcall!(velocityInterfaceCompositeInterface).getVelocityProperties()).clone(); java_value };
+        this.velocityInterface = (|| -> Option<Rc<RefCell<dyn VelocityInterface>>> { panic!("ClassCastException: a Rust dyn BasicVelocityProperties cannot be cast to VelocityInterface") })();
+        let mut rotationAnimationInterface: Option<Rc<RefCell<dyn RotationAnimationInterface>>> = (|| -> Option<Rc<RefCell<dyn RotationAnimationInterface>>> { panic!("ClassCastException: a Rust dyn IndexedAnimation cannot be cast to RotationAnimationInterface") })();
+        let mut angleIncrementInfo: Option<Rc<RefCell<AngleIncrementInfo>>> = jcall!(jcall!(rotationAnimationInterface).getAngleInfoP()).getAngleIncrementInfo();
+        jcall!(rotationAnimationInterfaceCompositeInterface).setFrame((({ let java_field = jcall!(angleIncrementInfo).RIGHT_FRAME.clone(); java_field }).unwrap() as i32));
         this
     }
 
@@ -92,10 +93,10 @@ impl HorizontaRotationManeuverAI {
     
 
     pub fn transition(&mut self) {
-        let mut rotationAnimationInterface: Option<Rc<RefCell<dyn RotationAnimationInterface>>> = (self.rotationAnimationInterface).clone() /* as RotationAnimationInterface */;
-        let mut angleIncrementInfo: Option<Rc<RefCell<AngleIncrementInfo>>> = jcall!(jcall!(rotationAnimationInterface).as_IndexedAnimation_mut().getAngleInfoP()).getAngleIncrementInfo();
-        let mut rotationAnimationInterfaceCompositeInterface: Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> = (self.getOwnerLayerInterface()).clone() /* as RotationAnimationInterfaceCompositeInterface */;
-        jcall!(rotationAnimationInterfaceCompositeInterface).setFrame(((jcall!(angleIncrementInfo).RIGHT_FRAME).unwrap() as i32));
+        let mut rotationAnimationInterface: Option<Rc<RefCell<dyn RotationAnimationInterface>>> = (|| -> Option<Rc<RefCell<dyn RotationAnimationInterface>>> { panic!("ClassCastException: a Rust dyn IndexedAnimation cannot be cast to RotationAnimationInterface") })();
+        let mut angleIncrementInfo: Option<Rc<RefCell<AngleIncrementInfo>>> = jcall!(jcall!(rotationAnimationInterface).getAngleInfoP()).getAngleIncrementInfo();
+        let mut rotationAnimationInterfaceCompositeInterface: Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to RotationAnimationInterfaceCompositeInterface") })();
+        jcall!(rotationAnimationInterfaceCompositeInterface).setFrame((({ let java_field = jcall!(angleIncrementInfo).RIGHT_FRAME.clone(); java_field }).unwrap() as i32));
         let mut allbinaryLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = self.getOwnerLayerInterface();
         jcall!(allbinaryLayer).setPosition(jcall!(allbinaryLayer).getXP(), 1, jcall!(allbinaryLayer).getZP());
     }
@@ -103,46 +104,46 @@ impl HorizontaRotationManeuverAI {
 
     // throws Exception
     pub fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) {
-        let mut rotationAnimationInterface: Option<Rc<RefCell<dyn RotationAnimationInterface>>> = ((self.rotationAnimationInterface).clone() /* as RotationAnimationInterface */);
-        let mut angleIncrementInfo: Option<Rc<RefCell<AngleIncrementInfo>>> = jcall!(jcall!(rotationAnimationInterface).as_IndexedAnimation_mut().getAngleInfoP()).getAngleIncrementInfo();
+        let mut rotationAnimationInterface: Option<Rc<RefCell<dyn RotationAnimationInterface>>> = ((|| -> Option<Rc<RefCell<dyn RotationAnimationInterface>>> { panic!("ClassCastException: a Rust dyn IndexedAnimation cannot be cast to RotationAnimationInterface") })());
+        let mut angleIncrementInfo: Option<Rc<RefCell<AngleIncrementInfo>>> = jcall!(jcall!(rotationAnimationInterface).getAngleInfoP()).getAngleIncrementInfo();
         let mut frame: i32 = jcall!(self.rotationAnimationInterface).getFrame();
         let mut ownerLayerInterface: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> = self.getOwnerLayerInterface();
-        if jcall!(ownerLayerInterface).getXP() - jcall!(ownerLayerInterface).getWidth() <= 0 && frame == ((jcall!(angleIncrementInfo).LEFT_FRAME).unwrap() as i32) {
+        if jcall!(ownerLayerInterface).getXP() - jcall!(ownerLayerInterface).getWidth() <= 0 && frame == (({ let java_field = jcall!(angleIncrementInfo).LEFT_FRAME.clone(); java_field }).unwrap() as i32) {
             self.reverse();
             self.drop();
         }
         let mut displayInfo: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::getInstance();
-        if jcall!(ownerLayerInterface).getX2() + jcall!(ownerLayerInterface).getWidth() > jcall!(displayInfo).getLastWidth() && frame == ((jcall!(angleIncrementInfo).RIGHT_FRAME).unwrap() as i32) {
+        if jcall!(ownerLayerInterface).getX2() + jcall!(ownerLayerInterface).getWidth() > jcall!(displayInfo).getLastWidth() && frame == (({ let java_field = jcall!(angleIncrementInfo).RIGHT_FRAME.clone(); java_field }).unwrap() as i32) {
             self.reverse();
             self.accelerate();
             self.drop();
         }
         let mut index: i32 = jcall!(self.circularIndexUtil).getIndex();
         if index % self.currentSpeedDivisor == 0 && index % 2 == 0 {
-            self.base.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() }.clone());
+            { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone).clone(),); self.base.processKeyAI(java_arguments.0) };
             { let java_receiver = self.velocityInterface.clone(); let java_arguments = (jcall!(self.velocityInterface).getMaxForwardVelocity() / self.currentSpeedDivisor,); jcall!(java_receiver).limitMaxXYVelocity(java_arguments.0); };
         }
         jcall!(self.circularIndexUtil).next();
-        if frame == ((jcall!(angleIncrementInfo).LEFT_FRAME).unwrap() as i32) {
-            self.base.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM0.clone() }.clone());
-        } else if frame == ((jcall!(angleIncrementInfo).RIGHT_FRAME).unwrap() as i32) {
-            self.base.processKeyAI(unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_KEY_POUND.clone() }.clone());
+        if frame == (({ let java_field = jcall!(angleIncrementInfo).LEFT_FRAME.clone(); java_field }).unwrap() as i32) {
+            { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_NUM0.with(Clone::clone).clone(),); self.base.processKeyAI(java_arguments.0) };
+        } else if frame == (({ let java_field = jcall!(angleIncrementInfo).RIGHT_FRAME.clone(); java_field }).unwrap() as i32) {
+            { let java_arguments = (crate::javax::microedition::lcdui::Canvas::Canvas_KEY_POUND.with(Clone::clone).clone(),); self.base.processKeyAI(java_arguments.0) };
         }
     }
     
 
     pub fn reverse(&mut self) {
-        let mut rotationAnimationInterface: Option<Rc<RefCell<dyn RotationAnimationInterface>>> = (self.rotationAnimationInterface).clone() /* as RotationAnimationInterface */;
-        let mut angleIncrementInfo: Option<Rc<RefCell<AngleIncrementInfo>>> = jcall!(jcall!(rotationAnimationInterface).as_IndexedAnimation_mut().getAngleInfoP()).getAngleIncrementInfo();
+        let mut rotationAnimationInterface: Option<Rc<RefCell<dyn RotationAnimationInterface>>> = (|| -> Option<Rc<RefCell<dyn RotationAnimationInterface>>> { panic!("ClassCastException: a Rust dyn IndexedAnimation cannot be cast to RotationAnimationInterface") })();
+        let mut angleIncrementInfo: Option<Rc<RefCell<AngleIncrementInfo>>> = jcall!(jcall!(rotationAnimationInterface).getAngleInfoP()).getAngleIncrementInfo();
         let mut frame: i32 = jcall!(self.rotationAnimationInterface).getFrame();
-        if frame == ((jcall!(angleIncrementInfo).LEFT_FRAME).unwrap() as i32) {
-            let mut rotationAnimationInterfaceCompositeInterface: Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> = (self.getOwnerLayerInterface()).clone() /* as RotationAnimationInterfaceCompositeInterface */;
-            jcall!(rotationAnimationInterfaceCompositeInterface).setFrame(((jcall!(angleIncrementInfo).RIGHT_FRAME).unwrap() as i32));
-            jcall!(self.baseVelocityInterface).zero();
-        } else if frame == ((jcall!(angleIncrementInfo).RIGHT_FRAME).unwrap() as i32) {
-            let mut rotationAnimationInterfaceCompositeInterface: Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> = (self.getOwnerLayerInterface()).clone() /* as RotationAnimationInterfaceCompositeInterface */;
-            jcall!(rotationAnimationInterfaceCompositeInterface).setFrame(((jcall!(angleIncrementInfo).LEFT_FRAME).unwrap() as i32));
-            jcall!(self.baseVelocityInterface).zero();
+        if frame == (({ let java_field = jcall!(angleIncrementInfo).LEFT_FRAME.clone(); java_field }).unwrap() as i32) {
+            let mut rotationAnimationInterfaceCompositeInterface: Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to RotationAnimationInterfaceCompositeInterface") })();
+            jcall!(rotationAnimationInterfaceCompositeInterface).setFrame((({ let java_field = jcall!(angleIncrementInfo).RIGHT_FRAME.clone(); java_field }).unwrap() as i32));
+            jcall!(self.baseVelocityInterface).as_BasicVelocityProperties_mut().zero();
+        } else if frame == (({ let java_field = jcall!(angleIncrementInfo).RIGHT_FRAME.clone(); java_field }).unwrap() as i32) {
+            let mut rotationAnimationInterfaceCompositeInterface: Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> = (|| -> Option<Rc<RefCell<dyn RotationAnimationInterfaceCompositeInterface>>> { panic!("ClassCastException: a Rust dyn AllBinaryLayer cannot be cast to RotationAnimationInterfaceCompositeInterface") })();
+            jcall!(rotationAnimationInterfaceCompositeInterface).setFrame((({ let java_field = jcall!(angleIncrementInfo).LEFT_FRAME.clone(); java_field }).unwrap() as i32));
+            jcall!(self.baseVelocityInterface).as_BasicVelocityProperties_mut().zero();
         }
     }
     

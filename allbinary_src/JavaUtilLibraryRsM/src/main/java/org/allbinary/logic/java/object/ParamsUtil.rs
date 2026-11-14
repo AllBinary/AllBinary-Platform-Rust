@@ -31,6 +31,10 @@ pub struct ParamsUtil {
 
 
 impl ParamsUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -45,7 +49,7 @@ impl ParamsUtil {
     
 
     pub fn viewParams(mut params: Vec<&'static str>) -> String {
-        if params.is_some() {
+        if !params.is_empty() {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             for index in (0..(params.len() as i32)) {
                 jcall!(stringBuffer).append(String::from(" "));

@@ -18,7 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 // use crate::java::awt::image::BufferedImage::BufferedImage;
-// use crate::java::io::IOException::IOException;
+use crate::java::io::IOException::IOException;
 use super::ImageProcessorInputCompositeInterface::ImageProcessorInputCompositeInterface;
 
 // Borrows the object of a Java reference

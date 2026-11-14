@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Canvas::Canvas;
-// use crate::javax::microedition::lcdui::Command::Command;
+use crate::javax::microedition::lcdui::Canvas::Canvas;
+use crate::javax::microedition::lcdui::Command::Command;
 use crate::org::allbinary::game::commands::GameCommandsFactory::GameCommandsFactory;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use crate::org::allbinary::game::configuration::feature::InputFeatureFactory::InputFeatureFactory;
@@ -39,6 +39,7 @@ use crate::org::allbinary::media::audio::SelectSound::SelectSound;
 use crate::org::allbinary::thread::PrimaryThreadPool::PrimaryThreadPool;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
+use crate::java::lang::Exception::*;
 use super::BasicMenuInputProcessor::BasicMenuInputProcessor;
 use super::CommandRunnable::CommandRunnable;
 
@@ -64,7 +65,23 @@ pub struct CommandFormInputProcessor {
     pub NAME_LABEL: String,
 }
 
+impl crate::org::allbinary::input::motion::gesture::observer::BaseMotionGestureEventListener::BaseMotionGestureEventListener for CommandFormInputProcessor {
+    fn onMotionGestureEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::input::motion::gesture::observer::MotionGestureEvent::MotionGestureEvent>>>) { crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessor::onMotionGestureEvent(crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn::as_BasicMenuInputProcessor_mut(self), p1) }
+    fn onScrolledMotionGestureEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::input::motion::gesture::observer::MotionGestureEvent::MotionGestureEvent>>>) { crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessor::onScrolledMotionGestureEvent(crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn::as_BasicMenuInputProcessor_mut(self), p1) }
+}
+impl crate::org::allbinary::game::input::event::DownGameKeyEventListenerInterface::DownGameKeyEventListenerInterface for CommandFormInputProcessor {
+    fn onDownGameKeyEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onDownGameKeyEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
+}
 impl crate::org::allbinary::game::input::event::GameKeyEventListenerInterface::GameKeyEventListenerInterface for CommandFormInputProcessor {
+}
+impl crate::org::allbinary::game::input::event::PressGameKeyEventListenerInterface::PressGameKeyEventListenerInterface for CommandFormInputProcessor {
+    fn onPressGameKeyEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onPressGameKeyEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
+}
+impl crate::org::allbinary::game::input::event::UpGameKeyEventListenerInterface::UpGameKeyEventListenerInterface for CommandFormInputProcessor {
+    fn onUpGameKeyEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onUpGameKeyEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
+}
+impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface for CommandFormInputProcessor {
+    fn onEvent(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInput::onEvent(crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn::as_PlayerGameInput_mut(self), p1) }
 }
 
 impl CommandFormInputProcessor {
@@ -72,7 +89,7 @@ impl CommandFormInputProcessor {
 
     pub fn new_struct(mut gameKeyEventList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut playerInputId: i32, mut gameCanvas: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::displayable::MyCanvas::MyCanvasDyn>>>, mut form: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::ScrollSelectionForm::ScrollSelectionFormDyn>>>) -> Self {
         let mut this = Self {
-            base: BasicMenuInputProcessor::new_struct(gameKeyEventList.clone(), playerInputId.clone(), gameCanvas.clone()),
+            base: BasicMenuInputProcessor::new_struct(gameKeyEventList.clone(), playerInputId.clone(), gameCanvas.clone().map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Canvas::CanvasDyn>>)),
             MOTION_GESTURE_SOURCE_ID: 0,
             CLICK_DELAY: 0,
             clickTimeHelper: None,
@@ -84,7 +101,7 @@ impl CommandFormInputProcessor {
             PROCESS_COMMAND: String::new(),
             NAME_LABEL: String::new(),
         };
-        this.MOTION_GESTURE_SOURCE_ID = jcall!(GameKeyEventFactory::getInstance()).MOTION_GESTURE_SOURCE_ID.clone();
+        this.MOTION_GESTURE_SOURCE_ID = { let java_field = jcall!(GameKeyEventFactory::getInstance()).MOTION_GESTURE_SOURCE_ID.clone(); java_field }.clone();
         this.CLICK_DELAY = 150;
         this.clickTimeHelper = TimeDelayHelper::new(this.CLICK_DELAY.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>);
         this.DOUBLE_CLICK_DELAY = 1200;
@@ -105,11 +122,11 @@ impl CommandFormInputProcessor {
 
     // throws Exception
     pub fn processInput(&mut self, mut key: i32) -> i32 {
-        if key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.clone() } || key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.clone() } || key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_UP.clone() } || key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.clone() } {
+        if key == crate::javax::microedition::lcdui::Canvas::Canvas_LEFT.with(Clone::clone) || key == crate::javax::microedition::lcdui::Canvas::Canvas_RIGHT.with(Clone::clone) || key == crate::javax::microedition::lcdui::Canvas::Canvas_UP.with(Clone::clone) || key == crate::javax::microedition::lcdui::Canvas::Canvas_DOWN.with(Clone::clone) {
             jcall!(PrimaryPlayerQueueFactory::getInstance()).add(SelectSound::getInstance());
             jcall!(self.form).processInputKey(key.clone());
             return 1;
-        } else if key == unsafe { crate::javax::microedition::lcdui::Canvas::Canvas_FIRE.clone() } {
+        } else if key == crate::javax::microedition::lcdui::Canvas::Canvas_FIRE.with(Clone::clone) {
             jcall!(PrimaryPlayerQueueFactory::getInstance()).add(SelectSound::getInstance());
             return self.processCommand();
         }
@@ -118,17 +135,17 @@ impl CommandFormInputProcessor {
     
 
     pub fn processCommand(&mut self) -> i32 {
-        let mut commandCurrentSelectionForm: Option<Rc<RefCell<CommandCurrentSelectionForm>>> = (self.form).clone() /* as CommandCurrentSelectionForm */;
-        let mut command: Option<Rc<RefCell<Command>>> = jcall!(commandCurrentSelectionForm).getSelectedCommand();
+        let mut commandCurrentSelectionForm: Option<Rc<RefCell<CommandCurrentSelectionForm>>> = (self.form).clone().map(|reference| { assert!({ let java_borrowed = reference.borrow(); let java_any: &dyn std::any::Any = &*java_borrowed; java_any.is::<CommandCurrentSelectionForm>() }, "ClassCastException: not a CommandCurrentSelectionForm"); unsafe { Rc::from_raw(Rc::into_raw(reference) as *const RefCell<CommandCurrentSelectionForm>) } });
+        let mut command: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>> = jcall!(commandCurrentSelectionForm).getSelectedCommand();
         { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(command).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.PROCESS_COMMAND.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
         let mut openGLFeatureFactory: Option<Rc<RefCell<OpenGLFeatureFactory>>> = OpenGLFeatureFactory::getInstance();
-        if unsafe { crate::org::allbinary::game::layer::SWTUtil::SWTUtil_isSWT.clone() } && jcall!(features).isFeature(jcall!(openGLFeatureFactory).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) && !match (&command, &jcall!(GameCommandsFactory::getInstance()).EXIT_COMMAND) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if unsafe { crate::org::allbinary::game::layer::SWTUtil::SWTUtil_isSWT.clone() } && jcall!(features).isFeature({ let java_field = jcall!(openGLFeatureFactory).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) && !match (&command, &{ let java_field = jcall!(GameCommandsFactory::getInstance()).EXIT_COMMAND.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             jcall!(CommandRunnable::new(None /* Java this: a &mut self method has no Rc of itself */, command.clone())).run();
         } else {
-            jcall!(PrimaryThreadPool::getInstance()).runTask(CommandRunnable::new(None /* Java this: a &mut self method has no Rc of itself */, command.clone()));
+            jcall!(PrimaryThreadPool::getInstance()).runTask(CommandRunnable::new(None /* Java this: a &mut self method has no Rc of itself */, command.clone()).map(|reference| reference as Rc<RefCell<dyn crate::Runnable>>));
         }
-        if match (&command, &jcall!(GameCommandsFactory::getInstance()).QUIT_COMMAND) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&command, &{ let java_field = jcall!(GameCommandsFactory::getInstance()).QUIT_COMMAND.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             return -1;
         } else {
             return 1;
@@ -138,15 +155,15 @@ impl CommandFormInputProcessor {
 
     // throws Exception
     pub fn processInputList(&mut self) -> i32 {
-        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let java_try_result = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             let mut motionInputsIndex: i32 = self.processMotionInputs();
             let mut list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = self.getGameKeyEventList();
             let mut size: i32 = jcall!(list).size();
             let mut key: i32 = 0;
             let mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>> = None;
             for index in (0..size) {
-                gameKeyEvent = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameKeyEvent>>>>().expect("ClassCastException").clone()) };
-                key = jcall!(gameKeyEvent).getKey();
+                gameKeyEvent = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameKeyEvent>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+                key = { let java_value = (jcall!(gameKeyEvent).getKey()).clone(); java_value };
                 if jcall!(gameKeyEvent).getSourceId() != self.MOTION_GESTURE_SOURCE_ID {
                     if self.processInput(key.clone()) == 1 {
                         break;
@@ -155,19 +172,20 @@ impl CommandFormInputProcessor {
             }
             self.clear();
             if size > 0 || motionInputsIndex >= 0 {
-                return 1;
+                return Some(1);
             } else {
-                return -1;
-            }
+                return Some(-1);
+            }None
         })) {
-            Ok(_) => {}
+            Ok(java_return) => java_return,
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).PROCESS_INPUT.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).PROCESS_INPUT.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             return -1;
+            None
             }
-        }
+        };if let Some(java_return) = java_try_result { return java_return; }unreachable!("try statement")
     }
     
 
@@ -175,7 +193,7 @@ impl CommandFormInputProcessor {
     pub fn processMotionInputs(&mut self) -> i32 {
         let mut lastIndex: i32 = jcall!(self.motionGestureEventList).size() - 1;
         if lastIndex >= 0 {
-            let mut motionGestureEvent: Option<Rc<RefCell<MotionGestureEvent>>> = (jcall!(self.motionGestureEventList).as_BasicArrayList_mut().objectArray[(lastIndex) as usize]).clone() /* as MotionGestureEvent */;
+            let mut motionGestureEvent: Option<Rc<RefCell<MotionGestureEvent>>> = { let java_object = (jcall!(self.motionGestureEventList).as_BasicArrayList_mut().objectArray[(lastIndex) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<MotionGestureEvent>>>>().expect("ClassCastException").clone()) };
             self.processMotionInput(motionGestureEvent.clone());
         }
         jcall!(self.motionGestureEventList).clear();
@@ -187,32 +205,32 @@ impl CommandFormInputProcessor {
     pub fn processMotionInput(&mut self, mut motionGestureEvent: Option<Rc<RefCell<MotionGestureEvent>>>) {
         let mut touchMotionGestureFactory: Option<Rc<RefCell<TouchMotionGestureFactory>>> = TouchMotionGestureFactory::getInstance();
         let mut motionGestureInput: Option<Rc<RefCell<MotionGestureInput>>> = jcall!(motionGestureEvent).getMotionGesture();
-        if match (&motionGestureInput, &jcall!(touchMotionGestureFactory).RELEASED) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if match (&motionGestureInput, &{ let java_field = jcall!(touchMotionGestureFactory).RELEASED.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             let mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>> = jcall!(motionGestureEvent).getCurrentPoint();
             if jcall!(self.form).isInForm(point.clone()) {
                 let mut index: i32 = jcall!(self.form).getSelectedIndexForPoint(point.clone());
                 if index != -1 {
                     jcall!(PrimaryPlayerQueueFactory::getInstance()).add(SelectSound::getInstance());
-                    if index == jcall!(self.form).as_ScrollSelectionForm_mut().getSelectedIndex() {
+                    if index == jcall!(self.form).getSelectedIndex() {
                         if jcall!(self.clickTimeHelper).isTimeTNT() {
                             self.processCommand();
                         }
                     } else {
-                        jcall!(self.form).as_ScrollSelectionForm_mut().setSelectedIndex(index.clone());
+                        jcall!(self.form).setSelectedIndex(index.clone());
                     }
                 } else {
                 }
             }
             if self.hasPressed {
                 if !jcall!(self.doubleClickTimeHelper).isTimeTNT() {
-                    jcall!(self.logUtil).putF(String::from("Double Press"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameInputStrings).PROCESS_MOTION_INPUT.clone());
+                    jcall!(self.logUtil).putF(String::from("Double Press"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameInputStrings).PROCESS_MOTION_INPUT.clone(); java_field }.clone());
                     self.processCommand();
                 }
                 jcall!(self.doubleClickTimeHelper).as_TimeDelayHelper_mut().delay = self.DOUBLE_CLICK_DELAY.clone();
                 jcall!(self.doubleClickTimeHelper).setStartTimeTNT();
             }
             self.hasPressed = false;
-        } else if match (&motionGestureInput, &jcall!(touchMotionGestureFactory).PRESSED) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        } else if match (&motionGestureInput, &{ let java_field = jcall!(touchMotionGestureFactory).PRESSED.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             jcall!(self.doubleClickTimeHelper).as_TimeDelayHelper_mut().delay = 0;
             self.hasPressed = true;
         }

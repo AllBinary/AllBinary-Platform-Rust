@@ -41,6 +41,10 @@ pub struct GameInput {
 
 
 impl GameInput {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut gameKeyEventList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>, mut removalGameKeyEventList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Self {
@@ -55,7 +59,7 @@ impl GameInput {
         this.commonStrings = CommonStrings::getInstance();
         this.gameKeyEventList = gameKeyEventList.clone();
         this.removalGameKeyEventList = removalGameKeyEventList.clone();
-        this.isRemoveDuplicateKeyPresses = jcall!(Features::getInstance()).isFeature(jcall!(InputFeatureFactory::getInstance()).REMOVE_DUPLICATE_KEY_PRESSES.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>));
+        this.isRemoveDuplicateKeyPresses = { let java_value = (jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(InputFeatureFactory::getInstance()).REMOVE_DUPLICATE_KEY_PRESSES.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>))).clone(); java_value };
         this
     }
 
@@ -72,7 +76,7 @@ impl GameInput {
         if gameKeyEvent.is_some() {
             jcall!(self.gameKeyEventList).add(crate::java_into_object(gameKeyEvent.clone()));
         } else {
-            jcall!(self.logUtil).putF(String::from("Danger Passed Null GameKeyEvent"), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStrings).ADD.clone());
+            jcall!(self.logUtil).putF(String::from("Danger Passed Null GameKeyEvent"), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStrings).ADD.clone(); java_field }.clone());
         }
     }
     
@@ -102,7 +106,7 @@ impl GameInput {
         {
             let mut index: i32 = jcall!(list).size();
             while { index -= 1; index } >= 0 {
-            gameKeyEvent = { let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameKeyEvent>>>>().expect("ClassCastException").clone()) };
+            gameKeyEvent = { let java_value = ({ let java_object = (jcall!(list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<GameKeyEvent>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
             if jcall!(gameKeyEvent).getSourceId() != 1 {
                 jcall!(list).removeAt(index.clone());
             }
@@ -140,7 +144,7 @@ impl GameInput {
         return self.gameKeyEventList.clone();
     }
 }
-pub trait GameInputDyn {
+pub trait GameInputDyn: std::any::Any {
     fn as_GameInput(&self) -> &GameInput;
     fn as_GameInput_mut(&mut self) -> &mut GameInput;
     fn add(&mut self, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) { GameInput::add(self.as_GameInput_mut(), gameKeyEvent) }

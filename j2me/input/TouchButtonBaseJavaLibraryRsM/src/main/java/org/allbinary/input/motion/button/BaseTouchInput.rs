@@ -61,7 +61,7 @@ impl BaseTouchInput {
         return std::any::type_name_of_val(&self).to_string();
     }
 }
-pub trait BaseTouchInputDyn {
+pub trait BaseTouchInputDyn: std::any::Any {
     fn as_BaseTouchInput(&self) -> &BaseTouchInput;
     fn as_BaseTouchInput_mut(&mut self) -> &mut BaseTouchInput;
     fn getList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { BaseTouchInput::getList(self.as_BaseTouchInput_mut()) }

@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::game::Sprite::Sprite;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::game::Sprite::Sprite;
 use crate::org::allbinary::animation::AnimationBehavior::AnimationBehavior;
 use crate::org::allbinary::direction::Direction::Direction;
 use crate::org::allbinary::math::Angle::Angle;
@@ -37,14 +37,9 @@ pub struct AllBinarySpriteRotationAnimation {
     pub base: HackRotationSpriteIndexedAnimation,
 }
 
-impl crate::org::allbinary::animation::IndexedAnimationInterface::IndexedAnimationInterface for AllBinarySpriteRotationAnimation {
-    fn reset(&mut self) { self.base.reset() }
-    fn setFrame(&mut self, mut index: i32) { Self::setFrame(self, index) }
-    fn getFrame(&mut self) -> i32 { self.base.getFrame() }
-}
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for AllBinarySpriteRotationAnimation {
-    fn getSize(&mut self) -> i32 { self.base.getSize() }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for AllBinarySpriteRotationAnimation {
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::Animation::Animation::nextFrame(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self)) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
 }
 impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterface for AllBinarySpriteRotationAnimation {
     fn setFrameByDirection(&mut self, mut direction: Option<Rc<RefCell<Direction>>>) { Self::setFrameByDirection(self, direction) }
@@ -52,20 +47,23 @@ impl crate::org::allbinary::direction::DirectionalInterface::DirectionalInterfac
     fn adjustFrameToAngle(&mut self, mut angle: Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>) { Self::adjustFrameToAngle(self, angle) }
     fn adjustFrame(&mut self, mut angle: i16) { Self::adjustFrame(self, angle) }
 }
+impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for AllBinarySpriteRotationAnimation {
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::animation::image::sprite::HackRotationSpriteIndexedAnimation::HackRotationSpriteIndexedAnimation::paintXY(crate::org::allbinary::animation::image::sprite::HackRotationSpriteIndexedAnimation::HackRotationSpriteIndexedAnimationDyn::as_HackRotationSpriteIndexedAnimation_mut(self), p1, p2, p3) }
+}
 
 impl AllBinarySpriteRotationAnimation {
     
 
-    pub fn new_struct(mut sprite: Option<Rc<RefCell<Sprite>>>, mut image: Option<Rc<RefCell<Image>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
+    pub fn new_struct(mut sprite: Option<Rc<RefCell<Sprite>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Self {
         let mut this = Self {
-            base: HackRotationSpriteIndexedAnimation::new_struct(sprite.clone(), image.clone(), AngleInfo::getInstance((((jcall!(AngleFactory::getInstance()).TOTAL_ANGLE / jcall!(sprite).getRawFrameCount())) as i16)), animationBehavior.clone()),
+            base: HackRotationSpriteIndexedAnimation::new_struct(sprite.clone(), image.clone(), AngleInfo::getInstance(((((({ let java_field = jcall!(AngleFactory::getInstance()).TOTAL_ANGLE.clone(); java_field }) as i32) / jcall!(sprite).getRawFrameCount())) as i16)), animationBehavior.clone()),
         };
         // super(...) is in the struct literal above
         { let java_receiver = this.angleInfo.clone(); let java_arguments = (jcall!(this.sprite).getFrame(),); jcall!(java_receiver).adjustAngle(java_arguments.0); };
         this
     }
 
-    pub fn new(mut sprite: Option<Rc<RefCell<Sprite>>>, mut image: Option<Rc<RefCell<Image>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<Self>>> {
+    pub fn new(mut sprite: Option<Rc<RefCell<Sprite>>>, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut animationBehavior: Option<Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>>) -> Option<Rc<RefCell<Self>>> {
         Some(Rc::new(RefCell::new(Self::new_struct(sprite, image, animationBehavior))))
     }
     
@@ -132,6 +130,7 @@ impl crate::org::allbinary::animation::image::sprite::HackRotationSpriteIndexedA
 impl crate::org::allbinary::animation::Animation::AnimationDyn for AllBinarySpriteRotationAnimation {
     fn as_Animation(&self) -> &crate::org::allbinary::animation::Animation::Animation { &self.base.base.base.base }
     fn as_Animation_mut(&mut self) -> &mut crate::org::allbinary::animation::Animation::Animation { &mut self.base.base.base.base }
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::animation::image::sprite::HackRotationSpriteIndexedAnimation::HackRotationSpriteIndexedAnimation::paintXY(crate::org::allbinary::animation::image::sprite::HackRotationSpriteIndexedAnimation::HackRotationSpriteIndexedAnimationDyn::as_HackRotationSpriteIndexedAnimation_mut(self), p1, p2, p3) }
 }
 impl crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn for AllBinarySpriteRotationAnimation {
     fn as_IndexedAnimation(&self) -> &crate::org::allbinary::animation::IndexedAnimation::IndexedAnimation { &self.base.base.base }

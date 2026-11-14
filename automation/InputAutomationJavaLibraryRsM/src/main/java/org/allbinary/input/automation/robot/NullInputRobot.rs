@@ -23,6 +23,7 @@ use super::*;
 use crate::org::allbinary::input::automation::AbstractInputRobot::AbstractInputRobot;
 use crate::org::allbinary::input::automation::PointFactory::PointFactory;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {

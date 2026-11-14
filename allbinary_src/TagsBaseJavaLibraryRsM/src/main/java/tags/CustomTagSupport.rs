@@ -60,7 +60,7 @@ impl std::ops::DerefMut for CustomTagSupport {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait CustomTagSupportDyn {
+pub trait CustomTagSupportDyn: std::any::Any {
     fn as_CustomTagSupport(&self) -> &CustomTagSupport;
     fn as_CustomTagSupport_mut(&mut self) -> &mut CustomTagSupport;
 }

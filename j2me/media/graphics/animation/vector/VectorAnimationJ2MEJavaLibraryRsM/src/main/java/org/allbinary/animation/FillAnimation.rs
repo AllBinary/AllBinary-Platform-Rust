@@ -5,7 +5,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::color::BasicColor::BasicColor;
 use super::IndexedAnimation::IndexedAnimation;
 use super::AnimationBehavior::AnimationBehavior;
@@ -24,9 +24,12 @@ pub struct FillAnimation {
     pub height: i32,
 }
 
-impl crate::org::allbinary::animation::SequentialAnimationInterface::SequentialAnimationInterface for FillAnimation {
-    fn getSize(&mut self) -> i32 { self.base.getSize() }
-    fn previousFrame(&mut self) { self.base.previousFrame() }
+impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for FillAnimation {
+    fn nextFrame(&mut self) { crate::org::allbinary::animation::Animation::Animation::nextFrame(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self)) }
+    fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }
+}
+impl crate::org::allbinary::graphics::paint::LocationPaintableInterface::LocationPaintableInterface for FillAnimation {
+    fn paintXY(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32) { crate::org::allbinary::animation::Animation::Animation::paintXY(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3) }
 }
 
 impl FillAnimation {
@@ -53,10 +56,10 @@ impl FillAnimation {
 
     pub fn setBasicColorP(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
         let mut changed: bool = false;
-        if self.getBasicColorP().is_none() || ((self.getBasicColorP()).unwrap() as i32) != jcall!(basicColor).intValue() {
+        if self.getBasicColorP().is_none() || { let java_value = jcall!(self.getBasicColorP()).intValue(); java_value } != { let java_value = jcall!(basicColor).intValue(); java_value } {
             changed = true;
         }
-        self.base.setBasicColorP(basicColor.clone());
+        { let java_arguments = (basicColor.clone(),); self.base.setBasicColorP(java_arguments.0) };
         if changed {
             self.updateModifiers();
         }
@@ -65,10 +68,10 @@ impl FillAnimation {
 
     pub fn changeBasicColor(&mut self, mut basicColor: Option<Rc<RefCell<BasicColor>>>) {
         let mut changed: bool = false;
-        if self.getChangeBasicColor().is_none() || ((self.getChangeBasicColor()).unwrap() as i32) != jcall!(basicColor).intValue() {
+        if self.getChangeBasicColor().is_none() || { let java_value = jcall!(self.getChangeBasicColor()).intValue(); java_value } != { let java_value = jcall!(basicColor).intValue(); java_value } {
             changed = true;
         }
-        self.base.changeBasicColor(basicColor.clone());
+        { let java_arguments = (basicColor.clone(),); self.base.changeBasicColor(java_arguments.0) };
         if changed {
             self.updateModifiers();
         }
@@ -80,7 +83,7 @@ impl FillAnimation {
         if self.alphaP != alpha {
             changed = true;
         }
-        self.base.setAlpha(alpha.clone());
+        { let java_arguments = (alpha.clone(),); self.base.setAlpha(java_arguments.0) };
         if changed {
             self.updateModifiers();
         }
@@ -99,7 +102,7 @@ impl FillAnimation {
     }
     
 
-    pub fn paint(&mut self, mut g: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut g: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         jcall!(g).drawRGB(self.pixelBuffer.clone(), 0, self.width.clone(), 0, 0, self.width.clone(), self.height.clone(), true);
     }
 }

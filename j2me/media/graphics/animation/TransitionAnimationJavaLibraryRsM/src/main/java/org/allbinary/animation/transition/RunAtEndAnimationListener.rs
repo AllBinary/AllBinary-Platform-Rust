@@ -38,6 +38,10 @@ impl AnimationListenerInterface for RunAtEndAnimationListener {
 }
 
 impl RunAtEndAnimationListener {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut runnable: Option<Rc<RefCell<dyn Runnable>>>) -> Self {
@@ -64,7 +68,7 @@ impl RunAtEndAnimationListener {
     pub fn onPlatformAnimationRepeat(&mut self) {
     }
 }
-pub trait RunAtEndAnimationListenerDyn: crate::org::allbinary::animation::transition::AnimationListenerInterface::AnimationListenerInterface {
+pub trait RunAtEndAnimationListenerDyn: std::any::Any + crate::org::allbinary::animation::transition::AnimationListenerInterface::AnimationListenerInterface {
     fn as_RunAtEndAnimationListener(&self) -> &RunAtEndAnimationListener;
     fn as_RunAtEndAnimationListener_mut(&mut self) -> &mut RunAtEndAnimationListener;
 }

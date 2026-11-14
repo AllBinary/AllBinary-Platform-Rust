@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 // use crate::java::io::ByteArrayOutputStream::ByteArrayOutputStream;
 // use crate::java::io::PrintStream::PrintStream;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -36,6 +37,10 @@ thread_local! { pub static ExceptionUtil_instance: Option<Rc<RefCell<ExceptionUt
 thread_local! { pub static ExceptionUtil_PRETEND_EXCEPTION: String = format!("{}: {:?}", "Exception", (String::from("Not Really An Exception"))); }
 
 impl ExceptionUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<ExceptionUtil>>> {
@@ -58,13 +63,11 @@ impl ExceptionUtil {
 
     pub fn getStackTrace(&mut self, mut e: String) -> String {
         if true {
-            let mut byteArrayOutputStream: Vec<u8> = Vec::new();
+            let mut byteArrayOutputStream: Option<Rc<RefCell<crate::java::io::OutputStream::OutputStream>>> = crate::java::io::OutputStream::OutputStream::new();
             let mut printStream: () = ();
-            byteArrayOutputStream.extend_from_slice(format!("{}\n", e).as_bytes());
-            let mut output: String = String::from_utf8_lossy(&byteArrayOutputStream).into_owned();
-            if true {
-                return output.clone().clone();
-            }
+            jcall!(byteArrayOutputStream).writeText(format!("{}\n", e));
+            let mut output: String = jcall!(byteArrayOutputStream).toString();
+            return output.clone().clone();
         }
         return self.NONE.clone();
     }

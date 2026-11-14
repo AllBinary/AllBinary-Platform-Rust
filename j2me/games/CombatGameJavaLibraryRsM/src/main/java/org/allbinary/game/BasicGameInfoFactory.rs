@@ -22,6 +22,10 @@ pub struct BasicGameInfoFactory {
 thread_local! { pub static BasicGameInfoFactory_SINGLETON: Option<Rc<RefCell<BasicGameInfoFactory>>> = BasicGameInfoFactory::new(); }
 
 impl BasicGameInfoFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<BasicGameInfoFactory>>> {

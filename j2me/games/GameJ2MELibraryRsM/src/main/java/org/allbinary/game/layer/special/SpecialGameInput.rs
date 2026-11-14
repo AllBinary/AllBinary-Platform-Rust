@@ -17,9 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::game::input::event::GameKeyEvent::GameKeyEvent;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
+use crate::java::lang::Exception::*;
 use super::SpecialGameInputInterface::SpecialGameInputInterface;
 
 // Borrows the object of a Java reference
@@ -47,11 +48,15 @@ impl SpecialGameInputInterface for SpecialGameInput {
     fn special5(&mut self, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) { Self::special5(self, layerManager, gameKeyEvent) }
 }
 impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for SpecialGameInput {
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paint(self, graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { Self::paintThreed(self, graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paintThreed(self, graphics) }
 }
 
 impl SpecialGameInput {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -124,14 +129,14 @@ impl SpecialGameInput {
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
     
 
-    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
     }
 }
-pub trait SpecialGameInputDyn {
+pub trait SpecialGameInputDyn: std::any::Any {
     fn as_SpecialGameInput(&self) -> &SpecialGameInput;
     fn as_SpecialGameInput_mut(&mut self) -> &mut SpecialGameInput;
     fn up(&mut self) { SpecialGameInput::up(self.as_SpecialGameInput_mut()) }
@@ -146,8 +151,8 @@ pub trait SpecialGameInputDyn {
     fn special3(&mut self, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) { SpecialGameInput::special3(self.as_SpecialGameInput_mut(), layerManager, gameKeyEvent) }
     fn special4(&mut self, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) { SpecialGameInput::special4(self.as_SpecialGameInput_mut(), layerManager, gameKeyEvent) }
     fn special5(&mut self, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, mut gameKeyEvent: Option<Rc<RefCell<GameKeyEvent>>>) { SpecialGameInput::special5(self.as_SpecialGameInput_mut(), layerManager, gameKeyEvent) }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { SpecialGameInput::paint(self.as_SpecialGameInput_mut(), graphics) }
-    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) { SpecialGameInput::paintThreed(self.as_SpecialGameInput_mut(), graphics) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { SpecialGameInput::paint(self.as_SpecialGameInput_mut(), graphics) }
+    fn paintThreed(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { SpecialGameInput::paintThreed(self.as_SpecialGameInput_mut(), graphics) }
 }
 impl SpecialGameInputDyn for SpecialGameInput {
     fn as_SpecialGameInput(&self) -> &SpecialGameInput { self }

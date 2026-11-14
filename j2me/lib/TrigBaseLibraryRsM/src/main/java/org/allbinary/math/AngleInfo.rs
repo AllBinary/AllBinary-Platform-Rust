@@ -91,8 +91,8 @@ impl AngleInfo {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(AngleInfo_ANGLE.with(Clone::clone).clone());
         jcall!(stringBuffer).appendshort(self.angle.clone());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getAngleIncrementInfo())));
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_argument = jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getAngleIncrementInfo())); java_argument });
         return jcall!(stringBuffer).toString();
     }
 }

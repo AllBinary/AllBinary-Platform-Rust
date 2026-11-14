@@ -43,6 +43,10 @@ thread_local! { pub static MouseStrings_instance: Option<Rc<RefCell<MouseStrings
 
 impl MouseStrings {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             MOUSE_PRESSED: String::new(),
@@ -61,11 +65,11 @@ impl MouseStrings {
         this.MOUSE_CLICKED = String::from("mouseClicked");
         this.MOUSE_DRAGGED = String::from("mouseDragged");
         this.MOUSE_MOVED = String::from("mouseMoved");
-        this.MOUSE_PRESSED_LABEL = format!("{}{}", String::from("MousePressed"), jcall!(CommonSeps::getInstance()).COLON_SEP);
-        this.MOUSE_RELEASED_LABEL = format!("{}{}", String::from("MouseReleased"), jcall!(CommonSeps::getInstance()).COLON_SEP);
-        this.MOUSE_CLICKED_LABEL = format!("{}{}", String::from("MouseClicked"), jcall!(CommonSeps::getInstance()).COLON_SEP);
-        this.MOUSE_DRAGGED_LABEL = format!("{}{}", String::from("MouseDragged"), jcall!(CommonSeps::getInstance()).COLON_SEP);
-        this.MOUSE_MOVED_LABEL = format!("{}{}", String::from("MouseMoved"), jcall!(CommonSeps::getInstance()).COLON_SEP);
+        this.MOUSE_PRESSED_LABEL = format!("{}{}", String::from("MousePressed"), { let java_field = jcall!(CommonSeps::getInstance()).COLON_SEP.clone(); java_field });
+        this.MOUSE_RELEASED_LABEL = format!("{}{}", String::from("MouseReleased"), { let java_field = jcall!(CommonSeps::getInstance()).COLON_SEP.clone(); java_field });
+        this.MOUSE_CLICKED_LABEL = format!("{}{}", String::from("MouseClicked"), { let java_field = jcall!(CommonSeps::getInstance()).COLON_SEP.clone(); java_field });
+        this.MOUSE_DRAGGED_LABEL = format!("{}{}", String::from("MouseDragged"), { let java_field = jcall!(CommonSeps::getInstance()).COLON_SEP.clone(); java_field });
+        this.MOUSE_MOVED_LABEL = format!("{}{}", String::from("MouseMoved"), { let java_field = jcall!(CommonSeps::getInstance()).COLON_SEP.clone(); java_field });
         this
     }
 

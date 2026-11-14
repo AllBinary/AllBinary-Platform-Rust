@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::RuntimeException::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,6 +32,10 @@ pub struct GeographicMapCellHistoryProgressBase {
 thread_local! { pub static GeographicMapCellHistoryProgressBase_instance: Option<Rc<RefCell<dyn GeographicMapCellHistoryProgressBaseDyn>>> = GeographicMapCellHistoryProgressBase::new().map(|reference| reference as Rc<RefCell<dyn GeographicMapCellHistoryProgressBaseDyn>>); }
 
 impl GeographicMapCellHistoryProgressBase {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn GeographicMapCellHistoryProgressBaseDyn>>> {
@@ -58,7 +63,7 @@ impl GeographicMapCellHistoryProgressBase {
         panic!("{:?}", format!("{}: {:?}", "RuntimeException", ()));
     }
 }
-pub trait GeographicMapCellHistoryProgressBaseDyn {
+pub trait GeographicMapCellHistoryProgressBaseDyn: std::any::Any {
     fn as_GeographicMapCellHistoryProgressBase(&self) -> &GeographicMapCellHistoryProgressBase;
     fn as_GeographicMapCellHistoryProgressBase_mut(&mut self) -> &mut GeographicMapCellHistoryProgressBase;
     fn init(&mut self) { GeographicMapCellHistoryProgressBase::init(self.as_GeographicMapCellHistoryProgressBase_mut()) }

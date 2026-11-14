@@ -40,6 +40,10 @@ pub struct RaceTrackInfo {
 
 
 impl RaceTrackInfo {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut id: Option<i32>, mut name: String, mut raceTrackFrictionProperties: Option<Rc<RefCell<RaceTrackFrictionProperties>>>, mut foregroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut backgroundBasicColor: Option<Rc<RefCell<BasicColor>>>, mut qualifyTime: i32, mut worstContinuePosition: i32, mut totalLaps: i32) -> Self {

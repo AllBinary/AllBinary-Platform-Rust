@@ -54,6 +54,10 @@ impl crate::org::allbinary::logic::util::event::EventListenerInterface::EventLis
 
 impl BaseChangedGameFeatureListener {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             logUtil: None,
@@ -63,7 +67,7 @@ impl BaseChangedGameFeatureListener {
         };
         this.logUtil = LogUtil::getInstance();
         this.gameFeatureUtil = GameFeatureUtil::getInstance();
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this.changed = true;
         this
     }
@@ -74,12 +78,12 @@ impl BaseChangedGameFeatureListener {
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(CommonStrings::getInstance()).NOT_IMPLEMENTED.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
     pub fn onGameFeatureChange(&mut self, mut gameFeatureEvent: Option<Rc<RefCell<GameFeatureEvent>>>) {
-        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append(jcall!(self.gameFeatureUtil).GAME_FEATURE_CHANGED.clone()).append(jcall!(gameFeatureEvent).getWhatChanged()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.gameFeatureUtil).ON_GAME_FEATURE_CHANGE.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+        { let java_receiver = self.logUtil.clone(); let java_arguments = (jcall!(StringMaker::new()).append({ let java_field = jcall!(self.gameFeatureUtil).GAME_FEATURE_CHANGED.clone(); java_field }.clone()).append(jcall!(gameFeatureEvent).getWhatChanged()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.gameFeatureUtil).ON_GAME_FEATURE_CHANGE.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
         { let java_receiver = self.list.clone(); let java_arguments = (crate::java_into_object(jcall!(gameFeatureEvent).getGameOption()),); jcall!(java_receiver).add(java_arguments.0); };
         self.setChanged(true);
     }
@@ -121,7 +125,7 @@ impl BaseChangedGameFeatureListener {
         return self.changed.clone();
     }
 }
-pub trait BaseChangedGameFeatureListenerDyn {
+pub trait BaseChangedGameFeatureListenerDyn: std::any::Any {
     fn as_BaseChangedGameFeatureListener(&self) -> &BaseChangedGameFeatureListener;
     fn as_BaseChangedGameFeatureListener_mut(&mut self) -> &mut BaseChangedGameFeatureListener;
     fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { BaseChangedGameFeatureListener::onEvent(self.as_BaseChangedGameFeatureListener_mut(), eventObject) }

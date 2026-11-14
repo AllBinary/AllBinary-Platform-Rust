@@ -28,12 +28,16 @@ macro_rules! jcall {
 }
 
 pub struct ThreedObjResources {
-    pub hashtable: Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>>,
+    pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
 }
 
 thread_local! { pub static ThreedObjResources_instance: Option<Rc<RefCell<ThreedObjResources>>> = ThreedObjResources::new(); }
 
 impl ThreedObjResources {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -54,7 +58,7 @@ impl ThreedObjResources {
     
 
     pub fn get(&mut self, mut resourceName: String) -> String {
-        let mut resourceName2: String = (jcall!(self.hashtable).get(crate::java_into_object(resourceName.clone()))).clone() /* as String */;
+        let mut resourceName2: String = { let java_object = (jcall!(self.hashtable).get(crate::java_into_object(resourceName.clone()))).clone(); java_object.map(|object| object.borrow().downcast_ref::<String>().cloned().expect("ClassCastException: not a String")).unwrap_or_default() };
         if true {
             return resourceName2.clone();
         }

@@ -17,8 +17,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Image::Image;
-// use crate::javax::microedition::lcdui::NullImage::NullImage;
+use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::lcdui::NullImage::NullImage;
 use crate::org::allbinary::graphics::CellPosition::CellPosition;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 
@@ -30,8 +30,8 @@ macro_rules! jcall {
 }
 
 pub struct RaceTrackData {
-    pub tileSetImage: Option<Rc<RefCell<Image>>>,
-    pub miniTileSetImage: Option<Rc<RefCell<Image>>>,
+    pub tileSetImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
+    pub miniTileSetImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>,
     pub cellWidth: i32,
     pub cellHeight: i32,
     pub miniCellWidth: i32,
@@ -45,6 +45,10 @@ pub struct RaceTrackData {
 
 
 impl RaceTrackData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut id: Option<i32>, mut cellWidth: i32, mut cellHeight: i32, mut miniCellWidth: i32, mut miniCellHeight: i32, mut cellTypeIdToGeographicMapCellTypeArray: Vec<i32>, mut mapArray: Vec<Vec<i32>>) -> Self {
@@ -67,8 +71,8 @@ impl RaceTrackData {
         this.cellHeight = 0;
         this.miniCellWidth = 0;
         this.miniCellHeight = 0;
-        this.mapArray = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY.clone();
-        this.cellTypeIdToGeographicMapCellTypeArray = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone();
+        this.mapArray = { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY_ARRAY.clone(); java_field }.clone();
+        this.cellTypeIdToGeographicMapCellTypeArray = { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone(); java_field }.clone();
         this.NO_OVER_PASSES_ARRAY = vec![None; (0) as usize];
         this.overPassGeographicMapCellPositionArray = this.NO_OVER_PASSES_ARRAY.clone();
         this.id = id.clone();
@@ -136,22 +140,22 @@ impl RaceTrackData {
     }
     
 
-    pub fn getTileSetImage(&mut self) -> Option<Rc<RefCell<Image>>> {
+    pub fn getTileSetImage(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return self.tileSetImage.clone();
     }
     
 
-    pub fn setTileSetImage(&mut self, mut tileSetImage: Option<Rc<RefCell<Image>>>) {
+    pub fn setTileSetImage(&mut self, mut tileSetImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) {
         self.tileSetImage = tileSetImage.clone();
     }
     
 
-    pub fn getMiniTileSetImage(&mut self) -> Option<Rc<RefCell<Image>>> {
+    pub fn getMiniTileSetImage(&mut self) -> Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>> {
         return self.miniTileSetImage.clone();
     }
     
 
-    pub fn setMiniTileSetImage(&mut self, mut miniTileSetImage: Option<Rc<RefCell<Image>>>) {
+    pub fn setMiniTileSetImage(&mut self, mut miniTileSetImage: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>) {
         self.miniTileSetImage = miniTileSetImage.clone();
     }
     

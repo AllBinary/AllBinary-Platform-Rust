@@ -18,6 +18,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::InitInterface::InitInterface;
 
 // Borrows the object of a Java reference
@@ -37,6 +38,10 @@ impl InitInterface for Init {
 
 impl Init {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             commonStrings: None,
@@ -54,7 +59,7 @@ impl Init {
     pub fn init(&mut self) {
     }
 }
-pub trait InitDyn: crate::org::allbinary::init::InitInterface::InitInterface {
+pub trait InitDyn: std::any::Any + crate::org::allbinary::init::InitInterface::InitInterface {
     fn as_Init(&self) -> &Init;
     fn as_Init_mut(&mut self) -> &mut Init;
 }

@@ -33,6 +33,10 @@ pub struct XslData {
 thread_local! { pub static XslData_instance: Option<Rc<RefCell<XslData>>> = XslData::new(); }
 
 impl XslData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<XslData>>> {

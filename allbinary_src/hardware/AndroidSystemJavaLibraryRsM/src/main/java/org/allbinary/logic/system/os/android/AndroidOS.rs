@@ -21,6 +21,7 @@ use crate::org::allbinary::android::AndroidInfoFactory::AndroidInfoFactory;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystem;
 use crate::org::allbinary::string::CommonSeps::CommonSeps;
+use crate::java::lang::Exception::*;
 use super::AndroidSystemProperties::AndroidSystemProperties;
 
 // Borrows the object of a Java reference
@@ -64,65 +65,65 @@ impl AndroidOS {
         let mut properties: Option<Rc<RefCell<AndroidSystemProperties>>> = AndroidSystemProperties::getInstance();
         let mut commonStrings: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::getInstance();
         jcall!(this.stringBuffer).append(this.DEVICE_ID.clone());
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getDeviceId(),); jcall!(java_receiver).append(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         jcall!(this.stringBuffer).append(this.DEVICE_SOFTWARE_VERSION.clone());
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getDeviceSoftwareVersion(),); jcall!(java_receiver).append(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         jcall!(this.stringBuffer).append(this.LINE_1_NUMBER.clone());
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getLine1Number(),); jcall!(java_receiver).append(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         jcall!(this.stringBuffer).append(String::from("NetworkCountryIso"));
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getNetworkCountryIso(),); jcall!(java_receiver).append(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         jcall!(this.stringBuffer).append(String::from("NetworkOperator"));
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getNetworkOperator(),); jcall!(java_receiver).append(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         jcall!(this.stringBuffer).append(String::from("NetworkOperatorName"));
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getNetworkOperatorName(),); jcall!(java_receiver).append(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         jcall!(this.stringBuffer).append(String::from("NetworkType"));
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getNetworkType(),); jcall!(java_receiver).appendint(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         jcall!(this.stringBuffer).append(String::from("PhoneType"));
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getPhoneType(),); jcall!(java_receiver).appendint(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         jcall!(this.stringBuffer).append(String::from("SimCountryIso"));
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getSimCountryIso(),); jcall!(java_receiver).append(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         jcall!(this.stringBuffer).append(String::from("SimOperator"));
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getSimOperator(),); jcall!(java_receiver).append(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         jcall!(this.stringBuffer).append(String::from("SimOperatorName"));
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getSimOperatorName(),); jcall!(java_receiver).append(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         jcall!(this.stringBuffer).append(String::from("SimSerialNumber"));
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getSimSerialNumber(),); jcall!(java_receiver).append(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         jcall!(this.stringBuffer).append(String::from("SubscriberId"));
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getSubscriberId(),); jcall!(java_receiver).append(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         jcall!(this.stringBuffer).append(String::from("VoiceMailAlphaTag"));
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getVoiceMailAlphaTag(),); jcall!(java_receiver).append(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         jcall!(this.stringBuffer).append(String::from("VoiceMailNumber"));
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).EQUALS.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).EQUALS.clone(); java_field }.clone());
         { let java_receiver = this.stringBuffer.clone(); let java_arguments = (jcall!(properties).getVoiceMailNumber(),); jcall!(java_receiver).append(java_arguments.0); };
-        jcall!(this.stringBuffer).append(jcall!(commonStrings).SPACE.clone());
+        jcall!(this.stringBuffer).append({ let java_field = jcall!(commonStrings).SPACE.clone(); java_field }.clone());
         this
     }
 
@@ -133,7 +134,7 @@ impl AndroidOS {
 
     pub fn isOverScan(&mut self) -> bool {
         let mut properties: Option<Rc<RefCell<AndroidSystemProperties>>> = AndroidSystemProperties::getInstance();
-        if jcall!(jcall!(properties).getDevice()).toLowerCase().find(&self.OUYA.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
+        if jcall!(properties).getDevice().to_lowercase().find(&self.OUYA.clone()).map(|index| index as i32).unwrap_or(-1) >= 0 {
             return true;
         }
         return false;
@@ -153,7 +154,7 @@ impl AndroidOS {
     pub fn toString(&mut self) -> String {
         let mut osBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(osBuffer).append(self.base.toString());
-        jcall!(osBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
+        jcall!(osBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
         jcall!(osBuffer).append(String::from("Other System Info: \n"));
         jcall!(osBuffer).append(jcall!(self.stringBuffer).toString());
         return jcall!(osBuffer).toString();

@@ -52,6 +52,10 @@ pub struct LogFormatUtil {
 thread_local! { pub static LogFormatUtil_instance: Option<Rc<RefCell<LogFormatUtil>>> = LogFormatUtil::new(); }
 
 impl LogFormatUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<LogFormatUtil>>> {
@@ -82,8 +86,8 @@ impl LogFormatUtil {
         this.EMPTY = String::from("Empty");
         this.STACK_TRACE = String::from("\nStack Trace: ");
         this.TIME = String::from("Time: ");
-        this.CLASS_NAME = jcall!(this.commonSeps).SPACE.clone();
-        this.FUNCTION_CALL = jcall!(CommonLabels::getInstance()).COLON_SEP.clone();
+        this.CLASS_NAME = { let java_field = jcall!(this.commonSeps).SPACE.clone(); java_field }.clone();
+        this.FUNCTION_CALL = { let java_field = jcall!(CommonLabels::getInstance()).COLON_SEP.clone(); java_field }.clone();
         this.SPECIAL_MESSAGE = String::from("> ");
         this.stringUtil = StringUtil::getInstance();
         this.exceptionUtil = ExceptionUtil::getInstance();
@@ -101,7 +105,7 @@ impl LogFormatUtil {
         jcall!(stringBuffer).append(self.getO(exception.clone()));
         jcall!(stringBuffer).append(self.SPECIAL_MESSAGE.clone());
         jcall!(stringBuffer).append(specialMessage.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).NEW_LINE.clone(); java_field }.clone());
         return jcall!(stringBuffer).toString();
     }
     
@@ -110,15 +114,12 @@ impl LogFormatUtil {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = self.getF(className.clone(), functionName.clone());
         jcall!(stringBuffer).append(self.SPECIAL_MESSAGE.clone());
         jcall!(stringBuffer).append(specialMessage.clone());
-        jcall!(stringBuffer).append(jcall!(self.commonSeps).NEW_LINE.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(self.commonSeps).NEW_LINE.clone(); java_field }.clone());
         return jcall!(stringBuffer).toString();
     }
     
 
     pub fn getF(&mut self, mut className: String, mut functionName: String) -> Option<Rc<RefCell<StringMaker>>> {
-        if false {
-            functionName = self.NONE.clone();
-        }
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(self.TIME.clone());
         jcall!(stringBuffer).append(jcall!(self.timeStampUtil).getAsString());
@@ -131,24 +132,20 @@ impl LogFormatUtil {
     
 
     pub fn getO(&mut self, mut exception: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> String {
-        if !match (&exception, &jcall!(self.nullUtil).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+        if !match (&exception, &{ let java_field = jcall!(self.nullUtil).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
             let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
             jcall!(stringBuffer).append(self.LOG_ERROR.clone());
-            let mut exceptionAsString: String = { let value = jcall!(exception); value.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", value.as_ref().type_id())) };
-            if true {
-                jcall!(stringBuffer).append(exceptionAsString.clone());
-            } else {
-                jcall!(stringBuffer).append(self.EMPTY.clone());
-            }
+            let mut exceptionAsString: String = { let java_object = (exception).clone(); let value = jcall!(java_object); value.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", value.as_ref().type_id())) };
+            jcall!(stringBuffer).append(exceptionAsString.clone());
             jcall!(stringBuffer).append(self.STACK_TRACE.clone());
-            if !match (&exception, &jcall!(self.nullUtil).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if !match (&exception, &{ let java_field = jcall!(self.nullUtil).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 jcall!(stringBuffer).append(jcall!(self.exceptionUtil).getStackTrace({ let reference = exception.as_ref().expect("null reference").borrow(); reference.as_ref().downcast_ref::<String>().cloned().unwrap_or_else(|| format!("{:?}", reference.as_ref().type_id())) }));
             } else {
-                jcall!(stringBuffer).append(jcall!(self.stringUtil).NULL_STRING.clone());
+                jcall!(stringBuffer).append({ let java_field = jcall!(self.stringUtil).NULL_STRING.clone(); java_field }.clone());
             }
             return jcall!(stringBuffer).toString();
         } else {
-            return jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+            return { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         }
     }
 }

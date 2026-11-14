@@ -53,6 +53,10 @@ thread_local! { pub static MediaDataFactory_instance: Option<Rc<RefCell<MediaDat
 
 impl MediaDataFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             AVI: None,

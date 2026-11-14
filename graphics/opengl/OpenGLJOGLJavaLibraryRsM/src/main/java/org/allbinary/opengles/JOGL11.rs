@@ -21,16 +21,7 @@ use crate::com::jogamp::opengl::GL::GL;
 use crate::com::jogamp::opengl::GL2::GL2;
 use super::JOGL10::JOGL10;
 use super::GL11::GL11;
-use super::opengles::opengles;
-use super::khronos::khronos;
-use super::microedition::microedition;
-use super::javax::javax;
-use super::opengl::opengl;
-use super::jogamp::jogamp;
-use super::com::com;
 use super::Buffer::Buffer;
-use super::nio::nio;
-use super::java::java;
 use super::FloatBuffer::FloatBuffer;
 use super::IntBuffer::IntBuffer;
 

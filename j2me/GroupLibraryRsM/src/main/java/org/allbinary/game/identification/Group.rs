@@ -49,8 +49,8 @@ impl Group {
             teamId: 0,
             string: String::new(),
         };
-        this.name = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
-        this.string = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone();
+        this.name = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
+        this.string = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone();
         this.teamId = teamId.clone();
         this.setName(teamName.clone());
         this
@@ -70,11 +70,11 @@ impl Group {
         self.name = name.clone();
         let mut groupCommonFactory: Option<Rc<RefCell<GroupCommonFactory>>> = GroupCommonFactory::getInstance();
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        jcall!(stringBuffer).append(jcall!(groupCommonFactory).GROUP_NAME_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(groupCommonFactory).GROUP_NAME_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).append(self.name.clone());
-        jcall!(stringBuffer).append(jcall!(groupCommonFactory).ID_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(groupCommonFactory).ID_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendshort(self.teamId.clone());
-        self.string = jcall!(stringBuffer).toString();
+        self.string = { let java_value = (jcall!(stringBuffer).toString()).clone(); java_value };
     }
     
 

@@ -35,11 +35,15 @@ thread_local! { pub static ScreenListenerHandler_instance: Option<Rc<RefCell<Scr
 
 impl ScreenListenerHandler {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             screenListenerInterface: None,
         };
-        this.screenListenerInterface = ScreenEmptyListener::new().map(|reference| reference as Rc<RefCell<dyn ScreenListenerInterface>>);
+        this.screenListenerInterface = ScreenEmptyListener::new().map(|reference| reference as Rc<RefCell<dyn ScreenListenerInterface>>).map(|reference| reference as Rc<RefCell<dyn ScreenListenerInterface>>);
         this
     }
 

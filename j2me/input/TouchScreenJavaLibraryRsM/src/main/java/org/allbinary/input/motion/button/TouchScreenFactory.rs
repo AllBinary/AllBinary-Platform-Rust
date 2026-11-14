@@ -21,6 +21,7 @@ use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 use super::TouchScreenType::TouchScreenType;
 
 // Borrows the object of a Java reference
@@ -52,17 +53,17 @@ impl TouchScreenFactory {
             touchScreenType: None,
         };
         this.logUtil = LogUtil::getInstance();
-        this.touchScreenType = jcall!(TouchScreenTypesFactory::TouchScreenTypesFactory::getInstance()).NOTOUCH.clone();
+        this.touchScreenType = { let java_field = jcall!(TouchScreenTypesFactory::TouchScreenTypesFactory::getInstance()).NOTOUCH.clone(); java_field }.clone();
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             this.setTouch(true);
             this.setMultiTouch(false);
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(this.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(TouchScreenFactory_SINGLETON.with(Clone::clone).clone()), jcall!(commonStrings).GET_INSTANCE.clone(), crate::java_into_object(e.clone()));
+            jcall!(this.logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(TouchScreenFactory_SINGLETON.with(Clone::clone).clone()), { let java_field = jcall!(commonStrings).GET_INSTANCE.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         this
@@ -127,7 +128,7 @@ impl TouchScreenFactory {
         jcall!(stringBuffer).append(String::from(" Distinct MultiTouch: "));
         jcall!(stringBuffer).appendboolean(self.isMultiTouchDistinct());
         jcall!(stringBuffer).append(String::from(" TouchScreenType: "));
-        jcall!(stringBuffer).append(jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getTouchScreenType())));
+        jcall!(stringBuffer).append({ let java_argument = jcall!(StringUtil::getInstance()).toString(crate::java_into_object(self.getTouchScreenType())); java_argument });
         return jcall!(stringBuffer).toString();
     }
 }

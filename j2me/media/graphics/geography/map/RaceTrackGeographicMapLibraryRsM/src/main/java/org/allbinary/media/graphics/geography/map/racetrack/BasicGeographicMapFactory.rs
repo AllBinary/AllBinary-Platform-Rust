@@ -23,6 +23,7 @@ use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionBaseFactory::GeographicMapCellPositionBaseFactory;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionFactoryInterface::GeographicMapCellPositionFactoryInterface;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellTypeFactory::GeographicMapCellTypeFactory;
+use crate::java::lang::Exception::*;
 use super::RaceTrackInfo::RaceTrackInfo;
 use super::RaceTrackData::RaceTrackData;
 use super::AllBinaryTiledLayerFactoryInterface::AllBinaryTiledLayerFactoryInterface;
@@ -40,6 +41,10 @@ pub struct BasicGeographicMapFactory {
 
 impl BasicGeographicMapFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -53,7 +58,7 @@ impl BasicGeographicMapFactory {
 
     // throws Exception
     pub fn getInstance(&mut self, mut raceTrackInfo: Option<Rc<RefCell<RaceTrackInfo>>>, mut raceTrackData: Option<Rc<RefCell<RaceTrackData>>>, mut tiledLayerFactoryInterface: Option<Rc<RefCell<dyn AllBinaryTiledLayerFactoryInterface>>>, mut geographicMapCellPositionFactoryInterface: Option<Rc<RefCell<dyn GeographicMapCellPositionFactoryInterface>>>, mut geographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellTypeFactory::GeographicMapCellTypeFactoryDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>> {
-        return BasicGeographicMap::new(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(((jcall!(raceTrackInfo).getId()).unwrap() as i32) + 100 + 1), jcall!(raceTrackInfo).getName(), jcall!(raceTrackData).getCellTypeIdToGeographicMapCellTypeArray(), jcall!(tiledLayerFactoryInterface).getMiniInstance(raceTrackData.clone()), jcall!(BasicColorFactory::getInstance()).CLEAR_COLOR.clone(), jcall!(BasicColorFactory::getInstance()).CLEAR_COLOR.clone(), geographicMapCellPositionFactoryInterface.clone(), GeographicMapCellPositionBaseFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionBaseFactory::GeographicMapCellPositionBaseFactoryDyn>>), geographicMapCellTypeFactory.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>);
+        return BasicGeographicMap::new(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(((jcall!(raceTrackInfo).getId()).unwrap() as i32) + 100 + 1), jcall!(raceTrackInfo).getName(), jcall!(raceTrackData).getCellTypeIdToGeographicMapCellTypeArray(), jcall!(tiledLayerFactoryInterface).getMiniInstance(raceTrackData.clone()), { let java_field = jcall!(BasicColorFactory::getInstance()).CLEAR_COLOR.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).CLEAR_COLOR.clone(); java_field }.clone(), geographicMapCellPositionFactoryInterface.clone(), GeographicMapCellPositionBaseFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionBaseFactory::GeographicMapCellPositionBaseFactoryDyn>>), geographicMapCellTypeFactory.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>);
     }
 }
 

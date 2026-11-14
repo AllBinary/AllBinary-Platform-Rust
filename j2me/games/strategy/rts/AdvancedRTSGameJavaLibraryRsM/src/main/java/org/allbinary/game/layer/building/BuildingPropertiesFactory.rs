@@ -30,6 +30,7 @@ use crate::org::allbinary::graphics::paint::Paintable::Paintable;
 use crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer;
 use crate::org::allbinary::logic::StdUtil::StdUtil;
 use crate::org::allbinary::util::ABHashtable::ABHashtable;
+use crate::java::lang::Exception::*;
 use super::BuildingLayer::BuildingLayer;
 
 // Borrows the object of a Java reference
@@ -46,6 +47,10 @@ pub struct BuildingPropertiesFactory {
 thread_local! { pub static BuildingPropertiesFactory_instance: Option<Rc<RefCell<dyn BuildingPropertiesFactoryDyn>>> = BuildingPropertiesFactory::new().map(|reference| reference as Rc<RefCell<dyn BuildingPropertiesFactoryDyn>>); }
 
 impl BuildingPropertiesFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -72,8 +77,8 @@ impl BuildingPropertiesFactory {
 
     pub fn getDamageFloaters(&mut self, mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::combat::damage::DamageFloaters::DamageFloatersDyn>>> {
         let mut damageFloaters: Option<Rc<RefCell<dyn crate::org::allbinary::game::combat::damage::DamageFloaters::DamageFloatersDyn>>> = DamageFloaters::getInstance();
-        if jcall!(Features::getInstance()).isFeature(jcall!(GameFeatureFactory::getInstance()).DAMAGE_FLOATERS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            damageFloaters = PtsDamageFloaters::new(buildingLayer.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::combat::damage::DamageFloaters::DamageFloatersDyn>>);
+        if jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(GameFeatureFactory::getInstance()).DAMAGE_FLOATERS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            damageFloaters = PtsDamageFloaters::new(buildingLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>)).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::combat::damage::DamageFloaters::DamageFloatersDyn>>);
             self.damageFloatersPaintableInterface = damageFloaters.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>);
         } else {
             damageFloaters = DamageFloaters::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::combat::damage::DamageFloaters::DamageFloatersDyn>>);
@@ -84,30 +89,30 @@ impl BuildingPropertiesFactory {
 
     // throws Exception
     pub fn getHealthBar(&mut self, mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>> {
-        let mut healthBar: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>> = NullPaintable::getInstance().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>);
-        if jcall!(Features::getInstance()).isFeature(jcall!(GameFeatureFactory::getInstance()).HEALTH_BARS.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
-            healthBar = HealthBar::new(buildingLayer.clone(), jcall!(buildingLayer).getHealthInterface(), HealthBarTwodAnimation::new((buildingLayer).clone() /* as AllBinaryLayer */, jcall!(BasicHudFactory::getInstance()).BOTTOMLEFT.clone()), -1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>);
+        let mut healthBar: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>> = NullPaintable::getInstance();
+        if jcall!(Features::getInstance()).isFeature({ let java_field = jcall!(GameFeatureFactory::getInstance()).HEALTH_BARS.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+            healthBar = { let java_value = (HealthBar::new(buildingLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>), jcall!(buildingLayer).getHealthInterface(), HealthBarTwodAnimation::new((buildingLayer).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>), { let java_field = jcall!(BasicHudFactory::getInstance()).BOTTOMLEFT.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::health::HealthBarAnimation::HealthBarAnimationDyn>>), -1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>)).clone(); java_value };
         }
         return healthBar.clone();
     }
     
 
-    pub fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> {
+    pub fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> {
         return jcall!(StdUtil::getInstance()).createHashtable();
     }
     
 
     pub fn getTrackingEvent(&mut self, mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>>) -> Option<Rc<RefCell<TrackingEvent>>> {
-        return TrackingEvent::new(buildingLayer.clone());
+        return TrackingEvent::new(crate::java_into_object(buildingLayer.clone()));
     }
 }
-pub trait BuildingPropertiesFactoryDyn {
+pub trait BuildingPropertiesFactoryDyn: std::any::Any {
     fn as_BuildingPropertiesFactory(&self) -> &BuildingPropertiesFactory;
     fn as_BuildingPropertiesFactory_mut(&mut self) -> &mut BuildingPropertiesFactory;
     fn getEfficiencyPerLevel(&mut self, mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>>) -> i32 { BuildingPropertiesFactory::getEfficiencyPerLevel(self.as_BuildingPropertiesFactory_mut(), buildingLayer) }
     fn getDamageFloaters(&mut self, mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::combat::damage::DamageFloaters::DamageFloatersDyn>>> { BuildingPropertiesFactory::getDamageFloaters(self.as_BuildingPropertiesFactory_mut(), buildingLayer) }
     fn getHealthBar(&mut self, mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>> { BuildingPropertiesFactory::getHealthBar(self.as_BuildingPropertiesFactory_mut(), buildingLayer) }
-    fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<Option<Rc<RefCell<Box<dyn std::any::Any>>>>, Option<Rc<RefCell<Box<dyn std::any::Any>>>>>>>> { BuildingPropertiesFactory::getHashtable(self.as_BuildingPropertiesFactory_mut()) }
+    fn getHashtable(&mut self) -> Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> { BuildingPropertiesFactory::getHashtable(self.as_BuildingPropertiesFactory_mut()) }
     fn getTrackingEvent(&mut self, mut buildingLayer: Option<Rc<RefCell<BuildingLayer>>>) -> Option<Rc<RefCell<TrackingEvent>>> { BuildingPropertiesFactory::getTrackingEvent(self.as_BuildingPropertiesFactory_mut(), buildingLayer) }
 }
 impl BuildingPropertiesFactoryDyn for BuildingPropertiesFactory {

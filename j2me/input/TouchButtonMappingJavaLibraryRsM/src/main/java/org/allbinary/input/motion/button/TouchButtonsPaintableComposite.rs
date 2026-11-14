@@ -35,6 +35,7 @@ use crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEv
 use crate::org::allbinary::logic::util::event::EventStrings::EventStrings;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelper;
+use crate::java::lang::Exception::*;
 use super::TouchButtonsMappingPaintable::TouchButtonsMappingPaintable;
 
 // Borrows the object of a Java reference
@@ -91,35 +92,35 @@ impl TouchButtonsPaintableComposite {
         this.FAST_REPEAT = String::from("Ignoring: MotionGestureInput Repeated To Quickly");
         this.IGNORE = String::from("Ignoring: Until Released");
         this.inputMappingInterface = inputMappingInterface.clone();
-        this.touchButtonsPaintable = TouchButtonsMappingPaintable::new(basicColor.clone());
         this
     }
 
     pub fn new(mut inputMappingInterface: Option<Rc<RefCell<dyn InputMappingInterface>>>, mut basicColor: Option<Rc<RefCell<BasicColor>>>) -> Option<Rc<RefCell<Self>>> {
-        let this = Some(Rc::new(RefCell::new(Self::new_struct(inputMappingInterface, basicColor))));
-            jcall!(CompleteMotionGestureInputEventHandler::getInstance()).addListenerInterface((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()));
+        let this = Some(Rc::new(RefCell::new(Self::new_struct(inputMappingInterface.clone(), basicColor.clone()))));
+            jcall!(CompleteMotionGestureInputEventHandler::getInstance()).addListenerInterface(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+            jcall!(this).touchButtonsPaintable = TouchButtonsMappingPaintable::new(basicColor.clone());
         this
     }
     
 
     pub fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) {
-        ForcedLogUtil::log(jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
+        ForcedLogUtil::log({ let java_field = jcall!(EventStrings::getInstance()).PERFORMANCE_MESSAGE.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())));
     }
     
 
     pub fn onCompleteMotionGestureInputEvent(&mut self, mut completeMotionGestureInputEvent: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn>>>) {
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onCompleteMotionGestureInputEvent"));
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("onCompleteMotionGestureInputEvent"));
             let mut touchMotionGestureFactory: Option<Rc<RefCell<TouchMotionGestureFactory>>> = TouchMotionGestureFactory::getInstance();
-            let mut gameKeyCompleteMotionGestureInputEvent: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::motion::action::GameKeyCompleteMotionGestureInputEvent::GameKeyCompleteMotionGestureInputEventDyn>>> = (completeMotionGestureInputEvent).clone() /* as GameKeyCompleteMotionGestureInputEvent */;
+            let mut gameKeyCompleteMotionGestureInputEvent: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::motion::action::GameKeyCompleteMotionGestureInputEvent::GameKeyCompleteMotionGestureInputEventDyn>>> = (|| -> Option<Rc<RefCell<dyn crate::org::allbinary::game::input::motion::action::GameKeyCompleteMotionGestureInputEvent::GameKeyCompleteMotionGestureInputEventDyn>>> { panic!("ClassCastException: a Rust dyn CompleteMotionGestureInputEvent cannot be cast to GameKeyCompleteMotionGestureInputEvent") })();
             let mut gameKey: Option<Rc<RefCell<GameKey>>> = jcall!(gameKeyCompleteMotionGestureInputEvent).getGameKey();
             let mut motionGestureInput: Option<Rc<RefCell<MotionGestureInput>>> = jcall!(completeMotionGestureInputEvent).getMotionGestureInput();
-            if match (&motionGestureInput, &jcall!(touchMotionGestureFactory).RELEASED) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            if match (&motionGestureInput, &{ let java_field = jcall!(touchMotionGestureFactory).RELEASED.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
                 jcall!(self.logUtil).putF(self.RELEASE.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_NAME.clone());
                 self.released = true;
                 return;
             }
-            if match (&motionGestureInput, &jcall!(TouchMotionGestureFactory::getInstance()).NO_MOTION) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } && !jcall!(self.timeHelper).isTimeTNT() {
+            if match (&motionGestureInput, &{ let java_field = jcall!(TouchMotionGestureFactory::getInstance()).NO_MOTION.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } && !jcall!(self.timeHelper).isTimeTNT() {
                 jcall!(self.logUtil).putF(self.FAST_REPEAT.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_NAME.clone());
                 return;
             }
@@ -133,9 +134,9 @@ impl TouchButtonsPaintableComposite {
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_NAME.clone(), crate::java_into_object(e.clone()));
+            jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), self.METHOD_NAME.clone(), crate::java_into_object(e.clone()));
             }
         }
     }
@@ -161,6 +162,10 @@ impl crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintableD
     fn as_ProcessPaintable(&self) -> &crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintable { &self.base }
     fn as_ProcessPaintable_mut(&mut self) -> &mut crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintable { &mut self.base }
     fn process(&mut self) { Self::process(self) }
+}
+impl crate::org::allbinary::graphics::paint::PaintableInterface::PaintableInterface for TouchButtonsPaintableComposite {
+    fn paint(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paint(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
+    fn paintThreed(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { crate::org::allbinary::graphics::paint::Paintable::Paintable::paintThreed(crate::org::allbinary::graphics::paint::Paintable::PaintableDyn::as_Paintable_mut(self), p1) }
 }
 
 

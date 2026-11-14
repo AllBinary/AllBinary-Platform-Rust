@@ -17,10 +17,10 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::opengles::GL::GL;
-// use crate::javax::microedition::lcdui::ChoiceGroupImageFactory::ChoiceGroupImageFactory;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
-// use crate::javax::microedition::lcdui::Image::Image;
+use crate::javax::microedition::khronos::opengles::GL::GL;
+use crate::javax::microedition::lcdui::ChoiceGroupImageFactory::ChoiceGroupImageFactory;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Image::Image;
 use crate::org::allbinary::graphics::opengles::OpenGLFeatureFactory::OpenGLFeatureFactory;
 use crate::org::allbinary::game::configuration::feature::Features::Features;
 use super::PreResourceImageUtil::PreResourceImageUtil;
@@ -38,6 +38,10 @@ pub struct ChoiceGroupImageUtil {
 thread_local! { pub static ChoiceGroupImageUtil_instance: Option<Rc<RefCell<ChoiceGroupImageUtil>>> = ChoiceGroupImageUtil::new(); }
 
 impl ChoiceGroupImageUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -58,8 +62,8 @@ impl ChoiceGroupImageUtil {
     pub fn init(&mut self) {
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
         let mut choiceGroupFactory: Option<Rc<RefCell<ChoiceGroupImageFactory>>> = ChoiceGroupImageFactory::getInstance();
-        let mut imageArray: Vec<Option<Rc<RefCell<Image>>>> = jcall!(choiceGroupFactory).getImageArray();
-        if jcall!(features).isDefault(jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        let mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> = jcall!(choiceGroupFactory).getImageArray();
+        if jcall!(features).isDefault({ let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             let mut preResourceImageUtil: Option<Rc<RefCell<PreResourceImageUtil>>> = PreResourceImageUtil::getInstance();
             let mut size: i32 = (imageArray.len() as i32).clone();
             for index in (0..size) {
@@ -73,8 +77,8 @@ impl ChoiceGroupImageUtil {
     pub fn update(&mut self, mut gl: Option<Rc<RefCell<dyn GL>>>) {
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
         let mut choiceGroupFactory: Option<Rc<RefCell<ChoiceGroupImageFactory>>> = ChoiceGroupImageFactory::getInstance();
-        let mut imageArray: Vec<Option<Rc<RefCell<Image>>>> = jcall!(choiceGroupFactory).getImageArray();
-        if jcall!(features).isDefault(jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        let mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> = jcall!(choiceGroupFactory).getImageArray();
+        if jcall!(features).isDefault({ let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             let mut preResourceImageUtil: Option<Rc<RefCell<PreResourceImageUtil>>> = PreResourceImageUtil::getInstance();
             let mut size: i32 = (imageArray.len() as i32).clone();
             for index in (0..size) {
@@ -86,11 +90,11 @@ impl ChoiceGroupImageUtil {
     
 
     // Java overloaded method: Rust needs a different name
-    pub fn update(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>) {
+    pub fn update_Graphics(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) {
         let mut features: Option<Rc<RefCell<Features>>> = Features::getInstance();
         let mut choiceGroupFactory: Option<Rc<RefCell<ChoiceGroupImageFactory>>> = ChoiceGroupImageFactory::getInstance();
-        let mut imageArray: Vec<Option<Rc<RefCell<Image>>>> = jcall!(choiceGroupFactory).getImageArray();
-        if jcall!(features).isDefault(jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
+        let mut imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>> = jcall!(choiceGroupFactory).getImageArray();
+        if jcall!(features).isDefault({ let java_field = jcall!(OpenGLFeatureFactory::getInstance()).OPENGL.clone(); java_field }.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>)) {
             let mut preResourceImageUtil: Option<Rc<RefCell<PreResourceImageUtil>>> = PreResourceImageUtil::getInstance();
             let mut size: i32 = (imageArray.len() as i32).clone();
             for index in (0..size) {

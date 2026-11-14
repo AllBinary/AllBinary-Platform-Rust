@@ -17,8 +17,9 @@ use crate::org::allbinary::string::CommonStateStrings::CommonStateStrings;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::thread::ARunnable::ARunnable;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::MusicStrings::MusicStrings;
-use super::MusicRunnable::MusicRunnable;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -74,20 +75,20 @@ impl BaseMusicService {
     
 
     pub fn onBind(&mut self, mut intent: Option<Rc<RefCell<Intent>>>) -> Option<Rc<RefCell<IBinder>>> {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStateStrings).BIND.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStateStrings).BIND.clone(); java_field }.clone());
         return None;
     }
     
 
     pub fn onCreate(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStateStrings).CREATE.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStateStrings).CREATE.clone(); java_field }.clone());
     }
     
 
     pub fn onDestroy(&mut self) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStateStrings).DESTROY.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStateStrings).DESTROY.clone(); java_field }.clone());
         if !match (&self.player, &crate::org::allbinary::android::NullAndroidCanvas::NullAndroidCanvas_NULL_MEDIA_PLAYER.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStateStrings).PAUSE.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStateStrings).PAUSE.clone(); java_field }.clone());
             jcall!(self.player).stop();
             jcall!(self.player).reset();
             jcall!(self.player).release();
@@ -97,7 +98,7 @@ impl BaseMusicService {
 
     pub fn pause(&mut self) {
         if !match (&self.player, &crate::org::allbinary::android::NullAndroidCanvas::NullAndroidCanvas_NULL_MEDIA_PLAYER.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStateStrings).PAUSE.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStateStrings).PAUSE.clone(); java_field }.clone());
             jcall!(self.player).pause();
         }
     }
@@ -105,14 +106,14 @@ impl BaseMusicService {
 
     pub fn resume(&mut self) {
         if !match (&self.player, &crate::org::allbinary::android::NullAndroidCanvas::NullAndroidCanvas_NULL_MEDIA_PLAYER.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } && !jcall!(self.player).isPlaying() {
-            jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStateStrings).RESUME.clone());
+            jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStateStrings).RESUME.clone(); java_field }.clone());
             jcall!(self.player).start();
         }
     }
     
 
     pub fn start(&mut self) {
-        self.player = MediaPlayer::create(None /* Java this: a &mut self method has no Rc of itself */, self.songId.clone());
+        self.player = { let java_value = (MediaPlayer::create(None /* Java this: a &mut self method has no Rc of itself */, self.songId.clone())).clone(); java_value };
         jcall!(self.player).setVolume((((self.leftVolume) as f32)) / 100.0_f32, (((self.rightVolume) as f32)) / 100.0_f32);
         jcall!(self.player).setLooping(false);
         jcall!(self.player).start();
@@ -121,7 +122,7 @@ impl BaseMusicService {
 
     pub fn onStart(&mut self, mut intent: Option<Rc<RefCell<Intent>>>, mut startid: i32) {
         self.onStartCommandIntent(intent.clone());
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStateStrings).START.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStateStrings).START.clone(); java_field }.clone());
     }
     
 
@@ -132,11 +133,11 @@ impl BaseMusicService {
     
 
     pub fn onStartCommandIntent(&mut self, mut intent: Option<Rc<RefCell<Intent>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStateStrings).ON_START_COMMAND.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStateStrings).ON_START_COMMAND.clone(); java_field }.clone());
         let mut musicStrings: Option<Rc<RefCell<MusicStrings>>> = MusicStrings::getInstance();
         if intent.is_some() {
-            let mut command: i32 = jcall!(intent).getIntExtra(jcall!(self.commonStateStrings).ON_START_COMMAND.clone(), -1);
-            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", jcall!(CommonLabels::getInstance()).COMMAND_LABEL, command), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStateStrings).ON_START_COMMAND.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
+            let mut command: i32 = jcall!(intent).getIntExtra({ let java_field = jcall!(self.commonStateStrings).ON_START_COMMAND.clone(); java_field }.clone(), -1);
+            { let java_receiver = self.logUtil.clone(); let java_arguments = (format!("{}{}", { let java_field = jcall!(CommonLabels::getInstance()).COMMAND_LABEL.clone(); java_field }, command), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStateStrings).ON_START_COMMAND.clone(); java_field }.clone(),); jcall!(java_receiver).putF(java_arguments.0, java_arguments.1, java_arguments.2); };
             if command == 1 {
                 self.pause();
                 return;
@@ -144,9 +145,9 @@ impl BaseMusicService {
                 self.resume();
                 return;
             } else {
-                self.songId = jcall!(intent).getIntExtra(jcall!(musicStrings).SONG_EXTRA.clone(), -1);
-                self.leftVolume = jcall!(intent).getIntExtra(jcall!(musicStrings).LEFT_VOLUME.clone(), -1);
-                self.rightVolume = jcall!(intent).getIntExtra(jcall!(musicStrings).RIGHT_VOLUME.clone(), -1);
+                self.songId = { let java_value = (jcall!(intent).getIntExtra({ let java_field = jcall!(musicStrings).SONG_EXTRA.clone(); java_field }.clone(), -1)).clone(); java_value };
+                self.leftVolume = { let java_value = (jcall!(intent).getIntExtra({ let java_field = jcall!(musicStrings).LEFT_VOLUME.clone(); java_field }.clone(), -1)).clone(); java_value };
+                self.rightVolume = { let java_value = (jcall!(intent).getIntExtra({ let java_field = jcall!(musicStrings).RIGHT_VOLUME.clone(); java_field }.clone(), -1)).clone(); java_value };
             }
         } else {
             panic!("{:?}", format!("{}: {:?}", "RuntimeException", (String::from("Started service without intent"))));
@@ -155,7 +156,7 @@ impl BaseMusicService {
             ();
             if !match (&self.player, &crate::org::allbinary::android::NullAndroidCanvas::NullAndroidCanvas_NULL_MEDIA_PLAYER.with(Clone::clone)) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } && jcall!(self.player).isPlaying() {
                 let mut player: Option<Rc<RefCell<MediaPlayer>>> = self.player.clone();
-                jcall!(self.logUtil).putF(self.ALREADY_PLAYING.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.commonStateStrings).ON_START_COMMAND.clone());
+                jcall!(self.logUtil).putF(self.ALREADY_PLAYING.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.commonStateStrings).ON_START_COMMAND.clone(); java_field }.clone());
                 /* Java local class: move it out of the function
 pub struct MusicRunnable {
     pub base: ARunnable,
@@ -186,16 +187,16 @@ impl MusicRunnable {
                         let mut commonStateStrings: Option<Rc<RefCell<CommonStateStrings>>> = CommonStateStrings::getInstance();
                         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                             while jcall!(self.player).isPlaying() {
-                                jcall!(logUtil).putF(jcall!(self.baseMusicService).as_BaseMusicService_mut().WAITING_FOR_MUSIC_TO_END.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStateStrings).ON_START_COMMAND.clone());
+                                jcall!(logUtil).putF({ let java_field = jcall!(self.baseMusicService).as_BaseMusicService_mut().WAITING_FOR_MUSIC_TO_END.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStateStrings).ON_START_COMMAND.clone(); java_field }.clone());
                                 std::thread::sleep(std::time::Duration::from_millis((1200) as u64));
                             }
                             jcall!(self.baseMusicService).onStartCommandIntent(self.base.intent.clone());
                         })) {
                             Ok(_) => {}
                             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                            jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStateStrings).ON_START_COMMAND.clone(), crate::java_into_object(e.clone()));
+                            jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStateStrings).ON_START_COMMAND.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                             }
                         }
                     }
@@ -209,8 +210,8 @@ impl std::ops::DerefMut for MusicRunnable {
 }
 
 impl crate::org::allbinary::thread::ARunnable::ARunnableDyn for MusicRunnable {
-    fn as_ARunnable(&self) -> &crate::org::allbinary::thread::ARunnable::ARunnable { &self }
-    fn as_ARunnable_mut(&mut self) -> &mut crate::org::allbinary::thread::ARunnable::ARunnable { &mut self }
+    fn as_ARunnable(&self) -> &crate::org::allbinary::thread::ARunnable::ARunnable { &self.base }
+    fn as_ARunnable_mut(&mut self) -> &mut crate::org::allbinary::thread::ARunnable::ARunnable { &mut self.base }
 }
 impl crate::Runnable for MusicRunnable {
     fn run(&mut self) { Self::run(self) }
@@ -234,7 +235,7 @@ impl std::ops::DerefMut for BaseMusicService {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
-pub trait BaseMusicServiceDyn {
+pub trait BaseMusicServiceDyn: std::any::Any {
     fn as_BaseMusicService(&self) -> &BaseMusicService;
     fn as_BaseMusicService_mut(&mut self) -> &mut BaseMusicService;
     fn onBind(&mut self, mut intent: Option<Rc<RefCell<Intent>>>) -> Option<Rc<RefCell<IBinder>>> { BaseMusicService::onBind(self.as_BaseMusicService_mut(), intent) }

@@ -24,6 +24,8 @@ use crate::org::allbinary::media::graphics::geography::map::BasicGeographicMapCe
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPosition;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPositionFactoryInterface::GeographicMapCellPositionFactoryInterface;
 use crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellType;
+use crate::java::lang::Exception::*;
+use crate::java::lang::RuntimeException::*;
 use super::RaceTrackGeographicMapInterface::RaceTrackGeographicMapInterface;
 use super::RaceTrackInfo::RaceTrackInfo;
 use super::RaceTrackData::RaceTrackData;
@@ -63,6 +65,10 @@ impl crate::org::allbinary::media::graphics::geography::map::GeographicMapInterf
 }
 
 impl NullRaceTrackGeographicMap {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {

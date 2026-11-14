@@ -25,6 +25,7 @@ use crate::org::allbinary::game::input::motion::action::GameKeyCompleteMotionGes
 use crate::org::allbinary::input::motion::gesture::TouchMotionGestureFactory::TouchMotionGestureFactory;
 use crate::org::allbinary::logic::NullUtil::NullUtil;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -38,30 +39,30 @@ pub struct ReleaseTouchInputToGameKeyEventAction {
     pub NONE: Option<Rc<RefCell<GameKey>>>,
 }
 
-pub static mut ReleaseTouchInputToGameKeyEventAction_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| jcall!(NullUtil::getInstance()).NULL_OBJECT.clone());
+pub static mut ReleaseTouchInputToGameKeyEventAction_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 impl crate::org::allbinary::game::input::CompleteMotionGestureInputInterface::CompleteMotionGestureInputInterface for ReleaseTouchInputToGameKeyEventAction {
 }
 impl crate::org::allbinary::layer::NamedInterface::NamedInterface for ReleaseTouchInputToGameKeyEventAction {
-    fn getName(&mut self) -> String { self.base.getName() }
+    fn getName(&mut self) -> String { crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEvent::getName(crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn::as_CompleteMotionGestureInputEvent_mut(self)) }
 }
 
 impl ReleaseTouchInputToGameKeyEventAction {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn crate::org::allbinary::game::input::motion::action::GameKeyCompleteMotionGestureInputEvent::GameKeyCompleteMotionGestureInputEventDyn>>> {
-        if match (&unsafe { ReleaseTouchInputToGameKeyEventAction_instance.clone() }, &jcall!(NullUtil::getInstance()).NULL_OBJECT) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            unsafe { *ReleaseTouchInputToGameKeyEventAction_instance = ReleaseTouchInputToGameKeyEventAction::new() };
+        if match (&unsafe { ReleaseTouchInputToGameKeyEventAction_instance.clone() }, &{ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
+            unsafe { *ReleaseTouchInputToGameKeyEventAction_instance = crate::java_into_object(ReleaseTouchInputToGameKeyEventAction::new()) };
         }
-        return (unsafe { ReleaseTouchInputToGameKeyEventAction_instance.clone() }).clone() /* as GameKeyCompleteMotionGestureInputEvent */;
+        return { let java_object = (unsafe { ReleaseTouchInputToGameKeyEventAction_instance.clone() }).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::motion::action::GameKeyCompleteMotionGestureInputEvent::GameKeyCompleteMotionGestureInputEventDyn>>>>().expect("ClassCastException").clone()) };
     }
     
 
     pub fn new_struct() -> Self {
         let mut this = Self {
-            base: GameKeyCompleteMotionGestureInputEvent::new_struct(String::from("Release Action"), jcall!(TouchMotionGestureFactory::getInstance()).RELEASED.clone(), jcall!(jcall!(PlatformInputMappingFactory::getInstance()).getPersistentInputMappingInstance()).getInputMapping()),
+            base: GameKeyCompleteMotionGestureInputEvent::new_struct(String::from("Release Action"), { let java_field = jcall!(TouchMotionGestureFactory::getInstance()).RELEASED.clone(); java_field }.clone(), jcall!(jcall!(PlatformInputMappingFactory::getInstance()).getPersistentInputMappingInstance()).getInputMapping()),
             NONE: None,
         };
-        this.NONE = jcall!(GameKeyFactory::getInstance()).NONE.clone();
+        this.NONE = { let java_field = jcall!(GameKeyFactory::getInstance()).NONE.clone(); java_field }.clone();
         // super(...) is in the struct literal above
         this
     }
@@ -69,15 +70,15 @@ impl ReleaseTouchInputToGameKeyEventAction {
     pub fn new() -> Option<Rc<RefCell<Self>>> {
         let this = Some(Rc::new(RefCell::new(Self::new_struct())));
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            this.setGameKey(this.NONE.clone());
-            { let java_arguments = (jcall!(GameKeyEventFactory::getInstance()).getInstanceForInput((|java_value: Option<Rc<RefCell<_>>>| java_value.map(|reference| Rc::new(RefCell::new(Box::new(Some(reference)) as Box<dyn std::any::Any>))))(this.clone()), this.NONE.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>)),); this.setGameKeyEvent(java_arguments.0) };
+            { let java_arguments = (jcall!(this).NONE.clone(),); jcall!(this).setGameKey(java_arguments.0) };
+            { let java_arguments = (jcall!(GameKeyEventFactory::getInstance()).getInstanceForInput(this.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::GameKeyEventSourceInterface::GameKeyEventSourceInterface>>), jcall!(this).NONE.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>)),); jcall!(this).setGameKeyEvent(java_arguments.0) };
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
             let mut commonStrings: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::getInstance();
-            jcall!(this.logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(commonStrings).CONSTRUCTOR.clone(), crate::java_into_object(e.clone()));
+            jcall!(jcall!(this).logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(commonStrings).CONSTRUCTOR.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
             }
         }
         this
@@ -95,14 +96,14 @@ impl std::ops::DerefMut for ReleaseTouchInputToGameKeyEventAction {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.base }
 }
 
+impl crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn for ReleaseTouchInputToGameKeyEventAction {
+    fn as_CompleteMotionGestureInputEvent(&self) -> &crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEvent { &self.base.base }
+    fn as_CompleteMotionGestureInputEvent_mut(&mut self) -> &mut crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEvent { &mut self.base.base }
+}
 impl crate::org::allbinary::game::input::motion::action::GameKeyCompleteMotionGestureInputEvent::GameKeyCompleteMotionGestureInputEventDyn for ReleaseTouchInputToGameKeyEventAction {
     fn as_GameKeyCompleteMotionGestureInputEvent(&self) -> &crate::org::allbinary::game::input::motion::action::GameKeyCompleteMotionGestureInputEvent::GameKeyCompleteMotionGestureInputEvent { &self.base }
     fn as_GameKeyCompleteMotionGestureInputEvent_mut(&mut self) -> &mut crate::org::allbinary::game::input::motion::action::GameKeyCompleteMotionGestureInputEvent::GameKeyCompleteMotionGestureInputEvent { &mut self.base }
     fn update(&mut self) { Self::update(self) }
-}
-impl crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn for ReleaseTouchInputToGameKeyEventAction {
-    fn as_CompleteMotionGestureInputEvent(&self) -> &crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEvent { &self.base.base }
-    fn as_CompleteMotionGestureInputEvent_mut(&mut self) -> &mut crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEvent { &mut self.base.base }
 }
 impl crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn for ReleaseTouchInputToGameKeyEventAction {
     fn as_AllBinaryEventObject(&self) -> &crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObject { &self.base.base.base }

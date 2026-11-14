@@ -41,7 +41,7 @@ impl StringMaker {
 
     pub fn append(&mut self, mut string: String) -> &mut Self {
         let mut stringLength: i32 = (string.chars().count() as i32);
-        self.ensureCapacity(self.currentLength + stringLength);
+        { let java_arguments = (self.currentLength + stringLength,); self.ensureCapacity(java_arguments.0) };
         { let chars: Vec<char> = string.chars().collect(); self.charArray[(self.currentLength) as usize..(self.currentLength + stringLength - 0) as usize].clone_from_slice(&chars[(0) as usize..(stringLength) as usize]); };
         self.currentLength += stringLength.clone();
         return self;
@@ -49,16 +49,16 @@ impl StringMaker {
     
 
     pub fn appendchar(&mut self, mut c: char) -> &mut Self {
-        self.ensureCapacity(self.currentLength + 1);
-        self.charArray[({ let value = self.currentLength; self.currentLength += 1; value }) as usize] = c.clone();
+        { let java_arguments = (self.currentLength + 1,); self.ensureCapacity(java_arguments.0) };
+        { let java_index = ({ let value = self.currentLength; self.currentLength += 1; value }) as usize; self.charArray[java_index] = c.clone(); };
         return self;
     }
     
 
     pub fn appendCharArray(&mut self, mut charArray: Vec<char>, mut start: i32, mut end: i32) -> &mut Self {
-        self.ensureCapacity(self.currentLength + (end - start));
+        { let java_arguments = (self.currentLength + (end - start),); self.ensureCapacity(java_arguments.0) };
         for index in (start..end) {
-            self.charArray[({ let value = self.currentLength; self.currentLength += 1; value }) as usize] = charArray[(index) as usize].clone();
+            { let java_index = ({ let value = self.currentLength; self.currentLength += 1; value }) as usize; self.charArray[java_index] = { let java_value = (charArray[(index) as usize]).clone(); java_value }.clone(); };
         }
         return self;
     }
@@ -96,18 +96,18 @@ impl StringMaker {
 
     pub fn appendboolean(&mut self, mut bool: bool) -> &mut Self {
         if bool {
-            self.ensureCapacity(self.currentLength + 4);
-            self.charArray[({ let value = self.currentLength; self.currentLength += 1; value }) as usize] = 't';
-            self.charArray[({ let value = self.currentLength; self.currentLength += 1; value }) as usize] = 'r';
-            self.charArray[({ let value = self.currentLength; self.currentLength += 1; value }) as usize] = 'u';
-            self.charArray[({ let value = self.currentLength; self.currentLength += 1; value }) as usize] = 'e';
+            { let java_arguments = (self.currentLength + 4,); self.ensureCapacity(java_arguments.0) };
+            { let java_index = ({ let value = self.currentLength; self.currentLength += 1; value }) as usize; self.charArray[java_index] = 't'; };
+            { let java_index = ({ let value = self.currentLength; self.currentLength += 1; value }) as usize; self.charArray[java_index] = 'r'; };
+            { let java_index = ({ let value = self.currentLength; self.currentLength += 1; value }) as usize; self.charArray[java_index] = 'u'; };
+            { let java_index = ({ let value = self.currentLength; self.currentLength += 1; value }) as usize; self.charArray[java_index] = 'e'; };
         } else {
-            self.ensureCapacity(self.currentLength + 5);
-            self.charArray[({ let value = self.currentLength; self.currentLength += 1; value }) as usize] = 'f';
-            self.charArray[({ let value = self.currentLength; self.currentLength += 1; value }) as usize] = 'a';
-            self.charArray[({ let value = self.currentLength; self.currentLength += 1; value }) as usize] = 'l';
-            self.charArray[({ let value = self.currentLength; self.currentLength += 1; value }) as usize] = 's';
-            self.charArray[({ let value = self.currentLength; self.currentLength += 1; value }) as usize] = 'e';
+            { let java_arguments = (self.currentLength + 5,); self.ensureCapacity(java_arguments.0) };
+            { let java_index = ({ let value = self.currentLength; self.currentLength += 1; value }) as usize; self.charArray[java_index] = 'f'; };
+            { let java_index = ({ let value = self.currentLength; self.currentLength += 1; value }) as usize; self.charArray[java_index] = 'a'; };
+            { let java_index = ({ let value = self.currentLength; self.currentLength += 1; value }) as usize; self.charArray[java_index] = 'l'; };
+            { let java_index = ({ let value = self.currentLength; self.currentLength += 1; value }) as usize; self.charArray[java_index] = 's'; };
+            { let java_index = ({ let value = self.currentLength; self.currentLength += 1; value }) as usize; self.charArray[java_index] = 'e'; };
         }
         return self;
     }
@@ -121,7 +121,7 @@ impl StringMaker {
                 newCapacity = minSize.clone();
             }
             let mut copy: Vec<char> = vec!['\0'; (newCapacity) as usize];
-            let mut min: i32 = self.min((self.charArray.len() as i32).clone(), newCapacity.clone());
+            let mut min: i32 = { let java_arguments = ((self.charArray.len() as i32).clone(), newCapacity.clone(),); self.min(java_arguments.0, java_arguments.1) };
             
                 { let java_copy_source = self.charArray[(0) as usize..(0 + min) as usize].to_vec(); copy[(0) as usize..(0 + min) as usize].clone_from_slice(&java_copy_source); };
             self.charArray = copy.clone();
@@ -130,7 +130,7 @@ impl StringMaker {
     
 
     pub fn min(&mut self, mut value: i32, mut value2: i32) -> i32 {
-        return (if (value <= value2) { value } else { value2 });
+        return (if (value <= value2) { value.clone() } else { value2.clone() });
     }
     
 

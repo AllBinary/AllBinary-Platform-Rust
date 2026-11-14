@@ -17,7 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::lcdui::Graphics::Graphics;
+use crate::javax::microedition::lcdui::Graphics::Graphics;
 use crate::org::allbinary::graphics::GPoint::GPoint;
 use crate::org::allbinary::layer::Layer::Layer;
 use super::LinePathAnimation::LinePathAnimation;
@@ -50,11 +50,11 @@ impl LinePathRelativeAnimation {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::LinePathAnimation::LinePathAnimationDyn>>> {
-        return LinePathRelativeAnimation_instanceC.with(Clone::clone).clone();
+        return LinePathRelativeAnimation_instanceC.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::LinePathAnimation::LinePathAnimationDyn>>);
     }
     
 
-    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut nextPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::Layer::LayerDyn>>>) {
+    pub fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut nextPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::Layer::LayerDyn>>>) {
         jcall!(graphics).drawLine(jcall!(nextPoint).getX() - jcall!(tiledLayer).getXP(), jcall!(nextPoint).getY() - jcall!(tiledLayer).getYP(), jcall!(point).getX() - jcall!(tiledLayer).getXP(), jcall!(point).getY() - jcall!(tiledLayer).getYP());
     }
 }
@@ -69,7 +69,7 @@ impl std::ops::DerefMut for LinePathRelativeAnimation {
 impl crate::org::allbinary::game::layer::LinePathAnimation::LinePathAnimationDyn for LinePathRelativeAnimation {
     fn as_LinePathAnimation(&self) -> &crate::org::allbinary::game::layer::LinePathAnimation::LinePathAnimation { &self.base }
     fn as_LinePathAnimation_mut(&mut self) -> &mut crate::org::allbinary::game::layer::LinePathAnimation::LinePathAnimation { &mut self.base }
-    fn paint(&mut self, mut graphics: Option<Rc<RefCell<Graphics>>>, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut nextPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::Layer::LayerDyn>>>) { Self::paint(self, graphics, point, nextPoint, tiledLayer) }
+    fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut nextPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>, mut tiledLayer: Option<Rc<RefCell<dyn crate::org::allbinary::layer::Layer::LayerDyn>>>) { Self::paint(self, graphics, point, nextPoint, tiledLayer) }
 }
 
 

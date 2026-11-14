@@ -20,6 +20,7 @@ use super::*;
 use crate::org::allbinary::game::combat::weapon::WeaponProperties::WeaponProperties;
 use crate::org::allbinary::game::score::ScoreableInterface::ScoreableInterface;
 use crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManager;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -28,7 +29,7 @@ macro_rules! jcall {
     };
 }
 
-pub trait SalvoInterface {
+pub trait SalvoInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     // throws Exception
@@ -37,8 +38,6 @@ pub trait SalvoInterface {
 
     // throws Exception
     fn processScore(&mut self, allbinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>, angle: i16, otherAngle: i16, weaponProperties: Option<Rc<RefCell<WeaponProperties>>>, scoreableInterface: Option<Rc<RefCell<dyn ScoreableInterface>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

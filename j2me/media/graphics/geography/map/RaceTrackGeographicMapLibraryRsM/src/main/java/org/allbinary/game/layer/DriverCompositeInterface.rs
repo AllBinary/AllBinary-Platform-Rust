@@ -26,12 +26,10 @@ macro_rules! jcall {
     };
 }
 
-pub trait DriverCompositeInterface {
+pub trait DriverCompositeInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getDriver(&mut self) -> Option<Rc<RefCell<Driver>>>;
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

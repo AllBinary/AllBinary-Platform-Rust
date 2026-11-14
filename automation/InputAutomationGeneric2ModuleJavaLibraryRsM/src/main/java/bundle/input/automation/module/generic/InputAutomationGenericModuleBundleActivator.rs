@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::input::automation::module::generic::InputAutomationGenericModuleServiceFactory::InputAutomationGenericModuleServiceFactory;
 use crate::org::allbinary::input::automation::module::osgi::InputAutomationModuleBundleActivator::InputAutomationModuleBundleActivator;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -51,7 +52,7 @@ impl InputAutomationGenericModuleBundleActivator {
     pub fn init(&mut self) {
         let mut inputAutomationGenericModuleServiceFactory: Option<Rc<RefCell<InputAutomationGenericModuleServiceFactory>>> = InputAutomationGenericModuleServiceFactory::getInstance();
         { let java_arguments = (jcall!(inputAutomationGenericModuleServiceFactory).getInputAutomationModuleInterfaceArray(),); self.setInputAutomationModuleInterface(java_arguments.0) };
-        self.setServiceFactory(inputAutomationGenericModuleServiceFactory.clone());
+        self.setServiceFactory(inputAutomationGenericModuleServiceFactory.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::osgi::framework::ServiceFactory::ServiceFactory>>));
     }
 }
 impl std::ops::Deref for InputAutomationGenericModuleBundleActivator {

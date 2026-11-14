@@ -33,6 +33,10 @@ thread_local! { pub static SoundThreadPool_instance: Option<Rc<RefCell<dyn crate
 
 impl SoundThreadPool {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };

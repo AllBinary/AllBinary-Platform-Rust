@@ -38,11 +38,15 @@ thread_local! { pub static GameLevelDisplayChangeEventListenersFactory_instance:
 
 impl GameLevelDisplayChangeEventListenersFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
             list: None,
         };
-        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.list = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         this
     }
 
@@ -58,7 +62,7 @@ impl GameLevelDisplayChangeEventListenersFactory {
 
     pub fn add(&mut self, mut displayChangeEventListener: Option<Rc<RefCell<dyn DisplayChangeEventListener>>>) {
         jcall!(self.list).add(crate::java_into_object(displayChangeEventListener.clone()));
-        jcall!(DisplayChangeEventHandler::getInstance()).addListenerInterface(displayChangeEventListener.clone());
+        jcall!(DisplayChangeEventHandler::getInstance()).addListenerInterface(displayChangeEventListener.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
     }
     
 
@@ -68,8 +72,8 @@ impl GameLevelDisplayChangeEventListenersFactory {
         {
             let mut index: i32 = jcall!(self.list).size();
             while { index -= 1; index } >= 0 {
-            displayChangeEventListener = { let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn DisplayChangeEventListener>>>>().expect("ClassCastException").clone()) };
-            jcall!(displayChangeEventHandler).removeListener(displayChangeEventListener.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
+            displayChangeEventListener = { let java_value = ({ let java_object = (jcall!(self.list).as_BasicArrayList_mut().objectArray[(index) as usize]).clone(); java_object.as_ref().and_then(|object| object.borrow().downcast_ref::<Option<Rc<RefCell<dyn DisplayChangeEventListener>>>>().expect("ClassCastException").clone()) }).clone(); java_value };
+            jcall!(displayChangeEventHandler).as_BasicEventHandler_mut().removeListener(displayChangeEventListener.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::util::event::EventListenerInterface::EventListenerInterface>>));
             }
         }
         jcall!(self.list).clear();

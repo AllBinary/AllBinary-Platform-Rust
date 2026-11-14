@@ -17,13 +17,14 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
-// use crate::javax::microedition::khronos::egl::EGLConfig::EGLConfig;
-// use crate::javax::microedition::khronos::opengles::GL10::GL10;
+use crate::javax::microedition::khronos::egl::EGLConfig::EGLConfig;
+use crate::javax::microedition::khronos::opengles::GL10::GL10;
 use crate::org::allbinary::emulator::InitEmulatorFactory::InitEmulatorFactory;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
 use crate::org::allbinary::logic::communication::log::LogUtil::LogUtil;
 use crate::org::allbinary::logic::communication::log::PreLogUtil::PreLogUtil;
 use crate::java::lang::Thread::*;
+use crate::java::lang::Exception::*;
 use super::RendererStrings::RendererStrings;
 
 // Borrows the object of a Java reference
@@ -41,6 +42,10 @@ pub struct EmulatorCustomRenderer {
 
 
 impl EmulatorCustomRenderer {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -60,21 +65,21 @@ impl EmulatorCustomRenderer {
     
 
     pub fn onSurfaceCreated(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>, mut eglConfig: Option<Rc<RefCell<EGLConfig>>>) {
-        jcall!(self.logUtil).putF(jcall!(self.commonStrings).START.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.renderStrings).ON_SURFACE_CREATED.clone());
+        jcall!(self.logUtil).putF({ let java_field = jcall!(self.commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.renderStrings).ON_SURFACE_CREATED.clone(); java_field }.clone());
         let mut initEmulatorFactory: Option<Rc<RefCell<InitEmulatorFactory>>> = InitEmulatorFactory::getInstance();
         if !jcall!(initEmulatorFactory).isInitEmulator() {
             match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                 let mut WAIT_FOR_EMULATOR: String = String::from("Waiting on Emulator Initialization");
                 while !jcall!(initEmulatorFactory).isInitEmulator() {
-                    PreLogUtil::put(WAIT_FOR_EMULATOR.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.renderStrings).ON_SURFACE_CREATED.clone());
+                    PreLogUtil::put(WAIT_FOR_EMULATOR.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.renderStrings).ON_SURFACE_CREATED.clone(); java_field }.clone());
                     std::thread::sleep(std::time::Duration::from_millis((180) as u64));
                 }
             })) {
                 Ok(_) => {}
                 Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-                jcall!(self.logUtil).put(jcall!(self.commonStrings).EXCEPTION.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), jcall!(self.renderStrings).ON_SURFACE_CREATED.clone(), crate::java_into_object(e.clone()));
+                jcall!(self.logUtil).put({ let java_field = jcall!(self.commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(String::from(std::any::type_name::<Self>())), { let java_field = jcall!(self.renderStrings).ON_SURFACE_CREATED.clone(); java_field }.clone(), crate::java_into_object(e.clone()));
                 }
             }
         }

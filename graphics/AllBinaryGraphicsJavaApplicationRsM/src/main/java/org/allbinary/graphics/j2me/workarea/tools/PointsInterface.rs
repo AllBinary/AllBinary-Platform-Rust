@@ -26,15 +26,13 @@ macro_rules! jcall {
     };
 }
 
-pub trait PointsInterface {
+pub trait PointsInterface: std::any::Any + crate::java::lang::Object::JavaObjectToString {
     
 
     fn getPoints(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>;
     
 
     fn addPoints(&mut self, vector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>);
-
-    fn toString(&mut self) -> String { String::from(std::any::type_name::<Self>()) }
 }
 
 

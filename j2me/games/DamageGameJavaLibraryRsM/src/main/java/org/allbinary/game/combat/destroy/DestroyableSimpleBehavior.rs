@@ -37,7 +37,7 @@ impl crate::org::allbinary::game::combat::destroy::DestroyableInterface::Destroy
     fn isDestroyed(&mut self) -> bool { Self::isDestroyed(self) }
 }
 impl crate::org::allbinary::layer::NamedInterface::NamedInterface for DestroyableSimpleBehavior {
-    fn getName(&mut self) -> String { self.base.getName() }
+    fn getName(&mut self) -> String { crate::org::allbinary::game::combat::destroy::DestroyableBaseBehavior::DestroyableBaseBehavior::getName(crate::org::allbinary::game::combat::destroy::DestroyableBaseBehavior::DestroyableBaseBehaviorDyn::as_DestroyableBaseBehavior_mut(self)) }
 }
 
 impl DestroyableSimpleBehavior {
@@ -67,7 +67,7 @@ impl DestroyableSimpleBehavior {
     pub fn setDestroyed(&mut self, mut destroyed: bool) {
         self.destroyed = destroyed.clone();
         if self.isDestroyed() {
-            jcall!(DestroyedLayerProcessor::DestroyedLayerProcessor::getInstance()).add(self.ownerLayer.clone());
+            jcall!(DestroyedLayerProcessor::DestroyedLayerProcessor::getInstance()).add(self.ownerLayer.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>));
         }
     }
 }

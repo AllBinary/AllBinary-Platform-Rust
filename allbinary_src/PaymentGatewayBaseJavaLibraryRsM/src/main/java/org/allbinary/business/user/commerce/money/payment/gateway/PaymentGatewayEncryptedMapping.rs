@@ -16,12 +16,12 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::collections::HashMap;
 use super::*;
-// use crate::java::util::HashMap::HashMap;
+use crate::java::util::HashMap::HashMap;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListD::BasicArrayListD;
 use crate::org::allbinary::data::tables::TableMappingInterface::TableMappingInterface;
+use crate::java::lang::Exception::*;
 use super::PaymentGatewayInterface::PaymentGatewayInterface;
 
 // Borrows the object of a Java reference
@@ -38,10 +38,14 @@ pub struct PaymentGatewayEncryptedMapping {
 impl TableMappingInterface for PaymentGatewayEncryptedMapping {
     fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getKey(self) }
     fn toVector(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::toVector(self) }
-    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> { Self::toHashMap(self) }
+    fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> { Self::toHashMap(self) }
 }
 
 impl PaymentGatewayEncryptedMapping {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut paymentGatewayInterface: Option<Rc<RefCell<dyn PaymentGatewayInterface>>>) -> Self {
@@ -58,7 +62,7 @@ impl PaymentGatewayEncryptedMapping {
     
 
     // throws Exception
-    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap>>> {
+    pub fn toHashMap(&mut self) -> Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>> {
         return jcall!(self.paymentGatewayInterface).toHashMap(true);
     }
     
@@ -70,7 +74,7 @@ impl PaymentGatewayEncryptedMapping {
 
     // throws Exception
     pub fn getKey(&mut self) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> {
-        return (jcall!(self.paymentGatewayInterface).getKey()).clone() /* as Any */;
+        return crate::java_into_object(crate::java_into_object((jcall!(self.paymentGatewayInterface).getKey()).clone()));
     }
 }
 

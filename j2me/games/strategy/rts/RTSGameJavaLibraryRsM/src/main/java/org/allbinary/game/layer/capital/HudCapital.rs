@@ -51,7 +51,7 @@ impl HudCapital {
     
 
     pub fn removeMoney(&mut self, mut points: i32) {
-        self.base.removeMoney(points.clone());
+        { let java_arguments = (points.clone(),); self.base.removeMoney(java_arguments.0) };
         jcall!(self.capitalGraphic).reduce(points.clone());
     }
     
@@ -62,7 +62,7 @@ impl HudCapital {
     
 
     pub fn addMoney(&mut self, mut points: i32) {
-        self.base.addMoney(points.clone());
+        { let java_arguments = (points.clone(),); self.base.addMoney(java_arguments.0) };
         jcall!(self.capitalGraphic).add(points.clone());
     }
 }

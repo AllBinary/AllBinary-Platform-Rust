@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::util::cache::CacheInterfaceFactory::CacheInter
 use crate::org::allbinary::logic::util::cache::CachePolicyFactory::CachePolicyFactory;
 use crate::org::allbinary::logic::util::cache::CacheTypeFactory::CacheTypeFactory;
 use crate::org::allbinary::string::CommonStrings::CommonStrings;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -39,6 +40,10 @@ pub struct CapturedBufferedImagesCacheSingleton {
 pub static mut CapturedBufferedImagesCacheSingleton_cacheInterface: std::cell::LazyCell<Option<Rc<RefCell<dyn AutomaticCacheInterface>>>> = std::cell::LazyCell::new(|| None);
 
 impl CapturedBufferedImagesCacheSingleton {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {
@@ -55,7 +60,7 @@ impl CapturedBufferedImagesCacheSingleton {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn CacheInterface>>> {
-        return unsafe { CapturedBufferedImagesCacheSingleton_cacheInterface.clone() }.clone();
+        return unsafe { CapturedBufferedImagesCacheSingleton_cacheInterface.clone() }.clone().map(|reference| reference as Rc<RefCell<dyn CacheInterface>>);
     }
     
 
@@ -66,15 +71,15 @@ impl CapturedBufferedImagesCacheSingleton {
         let mut STATIC_BLOCK: String = String::from("Static Block");
         let mut instance: String = String::from("CapturedBufferedImagesCacheSingleton");
         match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            jcall!(logUtil).putF(jcall!(commonStrings).START.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
-            unsafe { *CapturedBufferedImagesCacheSingleton_cacheInterface = (CacheInterfaceFactory::getInstance((jcall!(CacheTypeFactory::getInstance()).SET).clone(), (jcall!(CachePolicyFactory::getInstance()).ONE_MINUTE_FIVE_MAX).clone())).clone() /* as AutomaticCacheInterface */ };
-            jcall!(logUtil).putF(jcall!(commonStrings).END.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
+            jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).START.clone(); java_field }.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
+            unsafe { *CapturedBufferedImagesCacheSingleton_cacheInterface = (|| -> Option<Rc<RefCell<dyn AutomaticCacheInterface>>> { panic!("ClassCastException: a Rust dyn CacheInterface cannot be cast to dyn AutomaticCacheInterface") })() };
+            jcall!(logUtil).putF({ let java_field = jcall!(commonStrings).END.clone(); java_field }.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone());
         })) {
             Ok(_) => {}
             Err(e) => {
-            let e: Option<Rc<RefCell<Box<dyn std::any::Any>>>> = Some(Rc::new(RefCell::new(e as Box<dyn std::any::Any>)));
+            let e: String = crate::java::lang::Exception::java_panic_message(&e);
 
-            jcall!(logUtil).put(jcall!(commonStrings).EXCEPTION.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone(), crate::java_into_object(e.clone()));
+            jcall!(logUtil).put({ let java_field = jcall!(commonStrings).EXCEPTION.clone(); java_field }.clone(), crate::java_into_object(instance.clone()), STATIC_BLOCK.clone(), crate::java_into_object(e.clone()));
             }
         }
     }

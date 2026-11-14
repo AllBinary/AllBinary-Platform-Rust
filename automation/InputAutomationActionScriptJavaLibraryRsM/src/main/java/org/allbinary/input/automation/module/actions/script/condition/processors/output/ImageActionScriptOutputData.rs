@@ -35,6 +35,10 @@ pub static mut ImageActionScriptOutputData_TYPE: std::cell::LazyCell<String> = s
 pub static mut ImageActionScriptOutputData_TYPES: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| String::from("TYPES_IMAGE_ACTION_OUTPUT_NAME"));
 
 impl ImageActionScriptOutputData {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct() -> Self {

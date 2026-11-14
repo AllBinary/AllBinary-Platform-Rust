@@ -19,6 +19,7 @@ use std::rc::Rc;
 use super::*;
 use crate::org::allbinary::util::BasicArrayList::BasicArrayList;
 use crate::org::allbinary::util::BasicArrayListUtil::BasicArrayListUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -37,6 +38,10 @@ pub struct TouchButtonFactory {
 thread_local! { pub static TouchButtonFactory_SINGLETON: Option<Rc<RefCell<TouchButtonFactory>>> = TouchButtonFactory::new(); }
 
 impl TouchButtonFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<TouchButtonFactory>>> {
@@ -65,7 +70,7 @@ impl TouchButtonFactory {
 
     pub fn defaultList(&mut self) {
         self.list = self.LIST.clone();
-        self.toggle(false, self.LIST.clone());
+        { let java_arguments = (false, self.LIST.clone(),); self.toggle(java_arguments.0, java_arguments.1) };
     }
     
 

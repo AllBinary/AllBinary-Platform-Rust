@@ -33,6 +33,10 @@ pub struct ThirdPartyStore {
 
 
 impl ThirdPartyStore {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn new_struct(mut name: String) -> Self {
@@ -67,7 +71,7 @@ impl ThirdPartyStore {
         return self.name.clone();
     }
 }
-pub trait ThirdPartyStoreDyn {
+pub trait ThirdPartyStoreDyn: std::any::Any {
     fn as_ThirdPartyStore(&self) -> &ThirdPartyStore;
     fn as_ThirdPartyStore_mut(&mut self) -> &mut ThirdPartyStore;
     fn authorize(&mut self, mut clientInformationInterface: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>) { ThirdPartyStore::authorize(self.as_ThirdPartyStore_mut(), clientInformationInterface) }

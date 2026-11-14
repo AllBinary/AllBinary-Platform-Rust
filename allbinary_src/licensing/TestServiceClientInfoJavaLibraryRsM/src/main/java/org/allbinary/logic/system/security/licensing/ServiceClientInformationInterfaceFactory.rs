@@ -34,6 +34,10 @@ thread_local! { pub static ServiceClientInformationInterfaceFactory_instance: Op
 
 impl ServiceClientInformationInterfaceFactory {
 
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
+
     pub fn new_struct() -> Self {
         let mut this = Self {
         };
@@ -46,7 +50,7 @@ impl ServiceClientInformationInterfaceFactory {
     
 
     pub fn getInstance() -> Option<Rc<RefCell<dyn AbeClientInformationInterface>>> {
-        return ServiceClientInformationInterfaceFactory_instance.with(Clone::clone).clone();
+        return ServiceClientInformationInterfaceFactory_instance.with(Clone::clone).clone().map(|reference| reference as Rc<RefCell<dyn AbeClientInformationInterface>>);
     }
 }
 

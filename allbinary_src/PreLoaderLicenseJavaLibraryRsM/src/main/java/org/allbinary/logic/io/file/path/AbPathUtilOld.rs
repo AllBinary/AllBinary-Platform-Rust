@@ -24,6 +24,7 @@ use crate::org::allbinary::logic::io::path::AbPath::AbPath;
 use crate::org::allbinary::logic::io::path::AbPathData::AbPathData;
 use crate::org::allbinary::logic::string::StringUtil::StringUtil;
 use crate::org::allbinary::logic::string::StringValidationUtil::StringValidationUtil;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -43,6 +44,10 @@ thread_local! { pub static AbPathUtilOld_instance: Option<Rc<RefCell<AbPathUtilO
 thread_local! { pub static AbPathUtilOld_MIN: i32 = 4; }
 
 impl AbPathUtilOld {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<AbPathUtilOld>>> {
@@ -75,20 +80,20 @@ impl AbPathUtilOld {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn getExtension(&mut self, mut abPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>) -> String {
+    pub fn getExtension_AbPath(&mut self, mut abPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>) -> String {
         return { let java_arguments = (jcall!(abPath).toString(),); self.getExtension(java_arguments.0) };
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn getExtension(&mut self, mut filePath: String) -> String {
+    pub fn getExtension_String(&mut self, mut filePath: String) -> String {
         if (filePath.chars().count() as i32) < AbPathUtilOld_MIN.with(Clone::clone) {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Could not be a file path since its less that 4 characters"))));
         }
         let mut beginIndex: i32 = (filePath.chars().count() as i32) - AbPathUtilOld_MIN.with(Clone::clone);
         let mut extension: String = filePath[(beginIndex + 1) as usize..].to_string();
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             jcall!(self.logUtil).putF(format!("{}{}", String::from("FileExtension: "), extension), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getExtension()"));
         }
         return extension.clone();
@@ -103,20 +108,20 @@ impl AbPathUtilOld {
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn getWithoutExtension(&mut self, mut abPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>) -> String {
+    pub fn getWithoutExtension_AbPath(&mut self, mut abPath: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>) -> String {
         return { let java_arguments = (jcall!(abPath).toString(),); self.getWithoutExtension(java_arguments.0) };
     }
     
 
     // throws Exception
     // Java overloaded method: Rust needs a different name
-    pub fn getWithoutExtension(&mut self, mut filePath: String) -> String {
+    pub fn getWithoutExtension_String(&mut self, mut filePath: String) -> String {
         if (filePath.chars().count() as i32) < AbPathUtilOld_MIN.with(Clone::clone) {
             panic!("{:?}", format!("{}: {:?}", "Exception", (String::from("Could not be a file path since its less that 4 characters"))));
         }
         let mut endIndex: i32 = (filePath.chars().count() as i32) - AbPathUtilOld_MIN.with(Clone::clone);
         let mut pathWithoutExtension: String = filePath[(0) as usize..(endIndex) as usize].to_string();
-        if jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypes).LOGGING).contains(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(jcall!(unsafe { org_allbinary.clone() }).logic).communication).log).config).r#type).LogConfigTypeFactory).getInstance()).VIEW.clone()) {
+        if jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypes.clone(); java_field }).LOGGING.clone(); java_field }).contains({ let java_field = jcall!(jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!({ let java_field = jcall!(unsafe { org_allbinary.clone() }).logic.clone(); java_field }).communication.clone(); java_field }).log.clone(); java_field }).config.clone(); java_field }).r#type.clone(); java_field }).LogConfigTypeFactory.clone(); java_field }).getInstance()).VIEW.clone(); java_field }.clone()) {
             jcall!(self.logUtil).putF(format!("{}{}", String::from("FileWithoutExtension: "), pathWithoutExtension), crate::java_into_object(String::from(std::any::type_name::<Self>())), String::from("getWithoutExtension()"));
         }
         return pathWithoutExtension.clone();
@@ -134,7 +139,7 @@ impl AbPathUtilOld {
     
 
     pub fn isValidStart(&mut self, mut path: String) -> bool {
-        if path.chars().nth((0) as usize).unwrap() == jcall!(self.abPathData).SEPARATORCHAR {
+        if path.chars().nth((0) as usize).unwrap() == { let java_field = jcall!(self.abPathData).SEPARATORCHAR.clone(); java_field } {
             return true;
         } else {
             return false;
@@ -146,7 +151,7 @@ impl AbPathUtilOld {
         if jcall!(StringValidationUtil::getInstance()).isEmpty(path.clone()) {
             return false;
         }
-        if path.chars().nth(((path.chars().count() as i32) - 1) as usize).unwrap() == jcall!(self.abPathData).SEPARATORCHAR {
+        if path.chars().nth(((path.chars().count() as i32) - 1) as usize).unwrap() == { let java_field = jcall!(self.abPathData).SEPARATORCHAR.clone(); java_field } {
             return true;
         } else {
             return false;
@@ -156,7 +161,7 @@ impl AbPathUtilOld {
 
     pub fn adjustStart(&mut self, mut path: String) -> String {
         if !self.isValidStart(path.clone()) {
-            path = format!("{}{}", jcall!(self.abPathData).SEPARATOR, path);
+            path = { let java_value = (format!("{}{}", { let java_field = jcall!(self.abPathData).SEPARATOR.clone(); java_field }, path)).clone(); java_value };
         }
         return path.clone();
     }
@@ -164,7 +169,7 @@ impl AbPathUtilOld {
 
     pub fn adjustEnd(&mut self, mut path: String) -> String {
         if !self.isValidEnd(path.clone()) {
-            path = format!("{}{}", path, jcall!(self.abPathData).SEPARATOR);
+            path = { let java_value = (format!("{}{}", path, { let java_field = jcall!(self.abPathData).SEPARATOR.clone(); java_field })).clone(); java_value };
         }
         return path.clone();
     }
@@ -172,10 +177,10 @@ impl AbPathUtilOld {
 
     pub fn adjust(&mut self, mut path: String) -> String {
         if jcall!(StringValidationUtil::getInstance()).isEmpty(path.clone()) {
-            return jcall!(self.abPathData).SEPARATOR.clone();
+            return { let java_field = jcall!(self.abPathData).SEPARATOR.clone(); java_field }.clone();
         }
         if path.find(&String::from("\\")).map(|index| index as i32).unwrap_or(-1) >= 0 {
-            path = path.replace(&'\\', &jcall!(self.abPathData).SEPARATORCHAR);
+            path = { let java_value = (path.replace(&('\\').to_string(), &({ let java_field = jcall!(self.abPathData).SEPARATORCHAR.clone(); java_field }).to_string())).clone(); java_value };
         }
         return path.clone();
     }
@@ -183,9 +188,9 @@ impl AbPathUtilOld {
 
     // synchronized
     pub fn getNameFromPath(&mut self, mut categoryPath: String) -> String {
-        let mut endIndex: i32 = categoryPath.rfind(&jcall!(self.abPathData).SEPARATOR.clone()).map(|index| index as i32).unwrap_or(-1);
+        let mut endIndex: i32 = categoryPath.rfind(&{ let java_field = jcall!(self.abPathData).SEPARATOR.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1);
         if endIndex < 0 {
-            endIndex = categoryPath.rfind(jcall!(self.filePathData).SEPARATORCHAR.clone()).map(|index| index as i32).unwrap_or(-1);
+            endIndex = { let java_value = (categoryPath.rfind({ let java_field = jcall!(self.filePathData).SEPARATORCHAR.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1)).clone(); java_value };
         }
         if endIndex < 0 {
             return categoryPath.clone();
@@ -203,9 +208,9 @@ impl AbPathUtilOld {
     // throws Exception
     // synchronized
     pub fn removeNameFromPath(&mut self, mut categoryPath: String) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>> {
-        let mut endIndex: i32 = categoryPath.rfind(&jcall!(self.abPathData).SEPARATOR.clone()).map(|index| index as i32).unwrap_or(-1);
+        let mut endIndex: i32 = categoryPath.rfind(&{ let java_field = jcall!(self.abPathData).SEPARATOR.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1);
         if endIndex < 0 {
-            endIndex = categoryPath.rfind(jcall!(self.filePathData).SEPARATORCHAR.clone()).map(|index| index as i32).unwrap_or(-1);
+            endIndex = { let java_value = (categoryPath.rfind({ let java_field = jcall!(self.filePathData).SEPARATORCHAR.clone(); java_field }.clone()).map(|index| index as i32).unwrap_or(-1)).clone(); java_value };
         }
         if endIndex < 0 {
             return AbPath::createAbPath();
@@ -214,7 +219,7 @@ impl AbPathUtilOld {
             return { let java_arguments = (categoryPath[(0) as usize..(endIndex - 1) as usize].to_string(),); self.removeNameFromPath(java_arguments.0) };
         } else {
             let mut categoryName: String = categoryPath[(0) as usize..(endIndex) as usize].to_string();
-            return AbPath::new(categoryName.clone(), jcall!(StringUtil::getInstance()).EMPTY_STRING.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
+            return AbPath::new(categoryName.clone(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>);
         }
     }
 }

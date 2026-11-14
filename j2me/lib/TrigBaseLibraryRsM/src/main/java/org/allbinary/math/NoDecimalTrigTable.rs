@@ -26,6 +26,7 @@ use crate::org::allbinary::string::CommonSeps::CommonSeps;
 use crate::jsinterop::annotations::JsMethod;
 use crate::jsinterop::annotations::JsConstructor;
 use crate::jsinterop::annotations::JsProperty;
+use crate::java::lang::Exception::*;
 use super::AngleFactory::AngleFactory;
 use super::Angle::Angle;
 
@@ -47,6 +48,10 @@ pub struct NoDecimalTrigTable {
 thread_local! { pub static NoDecimalTrigTable_instance: Option<Rc<RefCell<NoDecimalTrigTable>>> = NoDecimalTrigTable::new(); }
 
 impl NoDecimalTrigTable {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<NoDecimalTrigTable>>> {
@@ -64,7 +69,7 @@ impl NoDecimalTrigTable {
         };
         this.mathUtil = MathUtil::getInstance();
         this.SCALE = 10000;
-        let mut TOTAL_ANGLE: i32 = ((jcall!(AngleFactory::getInstance()).TOTAL_ANGLE) as i32);
+        let mut TOTAL_ANGLE: i32 = (({ let java_field = jcall!(AngleFactory::getInstance()).TOTAL_ANGLE.clone(); java_field }) as i32);
         let mut MAX_VALUE: i64 = (((i32::MAX) as i64));
         this.noDecimalSin = vec![0_i64; (TOTAL_ANGLE) as usize];
         this.noDecimalCos = vec![0_i64; (TOTAL_ANGLE) as usize];
@@ -1182,7 +1187,7 @@ impl NoDecimalTrigTable {
             let mut dxl: i64 = (((dx) as i64));
             ratio = ((self.SCALE) as i64) * dxl / ((dy) as i64);
             if dx <= 0 && dy < 0 {
-                ratio = jcall!(self.mathUtil).abslong(ratio.clone());
+                ratio = { let java_value = (jcall!(self.mathUtil).abslong(ratio.clone())).clone(); java_value };
             }
         }
         if (dx >= 0 && dy < 0) {
@@ -1221,11 +1226,11 @@ impl NoDecimalTrigTable {
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(String::from("Invalid Ratio: "));
         jcall!(stringBuffer).appendlong(ratio.clone());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(PositionStrings::PositionStrings::getInstance()).DX_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(PositionStrings::PositionStrings::getInstance()).DX_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(dx.clone());
-        jcall!(stringBuffer).append(jcall!(CommonSeps::getInstance()).SPACE.clone());
-        jcall!(stringBuffer).append(jcall!(PositionStrings::PositionStrings::getInstance()).DX_LABEL.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(CommonSeps::getInstance()).SPACE.clone(); java_field }.clone());
+        jcall!(stringBuffer).append({ let java_field = jcall!(PositionStrings::PositionStrings::getInstance()).DX_LABEL.clone(); java_field }.clone());
         jcall!(stringBuffer).appendint(dy.clone());
         panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(stringBuffer).toString())));
     }
@@ -1257,9 +1262,9 @@ impl NoDecimalTrigTable {
         for index in (0..(dx.len() as i32)) {
             for index2 in (0..(dy.len() as i32)) {
                 angleOfTarget = self.antiTan(dx[(index) as usize].clone(), dy[(index2) as usize].clone());
-                angle = jcall!(angleFactory).getAt(((angleOfTarget) as i32));
+                angle = { let java_value = (jcall!(angleFactory).getAt(((angleOfTarget) as i32))).clone(); java_value };
                 jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
-                PreLogUtil::put(jcall!(stringMaker).append(jcall!(CommonLabels::getInstance()).INDEX_LABEL.clone()).appendint(index.clone()).append(String::from(" index2: ")).appendint(index2.clone()).append(jcall!(PositionStrings::PositionStrings::getInstance()).DX_LABEL.clone()).appendint(dx[(index) as usize].clone()).append(jcall!(PositionStrings::PositionStrings::getInstance()).DY_LABEL.clone()).appendint(dy[(index2) as usize].clone()).append(TARGET_ANGLE.clone()).appendshort(angleOfTarget.clone()).append(jcall!(CommonSeps::getInstance()).EQUALS.clone()).appendshort(((jcall!(angle).getValue()) as i16)).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone());
+                PreLogUtil::put(jcall!(stringMaker).append({ let java_field = jcall!(CommonLabels::getInstance()).INDEX_LABEL.clone(); java_field }.clone()).appendint(index.clone()).append(String::from(" index2: ")).appendint(index2.clone()).append({ let java_field = jcall!(PositionStrings::PositionStrings::getInstance()).DX_LABEL.clone(); java_field }.clone()).appendint(dx[(index) as usize].clone()).append({ let java_field = jcall!(PositionStrings::PositionStrings::getInstance()).DY_LABEL.clone(); java_field }.clone()).appendint(dy[(index2) as usize].clone()).append(TARGET_ANGLE.clone()).appendshort(angleOfTarget.clone()).append({ let java_field = jcall!(CommonSeps::getInstance()).EQUALS.clone(); java_field }.clone()).appendshort(jcall!(angle).getValue()).toString(), crate::java_into_object(String::from(std::any::type_name::<Self>())), METHOD_NAME.clone());
             }
         }
         angleOfTarget = self.antiTan(dx[(0) as usize].clone(), dy[(0) as usize].clone());

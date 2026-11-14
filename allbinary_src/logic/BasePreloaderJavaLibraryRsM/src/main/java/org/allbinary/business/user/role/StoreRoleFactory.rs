@@ -37,6 +37,10 @@ pub struct StoreRoleFactory {
 thread_local! { pub static StoreRoleFactory_instance: Option<Rc<RefCell<StoreRoleFactory>>> = StoreRoleFactory::new(); }
 
 impl StoreRoleFactory {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<StoreRoleFactory>>> {
@@ -50,15 +54,15 @@ impl StoreRoleFactory {
             subscriberRoles: None,
             wholesaleRoles: None,
         };
-        this.roles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.subscriberRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
-        this.wholesaleRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.roles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.subscriberRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
+        this.wholesaleRoles = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>);
         let mut basicUserRoleFactory: Option<Rc<RefCell<BasicUserRoleFactory>>> = BasicUserRoleFactory::getInstance();
-        jcall!(this.roles).add(crate::java_into_object(jcall!(basicUserRoleFactory).CUSTOMER.clone()));
-        jcall!(this.roles).add(crate::java_into_object(jcall!(basicUserRoleFactory).SUBSCRIBERCUSTOMER.clone()));
-        jcall!(this.roles).add(crate::java_into_object(jcall!(basicUserRoleFactory).WHOLESALECUSTOMER.clone()));
-        jcall!(this.subscriberRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).SUBSCRIBERCUSTOMER.clone()));
-        jcall!(this.wholesaleRoles).add(crate::java_into_object(jcall!(basicUserRoleFactory).WHOLESALECUSTOMER.clone()));
+        jcall!(this.roles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).CUSTOMER.clone(); java_field }.clone()));
+        jcall!(this.roles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).SUBSCRIBERCUSTOMER.clone(); java_field }.clone()));
+        jcall!(this.roles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).WHOLESALECUSTOMER.clone(); java_field }.clone()));
+        jcall!(this.subscriberRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).SUBSCRIBERCUSTOMER.clone(); java_field }.clone()));
+        jcall!(this.wholesaleRoles).add(crate::java_into_object({ let java_field = jcall!(basicUserRoleFactory).WHOLESALECUSTOMER.clone(); java_field }.clone()));
         this
     }
 

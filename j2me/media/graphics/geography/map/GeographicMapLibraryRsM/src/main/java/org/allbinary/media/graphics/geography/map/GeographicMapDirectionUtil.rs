@@ -21,6 +21,7 @@ use crate::org::allbinary::logic::string::StringMaker::StringMaker;
 use crate::org::allbinary::direction::Direction::Direction;
 use crate::org::allbinary::direction::DirectionFactory::DirectionFactory;
 use crate::org::allbinary::graphics::CellPosition::CellPosition;
+use crate::java::lang::Exception::*;
 use super::GeographicMapCellPosition::GeographicMapCellPosition;
 
 // Borrows the object of a Java reference
@@ -39,6 +40,10 @@ pub struct GeographicMapDirectionUtil {
 thread_local! { pub static GeographicMapDirectionUtil_instance: Option<Rc<RefCell<GeographicMapDirectionUtil>>> = GeographicMapDirectionUtil::new(); }
 
 impl GeographicMapDirectionUtil {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
     
 
     pub fn getInstance() -> Option<Rc<RefCell<GeographicMapDirectionUtil>>> {
@@ -71,19 +76,19 @@ impl GeographicMapDirectionUtil {
         let mut goRow: i32 = jcall!(toGeographicMapCellPosition).getRow();
         let mut directionFactory: Option<Rc<RefCell<DirectionFactory>>> = DirectionFactory::getInstance();
         if fromColumn - 1 == goColumn {
-            return jcall!(directionFactory).LEFT.clone();
+            return { let java_field = jcall!(directionFactory).LEFT.clone(); java_field }.clone();
         } else if fromColumn + 1 == goColumn {
-            return jcall!(directionFactory).RIGHT.clone();
+            return { let java_field = jcall!(directionFactory).RIGHT.clone(); java_field }.clone();
         } else if fromRow - 1 == goRow {
-            return jcall!(directionFactory).UP.clone();
+            return { let java_field = jcall!(directionFactory).UP.clone(); java_field }.clone();
         } else if fromRow + 1 == goRow {
-            return jcall!(directionFactory).DOWN.clone();
+            return { let java_field = jcall!(directionFactory).DOWN.clone(); java_field }.clone();
         } else if match (&fromGeographicMapCellPosition, &toGeographicMapCellPosition) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            return jcall!(directionFactory).NO_DIRECTION.clone();
+            return { let java_field = jcall!(directionFactory).NO_DIRECTION.clone(); java_field }.clone();
         } else if fromRow == goRow && fromColumn == goColumn {
             panic!("{:?}", format!("{}: {:?}", "Exception", (self.MESSAGE.clone())));
         }
-        return jcall!(directionFactory).NOT_BORDERED_WITH.clone();
+        return { let java_field = jcall!(directionFactory).NOT_BORDERED_WITH.clone(); java_field }.clone();
     }
     
 
@@ -96,34 +101,34 @@ impl GeographicMapDirectionUtil {
         let mut directionFactory: Option<Rc<RefCell<DirectionFactory>>> = DirectionFactory::getInstance();
         if fromRow == goRow {
             if fromColumn - 1 == goColumn {
-                return jcall!(directionFactory).LEFT.clone();
+                return { let java_field = jcall!(directionFactory).LEFT.clone(); java_field }.clone();
             } else if fromColumn + 1 == goColumn {
-                return jcall!(directionFactory).RIGHT.clone();
+                return { let java_field = jcall!(directionFactory).RIGHT.clone(); java_field }.clone();
             }
         } else if fromRow - 1 == goRow {
             if fromColumn == goColumn {
-                return jcall!(directionFactory).UP.clone();
+                return { let java_field = jcall!(directionFactory).UP.clone(); java_field }.clone();
             }
             if fromColumn - 1 == goColumn {
-                return jcall!(directionFactory).UP_LEFT.clone();
+                return { let java_field = jcall!(directionFactory).UP_LEFT.clone(); java_field }.clone();
             } else if fromColumn + 1 == goColumn {
-                return jcall!(directionFactory).UP_RIGHT.clone();
+                return { let java_field = jcall!(directionFactory).UP_RIGHT.clone(); java_field }.clone();
             }
         } else if fromRow + 1 == goRow {
             if fromColumn == goColumn {
-                return jcall!(directionFactory).DOWN.clone();
+                return { let java_field = jcall!(directionFactory).DOWN.clone(); java_field }.clone();
             }
             if fromColumn - 1 == goColumn {
-                return jcall!(directionFactory).DOWN_LEFT.clone();
+                return { let java_field = jcall!(directionFactory).DOWN_LEFT.clone(); java_field }.clone();
             } else if fromColumn + 1 == goColumn {
-                return jcall!(directionFactory).DOWN_RIGHT.clone();
+                return { let java_field = jcall!(directionFactory).DOWN_RIGHT.clone(); java_field }.clone();
             }
         } else if match (&fromGeographicMapCellPosition, &toGeographicMapCellPosition) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            return jcall!(directionFactory).NO_DIRECTION.clone();
+            return { let java_field = jcall!(directionFactory).NO_DIRECTION.clone(); java_field }.clone();
         } else if fromRow == goRow && fromColumn == goColumn {
             panic!("{:?}", format!("{}: {:?}", "Exception", (self.MESSAGE.clone())));
         }
-        return jcall!(directionFactory).NOT_BORDERED_WITH.clone();
+        return { let java_field = jcall!(directionFactory).NOT_BORDERED_WITH.clone(); java_field }.clone();
     }
     
 
@@ -135,16 +140,16 @@ impl GeographicMapDirectionUtil {
         let mut goRow: i32 = jcall!(toGeographicMapCellPosition).getRow();
         let mut directionFactory: Option<Rc<RefCell<DirectionFactory>>> = DirectionFactory::getInstance();
         if fromColumn > goColumn {
-            return jcall!(directionFactory).LEFT.clone();
+            return { let java_field = jcall!(directionFactory).LEFT.clone(); java_field }.clone();
         } else if fromColumn < goColumn {
-            return jcall!(directionFactory).RIGHT.clone();
+            return { let java_field = jcall!(directionFactory).RIGHT.clone(); java_field }.clone();
         } else if fromRow > goRow {
-            return jcall!(directionFactory).UP.clone();
+            return { let java_field = jcall!(directionFactory).UP.clone(); java_field }.clone();
         } else if fromRow < goRow {
-            return jcall!(directionFactory).DOWN.clone();
+            return { let java_field = jcall!(directionFactory).DOWN.clone(); java_field }.clone();
         }
         let mut stringMaker: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
-        let mut string: String = jcall!(stringMaker).append(CellPosition::toStringCellPosition(fromGeographicMapCellPosition.clone())).append(String::from(" == ")).append(CellPosition::toStringCellPosition(toGeographicMapCellPosition.clone())).toString();
+        let mut string: String = jcall!(stringMaker).append(CellPosition::toStringCellPosition(fromGeographicMapCellPosition.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>))).append(String::from(" == ")).append(CellPosition::toStringCellPosition(toGeographicMapCellPosition.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>))).toString();
         jcall!(stringMaker).delete(0, jcall!(stringMaker).length());
         panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(stringMaker).append(String::from("Error: ")).append(string.clone()).toString())));
     }
@@ -158,35 +163,35 @@ impl GeographicMapDirectionUtil {
         let mut goRow: i32 = jcall!(toGeographicMapCellPosition).getRow();
         let mut directionFactory: Option<Rc<RefCell<DirectionFactory>>> = DirectionFactory::getInstance();
         if match (&fromGeographicMapCellPosition, &toGeographicMapCellPosition) { (Some(left), Some(right)) => std::ptr::addr_eq(Rc::as_ptr(left), Rc::as_ptr(right)), (None, None) => true, _ => false } {
-            return jcall!(directionFactory).NO_DIRECTION.clone();
+            return { let java_field = jcall!(directionFactory).NO_DIRECTION.clone(); java_field }.clone();
         } else if fromRow == goRow {
             if fromColumn > goColumn {
-                return jcall!(directionFactory).LEFT.clone();
+                return { let java_field = jcall!(directionFactory).LEFT.clone(); java_field }.clone();
             } else if fromColumn < goColumn {
-                return jcall!(directionFactory).RIGHT.clone();
+                return { let java_field = jcall!(directionFactory).RIGHT.clone(); java_field }.clone();
             }
         } else if fromRow > goRow {
             if fromColumn > goColumn {
-                return jcall!(directionFactory).UP_LEFT.clone();
+                return { let java_field = jcall!(directionFactory).UP_LEFT.clone(); java_field }.clone();
             } else if fromColumn < goColumn {
-                return jcall!(directionFactory).UP_RIGHT.clone();
+                return { let java_field = jcall!(directionFactory).UP_RIGHT.clone(); java_field }.clone();
             } else if fromColumn == goColumn {
-                return jcall!(directionFactory).UP.clone();
+                return { let java_field = jcall!(directionFactory).UP.clone(); java_field }.clone();
             }
         } else if fromRow < goRow {
             if fromColumn > goColumn {
-                return jcall!(directionFactory).DOWN_LEFT.clone();
+                return { let java_field = jcall!(directionFactory).DOWN_LEFT.clone(); java_field }.clone();
             } else if fromColumn < goColumn {
-                return jcall!(directionFactory).DOWN_RIGHT.clone();
+                return { let java_field = jcall!(directionFactory).DOWN_RIGHT.clone(); java_field }.clone();
             } else if fromColumn == goColumn {
-                return jcall!(directionFactory).DOWN.clone();
+                return { let java_field = jcall!(directionFactory).DOWN.clone(); java_field }.clone();
             }
         }
         let mut stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new();
         jcall!(stringBuffer).append(self.ERROR.clone());
-        jcall!(stringBuffer).append(CellPosition::toStringCellPosition(fromGeographicMapCellPosition.clone()));
+        jcall!(stringBuffer).append(CellPosition::toStringCellPosition(fromGeographicMapCellPosition.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>)));
         jcall!(stringBuffer).append(self.EQUAL.clone());
-        jcall!(stringBuffer).append(CellPosition::toStringCellPosition(toGeographicMapCellPosition.clone()));
+        jcall!(stringBuffer).append(CellPosition::toStringCellPosition(toGeographicMapCellPosition.clone().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::CellPosition::CellPositionDyn>>)));
         panic!("{:?}", format!("{}: {:?}", "Exception", (jcall!(stringBuffer).toString())));
     }
 }

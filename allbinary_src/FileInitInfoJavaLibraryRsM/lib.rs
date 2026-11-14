@@ -16,13 +16,13 @@ pub fn java_into_object<T: 'static>(value: T) -> JavaObject {
         Err(value) => Some(std::rc::Rc::new(std::cell::RefCell::new(value))),
     }
 }
-pub fn java_object_cast<T: 'static>(value: &JavaObject) -> Option<std::rc::Rc<std::cell::RefCell<T>>> {
+pub fn java_object_cast<T: ?Sized + 'static>(value: &JavaObject) -> Option<std::rc::Rc<std::cell::RefCell<T>>> {
     value.as_ref().and_then(|object| {
         object.borrow().downcast_ref::<Option<std::rc::Rc<std::cell::RefCell<T>>>>()
             .expect("ClassCastException").clone()
     })
 }
-pub fn java_reference_into_object<T: 'static>(value: Option<std::rc::Rc<std::cell::RefCell<T>>>) -> JavaObject {
+pub fn java_reference_into_object<T: ?Sized + 'static>(value: Option<std::rc::Rc<std::cell::RefCell<T>>>) -> JavaObject {
     value.map(|reference| std::rc::Rc::new(std::cell::RefCell::new(
         Box::new(Some(reference)) as Box<dyn std::any::Any>
     )))

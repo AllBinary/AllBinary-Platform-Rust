@@ -17,6 +17,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 use super::*;
+use crate::java::lang::Exception::*;
 
 // Borrows the object of a Java reference
 macro_rules! jcall {
@@ -31,6 +32,10 @@ pub struct Processor {
 thread_local! { pub static Processor_SINGLETON: Option<Rc<RefCell<dyn ProcessorDyn>>> = Processor::new().map(|reference| reference as Rc<RefCell<dyn ProcessorDyn>>); }
 
 impl Processor {
+
+    pub fn toString(&mut self) -> String {
+        String::from(std::any::type_name::<Self>())
+    }
 
     pub fn new_struct() -> Self {
         let mut this = Self {
@@ -57,7 +62,7 @@ impl Processor {
     pub fn processt(&mut self, mut timeDelta: i64) {
     }
 }
-pub trait ProcessorDyn {
+pub trait ProcessorDyn: std::any::Any {
     fn as_Processor(&self) -> &Processor;
     fn as_Processor_mut(&mut self) -> &mut Processor;
     fn process(&mut self) { Processor::process(self.as_Processor_mut()) }
