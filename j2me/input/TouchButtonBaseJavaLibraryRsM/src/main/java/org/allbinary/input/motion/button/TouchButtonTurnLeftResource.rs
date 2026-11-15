@@ -30,7 +30,7 @@ pub struct TouchButtonTurnLeftResource {
     pub base: TouchButtonResource,
 }
 
-thread_local! { pub static TouchButtonTurnLeftResource_instance: Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButtonResource::TouchButtonResourceDyn>>> = TouchButtonTurnLeftResource::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButtonResource::TouchButtonResourceDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButtonResource::TouchButtonResourceDyn>>); }
+pub static TouchButtonTurnLeftResource_instance: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButtonResource::TouchButtonResourceDyn>>>> = crate::JavaStatic::new(|| TouchButtonTurnLeftResource::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButtonResource::TouchButtonResourceDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButtonResource::TouchButtonResourceDyn>>));
 
 impl TouchButtonTurnLeftResource {
     

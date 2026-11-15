@@ -16,7 +16,7 @@ macro_rules! jcall {
 pub struct E {
 }
 
-thread_local! { pub static E_e: Option<Rc<RefCell<dyn EDyn>>> = E::new().map(|reference| reference as Rc<RefCell<dyn EDyn>>); }
+pub static E_e: crate::JavaStatic<Option<Rc<RefCell<dyn EDyn>>>> = crate::JavaStatic::new(|| E::new().map(|reference| reference as Rc<RefCell<dyn EDyn>>));
 
 impl E {
 

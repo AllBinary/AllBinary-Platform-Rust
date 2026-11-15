@@ -30,7 +30,7 @@ pub struct AngleIncrementInfoFactory {
     pub angleIncrementInfo: Vec<Option<Rc<RefCell<AngleIncrementInfo>>>>,
 }
 
-thread_local! { pub static AngleIncrementInfoFactory_instance: Option<Rc<RefCell<AngleIncrementInfoFactory>>> = AngleIncrementInfoFactory::new(); }
+pub static AngleIncrementInfoFactory_instance: crate::JavaStatic<Option<Rc<RefCell<AngleIncrementInfoFactory>>>> = crate::JavaStatic::new(|| AngleIncrementInfoFactory::new());
 
 impl AngleIncrementInfoFactory {
 

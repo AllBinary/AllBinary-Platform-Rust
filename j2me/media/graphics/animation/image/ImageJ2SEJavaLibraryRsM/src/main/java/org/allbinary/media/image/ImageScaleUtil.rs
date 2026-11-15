@@ -40,7 +40,7 @@ pub struct ImageScaleUtil {
     pub imageCreationUtil: Option<Rc<RefCell<ImageCreationUtil>>>,
 }
 
-thread_local! { pub static ImageScaleUtil_instance: Option<Rc<RefCell<ImageScaleUtil>>> = ImageScaleUtil::new(); }
+pub static ImageScaleUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImageScaleUtil>>>> = crate::JavaStatic::new(|| ImageScaleUtil::new());
 
 impl ImageScaleUtil {
 

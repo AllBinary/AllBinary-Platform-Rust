@@ -41,7 +41,7 @@ pub struct MakeCountedPartsSingletonArrayFactory {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static MakeCountedPartsSingletonArrayFactory_instance: Option<Rc<RefCell<MakeCountedPartsSingletonArrayFactory>>> = MakeCountedPartsSingletonArrayFactory::new(); }
+pub static MakeCountedPartsSingletonArrayFactory_instance: crate::JavaStatic<Option<Rc<RefCell<MakeCountedPartsSingletonArrayFactory>>>> = crate::JavaStatic::new(|| MakeCountedPartsSingletonArrayFactory::new());
 
 impl MakeCountedPartsSingletonArrayFactory {
 

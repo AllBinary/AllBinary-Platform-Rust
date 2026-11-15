@@ -31,7 +31,7 @@ pub struct FullScreenPaintableFactory {
     pub paintable: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>>,
 }
 
-thread_local! { pub static FullScreenPaintableFactory_instance: Option<Rc<RefCell<FullScreenPaintableFactory>>> = FullScreenPaintableFactory::new(); }
+pub static FullScreenPaintableFactory_instance: crate::JavaStatic<Option<Rc<RefCell<FullScreenPaintableFactory>>>> = crate::JavaStatic::new(|| FullScreenPaintableFactory::new());
 
 impl FullScreenPaintableFactory {
 

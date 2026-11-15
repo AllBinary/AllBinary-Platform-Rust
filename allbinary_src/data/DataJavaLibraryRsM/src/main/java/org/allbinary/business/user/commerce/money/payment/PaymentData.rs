@@ -28,29 +28,29 @@ macro_rules! jcall {
 pub struct PaymentData {
 }
 
-thread_local! { pub static PaymentData_MIN: i32 = 4; }
-thread_local! { pub static PaymentData_MAX: i32 = 19; }
-thread_local! { pub static PaymentData_ADDNEW: String = String::from("Add New Payment"); }
-thread_local! { pub static PaymentData_VIEW: String = String::from("View Payment"); }
-thread_local! { pub static PaymentData_SELECT: String = String::from("Select Payment"); }
-thread_local! { pub static PaymentData_CHANGE: String = String::from("Change Payment"); }
-thread_local! { pub static PaymentData_PAYMENT: String = String::from("PAYMENT"); }
-thread_local! { pub static PaymentData_METHOD: String = String::from("PAYMENT_METHOD"); }
-thread_local! { pub static PaymentData_ID: String = String::from("PAYMENT_ID"); }
-thread_local! { pub static PaymentData_NUMBER: String = String::from("PAYMENT_NUMBER"); }
-thread_local! { pub static PaymentData_NAME: String = String::from("PAYMENT_NAME"); }
-thread_local! { pub static PaymentData_TYPE: String = String::from("PAYMENT_TYPE"); }
-thread_local! { pub static PaymentData_EXPIRATION: String = String::from("PAYMENT_EXPIRATION"); }
-thread_local! { pub static PaymentData_TENDERTYPE: String = String::from("PAYMENT_TENDERTYPE"); }
-thread_local! { pub static PaymentData_TRANSACTIONTYPE: String = String::from("PAYMENT_TRANSACTIONTYPE"); }
-thread_local! { pub static PaymentData_ABA: String = String::from("PAYMENT_ABA"); }
-thread_local! { pub static PaymentData_ACCOUNT: String = String::from("PAYMENT_ACCOUNT"); }
-thread_local! { pub static PaymentData_ACCOUNTTYPE: String = String::from("PAYMENT_ACCOUNTTYPE"); }
-thread_local! { pub static PaymentData_AUTHORIZATIONCODE: String = String::from("PAYMENT_AUTHORIZATIONCODE"); }
-thread_local! { pub static PaymentData_CHECKNUMBER: String = String::from("PAYMENT_CHECKNUMBER"); }
-thread_local! { pub static PaymentData_CHECKTYPE: String = String::from("PAYMENT_CHECKTYPE"); }
-thread_local! { pub static PaymentData_DRIVERSLICENSE: String = String::from("PAYMENT_DRIVERSLICENSE"); }
-thread_local! { pub static PaymentData_MAGNETICINKCHECKREADER: String = String::from("PAYMENT_MAGNETICINKCHECKREADER"); }
+pub static PaymentData_MIN: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 4);
+pub static PaymentData_MAX: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 19);
+pub static PaymentData_ADDNEW: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Add New Payment"));
+pub static PaymentData_VIEW: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("View Payment"));
+pub static PaymentData_SELECT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Select Payment"));
+pub static PaymentData_CHANGE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Change Payment"));
+pub static PaymentData_PAYMENT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT"));
+pub static PaymentData_METHOD: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_METHOD"));
+pub static PaymentData_ID: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_ID"));
+pub static PaymentData_NUMBER: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_NUMBER"));
+pub static PaymentData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_NAME"));
+pub static PaymentData_TYPE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_TYPE"));
+pub static PaymentData_EXPIRATION: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_EXPIRATION"));
+pub static PaymentData_TENDERTYPE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_TENDERTYPE"));
+pub static PaymentData_TRANSACTIONTYPE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_TRANSACTIONTYPE"));
+pub static PaymentData_ABA: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_ABA"));
+pub static PaymentData_ACCOUNT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_ACCOUNT"));
+pub static PaymentData_ACCOUNTTYPE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_ACCOUNTTYPE"));
+pub static PaymentData_AUTHORIZATIONCODE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_AUTHORIZATIONCODE"));
+pub static PaymentData_CHECKNUMBER: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_CHECKNUMBER"));
+pub static PaymentData_CHECKTYPE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_CHECKTYPE"));
+pub static PaymentData_DRIVERSLICENSE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_DRIVERSLICENSE"));
+pub static PaymentData_MAGNETICINKCHECKREADER: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PAYMENT_MAGNETICINKCHECKREADER"));
 
 impl PaymentData {
 

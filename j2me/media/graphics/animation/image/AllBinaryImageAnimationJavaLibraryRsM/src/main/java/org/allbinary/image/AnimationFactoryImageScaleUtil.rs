@@ -39,7 +39,7 @@ pub struct AnimationFactoryImageScaleUtil {
     pub imageScaleUtil: Option<Rc<RefCell<ImageJ2MEScaleUtil>>>,
 }
 
-thread_local! { pub static AnimationFactoryImageScaleUtil_instance: Option<Rc<RefCell<AnimationFactoryImageScaleUtil>>> = AnimationFactoryImageScaleUtil::new(); }
+pub static AnimationFactoryImageScaleUtil_instance: crate::JavaStatic<Option<Rc<RefCell<AnimationFactoryImageScaleUtil>>>> = crate::JavaStatic::new(|| AnimationFactoryImageScaleUtil::new());
 
 impl AnimationFactoryImageScaleUtil {
 

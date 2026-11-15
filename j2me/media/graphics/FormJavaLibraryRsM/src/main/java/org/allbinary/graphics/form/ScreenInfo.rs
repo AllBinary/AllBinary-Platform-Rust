@@ -20,7 +20,7 @@ pub struct ScreenInfo {
     pub MEDIUM_HEIGHT: i32,
 }
 
-thread_local! { pub static ScreenInfo_instance: Option<Rc<RefCell<ScreenInfo>>> = ScreenInfo::new(); }
+pub static ScreenInfo_instance: crate::JavaStatic<Option<Rc<RefCell<ScreenInfo>>>> = crate::JavaStatic::new(|| ScreenInfo::new());
 
 impl ScreenInfo {
 

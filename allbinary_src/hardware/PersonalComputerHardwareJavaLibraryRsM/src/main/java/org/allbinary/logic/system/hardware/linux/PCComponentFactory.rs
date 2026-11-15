@@ -45,7 +45,7 @@ pub struct PCComponentFactory {
     pub componentFactory: Option<Rc<RefCell<ComponentFactory>>>,
 }
 
-thread_local! { pub static PCComponentFactory_instance: Option<Rc<RefCell<PCComponentFactory>>> = PCComponentFactory::new(); }
+pub static PCComponentFactory_instance: crate::JavaStatic<Option<Rc<RefCell<PCComponentFactory>>>> = crate::JavaStatic::new(|| PCComponentFactory::new());
 
 impl PCComponentFactory {
 

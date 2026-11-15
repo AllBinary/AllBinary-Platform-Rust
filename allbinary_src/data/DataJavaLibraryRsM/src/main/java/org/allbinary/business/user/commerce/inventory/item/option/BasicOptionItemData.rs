@@ -28,27 +28,27 @@ macro_rules! jcall {
 pub struct BasicOptionItemData {
 }
 
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_TITLE: String = String::from("BASICOPTIONITEM_OPTION_ONE_TITLE"); }
-thread_local! { pub static BasicOptionItemData_DEFAULT_OPTION_ITEM: String = String::from("BASICOPTIONITEM_DEFAULT_OPTION_ITEM"); }
-thread_local! { pub static BasicOptionItemData_DEFAULT_OPTION_VALUE: String = String::from("BASICOPTIONITEM_DEFAULT_OPTION_VALUE"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_ONE_ITEM: String = String::from("BASICOPTIONITEM_OPTION_ONE_ONE_ITEM"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_ONE_VALUE: String = String::from("BASICOPTIONITEM_OPTION_ONE_ONE_VALUE"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_TWO_ITEM: String = String::from("BASICOPTIONITEM_OPTION_ONE_TWO_ITEM"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_TWO_VALUE: String = String::from("BASICOPTIONITEM_OPTION_ONE_TWO_VALUE"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_THREE_ITEM: String = String::from("BASICOPTIONITEM_OPTION_ONE_THREE_ITEM"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_THREE_VALUE: String = String::from("BASICOPTIONITEM_OPTION_ONE_THREE_VALUE"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_FOUR_ITEM: String = String::from("BASICOPTIONITEM_OPTION_ONE_FOUR_ITEM"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_FOUR_VALUE: String = String::from("BASICOPTIONITEM_OPTION_ONE_FOUR_VALUE"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_FIVE_ITEM: String = String::from("BASICOPTIONITEM_OPTION_ONE_FIVE_ITEM"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_FIVE_VALUE: String = String::from("BASICOPTIONITEM_OPTION_ONE_FIVE_VALUE"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_SIX_ITEM: String = String::from("BASICOPTIONITEM_OPTION_ONE_SIX_ITEM"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_SIX_VALUE: String = String::from("BASICOPTIONITEM_OPTION_ONE_SIX_VALUE"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_SEVEN_ITEM: String = String::from("BASICOPTIONITEM_OPTION_ONE_SEVEN_ITEM"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_SEVEN_VALUE: String = String::from("BASICOPTIONITEM_OPTION_ONE_SEVEN_VALUE"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_EIGHT_ITEM: String = String::from("BASICOPTIONITEM_OPTION_ONE_EIGHT_ITEM"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_EIGHT_VALUE: String = String::from("BASICOPTIONITEM_OPTION_ONE_EIGHT_VALUE"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_NINE_ITEM: String = String::from("BASICOPTIONITEM_OPTION_ONE_NINE_ITEM"); }
-thread_local! { pub static BasicOptionItemData_OPTION_ONE_NINE_VALUE: String = String::from("BASICOPTIONITEM_OPTION_ONE_NINE_VALUE"); }
+pub static BasicOptionItemData_OPTION_ONE_TITLE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_TITLE"));
+pub static BasicOptionItemData_DEFAULT_OPTION_ITEM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_DEFAULT_OPTION_ITEM"));
+pub static BasicOptionItemData_DEFAULT_OPTION_VALUE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_DEFAULT_OPTION_VALUE"));
+pub static BasicOptionItemData_OPTION_ONE_ONE_ITEM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_ONE_ITEM"));
+pub static BasicOptionItemData_OPTION_ONE_ONE_VALUE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_ONE_VALUE"));
+pub static BasicOptionItemData_OPTION_ONE_TWO_ITEM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_TWO_ITEM"));
+pub static BasicOptionItemData_OPTION_ONE_TWO_VALUE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_TWO_VALUE"));
+pub static BasicOptionItemData_OPTION_ONE_THREE_ITEM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_THREE_ITEM"));
+pub static BasicOptionItemData_OPTION_ONE_THREE_VALUE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_THREE_VALUE"));
+pub static BasicOptionItemData_OPTION_ONE_FOUR_ITEM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_FOUR_ITEM"));
+pub static BasicOptionItemData_OPTION_ONE_FOUR_VALUE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_FOUR_VALUE"));
+pub static BasicOptionItemData_OPTION_ONE_FIVE_ITEM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_FIVE_ITEM"));
+pub static BasicOptionItemData_OPTION_ONE_FIVE_VALUE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_FIVE_VALUE"));
+pub static BasicOptionItemData_OPTION_ONE_SIX_ITEM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_SIX_ITEM"));
+pub static BasicOptionItemData_OPTION_ONE_SIX_VALUE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_SIX_VALUE"));
+pub static BasicOptionItemData_OPTION_ONE_SEVEN_ITEM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_SEVEN_ITEM"));
+pub static BasicOptionItemData_OPTION_ONE_SEVEN_VALUE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_SEVEN_VALUE"));
+pub static BasicOptionItemData_OPTION_ONE_EIGHT_ITEM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_EIGHT_ITEM"));
+pub static BasicOptionItemData_OPTION_ONE_EIGHT_VALUE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_EIGHT_VALUE"));
+pub static BasicOptionItemData_OPTION_ONE_NINE_ITEM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_NINE_ITEM"));
+pub static BasicOptionItemData_OPTION_ONE_NINE_VALUE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICOPTIONITEM_OPTION_ONE_NINE_VALUE"));
 
 impl BasicOptionItemData {
 

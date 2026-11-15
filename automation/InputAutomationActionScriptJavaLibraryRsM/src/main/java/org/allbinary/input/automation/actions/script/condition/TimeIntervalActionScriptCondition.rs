@@ -46,7 +46,7 @@ pub struct TimeIntervalActionScriptCondition {
     pub timeHelper: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>>,
 }
 
-thread_local! { pub static TimeIntervalActionScriptCondition_NAME: String = String::from("Time Interval"); }
+pub static TimeIntervalActionScriptCondition_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Time Interval"));
 impl TimeIntervalActionScriptConditionInterface for TimeIntervalActionScriptCondition {
     fn getTimeDelayHelper(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>> { Self::getTimeDelayHelper(self) }
     fn log(&mut self) { Self::log(self) }

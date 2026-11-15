@@ -33,7 +33,7 @@ pub struct Driver {
     pub aggression: Option<Rc<RefCell<Aggression>>>,
 }
 
-thread_local! { pub static Driver_NULL_DRIVER: Option<Rc<RefCell<Driver>>> = Driver::new(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0), jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0), Aggression::new(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0), jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0), jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0))); }
+pub static Driver_NULL_DRIVER: crate::JavaStatic<Option<Rc<RefCell<Driver>>>> = crate::JavaStatic::new(|| Driver::new(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0), jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0), Aggression::new(jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0), jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0), jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0))));
 
 impl Driver {
 

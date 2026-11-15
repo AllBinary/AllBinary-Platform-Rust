@@ -28,15 +28,15 @@ macro_rules! jcall {
 pub struct ShippingMethodsData {
 }
 
-thread_local! { pub static ShippingMethodsData_SHIPPINGMETHODSORDERSUMMARIES: String = String::from("SHIPPINGMETHODS_ORDERSUMMARIES"); }
-thread_local! { pub static ShippingMethodsData_SHIPPINGMETHODORDERSUMMARY: String = String::from("SHIPPINGMETHOD_ORDERSUMMARY"); }
-thread_local! { pub static ShippingMethodsData_SHIPPINGMETHODS: String = String::from("SHIPPINGMETHODS"); }
-thread_local! { pub static ShippingMethodsData_NAME: String = String::from("SHIPPINGMETHODS_NAME"); }
-thread_local! { pub static ShippingMethodsData_SHIPPINGCOST: String = String::from("SHIPPINGMETHOD_SHIPPINGCOST"); }
-thread_local! { pub static ShippingMethodsData_TAXRATE: String = String::from("SHIPPINGMETHOD_TAXRATE"); }
-thread_local! { pub static ShippingMethodsData_SUBTOTAL: String = String::from("SHIPPINGMETHOD_SUBTOTAL"); }
-thread_local! { pub static ShippingMethodsData_TAX: String = String::from("SHIPPINGMETHOD_TAX"); }
-thread_local! { pub static ShippingMethodsData_TOTAL: String = String::from("SHIPPINGMETHOD_TOTAL"); }
+pub static ShippingMethodsData_SHIPPINGMETHODSORDERSUMMARIES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGMETHODS_ORDERSUMMARIES"));
+pub static ShippingMethodsData_SHIPPINGMETHODORDERSUMMARY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGMETHOD_ORDERSUMMARY"));
+pub static ShippingMethodsData_SHIPPINGMETHODS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGMETHODS"));
+pub static ShippingMethodsData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGMETHODS_NAME"));
+pub static ShippingMethodsData_SHIPPINGCOST: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGMETHOD_SHIPPINGCOST"));
+pub static ShippingMethodsData_TAXRATE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGMETHOD_TAXRATE"));
+pub static ShippingMethodsData_SUBTOTAL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGMETHOD_SUBTOTAL"));
+pub static ShippingMethodsData_TAX: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGMETHOD_TAX"));
+pub static ShippingMethodsData_TOTAL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGMETHOD_TOTAL"));
 
 impl ShippingMethodsData {
 

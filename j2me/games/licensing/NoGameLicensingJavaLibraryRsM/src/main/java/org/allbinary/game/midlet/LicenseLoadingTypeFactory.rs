@@ -33,7 +33,7 @@ pub struct LicenseLoadingTypeFactory {
     pub OTHER: Option<Rc<RefCell<LicenseLoadingType>>>,
 }
 
-thread_local! { pub static LicenseLoadingTypeFactory_instance: Option<Rc<RefCell<LicenseLoadingTypeFactory>>> = LicenseLoadingTypeFactory::new(); }
+pub static LicenseLoadingTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<LicenseLoadingTypeFactory>>>> = crate::JavaStatic::new(|| LicenseLoadingTypeFactory::new());
 
 impl LicenseLoadingTypeFactory {
 

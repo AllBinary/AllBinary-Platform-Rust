@@ -22,7 +22,7 @@ pub struct JTreeInterfaceFactory {
     pub jTreeInterface: Option<Rc<RefCell<dyn JTreeInterface>>>,
 }
 
-thread_local! { pub static JTreeInterfaceFactory_instance: Option<Rc<RefCell<JTreeInterfaceFactory>>> = JTreeInterfaceFactory::new(); }
+pub static JTreeInterfaceFactory_instance: crate::JavaStatic<Option<Rc<RefCell<JTreeInterfaceFactory>>>> = crate::JavaStatic::new(|| JTreeInterfaceFactory::new());
 
 impl JTreeInterfaceFactory {
 

@@ -31,7 +31,7 @@ pub struct BodyData {
     pub MIN: i32,
 }
 
-thread_local! { pub static BodyData_instance: Option<Rc<RefCell<BodyData>>> = BodyData::new(); }
+pub static BodyData_instance: crate::JavaStatic<Option<Rc<RefCell<BodyData>>>> = crate::JavaStatic::new(|| BodyData::new());
 
 impl BodyData {
 

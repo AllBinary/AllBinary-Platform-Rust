@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct DamageableBaseBehavior {
 }
 
-thread_local! { pub static DamageableBaseBehavior_instance: Option<Rc<RefCell<DamageableBaseBehavior>>> = DamageableBaseBehavior::new(); }
+pub static DamageableBaseBehavior_instance: crate::JavaStatic<Option<Rc<RefCell<DamageableBaseBehavior>>>> = crate::JavaStatic::new(|| DamageableBaseBehavior::new());
 impl DamageableInterface for DamageableBaseBehavior {
     fn damage(&mut self, mut damage: i32, mut damageType: i32) { Self::damage(self, damage, damageType) }
     fn getDamage(&mut self, mut damageType: i32) -> i32 { Self::getDamage(self, damageType) }

@@ -32,7 +32,7 @@ pub struct TouchScreenFactory {
     pub touchScreenType: Option<Rc<RefCell<TouchScreenType>>>,
 }
 
-thread_local! { pub static TouchScreenFactory_SINGLETON: Option<Rc<RefCell<TouchScreenFactory>>> = TouchScreenFactory::new(); }
+pub static TouchScreenFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<TouchScreenFactory>>>> = crate::JavaStatic::new(|| TouchScreenFactory::new());
 
 impl TouchScreenFactory {
 

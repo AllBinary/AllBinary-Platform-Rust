@@ -49,7 +49,7 @@ pub struct UnitItemArrayFactory {
     pub resources: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::resources::BasicGameResources::BasicGameResourcesDyn>>>>,
 }
 
-thread_local! { pub static UnitItemArrayFactory_ITEMS: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>> = { let java_field = jcall!(CustomItemUtil::getInstance()).CUSTOM_ITEM_ARRAY.clone(); java_field }.clone(); }
+pub static UnitItemArrayFactory_ITEMS: crate::JavaStatic<Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>>> = crate::JavaStatic::new(|| { let java_field = jcall!(CustomItemUtil::getInstance()).CUSTOM_ITEM_ARRAY.clone(); java_field }.clone());
 impl ItemArraySingletonFactoryInterface for UnitItemArrayFactory {
     fn getItems(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>> { Self::getItems(self) }
 }

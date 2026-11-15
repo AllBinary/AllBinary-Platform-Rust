@@ -38,7 +38,7 @@ pub struct TransformsGeneratorUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static TransformsGeneratorUtil_instance: Option<Rc<RefCell<TransformsGeneratorUtil>>> = TransformsGeneratorUtil::new(); }
+pub static TransformsGeneratorUtil_instance: crate::JavaStatic<Option<Rc<RefCell<TransformsGeneratorUtil>>>> = crate::JavaStatic::new(|| TransformsGeneratorUtil::new());
 
 impl TransformsGeneratorUtil {
 

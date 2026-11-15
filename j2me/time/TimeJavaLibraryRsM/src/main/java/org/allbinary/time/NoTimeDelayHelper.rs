@@ -30,7 +30,7 @@ pub struct NoTimeDelayHelper {
     pub base: TimeDelayHelper,
 }
 
-thread_local! { pub static NoTimeDelayHelper_SINGLETON: Option<Rc<RefCell<NoTimeDelayHelper>>> = NoTimeDelayHelper::new(); }
+pub static NoTimeDelayHelper_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<NoTimeDelayHelper>>>> = crate::JavaStatic::new(|| NoTimeDelayHelper::new());
 
 impl NoTimeDelayHelper {
     

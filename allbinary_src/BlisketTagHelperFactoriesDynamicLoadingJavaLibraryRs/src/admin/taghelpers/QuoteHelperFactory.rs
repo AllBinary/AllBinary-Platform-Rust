@@ -32,8 +32,8 @@ macro_rules! jcall {
 pub struct QuoteHelperFactory {
 }
 
-thread_local! { pub static QuoteHelperFactory_CLASSNAME: String = String::from("admin.taghelpers.QuoteHelper"); }
-thread_local! { pub static QuoteHelperFactory_FACTORYNAME: String = String::from("QuoteHelperFactory"); }
+pub static QuoteHelperFactory_CLASSNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("admin.taghelpers.QuoteHelper"));
+pub static QuoteHelperFactory_FACTORYNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("QuoteHelperFactory"));
 // impl TagHelperFactoryInterface for QuoteHelperFactory with the methods of the trait
 
 impl QuoteHelperFactory {

@@ -37,7 +37,7 @@ macro_rules! jcall {
 pub struct PathGenerator {
 }
 
-thread_local! { pub static PathGenerator_SINGLETON: Option<Rc<RefCell<PathGenerator>>> = PathGenerator::new(); }
+pub static PathGenerator_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<PathGenerator>>>> = crate::JavaStatic::new(|| PathGenerator::new());
 impl PathGeneratorInterface for PathGenerator {
     fn createList(&mut self, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, mut geographicMapCellHistory: Option<Rc<RefCell<GeographicMapCellHistory>>>, mut pathFindingInfo: Option<Rc<RefCell<PathFindingInfo>>>, mut totalPaths: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::createList(self, geographicMapInterface, geographicMapCellHistory, pathFindingInfo, totalPaths) }
 }

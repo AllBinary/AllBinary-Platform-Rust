@@ -77,8 +77,8 @@ pub struct CanvasJPanel {
 }
 
 pub static mut CanvasJPanel_frame: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 0);
-thread_local! { pub static CanvasJPanel_gridColor: Option<Rc<RefCell<Color>>> = Color::new(jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }).intValue()); }
-thread_local! { pub static CanvasJPanel_backgroundColor: Option<Rc<RefCell<Color>>> = Color::new(jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).CLEAR_COLOR.clone(); java_field }).intValue()); }
+pub static CanvasJPanel_gridColor: crate::JavaStatic<Option<Rc<RefCell<Color>>>> = crate::JavaStatic::new(|| Color::new(jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }).intValue()));
+pub static CanvasJPanel_backgroundColor: crate::JavaStatic<Option<Rc<RefCell<Color>>>> = crate::JavaStatic::new(|| Color::new(jcall!({ let java_field = jcall!(BasicColorFactory::getInstance()).CLEAR_COLOR.clone(); java_field }).intValue()));
 // impl MouseListener for CanvasJPanel with the methods of the trait
 // impl MouseMotionListener for CanvasJPanel with the methods of the trait
 // impl KeyListener for CanvasJPanel with the methods of the trait

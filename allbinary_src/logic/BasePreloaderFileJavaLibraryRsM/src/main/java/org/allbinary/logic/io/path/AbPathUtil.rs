@@ -30,7 +30,7 @@ pub struct AbPathUtil {
     pub NO_ABPATH: Option<Rc<RefCell<dyn crate::org::allbinary::logic::io::path::AbPath::AbPathDyn>>>,
 }
 
-thread_local! { pub static AbPathUtil_instance: Option<Rc<RefCell<AbPathUtil>>> = AbPathUtil::new(); }
+pub static AbPathUtil_instance: crate::JavaStatic<Option<Rc<RefCell<AbPathUtil>>>> = crate::JavaStatic::new(|| AbPathUtil::new());
 
 impl AbPathUtil {
 

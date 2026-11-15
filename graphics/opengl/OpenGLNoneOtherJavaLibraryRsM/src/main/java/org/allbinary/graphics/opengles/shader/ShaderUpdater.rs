@@ -34,7 +34,7 @@ pub struct ShaderUpdater {
     pub rendererStrings: Option<Rc<RefCell<RendererStrings>>>,
 }
 
-thread_local! { pub static ShaderUpdater_instance: Option<Rc<RefCell<dyn ShaderUpdaterDyn>>> = ShaderUpdater::new().map(|reference| reference as Rc<RefCell<dyn ShaderUpdaterDyn>>); }
+pub static ShaderUpdater_instance: crate::JavaStatic<Option<Rc<RefCell<dyn ShaderUpdaterDyn>>>> = crate::JavaStatic::new(|| ShaderUpdater::new().map(|reference| reference as Rc<RefCell<dyn ShaderUpdaterDyn>>));
 
 impl ShaderUpdater {
 

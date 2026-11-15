@@ -33,7 +33,7 @@ pub struct HighScoreCommands {
     pub WORLD: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
 }
 
-thread_local! { pub static HighScoreCommands_instance: Option<Rc<RefCell<HighScoreCommands>>> = HighScoreCommands::new(); }
+pub static HighScoreCommands_instance: crate::JavaStatic<Option<Rc<RefCell<HighScoreCommands>>>> = crate::JavaStatic::new(|| HighScoreCommands::new());
 
 impl HighScoreCommands {
 

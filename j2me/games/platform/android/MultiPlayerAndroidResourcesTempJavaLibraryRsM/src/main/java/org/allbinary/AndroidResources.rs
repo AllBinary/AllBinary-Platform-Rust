@@ -27,7 +27,7 @@ pub struct AndroidResources {
     pub string: Option<Rc<RefCell<string>>>,
 }
 
-thread_local! { pub static AndroidResources_instance: Option<Rc<RefCell<AndroidResources>>> = AndroidResources::new(); }
+pub static AndroidResources_instance: crate::JavaStatic<Option<Rc<RefCell<AndroidResources>>>> = crate::JavaStatic::new(|| AndroidResources::new());
 
 impl AndroidResources {
 

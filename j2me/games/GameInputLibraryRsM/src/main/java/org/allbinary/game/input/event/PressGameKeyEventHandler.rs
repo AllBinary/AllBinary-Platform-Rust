@@ -41,7 +41,7 @@ pub struct PressGameKeyEventHandler {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static PressGameKeyEventHandler_instance: Option<Rc<RefCell<PressGameKeyEventHandler>>> = PressGameKeyEventHandler::new(); }
+pub static PressGameKeyEventHandler_instance: crate::JavaStatic<Option<Rc<RefCell<PressGameKeyEventHandler>>>> = crate::JavaStatic::new(|| PressGameKeyEventHandler::new());
 
 impl PressGameKeyEventHandler {
     

@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct TextChangeListener {
 }
 
-thread_local! { pub static TextChangeListener_instance: Option<Rc<RefCell<TextChangeListener>>> = TextChangeListener::new(); }
+pub static TextChangeListener_instance: crate::JavaStatic<Option<Rc<RefCell<TextChangeListener>>>> = crate::JavaStatic::new(|| TextChangeListener::new());
 
 impl TextChangeListener {
 

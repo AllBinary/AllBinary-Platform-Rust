@@ -58,7 +58,7 @@ pub struct CommonSeps {
     pub INDENT: String,
 }
 
-thread_local! { pub static CommonSeps_instance: Option<Rc<RefCell<CommonSeps>>> = CommonSeps::new(); }
+pub static CommonSeps_instance: crate::JavaStatic<Option<Rc<RefCell<CommonSeps>>>> = crate::JavaStatic::new(|| CommonSeps::new());
 
 impl CommonSeps {
 

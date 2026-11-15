@@ -42,7 +42,7 @@ macro_rules! jcall {
 pub struct UserConfigurationInterfaceFactory {
 }
 
-thread_local! { pub static UserConfigurationInterfaceFactory_configurationName: String = String::from("DefaultUserConfiguration"); }
+pub static UserConfigurationInterfaceFactory_configurationName: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DefaultUserConfiguration"));
 
 impl UserConfigurationInterfaceFactory {
 

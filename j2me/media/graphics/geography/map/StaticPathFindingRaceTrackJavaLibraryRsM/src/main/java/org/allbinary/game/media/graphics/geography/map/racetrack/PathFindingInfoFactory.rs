@@ -38,7 +38,7 @@ pub struct PathFindingInfoFactory {
     pub base: BasePathFindingInfoFactory,
 }
 
-thread_local! { pub static PathFindingInfoFactory_instance: Option<Rc<RefCell<PathFindingInfoFactory>>> = PathFindingInfoFactory::new(); }
+pub static PathFindingInfoFactory_instance: crate::JavaStatic<Option<Rc<RefCell<PathFindingInfoFactory>>>> = crate::JavaStatic::new(|| PathFindingInfoFactory::new());
 
 impl PathFindingInfoFactory {
     

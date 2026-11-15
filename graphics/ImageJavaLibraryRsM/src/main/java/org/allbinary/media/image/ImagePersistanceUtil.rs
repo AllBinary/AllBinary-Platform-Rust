@@ -38,7 +38,7 @@ pub struct ImagePersistanceUtil {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static ImagePersistanceUtil_instance: Option<Rc<RefCell<ImagePersistanceUtil>>> = ImagePersistanceUtil::new(); }
+pub static ImagePersistanceUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImagePersistanceUtil>>>> = crate::JavaStatic::new(|| ImagePersistanceUtil::new());
 
 impl ImagePersistanceUtil {
 

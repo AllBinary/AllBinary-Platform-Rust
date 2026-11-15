@@ -31,7 +31,7 @@ pub struct HighScoreCommandsFactory {
     pub base: HighScoreCommandsBaseFactory,
 }
 
-thread_local! { pub static HighScoreCommandsFactory_instance: Option<Rc<RefCell<HighScoreCommandsFactory>>> = HighScoreCommandsFactory::new(); }
+pub static HighScoreCommandsFactory_instance: crate::JavaStatic<Option<Rc<RefCell<HighScoreCommandsFactory>>>> = crate::JavaStatic::new(|| HighScoreCommandsFactory::new());
 
 impl HighScoreCommandsFactory {
     

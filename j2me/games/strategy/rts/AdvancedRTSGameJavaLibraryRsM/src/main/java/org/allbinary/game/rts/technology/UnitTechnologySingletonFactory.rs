@@ -33,7 +33,7 @@ pub struct UnitTechnologySingletonFactory {
     pub speed: i32,
 }
 
-thread_local! { pub static UnitTechnologySingletonFactory_instance: Option<Rc<RefCell<UnitTechnologySingletonFactory>>> = UnitTechnologySingletonFactory::new(); }
+pub static UnitTechnologySingletonFactory_instance: crate::JavaStatic<Option<Rc<RefCell<UnitTechnologySingletonFactory>>>> = crate::JavaStatic::new(|| UnitTechnologySingletonFactory::new());
 
 impl UnitTechnologySingletonFactory {
 

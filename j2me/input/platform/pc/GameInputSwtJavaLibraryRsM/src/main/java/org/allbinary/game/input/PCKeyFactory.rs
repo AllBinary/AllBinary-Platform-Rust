@@ -113,7 +113,7 @@ pub struct PCKeyFactory {
     pub BACK_SPACE: Option<Rc<RefCell<PCGameKey>>>,
 }
 
-thread_local! { pub static PCKeyFactory_SINGLETON: Option<Rc<RefCell<PCKeyFactory>>> = PCKeyFactory::new(); }
+pub static PCKeyFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<PCKeyFactory>>>> = crate::JavaStatic::new(|| PCKeyFactory::new());
 
 impl PCKeyFactory {
 

@@ -34,7 +34,7 @@ pub struct BottomLimiter {
     pub higher: i32,
 }
 
-thread_local! { pub static BottomLimiter_instance: Option<Rc<RefCell<BottomLimiter>>> = BottomLimiter::new(); }
+pub static BottomLimiter_instance: crate::JavaStatic<Option<Rc<RefCell<BottomLimiter>>>> = crate::JavaStatic::new(|| BottomLimiter::new());
 
 impl BottomLimiter {
 

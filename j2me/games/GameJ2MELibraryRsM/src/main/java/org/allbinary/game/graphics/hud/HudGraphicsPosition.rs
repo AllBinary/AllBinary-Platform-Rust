@@ -32,7 +32,7 @@ pub struct HudGraphicsPosition {
     pub point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>,
 }
 
-thread_local! { pub static HudGraphicsPosition_NULL_HUD_GRAPHICS_POSITION: Option<Rc<RefCell<HudGraphicsPosition>>> = HudGraphicsPosition::new({ let java_field = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone(), 9); }
+pub static HudGraphicsPosition_NULL_HUD_GRAPHICS_POSITION: crate::JavaStatic<Option<Rc<RefCell<HudGraphicsPosition>>>> = crate::JavaStatic::new(|| HudGraphicsPosition::new({ let java_field = jcall!(PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone(), 9));
 
 impl HudGraphicsPosition {
 

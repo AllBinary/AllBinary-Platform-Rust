@@ -73,7 +73,7 @@ pub struct UnitWaypointBehavior {
     pub repeatedToLong: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>>,
 }
 
-thread_local! { pub static UnitWaypointBehavior_PATHING: String = String::from("Pathing"); }
+pub static UnitWaypointBehavior_PATHING: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Pathing"));
 impl WaypointEventListenerInterface for UnitWaypointBehavior {
     fn onWaypointEvent(&mut self, mut event: Option<Rc<RefCell<RTSLayerEvent>>>) { Self::onWaypointEvent(self, event) }
 }

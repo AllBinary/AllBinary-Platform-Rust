@@ -40,7 +40,7 @@ pub struct NullUtil {
     pub NULL_FLOAT_ARRAY: Vec<f32>,
 }
 
-thread_local! { pub static NullUtil_instance: Option<Rc<RefCell<NullUtil>>> = NullUtil::new(); }
+pub static NullUtil_instance: crate::JavaStatic<Option<Rc<RefCell<NullUtil>>>> = crate::JavaStatic::new(|| NullUtil::new());
 
 impl NullUtil {
 

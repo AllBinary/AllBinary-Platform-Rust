@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct ImageSwtUtil {
 }
 
-thread_local! { pub static ImageSwtUtil_instance: Option<Rc<RefCell<ImageSwtUtil>>> = ImageSwtUtil::new(); }
+pub static ImageSwtUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImageSwtUtil>>>> = crate::JavaStatic::new(|| ImageSwtUtil::new());
 
 impl ImageSwtUtil {
 

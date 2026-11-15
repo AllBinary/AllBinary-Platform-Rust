@@ -33,7 +33,7 @@ pub struct ABToGBUtil {
     pub allBinaryGameLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>>,
 }
 
-thread_local! { pub static ABToGBUtil_instance: Option<Rc<RefCell<ABToGBUtil>>> = ABToGBUtil::new(); }
+pub static ABToGBUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ABToGBUtil>>>> = crate::JavaStatic::new(|| ABToGBUtil::new());
 
 impl ABToGBUtil {
 

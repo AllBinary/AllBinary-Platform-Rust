@@ -52,7 +52,7 @@ pub struct UpgradableRTSLayerHudPaintable {
     pub currentTotalDigits: i32,
 }
 
-thread_local! { pub static UpgradableRTSLayerHudPaintable_instance: Option<Rc<RefCell<UpgradableRTSLayerHudPaintable>>> = UpgradableRTSLayerHudPaintable::new(); }
+pub static UpgradableRTSLayerHudPaintable_instance: crate::JavaStatic<Option<Rc<RefCell<UpgradableRTSLayerHudPaintable>>>> = crate::JavaStatic::new(|| UpgradableRTSLayerHudPaintable::new());
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintableInterface::InitUpdatePaintableInterface for UpgradableRTSLayerHudPaintable {
 }
 impl crate::org::allbinary::init::InitInterface::InitInterface for UpgradableRTSLayerHudPaintable {

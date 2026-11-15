@@ -36,7 +36,7 @@ pub struct DamageUtil {
     pub COLLIDE: String,
 }
 
-thread_local! { pub static DamageUtil_instance: Option<Rc<RefCell<DamageUtil>>> = DamageUtil::new(); }
+pub static DamageUtil_instance: crate::JavaStatic<Option<Rc<RefCell<DamageUtil>>>> = crate::JavaStatic::new(|| DamageUtil::new());
 
 impl DamageUtil {
 

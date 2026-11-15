@@ -32,7 +32,7 @@ pub struct PlatformRecordIdUtil {
     pub PLATFORM_SHORT_NAME: String,
 }
 
-thread_local! { pub static PlatformRecordIdUtil_instance: Option<Rc<RefCell<PlatformRecordIdUtil>>> = PlatformRecordIdUtil::new(); }
+pub static PlatformRecordIdUtil_instance: crate::JavaStatic<Option<Rc<RefCell<PlatformRecordIdUtil>>>> = crate::JavaStatic::new(|| PlatformRecordIdUtil::new());
 
 impl PlatformRecordIdUtil {
 

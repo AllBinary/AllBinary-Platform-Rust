@@ -34,7 +34,7 @@ pub struct BooleanUtil {
     pub tsUtil: Option<Rc<RefCell<TsUtil>>>,
 }
 
-thread_local! { pub static BooleanUtil_instance: Option<Rc<RefCell<BooleanUtil>>> = BooleanUtil::new(); }
+pub static BooleanUtil_instance: crate::JavaStatic<Option<Rc<RefCell<BooleanUtil>>>> = crate::JavaStatic::new(|| BooleanUtil::new());
 
 impl BooleanUtil {
 

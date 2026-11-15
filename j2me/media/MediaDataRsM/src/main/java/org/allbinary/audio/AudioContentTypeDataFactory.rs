@@ -35,7 +35,7 @@ pub struct AudioContentTypeDataFactory {
     pub MIME_AUDIO_SP_MIDI: Option<Rc<RefCell<AudioContentTypeData>>>,
 }
 
-thread_local! { pub static AudioContentTypeDataFactory_instance: Option<Rc<RefCell<AudioContentTypeDataFactory>>> = AudioContentTypeDataFactory::new(); }
+pub static AudioContentTypeDataFactory_instance: crate::JavaStatic<Option<Rc<RefCell<AudioContentTypeDataFactory>>>> = crate::JavaStatic::new(|| AudioContentTypeDataFactory::new());
 
 impl AudioContentTypeDataFactory {
 

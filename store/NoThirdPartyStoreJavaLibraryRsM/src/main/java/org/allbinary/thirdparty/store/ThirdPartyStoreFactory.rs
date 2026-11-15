@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct ThirdPartyStoreFactory {
 }
 
-thread_local! { pub static ThirdPartyStoreFactory_instance: Option<Rc<RefCell<NoThirdPartyStore>>> = NoThirdPartyStore::new(); }
+pub static ThirdPartyStoreFactory_instance: crate::JavaStatic<Option<Rc<RefCell<NoThirdPartyStore>>>> = crate::JavaStatic::new(|| NoThirdPartyStore::new());
 
 impl ThirdPartyStoreFactory {
 

@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct UserRoleData {
 }
 
-thread_local! { pub static UserRoleData_NAME: String = String::from("ROLE"); }
+pub static UserRoleData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("ROLE"));
 
 impl UserRoleData {
 

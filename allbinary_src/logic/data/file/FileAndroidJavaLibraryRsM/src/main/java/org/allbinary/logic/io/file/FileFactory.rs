@@ -34,7 +34,7 @@ pub struct FileFactory {
     pub context: Option<Rc<RefCell<Context>>>,
 }
 
-thread_local! { pub static FileFactory_SINGLETON: Option<Rc<RefCell<FileFactory>>> = FileFactory::new(jcall!(ResourceUtil::getInstance()).getContext()); }
+pub static FileFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<FileFactory>>>> = crate::JavaStatic::new(|| FileFactory::new(jcall!(ResourceUtil::getInstance()).getContext()));
 
 impl FileFactory {
 

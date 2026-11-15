@@ -54,7 +54,7 @@ pub struct UpdateFileValidationView {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static UpdateFileValidationView_UPDATEPRODUCT: String = { let java_field = jcall!(CommonStrings::getInstance()).UPDATE.clone(); java_field }.clone(); }
+pub static UpdateFileValidationView_UPDATEPRODUCT: crate::JavaStatic<String> = crate::JavaStatic::new(|| { let java_field = jcall!(CommonStrings::getInstance()).UPDATE.clone(); java_field }.clone());
 // impl ValidationComponentInterface for UpdateFileValidationView with the methods of the trait
 impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for UpdateFileValidationView {
     fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }

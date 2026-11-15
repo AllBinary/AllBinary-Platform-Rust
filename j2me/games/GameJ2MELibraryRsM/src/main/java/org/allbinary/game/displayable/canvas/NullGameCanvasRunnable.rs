@@ -40,7 +40,7 @@ pub struct NullGameCanvasRunnable {
     pub gameStateFactory: Option<Rc<RefCell<GameStateFactory>>>,
 }
 
-thread_local! { pub static NullGameCanvasRunnable_NULL_GAME_CANVAS_RUNNABLE: Option<Rc<RefCell<NullGameCanvasRunnable>>> = NullGameCanvasRunnable::new(); }
+pub static NullGameCanvasRunnable_NULL_GAME_CANVAS_RUNNABLE: crate::JavaStatic<Option<Rc<RefCell<NullGameCanvasRunnable>>>> = crate::JavaStatic::new(|| NullGameCanvasRunnable::new());
 impl GameCanvasRunnableInterface for NullGameCanvasRunnable {
     fn getTitle(&mut self) -> String { Self::getTitle(self) }
     fn isInitialized(&mut self) -> bool { Self::isInitialized(self) }

@@ -42,7 +42,7 @@ pub struct MineLayer {
     pub viewPositionEventHandler: Option<Rc<RefCell<ViewPositionEventHandler>>>,
 }
 
-thread_local! { pub static MineLayer_NAME: String = String::from("MineLayer"); }
+pub static MineLayer_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("MineLayer"));
 impl crate::org::allbinary::layer::LayerInterface::LayerInterface for MineLayer {
     fn getHeight(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getHeight(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
     fn getWidth(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getWidth(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }

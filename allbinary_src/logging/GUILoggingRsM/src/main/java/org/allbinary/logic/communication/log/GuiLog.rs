@@ -34,7 +34,7 @@ pub struct GuiLog {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static GuiLog_instance: Option<Rc<RefCell<GuiLog>>> = GuiLog::new(); }
+pub static GuiLog_instance: crate::JavaStatic<Option<Rc<RefCell<GuiLog>>>> = crate::JavaStatic::new(|| GuiLog::new());
 
 impl GuiLog {
 

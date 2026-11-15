@@ -33,8 +33,8 @@ macro_rules! jcall {
 pub struct AuthenticationHelperFactory {
 }
 
-thread_local! { pub static AuthenticationHelperFactory_CLASSNAME: String = String::from("admin.taghelpers.AuthenticationHelper"); }
-thread_local! { pub static AuthenticationHelperFactory_FACTORYNAME: String = String::from("AuthenticationHelperFactory"); }
+pub static AuthenticationHelperFactory_CLASSNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("admin.taghelpers.AuthenticationHelper"));
+pub static AuthenticationHelperFactory_FACTORYNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("AuthenticationHelperFactory"));
 // impl TagHelperFactoryInterface for AuthenticationHelperFactory with the methods of the trait
 
 impl AuthenticationHelperFactory {

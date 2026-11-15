@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct J2SEUtil {
 }
 
-thread_local! { pub static J2SEUtil_instance: Option<Rc<RefCell<J2SEUtil>>> = J2SEUtil::new(); }
+pub static J2SEUtil_instance: crate::JavaStatic<Option<Rc<RefCell<J2SEUtil>>>> = crate::JavaStatic::new(|| J2SEUtil::new());
 
 impl J2SEUtil {
 

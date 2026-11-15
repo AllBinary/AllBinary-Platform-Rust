@@ -35,7 +35,7 @@ pub struct PlatformInputMappingFactory {
     pub inputToGameKeyMapping: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::mapping::PersistentInputMapping::PersistentInputMappingDyn>>>,
 }
 
-thread_local! { pub static PlatformInputMappingFactory_instance: Option<Rc<RefCell<PlatformInputMappingFactory>>> = PlatformInputMappingFactory::new(); }
+pub static PlatformInputMappingFactory_instance: crate::JavaStatic<Option<Rc<RefCell<PlatformInputMappingFactory>>>> = crate::JavaStatic::new(|| PlatformInputMappingFactory::new());
 
 impl PlatformInputMappingFactory {
 

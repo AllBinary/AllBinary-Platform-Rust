@@ -45,7 +45,7 @@ pub struct TransformFactory {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static TransformFactory_instance: Option<Rc<RefCell<TransformFactory>>> = TransformFactory::new(); }
+pub static TransformFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TransformFactory>>>> = crate::JavaStatic::new(|| TransformFactory::new());
 
 impl TransformFactory {
 

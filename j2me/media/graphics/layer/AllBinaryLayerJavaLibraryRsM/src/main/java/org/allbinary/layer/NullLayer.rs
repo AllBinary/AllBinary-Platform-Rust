@@ -31,7 +31,7 @@ pub struct NullLayer {
     pub base: Layer,
 }
 
-thread_local! { pub static NullLayer_instance: Option<Rc<RefCell<NullLayer>>> = NullLayer::new(); }
+pub static NullLayer_instance: crate::JavaStatic<Option<Rc<RefCell<NullLayer>>>> = crate::JavaStatic::new(|| NullLayer::new());
 
 impl NullLayer {
     

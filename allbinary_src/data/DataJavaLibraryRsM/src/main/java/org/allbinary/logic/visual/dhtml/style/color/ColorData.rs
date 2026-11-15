@@ -29,7 +29,7 @@ pub struct ColorData {
     pub NAME: String,
 }
 
-thread_local! { pub static ColorData_instance: Option<Rc<RefCell<ColorData>>> = ColorData::new(); }
+pub static ColorData_instance: crate::JavaStatic<Option<Rc<RefCell<ColorData>>>> = crate::JavaStatic::new(|| ColorData::new());
 
 impl ColorData {
 

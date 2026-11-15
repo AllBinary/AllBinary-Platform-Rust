@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct UserEmailEventsConfigurationData {
 }
 
-thread_local! { pub static UserEmailEventsConfigurationData_NAME: String = String::from("EMAIL_EVENTS_CONFIGURATION_NAME"); }
+pub static UserEmailEventsConfigurationData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("EMAIL_EVENTS_CONFIGURATION_NAME"));
 
 impl UserEmailEventsConfigurationData {
 

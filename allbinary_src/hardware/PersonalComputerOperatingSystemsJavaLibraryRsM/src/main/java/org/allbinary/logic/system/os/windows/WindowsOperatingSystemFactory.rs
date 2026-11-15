@@ -39,7 +39,7 @@ pub struct WindowsOperatingSystemFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static WindowsOperatingSystemFactory_instance: Option<Rc<RefCell<WindowsOperatingSystemFactory>>> = WindowsOperatingSystemFactory::new(); }
+pub static WindowsOperatingSystemFactory_instance: crate::JavaStatic<Option<Rc<RefCell<WindowsOperatingSystemFactory>>>> = crate::JavaStatic::new(|| WindowsOperatingSystemFactory::new());
 
 impl WindowsOperatingSystemFactory {
 

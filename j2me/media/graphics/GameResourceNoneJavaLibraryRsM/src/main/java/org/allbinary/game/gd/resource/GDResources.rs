@@ -30,7 +30,7 @@ pub struct GDResources {
     pub currentLayoutRequiredTotal: i32,
 }
 
-thread_local! { pub static GDResources_instance: Option<Rc<RefCell<GDResources>>> = GDResources::new(); }
+pub static GDResources_instance: crate::JavaStatic<Option<Rc<RefCell<GDResources>>>> = crate::JavaStatic::new(|| GDResources::new());
 
 impl GDResources {
 

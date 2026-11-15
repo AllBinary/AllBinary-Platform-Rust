@@ -33,7 +33,7 @@ pub struct ThreadUtil {
     pub JOIN: String,
 }
 
-thread_local! { pub static ThreadUtil_instance: Option<Rc<RefCell<ThreadUtil>>> = ThreadUtil::new(); }
+pub static ThreadUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ThreadUtil>>>> = crate::JavaStatic::new(|| ThreadUtil::new());
 
 impl ThreadUtil {
 

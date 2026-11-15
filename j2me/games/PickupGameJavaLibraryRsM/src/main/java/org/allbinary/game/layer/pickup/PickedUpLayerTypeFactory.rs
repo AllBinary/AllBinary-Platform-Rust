@@ -40,7 +40,7 @@ pub struct PickedUpLayerTypeFactory {
     pub POINTS: Option<Rc<RefCell<PickedUpLayerType>>>,
 }
 
-thread_local! { pub static PickedUpLayerTypeFactory_instance: Option<Rc<RefCell<PickedUpLayerTypeFactory>>> = PickedUpLayerTypeFactory::new(); }
+pub static PickedUpLayerTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<PickedUpLayerTypeFactory>>>> = crate::JavaStatic::new(|| PickedUpLayerTypeFactory::new());
 
 impl PickedUpLayerTypeFactory {
 

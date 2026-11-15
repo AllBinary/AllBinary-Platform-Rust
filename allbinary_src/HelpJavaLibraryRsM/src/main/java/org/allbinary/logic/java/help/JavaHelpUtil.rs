@@ -45,7 +45,7 @@ pub struct JavaHelpUtil {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static JavaHelpUtil_instance: Option<Rc<RefCell<JavaHelpUtil>>> = JavaHelpUtil::new(); }
+pub static JavaHelpUtil_instance: crate::JavaStatic<Option<Rc<RefCell<JavaHelpUtil>>>> = crate::JavaStatic::new(|| JavaHelpUtil::new());
 
 impl JavaHelpUtil {
 

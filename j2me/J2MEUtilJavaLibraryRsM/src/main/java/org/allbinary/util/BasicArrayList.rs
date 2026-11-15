@@ -29,7 +29,7 @@ pub struct BasicArrayList {
     pub currentIndex: i32,
 }
 
-thread_local! { pub static BasicArrayList_SIZE: String = String::from(", Size: "); }
+pub static BasicArrayList_SIZE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(", Size: "));
 
 impl BasicArrayList {
     

@@ -30,7 +30,7 @@ pub struct FileUnamedUtil {
     pub commonSeps: Option<Rc<RefCell<CommonSeps>>>,
 }
 
-thread_local! { pub static FileUnamedUtil_instance: Option<Rc<RefCell<FileUnamedUtil>>> = FileUnamedUtil::new(); }
+pub static FileUnamedUtil_instance: crate::JavaStatic<Option<Rc<RefCell<FileUnamedUtil>>>> = crate::JavaStatic::new(|| FileUnamedUtil::new());
 
 impl FileUnamedUtil {
 

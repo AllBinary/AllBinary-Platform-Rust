@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct LocationPaintable {
 }
 
-thread_local! { pub static LocationPaintable_instance: Option<Rc<RefCell<dyn LocationPaintableDyn>>> = LocationPaintable::new().map(|reference| reference as Rc<RefCell<dyn LocationPaintableDyn>>); }
+pub static LocationPaintable_instance: crate::JavaStatic<Option<Rc<RefCell<dyn LocationPaintableDyn>>>> = crate::JavaStatic::new(|| LocationPaintable::new().map(|reference| reference as Rc<RefCell<dyn LocationPaintableDyn>>));
 impl LocationPaintableInterface for LocationPaintable {
     fn paintXY(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32) { Self::paintXY(self, graphics, x, y) }
 }

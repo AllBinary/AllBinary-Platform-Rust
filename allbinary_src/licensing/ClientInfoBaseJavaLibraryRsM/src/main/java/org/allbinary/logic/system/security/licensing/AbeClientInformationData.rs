@@ -44,7 +44,7 @@ pub struct AbeClientInformationData {
     pub SPECIAL: String,
 }
 
-thread_local! { pub static AbeClientInformationData_instance: Option<Rc<RefCell<AbeClientInformationData>>> = AbeClientInformationData::new(); }
+pub static AbeClientInformationData_instance: crate::JavaStatic<Option<Rc<RefCell<AbeClientInformationData>>>> = crate::JavaStatic::new(|| AbeClientInformationData::new());
 
 impl AbeClientInformationData {
 

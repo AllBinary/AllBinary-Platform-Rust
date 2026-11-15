@@ -40,7 +40,7 @@ pub struct GeographicMapCellPositionFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static GeographicMapCellPositionFactory_hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashtable(); }
+pub static GeographicMapCellPositionFactory_hashtable: crate::JavaStatic<Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>> = crate::JavaStatic::new(|| jcall!(StdUtil::getInstance()).createHashtable());
 
 impl GeographicMapCellPositionFactory {
 

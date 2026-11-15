@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct ThreedResources {
 }
 
-thread_local! { pub static ThreedResources_threedResources: Option<Rc<RefCell<ThreedResources>>> = ThreedResources::new(); }
+pub static ThreedResources_threedResources: crate::JavaStatic<Option<Rc<RefCell<ThreedResources>>>> = crate::JavaStatic::new(|| ThreedResources::new());
 
 impl ThreedResources {
 

@@ -38,10 +38,10 @@ pub struct FlagGameResources {
     pub ICON_SIZE: String,
 }
 
-thread_local! { pub static FlagGameResources_ICON: String = String::from("_icon"); }
-thread_local! { pub static FlagGameResources_BUILD: String = String::from("_build"); }
-thread_local! { pub static FlagGameResources_DESTROY: String = String::from("_destroy"); }
-thread_local! { pub static FlagGameResources_ICON_BUILD: String = format!("{}{}", String::from("_icon"), FlagGameResources_BUILD.with(Clone::clone)); }
+pub static FlagGameResources_ICON: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("_icon"));
+pub static FlagGameResources_BUILD: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("_build"));
+pub static FlagGameResources_DESTROY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("_destroy"));
+pub static FlagGameResources_ICON_BUILD: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", String::from("_icon"), FlagGameResources_BUILD.with(Clone::clone)));
 
 impl FlagGameResources {
     

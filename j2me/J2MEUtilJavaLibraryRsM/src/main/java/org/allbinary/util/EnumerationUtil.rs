@@ -35,7 +35,7 @@ macro_rules! jcall {
 pub struct EnumerationUtil {
 }
 
-thread_local! { pub static EnumerationUtil_instance: Option<Rc<RefCell<EnumerationUtil>>> = EnumerationUtil::new(); }
+pub static EnumerationUtil_instance: crate::JavaStatic<Option<Rc<RefCell<EnumerationUtil>>>> = crate::JavaStatic::new(|| EnumerationUtil::new());
 
 impl EnumerationUtil {
 

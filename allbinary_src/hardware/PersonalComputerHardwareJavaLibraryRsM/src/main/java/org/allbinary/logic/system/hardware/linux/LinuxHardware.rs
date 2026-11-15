@@ -74,7 +74,7 @@ pub struct LinuxHardware {
     pub MINHARDWARE: i32,
 }
 
-thread_local! { pub static LinuxHardware_PCIFILE: String = String::from("/proc/pci"); }
+pub static LinuxHardware_PCIFILE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("/proc/pci"));
 impl HardwareInterface for LinuxHardware {
     fn getComponent(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn HardwareComponentInterface>>> { Self::getComponent(self, index) }
     fn toString(&mut self) -> String { Self::toString(self) }

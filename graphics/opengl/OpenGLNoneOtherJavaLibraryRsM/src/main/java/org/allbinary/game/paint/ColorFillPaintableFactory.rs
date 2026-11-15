@@ -34,7 +34,7 @@ macro_rules! jcall {
 pub struct ColorFillPaintableFactory {
 }
 
-thread_local! { pub static ColorFillPaintableFactory_instance: Option<Rc<RefCell<ColorFillPaintableFactory>>> = ColorFillPaintableFactory::new(); }
+pub static ColorFillPaintableFactory_instance: crate::JavaStatic<Option<Rc<RefCell<ColorFillPaintableFactory>>>> = crate::JavaStatic::new(|| ColorFillPaintableFactory::new());
 
 impl ColorFillPaintableFactory {
 

@@ -35,7 +35,7 @@ pub struct AllMotionRectangles {
     pub base: MotionRectangles,
 }
 
-thread_local! { pub static AllMotionRectangles_NAME: String = String::from("allMotionRectangles_"); }
+pub static AllMotionRectangles_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("allMotionRectangles_"));
 
 impl AllMotionRectangles {
     

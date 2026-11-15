@@ -36,7 +36,7 @@ pub struct ShapeTypeFactory {
     pub RECTANGLE: Option<Rc<RefCell<ShapeType>>>,
 }
 
-thread_local! { pub static ShapeTypeFactory_instance: Option<Rc<RefCell<ShapeTypeFactory>>> = ShapeTypeFactory::new(); }
+pub static ShapeTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<ShapeTypeFactory>>>> = crate::JavaStatic::new(|| ShapeTypeFactory::new());
 
 impl ShapeTypeFactory {
 

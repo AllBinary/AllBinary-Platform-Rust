@@ -63,7 +63,7 @@ pub struct SVGAsJSONSimpleLoader {
     pub CIRCLE_SEGMENTS: i32,
 }
 
-thread_local! { pub static SVGAsJSONSimpleLoader_instance: Option<Rc<RefCell<SVGAsJSONSimpleLoader>>> = SVGAsJSONSimpleLoader::new(); }
+pub static SVGAsJSONSimpleLoader_instance: crate::JavaStatic<Option<Rc<RefCell<SVGAsJSONSimpleLoader>>>> = crate::JavaStatic::new(|| SVGAsJSONSimpleLoader::new());
 
 impl SVGAsJSONSimpleLoader {
 

@@ -34,7 +34,7 @@ pub struct AppUrlGlobals {
     pub path: String,
 }
 
-thread_local! { pub static AppUrlGlobals_NULL_APP_URL_GLOBALS: Option<Rc<RefCell<AppUrlGlobals>>> = AppUrlGlobals::new(); }
+pub static AppUrlGlobals_NULL_APP_URL_GLOBALS: crate::JavaStatic<Option<Rc<RefCell<AppUrlGlobals>>>> = crate::JavaStatic::new(|| AppUrlGlobals::new());
 
 impl AppUrlGlobals {
 

@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct OpenGLImageFactory {
 }
 
-thread_local! { pub static OpenGLImageFactory_NULL_OPENGL_IMAGE_FACTORY: Option<Rc<RefCell<dyn OpenGLImageFactoryDyn>>> = OpenGLImageFactory::new().map(|reference| reference as Rc<RefCell<dyn OpenGLImageFactoryDyn>>); }
+pub static OpenGLImageFactory_NULL_OPENGL_IMAGE_FACTORY: crate::JavaStatic<Option<Rc<RefCell<dyn OpenGLImageFactoryDyn>>>> = crate::JavaStatic::new(|| OpenGLImageFactory::new().map(|reference| reference as Rc<RefCell<dyn OpenGLImageFactoryDyn>>));
 
 impl OpenGLImageFactory {
 

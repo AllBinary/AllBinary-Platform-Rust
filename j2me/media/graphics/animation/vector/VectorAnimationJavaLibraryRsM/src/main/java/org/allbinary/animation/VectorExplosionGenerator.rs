@@ -42,7 +42,7 @@ pub struct VectorExplosionGenerator {
     pub randomRotationFactory: Option<Rc<RefCell<RandomRotationFactory>>>,
 }
 
-thread_local! { pub static VectorExplosionGenerator_instance: Option<Rc<RefCell<VectorExplosionGenerator>>> = VectorExplosionGenerator::new(); }
+pub static VectorExplosionGenerator_instance: crate::JavaStatic<Option<Rc<RefCell<VectorExplosionGenerator>>>> = crate::JavaStatic::new(|| VectorExplosionGenerator::new());
 
 impl VectorExplosionGenerator {
 

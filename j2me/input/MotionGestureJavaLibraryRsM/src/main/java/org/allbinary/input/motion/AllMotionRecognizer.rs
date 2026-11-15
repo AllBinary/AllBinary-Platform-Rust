@@ -44,7 +44,7 @@ pub struct AllMotionRecognizer {
 }
 
 pub static mut AllMotionRecognizer_index: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 0);
-thread_local! { pub static AllMotionRecognizer_pointCircularPool: Option<Rc<RefCell<GPointCircularPool>>> = GPointCircularPool::new(40); }
+pub static AllMotionRecognizer_pointCircularPool: crate::JavaStatic<Option<Rc<RefCell<GPointCircularPool>>>> = crate::JavaStatic::new(|| GPointCircularPool::new(40));
 
 impl AllMotionRecognizer {
     

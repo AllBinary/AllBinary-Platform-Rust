@@ -37,7 +37,7 @@ pub struct SensorFeatureFactory {
     pub ROLL: Option<Rc<RefCell<SensorFeature>>>,
 }
 
-thread_local! { pub static SensorFeatureFactory_instance: Option<Rc<RefCell<SensorFeatureFactory>>> = SensorFeatureFactory::new(); }
+pub static SensorFeatureFactory_instance: crate::JavaStatic<Option<Rc<RefCell<SensorFeatureFactory>>>> = crate::JavaStatic::new(|| SensorFeatureFactory::new());
 
 impl SensorFeatureFactory {
 

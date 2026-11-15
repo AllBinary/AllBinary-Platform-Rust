@@ -30,7 +30,7 @@ pub struct OpenGLESGraphicsCompositeFactory {
     pub openGLESGraphicsFactory: Option<Rc<RefCell<dyn crate::org::allbinary::device::OpenGLESGraphicsFactory::OpenGLESGraphicsFactoryDyn>>>,
 }
 
-thread_local! { pub static OpenGLESGraphicsCompositeFactory_instance: Option<Rc<RefCell<OpenGLESGraphicsCompositeFactory>>> = OpenGLESGraphicsCompositeFactory::new(); }
+pub static OpenGLESGraphicsCompositeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLESGraphicsCompositeFactory>>>> = crate::JavaStatic::new(|| OpenGLESGraphicsCompositeFactory::new());
 
 impl OpenGLESGraphicsCompositeFactory {
 

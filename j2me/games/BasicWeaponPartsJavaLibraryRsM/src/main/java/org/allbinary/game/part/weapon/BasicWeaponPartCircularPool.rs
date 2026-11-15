@@ -36,7 +36,7 @@ pub struct BasicWeaponPartCircularPool {
     pub basicWeaponPart: Option<Rc<RefCell<dyn crate::org::allbinary::game::part::weapon::BasicWeaponPart::BasicWeaponPartDyn>>>,
 }
 
-thread_local! { pub static BasicWeaponPartCircularPool_NULL_BASIC_WEAPON_PART_CIRCULAR_POOL: Option<Rc<RefCell<BasicWeaponPartCircularPool>>> = BasicWeaponPartCircularPool::new(); }
+pub static BasicWeaponPartCircularPool_NULL_BASIC_WEAPON_PART_CIRCULAR_POOL: crate::JavaStatic<Option<Rc<RefCell<BasicWeaponPartCircularPool>>>> = crate::JavaStatic::new(|| BasicWeaponPartCircularPool::new());
 
 impl BasicWeaponPartCircularPool {
 

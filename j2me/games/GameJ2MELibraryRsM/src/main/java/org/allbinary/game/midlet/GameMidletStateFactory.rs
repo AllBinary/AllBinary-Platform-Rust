@@ -24,7 +24,7 @@ pub struct GameMidletStateFactory {
     pub currentGameState: Option<Rc<RefCell<GameState>>>,
 }
 
-thread_local! { pub static GameMidletStateFactory_INSTANCE: Option<Rc<RefCell<GameMidletStateFactory>>> = GameMidletStateFactory::new(); }
+pub static GameMidletStateFactory_INSTANCE: crate::JavaStatic<Option<Rc<RefCell<GameMidletStateFactory>>>> = crate::JavaStatic::new(|| GameMidletStateFactory::new());
 
 impl GameMidletStateFactory {
 

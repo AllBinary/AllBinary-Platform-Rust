@@ -40,8 +40,8 @@ pub struct AbPathUtilOld {
     pub filePathData: Option<Rc<RefCell<FilePathData>>>,
 }
 
-thread_local! { pub static AbPathUtilOld_instance: Option<Rc<RefCell<AbPathUtilOld>>> = AbPathUtilOld::new(); }
-thread_local! { pub static AbPathUtilOld_MIN: i32 = 4; }
+pub static AbPathUtilOld_instance: crate::JavaStatic<Option<Rc<RefCell<AbPathUtilOld>>>> = crate::JavaStatic::new(|| AbPathUtilOld::new());
+pub static AbPathUtilOld_MIN: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 4);
 
 impl AbPathUtilOld {
 

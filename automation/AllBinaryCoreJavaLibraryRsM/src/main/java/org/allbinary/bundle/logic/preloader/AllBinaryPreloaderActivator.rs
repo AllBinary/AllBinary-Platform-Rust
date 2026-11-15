@@ -41,7 +41,7 @@ pub struct AllBinaryPreloaderActivator {
 }
 
 pub static mut AllBinaryPreloaderActivator_context: std::cell::LazyCell<Option<Rc<RefCell<dyn BundleContext>>>> = std::cell::LazyCell::new(|| None);
-thread_local! { pub static AllBinaryPreloaderActivator_CRYPT_REGISTRY_NAME: String = String::from("bundle.abcs.logic.system.loader.CryptService"); }
+pub static AllBinaryPreloaderActivator_CRYPT_REGISTRY_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("bundle.abcs.logic.system.loader.CryptService"));
 impl BundleActivator for AllBinaryPreloaderActivator {
 }
 

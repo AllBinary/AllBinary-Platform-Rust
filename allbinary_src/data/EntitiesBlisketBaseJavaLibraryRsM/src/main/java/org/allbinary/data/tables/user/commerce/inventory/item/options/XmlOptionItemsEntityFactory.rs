@@ -33,7 +33,7 @@ pub struct XmlOptionItemsEntityFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static XmlOptionItemsEntityFactory_instance: Option<Rc<RefCell<XmlOptionItemsEntityFactory>>> = XmlOptionItemsEntityFactory::new(); }
+pub static XmlOptionItemsEntityFactory_instance: crate::JavaStatic<Option<Rc<RefCell<XmlOptionItemsEntityFactory>>>> = crate::JavaStatic::new(|| XmlOptionItemsEntityFactory::new());
 
 impl XmlOptionItemsEntityFactory {
 

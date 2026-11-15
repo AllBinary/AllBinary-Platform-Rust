@@ -30,7 +30,7 @@ pub struct CssPropertyData {
     pub VALUES: String,
 }
 
-thread_local! { pub static CssPropertyData_instance: Option<Rc<RefCell<CssPropertyData>>> = CssPropertyData::new(); }
+pub static CssPropertyData_instance: crate::JavaStatic<Option<Rc<RefCell<CssPropertyData>>>> = crate::JavaStatic::new(|| CssPropertyData::new());
 
 impl CssPropertyData {
 

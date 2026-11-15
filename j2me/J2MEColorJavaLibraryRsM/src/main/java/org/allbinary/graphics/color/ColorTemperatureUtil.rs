@@ -31,7 +31,7 @@ pub struct ColorTemperatureUtil {
     pub basicColorFactory: Option<Rc<RefCell<BasicColorFactory>>>,
 }
 
-thread_local! { pub static ColorTemperatureUtil_instance: Option<Rc<RefCell<ColorTemperatureUtil>>> = ColorTemperatureUtil::new(); }
+pub static ColorTemperatureUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ColorTemperatureUtil>>>> = crate::JavaStatic::new(|| ColorTemperatureUtil::new());
 
 impl ColorTemperatureUtil {
 

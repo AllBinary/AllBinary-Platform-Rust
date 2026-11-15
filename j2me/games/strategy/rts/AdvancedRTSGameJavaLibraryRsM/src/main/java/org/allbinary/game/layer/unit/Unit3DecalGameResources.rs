@@ -34,7 +34,7 @@ pub struct Unit3DecalGameResources {
     pub base: BasicGameResources,
 }
 
-thread_local! { pub static Unit3DecalGameResources_instance: Option<Rc<RefCell<Unit3DecalGameResources>>> = Unit3DecalGameResources::new(); }
+pub static Unit3DecalGameResources_instance: crate::JavaStatic<Option<Rc<RefCell<Unit3DecalGameResources>>>> = crate::JavaStatic::new(|| Unit3DecalGameResources::new());
 
 impl Unit3DecalGameResources {
     

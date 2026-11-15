@@ -43,7 +43,7 @@ pub struct AbeLicenseInterfaceFactory {
     pub abeLicenseInterface: Option<Rc<RefCell<dyn AbeLicenseInterface>>>,
 }
 
-thread_local! { pub static AbeLicenseInterfaceFactory_SINGLETON: Option<Rc<RefCell<AbeLicenseInterfaceFactory>>> = AbeLicenseInterfaceFactory::new(); }
+pub static AbeLicenseInterfaceFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<AbeLicenseInterfaceFactory>>>> = crate::JavaStatic::new(|| AbeLicenseInterfaceFactory::new());
 
 impl AbeLicenseInterfaceFactory {
 

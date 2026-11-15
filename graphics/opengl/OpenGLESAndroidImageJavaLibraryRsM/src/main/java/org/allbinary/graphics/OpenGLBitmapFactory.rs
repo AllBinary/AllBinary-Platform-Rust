@@ -27,7 +27,7 @@ pub struct OpenGLBitmapFactory {
     pub ARGB_8888: Option<Rc<RefCell<Config>>>,
 }
 
-thread_local! { pub static OpenGLBitmapFactory_instance: Option<Rc<RefCell<OpenGLBitmapFactory>>> = OpenGLBitmapFactory::new(); }
+pub static OpenGLBitmapFactory_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLBitmapFactory>>>> = crate::JavaStatic::new(|| OpenGLBitmapFactory::new());
 
 impl OpenGLBitmapFactory {
 

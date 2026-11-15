@@ -36,7 +36,7 @@ pub struct ProfilingRefreshHelper {
     pub frameProcessingTimeElapsed: i64,
 }
 
-thread_local! { pub static ProfilingRefreshHelper_instance: Option<Rc<RefCell<ProfilingRefreshHelper>>> = ProfilingRefreshHelper::new(); }
+pub static ProfilingRefreshHelper_instance: crate::JavaStatic<Option<Rc<RefCell<ProfilingRefreshHelper>>>> = crate::JavaStatic::new(|| ProfilingRefreshHelper::new());
 
 impl ProfilingRefreshHelper {
     

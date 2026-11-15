@@ -34,7 +34,7 @@ pub struct OrderProcessorUtil {
     pub ORDER_PROCESSED: String,
 }
 
-thread_local! { pub static OrderProcessorUtil_instance: Option<Rc<RefCell<OrderProcessorUtil>>> = OrderProcessorUtil::new(); }
+pub static OrderProcessorUtil_instance: crate::JavaStatic<Option<Rc<RefCell<OrderProcessorUtil>>>> = crate::JavaStatic::new(|| OrderProcessorUtil::new());
 
 impl OrderProcessorUtil {
 

@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct RemoteHighScoresSubmissionProcessorFactory {
 }
 
-thread_local! { pub static RemoteHighScoresSubmissionProcessorFactory_SINGLETON: Option<Rc<RefCell<dyn RemoteHighScoresSubmissionProcessorInterface>>> = RemoteHighScoresSubmissionProcessor::new().map(|reference| reference as Rc<RefCell<dyn RemoteHighScoresSubmissionProcessorInterface>>).map(|reference| reference as Rc<RefCell<dyn RemoteHighScoresSubmissionProcessorInterface>>); }
+pub static RemoteHighScoresSubmissionProcessorFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<dyn RemoteHighScoresSubmissionProcessorInterface>>>> = crate::JavaStatic::new(|| RemoteHighScoresSubmissionProcessor::new().map(|reference| reference as Rc<RefCell<dyn RemoteHighScoresSubmissionProcessorInterface>>).map(|reference| reference as Rc<RefCell<dyn RemoteHighScoresSubmissionProcessorInterface>>));
 
 impl RemoteHighScoresSubmissionProcessorFactory {
 

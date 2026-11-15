@@ -30,7 +30,7 @@ pub struct OrientationData {
     pub ORIENTATION_TYPE: String,
 }
 
-thread_local! { pub static OrientationData_SINGLETON: Option<Rc<RefCell<OrientationData>>> = OrientationData::new(); }
+pub static OrientationData_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<OrientationData>>>> = crate::JavaStatic::new(|| OrientationData::new());
 
 impl OrientationData {
 

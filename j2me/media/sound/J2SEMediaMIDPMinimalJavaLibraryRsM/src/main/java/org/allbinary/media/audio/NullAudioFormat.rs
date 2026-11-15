@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct NullAudioFormat {
 }
 
-thread_local! { pub static NullAudioFormat_NULL_AUDIO_FORMAT: Option<Rc<RefCell<AudioFormat>>> = AudioFormat::new({ let java_field = jcall!(unsafe { crate::javax::sound::sampled::AudioFormat::AudioFormat_Encoding.clone() }).PCM_UNSIGNED.clone(); java_field }.clone(), 0.0_f32, 0, 0, 0, 0.0_f32, false); }
+pub static NullAudioFormat_NULL_AUDIO_FORMAT: crate::JavaStatic<Option<Rc<RefCell<AudioFormat>>>> = crate::JavaStatic::new(|| AudioFormat::new({ let java_field = jcall!(unsafe { crate::javax::sound::sampled::AudioFormat::AudioFormat_Encoding.clone() }).PCM_UNSIGNED.clone(); java_field }.clone(), 0.0_f32, 0, 0, 0, 0.0_f32, false));
 
 impl NullAudioFormat {
 

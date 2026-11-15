@@ -32,7 +32,7 @@ pub struct ContextConfigurationData {
     pub ENCRYPTED_EXTENSION: String,
 }
 
-thread_local! { pub static ContextConfigurationData_instance: Option<Rc<RefCell<ContextConfigurationData>>> = ContextConfigurationData::new(); }
+pub static ContextConfigurationData_instance: crate::JavaStatic<Option<Rc<RefCell<ContextConfigurationData>>>> = crate::JavaStatic::new(|| ContextConfigurationData::new());
 
 impl ContextConfigurationData {
 

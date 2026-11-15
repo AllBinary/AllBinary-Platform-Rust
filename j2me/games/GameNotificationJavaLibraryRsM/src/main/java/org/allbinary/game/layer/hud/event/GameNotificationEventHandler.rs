@@ -38,7 +38,7 @@ pub struct GameNotificationEventHandler {
     pub enabled: bool,
 }
 
-thread_local! { pub static GameNotificationEventHandler_instance: Option<Rc<RefCell<GameNotificationEventHandler>>> = GameNotificationEventHandler::new(); }
+pub static GameNotificationEventHandler_instance: crate::JavaStatic<Option<Rc<RefCell<GameNotificationEventHandler>>>> = crate::JavaStatic::new(|| GameNotificationEventHandler::new());
 
 impl GameNotificationEventHandler {
     

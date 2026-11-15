@@ -35,7 +35,7 @@ pub struct ImagesRatioUtil {
     pub imageUtil: Option<Rc<RefCell<ImageUtil>>>,
 }
 
-thread_local! { pub static ImagesRatioUtil_instance: Option<Rc<RefCell<ImagesRatioUtil>>> = ImagesRatioUtil::new(); }
+pub static ImagesRatioUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImagesRatioUtil>>>> = crate::JavaStatic::new(|| ImagesRatioUtil::new());
 
 impl ImagesRatioUtil {
 

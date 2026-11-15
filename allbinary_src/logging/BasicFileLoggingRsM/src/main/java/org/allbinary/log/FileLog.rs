@@ -39,13 +39,13 @@ macro_rules! jcall {
 pub struct FileLog {
 }
 
-thread_local! { pub static FileLog_stringUtil: Option<Rc<RefCell<StringUtil>>> = StringUtil::getInstance(); }
-thread_local! { pub static FileLog_logLength: i64 = 33000000_i64; }
-thread_local! { pub static FileLog_logPath: String = String::from("g:\\log\\"); }
-thread_local! { pub static FileLog_extension: String = String::from("dat").clone(); }
-thread_local! { pub static FileLog_fileName: String = format!("{}{}", String::from("log."), FileLog_extension.with(Clone::clone)).clone(); }
-thread_local! { pub static FileLog_backupFileName: String = jcall!(FileLog_fileName.with(Clone::clone)).concat(String::from(".bak")); }
-thread_local! { pub static FileLog_ORG_ALLBINARY: String = String::from("org.allbinary: "); }
+pub static FileLog_stringUtil: crate::JavaStatic<Option<Rc<RefCell<StringUtil>>>> = crate::JavaStatic::new(|| StringUtil::getInstance());
+pub static FileLog_logLength: crate::JavaStatic<i64> = crate::JavaStatic::new(|| 33000000_i64);
+pub static FileLog_logPath: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("g:\\log\\"));
+pub static FileLog_extension: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("dat").clone());
+pub static FileLog_fileName: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", String::from("log."), FileLog_extension.with(Clone::clone)).clone());
+pub static FileLog_backupFileName: crate::JavaStatic<String> = crate::JavaStatic::new(|| jcall!(FileLog_fileName.with(Clone::clone)).concat(String::from(".bak")));
+pub static FileLog_ORG_ALLBINARY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("org.allbinary: "));
 pub static mut FileLog_firstTime: std::cell::LazyCell<bool> = std::cell::LazyCell::new(|| true);
 pub static mut FileLog_logFile: std::cell::LazyCell<Option<Rc<RefCell<File>>>> = std::cell::LazyCell::new(|| File::new2(FileLog_logPath.with(Clone::clone).clone(), FileLog_fileName.with(Clone::clone).clone()));
 pub static mut FileLog_logFileBak: std::cell::LazyCell<Option<Rc<RefCell<File>>>> = std::cell::LazyCell::new(|| None);

@@ -42,9 +42,9 @@ pub struct InstallerInfo {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static InstallerInfo_instance: Option<Rc<RefCell<InstallerInfo>>> = InstallerInfo::new(); }
-thread_local! { pub static InstallerInfo_INITFILENAME: String = String::from("installerdata.dat"); }
-thread_local! { pub static InstallerInfo_PACKAGE: String = { let java_field = jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field }.clone(); }
+pub static InstallerInfo_instance: crate::JavaStatic<Option<Rc<RefCell<InstallerInfo>>>> = crate::JavaStatic::new(|| InstallerInfo::new());
+pub static InstallerInfo_INITFILENAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("installerdata.dat"));
+pub static InstallerInfo_PACKAGE: crate::JavaStatic<String> = crate::JavaStatic::new(|| { let java_field = jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field }.clone());
 pub static mut InstallerInfo_userName: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
 pub static mut InstallerInfo_password: std::cell::LazyCell<String> = std::cell::LazyCell::new(|| { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
 pub static mut InstallerInfo_hasRead: std::cell::LazyCell<bool> = std::cell::LazyCell::new(|| false);

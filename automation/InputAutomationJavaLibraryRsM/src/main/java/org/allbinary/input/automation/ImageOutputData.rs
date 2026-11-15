@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct ImageOutputData {
 }
 
-thread_local! { pub static ImageOutputData_SAVE_PATH: String = jcall!(StringMaker::new()).append(match String::from("user.dir").as_str() { "os.name" => std::env::consts::OS.to_string(), "os.arch" => std::env::consts::ARCH.to_string(), "user.home" => std::env::var("USERPROFILE").or_else(|_| std::env::var("HOME")).unwrap_or_default(), _ => String::new() }).appendchar({ let java_field = jcall!(FilePathData::getInstance()).SEPARATORCHAR.clone(); java_field }.clone()).append(String::from("saves")).appendchar({ let java_field = jcall!(FilePathData::getInstance()).SEPARATORCHAR.clone(); java_field }.clone()).toString(); }
+pub static ImageOutputData_SAVE_PATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| jcall!(StringMaker::new()).append(match String::from("user.dir").as_str() { "os.name" => std::env::consts::OS.to_string(), "os.arch" => std::env::consts::ARCH.to_string(), "user.home" => std::env::var("USERPROFILE").or_else(|_| std::env::var("HOME")).unwrap_or_default(), _ => String::new() }).appendchar({ let java_field = jcall!(FilePathData::getInstance()).SEPARATORCHAR.clone(); java_field }.clone()).append(String::from("saves")).appendchar({ let java_field = jcall!(FilePathData::getInstance()).SEPARATORCHAR.clone(); java_field }.clone()).toString());
 
 impl ImageOutputData {
 

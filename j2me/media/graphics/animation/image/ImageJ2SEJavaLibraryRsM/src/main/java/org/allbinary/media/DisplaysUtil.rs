@@ -35,7 +35,7 @@ macro_rules! jcall {
 pub struct DisplaysUtil {
 }
 
-thread_local! { pub static DisplaysUtil_instance: Option<Rc<RefCell<DisplaysUtil>>> = DisplaysUtil::new(); }
+pub static DisplaysUtil_instance: crate::JavaStatic<Option<Rc<RefCell<DisplaysUtil>>>> = crate::JavaStatic::new(|| DisplaysUtil::new());
 
 impl DisplaysUtil {
 

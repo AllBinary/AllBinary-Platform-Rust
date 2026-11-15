@@ -40,7 +40,7 @@ pub struct TagWorkFlowFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static TagWorkFlowFactory_instance: Option<Rc<RefCell<TagWorkFlowFactory>>> = TagWorkFlowFactory::new(); }
+pub static TagWorkFlowFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TagWorkFlowFactory>>>> = crate::JavaStatic::new(|| TagWorkFlowFactory::new());
 
 impl TagWorkFlowFactory {
 

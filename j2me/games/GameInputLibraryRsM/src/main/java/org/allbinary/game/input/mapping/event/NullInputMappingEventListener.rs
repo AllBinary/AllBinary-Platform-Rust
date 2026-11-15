@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct NullInputMappingEventListener {
 }
 
-thread_local! { pub static NullInputMappingEventListener_NULL_INPUT_MAPPING_EVENT_LISTENER: Option<Rc<RefCell<NullInputMappingEventListener>>> = NullInputMappingEventListener::new(); }
+pub static NullInputMappingEventListener_NULL_INPUT_MAPPING_EVENT_LISTENER: crate::JavaStatic<Option<Rc<RefCell<NullInputMappingEventListener>>>> = crate::JavaStatic::new(|| NullInputMappingEventListener::new());
 impl InputMappingEventListenerInterface for NullInputMappingEventListener {
     fn onInputMappingEvent(&mut self, mut inputMappingEvent: Option<Rc<RefCell<InputMappingEvent>>>) { Self::onInputMappingEvent(self, inputMappingEvent) }
 }

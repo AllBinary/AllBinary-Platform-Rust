@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct PreLogUtil {
 }
 
-thread_local! { pub static PreLogUtil_LABEL: String = String::from("org.allbinary"); }
+pub static PreLogUtil_LABEL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("org.allbinary"));
 
 impl PreLogUtil {
 

@@ -29,7 +29,7 @@ pub struct AndroidInfoFactory {
     pub version: i32,
 }
 
-thread_local! { pub static AndroidInfoFactory_instance: Option<Rc<RefCell<AndroidInfoFactory>>> = AndroidInfoFactory::new(); }
+pub static AndroidInfoFactory_instance: crate::JavaStatic<Option<Rc<RefCell<AndroidInfoFactory>>>> = crate::JavaStatic::new(|| AndroidInfoFactory::new());
 
 impl AndroidInfoFactory {
 

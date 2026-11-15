@@ -44,7 +44,7 @@ pub struct BuildingPropertiesFactory {
     pub damageFloatersPaintableInterface: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>>,
 }
 
-thread_local! { pub static BuildingPropertiesFactory_instance: Option<Rc<RefCell<dyn BuildingPropertiesFactoryDyn>>> = BuildingPropertiesFactory::new().map(|reference| reference as Rc<RefCell<dyn BuildingPropertiesFactoryDyn>>); }
+pub static BuildingPropertiesFactory_instance: crate::JavaStatic<Option<Rc<RefCell<dyn BuildingPropertiesFactoryDyn>>>> = crate::JavaStatic::new(|| BuildingPropertiesFactory::new().map(|reference| reference as Rc<RefCell<dyn BuildingPropertiesFactoryDyn>>));
 
 impl BuildingPropertiesFactory {
 

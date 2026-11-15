@@ -37,7 +37,7 @@ pub struct BasicGameResources {
     pub RESOURCE_DESTROY: String,
 }
 
-thread_local! { pub static BasicGameResources_stringBuffer: Option<Rc<RefCell<StringMaker>>> = StringMaker::new(); }
+pub static BasicGameResources_stringBuffer: crate::JavaStatic<Option<Rc<RefCell<StringMaker>>>> = crate::JavaStatic::new(|| StringMaker::new());
 
 impl BasicGameResources {
 

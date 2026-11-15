@@ -48,7 +48,7 @@ pub struct TransformTemplateCustomizerUtil {
     pub GLOBALS_UPDATE: String,
 }
 
-thread_local! { pub static TransformTemplateCustomizerUtil_instance: Option<Rc<RefCell<TransformTemplateCustomizerUtil>>> = TransformTemplateCustomizerUtil::new(); }
+pub static TransformTemplateCustomizerUtil_instance: crate::JavaStatic<Option<Rc<RefCell<TransformTemplateCustomizerUtil>>>> = crate::JavaStatic::new(|| TransformTemplateCustomizerUtil::new());
 
 impl TransformTemplateCustomizerUtil {
 

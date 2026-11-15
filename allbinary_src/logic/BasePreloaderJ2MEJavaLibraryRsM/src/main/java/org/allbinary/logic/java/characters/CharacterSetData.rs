@@ -34,7 +34,7 @@ pub struct CharacterSetData {
     pub UTF_16LE: String,
 }
 
-thread_local! { pub static CharacterSetData_instance: Option<Rc<RefCell<CharacterSetData>>> = CharacterSetData::new(); }
+pub static CharacterSetData_instance: crate::JavaStatic<Option<Rc<RefCell<CharacterSetData>>>> = crate::JavaStatic::new(|| CharacterSetData::new());
 
 impl CharacterSetData {
 

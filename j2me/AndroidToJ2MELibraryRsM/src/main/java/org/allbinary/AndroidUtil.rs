@@ -30,8 +30,8 @@ macro_rules! jcall {
 pub struct AndroidUtil {
 }
 
-thread_local! { pub static AndroidUtil_NULL_ACTIVITY: Option<Rc<RefCell<Activity>>> = Activity::new(); }
-thread_local! { pub static AndroidUtil_version: i32 = { let java_field = jcall!(unsafe { crate::android::os::Build::Build_VERSION.clone() }).SDK.clone(); java_field }.clone().parse::<i32>().unwrap(); }
+pub static AndroidUtil_NULL_ACTIVITY: crate::JavaStatic<Option<Rc<RefCell<Activity>>>> = crate::JavaStatic::new(|| Activity::new());
+pub static AndroidUtil_version: crate::JavaStatic<i32> = crate::JavaStatic::new(|| { let java_field = jcall!(unsafe { crate::android::os::Build::Build_VERSION.clone() }).SDK.clone(); java_field }.clone().parse::<i32>().unwrap());
 
 impl AndroidUtil {
 

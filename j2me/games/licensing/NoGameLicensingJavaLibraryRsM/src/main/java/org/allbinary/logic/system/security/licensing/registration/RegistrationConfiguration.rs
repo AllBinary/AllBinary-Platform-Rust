@@ -32,7 +32,7 @@ pub struct RegistrationConfiguration {
     pub NAME: String,
 }
 
-thread_local! { pub static RegistrationConfiguration_SINGLETON: Option<Rc<RefCell<RegistrationConfiguration>>> = RegistrationConfiguration::new(); }
+pub static RegistrationConfiguration_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<RegistrationConfiguration>>>> = crate::JavaStatic::new(|| RegistrationConfiguration::new());
 
 impl RegistrationConfiguration {
     

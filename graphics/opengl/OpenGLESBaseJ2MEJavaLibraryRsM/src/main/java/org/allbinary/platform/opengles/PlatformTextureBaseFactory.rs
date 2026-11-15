@@ -32,7 +32,7 @@ pub struct PlatformTextureBaseFactory {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static PlatformTextureBaseFactory_NULL_PLATFORM_TEXTURE_BASE_FACTORY: Option<Rc<RefCell<dyn PlatformTextureBaseFactoryDyn>>> = PlatformTextureBaseFactory::new().map(|reference| reference as Rc<RefCell<dyn PlatformTextureBaseFactoryDyn>>); }
+pub static PlatformTextureBaseFactory_NULL_PLATFORM_TEXTURE_BASE_FACTORY: crate::JavaStatic<Option<Rc<RefCell<dyn PlatformTextureBaseFactoryDyn>>>> = crate::JavaStatic::new(|| PlatformTextureBaseFactory::new().map(|reference| reference as Rc<RefCell<dyn PlatformTextureBaseFactoryDyn>>));
 
 impl PlatformTextureBaseFactory {
 

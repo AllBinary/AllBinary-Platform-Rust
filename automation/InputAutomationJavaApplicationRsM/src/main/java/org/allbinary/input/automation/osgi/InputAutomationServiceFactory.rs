@@ -36,7 +36,7 @@ pub struct InputAutomationServiceFactory {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static InputAutomationServiceFactory_inputAutomationServiceFactory: Option<Rc<RefCell<InputAutomationServiceFactory>>> = InputAutomationServiceFactory::new(); }
+pub static InputAutomationServiceFactory_inputAutomationServiceFactory: crate::JavaStatic<Option<Rc<RefCell<InputAutomationServiceFactory>>>> = crate::JavaStatic::new(|| InputAutomationServiceFactory::new());
 impl ServiceFactory for InputAutomationServiceFactory {
 }
 

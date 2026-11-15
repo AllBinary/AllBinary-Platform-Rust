@@ -17,7 +17,7 @@ macro_rules! jcall {
 pub struct MediaIOUtil {
 }
 
-thread_local! { pub static MediaIOUtil_instance: Option<Rc<RefCell<MediaIOUtil>>> = MediaIOUtil::new(); }
+pub static MediaIOUtil_instance: crate::JavaStatic<Option<Rc<RefCell<MediaIOUtil>>>> = crate::JavaStatic::new(|| MediaIOUtil::new());
 
 impl MediaIOUtil {
 

@@ -33,7 +33,7 @@ pub struct OrderedIntArrayPermutationUtil {
     pub FINISHED: String,
 }
 
-thread_local! { pub static OrderedIntArrayPermutationUtil_instance: Option<Rc<RefCell<OrderedIntArrayPermutationUtil>>> = OrderedIntArrayPermutationUtil::new(); }
+pub static OrderedIntArrayPermutationUtil_instance: crate::JavaStatic<Option<Rc<RefCell<OrderedIntArrayPermutationUtil>>>> = crate::JavaStatic::new(|| OrderedIntArrayPermutationUtil::new());
 
 impl OrderedIntArrayPermutationUtil {
 

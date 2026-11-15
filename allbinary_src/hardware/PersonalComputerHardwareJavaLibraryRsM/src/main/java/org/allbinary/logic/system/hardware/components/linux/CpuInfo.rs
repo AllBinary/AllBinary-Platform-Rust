@@ -29,24 +29,24 @@ pub struct CpuInfo {
     pub name: String,
 }
 
-thread_local! { pub static CpuInfo_PROCESSOR: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("processor")); }
-thread_local! { pub static CpuInfo_VENDORID: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("vendor_id")); }
-thread_local! { pub static CpuInfo_CPUFAMILY: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("cpu family")); }
-thread_local! { pub static CpuInfo_MODEL: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("model")); }
-thread_local! { pub static CpuInfo_MODELNAME: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("model name")); }
-thread_local! { pub static CpuInfo_STEPPING: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("stepping")); }
-thread_local! { pub static CpuInfo_CPUMHZ: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("cpu MHz")); }
-thread_local! { pub static CpuInfo_CACHESIZE: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("cache size")); }
-thread_local! { pub static CpuInfo_FDIVBUG: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("fdiv_bug")); }
-thread_local! { pub static CpuInfo_HLTBUG: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("hlt_bug")); }
-thread_local! { pub static CpuInfo_F00FBUG: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("f00f_bug")); }
-thread_local! { pub static CpuInfo_COMABUG: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("coma_bug")); }
-thread_local! { pub static CpuInfo_FPU: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("fpu")); }
-thread_local! { pub static CpuInfo_FPUEXCEPTION: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("fpu_exception")); }
-thread_local! { pub static CpuInfo_CPUIDLEVEL: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("cache size")); }
-thread_local! { pub static CpuInfo_WP: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("yes")); }
-thread_local! { pub static CpuInfo_FLAGS: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("flags")); }
-thread_local! { pub static CpuInfo_BOGOMIPS: Option<Rc<RefCell<CpuInfo>>> = CpuInfo::new(String::from("bogomips")); }
+pub static CpuInfo_PROCESSOR: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("processor")));
+pub static CpuInfo_VENDORID: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("vendor_id")));
+pub static CpuInfo_CPUFAMILY: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("cpu family")));
+pub static CpuInfo_MODEL: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("model")));
+pub static CpuInfo_MODELNAME: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("model name")));
+pub static CpuInfo_STEPPING: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("stepping")));
+pub static CpuInfo_CPUMHZ: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("cpu MHz")));
+pub static CpuInfo_CACHESIZE: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("cache size")));
+pub static CpuInfo_FDIVBUG: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("fdiv_bug")));
+pub static CpuInfo_HLTBUG: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("hlt_bug")));
+pub static CpuInfo_F00FBUG: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("f00f_bug")));
+pub static CpuInfo_COMABUG: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("coma_bug")));
+pub static CpuInfo_FPU: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("fpu")));
+pub static CpuInfo_FPUEXCEPTION: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("fpu_exception")));
+pub static CpuInfo_CPUIDLEVEL: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("cache size")));
+pub static CpuInfo_WP: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("yes")));
+pub static CpuInfo_FLAGS: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("flags")));
+pub static CpuInfo_BOGOMIPS: crate::JavaStatic<Option<Rc<RefCell<CpuInfo>>>> = crate::JavaStatic::new(|| CpuInfo::new(String::from("bogomips")));
 
 impl CpuInfo {
     

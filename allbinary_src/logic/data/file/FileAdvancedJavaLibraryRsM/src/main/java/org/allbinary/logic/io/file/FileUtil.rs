@@ -60,7 +60,7 @@ pub struct FileUtil {
     pub WRITE_METHOD: String,
 }
 
-thread_local! { pub static FileUtil_instance: Option<Rc<RefCell<FileUtil>>> = FileUtil::new(); }
+pub static FileUtil_instance: crate::JavaStatic<Option<Rc<RefCell<FileUtil>>>> = crate::JavaStatic::new(|| FileUtil::new());
 
 impl FileUtil {
 

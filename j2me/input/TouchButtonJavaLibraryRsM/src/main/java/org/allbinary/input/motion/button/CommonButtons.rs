@@ -34,7 +34,7 @@ pub struct CommonButtons {
     pub LARGE_BUTTON: Option<Rc<RefCell<Rectangle>>>,
 }
 
-thread_local! { pub static CommonButtons_instance: Option<Rc<RefCell<CommonButtons>>> = CommonButtons::new(); }
+pub static CommonButtons_instance: crate::JavaStatic<Option<Rc<RefCell<CommonButtons>>>> = crate::JavaStatic::new(|| CommonButtons::new());
 
 impl CommonButtons {
 

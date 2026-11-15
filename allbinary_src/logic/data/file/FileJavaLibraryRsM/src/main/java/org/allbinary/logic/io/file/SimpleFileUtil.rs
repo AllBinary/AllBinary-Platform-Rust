@@ -50,7 +50,7 @@ pub struct SimpleFileUtil {
     pub streamUtil: Option<Rc<RefCell<StreamUtil>>>,
 }
 
-thread_local! { pub static SimpleFileUtil_instance: Option<Rc<RefCell<SimpleFileUtil>>> = SimpleFileUtil::new(); }
+pub static SimpleFileUtil_instance: crate::JavaStatic<Option<Rc<RefCell<SimpleFileUtil>>>> = crate::JavaStatic::new(|| SimpleFileUtil::new());
 
 impl SimpleFileUtil {
 

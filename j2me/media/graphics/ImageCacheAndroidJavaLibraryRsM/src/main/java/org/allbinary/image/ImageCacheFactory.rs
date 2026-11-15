@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct ImageCacheFactory {
 }
 
-thread_local! { pub static ImageCacheFactory_IMAGE_CACHE: Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>> = ImageCache::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>); }
+pub static ImageCacheFactory_IMAGE_CACHE: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>>> = crate::JavaStatic::new(|| ImageCache::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::image::ImageCache::ImageCacheDyn>>));
 
 impl ImageCacheFactory {
 

@@ -38,7 +38,7 @@ pub struct LogConfigTypeFactory {
     pub REPLACEERROR: Option<Rc<RefCell<LogConfigType>>>,
 }
 
-thread_local! { pub static LogConfigTypeFactory_instance: Option<Rc<RefCell<LogConfigTypeFactory>>> = LogConfigTypeFactory::new(); }
+pub static LogConfigTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<LogConfigTypeFactory>>>> = crate::JavaStatic::new(|| LogConfigTypeFactory::new());
 
 impl LogConfigTypeFactory {
 

@@ -22,7 +22,17 @@
         </repository>
     </distributionManagement>
     
-    <properties><cargo.executable>${user.home}/.cargo/bin/cargo</cargo.executable><cargo.profile>release</cargo.profile><cargo.target.dir>${project.build.directory}/cargo</cargo.target.dir><rust.jsinterop.source.path>G:/mnt/bc/mydev/workingrust/replace_these_stub_projects/allbinary_src/J2MEJsInteropCompatibilityJavaLibraryRsM/src/main/java</rust.jsinterop.source.path><rust.fail.on.error>true</rust.fail.on.error><rust.runtime.source.path>G:/mnt/bc/mydev/workrust/j2me/J2SEForRustLibraryRsM/src/main/java</rust.runtime.source.path><rust.dependency.source.paths>G:/mnt/bc/mydev/working_thirdpartyrust/embedded/j2me/microemulator/2_0_4/microemu-cldcRs/src/main/java;G:/mnt/bc/mydev/working_thirdpartyrust/embedded/j2me/microemulator/2_0_4/microemu-midpRs/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/allbinary_src_designpatterns_srcRsM/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/cache/BaseCacheJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/LogAndroidJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/LogJ2MEJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/LogNoPlatformJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/LogRsM/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/ThreadJ2MELibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/ThreadLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/CommonJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/EventJ2MELibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/J2MEExceptionLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/J2MEUtilJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/lib/BaseMathLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/lib/BasicMathLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/logging/LoggingAndroidAllRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/logging/LoggingJ2MEAllRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/logging/LoggingJ2MEExceptionRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/TempBaseJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/replace_these_stub_projects/allbinary_src/J2MEJsInteropCompatibilityJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/replace_these_stub_projects/allbinary_src/NoneOnlyJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/replace_these_stub_projects/osgi/YourOSGIComponentLibraryRsM/src/main/java;G:/mnt/bc/mydev/workrust/j2me/J2SEForRustLibraryRsM/src/main/java</rust.dependency.source.paths></properties><dependencies>
+    <properties>
+        <cargo.executable>${user.home}/.cargo/bin/cargo</cargo.executable>
+        <cargo.profile>release</cargo.profile>
+        <cargo.target.dir>${project.build.directory}/cargo</cargo.target.dir>
+        <rust.jsinterop.source.path>G:/mnt/bc/mydev/workingrust/replace_these_stub_projects/allbinary_src/J2MEJsInteropCompatibilityJavaLibraryRsM/src/main/java</rust.jsinterop.source.path>
+        <rust.fail.on.error>true</rust.fail.on.error>
+        <rust.runtime.source.path>G:/mnt/bc/mydev/workrust/j2me/J2SEForRustLibraryRsM/src/main/java</rust.runtime.source.path>
+        <rust.dependency.source.paths>G:/mnt/bc/mydev/working_thirdpartyrust/embedded/j2me/microemulator/2_0_4/microemu-cldcRs/src/main/java;G:/mnt/bc/mydev/working_thirdpartyrust/embedded/j2me/microemulator/2_0_4/microemu-midpRs/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/allbinary_src_designpatterns_srcRsM/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/cache/BaseCacheJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/LogAndroidJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/LogJ2MEJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/LogNoPlatformJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/LogRsM/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/ThreadJ2MELibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/allbinary_src/ThreadLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/CommonJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/EventJ2MELibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/J2MEExceptionLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/J2MEUtilJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/lib/BaseMathLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/lib/BasicMathLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/logging/LoggingAndroidAllRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/logging/LoggingJ2MEAllRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/logging/LoggingJ2MEExceptionRsM/src/main/java;G:/mnt/bc/mydev/workingrust/j2me/TempBaseJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/replace_these_stub_projects/allbinary_src/J2MEJsInteropCompatibilityJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/replace_these_stub_projects/allbinary_src/NoneOnlyJavaLibraryRsM/src/main/java;G:/mnt/bc/mydev/workingrust/replace_these_stub_projects/osgi/YourOSGIComponentLibraryRsM/src/main/java;G:/mnt/bc/mydev/workrust/j2me/J2SEForRustLibraryRsM/src/main/java</rust.dependency.source.paths>
+    </properties>
+    
+    <dependencies>
         <dependency>
             <groupId>org.junit</groupId>
             <artifactId>junit-bomRs</artifactId>
@@ -105,9 +115,44 @@
             <optional>true</optional>
         </dependency>
 
-    <dependency><groupId>org.allbinary</groupId><artifactId>J2MEJsInteropCompatibilityJavaLibraryRs</artifactId><version>1.0.0-SNAPSHOT</version></dependency></dependencies>
+        <dependency>
+            <groupId>org.allbinary</groupId>
+            <artifactId>J2MEJsInteropCompatibilityJavaLibraryRs</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
-    <profiles><profile><id>rust-ignore-errors</id><activation><property><name>rust.fail.on.error</name><value>false</value></property></activation><build><plugins><plugin><groupId>org.codehaus.mojo</groupId><artifactId>exec-maven-plugin</artifactId><executions><execution><id>compile-rust-sources</id><configuration><successCodes><successCode>0</successCode><successCode>101</successCode></successCodes></configuration></execution></executions></plugin></plugins></build></profile></profiles><build>
+    <profiles>
+        <profile>
+            <id>rust-ignore-errors</id>
+            <activation>
+                <property>
+                    <name>rust.fail.on.error</name>
+                    <value>false</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>compile-rust-sources</id>
+                                <configuration>
+                                    <successCodes>
+                                        <successCode>0</successCode>
+                                        <successCode>101</successCode>
+                                    </successCodes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    <build>
         <plugins>
             <!-- 
             //Use this when not using the plugin
@@ -131,7 +176,62 @@
                     </execution>
                 </executions>
             </plugin>
-        <plugin><groupId>org.codehaus.mojo</groupId><artifactId>exec-maven-plugin</artifactId><version>3.5.0</version><executions><execution><id>compile-rust-sources</id><phase>compile</phase><goals><goal>exec</goal></goals><configuration><executable>${cargo.executable}</executable><workingDirectory>${project.basedir}</workingDirectory><environmentVariables><ALLBINARY_RUST_DEPENDENCY_SOURCE_PATHS>${rust.dependency.source.paths}</ALLBINARY_RUST_DEPENDENCY_SOURCE_PATHS></environmentVariables><arguments><argument>build</argument><argument>--manifest-path</argument><argument>${project.basedir}/Cargo.toml</argument><argument>--profile</argument><argument>${cargo.profile}</argument><argument>--target-dir</argument><argument>${cargo.target.dir}</argument></arguments></configuration></execution></executions></plugin><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-resources-plugin</artifactId><version>3.3.1</version><executions><execution><id>copy-rust-library</id><phase>process-classes</phase><goals><goal>copy-resources</goal></goals><configuration><outputDirectory>${project.build.outputDirectory}/META-INF/rust</outputDirectory><resources><resource><directory>${cargo.target.dir}/${cargo.profile}</directory><includes><include>*.rlib</include></includes></resource></resources></configuration></execution></executions></plugin></plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>compile-rust-sources</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${cargo.executable}</executable>
+                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <environmentVariables>
+                                <ALLBINARY_RUST_DEPENDENCY_SOURCE_PATHS>${rust.dependency.source.paths}</ALLBINARY_RUST_DEPENDENCY_SOURCE_PATHS>
+                            </environmentVariables>
+                            <arguments>
+                                <argument>build</argument>
+                                <argument>--manifest-path</argument>
+                                <argument>${project.basedir}/Cargo.toml</argument>
+                                <argument>--profile</argument>
+                                <argument>${cargo.profile}</argument>
+                                <argument>--target-dir</argument>
+                                <argument>${cargo.target.dir}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-rust-library</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/META-INF/rust</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${cargo.target.dir}/${cargo.profile}</directory>
+                                    <includes>
+                                        <include>*.rlib</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
 
     </build>
 

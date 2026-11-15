@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct NullThread {
 }
 
-thread_local! { pub static NullThread_NULL_THREAD: Option<Rc<RefCell<Thread>>> = Thread::new(); }
+pub static NullThread_NULL_THREAD: crate::JavaStatic<Option<Rc<RefCell<Thread>>>> = crate::JavaStatic::new(|| Thread::new());
 
 impl NullThread {
 

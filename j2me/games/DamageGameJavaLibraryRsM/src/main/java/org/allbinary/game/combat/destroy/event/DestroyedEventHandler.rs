@@ -40,7 +40,7 @@ pub struct DestroyedEventHandler {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static DestroyedEventHandler_instance: Option<Rc<RefCell<DestroyedEventHandler>>> = DestroyedEventHandler::new(); }
+pub static DestroyedEventHandler_instance: crate::JavaStatic<Option<Rc<RefCell<DestroyedEventHandler>>>> = crate::JavaStatic::new(|| DestroyedEventHandler::new());
 
 impl DestroyedEventHandler {
     

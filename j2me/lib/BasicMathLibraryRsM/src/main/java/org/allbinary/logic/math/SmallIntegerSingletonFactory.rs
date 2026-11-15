@@ -40,7 +40,7 @@ pub struct SmallIntegerSingletonFactory {
     pub lastNegativeMin: i32,
 }
 
-thread_local! { pub static SmallIntegerSingletonFactory_instance: Option<Rc<RefCell<SmallIntegerSingletonFactory>>> = SmallIntegerSingletonFactory::new(); }
+pub static SmallIntegerSingletonFactory_instance: crate::JavaStatic<Option<Rc<RefCell<SmallIntegerSingletonFactory>>>> = crate::JavaStatic::new(|| SmallIntegerSingletonFactory::new());
 
 impl SmallIntegerSingletonFactory {
 

@@ -39,11 +39,11 @@ macro_rules! jcall {
 pub struct ChangedPixelsUtil {
 }
 
-thread_local! { pub static ChangedPixelsUtil_START_X: i32 = 0; }
-thread_local! { pub static ChangedPixelsUtil_START_Y: i32 = 0; }
-thread_local! { pub static ChangedPixelsUtil_OFFSET: i32 = 0; }
-thread_local! { pub static ChangedPixelsUtil_SCAN_SIZE: i32 = 0; }
-thread_local! { pub static ChangedPixelsUtil_CLEAR_INT_ARRAY: Vec<i32> = vec![0; (1800 * 1600) as usize]; }
+pub static ChangedPixelsUtil_START_X: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0);
+pub static ChangedPixelsUtil_START_Y: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0);
+pub static ChangedPixelsUtil_OFFSET: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0);
+pub static ChangedPixelsUtil_SCAN_SIZE: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0);
+pub static ChangedPixelsUtil_CLEAR_INT_ARRAY: crate::JavaStatic<Vec<i32>> = crate::JavaStatic::new(|| vec![0; (1800 * 1600) as usize]);
 
 impl ChangedPixelsUtil {
 

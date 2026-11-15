@@ -35,7 +35,7 @@ pub struct MirrorImageUtil {
     pub imageUtil: Option<Rc<RefCell<ImageUtil>>>,
 }
 
-thread_local! { pub static MirrorImageUtil_instance: Option<Rc<RefCell<MirrorImageUtil>>> = MirrorImageUtil::new(); }
+pub static MirrorImageUtil_instance: crate::JavaStatic<Option<Rc<RefCell<MirrorImageUtil>>>> = crate::JavaStatic::new(|| MirrorImageUtil::new());
 
 impl MirrorImageUtil {
 

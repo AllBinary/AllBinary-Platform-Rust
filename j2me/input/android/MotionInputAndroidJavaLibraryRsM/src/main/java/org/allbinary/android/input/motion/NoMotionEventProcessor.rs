@@ -30,7 +30,7 @@ pub struct NoMotionEventProcessor {
     pub base: MotionEventProcessor,
 }
 
-thread_local! { pub static NoMotionEventProcessor_SINGLETON: Option<Rc<RefCell<dyn crate::org::allbinary::android::input::motion::MotionEventProcessor::MotionEventProcessorDyn>>> = MotionEventProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::android::input::motion::MotionEventProcessor::MotionEventProcessorDyn>>); }
+pub static NoMotionEventProcessor_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::android::input::motion::MotionEventProcessor::MotionEventProcessorDyn>>>> = crate::JavaStatic::new(|| MotionEventProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::android::input::motion::MotionEventProcessor::MotionEventProcessorDyn>>));
 
 impl NoMotionEventProcessor {
 

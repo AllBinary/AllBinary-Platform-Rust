@@ -30,7 +30,7 @@ pub struct NoMovementFactory {
     pub movement: Option<Rc<RefCell<dyn crate::org::allbinary::physics::movement::Movement::MovementDyn>>>,
 }
 
-thread_local! { pub static NoMovementFactory_instance: Option<Rc<RefCell<NoMovementFactory>>> = NoMovementFactory::new(); }
+pub static NoMovementFactory_instance: crate::JavaStatic<Option<Rc<RefCell<NoMovementFactory>>>> = crate::JavaStatic::new(|| NoMovementFactory::new());
 
 impl NoMovementFactory {
 

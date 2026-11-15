@@ -33,7 +33,7 @@ pub struct ShakeEventFactory {
     pub LARGE: Option<Rc<RefCell<ShakeEvent>>>,
 }
 
-thread_local! { pub static ShakeEventFactory_instance: Option<Rc<RefCell<ShakeEventFactory>>> = ShakeEventFactory::new(); }
+pub static ShakeEventFactory_instance: crate::JavaStatic<Option<Rc<RefCell<ShakeEventFactory>>>> = crate::JavaStatic::new(|| ShakeEventFactory::new());
 
 impl ShakeEventFactory {
 

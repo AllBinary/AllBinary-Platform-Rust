@@ -44,7 +44,7 @@ pub struct NullRTSLayer {
     pub base: NullPathFindingLayer,
 }
 
-thread_local! { pub static NullRTSLayer_NULL_RTS_LAYER: Option<Rc<RefCell<NullRTSLayer>>> = NullRTSLayer::new(); }
+pub static NullRTSLayer_NULL_RTS_LAYER: crate::JavaStatic<Option<Rc<RefCell<NullRTSLayer>>>> = crate::JavaStatic::new(|| NullRTSLayer::new());
 // impl RTSPlayerLayerInterface for NullRTSLayer with the methods of the trait
 impl crate::org::allbinary::game::identification::GroupInterfaceCompositeInterface::GroupInterfaceCompositeInterface for NullRTSLayer {
     fn getGroupInterface(&mut self) -> Vec<Option<Rc<RefCell<crate::org::allbinary::game::identification::Group::Group>>>> { crate::org::allbinary::game::layer::NullPathFindingLayer::NullPathFindingLayer::getGroupInterface(crate::org::allbinary::game::layer::NullPathFindingLayer::NullPathFindingLayerDyn::as_NullPathFindingLayer_mut(self)) }

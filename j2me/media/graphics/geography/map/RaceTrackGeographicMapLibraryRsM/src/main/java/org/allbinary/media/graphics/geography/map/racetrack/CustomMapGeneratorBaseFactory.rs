@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct CustomMapGeneratorBaseFactory {
 }
 
-thread_local! { pub static CustomMapGeneratorBaseFactory_instance: Option<Rc<RefCell<dyn CustomMapGeneratorBaseFactoryDyn>>> = CustomMapGeneratorBaseFactory::new().map(|reference| reference as Rc<RefCell<dyn CustomMapGeneratorBaseFactoryDyn>>); }
+pub static CustomMapGeneratorBaseFactory_instance: crate::JavaStatic<Option<Rc<RefCell<dyn CustomMapGeneratorBaseFactoryDyn>>>> = crate::JavaStatic::new(|| CustomMapGeneratorBaseFactory::new().map(|reference| reference as Rc<RefCell<dyn CustomMapGeneratorBaseFactoryDyn>>));
 
 impl CustomMapGeneratorBaseFactory {
 

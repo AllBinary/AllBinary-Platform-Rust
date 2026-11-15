@@ -56,8 +56,8 @@ pub struct AllBinaryLayer {
     pub viewPosition: Option<Rc<RefCell<dyn crate::org::allbinary::view::ViewPositionBase::ViewPositionBaseDyn>>>,
 }
 
-thread_local! { pub static AllBinaryLayer_NULL_ALLBINARY_LAYER: Option<Rc<RefCell<dyn AllBinaryLayerDyn>>> = AllBinaryLayer::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::org::allbinary::graphics::RectangleFactory::RectangleFactory_SINGLETON.with(Clone::clone).clone(), crate::org::allbinary::view::ViewPositionBase::ViewPositionBase_NULL_VIEW_POSITION.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn AllBinaryLayerDyn>>); }
-thread_local! { pub static AllBinaryLayer_TYPE: String = String::from("Type: "); }
+pub static AllBinaryLayer_NULL_ALLBINARY_LAYER: crate::JavaStatic<Option<Rc<RefCell<dyn AllBinaryLayerDyn>>>> = crate::JavaStatic::new(|| AllBinaryLayer::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::org::allbinary::graphics::RectangleFactory::RectangleFactory_SINGLETON.with(Clone::clone).clone(), crate::org::allbinary::view::ViewPositionBase::ViewPositionBase_NULL_VIEW_POSITION.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn AllBinaryLayerDyn>>));
+pub static AllBinaryLayer_TYPE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Type: "));
 impl LayerInterface for AllBinaryLayer {
     fn getHeight(&mut self) -> i32 { Self::getHeight(self) }
     fn getWidth(&mut self) -> i32 { Self::getWidth(self) }

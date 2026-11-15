@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct NullOpenGLTextureProcessor {
 }
 
-thread_local! { pub static NullOpenGLTextureProcessor_instance: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::shader::OpenGLObject3dProcessor::OpenGLObject3dProcessorDyn>>> = OpenGLObject3dProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::shader::OpenGLObject3dProcessor::OpenGLObject3dProcessorDyn>>); }
+pub static NullOpenGLTextureProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::shader::OpenGLObject3dProcessor::OpenGLObject3dProcessorDyn>>>> = crate::JavaStatic::new(|| OpenGLObject3dProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::shader::OpenGLObject3dProcessor::OpenGLObject3dProcessorDyn>>));
 
 impl NullOpenGLTextureProcessor {
 

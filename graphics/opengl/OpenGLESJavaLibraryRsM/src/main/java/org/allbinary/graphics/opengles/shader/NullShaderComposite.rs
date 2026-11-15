@@ -38,12 +38,12 @@ pub struct NullShaderComposite {
     pub base: ShaderComposite,
 }
 
-thread_local! { pub static NullShaderComposite_instance: Option<Rc<RefCell<NullShaderComposite>>> = NullShaderComposite::new({ let java_field = jcall!(OpenGLCapabilities::getInstance()).VERSION_2_0.clone(); java_field }.clone(), vec![Shader::new(), Shader::new()], CompositeShaderUpdater::getInstance(), ShaderInitializer::getInstance(), ModelViewProjection::getInstance(), NullOpenGLProcessorFactory::getInstance(), NullOpenGLProcessorFactory::getInstance(), NullOpenGLProcessorFactory::getInstance()) /* Java anonymous class body: implement it as a named type
+pub static NullShaderComposite_instance: crate::JavaStatic<Option<Rc<RefCell<NullShaderComposite>>>> = crate::JavaStatic::new(|| NullShaderComposite::new({ let java_field = jcall!(OpenGLCapabilities::getInstance()).VERSION_2_0.clone(); java_field }.clone(), vec![Shader::new(), Shader::new()], CompositeShaderUpdater::getInstance(), ShaderInitializer::getInstance(), ModelViewProjection::getInstance(), NullOpenGLProcessorFactory::getInstance(), NullOpenGLProcessorFactory::getInstance(), NullOpenGLProcessorFactory::getInstance()) /* Java anonymous class body: implement it as a named type
         
 
         pub fn init(&mut self, mut gl: Option<Rc<RefCell<dyn GL10>>>) {
         }
-*/; }
+*/);
 
 impl NullShaderComposite {
     

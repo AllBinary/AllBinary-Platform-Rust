@@ -30,7 +30,7 @@ pub struct CloseLoopRaceTrackGeographicMapCellTypeFactory {
     pub base: RaceTrackGeographicMapCellTypeFactory,
 }
 
-thread_local! { pub static CloseLoopRaceTrackGeographicMapCellTypeFactory_instanceC: Option<Rc<RefCell<CloseLoopRaceTrackGeographicMapCellTypeFactory>>> = CloseLoopRaceTrackGeographicMapCellTypeFactory::new(); }
+pub static CloseLoopRaceTrackGeographicMapCellTypeFactory_instanceC: crate::JavaStatic<Option<Rc<RefCell<CloseLoopRaceTrackGeographicMapCellTypeFactory>>>> = crate::JavaStatic::new(|| CloseLoopRaceTrackGeographicMapCellTypeFactory::new());
 
 impl CloseLoopRaceTrackGeographicMapCellTypeFactory {
     

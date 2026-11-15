@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct PointHelper {
 }
 
-thread_local! { pub static PointHelper_two: f64 = 2.0; }
+pub static PointHelper_two: crate::JavaStatic<f64> = crate::JavaStatic::new(|| 2.0);
 
 impl PointHelper {
 

@@ -18,7 +18,7 @@ macro_rules! jcall {
 pub struct OpenGLGLU {
 }
 
-thread_local! { pub static OpenGLGLU_instance: Option<Rc<RefCell<OpenGLGLU>>> = OpenGLGLU::new(); }
+pub static OpenGLGLU_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLGLU>>>> = crate::JavaStatic::new(|| OpenGLGLU::new());
 
 impl OpenGLGLU {
 

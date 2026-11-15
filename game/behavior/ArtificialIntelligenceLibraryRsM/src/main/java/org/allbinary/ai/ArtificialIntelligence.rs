@@ -31,8 +31,8 @@ macro_rules! jcall {
 pub struct ArtificialIntelligence {
 }
 
-thread_local! { pub static ArtificialIntelligence_AI_ID: i32 = 2; }
-thread_local! { pub static ArtificialIntelligence_instance: Option<Rc<RefCell<dyn ArtificialIntelligenceDyn>>> = ArtificialIntelligence::new().map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceDyn>>); }
+pub static ArtificialIntelligence_AI_ID: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 2);
+pub static ArtificialIntelligence_instance: crate::JavaStatic<Option<Rc<RefCell<dyn ArtificialIntelligenceDyn>>>> = crate::JavaStatic::new(|| ArtificialIntelligence::new().map(|reference| reference as Rc<RefCell<dyn ArtificialIntelligenceDyn>>));
 impl ArtificialIntelligenceInterface for ArtificialIntelligence {
     fn processAI(&mut self, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, layerManager) }
 }

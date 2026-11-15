@@ -44,9 +44,9 @@ pub struct BasePatrolAI {
     pub keyDirection: i32,
 }
 
-thread_local! { pub static BasePatrolAI_MAX_DISTANCE: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(2); }
-thread_local! { pub static BasePatrolAI_DIRECTION_ARRAY: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(3); }
-thread_local! { pub static BasePatrolAI_FIRING_DISTANCE: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(4); }
+pub static BasePatrolAI_MAX_DISTANCE: crate::JavaStatic<Option<i32>> = crate::JavaStatic::new(|| jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(2));
+pub static BasePatrolAI_DIRECTION_ARRAY: crate::JavaStatic<Option<i32>> = crate::JavaStatic::new(|| jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(3));
+pub static BasePatrolAI_FIRING_DISTANCE: crate::JavaStatic<Option<i32>> = crate::JavaStatic::new(|| jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(4));
 pub static mut BasePatrolAI_SPEED: std::cell::LazyCell<Option<i32>> = std::cell::LazyCell::new(|| jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(5));
 impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntelligenceInterface for BasePatrolAI {
     fn processAI(&mut self, p1: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { crate::org::allbinary::game::ai::BasicAI::BasicAI::processAI(crate::org::allbinary::game::ai::BasicAI::BasicAIDyn::as_BasicAI_mut(self), p1) }

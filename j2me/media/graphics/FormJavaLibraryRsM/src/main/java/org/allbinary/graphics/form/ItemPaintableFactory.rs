@@ -32,7 +32,7 @@ pub struct ItemPaintableFactory {
     pub base: ItemPaintable,
 }
 
-thread_local! { pub static ItemPaintableFactory_instance: Option<Rc<RefCell<dyn ItemPaintableFactoryDyn>>> = ItemPaintableFactory::new().map(|reference| reference as Rc<RefCell<dyn ItemPaintableFactoryDyn>>); }
+pub static ItemPaintableFactory_instance: crate::JavaStatic<Option<Rc<RefCell<dyn ItemPaintableFactoryDyn>>>> = crate::JavaStatic::new(|| ItemPaintableFactory::new().map(|reference| reference as Rc<RefCell<dyn ItemPaintableFactoryDyn>>));
 
 impl ItemPaintableFactory {
 

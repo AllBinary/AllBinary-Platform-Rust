@@ -30,7 +30,7 @@ pub struct StyleData {
     pub NAMEMAXLEN: i32,
 }
 
-thread_local! { pub static StyleData_instance: Option<Rc<RefCell<StyleData>>> = StyleData::new(); }
+pub static StyleData_instance: crate::JavaStatic<Option<Rc<RefCell<StyleData>>>> = crate::JavaStatic::new(|| StyleData::new());
 
 impl StyleData {
 

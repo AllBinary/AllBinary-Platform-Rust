@@ -46,7 +46,7 @@ pub struct GameFeatureFormUtil {
     pub meUtil: Option<Rc<RefCell<MEUtil>>>,
 }
 
-thread_local! { pub static GameFeatureFormUtil_instance: Option<Rc<RefCell<GameFeatureFormUtil>>> = GameFeatureFormUtil::new(); }
+pub static GameFeatureFormUtil_instance: crate::JavaStatic<Option<Rc<RefCell<GameFeatureFormUtil>>>> = crate::JavaStatic::new(|| GameFeatureFormUtil::new());
 
 impl GameFeatureFormUtil {
 

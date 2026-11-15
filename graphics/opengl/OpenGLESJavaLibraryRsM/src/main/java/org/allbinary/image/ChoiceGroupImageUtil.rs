@@ -35,7 +35,7 @@ macro_rules! jcall {
 pub struct ChoiceGroupImageUtil {
 }
 
-thread_local! { pub static ChoiceGroupImageUtil_instance: Option<Rc<RefCell<ChoiceGroupImageUtil>>> = ChoiceGroupImageUtil::new(); }
+pub static ChoiceGroupImageUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ChoiceGroupImageUtil>>>> = crate::JavaStatic::new(|| ChoiceGroupImageUtil::new());
 
 impl ChoiceGroupImageUtil {
 

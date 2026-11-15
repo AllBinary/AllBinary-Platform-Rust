@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct AllBinaryThreedTiledLayerFactory {
 }
 
-thread_local! { pub static AllBinaryThreedTiledLayerFactory_instance: Option<Rc<RefCell<AllBinaryThreedTiledLayerFactory>>> = AllBinaryThreedTiledLayerFactory::new(); }
+pub static AllBinaryThreedTiledLayerFactory_instance: crate::JavaStatic<Option<Rc<RefCell<AllBinaryThreedTiledLayerFactory>>>> = crate::JavaStatic::new(|| AllBinaryThreedTiledLayerFactory::new());
 
 impl AllBinaryThreedTiledLayerFactory {
 

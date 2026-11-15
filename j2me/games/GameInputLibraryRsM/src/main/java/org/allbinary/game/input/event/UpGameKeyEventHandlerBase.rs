@@ -41,8 +41,8 @@ pub struct UpGameKeyEventHandlerBase {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static UpGameKeyEventHandlerBase_TOTAL_LISTENERS: String = String::from(" Total PlayerGameInput Listeners: "); }
-thread_local! { pub static UpGameKeyEventHandlerBase_LISTENER_LABEL: String = String::from(" PlayerGameInput Listener: "); }
+pub static UpGameKeyEventHandlerBase_TOTAL_LISTENERS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(" Total PlayerGameInput Listeners: "));
+pub static UpGameKeyEventHandlerBase_LISTENER_LABEL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(" PlayerGameInput Listener: "));
 
 impl UpGameKeyEventHandlerBase {
     

@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct NoButtonsTouchInputFactory {
 }
 
-thread_local! { pub static NoButtonsTouchInputFactory_instance: Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::BaseTouchInput::BaseTouchInputDyn>>> = BaseTouchInput::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::button::BaseTouchInput::BaseTouchInputDyn>>); }
+pub static NoButtonsTouchInputFactory_instance: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::BaseTouchInput::BaseTouchInputDyn>>>> = crate::JavaStatic::new(|| BaseTouchInput::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::button::BaseTouchInput::BaseTouchInputDyn>>));
 
 impl NoButtonsTouchInputFactory {
 

@@ -33,7 +33,7 @@ pub struct InventoryEntityFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static InventoryEntityFactory_instance: Option<Rc<RefCell<InventoryEntityFactory>>> = InventoryEntityFactory::new(); }
+pub static InventoryEntityFactory_instance: crate::JavaStatic<Option<Rc<RefCell<InventoryEntityFactory>>>> = crate::JavaStatic::new(|| InventoryEntityFactory::new());
 
 impl InventoryEntityFactory {
 

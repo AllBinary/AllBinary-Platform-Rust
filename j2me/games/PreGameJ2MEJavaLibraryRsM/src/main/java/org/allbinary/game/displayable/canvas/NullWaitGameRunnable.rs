@@ -30,7 +30,7 @@ pub struct NullWaitGameRunnable {
     pub base: GameRunnable,
 }
 
-thread_local! { pub static NullWaitGameRunnable_instance: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>> = NullWaitGameRunnable::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>); }
+pub static NullWaitGameRunnable_instance: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>>> = crate::JavaStatic::new(|| NullWaitGameRunnable::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>));
 
 impl NullWaitGameRunnable {
 

@@ -53,7 +53,7 @@ pub struct HighScoreUtil {
     pub firstTime: bool,
 }
 
-thread_local! { pub static HighScoreUtil_SUBMIT_TEXTBOX_COMMAND: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>> = Command::new4(String::from("Submit"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>); }
+pub static HighScoreUtil_SUBMIT_TEXTBOX_COMMAND: crate::JavaStatic<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>> = crate::JavaStatic::new(|| Command::new4(String::from("Submit"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 1).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>));
 impl HighScoresResultsListener for HighScoreUtil {
     fn setHighScoresArray(&mut self, mut highScoresArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>>>) { Self::setHighScoresArray(self, highScoresArray) }
 }

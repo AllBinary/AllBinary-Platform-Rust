@@ -39,7 +39,7 @@ macro_rules! jcall {
 pub struct NullVehicleLayer {
 }
 
-thread_local! { pub static NullVehicleLayer_NULL_VEHICLE_LAYER: Option<Rc<RefCell<NullVehicleLayer>>> = NullVehicleLayer::new(); }
+pub static NullVehicleLayer_NULL_VEHICLE_LAYER: crate::JavaStatic<Option<Rc<RefCell<NullVehicleLayer>>>> = crate::JavaStatic::new(|| NullVehicleLayer::new());
 impl VehicleLayerInterface for NullVehicleLayer {
     fn getGameKeyEventList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::getGameKeyEventList(self) }
     fn getSpeedBasicDecimal(&mut self) -> Option<Rc<RefCell<BasicDecimal>>> { Self::getSpeedBasicDecimal(self) }

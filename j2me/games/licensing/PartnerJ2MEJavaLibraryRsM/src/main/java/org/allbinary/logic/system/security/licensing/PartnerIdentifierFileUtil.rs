@@ -37,7 +37,7 @@ pub struct PartnerIdentifierFileUtil {
     pub FILE_NAME: String,
 }
 
-thread_local! { pub static PartnerIdentifierFileUtil_instance: Option<Rc<RefCell<PartnerIdentifierFileUtil>>> = PartnerIdentifierFileUtil::new(); }
+pub static PartnerIdentifierFileUtil_instance: crate::JavaStatic<Option<Rc<RefCell<PartnerIdentifierFileUtil>>>> = crate::JavaStatic::new(|| PartnerIdentifierFileUtil::new());
 
 impl PartnerIdentifierFileUtil {
 

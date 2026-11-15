@@ -43,7 +43,7 @@ pub struct ImageSwtRotationUtil {
     pub NO_COPY: String,
 }
 
-thread_local! { pub static ImageSwtRotationUtil_instance: Option<Rc<RefCell<ImageSwtRotationUtil>>> = ImageSwtRotationUtil::new(); }
+pub static ImageSwtRotationUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImageSwtRotationUtil>>>> = crate::JavaStatic::new(|| ImageSwtRotationUtil::new());
 
 impl ImageSwtRotationUtil {
 

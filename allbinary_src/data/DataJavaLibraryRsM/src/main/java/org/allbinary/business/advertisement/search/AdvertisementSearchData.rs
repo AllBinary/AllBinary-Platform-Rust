@@ -32,7 +32,7 @@ pub struct AdvertisementSearchData {
     pub POPULARITY: String,
 }
 
-thread_local! { pub static AdvertisementSearchData_instance: Option<Rc<RefCell<AdvertisementSearchData>>> = AdvertisementSearchData::new(); }
+pub static AdvertisementSearchData_instance: crate::JavaStatic<Option<Rc<RefCell<AdvertisementSearchData>>>> = crate::JavaStatic::new(|| AdvertisementSearchData::new());
 
 impl AdvertisementSearchData {
 

@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct NotificationBuilder {
 }
 
-thread_local! { pub static NotificationBuilder_NULL_NOTIFICATION_BUILDER: Option<Rc<RefCell<dyn NotificationBuilderDyn>>> = NotificationBuilder::new().map(|reference| reference as Rc<RefCell<dyn NotificationBuilderDyn>>); }
+pub static NotificationBuilder_NULL_NOTIFICATION_BUILDER: crate::JavaStatic<Option<Rc<RefCell<dyn NotificationBuilderDyn>>>> = crate::JavaStatic::new(|| NotificationBuilder::new().map(|reference| reference as Rc<RefCell<dyn NotificationBuilderDyn>>));
 
 impl NotificationBuilder {
 

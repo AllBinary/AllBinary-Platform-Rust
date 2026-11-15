@@ -31,7 +31,7 @@ pub struct GravityUtil {
     pub MAX_GAME_VELOCITY: i32,
 }
 
-thread_local! { pub static GravityUtil_instance: Option<Rc<RefCell<GravityUtil>>> = GravityUtil::new(); }
+pub static GravityUtil_instance: crate::JavaStatic<Option<Rc<RefCell<GravityUtil>>>> = crate::JavaStatic::new(|| GravityUtil::new());
 
 impl GravityUtil {
 

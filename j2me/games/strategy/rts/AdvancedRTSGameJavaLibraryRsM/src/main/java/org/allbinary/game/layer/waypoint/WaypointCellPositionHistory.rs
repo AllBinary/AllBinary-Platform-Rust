@@ -34,7 +34,7 @@ pub struct WaypointCellPositionHistory {
     pub layerList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static WaypointCellPositionHistory_SINGLETON: Option<Rc<RefCell<WaypointCellPositionHistory>>> = WaypointCellPositionHistory::new(); }
+pub static WaypointCellPositionHistory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<WaypointCellPositionHistory>>>> = crate::JavaStatic::new(|| WaypointCellPositionHistory::new());
 
 impl WaypointCellPositionHistory {
 

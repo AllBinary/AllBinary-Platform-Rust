@@ -36,7 +36,7 @@ pub struct PATH_GLOBALS {
     pub BACKUP_PATH: String,
 }
 
-thread_local! { pub static PATH_GLOBALS_instance: Option<Rc<RefCell<PATH_GLOBALS>>> = PATH_GLOBALS::new(); }
+pub static PATH_GLOBALS_instance: crate::JavaStatic<Option<Rc<RefCell<PATH_GLOBALS>>>> = crate::JavaStatic::new(|| PATH_GLOBALS::new());
 
 impl PATH_GLOBALS {
 

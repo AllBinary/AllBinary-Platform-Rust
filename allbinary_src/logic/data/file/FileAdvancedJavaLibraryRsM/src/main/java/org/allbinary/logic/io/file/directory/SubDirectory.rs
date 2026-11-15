@@ -35,7 +35,7 @@ pub struct SubDirectory {
     pub directory: Option<Rc<RefCell<Directory>>>,
 }
 
-thread_local! { pub static SubDirectory_instance: Option<Rc<RefCell<SubDirectory>>> = SubDirectory::new(); }
+pub static SubDirectory_instance: crate::JavaStatic<Option<Rc<RefCell<SubDirectory>>>> = crate::JavaStatic::new(|| SubDirectory::new());
 
 impl SubDirectory {
     

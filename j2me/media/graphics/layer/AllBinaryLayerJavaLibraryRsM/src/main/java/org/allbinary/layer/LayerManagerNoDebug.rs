@@ -30,7 +30,7 @@ pub struct LayerManagerNoDebug {
     pub base: LayerManagerLoggingBase,
 }
 
-thread_local! { pub static LayerManagerNoDebug_instance: Option<Rc<RefCell<LayerManagerNoDebug>>> = LayerManagerNoDebug::new(); }
+pub static LayerManagerNoDebug_instance: crate::JavaStatic<Option<Rc<RefCell<LayerManagerNoDebug>>>> = crate::JavaStatic::new(|| LayerManagerNoDebug::new());
 
 impl LayerManagerNoDebug {
 

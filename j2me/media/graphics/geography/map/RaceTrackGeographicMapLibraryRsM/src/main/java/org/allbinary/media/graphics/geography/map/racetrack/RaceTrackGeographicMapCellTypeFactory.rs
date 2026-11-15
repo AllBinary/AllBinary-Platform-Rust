@@ -44,7 +44,7 @@ pub struct RaceTrackGeographicMapCellTypeFactory {
     pub FINISH_LINE_ROAD_CELL_TYPE: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>,
 }
 
-thread_local! { pub static RaceTrackGeographicMapCellTypeFactory_instanceC: Option<Rc<RefCell<dyn RaceTrackGeographicMapCellTypeFactoryDyn>>> = RaceTrackGeographicMapCellTypeFactory::new().map(|reference| reference as Rc<RefCell<dyn RaceTrackGeographicMapCellTypeFactoryDyn>>); }
+pub static RaceTrackGeographicMapCellTypeFactory_instanceC: crate::JavaStatic<Option<Rc<RefCell<dyn RaceTrackGeographicMapCellTypeFactoryDyn>>>> = crate::JavaStatic::new(|| RaceTrackGeographicMapCellTypeFactory::new().map(|reference| reference as Rc<RefCell<dyn RaceTrackGeographicMapCellTypeFactoryDyn>>));
 
 impl RaceTrackGeographicMapCellTypeFactory {
     

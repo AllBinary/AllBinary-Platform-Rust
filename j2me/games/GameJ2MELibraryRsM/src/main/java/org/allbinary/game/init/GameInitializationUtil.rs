@@ -40,7 +40,7 @@ pub struct GameInitializationUtil {
     pub EVENT: Option<Rc<RefCell<GameInitializedEvent>>>,
 }
 
-thread_local! { pub static GameInitializationUtil_instance: Option<Rc<RefCell<GameInitializationUtil>>> = GameInitializationUtil::new(); }
+pub static GameInitializationUtil_instance: crate::JavaStatic<Option<Rc<RefCell<GameInitializationUtil>>>> = crate::JavaStatic::new(|| GameInitializationUtil::new());
 
 impl GameInitializationUtil {
 

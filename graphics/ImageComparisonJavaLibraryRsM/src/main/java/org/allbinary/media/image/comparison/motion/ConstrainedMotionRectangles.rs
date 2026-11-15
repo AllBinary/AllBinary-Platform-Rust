@@ -41,7 +41,7 @@ pub struct ConstrainedMotionRectangles {
     pub motionRectangleConstraintsInterface: Option<Rc<RefCell<dyn MotionRectangleConstraintsInterface>>>,
 }
 
-thread_local! { pub static ConstrainedMotionRectangles_NAME: String = String::from("constrainedMotionRectangles_"); }
+pub static ConstrainedMotionRectangles_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("constrainedMotionRectangles_"));
 
 impl ConstrainedMotionRectangles {
     

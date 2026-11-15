@@ -33,7 +33,7 @@ pub struct BasicColorUtil {
     pub ffOpaque: bool,
 }
 
-thread_local! { pub static BasicColorUtil_instance: Option<Rc<RefCell<BasicColorUtil>>> = BasicColorUtil::new(); }
+pub static BasicColorUtil_instance: crate::JavaStatic<Option<Rc<RefCell<BasicColorUtil>>>> = crate::JavaStatic::new(|| BasicColorUtil::new());
 
 impl BasicColorUtil {
 

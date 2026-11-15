@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct ModifierBaseProcessor {
 }
 
-thread_local! { pub static ModifierBaseProcessor_instance: Option<Rc<RefCell<dyn ModifierBaseProcessorDyn>>> = ModifierBaseProcessor::new().map(|reference| reference as Rc<RefCell<dyn ModifierBaseProcessorDyn>>); }
+pub static ModifierBaseProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<dyn ModifierBaseProcessorDyn>>>> = crate::JavaStatic::new(|| ModifierBaseProcessor::new().map(|reference| reference as Rc<RefCell<dyn ModifierBaseProcessorDyn>>));
 
 impl ModifierBaseProcessor {
 

@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct GameInputProcessor {
 }
 
-thread_local! { pub static GameInputProcessor_instance: Option<Rc<RefCell<dyn GameInputProcessorDyn>>> = GameInputProcessor::new().map(|reference| reference as Rc<RefCell<dyn GameInputProcessorDyn>>); }
+pub static GameInputProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<dyn GameInputProcessorDyn>>>> = crate::JavaStatic::new(|| GameInputProcessor::new().map(|reference| reference as Rc<RefCell<dyn GameInputProcessorDyn>>));
 
 impl GameInputProcessor {
 

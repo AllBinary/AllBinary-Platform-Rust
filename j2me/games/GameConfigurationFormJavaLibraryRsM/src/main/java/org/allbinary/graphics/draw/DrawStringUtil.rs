@@ -41,7 +41,7 @@ pub struct DrawStringUtil {
     pub anchor: i32,
 }
 
-thread_local! { pub static DrawStringUtil_instance: Option<Rc<RefCell<DrawStringUtil>>> = DrawStringUtil::new(); }
+pub static DrawStringUtil_instance: crate::JavaStatic<Option<Rc<RefCell<DrawStringUtil>>>> = crate::JavaStatic::new(|| DrawStringUtil::new());
 
 impl DrawStringUtil {
 

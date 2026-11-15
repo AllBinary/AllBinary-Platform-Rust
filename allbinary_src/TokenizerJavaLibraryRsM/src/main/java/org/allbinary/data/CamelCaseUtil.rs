@@ -37,7 +37,7 @@ pub struct CamelCaseUtil {
     pub commonSeps: Option<Rc<RefCell<CommonSeps>>>,
 }
 
-thread_local! { pub static CamelCaseUtil_instance: Option<Rc<RefCell<CamelCaseUtil>>> = CamelCaseUtil::new(); }
+pub static CamelCaseUtil_instance: crate::JavaStatic<Option<Rc<RefCell<CamelCaseUtil>>>> = crate::JavaStatic::new(|| CamelCaseUtil::new());
 
 impl CamelCaseUtil {
 

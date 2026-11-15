@@ -33,7 +33,7 @@ pub struct NoPlayer {
     pub base: BasicPlayer,
 }
 
-thread_local! { pub static NoPlayer_NO_PLAYER: Option<Rc<RefCell<NoPlayer>>> = NoPlayer::new(); }
+pub static NoPlayer_NO_PLAYER: crate::JavaStatic<Option<Rc<RefCell<NoPlayer>>>> = crate::JavaStatic::new(|| NoPlayer::new());
 impl crate::javax::microedition::media::Controllable::Controllable for NoPlayer {
     fn getControls(&mut self) -> Vec<Option<Rc<RefCell<dyn Control>>>> { Self::getControls(self) }
     fn getControl(&mut self, mut controlType: String) -> Option<Rc<RefCell<dyn Control>>> { Self::getControl(self, controlType) }

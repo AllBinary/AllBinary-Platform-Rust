@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct AboutCommandProcessor {
 }
 
-thread_local! { pub static AboutCommandProcessor_instance: Option<Rc<RefCell<AboutCommandProcessor>>> = AboutCommandProcessor::new(); }
+pub static AboutCommandProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<AboutCommandProcessor>>>> = crate::JavaStatic::new(|| AboutCommandProcessor::new());
 
 impl AboutCommandProcessor {
 

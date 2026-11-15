@@ -31,7 +31,7 @@ pub struct PreLoadPlatformImage {
     pub base: PlatformImage,
 }
 
-thread_local! { pub static PreLoadPlatformImage_instance: Option<Rc<RefCell<PreLoadPlatformImage>>> = PreLoadPlatformImage::new(); }
+pub static PreLoadPlatformImage_instance: crate::JavaStatic<Option<Rc<RefCell<PreLoadPlatformImage>>>> = crate::JavaStatic::new(|| PreLoadPlatformImage::new());
 
 impl PreLoadPlatformImage {
 

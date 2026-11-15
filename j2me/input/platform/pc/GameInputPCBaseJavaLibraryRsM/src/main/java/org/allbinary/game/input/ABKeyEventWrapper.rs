@@ -219,7 +219,7 @@ pub struct ABKeyEventWrapper {
     pub VK_UNDEFINED: i32,
 }
 
-thread_local! { pub static ABKeyEventWrapper_instance: Option<Rc<RefCell<ABKeyEventWrapper>>> = ABKeyEventWrapper::new(); }
+pub static ABKeyEventWrapper_instance: crate::JavaStatic<Option<Rc<RefCell<ABKeyEventWrapper>>>> = crate::JavaStatic::new(|| ABKeyEventWrapper::new());
 
 impl ABKeyEventWrapper {
 

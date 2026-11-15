@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct Waypoint2LogHelper {
 }
 
-thread_local! { pub static Waypoint2LogHelper_instance: Option<Rc<RefCell<dyn Waypoint2LogHelperDyn>>> = Waypoint2LogHelper::new().map(|reference| reference as Rc<RefCell<dyn Waypoint2LogHelperDyn>>); }
+pub static Waypoint2LogHelper_instance: crate::JavaStatic<Option<Rc<RefCell<dyn Waypoint2LogHelperDyn>>>> = crate::JavaStatic::new(|| Waypoint2LogHelper::new().map(|reference| reference as Rc<RefCell<dyn Waypoint2LogHelperDyn>>));
 
 impl Waypoint2LogHelper {
 

@@ -47,7 +47,7 @@ pub struct ImageUtil {
     pub CREATE_BUFFERED_IMAGE: String,
 }
 
-thread_local! { pub static ImageUtil_instance: Option<Rc<RefCell<ImageUtil>>> = ImageUtil::new(); }
+pub static ImageUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImageUtil>>>> = crate::JavaStatic::new(|| ImageUtil::new());
 
 impl ImageUtil {
     

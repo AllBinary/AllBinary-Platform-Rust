@@ -35,7 +35,7 @@ pub struct InputImageType {
 }
 
 pub static mut InputImageType_hashMap: std::cell::LazyCell<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashMap());
-thread_local! { pub static InputImageType_TYPE_VECTOR: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>); }
+pub static InputImageType_TYPE_VECTOR: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = crate::JavaStatic::new(|| BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
 pub static mut InputImageType_CAPTURE: std::cell::LazyCell<Option<Rc<RefCell<InputImageType>>>> = std::cell::LazyCell::new(|| InputImageType::new(String::from("Capture"), 0));
 pub static mut InputImageType_COMPARISON: std::cell::LazyCell<Option<Rc<RefCell<InputImageType>>>> = std::cell::LazyCell::new(|| InputImageType::new(String::from("Comparison"), 1));
 pub static mut InputImageType_MOTION: std::cell::LazyCell<Option<Rc<RefCell<InputImageType>>>> = std::cell::LazyCell::new(|| InputImageType::new(String::from("Motion"), 2));

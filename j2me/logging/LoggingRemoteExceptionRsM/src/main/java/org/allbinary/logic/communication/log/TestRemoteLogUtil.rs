@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct TestRemoteLogUtil {
 }
 
-thread_local! { pub static TestRemoteLogUtil_PATH: String = String::from("G:\\mnt\\bc\\mydev\\work\\allbinary_src\\licensing\\data\\"); }
+pub static TestRemoteLogUtil_PATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("G:\\mnt\\bc\\mydev\\work\\allbinary_src\\licensing\\data\\"));
 
 impl TestRemoteLogUtil {
 

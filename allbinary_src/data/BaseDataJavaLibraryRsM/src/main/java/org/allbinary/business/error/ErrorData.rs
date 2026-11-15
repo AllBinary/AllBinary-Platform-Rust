@@ -30,7 +30,7 @@ pub struct ErrorData {
     pub TEXT: String,
 }
 
-thread_local! { pub static ErrorData_instance: Option<Rc<RefCell<ErrorData>>> = ErrorData::new(); }
+pub static ErrorData_instance: crate::JavaStatic<Option<Rc<RefCell<ErrorData>>>> = crate::JavaStatic::new(|| ErrorData::new());
 
 impl ErrorData {
 

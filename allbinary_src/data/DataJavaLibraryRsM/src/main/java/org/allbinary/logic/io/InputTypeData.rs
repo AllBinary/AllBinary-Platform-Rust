@@ -29,7 +29,7 @@ pub struct InputTypeData {
     pub NAME: String,
 }
 
-thread_local! { pub static InputTypeData_instance: Option<Rc<RefCell<InputTypeData>>> = InputTypeData::new(); }
+pub static InputTypeData_instance: crate::JavaStatic<Option<Rc<RefCell<InputTypeData>>>> = crate::JavaStatic::new(|| InputTypeData::new());
 
 impl InputTypeData {
 

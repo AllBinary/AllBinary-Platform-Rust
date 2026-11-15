@@ -40,7 +40,7 @@ pub struct CompleteMotionGestureInputEventHandler {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static CompleteMotionGestureInputEventHandler_SINGLETON: Option<Rc<RefCell<CompleteMotionGestureInputEventHandler>>> = CompleteMotionGestureInputEventHandler::new(); }
+pub static CompleteMotionGestureInputEventHandler_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<CompleteMotionGestureInputEventHandler>>>> = crate::JavaStatic::new(|| CompleteMotionGestureInputEventHandler::new());
 
 impl CompleteMotionGestureInputEventHandler {
     

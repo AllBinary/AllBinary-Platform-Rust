@@ -32,7 +32,7 @@ pub struct ShaderInitializer {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static ShaderInitializer_instance: Option<Rc<RefCell<dyn ShaderInitializerDyn>>> = ShaderInitializer::new().map(|reference| reference as Rc<RefCell<dyn ShaderInitializerDyn>>); }
+pub static ShaderInitializer_instance: crate::JavaStatic<Option<Rc<RefCell<dyn ShaderInitializerDyn>>>> = crate::JavaStatic::new(|| ShaderInitializer::new().map(|reference| reference as Rc<RefCell<dyn ShaderInitializerDyn>>));
 
 impl ShaderInitializer {
 

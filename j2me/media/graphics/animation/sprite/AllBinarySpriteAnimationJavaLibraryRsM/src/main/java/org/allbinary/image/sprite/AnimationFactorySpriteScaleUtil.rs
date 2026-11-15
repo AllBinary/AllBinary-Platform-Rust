@@ -47,7 +47,7 @@ pub struct AnimationFactorySpriteScaleUtil {
     pub openGLESImageExclusionUtil: Option<Rc<RefCell<OpenGLESImageExclusionUtil>>>,
 }
 
-thread_local! { pub static AnimationFactorySpriteScaleUtil_instance: Option<Rc<RefCell<AnimationFactorySpriteScaleUtil>>> = AnimationFactorySpriteScaleUtil::new(); }
+pub static AnimationFactorySpriteScaleUtil_instance: crate::JavaStatic<Option<Rc<RefCell<AnimationFactorySpriteScaleUtil>>>> = crate::JavaStatic::new(|| AnimationFactorySpriteScaleUtil::new());
 
 impl AnimationFactorySpriteScaleUtil {
 

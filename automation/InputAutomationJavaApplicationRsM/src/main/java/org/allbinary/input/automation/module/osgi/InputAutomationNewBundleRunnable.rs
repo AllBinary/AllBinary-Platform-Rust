@@ -59,10 +59,10 @@ pub struct InputAutomationNewBundleRunnable {
     pub fileBasicArrayList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static InputAutomationNewBundleRunnable_FILE: String = String::from("file:"); }
-thread_local! { pub static InputAutomationNewBundleRunnable_JAR_DIR_PROP: String = String::from("org.knopflerfish.gosg.jars"); }
-thread_local! { pub static InputAutomationNewBundleRunnable_INPUT_AUTMATION_MODULE_BUNDLE_JAR_PATH: String = String::from("ia/auto"); }
-thread_local! { pub static InputAutomationNewBundleRunnable_MODULES_START_LEVEL: i32 = 8; }
+pub static InputAutomationNewBundleRunnable_FILE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("file:"));
+pub static InputAutomationNewBundleRunnable_JAR_DIR_PROP: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("org.knopflerfish.gosg.jars"));
+pub static InputAutomationNewBundleRunnable_INPUT_AUTMATION_MODULE_BUNDLE_JAR_PATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("ia/auto"));
+pub static InputAutomationNewBundleRunnable_MODULES_START_LEVEL: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 8);
 impl RunnableInterface for InputAutomationNewBundleRunnable {
     fn isRunning(&mut self) -> bool { Self::isRunning(self) }
     fn setRunning(&mut self, mut running: bool) { Self::setRunning(self, running) }

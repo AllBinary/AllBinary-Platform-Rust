@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct CaptionResources {
 }
 
-thread_local! { pub static CaptionResources_RESOURCE: String = String::from("/character_message_bubbled_box.png"); }
+pub static CaptionResources_RESOURCE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("/character_message_bubbled_box.png"));
 
 impl CaptionResources {
 

@@ -32,7 +32,7 @@ pub struct BasicDecimal {
     pub factorValue: i32,
 }
 
-thread_local! { pub static BasicDecimal_ZERO_BIGDECIMAL: Option<Rc<RefCell<BasicDecimal>>> = BasicDecimal::new(0); }
+pub static BasicDecimal_ZERO_BIGDECIMAL: crate::JavaStatic<Option<Rc<RefCell<BasicDecimal>>>> = crate::JavaStatic::new(|| BasicDecimal::new(0));
 
 impl BasicDecimal {
     

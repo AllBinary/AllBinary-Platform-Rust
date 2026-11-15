@@ -33,7 +33,7 @@ pub struct DisposalUtil {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static DisposalUtil_instance: Option<Rc<RefCell<DisposalUtil>>> = DisposalUtil::new(); }
+pub static DisposalUtil_instance: crate::JavaStatic<Option<Rc<RefCell<DisposalUtil>>>> = crate::JavaStatic::new(|| DisposalUtil::new());
 
 impl DisposalUtil {
 

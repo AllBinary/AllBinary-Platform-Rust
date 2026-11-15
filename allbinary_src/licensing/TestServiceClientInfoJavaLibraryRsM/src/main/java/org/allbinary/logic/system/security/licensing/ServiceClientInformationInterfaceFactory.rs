@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct ServiceClientInformationInterfaceFactory {
 }
 
-thread_local! { pub static ServiceClientInformationInterfaceFactory_instance: Option<Rc<RefCell<TestClientInformation>>> = TestClientInformation::new(); }
+pub static ServiceClientInformationInterfaceFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TestClientInformation>>>> = crate::JavaStatic::new(|| TestClientInformation::new());
 
 impl ServiceClientInformationInterfaceFactory {
 

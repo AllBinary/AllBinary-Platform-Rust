@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct AllBinaryMediaManagerShutdown {
 }
 
-thread_local! { pub static AllBinaryMediaManagerShutdown_instance: Option<Rc<RefCell<AllBinaryMediaManagerShutdown>>> = AllBinaryMediaManagerShutdown::new(); }
+pub static AllBinaryMediaManagerShutdown_instance: crate::JavaStatic<Option<Rc<RefCell<AllBinaryMediaManagerShutdown>>>> = crate::JavaStatic::new(|| AllBinaryMediaManagerShutdown::new());
 
 impl AllBinaryMediaManagerShutdown {
 

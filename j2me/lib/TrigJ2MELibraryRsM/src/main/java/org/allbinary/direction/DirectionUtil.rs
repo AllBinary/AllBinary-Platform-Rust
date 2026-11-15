@@ -34,7 +34,7 @@ pub struct DirectionUtil {
     pub directionArray2: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::math::Angle::AngleDyn>>>>,
 }
 
-thread_local! { pub static DirectionUtil_instance: Option<Rc<RefCell<DirectionUtil>>> = DirectionUtil::new(); }
+pub static DirectionUtil_instance: crate::JavaStatic<Option<Rc<RefCell<DirectionUtil>>>> = crate::JavaStatic::new(|| DirectionUtil::new());
 
 impl DirectionUtil {
 

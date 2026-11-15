@@ -35,7 +35,7 @@ pub struct AbCryptUtil {
     pub streamUtil: Option<Rc<RefCell<StreamUtil>>>,
 }
 
-thread_local! { pub static AbCryptUtil_instance: Option<Rc<RefCell<AbCryptUtil>>> = AbCryptUtil::new(); }
+pub static AbCryptUtil_instance: crate::JavaStatic<Option<Rc<RefCell<AbCryptUtil>>>> = crate::JavaStatic::new(|| AbCryptUtil::new());
 
 impl AbCryptUtil {
 

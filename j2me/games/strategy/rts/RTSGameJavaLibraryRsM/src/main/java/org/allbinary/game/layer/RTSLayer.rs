@@ -123,9 +123,9 @@ pub struct RTSLayer {
     pub layerDistanceUtil: Option<Rc<RefCell<LayerDistanceUtil>>>,
 }
 
-thread_local! { pub static RTSLayer_id: i32 = 0; }
-thread_local! { pub static RTSLayer_MAIN_INDEX: i32 = 0; }
-thread_local! { pub static RTSLayer_SECONDARY_INDEX: i32 = 1; }
+pub static RTSLayer_id: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0);
+pub static RTSLayer_MAIN_INDEX: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0);
+pub static RTSLayer_SECONDARY_INDEX: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 1);
 // impl TickableInterface for RTSLayer with the methods of the trait
 impl GameInputInterface for RTSLayer {
     fn processInput(&mut self, mut layerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processInput(self, layerManager) }

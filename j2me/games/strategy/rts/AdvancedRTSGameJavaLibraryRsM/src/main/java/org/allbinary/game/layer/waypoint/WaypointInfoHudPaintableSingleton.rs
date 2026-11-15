@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct WaypointInfoHudPaintableSingleton {
 }
 
-thread_local! { pub static WaypointInfoHudPaintableSingleton_instance: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointInfoHudPaintable::WaypointInfoHudPaintableDyn>>> = WaypointInfoHudPaintable::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointInfoHudPaintable::WaypointInfoHudPaintableDyn>>); }
+pub static WaypointInfoHudPaintableSingleton_instance: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointInfoHudPaintable::WaypointInfoHudPaintableDyn>>>> = crate::JavaStatic::new(|| WaypointInfoHudPaintable::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::waypoint::WaypointInfoHudPaintable::WaypointInfoHudPaintableDyn>>));
 
 impl WaypointInfoHudPaintableSingleton {
 

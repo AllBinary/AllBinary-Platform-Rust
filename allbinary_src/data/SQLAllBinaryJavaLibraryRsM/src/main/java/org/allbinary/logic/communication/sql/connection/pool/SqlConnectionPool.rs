@@ -50,7 +50,7 @@ pub struct SqlConnectionPool {
     pub METHOD_ADD: String,
 }
 
-thread_local! { pub static SqlConnectionPool_instance: Option<Rc<RefCell<SqlConnectionPool>>> = SqlConnectionPool::new(); }
+pub static SqlConnectionPool_instance: crate::JavaStatic<Option<Rc<RefCell<SqlConnectionPool>>>> = crate::JavaStatic::new(|| SqlConnectionPool::new());
 
 impl SqlConnectionPool {
 

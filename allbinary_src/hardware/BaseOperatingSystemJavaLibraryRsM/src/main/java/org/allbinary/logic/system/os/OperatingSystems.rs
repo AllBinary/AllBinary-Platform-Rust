@@ -40,7 +40,7 @@ pub struct OperatingSystems {
     pub unknownSpecificOSAllowed: bool,
 }
 
-thread_local! { pub static OperatingSystems_instance: Option<Rc<RefCell<OperatingSystems>>> = OperatingSystems::new(); }
+pub static OperatingSystems_instance: crate::JavaStatic<Option<Rc<RefCell<OperatingSystems>>>> = crate::JavaStatic::new(|| OperatingSystems::new());
 
 impl OperatingSystems {
 

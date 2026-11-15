@@ -39,7 +39,7 @@ pub struct GraphicsFeatureFactory {
     pub VECTOR_TO_IMAGE_GRAPHICS: Option<Rc<RefCell<GraphicsFeature>>>,
 }
 
-thread_local! { pub static GraphicsFeatureFactory_instance: Option<Rc<RefCell<GraphicsFeatureFactory>>> = GraphicsFeatureFactory::new(); }
+pub static GraphicsFeatureFactory_instance: crate::JavaStatic<Option<Rc<RefCell<GraphicsFeatureFactory>>>> = crate::JavaStatic::new(|| GraphicsFeatureFactory::new());
 
 impl GraphicsFeatureFactory {
 

@@ -35,7 +35,7 @@ pub struct DestroyEventCircularStaticPool {
     pub EVENT_POOL: Option<Rc<RefCell<AllBinaryEventCircularPool>>>,
 }
 
-thread_local! { pub static DestroyEventCircularStaticPool_instance: Option<Rc<RefCell<DestroyEventCircularStaticPool>>> = DestroyEventCircularStaticPool::new(); }
+pub static DestroyEventCircularStaticPool_instance: crate::JavaStatic<Option<Rc<RefCell<DestroyEventCircularStaticPool>>>> = crate::JavaStatic::new(|| DestroyEventCircularStaticPool::new());
 
 impl DestroyEventCircularStaticPool {
 

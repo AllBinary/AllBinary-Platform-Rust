@@ -42,7 +42,7 @@ pub struct AuthenticationHelperUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static AuthenticationHelperUtil_instance: Option<Rc<RefCell<AuthenticationHelperUtil>>> = AuthenticationHelperUtil::new(); }
+pub static AuthenticationHelperUtil_instance: crate::JavaStatic<Option<Rc<RefCell<AuthenticationHelperUtil>>>> = crate::JavaStatic::new(|| AuthenticationHelperUtil::new());
 
 impl AuthenticationHelperUtil {
 

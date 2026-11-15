@@ -31,7 +31,7 @@ pub struct ServletStrings {
     pub REQUEST_EXCEPTION: String,
 }
 
-thread_local! { pub static ServletStrings_instance: Option<Rc<RefCell<ServletStrings>>> = ServletStrings::new(); }
+pub static ServletStrings_instance: crate::JavaStatic<Option<Rc<RefCell<ServletStrings>>>> = crate::JavaStatic::new(|| ServletStrings::new());
 
 impl ServletStrings {
 

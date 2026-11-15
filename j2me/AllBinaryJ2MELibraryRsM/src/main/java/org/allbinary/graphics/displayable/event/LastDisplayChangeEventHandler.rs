@@ -35,7 +35,7 @@ pub struct LastDisplayChangeEventHandler {
     pub base: BasicEventHandler,
 }
 
-thread_local! { pub static LastDisplayChangeEventHandler_SINGLETON: Option<Rc<RefCell<LastDisplayChangeEventHandler>>> = LastDisplayChangeEventHandler::new(); }
+pub static LastDisplayChangeEventHandler_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<LastDisplayChangeEventHandler>>>> = crate::JavaStatic::new(|| LastDisplayChangeEventHandler::new());
 
 impl LastDisplayChangeEventHandler {
     

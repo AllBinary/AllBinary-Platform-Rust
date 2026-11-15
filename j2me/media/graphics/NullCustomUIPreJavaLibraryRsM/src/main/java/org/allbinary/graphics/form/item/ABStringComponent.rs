@@ -18,7 +18,7 @@ macro_rules! jcall {
 pub struct ABStringComponent {
 }
 
-thread_local! { pub static ABStringComponent_NULL_STRING_COMPONENT: Option<Rc<RefCell<ABStringComponent>>> = ABStringComponent::new({ let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone()); }
+pub static ABStringComponent_NULL_STRING_COMPONENT: crate::JavaStatic<Option<Rc<RefCell<ABStringComponent>>>> = crate::JavaStatic::new(|| ABStringComponent::new({ let java_field = jcall!(BasicColorFactory::getInstance()).BLACK.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone()));
 
 impl ABStringComponent {
 

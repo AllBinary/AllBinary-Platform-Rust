@@ -33,7 +33,7 @@ pub struct HttpData {
     pub URL_LABEL: String,
 }
 
-thread_local! { pub static HttpData_instance: Option<Rc<RefCell<HttpData>>> = HttpData::new(); }
+pub static HttpData_instance: crate::JavaStatic<Option<Rc<RefCell<HttpData>>>> = crate::JavaStatic::new(|| HttpData::new());
 
 impl HttpData {
 

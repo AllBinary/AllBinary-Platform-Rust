@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct GlobalsData {
 }
 
-thread_local! { pub static GlobalsData_NAME: String = String::from("GLOBALS_NAME"); }
+pub static GlobalsData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("GLOBALS_NAME"));
 
 impl GlobalsData {
 

@@ -22,7 +22,7 @@ pub struct CacheTypeFactory {
     pub CACHE_VECTOR: Option<Rc<RefCell<CacheType>>>,
 }
 
-thread_local! { pub static CacheTypeFactory_instance: Option<Rc<RefCell<CacheTypeFactory>>> = CacheTypeFactory::new(); }
+pub static CacheTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<CacheTypeFactory>>>> = crate::JavaStatic::new(|| CacheTypeFactory::new());
 
 impl CacheTypeFactory {
 

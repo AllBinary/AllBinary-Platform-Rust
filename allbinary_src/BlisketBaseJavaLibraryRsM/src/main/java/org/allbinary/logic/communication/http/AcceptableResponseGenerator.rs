@@ -34,7 +34,7 @@ pub struct AcceptableResponseGenerator {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static AcceptableResponseGenerator_instance: Option<Rc<RefCell<AcceptableResponseGenerator>>> = AcceptableResponseGenerator::new(); }
+pub static AcceptableResponseGenerator_instance: crate::JavaStatic<Option<Rc<RefCell<AcceptableResponseGenerator>>>> = crate::JavaStatic::new(|| AcceptableResponseGenerator::new());
 
 impl AcceptableResponseGenerator {
 

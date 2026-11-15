@@ -51,17 +51,17 @@ pub struct CanvasDom {
     pub grid: Option<Rc<RefCell<Grid>>>,
 }
 
-thread_local! { pub static CanvasDom_FRAME: String = String::from("frame"); }
-thread_local! { pub static CanvasDom_ROTATE: String = String::from("rotate"); }
-thread_local! { pub static CanvasDom_SIZE: String = String::from("size"); }
-thread_local! { pub static CanvasDom_X: String = String::from("X"); }
-thread_local! { pub static CanvasDom_Y: String = String::from("Y"); }
-thread_local! { pub static CanvasDom_ZOOM: String = String::from("zoom"); }
-thread_local! { pub static CanvasDom_GRID: String = String::from("grid"); }
-thread_local! { pub static CanvasDom_ENABLED: String = String::from("enabled"); }
-thread_local! { pub static CanvasDom_POSSIBLE: String = String::from("possible"); }
-thread_local! { pub static CanvasDom_GRAPHICITEMS: String = String::from("graphicItems"); }
-thread_local! { pub static CanvasDom_REAL_SIZE: String = String::from("realSize"); }
+pub static CanvasDom_FRAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("frame"));
+pub static CanvasDom_ROTATE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("rotate"));
+pub static CanvasDom_SIZE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("size"));
+pub static CanvasDom_X: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("X"));
+pub static CanvasDom_Y: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Y"));
+pub static CanvasDom_ZOOM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("zoom"));
+pub static CanvasDom_GRID: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("grid"));
+pub static CanvasDom_ENABLED: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("enabled"));
+pub static CanvasDom_POSSIBLE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("possible"));
+pub static CanvasDom_GRAPHICITEMS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("graphicItems"));
+pub static CanvasDom_REAL_SIZE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("realSize"));
 
 impl CanvasDom {
 

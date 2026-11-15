@@ -30,7 +30,7 @@ pub struct LicensingException {
     pub base: Exception,
 }
 
-thread_local! { pub static LicensingException_serialVersionUID: i64 = 1_i64; }
+pub static LicensingException_serialVersionUID: crate::JavaStatic<i64> = crate::JavaStatic::new(|| 1_i64);
 
 impl LicensingException {
     

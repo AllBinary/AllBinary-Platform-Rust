@@ -46,7 +46,7 @@ pub struct TestingInputSingleton {
     pub paintable: Option<Rc<RefCell<dyn PaintableInterface>>>,
 }
 
-thread_local! { pub static TestingInputSingleton_instance: Option<Rc<RefCell<TestingInputSingleton>>> = TestingInputSingleton::new(); }
+pub static TestingInputSingleton_instance: crate::JavaStatic<Option<Rc<RefCell<TestingInputSingleton>>>> = crate::JavaStatic::new(|| TestingInputSingleton::new());
 // impl GameInputInterface for TestingInputSingleton with the methods of the trait
 impl PaintableInterface for TestingInputSingleton {
     fn paint(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::paint(self, graphics) }

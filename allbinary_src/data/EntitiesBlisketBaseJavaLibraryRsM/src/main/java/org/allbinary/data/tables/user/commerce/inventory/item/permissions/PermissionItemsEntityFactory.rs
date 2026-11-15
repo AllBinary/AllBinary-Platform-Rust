@@ -33,7 +33,7 @@ pub struct PermissionItemsEntityFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static PermissionItemsEntityFactory_instance: Option<Rc<RefCell<PermissionItemsEntityFactory>>> = PermissionItemsEntityFactory::new(); }
+pub static PermissionItemsEntityFactory_instance: crate::JavaStatic<Option<Rc<RefCell<PermissionItemsEntityFactory>>>> = crate::JavaStatic::new(|| PermissionItemsEntityFactory::new());
 
 impl PermissionItemsEntityFactory {
 

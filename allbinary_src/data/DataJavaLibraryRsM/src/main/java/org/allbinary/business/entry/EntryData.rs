@@ -37,7 +37,7 @@ pub struct EntryData {
     pub NO: String,
 }
 
-thread_local! { pub static EntryData_instance: Option<Rc<RefCell<EntryData>>> = EntryData::new(); }
+pub static EntryData_instance: crate::JavaStatic<Option<Rc<RefCell<EntryData>>>> = crate::JavaStatic::new(|| EntryData::new());
 
 impl EntryData {
 

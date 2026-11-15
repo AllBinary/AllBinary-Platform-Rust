@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct InputAutomationClientInformationFactory {
 }
 
-thread_local! { pub static InputAutomationClientInformationFactory_instance: Option<Rc<RefCell<InputAutomationClientInformation>>> = InputAutomationClientInformation::new(); }
+pub static InputAutomationClientInformationFactory_instance: crate::JavaStatic<Option<Rc<RefCell<InputAutomationClientInformation>>>> = crate::JavaStatic::new(|| InputAutomationClientInformation::new());
 
 impl InputAutomationClientInformationFactory {
 

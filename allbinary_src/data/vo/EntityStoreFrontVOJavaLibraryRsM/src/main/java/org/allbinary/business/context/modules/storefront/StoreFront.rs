@@ -104,7 +104,7 @@ pub struct StoreFront {
     pub ONE_EMPTY_STRING_ARRAY: Vec<String>,
 }
 
-thread_local! { pub static StoreFront_RESOURCES: String = format!("{}{}", String::from(" Resources"), { let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }); }
+pub static StoreFront_RESOURCES: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", String::from(" Resources"), { let java_field = jcall!(AbPathData::getInstance()).SEPARATOR.clone(); java_field }));
 impl StoreFrontInterface for StoreFront {
     fn isNameValid(&mut self) -> Option<bool> { Self::isNameValid(self) }
     fn isValid(&mut self) -> Option<bool> { Self::isValid(self) }

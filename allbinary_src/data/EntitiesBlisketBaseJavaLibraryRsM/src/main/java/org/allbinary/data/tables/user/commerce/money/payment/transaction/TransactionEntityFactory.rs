@@ -33,7 +33,7 @@ pub struct TransactionEntityFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static TransactionEntityFactory_instance: Option<Rc<RefCell<TransactionEntityFactory>>> = TransactionEntityFactory::new(); }
+pub static TransactionEntityFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TransactionEntityFactory>>>> = crate::JavaStatic::new(|| TransactionEntityFactory::new());
 
 impl TransactionEntityFactory {
 

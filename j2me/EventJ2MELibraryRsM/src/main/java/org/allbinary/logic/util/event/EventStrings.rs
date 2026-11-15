@@ -32,7 +32,7 @@ pub struct EventStrings {
     pub FIRE_EVENT: String,
 }
 
-thread_local! { pub static EventStrings_instance: Option<Rc<RefCell<EventStrings>>> = EventStrings::new(); }
+pub static EventStrings_instance: crate::JavaStatic<Option<Rc<RefCell<EventStrings>>>> = crate::JavaStatic::new(|| EventStrings::new());
 
 impl EventStrings {
 

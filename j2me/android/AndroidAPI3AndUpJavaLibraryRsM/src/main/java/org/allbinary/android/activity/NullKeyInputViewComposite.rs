@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct NullKeyInputViewComposite {
 }
 
-thread_local! { pub static NullKeyInputViewComposite_NULL_KEY_INPUT_VIEW_COMPOSITE: Option<Rc<RefCell<NullKeyInputViewComposite>>> = NullKeyInputViewComposite::new(); }
+pub static NullKeyInputViewComposite_NULL_KEY_INPUT_VIEW_COMPOSITE: crate::JavaStatic<Option<Rc<RefCell<NullKeyInputViewComposite>>>> = crate::JavaStatic::new(|| NullKeyInputViewComposite::new());
 impl KeyInputViewCompositeInterface for NullKeyInputViewComposite {
     fn setKeyInputView(&mut self, mut keyInputView: Option<Rc<RefCell<View>>>) { Self::setKeyInputView(self, keyInputView) }
 }

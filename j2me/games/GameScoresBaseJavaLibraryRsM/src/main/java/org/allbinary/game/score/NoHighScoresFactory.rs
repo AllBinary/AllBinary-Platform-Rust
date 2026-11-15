@@ -38,7 +38,7 @@ pub struct NoHighScoresFactory {
     pub NO_HIGH_SCORES: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>>>,
 }
 
-thread_local! { pub static NoHighScoresFactory_instance: Option<Rc<RefCell<NoHighScoresFactory>>> = NoHighScoresFactory::new(); }
+pub static NoHighScoresFactory_instance: crate::JavaStatic<Option<Rc<RefCell<NoHighScoresFactory>>>> = crate::JavaStatic::new(|| NoHighScoresFactory::new());
 
 impl NoHighScoresFactory {
     

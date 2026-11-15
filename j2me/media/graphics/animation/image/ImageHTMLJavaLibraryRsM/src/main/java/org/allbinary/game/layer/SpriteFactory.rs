@@ -36,7 +36,7 @@ pub struct SpriteFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static SpriteFactory_instance: Option<Rc<RefCell<SpriteFactory>>> = SpriteFactory::new(); }
+pub static SpriteFactory_instance: crate::JavaStatic<Option<Rc<RefCell<SpriteFactory>>>> = crate::JavaStatic::new(|| SpriteFactory::new());
 // impl SpriteFactoryInterface for SpriteFactory with the methods of the trait
 
 impl SpriteFactory {

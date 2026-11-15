@@ -30,7 +30,7 @@ pub struct AxisMathVectorUtil {
     pub noDecimalTrigTable: Option<Rc<RefCell<NoDecimalTrigTable>>>,
 }
 
-thread_local! { pub static AxisMathVectorUtil_instance: Option<Rc<RefCell<AxisMathVectorUtil>>> = AxisMathVectorUtil::new(); }
+pub static AxisMathVectorUtil_instance: crate::JavaStatic<Option<Rc<RefCell<AxisMathVectorUtil>>>> = crate::JavaStatic::new(|| AxisMathVectorUtil::new());
 
 impl AxisMathVectorUtil {
 

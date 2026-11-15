@@ -17,7 +17,7 @@ macro_rules! jcall {
 pub struct OpenGLESNullGraphicsFactory {
 }
 
-thread_local! { pub static OpenGLESNullGraphicsFactory_instance: Option<Rc<RefCell<dyn crate::org::allbinary::device::OpenGLESGraphics::OpenGLESGraphicsDyn>>> = OpenGLESGraphics::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::device::OpenGLESGraphics::OpenGLESGraphicsDyn>>); }
+pub static OpenGLESNullGraphicsFactory_instance: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::device::OpenGLESGraphics::OpenGLESGraphicsDyn>>>> = crate::JavaStatic::new(|| OpenGLESGraphics::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::device::OpenGLESGraphics::OpenGLESGraphicsDyn>>));
 
 impl OpenGLESNullGraphicsFactory {
 

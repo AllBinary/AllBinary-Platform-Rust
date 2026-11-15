@@ -32,8 +32,8 @@ macro_rules! jcall {
 pub struct InitHelperFactory {
 }
 
-thread_local! { pub static InitHelperFactory_CLASSNAME: String = String::from("admin.taghelpers.InitHelper"); }
-thread_local! { pub static InitHelperFactory_FACTORYNAME: String = String::from("InitHelperFactory"); }
+pub static InitHelperFactory_CLASSNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("admin.taghelpers.InitHelper"));
+pub static InitHelperFactory_FACTORYNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("InitHelperFactory"));
 // impl TagHelperFactoryInterface for InitHelperFactory with the methods of the trait
 
 impl InitHelperFactory {

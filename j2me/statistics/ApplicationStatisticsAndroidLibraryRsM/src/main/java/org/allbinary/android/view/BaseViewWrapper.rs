@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct BaseViewWrapper {
 }
 
-thread_local! { pub static BaseViewWrapper_NULL_VIEW_WRAPPER: Option<Rc<RefCell<dyn BaseViewWrapperDyn>>> = BaseViewWrapper::new().map(|reference| reference as Rc<RefCell<dyn BaseViewWrapperDyn>>); }
+pub static BaseViewWrapper_NULL_VIEW_WRAPPER: crate::JavaStatic<Option<Rc<RefCell<dyn BaseViewWrapperDyn>>>> = crate::JavaStatic::new(|| BaseViewWrapper::new().map(|reference| reference as Rc<RefCell<dyn BaseViewWrapperDyn>>));
 
 impl BaseViewWrapper {
 

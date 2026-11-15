@@ -33,7 +33,7 @@ pub struct SpecialAnimation {
     pub base: IndexedAnimation,
 }
 
-thread_local! { pub static SpecialAnimation_NULL_SPECIAL_ANIMATION: Option<Rc<RefCell<dyn SpecialAnimationDyn>>> = SpecialAnimation::new(IndexedAnimationBehavior::new(1, 250).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>)).map(|reference| reference as Rc<RefCell<dyn SpecialAnimationDyn>>); }
+pub static SpecialAnimation_NULL_SPECIAL_ANIMATION: crate::JavaStatic<Option<Rc<RefCell<dyn SpecialAnimationDyn>>>> = crate::JavaStatic::new(|| SpecialAnimation::new(IndexedAnimationBehavior::new(1, 250).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::animation::AnimationBehavior::AnimationBehaviorDyn>>)).map(|reference| reference as Rc<RefCell<dyn SpecialAnimationDyn>>));
 // impl SpecialAnimationInterface for SpecialAnimation with the methods of the trait
 impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for SpecialAnimation {
     fn nextFrame(&mut self) { Self::nextFrame(self) }

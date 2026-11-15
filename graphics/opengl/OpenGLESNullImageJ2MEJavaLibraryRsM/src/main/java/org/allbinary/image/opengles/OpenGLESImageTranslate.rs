@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct OpenGLESImageTranslate {
 }
 
-thread_local! { pub static OpenGLESImageTranslate_instance: Option<Rc<RefCell<dyn OpenGLESImageTranslateDyn>>> = OpenGLESImageTranslate::new().map(|reference| reference as Rc<RefCell<dyn OpenGLESImageTranslateDyn>>); }
+pub static OpenGLESImageTranslate_instance: crate::JavaStatic<Option<Rc<RefCell<dyn OpenGLESImageTranslateDyn>>>> = crate::JavaStatic::new(|| OpenGLESImageTranslate::new().map(|reference| reference as Rc<RefCell<dyn OpenGLESImageTranslateDyn>>));
 
 impl OpenGLESImageTranslate {
 

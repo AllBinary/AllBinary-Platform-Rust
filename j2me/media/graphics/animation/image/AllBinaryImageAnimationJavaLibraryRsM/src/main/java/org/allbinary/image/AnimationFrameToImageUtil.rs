@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct AnimationFrameToImageUtil {
 }
 
-thread_local! { pub static AnimationFrameToImageUtil_instance: Option<Rc<RefCell<AnimationFrameToImageUtil>>> = AnimationFrameToImageUtil::new(); }
+pub static AnimationFrameToImageUtil_instance: crate::JavaStatic<Option<Rc<RefCell<AnimationFrameToImageUtil>>>> = crate::JavaStatic::new(|| AnimationFrameToImageUtil::new());
 
 impl AnimationFrameToImageUtil {
 

@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct NullParcelable {
 }
 
-thread_local! { pub static NullParcelable_NULL_PARCELABLE: Option<Rc<RefCell<NullParcelable>>> = NullParcelable::new(); }
+pub static NullParcelable_NULL_PARCELABLE: crate::JavaStatic<Option<Rc<RefCell<NullParcelable>>>> = crate::JavaStatic::new(|| NullParcelable::new());
 // impl Parcelable for NullParcelable with the methods of the trait
 
 impl NullParcelable {

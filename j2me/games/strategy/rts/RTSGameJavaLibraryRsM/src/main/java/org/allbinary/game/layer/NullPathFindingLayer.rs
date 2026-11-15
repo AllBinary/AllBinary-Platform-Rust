@@ -45,7 +45,7 @@ macro_rules! jcall {
 pub struct NullPathFindingLayer {
 }
 
-thread_local! { pub static NullPathFindingLayer_NULL_PATH_FINDING_LAYER: Option<Rc<RefCell<dyn NullPathFindingLayerDyn>>> = NullPathFindingLayer::new().map(|reference| reference as Rc<RefCell<dyn NullPathFindingLayerDyn>>); }
+pub static NullPathFindingLayer_NULL_PATH_FINDING_LAYER: crate::JavaStatic<Option<Rc<RefCell<dyn NullPathFindingLayerDyn>>>> = crate::JavaStatic::new(|| NullPathFindingLayer::new().map(|reference| reference as Rc<RefCell<dyn NullPathFindingLayerDyn>>));
 impl PathFindingLayerInterface for NullPathFindingLayer {
     fn getEndGeographicMapCellPositionList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::getEndGeographicMapCellPositionList(self) }
     fn shouldHandleStartSameAsEnd(&mut self) -> bool { Self::shouldHandleStartSameAsEnd(self) }

@@ -34,7 +34,7 @@ pub struct RemoteHighScoresData {
     pub GAME_CONFIGURATION: String,
 }
 
-thread_local! { pub static RemoteHighScoresData_SINGLETON: Option<Rc<RefCell<RemoteHighScoresData>>> = RemoteHighScoresData::new(); }
+pub static RemoteHighScoresData_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<RemoteHighScoresData>>>> = crate::JavaStatic::new(|| RemoteHighScoresData::new());
 
 impl RemoteHighScoresData {
 

@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct CustomItemData {
 }
 
-thread_local! { pub static CustomItemData_PACKAGE: String = String::from("CUSTOMITEM_PACKAGE"); }
+pub static CustomItemData_PACKAGE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("CUSTOMITEM_PACKAGE"));
 
 impl CustomItemData {
 

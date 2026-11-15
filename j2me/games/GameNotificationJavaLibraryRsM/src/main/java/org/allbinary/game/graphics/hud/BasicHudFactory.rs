@@ -38,7 +38,7 @@ pub struct BasicHudFactory {
     pub ABSOLUTE: i32,
 }
 
-thread_local! { pub static BasicHudFactory_instance: Option<Rc<RefCell<BasicHudFactory>>> = BasicHudFactory::new(); }
+pub static BasicHudFactory_instance: crate::JavaStatic<Option<Rc<RefCell<BasicHudFactory>>>> = crate::JavaStatic::new(|| BasicHudFactory::new());
 
 impl BasicHudFactory {
 

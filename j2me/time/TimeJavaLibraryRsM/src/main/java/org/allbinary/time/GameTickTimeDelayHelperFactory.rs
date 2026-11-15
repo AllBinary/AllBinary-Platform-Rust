@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct GameTickTimeDelayHelperFactory {
 }
 
-thread_local! { pub static GameTickTimeDelayHelperFactory_instance: Option<Rc<RefCell<GameTickTimeDelayHelper>>> = GameTickTimeDelayHelper::new(-1); }
+pub static GameTickTimeDelayHelperFactory_instance: crate::JavaStatic<Option<Rc<RefCell<GameTickTimeDelayHelper>>>> = crate::JavaStatic::new(|| GameTickTimeDelayHelper::new(-1));
 
 impl GameTickTimeDelayHelperFactory {
 

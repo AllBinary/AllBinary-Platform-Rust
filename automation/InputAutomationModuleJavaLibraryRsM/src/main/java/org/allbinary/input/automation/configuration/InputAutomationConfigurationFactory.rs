@@ -43,7 +43,7 @@ pub struct InputAutomationConfigurationFactory {
     pub inputAutomationConfiguration: Option<Rc<RefCell<InputAutomationConfiguration>>>,
 }
 
-thread_local! { pub static InputAutomationConfigurationFactory_instance: Option<Rc<RefCell<InputAutomationConfigurationFactory>>> = InputAutomationConfigurationFactory::new(); }
+pub static InputAutomationConfigurationFactory_instance: crate::JavaStatic<Option<Rc<RefCell<InputAutomationConfigurationFactory>>>> = crate::JavaStatic::new(|| InputAutomationConfigurationFactory::new());
 
 impl InputAutomationConfigurationFactory {
 

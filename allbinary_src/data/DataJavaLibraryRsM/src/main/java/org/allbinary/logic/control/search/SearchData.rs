@@ -28,29 +28,29 @@ macro_rules! jcall {
 pub struct SearchData {
 }
 
-thread_local! { pub static SearchData_TOTAL_NUMBER_PAGES: String = String::from("SEARCHDATA_TOTALNUMBEROFPAGES"); }
-thread_local! { pub static SearchData_TOTAL_NUMBER_ITEMS_ON_THIS_PAGE: String = String::from("SEARCHDATA_TOTALNUMBEROFITEMSONTHISPAGE"); }
-thread_local! { pub static SearchData_TOTAL_NUMBER_ITEMS: String = String::from("SEARCHDATA_TOTALNUMBEROFITEMS"); }
-thread_local! { pub static SearchData_DEFAULT_PAGE_LENGTH: i32 = 10; }
-thread_local! { pub static SearchData_GENERATESTATICPAGES: String = String::from("Generate Static Pages"); }
-thread_local! { pub static SearchData_SEARCHBYSUMMARY: String = String::from("Search By Summary"); }
-thread_local! { pub static SearchData_SEARCHBYDESCRIPTION: String = String::from("Search By Description"); }
-thread_local! { pub static SearchData_SEARCHBYCATEGORY: String = String::from("Search By Category"); }
-thread_local! { pub static SearchData_SEARCHCATEGORIES: String = String::from("Search Categories"); }
-thread_local! { pub static SearchData_FILENAME: String = String::from("SEARCHDATA_BASEFILENAME"); }
-thread_local! { pub static SearchData_COLUMNNAME: String = String::from("COLUMN_NAME"); }
-thread_local! { pub static SearchData_COLUMNVALUE: String = String::from("COLUMN_VALUE"); }
-thread_local! { pub static SearchData_PARAMS: String = String::from("SEARCHDATA_PARAMS"); }
-thread_local! { pub static SearchData_LENGTH: String = String::from("SEARCHDATA_LENGTH"); }
-thread_local! { pub static SearchData_ORDER: String = String::from("SEARCHDATA_ORDER"); }
-thread_local! { pub static SearchData_PAGE: String = String::from("SEARCHDATA_PAGE"); }
-thread_local! { pub static SearchData_FIELDS: String = String::from("SEARCHDATA_FIELDS"); }
-thread_local! { pub static SearchData_FIELD: String = String::from("SEARCHDATA_FIELD"); }
-thread_local! { pub static SearchData_SORTBY: String = String::from("SEARCHDATA_SORTBY"); }
-thread_local! { pub static SearchData_TYPE: String = String::from("SEARCHDATA_TYPE"); }
-thread_local! { pub static SearchData_PAGE_INFO: String = String::from("pageInfo"); }
-thread_local! { pub static SearchData_SEARCH: String = String::from("search"); }
-thread_local! { pub static SearchData_MAKEPUBLIC: String = String::from("Make Public"); }
+pub static SearchData_TOTAL_NUMBER_PAGES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SEARCHDATA_TOTALNUMBEROFPAGES"));
+pub static SearchData_TOTAL_NUMBER_ITEMS_ON_THIS_PAGE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SEARCHDATA_TOTALNUMBEROFITEMSONTHISPAGE"));
+pub static SearchData_TOTAL_NUMBER_ITEMS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SEARCHDATA_TOTALNUMBEROFITEMS"));
+pub static SearchData_DEFAULT_PAGE_LENGTH: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 10);
+pub static SearchData_GENERATESTATICPAGES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Generate Static Pages"));
+pub static SearchData_SEARCHBYSUMMARY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Search By Summary"));
+pub static SearchData_SEARCHBYDESCRIPTION: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Search By Description"));
+pub static SearchData_SEARCHBYCATEGORY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Search By Category"));
+pub static SearchData_SEARCHCATEGORIES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Search Categories"));
+pub static SearchData_FILENAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SEARCHDATA_BASEFILENAME"));
+pub static SearchData_COLUMNNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("COLUMN_NAME"));
+pub static SearchData_COLUMNVALUE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("COLUMN_VALUE"));
+pub static SearchData_PARAMS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SEARCHDATA_PARAMS"));
+pub static SearchData_LENGTH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SEARCHDATA_LENGTH"));
+pub static SearchData_ORDER: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SEARCHDATA_ORDER"));
+pub static SearchData_PAGE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SEARCHDATA_PAGE"));
+pub static SearchData_FIELDS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SEARCHDATA_FIELDS"));
+pub static SearchData_FIELD: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SEARCHDATA_FIELD"));
+pub static SearchData_SORTBY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SEARCHDATA_SORTBY"));
+pub static SearchData_TYPE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SEARCHDATA_TYPE"));
+pub static SearchData_PAGE_INFO: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("pageInfo"));
+pub static SearchData_SEARCH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("search"));
+pub static SearchData_MAKEPUBLIC: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Make Public"));
 
 impl SearchData {
 

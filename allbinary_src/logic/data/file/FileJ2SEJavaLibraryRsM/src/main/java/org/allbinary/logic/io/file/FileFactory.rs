@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct FileFactory {
 }
 
-thread_local! { pub static FileFactory_instance: Option<Rc<RefCell<FileFactory>>> = FileFactory::new(); }
+pub static FileFactory_instance: crate::JavaStatic<Option<Rc<RefCell<FileFactory>>>> = crate::JavaStatic::new(|| FileFactory::new());
 
 impl FileFactory {
 

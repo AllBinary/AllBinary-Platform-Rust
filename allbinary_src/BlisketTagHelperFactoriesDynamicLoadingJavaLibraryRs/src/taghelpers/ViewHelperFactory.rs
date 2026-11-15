@@ -34,8 +34,8 @@ macro_rules! jcall {
 pub struct ViewHelperFactory {
 }
 
-thread_local! { pub static ViewHelperFactory_CLASSNAME: String = String::from("taghelpers.ViewHelper"); }
-thread_local! { pub static ViewHelperFactory_FACTORYNAME: String = String::from("taghelpers.ViewHelperFactory"); }
+pub static ViewHelperFactory_CLASSNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("taghelpers.ViewHelper"));
+pub static ViewHelperFactory_FACTORYNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("taghelpers.ViewHelperFactory"));
 // impl TagHelperFactoryInterface for ViewHelperFactory with the methods of the trait
 
 impl ViewHelperFactory {

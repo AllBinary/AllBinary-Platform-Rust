@@ -28,9 +28,9 @@ macro_rules! jcall {
 pub struct TempInputRobotNames {
 }
 
-thread_local! { pub static TempInputRobotNames_LOW_NAME: String = String::from("Low Level"); }
-thread_local! { pub static TempInputRobotNames_SYS_NAME: String = String::from("System Drivers"); }
-thread_local! { pub static TempInputRobotNames_DX_NAME: String = String::from("DirectX"); }
+pub static TempInputRobotNames_LOW_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Low Level"));
+pub static TempInputRobotNames_SYS_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("System Drivers"));
+pub static TempInputRobotNames_DX_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DirectX"));
 
 impl TempInputRobotNames {
 

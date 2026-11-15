@@ -41,8 +41,8 @@ pub struct InitializeCloud {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static InitializeCloud_CLOUD: String = String::from("cloud/"); }
-thread_local! { pub static InitializeCloud_CLOUD_UPDATE: String = String::from("cloudupdate/"); }
+pub static InitializeCloud_CLOUD: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("cloud/"));
+pub static InitializeCloud_CLOUD_UPDATE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("cloudupdate/"));
 
 impl InitializeCloud {
 

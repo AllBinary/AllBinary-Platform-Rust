@@ -35,7 +35,7 @@ pub struct PrimitiveLongSingleton {
     pub ZERO: Vec<char>,
 }
 
-thread_local! { pub static PrimitiveLongSingleton_instance: Option<Rc<RefCell<PrimitiveLongSingleton>>> = PrimitiveLongSingleton::new(); }
+pub static PrimitiveLongSingleton_instance: crate::JavaStatic<Option<Rc<RefCell<PrimitiveLongSingleton>>>> = crate::JavaStatic::new(|| PrimitiveLongSingleton::new());
 
 impl PrimitiveLongSingleton {
 

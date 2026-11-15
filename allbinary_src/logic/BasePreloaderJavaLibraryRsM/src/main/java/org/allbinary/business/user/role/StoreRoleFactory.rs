@@ -34,7 +34,7 @@ pub struct StoreRoleFactory {
     pub wholesaleRoles: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static StoreRoleFactory_instance: Option<Rc<RefCell<StoreRoleFactory>>> = StoreRoleFactory::new(); }
+pub static StoreRoleFactory_instance: crate::JavaStatic<Option<Rc<RefCell<StoreRoleFactory>>>> = crate::JavaStatic::new(|| StoreRoleFactory::new());
 
 impl StoreRoleFactory {
 

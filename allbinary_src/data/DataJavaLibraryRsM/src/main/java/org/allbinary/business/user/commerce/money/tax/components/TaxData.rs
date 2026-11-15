@@ -28,8 +28,8 @@ macro_rules! jcall {
 pub struct TaxData {
 }
 
-thread_local! { pub static TaxData_NAME: String = String::from("TAX_NAME"); }
-thread_local! { pub static TaxData_RATE: String = String::from("TAX_RATE"); }
+pub static TaxData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("TAX_NAME"));
+pub static TaxData_RATE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("TAX_RATE"));
 
 impl TaxData {
 

@@ -48,7 +48,7 @@ pub struct CanvasStrings {
     pub _PNG: String,
 }
 
-thread_local! { pub static CanvasStrings_instance: Option<Rc<RefCell<CanvasStrings>>> = CanvasStrings::new(); }
+pub static CanvasStrings_instance: crate::JavaStatic<Option<Rc<RefCell<CanvasStrings>>>> = crate::JavaStatic::new(|| CanvasStrings::new());
 
 impl CanvasStrings {
 

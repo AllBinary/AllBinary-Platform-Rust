@@ -37,7 +37,7 @@ pub struct BasicTouchButtonsBuilder {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static BasicTouchButtonsBuilder_SINGLETON: Option<Rc<RefCell<BasicTouchButtonsBuilder>>> = BasicTouchButtonsBuilder::new(); }
+pub static BasicTouchButtonsBuilder_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<BasicTouchButtonsBuilder>>>> = crate::JavaStatic::new(|| BasicTouchButtonsBuilder::new());
 
 impl BasicTouchButtonsBuilder {
 

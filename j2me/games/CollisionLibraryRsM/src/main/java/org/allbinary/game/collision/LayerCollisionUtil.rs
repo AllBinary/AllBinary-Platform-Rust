@@ -36,7 +36,7 @@ pub struct LayerCollisionUtil {
     pub collisionProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::game::collision::CollisionProcessor::CollisionProcessorDyn>>>,
 }
 
-thread_local! { pub static LayerCollisionUtil_instance: Option<Rc<RefCell<LayerCollisionUtil>>> = LayerCollisionUtil::new(); }
+pub static LayerCollisionUtil_instance: crate::JavaStatic<Option<Rc<RefCell<LayerCollisionUtil>>>> = crate::JavaStatic::new(|| LayerCollisionUtil::new());
 
 impl LayerCollisionUtil {
 

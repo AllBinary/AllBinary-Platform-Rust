@@ -36,7 +36,7 @@ pub struct GameOptionsFormFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static GameOptionsFormFactory_instance: Option<Rc<RefCell<GameOptionsFormFactory>>> = GameOptionsFormFactory::new(); }
+pub static GameOptionsFormFactory_instance: crate::JavaStatic<Option<Rc<RefCell<GameOptionsFormFactory>>>> = crate::JavaStatic::new(|| GameOptionsFormFactory::new());
 
 impl GameOptionsFormFactory {
 

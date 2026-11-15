@@ -38,7 +38,7 @@ pub struct GameStrings {
     pub STOP_GAME_CANVAS_RUNNABLE_INTERFACE: String,
 }
 
-thread_local! { pub static GameStrings_instance: Option<Rc<RefCell<GameStrings>>> = GameStrings::new(); }
+pub static GameStrings_instance: crate::JavaStatic<Option<Rc<RefCell<GameStrings>>>> = crate::JavaStatic::new(|| GameStrings::new());
 
 impl GameStrings {
 

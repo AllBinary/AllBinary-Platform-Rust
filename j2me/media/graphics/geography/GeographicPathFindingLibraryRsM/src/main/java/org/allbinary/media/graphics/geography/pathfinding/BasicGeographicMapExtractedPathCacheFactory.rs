@@ -22,7 +22,7 @@ pub struct BasicGeographicMapExtractedPathCacheFactory {
     pub maxPaths: i32,
 }
 
-thread_local! { pub static BasicGeographicMapExtractedPathCacheFactory_instance: Option<Rc<RefCell<BasicGeographicMapExtractedPathCacheFactory>>> = BasicGeographicMapExtractedPathCacheFactory::new(); }
+pub static BasicGeographicMapExtractedPathCacheFactory_instance: crate::JavaStatic<Option<Rc<RefCell<BasicGeographicMapExtractedPathCacheFactory>>>> = crate::JavaStatic::new(|| BasicGeographicMapExtractedPathCacheFactory::new());
 
 impl BasicGeographicMapExtractedPathCacheFactory {
     

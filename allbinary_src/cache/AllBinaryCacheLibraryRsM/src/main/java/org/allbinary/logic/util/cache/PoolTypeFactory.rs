@@ -18,7 +18,7 @@ pub struct PoolTypeFactory {
     pub VECTOR_POOL: Option<Rc<RefCell<PoolType>>>,
 }
 
-thread_local! { pub static PoolTypeFactory_instance: Option<Rc<RefCell<PoolTypeFactory>>> = PoolTypeFactory::new(); }
+pub static PoolTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<PoolTypeFactory>>>> = crate::JavaStatic::new(|| PoolTypeFactory::new());
 
 impl PoolTypeFactory {
 

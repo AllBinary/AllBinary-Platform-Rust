@@ -33,7 +33,7 @@ pub struct PathFindingThreadPool {
     pub base: ThreadPool,
 }
 
-thread_local! { pub static PathFindingThreadPool_instance: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>> = PathFindingThreadPool::new(String::from("PathFinding"), 1, 1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>); }
+pub static PathFindingThreadPool_instance: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>>> = crate::JavaStatic::new(|| PathFindingThreadPool::new(String::from("PathFinding"), 1, 1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>));
 
 impl PathFindingThreadPool {
     

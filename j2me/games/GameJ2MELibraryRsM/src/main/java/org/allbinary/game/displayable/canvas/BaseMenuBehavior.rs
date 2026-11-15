@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct BaseMenuBehavior {
 }
 
-thread_local! { pub static BaseMenuBehavior_instance: Option<Rc<RefCell<dyn BaseMenuBehaviorDyn>>> = BaseMenuBehavior::new().map(|reference| reference as Rc<RefCell<dyn BaseMenuBehaviorDyn>>); }
+pub static BaseMenuBehavior_instance: crate::JavaStatic<Option<Rc<RefCell<dyn BaseMenuBehaviorDyn>>>> = crate::JavaStatic::new(|| BaseMenuBehavior::new().map(|reference| reference as Rc<RefCell<dyn BaseMenuBehaviorDyn>>));
 
 impl BaseMenuBehavior {
 

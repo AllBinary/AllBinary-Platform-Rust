@@ -23,7 +23,7 @@ pub struct OpenGLTextureFactory {
     pub gluUtils: Option<Rc<RefCell<OpenGLGLUUtils>>>,
 }
 
-thread_local! { pub static OpenGLTextureFactory_instance: Option<Rc<RefCell<OpenGLTextureFactory>>> = OpenGLTextureFactory::new(); }
+pub static OpenGLTextureFactory_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLTextureFactory>>>> = crate::JavaStatic::new(|| OpenGLTextureFactory::new());
 
 impl OpenGLTextureFactory {
     

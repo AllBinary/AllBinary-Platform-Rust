@@ -61,13 +61,13 @@ pub struct LinesGraphicItem {
     pub points: Option<Rc<RefCell<Points>>>,
 }
 
-thread_local! { pub static LinesGraphicItem_RECT: String = String::from("rect"); }
-thread_local! { pub static LinesGraphicItem_ARC: String = String::from("arc"); }
-thread_local! { pub static LinesGraphicItem_STRING: String = String::from("string"); }
-thread_local! { pub static LinesGraphicItem_CHAR: String = String::from("char"); }
-thread_local! { pub static LinesGraphicItem_IMAGE: String = String::from("image"); }
+pub static LinesGraphicItem_RECT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("rect"));
+pub static LinesGraphicItem_ARC: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("arc"));
+pub static LinesGraphicItem_STRING: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("string"));
+pub static LinesGraphicItem_CHAR: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("char"));
+pub static LinesGraphicItem_IMAGE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("image"));
 pub static mut LinesGraphicItem_item: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 0);
-thread_local! { pub static LinesGraphicItem_NAME: String = String::from("Line Tool"); }
+pub static LinesGraphicItem_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Line Tool"));
 // impl GraphicItemInterface for LinesGraphicItem with the methods of the trait
 
 impl LinesGraphicItem {

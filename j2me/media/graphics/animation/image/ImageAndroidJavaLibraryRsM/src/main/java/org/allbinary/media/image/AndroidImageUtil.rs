@@ -35,7 +35,7 @@ macro_rules! jcall {
 pub struct AndroidImageUtil {
 }
 
-thread_local! { pub static AndroidImageUtil_instance: Option<Rc<RefCell<AndroidImageUtil>>> = AndroidImageUtil::new(); }
+pub static AndroidImageUtil_instance: crate::JavaStatic<Option<Rc<RefCell<AndroidImageUtil>>>> = crate::JavaStatic::new(|| AndroidImageUtil::new());
 
 impl AndroidImageUtil {
 

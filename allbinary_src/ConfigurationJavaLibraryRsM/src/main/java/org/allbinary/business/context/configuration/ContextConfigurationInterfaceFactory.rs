@@ -38,7 +38,7 @@ macro_rules! jcall {
 pub struct ContextConfigurationInterfaceFactory {
 }
 
-thread_local! { pub static ContextConfigurationInterfaceFactory_instance: Option<Rc<RefCell<ContextConfigurationInterfaceFactory>>> = ContextConfigurationInterfaceFactory::new(); }
+pub static ContextConfigurationInterfaceFactory_instance: crate::JavaStatic<Option<Rc<RefCell<ContextConfigurationInterfaceFactory>>>> = crate::JavaStatic::new(|| ContextConfigurationInterfaceFactory::new());
 
 impl ContextConfigurationInterfaceFactory {
 

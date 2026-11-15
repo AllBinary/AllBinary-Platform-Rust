@@ -44,7 +44,7 @@ pub struct ChoiceGroupImageFactory {
     pub imageArray: Vec<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>>,
 }
 
-thread_local! { pub static ChoiceGroupImageFactory_instance: Option<Rc<RefCell<ChoiceGroupImageFactory>>> = ChoiceGroupImageFactory::new(); }
+pub static ChoiceGroupImageFactory_instance: crate::JavaStatic<Option<Rc<RefCell<ChoiceGroupImageFactory>>>> = crate::JavaStatic::new(|| ChoiceGroupImageFactory::new());
 
 impl ChoiceGroupImageFactory {
 

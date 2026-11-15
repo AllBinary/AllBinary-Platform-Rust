@@ -30,7 +30,7 @@ pub struct FileExtensionData {
     pub JAVA_SOURCE: String,
 }
 
-thread_local! { pub static FileExtensionData_instance: Option<Rc<RefCell<FileExtensionData>>> = FileExtensionData::new(); }
+pub static FileExtensionData_instance: crate::JavaStatic<Option<Rc<RefCell<FileExtensionData>>>> = crate::JavaStatic::new(|| FileExtensionData::new());
 
 impl FileExtensionData {
 

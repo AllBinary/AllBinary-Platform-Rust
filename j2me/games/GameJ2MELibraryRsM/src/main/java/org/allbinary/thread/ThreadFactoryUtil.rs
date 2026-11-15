@@ -44,7 +44,7 @@ pub struct ThreadFactoryUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static ThreadFactoryUtil_instance: Option<Rc<RefCell<ThreadFactoryUtil>>> = ThreadFactoryUtil::new(); }
+pub static ThreadFactoryUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ThreadFactoryUtil>>>> = crate::JavaStatic::new(|| ThreadFactoryUtil::new());
 
 impl ThreadFactoryUtil {
 

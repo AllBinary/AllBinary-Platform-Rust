@@ -31,7 +31,7 @@ pub struct BasicHighScoresGameInfoFactory {
     pub SINGLE_PLAYER_SERVER: Option<Rc<RefCell<GameInfo>>>,
 }
 
-thread_local! { pub static BasicHighScoresGameInfoFactory_SINGLETON: Option<Rc<RefCell<BasicHighScoresGameInfoFactory>>> = BasicHighScoresGameInfoFactory::new(); }
+pub static BasicHighScoresGameInfoFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<BasicHighScoresGameInfoFactory>>>> = crate::JavaStatic::new(|| BasicHighScoresGameInfoFactory::new());
 
 impl BasicHighScoresGameInfoFactory {
 

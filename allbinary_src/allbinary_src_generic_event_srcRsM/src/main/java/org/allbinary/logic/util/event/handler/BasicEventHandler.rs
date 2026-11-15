@@ -41,7 +41,7 @@ pub struct BasicEventHandler {
     pub eventListenerInterfaceList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static BasicEventHandler_PERFORMANCE_MESSAGE: String = String::from("Use Custom onEvent Methods for needed optimization"); }
+pub static BasicEventHandler_PERFORMANCE_MESSAGE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Use Custom onEvent Methods for needed optimization"));
 // impl BasicEventHandlerInterface for BasicEventHandler with the methods of the trait
 
 impl BasicEventHandler {

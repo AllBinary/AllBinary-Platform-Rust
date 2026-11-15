@@ -28,20 +28,20 @@ macro_rules! jcall {
 pub struct StreetAddressData {
 }
 
-thread_local! { pub static StreetAddressData_MAX: i32 = 255; }
-thread_local! { pub static StreetAddressData_MIN: i32 = 0; }
-thread_local! { pub static StreetAddressData_FORM: String = String::from("FORM"); }
-thread_local! { pub static StreetAddressData_STATES: String = String::from("STATES"); }
-thread_local! { pub static StreetAddressData_NUMBEROFADDRESSES: String = String::from("STREETADDRESS_NUMBEROFADDRESSES"); }
-thread_local! { pub static StreetAddressData_ID: String = String::from("STREETADDRESS_ID"); }
-thread_local! { pub static StreetAddressData_DEFAULT: String = String::from("STREETADDRESS_DEFAULT_ADDRESS"); }
-thread_local! { pub static StreetAddressData_ADDRESS: String = String::from("STREETADDRESS_ADDRESS"); }
-thread_local! { pub static StreetAddressData_NAME: String = String::from("STREETADDRESS_NAME"); }
-thread_local! { pub static StreetAddressData_STREET: String = String::from("STREETADDRESS_STREET"); }
-thread_local! { pub static StreetAddressData_CITY: String = String::from("STREETADDRESS_CITY"); }
-thread_local! { pub static StreetAddressData_STATE: String = String::from("STREETADDRESS_STATE"); }
-thread_local! { pub static StreetAddressData_CODE: String = String::from("STREETADDRESS_CODE"); }
-thread_local! { pub static StreetAddressData_COUNTRY: String = String::from("STREETADDRESS_COUNTRY"); }
+pub static StreetAddressData_MAX: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 255);
+pub static StreetAddressData_MIN: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0);
+pub static StreetAddressData_FORM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("FORM"));
+pub static StreetAddressData_STATES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("STATES"));
+pub static StreetAddressData_NUMBEROFADDRESSES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("STREETADDRESS_NUMBEROFADDRESSES"));
+pub static StreetAddressData_ID: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("STREETADDRESS_ID"));
+pub static StreetAddressData_DEFAULT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("STREETADDRESS_DEFAULT_ADDRESS"));
+pub static StreetAddressData_ADDRESS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("STREETADDRESS_ADDRESS"));
+pub static StreetAddressData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("STREETADDRESS_NAME"));
+pub static StreetAddressData_STREET: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("STREETADDRESS_STREET"));
+pub static StreetAddressData_CITY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("STREETADDRESS_CITY"));
+pub static StreetAddressData_STATE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("STREETADDRESS_STATE"));
+pub static StreetAddressData_CODE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("STREETADDRESS_CODE"));
+pub static StreetAddressData_COUNTRY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("STREETADDRESS_COUNTRY"));
 
 impl StreetAddressData {
 

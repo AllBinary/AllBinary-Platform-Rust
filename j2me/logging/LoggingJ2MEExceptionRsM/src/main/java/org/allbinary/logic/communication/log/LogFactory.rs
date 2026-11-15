@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct LogFactory {
 }
 
-thread_local! { pub static LogFactory_LOG: Option<Rc<RefCell<Log>>> = Log::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone())); }
+pub static LogFactory_LOG: crate::JavaStatic<Option<Rc<RefCell<Log>>>> = crate::JavaStatic::new(|| Log::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone())));
 
 impl LogFactory {
 

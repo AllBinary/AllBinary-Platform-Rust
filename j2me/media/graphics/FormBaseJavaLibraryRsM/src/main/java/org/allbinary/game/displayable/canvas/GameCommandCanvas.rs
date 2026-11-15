@@ -104,7 +104,7 @@ pub struct GameCommandCanvas {
     pub fontHeight: i32,
 }
 
-thread_local! { pub static GameCommandCanvas_id: i32 = 0; }
+pub static GameCommandCanvas_id: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0);
 impl MenuListener for GameCommandCanvas {
     fn open(&mut self) { Self::open(self) }
     fn close(&mut self) { Self::close(self) }

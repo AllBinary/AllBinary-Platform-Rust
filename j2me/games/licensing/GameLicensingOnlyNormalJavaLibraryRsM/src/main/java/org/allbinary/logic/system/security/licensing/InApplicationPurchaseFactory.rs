@@ -22,7 +22,7 @@ macro_rules! jcall {
 pub struct InApplicationPurchaseFactory {
 }
 
-thread_local! { pub static InApplicationPurchaseFactory_instance: Option<Rc<RefCell<InApplicationPurchaseFactory>>> = InApplicationPurchaseFactory::new(); }
+pub static InApplicationPurchaseFactory_instance: crate::JavaStatic<Option<Rc<RefCell<InApplicationPurchaseFactory>>>> = crate::JavaStatic::new(|| InApplicationPurchaseFactory::new());
 
 impl InApplicationPurchaseFactory {
 

@@ -37,7 +37,7 @@ pub struct HtmlInputData {
     pub TYPES: Vec<String>,
 }
 
-thread_local! { pub static HtmlInputData_instance: Option<Rc<RefCell<HtmlInputData>>> = HtmlInputData::new(); }
+pub static HtmlInputData_instance: crate::JavaStatic<Option<Rc<RefCell<HtmlInputData>>>> = crate::JavaStatic::new(|| HtmlInputData::new());
 
 impl HtmlInputData {
 

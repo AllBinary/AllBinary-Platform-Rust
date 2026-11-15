@@ -49,7 +49,7 @@ pub struct CategoryProperties {
     pub category: String,
 }
 
-thread_local! { pub static CategoryProperties_MAXDEPTH: i32 = 100; }
+pub static CategoryProperties_MAXDEPTH: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 100);
 impl CategoryPropertiesInterface for CategoryProperties {
     fn setValue(&mut self, mut value: String) { Self::setValue(self, value) }
     fn getValue(&mut self) -> String { Self::getValue(self) }

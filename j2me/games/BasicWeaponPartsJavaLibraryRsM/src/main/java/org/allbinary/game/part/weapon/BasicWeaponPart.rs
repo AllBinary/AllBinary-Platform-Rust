@@ -47,7 +47,7 @@ pub struct BasicWeaponPart {
     pub relativeRelationship: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::RelativeRelationship::RelativeRelationshipDyn>>>,
 }
 
-thread_local! { pub static BasicWeaponPart_NULL_BASIC_WEAPON_PART: Option<Rc<RefCell<dyn BasicWeaponPartDyn>>> = BasicWeaponPart::createBasicWeaponPart(jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0)); }
+pub static BasicWeaponPart_NULL_BASIC_WEAPON_PART: crate::JavaStatic<Option<Rc<RefCell<dyn BasicWeaponPartDyn>>>> = crate::JavaStatic::new(|| BasicWeaponPart::createBasicWeaponPart(jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0)));
 impl PartInterface for BasicWeaponPart {
 }
 impl crate::org::allbinary::animation::AnimationInterfaceCompositeInterface::AnimationInterfaceCompositeInterface for BasicWeaponPart {

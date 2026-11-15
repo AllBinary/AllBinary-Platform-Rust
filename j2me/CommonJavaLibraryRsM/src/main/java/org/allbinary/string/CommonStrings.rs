@@ -83,7 +83,7 @@ pub struct CommonStrings {
     pub SIZE: String,
 }
 
-thread_local! { pub static CommonStrings_instance: Option<Rc<RefCell<CommonStrings>>> = CommonStrings::new(); }
+pub static CommonStrings_instance: crate::JavaStatic<Option<Rc<RefCell<CommonStrings>>>> = crate::JavaStatic::new(|| CommonStrings::new());
 
 impl CommonStrings {
 

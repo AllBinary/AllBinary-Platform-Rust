@@ -34,7 +34,7 @@ macro_rules! jcall {
 pub struct GeographicMapCellPositionAreaBase {
 }
 
-thread_local! { pub static GeographicMapCellPositionAreaBase_NULL_GEOGRPAHIC_MAP_POSITION_AREA_BASE: Option<Rc<RefCell<dyn GeographicMapCellPositionAreaBaseDyn>>> = GeographicMapCellPositionAreaBase::new().map(|reference| reference as Rc<RefCell<dyn GeographicMapCellPositionAreaBaseDyn>>); }
+pub static GeographicMapCellPositionAreaBase_NULL_GEOGRPAHIC_MAP_POSITION_AREA_BASE: crate::JavaStatic<Option<Rc<RefCell<dyn GeographicMapCellPositionAreaBaseDyn>>>> = crate::JavaStatic::new(|| GeographicMapCellPositionAreaBase::new().map(|reference| reference as Rc<RefCell<dyn GeographicMapCellPositionAreaBaseDyn>>));
 impl GeographicMapCellPositionAreaInterface for GeographicMapCellPositionAreaBase {
     fn getNextSurroundingGeographicMapCellPosition(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> { Self::getNextSurroundingGeographicMapCellPosition(self) }
     fn getOccupyingGeographicMapCellPositionList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::getOccupyingGeographicMapCellPositionList(self) }

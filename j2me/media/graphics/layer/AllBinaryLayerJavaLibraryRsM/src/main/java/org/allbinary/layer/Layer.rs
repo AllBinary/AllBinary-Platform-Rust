@@ -41,7 +41,7 @@ pub struct Layer {
     pub visible: bool,
 }
 
-thread_local! { pub static Layer_ID: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0); }
+pub static Layer_ID: crate::JavaStatic<Option<i32>> = crate::JavaStatic::new(|| jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(0));
 
 impl Layer {
 

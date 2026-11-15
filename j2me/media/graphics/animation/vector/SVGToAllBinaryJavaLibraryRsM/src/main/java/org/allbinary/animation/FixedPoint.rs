@@ -17,7 +17,7 @@ pub struct FixedPoint {
     pub ONE: i32,
 }
 
-thread_local! { pub static FixedPoint_instance: Option<Rc<RefCell<FixedPoint>>> = FixedPoint::new(); }
+pub static FixedPoint_instance: crate::JavaStatic<Option<Rc<RefCell<FixedPoint>>>> = crate::JavaStatic::new(|| FixedPoint::new());
 
 impl FixedPoint {
 

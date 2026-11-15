@@ -43,7 +43,7 @@ pub struct VectorRotationGenerator {
     pub angleFactory: Option<Rc<RefCell<AngleFactory>>>,
 }
 
-thread_local! { pub static VectorRotationGenerator_instance: Option<Rc<RefCell<VectorRotationGenerator>>> = VectorRotationGenerator::new(); }
+pub static VectorRotationGenerator_instance: crate::JavaStatic<Option<Rc<RefCell<VectorRotationGenerator>>>> = crate::JavaStatic::new(|| VectorRotationGenerator::new());
 
 impl VectorRotationGenerator {
 

@@ -36,7 +36,7 @@ pub struct SWTJOGLProcessor {
     pub glHolder: Option<Rc<RefCell<GLHolder>>>,
 }
 
-thread_local! { pub static SWTJOGLProcessor_instance: Option<Rc<RefCell<SWTJOGLProcessor>>> = SWTJOGLProcessor::new(); }
+pub static SWTJOGLProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<SWTJOGLProcessor>>>> = crate::JavaStatic::new(|| SWTJOGLProcessor::new());
 impl Runnable for SWTJOGLProcessor {
     fn run(&mut self) { Self::run(self) }
 }

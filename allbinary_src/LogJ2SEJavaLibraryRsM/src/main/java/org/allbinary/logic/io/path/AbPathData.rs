@@ -34,7 +34,7 @@ pub struct AbPathData {
     pub SEPARATOR: String,
 }
 
-thread_local! { pub static AbPathData_instance: Option<Rc<RefCell<AbPathData>>> = AbPathData::new(); }
+pub static AbPathData_instance: crate::JavaStatic<Option<Rc<RefCell<AbPathData>>>> = crate::JavaStatic::new(|| AbPathData::new());
 
 impl AbPathData {
 

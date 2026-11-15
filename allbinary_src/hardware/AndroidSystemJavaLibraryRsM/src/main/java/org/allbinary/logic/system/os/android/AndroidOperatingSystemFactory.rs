@@ -39,7 +39,7 @@ pub struct AndroidOperatingSystemFactory {
     pub tsUtil: Option<Rc<RefCell<TsUtil>>>,
 }
 
-thread_local! { pub static AndroidOperatingSystemFactory_instance: Option<Rc<RefCell<AndroidOperatingSystemFactory>>> = AndroidOperatingSystemFactory::new(); }
+pub static AndroidOperatingSystemFactory_instance: crate::JavaStatic<Option<Rc<RefCell<AndroidOperatingSystemFactory>>>> = crate::JavaStatic::new(|| AndroidOperatingSystemFactory::new());
 
 impl AndroidOperatingSystemFactory {
 

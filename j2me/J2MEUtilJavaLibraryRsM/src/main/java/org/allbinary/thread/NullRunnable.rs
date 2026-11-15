@@ -33,7 +33,7 @@ pub struct NullRunnable {
     pub base: ARunnable,
 }
 
-thread_local! { pub static NullRunnable_instance: Option<Rc<RefCell<NullRunnable>>> = NullRunnable::new(); }
+pub static NullRunnable_instance: crate::JavaStatic<Option<Rc<RefCell<NullRunnable>>>> = crate::JavaStatic::new(|| NullRunnable::new());
 
 impl NullRunnable {
     

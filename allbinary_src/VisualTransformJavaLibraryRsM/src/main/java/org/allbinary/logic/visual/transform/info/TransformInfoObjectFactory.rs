@@ -38,7 +38,7 @@ pub struct TransformInfoObjectFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static TransformInfoObjectFactory_instance: Option<Rc<RefCell<TransformInfoObjectFactory>>> = TransformInfoObjectFactory::new(); }
+pub static TransformInfoObjectFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TransformInfoObjectFactory>>>> = crate::JavaStatic::new(|| TransformInfoObjectFactory::new());
 
 impl TransformInfoObjectFactory {
 

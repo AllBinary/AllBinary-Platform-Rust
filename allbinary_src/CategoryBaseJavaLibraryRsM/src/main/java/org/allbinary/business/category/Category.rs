@@ -54,7 +54,7 @@ pub struct Category {
     pub CATEGORY: Option<i32>,
 }
 
-thread_local! { pub static Category_NOT_ROOT: String = String::from("This is not the root so it has no file path."); }
+pub static Category_NOT_ROOT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("This is not the root so it has no file path."));
 impl CategoryInterface for Category {
     fn getChildNodes(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::getChildNodes(self) }
     fn addChildProperty(&mut self, mut categoryPropertiesInterface: Option<Rc<RefCell<dyn CategoryPropertiesInterface>>>) -> bool { Self::addChildProperty(self, categoryPropertiesInterface) }

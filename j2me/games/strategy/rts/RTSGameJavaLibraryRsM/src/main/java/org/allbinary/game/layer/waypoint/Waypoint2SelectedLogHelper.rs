@@ -52,7 +52,7 @@ pub struct Waypoint2SelectedLogHelper {
     pub PROCESS_POSSIBLE_TARGET: String,
 }
 
-thread_local! { pub static Waypoint2SelectedLogHelper_instanceC: Option<Rc<RefCell<Waypoint2SelectedLogHelper>>> = Waypoint2SelectedLogHelper::new(); }
+pub static Waypoint2SelectedLogHelper_instanceC: crate::JavaStatic<Option<Rc<RefCell<Waypoint2SelectedLogHelper>>>> = crate::JavaStatic::new(|| Waypoint2SelectedLogHelper::new());
 
 impl Waypoint2SelectedLogHelper {
 

@@ -48,7 +48,7 @@ pub struct ThreadPool {
     pub currentPriorityRunnable: Option<Rc<RefCell<dyn PriorityRunnable>>>,
 }
 
-thread_local! { pub static ThreadPool_NORMAL_PRIORITY: i32 = 5; }
+pub static ThreadPool_NORMAL_PRIORITY: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 5);
 
 impl ThreadPool {
 

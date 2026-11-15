@@ -42,7 +42,7 @@ pub struct GameNotificationHud {
     pub lastGameNotificationEvent: Option<Rc<RefCell<GameNotificationEvent>>>,
 }
 
-thread_local! { pub static GameNotificationHud_NULL_GAME_NOTIFICATION: Option<Rc<RefCell<dyn GameNotificationHudDyn>>> = GameNotificationHud::new({ let java_field = jcall!(BasicHudFactory::getInstance()).TOPCENTER.clone(); java_field }.clone(), { let java_field = jcall!(BasicHudFactory::getInstance()).HORIZONTAL.clone(); java_field }.clone(), 0, { let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn GameNotificationHudDyn>>); }
+pub static GameNotificationHud_NULL_GAME_NOTIFICATION: crate::JavaStatic<Option<Rc<RefCell<dyn GameNotificationHudDyn>>>> = crate::JavaStatic::new(|| GameNotificationHud::new({ let java_field = jcall!(BasicHudFactory::getInstance()).TOPCENTER.clone(); java_field }.clone(), { let java_field = jcall!(BasicHudFactory::getInstance()).HORIZONTAL.clone(); java_field }.clone(), 0, { let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn GameNotificationHudDyn>>));
 impl GameNotificationListenerInterface for GameNotificationHud {
     fn onGameNotificationEvent(&mut self, mut gameNotificationEvent: Option<Rc<RefCell<GameNotificationEvent>>>) { Self::onGameNotificationEvent(self, gameNotificationEvent) }
 }

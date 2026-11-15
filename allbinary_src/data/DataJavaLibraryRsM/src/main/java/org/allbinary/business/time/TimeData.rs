@@ -31,7 +31,7 @@ pub struct TimeData {
     pub END: String,
 }
 
-thread_local! { pub static TimeData_instance: Option<Rc<RefCell<TimeData>>> = TimeData::new(); }
+pub static TimeData_instance: crate::JavaStatic<Option<Rc<RefCell<TimeData>>>> = crate::JavaStatic::new(|| TimeData::new());
 
 impl TimeData {
 

@@ -57,7 +57,7 @@ pub struct BaseGameInitialization {
     pub allLoaded: bool,
 }
 
-thread_local! { pub static BaseGameInitialization_NULL_BASE_GAME_INITIALIZATION: Option<Rc<RefCell<dyn BaseGameInitializationDyn>>> = BaseGameInitialization::new(vec![None; (0) as usize], 0).map(|reference| reference as Rc<RefCell<dyn BaseGameInitializationDyn>>); }
+pub static BaseGameInitialization_NULL_BASE_GAME_INITIALIZATION: crate::JavaStatic<Option<Rc<RefCell<dyn BaseGameInitializationDyn>>>> = crate::JavaStatic::new(|| BaseGameInitialization::new(vec![None; (0) as usize], 0).map(|reference| reference as Rc<RefCell<dyn BaseGameInitializationDyn>>));
 impl GameInitializationInterface for BaseGameInitialization {
     fn init(&mut self, mut abeClientInformation: Option<Rc<RefCell<dyn AbeClientInformationInterface>>>, mut commandListener: Option<Rc<RefCell<dyn CommandListener>>>, mut level: i32) { Self::init(self, abeClientInformation, commandListener, level) }
 }

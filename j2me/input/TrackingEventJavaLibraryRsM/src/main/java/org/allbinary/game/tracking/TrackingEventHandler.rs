@@ -35,7 +35,7 @@ pub struct TrackingEventHandler {
     pub base: BasicEventHandler,
 }
 
-thread_local! { pub static TrackingEventHandler_instance: Option<Rc<RefCell<TrackingEventHandler>>> = TrackingEventHandler::new(); }
+pub static TrackingEventHandler_instance: crate::JavaStatic<Option<Rc<RefCell<TrackingEventHandler>>>> = crate::JavaStatic::new(|| TrackingEventHandler::new());
 
 impl TrackingEventHandler {
     

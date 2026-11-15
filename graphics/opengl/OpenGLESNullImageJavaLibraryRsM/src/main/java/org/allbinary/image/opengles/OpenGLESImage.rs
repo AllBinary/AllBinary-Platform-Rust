@@ -51,9 +51,9 @@ pub struct OpenGLESImage {
     pub openGLESImageTranslate: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImageTranslate::OpenGLESImageTranslateDyn>>>,
 }
 
-thread_local! { pub static OpenGLESImage_NULL_OPENGL_IMAGE: Option<Rc<RefCell<dyn OpenGLESImageDyn>>> = OpenGLESImage::new(crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone).clone(), crate::org::allbinary::platform::graphics::PlatformBitmapBaseFactory::PlatformBitmapBaseFactory_NULL_PLATFORM_BITMAP_BASE_FACTORY.with(Clone::clone).clone(), crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactory_NULL_PLATFORM_TEXTURE_BASE_FACTORY.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn OpenGLESImageDyn>>); }
-thread_local! { pub static OpenGLESImage_texture2dList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>); }
-thread_local! { pub static OpenGLESImage_TYPE: i32 = 4; }
+pub static OpenGLESImage_NULL_OPENGL_IMAGE: crate::JavaStatic<Option<Rc<RefCell<dyn OpenGLESImageDyn>>>> = crate::JavaStatic::new(|| OpenGLESImage::new(crate::javax::microedition::lcdui::NullImage::NullImage_NULL_IMAGE.with(Clone::clone).clone(), crate::org::allbinary::platform::graphics::PlatformBitmapBaseFactory::PlatformBitmapBaseFactory_NULL_PLATFORM_BITMAP_BASE_FACTORY.with(Clone::clone).clone(), crate::org::allbinary::platform::opengles::PlatformTextureBaseFactory::PlatformTextureBaseFactory_NULL_PLATFORM_TEXTURE_BASE_FACTORY.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn OpenGLESImageDyn>>));
+pub static OpenGLESImage_texture2dList: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = crate::JavaStatic::new(|| BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
+pub static OpenGLESImage_TYPE: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 4);
 impl OpenGLSurfaceChangedInterface for OpenGLESImage {
     fn set(&mut self, mut gl: Option<Rc<RefCell<dyn GL>>>) { Self::set(self, gl) }
 }

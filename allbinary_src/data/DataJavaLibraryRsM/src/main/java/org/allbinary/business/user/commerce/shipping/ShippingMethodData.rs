@@ -28,11 +28,11 @@ macro_rules! jcall {
 pub struct ShippingMethodData {
 }
 
-thread_local! { pub static ShippingMethodData_DESCRIPTION: String = String::from("SHIPPINGMETHOD_DESCRIPTION"); }
-thread_local! { pub static ShippingMethodData_DEFAULT: String = String::from("SHIPPINGMETHOD_DEFAULT"); }
-thread_local! { pub static ShippingMethodData_NAME: String = String::from("SHIPPINGMETHOD_NAME"); }
-thread_local! { pub static ShippingMethodData_GROUP: String = String::from("SHIPPINGMETHOD_GROUP"); }
-thread_local! { pub static ShippingMethodData_COST: String = String::from("SHIPPINGMETHOD_COST"); }
+pub static ShippingMethodData_DESCRIPTION: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGMETHOD_DESCRIPTION"));
+pub static ShippingMethodData_DEFAULT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGMETHOD_DEFAULT"));
+pub static ShippingMethodData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGMETHOD_NAME"));
+pub static ShippingMethodData_GROUP: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGMETHOD_GROUP"));
+pub static ShippingMethodData_COST: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGMETHOD_COST"));
 
 impl ShippingMethodData {
 

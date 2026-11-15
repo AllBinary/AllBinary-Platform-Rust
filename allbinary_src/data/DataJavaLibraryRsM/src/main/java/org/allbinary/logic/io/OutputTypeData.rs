@@ -29,7 +29,7 @@ pub struct OutputTypeData {
     pub NAME: String,
 }
 
-thread_local! { pub static OutputTypeData_instance: Option<Rc<RefCell<OutputTypeData>>> = OutputTypeData::new(); }
+pub static OutputTypeData_instance: crate::JavaStatic<Option<Rc<RefCell<OutputTypeData>>>> = crate::JavaStatic::new(|| OutputTypeData::new());
 
 impl OutputTypeData {
 

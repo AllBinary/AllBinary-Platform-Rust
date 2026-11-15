@@ -31,7 +31,7 @@ pub struct MusicStrings {
     pub RIGHT_VOLUME: String,
 }
 
-thread_local! { pub static MusicStrings_instance: Option<Rc<RefCell<MusicStrings>>> = MusicStrings::new(); }
+pub static MusicStrings_instance: crate::JavaStatic<Option<Rc<RefCell<MusicStrings>>>> = crate::JavaStatic::new(|| MusicStrings::new());
 
 impl MusicStrings {
 

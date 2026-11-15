@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct PlatformBitmapBaseFactory {
 }
 
-thread_local! { pub static PlatformBitmapBaseFactory_NULL_PLATFORM_BITMAP_BASE_FACTORY: Option<Rc<RefCell<dyn PlatformBitmapBaseFactoryDyn>>> = PlatformBitmapBaseFactory::new().map(|reference| reference as Rc<RefCell<dyn PlatformBitmapBaseFactoryDyn>>); }
+pub static PlatformBitmapBaseFactory_NULL_PLATFORM_BITMAP_BASE_FACTORY: crate::JavaStatic<Option<Rc<RefCell<dyn PlatformBitmapBaseFactoryDyn>>>> = crate::JavaStatic::new(|| PlatformBitmapBaseFactory::new().map(|reference| reference as Rc<RefCell<dyn PlatformBitmapBaseFactoryDyn>>));
 
 impl PlatformBitmapBaseFactory {
 

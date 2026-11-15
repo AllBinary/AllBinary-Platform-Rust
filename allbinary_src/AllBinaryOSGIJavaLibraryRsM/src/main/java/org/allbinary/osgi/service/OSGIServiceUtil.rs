@@ -37,7 +37,7 @@ pub struct OSGIServiceUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static OSGIServiceUtil_instance: Option<Rc<RefCell<OSGIServiceUtil>>> = OSGIServiceUtil::new(); }
+pub static OSGIServiceUtil_instance: crate::JavaStatic<Option<Rc<RefCell<OSGIServiceUtil>>>> = crate::JavaStatic::new(|| OSGIServiceUtil::new());
 
 impl OSGIServiceUtil {
 

@@ -52,7 +52,7 @@ pub struct RemoteHighScores {
     pub ASCENDING: String,
 }
 
-thread_local! { pub static RemoteHighScores_hashTable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashtable(); }
+pub static RemoteHighScores_hashTable: crate::JavaStatic<Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>> = crate::JavaStatic::new(|| jcall!(StdUtil::getInstance()).createHashtable());
 
 impl RemoteHighScores {
     

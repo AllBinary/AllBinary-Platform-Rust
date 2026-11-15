@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct CapitalEventHandlerFactory {
 }
 
-thread_local! { pub static CapitalEventHandlerFactory_capitalEventHandlerArray: Vec<Option<Rc<RefCell<CapitalEventHandler>>>> = Vec::new(); }
+pub static CapitalEventHandlerFactory_capitalEventHandlerArray: crate::JavaStatic<Vec<Option<Rc<RefCell<CapitalEventHandler>>>>> = crate::JavaStatic::new(|| Vec::new());
 
 impl CapitalEventHandlerFactory {
 

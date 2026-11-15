@@ -31,7 +31,7 @@ pub struct OrthogonalLightingOpenGLProcessorFactory {
     pub sceneLightsOrthogonalModeOpenGLProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::OpenGLProcessor::OpenGLProcessorDyn>>>,
 }
 
-thread_local! { pub static OrthogonalLightingOpenGLProcessorFactory_instance: Option<Rc<RefCell<OrthogonalLightingOpenGLProcessorFactory>>> = OrthogonalLightingOpenGLProcessorFactory::new(); }
+pub static OrthogonalLightingOpenGLProcessorFactory_instance: crate::JavaStatic<Option<Rc<RefCell<OrthogonalLightingOpenGLProcessorFactory>>>> = crate::JavaStatic::new(|| OrthogonalLightingOpenGLProcessorFactory::new());
 
 impl OrthogonalLightingOpenGLProcessorFactory {
 

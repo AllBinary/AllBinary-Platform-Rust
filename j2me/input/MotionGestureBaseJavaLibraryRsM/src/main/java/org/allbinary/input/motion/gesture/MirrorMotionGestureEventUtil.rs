@@ -34,7 +34,7 @@ pub struct MirrorMotionGestureEventUtil {
     pub motionEventCircularPool: Option<Rc<RefCell<MotionEventCircularPool>>>,
 }
 
-thread_local! { pub static MirrorMotionGestureEventUtil_instance: Option<Rc<RefCell<MirrorMotionGestureEventUtil>>> = MirrorMotionGestureEventUtil::new(); }
+pub static MirrorMotionGestureEventUtil_instance: crate::JavaStatic<Option<Rc<RefCell<MirrorMotionGestureEventUtil>>>> = crate::JavaStatic::new(|| MirrorMotionGestureEventUtil::new());
 
 impl MirrorMotionGestureEventUtil {
 

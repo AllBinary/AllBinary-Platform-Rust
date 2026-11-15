@@ -36,7 +36,7 @@ pub struct AuthorizationTypeFactory {
     pub CHIP: Option<Rc<RefCell<AuthorizationType>>>,
 }
 
-thread_local! { pub static AuthorizationTypeFactory_instance: Option<Rc<RefCell<AuthorizationTypeFactory>>> = AuthorizationTypeFactory::new(); }
+pub static AuthorizationTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<AuthorizationTypeFactory>>>> = crate::JavaStatic::new(|| AuthorizationTypeFactory::new());
 
 impl AuthorizationTypeFactory {
 

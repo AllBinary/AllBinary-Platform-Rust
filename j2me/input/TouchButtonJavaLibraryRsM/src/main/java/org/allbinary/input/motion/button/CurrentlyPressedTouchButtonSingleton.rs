@@ -32,7 +32,7 @@ pub struct CurrentlyPressedTouchButtonSingleton {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static CurrentlyPressedTouchButtonSingleton_instance: Option<Rc<RefCell<dyn CurrentlyPressedTouchButtonSingletonDyn>>> = CurrentlyPressedTouchButtonSingleton::new().map(|reference| reference as Rc<RefCell<dyn CurrentlyPressedTouchButtonSingletonDyn>>); }
+pub static CurrentlyPressedTouchButtonSingleton_instance: crate::JavaStatic<Option<Rc<RefCell<dyn CurrentlyPressedTouchButtonSingletonDyn>>>> = crate::JavaStatic::new(|| CurrentlyPressedTouchButtonSingleton::new().map(|reference| reference as Rc<RefCell<dyn CurrentlyPressedTouchButtonSingletonDyn>>));
 
 impl CurrentlyPressedTouchButtonSingleton {
 

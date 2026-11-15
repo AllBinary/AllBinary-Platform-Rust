@@ -34,7 +34,7 @@ pub struct QuoteRequestData {
     pub COMMENTS: String,
 }
 
-thread_local! { pub static QuoteRequestData_instance: Option<Rc<RefCell<QuoteRequestData>>> = QuoteRequestData::new(); }
+pub static QuoteRequestData_instance: crate::JavaStatic<Option<Rc<RefCell<QuoteRequestData>>>> = crate::JavaStatic::new(|| QuoteRequestData::new());
 
 impl QuoteRequestData {
 

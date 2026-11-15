@@ -46,7 +46,7 @@ pub struct DirectionFactory {
     pub ALL_DIRECTION: Option<Rc<RefCell<Direction>>>,
 }
 
-thread_local! { pub static DirectionFactory_instance: Option<Rc<RefCell<DirectionFactory>>> = DirectionFactory::new(); }
+pub static DirectionFactory_instance: crate::JavaStatic<Option<Rc<RefCell<DirectionFactory>>>> = crate::JavaStatic::new(|| DirectionFactory::new());
 
 impl DirectionFactory {
 

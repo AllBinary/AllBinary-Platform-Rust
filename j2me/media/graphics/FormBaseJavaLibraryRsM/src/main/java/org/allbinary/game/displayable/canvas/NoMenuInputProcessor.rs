@@ -34,7 +34,7 @@ pub struct NoMenuInputProcessor {
     pub base: BasicMenuInputProcessor,
 }
 
-thread_local! { pub static NoMenuInputProcessor_SINGLETON: Option<Rc<RefCell<NoMenuInputProcessor>>> = NoMenuInputProcessor::new(); }
+pub static NoMenuInputProcessor_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<NoMenuInputProcessor>>>> = crate::JavaStatic::new(|| NoMenuInputProcessor::new());
 impl crate::org::allbinary::input::motion::gesture::observer::BaseMotionGestureEventListener::BaseMotionGestureEventListener for NoMenuInputProcessor {
     fn onMotionGestureEvent(&mut self, mut motionGestureEvent: Option<Rc<RefCell<MotionGestureEvent>>>) { Self::onMotionGestureEvent(self, motionGestureEvent) }
     fn onScrolledMotionGestureEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::input::motion::gesture::observer::MotionGestureEvent::MotionGestureEvent>>>) { crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessor::onScrolledMotionGestureEvent(crate::org::allbinary::game::displayable::canvas::BasicMenuInputProcessor::BasicMenuInputProcessorDyn::as_BasicMenuInputProcessor_mut(self), p1) }

@@ -36,30 +36,30 @@ pub struct UserEmailEventNameData {
 
 pub static mut UserEmailEventNameData_userNameEvenNameHashMap: std::cell::LazyCell<Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>> = std::cell::LazyCell::new(|| jcall!(StdUtil::getInstance()).createHashMap());
 pub static mut UserEmailEventNameData_nextId: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 0);
-thread_local! { pub static UserEmailEventNameData_INSTALLER: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Installer")); }
-thread_local! { pub static UserEmailEventNameData_EXCEPTION: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Exception")); }
-thread_local! { pub static UserEmailEventNameData_LOGGEDEXCEPTION: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Logged Exception")); }
-thread_local! { pub static UserEmailEventNameData_ERROR: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Error")); }
-thread_local! { pub static UserEmailEventNameData_OUTOFMEMORY: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Out Of Memory Error")); }
-thread_local! { pub static UserEmailEventNameData_ADMINGENERATINGSTATICPAGES: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Admin Generating Static Pages")); }
-thread_local! { pub static UserEmailEventNameData_STOREERROROCCURRED: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Store Error Occurred")); }
-thread_local! { pub static UserEmailEventNameData_STOREOUTOFMEMORY: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Store Out Of Memory Error")); }
-thread_local! { pub static UserEmailEventNameData_STORECREATED: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Store Created")); }
-thread_local! { pub static UserEmailEventNameData_STOREOPENED: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Store Opened")); }
-thread_local! { pub static UserEmailEventNameData_STORECLOSED: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Store Closed")); }
-thread_local! { pub static UserEmailEventNameData_STOREGENERATINGSTATICPAGES: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Store Generating Static Pages")); }
-thread_local! { pub static UserEmailEventNameData_PRODUCTISOUT: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Product Is Out")); }
-thread_local! { pub static UserEmailEventNameData_PRODUCTISAVAILABLE: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Product Is Available")); }
-thread_local! { pub static UserEmailEventNameData_PRODUCTISOLD: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Product Is Old")); }
-thread_local! { pub static UserEmailEventNameData_PRODUCTISONSALE: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Product Is On Sale")); }
-thread_local! { pub static UserEmailEventNameData_PRODUCTSALEISOVER: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Product Sale Is Over")); }
-thread_local! { pub static UserEmailEventNameData_ORDERPREPROCESSING: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PREPROCESSING.with(Clone::clone).clone()); }
-thread_local! { pub static UserEmailEventNameData_ORDERPROCESSING: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PROCESSING.with(Clone::clone).clone()); }
-thread_local! { pub static UserEmailEventNameData_ORDERCANCELLED: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELLED.with(Clone::clone).clone()); }
-thread_local! { pub static UserEmailEventNameData_ORDERPARTIALLYSHIPPED: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PARTIALLYSHIPPED.with(Clone::clone).clone()); }
-thread_local! { pub static UserEmailEventNameData_ORDERSHIPPED: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPED.with(Clone::clone).clone()); }
-thread_local! { pub static UserEmailEventNameData_QUOTEREQUEST: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("Quote Request")); }
-thread_local! { pub static UserEmailEventNameData_NEWPASSWORD: Option<Rc<RefCell<UserEmailEventNameData>>> = UserEmailEventNameData::new(String::from("New Password")); }
+pub static UserEmailEventNameData_INSTALLER: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Installer")));
+pub static UserEmailEventNameData_EXCEPTION: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Exception")));
+pub static UserEmailEventNameData_LOGGEDEXCEPTION: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Logged Exception")));
+pub static UserEmailEventNameData_ERROR: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Error")));
+pub static UserEmailEventNameData_OUTOFMEMORY: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Out Of Memory Error")));
+pub static UserEmailEventNameData_ADMINGENERATINGSTATICPAGES: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Admin Generating Static Pages")));
+pub static UserEmailEventNameData_STOREERROROCCURRED: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Store Error Occurred")));
+pub static UserEmailEventNameData_STOREOUTOFMEMORY: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Store Out Of Memory Error")));
+pub static UserEmailEventNameData_STORECREATED: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Store Created")));
+pub static UserEmailEventNameData_STOREOPENED: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Store Opened")));
+pub static UserEmailEventNameData_STORECLOSED: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Store Closed")));
+pub static UserEmailEventNameData_STOREGENERATINGSTATICPAGES: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Store Generating Static Pages")));
+pub static UserEmailEventNameData_PRODUCTISOUT: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Product Is Out")));
+pub static UserEmailEventNameData_PRODUCTISAVAILABLE: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Product Is Available")));
+pub static UserEmailEventNameData_PRODUCTISOLD: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Product Is Old")));
+pub static UserEmailEventNameData_PRODUCTISONSALE: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Product Is On Sale")));
+pub static UserEmailEventNameData_PRODUCTSALEISOVER: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Product Sale Is Over")));
+pub static UserEmailEventNameData_ORDERPREPROCESSING: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PREPROCESSING.with(Clone::clone).clone()));
+pub static UserEmailEventNameData_ORDERPROCESSING: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PROCESSING.with(Clone::clone).clone()));
+pub static UserEmailEventNameData_ORDERCANCELLED: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_CANCELLED.with(Clone::clone).clone()));
+pub static UserEmailEventNameData_ORDERPARTIALLYSHIPPED: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_PARTIALLYSHIPPED.with(Clone::clone).clone()));
+pub static UserEmailEventNameData_ORDERSHIPPED: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(crate::org::allbinary::business::user::commerce::inventory::order::OrderHistoryData::OrderHistoryData_SHIPPED.with(Clone::clone).clone()));
+pub static UserEmailEventNameData_QUOTEREQUEST: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("Quote Request")));
+pub static UserEmailEventNameData_NEWPASSWORD: crate::JavaStatic<Option<Rc<RefCell<UserEmailEventNameData>>>> = crate::JavaStatic::new(|| UserEmailEventNameData::new(String::from("New Password")));
 
 impl UserEmailEventNameData {
     

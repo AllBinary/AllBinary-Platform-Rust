@@ -32,7 +32,7 @@ pub struct BasicColorCacheFactory {
     pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
 }
 
-thread_local! { pub static BasicColorCacheFactory_instance: Option<Rc<RefCell<BasicColorCacheFactory>>> = BasicColorCacheFactory::new(); }
+pub static BasicColorCacheFactory_instance: crate::JavaStatic<Option<Rc<RefCell<BasicColorCacheFactory>>>> = crate::JavaStatic::new(|| BasicColorCacheFactory::new());
 
 impl BasicColorCacheFactory {
 

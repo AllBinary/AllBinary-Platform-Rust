@@ -31,7 +31,7 @@ pub struct TableDataFactory {
     pub ZERO_STRING: String,
 }
 
-thread_local! { pub static TableDataFactory_instance: Option<Rc<RefCell<TableDataFactory>>> = TableDataFactory::new(); }
+pub static TableDataFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TableDataFactory>>>> = crate::JavaStatic::new(|| TableDataFactory::new());
 
 impl TableDataFactory {
 

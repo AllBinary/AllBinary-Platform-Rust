@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct ImageToRotationImageArrayUtil {
 }
 
-thread_local! { pub static ImageToRotationImageArrayUtil_instance: Option<Rc<RefCell<ImageToRotationImageArrayUtil>>> = ImageToRotationImageArrayUtil::new(); }
+pub static ImageToRotationImageArrayUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImageToRotationImageArrayUtil>>>> = crate::JavaStatic::new(|| ImageToRotationImageArrayUtil::new());
 
 impl ImageToRotationImageArrayUtil {
 

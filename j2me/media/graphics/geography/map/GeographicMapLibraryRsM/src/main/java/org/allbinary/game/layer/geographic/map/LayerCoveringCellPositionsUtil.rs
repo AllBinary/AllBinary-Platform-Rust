@@ -35,7 +35,7 @@ pub struct LayerCoveringCellPositionsUtil {
     pub cellPositionsUtil: Option<Rc<RefCell<CellPositionsUtil>>>,
 }
 
-thread_local! { pub static LayerCoveringCellPositionsUtil_instance: Option<Rc<RefCell<LayerCoveringCellPositionsUtil>>> = LayerCoveringCellPositionsUtil::new(); }
+pub static LayerCoveringCellPositionsUtil_instance: crate::JavaStatic<Option<Rc<RefCell<LayerCoveringCellPositionsUtil>>>> = crate::JavaStatic::new(|| LayerCoveringCellPositionsUtil::new());
 
 impl LayerCoveringCellPositionsUtil {
 

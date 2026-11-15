@@ -33,7 +33,7 @@ pub struct CollidableNeverCollideBehaviorFactory {
     pub instance: Option<Rc<RefCell<dyn crate::org::allbinary::game::collision::CollidableNeverCollideBehavior::CollidableNeverCollideBehaviorDyn>>>,
 }
 
-thread_local! { pub static CollidableNeverCollideBehaviorFactory_instanceC: Option<Rc<RefCell<CollidableNeverCollideBehaviorFactory>>> = CollidableNeverCollideBehaviorFactory::new(); }
+pub static CollidableNeverCollideBehaviorFactory_instanceC: crate::JavaStatic<Option<Rc<RefCell<CollidableNeverCollideBehaviorFactory>>>> = crate::JavaStatic::new(|| CollidableNeverCollideBehaviorFactory::new());
 
 impl CollidableNeverCollideBehaviorFactory {
 

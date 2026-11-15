@@ -36,7 +36,7 @@ pub struct ResourceLoadingLevelFactory {
     pub RESOURCE_LOADING_LEVEL_ARRAY: Vec<Option<Rc<RefCell<ResourceLoadingLevel>>>>,
 }
 
-thread_local! { pub static ResourceLoadingLevelFactory_instance: Option<Rc<RefCell<ResourceLoadingLevelFactory>>> = ResourceLoadingLevelFactory::new(); }
+pub static ResourceLoadingLevelFactory_instance: crate::JavaStatic<Option<Rc<RefCell<ResourceLoadingLevelFactory>>>> = crate::JavaStatic::new(|| ResourceLoadingLevelFactory::new());
 
 impl ResourceLoadingLevelFactory {
 

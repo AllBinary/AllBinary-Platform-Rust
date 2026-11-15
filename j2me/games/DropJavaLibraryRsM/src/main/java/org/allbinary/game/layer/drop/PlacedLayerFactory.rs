@@ -22,7 +22,7 @@ pub struct PlacedLayerFactory {
     pub basicArrayListUtil: Option<Rc<RefCell<BasicArrayListUtil>>>,
 }
 
-thread_local! { pub static PlacedLayerFactory_instance: Option<Rc<RefCell<PlacedLayerFactory>>> = PlacedLayerFactory::new(); }
+pub static PlacedLayerFactory_instance: crate::JavaStatic<Option<Rc<RefCell<PlacedLayerFactory>>>> = crate::JavaStatic::new(|| PlacedLayerFactory::new());
 
 impl PlacedLayerFactory {
 

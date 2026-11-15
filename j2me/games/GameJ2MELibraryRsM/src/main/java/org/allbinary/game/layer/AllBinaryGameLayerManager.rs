@@ -45,7 +45,7 @@ pub struct AllBinaryGameLayerManager {
 }
 
 pub static mut AllBinaryGameLayerManager_NULL_ALLBINARY_LAYER_MANAGER: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
-thread_local! { pub static AllBinaryGameLayerManager_ID: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(22); }
+pub static AllBinaryGameLayerManager_ID: crate::JavaStatic<Option<i32>> = crate::JavaStatic::new(|| jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(22));
 
 impl AllBinaryGameLayerManager {
     

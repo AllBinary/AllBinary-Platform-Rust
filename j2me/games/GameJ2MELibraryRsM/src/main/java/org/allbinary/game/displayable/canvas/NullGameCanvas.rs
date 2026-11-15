@@ -43,8 +43,8 @@ pub struct NullGameCanvas {
 }
 
 pub static mut NullGameCanvas_instance: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
-thread_local! { pub static NullGameCanvas_NO_GAME: String = String::from("No Background Game"); }
-thread_local! { pub static NullGameCanvas_TYPE: i32 = 1; }
+pub static NullGameCanvas_NO_GAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("No Background Game"));
+pub static NullGameCanvas_TYPE: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 1);
 impl crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvasInterface::AllBinaryGameCanvasInterface for NullGameCanvas {
     fn getLayerManager(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>> { crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvas::getLayerManager(crate::org::allbinary::game::displayable::canvas::AllBinaryGameCanvas::AllBinaryGameCanvasDyn::as_AllBinaryGameCanvas_mut(self)) }
 }

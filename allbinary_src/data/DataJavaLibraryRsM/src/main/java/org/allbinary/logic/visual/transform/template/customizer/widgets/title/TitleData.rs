@@ -32,7 +32,7 @@ pub struct TitleData {
     pub MAXLEN: i32,
 }
 
-thread_local! { pub static TitleData_instance: Option<Rc<RefCell<TitleData>>> = TitleData::new(); }
+pub static TitleData_instance: crate::JavaStatic<Option<Rc<RefCell<TitleData>>>> = crate::JavaStatic::new(|| TitleData::new());
 
 impl TitleData {
 

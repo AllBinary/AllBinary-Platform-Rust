@@ -42,7 +42,7 @@ pub struct ResourceUtil {
     pub ext: String,
 }
 
-thread_local! { pub static ResourceUtil_instance: Option<Rc<RefCell<ResourceUtil>>> = ResourceUtil::new(); }
+pub static ResourceUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ResourceUtil>>>> = crate::JavaStatic::new(|| ResourceUtil::new());
 
 impl ResourceUtil {
 

@@ -39,7 +39,7 @@ pub struct MouseStrings {
     pub MOUSE_MOVED_LABEL: String,
 }
 
-thread_local! { pub static MouseStrings_instance: Option<Rc<RefCell<MouseStrings>>> = MouseStrings::new(); }
+pub static MouseStrings_instance: crate::JavaStatic<Option<Rc<RefCell<MouseStrings>>>> = crate::JavaStatic::new(|| MouseStrings::new());
 
 impl MouseStrings {
 

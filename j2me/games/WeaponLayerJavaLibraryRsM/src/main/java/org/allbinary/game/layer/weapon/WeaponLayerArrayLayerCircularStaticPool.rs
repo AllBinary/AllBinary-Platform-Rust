@@ -37,7 +37,7 @@ pub struct WeaponLayerArrayLayerCircularStaticPool {
     pub THREE_WEAPONLAYER_ARRAY: Vec<Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::weapon::WeaponLayer::WeaponLayerDyn>>>>>,
 }
 
-thread_local! { pub static WeaponLayerArrayLayerCircularStaticPool_instance: Option<Rc<RefCell<WeaponLayerArrayLayerCircularStaticPool>>> = WeaponLayerArrayLayerCircularStaticPool::new(); }
+pub static WeaponLayerArrayLayerCircularStaticPool_instance: crate::JavaStatic<Option<Rc<RefCell<WeaponLayerArrayLayerCircularStaticPool>>>> = crate::JavaStatic::new(|| WeaponLayerArrayLayerCircularStaticPool::new());
 
 impl WeaponLayerArrayLayerCircularStaticPool {
 

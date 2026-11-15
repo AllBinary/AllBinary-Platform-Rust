@@ -30,7 +30,7 @@ pub struct SimpleShaderInitializer {
     pub base: ShaderInitializer,
 }
 
-thread_local! { pub static SimpleShaderInitializer_instanceC: Option<Rc<RefCell<SimpleShaderInitializer>>> = SimpleShaderInitializer::new(); }
+pub static SimpleShaderInitializer_instanceC: crate::JavaStatic<Option<Rc<RefCell<SimpleShaderInitializer>>>> = crate::JavaStatic::new(|| SimpleShaderInitializer::new());
 
 impl SimpleShaderInitializer {
 

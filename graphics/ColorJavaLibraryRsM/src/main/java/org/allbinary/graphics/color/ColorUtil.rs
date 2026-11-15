@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct ColorUtil {
 }
 
-thread_local! { pub static ColorUtil_instance: Option<Rc<RefCell<ColorUtil>>> = ColorUtil::new(); }
+pub static ColorUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ColorUtil>>>> = crate::JavaStatic::new(|| ColorUtil::new());
 
 impl ColorUtil {
 

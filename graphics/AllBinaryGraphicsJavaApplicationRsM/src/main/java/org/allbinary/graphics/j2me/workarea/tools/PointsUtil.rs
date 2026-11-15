@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct PointsUtil {
 }
 
-thread_local! { pub static PointsUtil_instance: Option<Rc<RefCell<PointsUtil>>> = PointsUtil::new(); }
+pub static PointsUtil_instance: crate::JavaStatic<Option<Rc<RefCell<PointsUtil>>>> = crate::JavaStatic::new(|| PointsUtil::new());
 
 impl PointsUtil {
 

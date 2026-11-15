@@ -39,7 +39,7 @@ pub struct GameKeyEventHandler {
     pub downGameKeyEventHandler: Option<Rc<RefCell<DownGameKeyEventHandler>>>,
 }
 
-thread_local! { pub static GameKeyEventHandler_instance: Option<Rc<RefCell<GameKeyEventHandler>>> = GameKeyEventHandler::new(); }
+pub static GameKeyEventHandler_instance: crate::JavaStatic<Option<Rc<RefCell<GameKeyEventHandler>>>> = crate::JavaStatic::new(|| GameKeyEventHandler::new());
 
 impl GameKeyEventHandler {
 

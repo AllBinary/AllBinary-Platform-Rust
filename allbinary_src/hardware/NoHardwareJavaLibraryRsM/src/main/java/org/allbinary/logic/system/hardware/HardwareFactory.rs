@@ -32,7 +32,7 @@ pub struct HardwareFactory {
     pub SINGLETON: Option<Rc<RefCell<dyn HardwareInterface>>>,
 }
 
-thread_local! { pub static HardwareFactory_instance: Option<Rc<RefCell<HardwareFactory>>> = HardwareFactory::new(); }
+pub static HardwareFactory_instance: crate::JavaStatic<Option<Rc<RefCell<HardwareFactory>>>> = crate::JavaStatic::new(|| HardwareFactory::new());
 
 impl HardwareFactory {
 

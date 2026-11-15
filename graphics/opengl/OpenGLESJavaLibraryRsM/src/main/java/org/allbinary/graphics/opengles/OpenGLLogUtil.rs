@@ -25,7 +25,7 @@ pub struct OpenGLLogUtil {
     pub IMAGE: String,
 }
 
-thread_local! { pub static OpenGLLogUtil_instance: Option<Rc<RefCell<OpenGLLogUtil>>> = OpenGLLogUtil::new(); }
+pub static OpenGLLogUtil_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLLogUtil>>>> = crate::JavaStatic::new(|| OpenGLLogUtil::new());
 
 impl OpenGLLogUtil {
 

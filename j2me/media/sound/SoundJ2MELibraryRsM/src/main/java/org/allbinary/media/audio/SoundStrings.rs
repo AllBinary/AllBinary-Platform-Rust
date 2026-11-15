@@ -34,7 +34,7 @@ pub struct SoundStrings {
     pub CLOSING_SOUND: String,
 }
 
-thread_local! { pub static SoundStrings_instance: Option<Rc<RefCell<SoundStrings>>> = SoundStrings::new(); }
+pub static SoundStrings_instance: crate::JavaStatic<Option<Rc<RefCell<SoundStrings>>>> = crate::JavaStatic::new(|| SoundStrings::new());
 
 impl SoundStrings {
 

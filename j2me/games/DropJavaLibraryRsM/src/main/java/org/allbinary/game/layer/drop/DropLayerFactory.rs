@@ -34,7 +34,7 @@ pub struct DropLayerFactory {
     pub basicArrayListUtil: Option<Rc<RefCell<BasicArrayListUtil>>>,
 }
 
-thread_local! { pub static DropLayerFactory_DROP_LAYER_FACTORY: Option<Rc<RefCell<DropLayerFactory>>> = DropLayerFactory::new(); }
+pub static DropLayerFactory_DROP_LAYER_FACTORY: crate::JavaStatic<Option<Rc<RefCell<DropLayerFactory>>>> = crate::JavaStatic::new(|| DropLayerFactory::new());
 
 impl DropLayerFactory {
 

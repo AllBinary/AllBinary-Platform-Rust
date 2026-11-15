@@ -30,7 +30,7 @@ pub struct NoScoreable {
     pub base: Scoreable,
 }
 
-thread_local! { pub static NoScoreable_SINGLETON: Option<Rc<RefCell<NoScoreable>>> = NoScoreable::new(); }
+pub static NoScoreable_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<NoScoreable>>>> = crate::JavaStatic::new(|| NoScoreable::new());
 
 impl NoScoreable {
     

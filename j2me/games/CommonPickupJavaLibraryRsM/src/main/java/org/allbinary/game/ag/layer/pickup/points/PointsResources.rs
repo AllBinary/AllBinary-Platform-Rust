@@ -32,7 +32,7 @@ pub struct PointsResources {
     pub RESOURCE_4: String,
 }
 
-thread_local! { pub static PointsResources_SINGLETON: Option<Rc<RefCell<PointsResources>>> = PointsResources::new(); }
+pub static PointsResources_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<PointsResources>>>> = crate::JavaStatic::new(|| PointsResources::new());
 
 impl PointsResources {
 

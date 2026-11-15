@@ -44,7 +44,7 @@ pub struct DrawVerticalStringUtil {
     pub offsetXArray: Vec<i32>,
 }
 
-thread_local! { pub static DrawVerticalStringUtil_instance: Option<Rc<RefCell<DrawVerticalStringUtil>>> = DrawVerticalStringUtil::new(); }
+pub static DrawVerticalStringUtil_instance: crate::JavaStatic<Option<Rc<RefCell<DrawVerticalStringUtil>>>> = crate::JavaStatic::new(|| DrawVerticalStringUtil::new());
 
 impl DrawVerticalStringUtil {
 

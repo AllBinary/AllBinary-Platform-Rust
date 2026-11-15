@@ -28,12 +28,12 @@ macro_rules! jcall {
 pub struct NameSpaceRequestParamData {
 }
 
-thread_local! { pub static NameSpaceRequestParamData_NAME: String = String::from("NAMESPACE_REQUESTDATA_NAME"); }
-thread_local! { pub static NameSpaceRequestParamData_VALUE: String = String::from("INPUT_VALUE"); }
-thread_local! { pub static NameSpaceRequestParamData_PROPERTIES: String = String::from("_PROPERTIES_"); }
-thread_local! { pub static NameSpaceRequestParamData_SEP: String = String::from("_DOT_"); }
-thread_local! { pub static NameSpaceRequestParamData_PROPERTIESSEPARATOR: String = String::from("_PROPDOT_"); }
-thread_local! { pub static NameSpaceRequestParamData_DOCUMENT: String = String::from("NAMESPACE_REQUESTDATA_DOCUMENT"); }
+pub static NameSpaceRequestParamData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("NAMESPACE_REQUESTDATA_NAME"));
+pub static NameSpaceRequestParamData_VALUE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("INPUT_VALUE"));
+pub static NameSpaceRequestParamData_PROPERTIES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("_PROPERTIES_"));
+pub static NameSpaceRequestParamData_SEP: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("_DOT_"));
+pub static NameSpaceRequestParamData_PROPERTIESSEPARATOR: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("_PROPDOT_"));
+pub static NameSpaceRequestParamData_DOCUMENT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("NAMESPACE_REQUESTDATA_DOCUMENT"));
 
 impl NameSpaceRequestParamData {
 

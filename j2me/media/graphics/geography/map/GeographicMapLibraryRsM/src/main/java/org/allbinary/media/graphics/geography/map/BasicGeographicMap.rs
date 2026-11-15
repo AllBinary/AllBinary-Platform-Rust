@@ -47,7 +47,7 @@ pub struct BasicGeographicMap {
     pub geographicMapCellTypeFactory: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellTypeFactory::GeographicMapCellTypeFactoryDyn>>>,
 }
 
-thread_local! { pub static BasicGeographicMap_NULL_BASIC_GEOGRAPHIC_MAP_ARRAY: Vec<Option<Rc<RefCell<dyn BasicGeographicMapDyn>>>> = vec![None; (0) as usize]; }
+pub static BasicGeographicMap_NULL_BASIC_GEOGRAPHIC_MAP_ARRAY: crate::JavaStatic<Vec<Option<Rc<RefCell<dyn BasicGeographicMapDyn>>>>> = crate::JavaStatic::new(|| vec![None; (0) as usize]);
 // impl GeographicMapInterface for BasicGeographicMap with the methods of the trait
 
 impl BasicGeographicMap {

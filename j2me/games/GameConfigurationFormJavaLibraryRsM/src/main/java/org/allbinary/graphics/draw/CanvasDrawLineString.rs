@@ -39,7 +39,7 @@ pub struct CanvasDrawLineString {
     pub fontHeight: i32,
 }
 
-thread_local! { pub static CanvasDrawLineString_NULL_CANVAS_DRAW_LINE_STRING: Option<Rc<RefCell<CanvasDrawLineString>>> = CanvasDrawLineString::new(0, 0); }
+pub static CanvasDrawLineString_NULL_CANVAS_DRAW_LINE_STRING: crate::JavaStatic<Option<Rc<RefCell<CanvasDrawLineString>>>> = crate::JavaStatic::new(|| CanvasDrawLineString::new(0, 0));
 impl UpdateMyFontInterface for CanvasDrawLineString {
     fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }

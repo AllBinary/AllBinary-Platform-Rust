@@ -70,7 +70,7 @@ pub struct CollidableDestroyableDamageableLayer {
 }
 
 pub static mut CollidableDestroyableDamageableLayer_NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
-thread_local! { pub static CollidableDestroyableDamageableLayer_READYFOREXPLOSION: String = String::from("ReadyForExplosion: "); }
+pub static CollidableDestroyableDamageableLayer_READYFOREXPLOSION: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("ReadyForExplosion: "));
 // impl DestroyableInterface for CollidableDestroyableDamageableLayer with the methods of the trait
 impl DamageableInterface for CollidableDestroyableDamageableLayer {
     fn damage(&mut self, mut damage: i32, mut damageType: i32) { Self::damage(self, damage, damageType) }

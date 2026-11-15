@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct J2SEMath {
 }
 
-thread_local! { pub static J2SEMath_instance: Option<Rc<RefCell<J2SEMath>>> = J2SEMath::new(); }
+pub static J2SEMath_instance: crate::JavaStatic<Option<Rc<RefCell<J2SEMath>>>> = crate::JavaStatic::new(|| J2SEMath::new());
 
 impl J2SEMath {
 

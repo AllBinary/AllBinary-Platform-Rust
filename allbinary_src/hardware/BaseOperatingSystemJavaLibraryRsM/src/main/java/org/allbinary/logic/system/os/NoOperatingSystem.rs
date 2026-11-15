@@ -30,7 +30,7 @@ pub struct NoOperatingSystem {
     pub base: GenericOperatingSystem,
 }
 
-thread_local! { pub static NoOperatingSystem_NO_OPERATING_SYSTEM: Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>> = GenericOperatingSystem::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>); }
+pub static NoOperatingSystem_NO_OPERATING_SYSTEM: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>>> = crate::JavaStatic::new(|| GenericOperatingSystem::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>));
 
 impl NoOperatingSystem {
     

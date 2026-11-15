@@ -30,7 +30,7 @@ pub struct NoAllBinarySensor {
     pub base: AllBinarySensor,
 }
 
-thread_local! { pub static NoAllBinarySensor_instance: Option<Rc<RefCell<NoAllBinarySensor>>> = NoAllBinarySensor::new(); }
+pub static NoAllBinarySensor_instance: crate::JavaStatic<Option<Rc<RefCell<NoAllBinarySensor>>>> = crate::JavaStatic::new(|| NoAllBinarySensor::new());
 
 impl NoAllBinarySensor {
     

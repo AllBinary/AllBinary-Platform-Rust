@@ -31,7 +31,7 @@ pub struct ForwardData {
     pub VALUE: String,
 }
 
-thread_local! { pub static ForwardData_instance: Option<Rc<RefCell<ForwardData>>> = ForwardData::new(); }
+pub static ForwardData_instance: crate::JavaStatic<Option<Rc<RefCell<ForwardData>>>> = crate::JavaStatic::new(|| ForwardData::new());
 
 impl ForwardData {
 

@@ -36,7 +36,7 @@ pub struct DemoGameBehavior {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static DemoGameBehavior_instance: Option<Rc<RefCell<dyn DemoGameBehaviorDyn>>> = DemoGameBehavior::new().map(|reference| reference as Rc<RefCell<dyn DemoGameBehaviorDyn>>); }
+pub static DemoGameBehavior_instance: crate::JavaStatic<Option<Rc<RefCell<dyn DemoGameBehaviorDyn>>>> = crate::JavaStatic::new(|| DemoGameBehavior::new().map(|reference| reference as Rc<RefCell<dyn DemoGameBehaviorDyn>>));
 
 impl DemoGameBehavior {
 

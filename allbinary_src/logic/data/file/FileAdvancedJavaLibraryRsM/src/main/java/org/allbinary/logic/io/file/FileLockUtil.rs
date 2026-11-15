@@ -39,7 +39,7 @@ pub struct FileLockUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static FileLockUtil_instance: Option<Rc<RefCell<FileLockUtil>>> = FileLockUtil::new(); }
+pub static FileLockUtil_instance: crate::JavaStatic<Option<Rc<RefCell<FileLockUtil>>>> = crate::JavaStatic::new(|| FileLockUtil::new());
 
 impl FileLockUtil {
 

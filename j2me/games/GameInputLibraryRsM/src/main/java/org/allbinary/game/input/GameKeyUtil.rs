@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct GameKeyUtil {
 }
 
-thread_local! { pub static GameKeyUtil_instance: Option<Rc<RefCell<GameKeyUtil>>> = GameKeyUtil::new(); }
+pub static GameKeyUtil_instance: crate::JavaStatic<Option<Rc<RefCell<GameKeyUtil>>>> = crate::JavaStatic::new(|| GameKeyUtil::new());
 
 impl GameKeyUtil {
 

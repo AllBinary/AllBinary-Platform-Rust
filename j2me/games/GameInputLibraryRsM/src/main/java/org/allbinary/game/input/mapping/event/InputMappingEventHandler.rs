@@ -35,7 +35,7 @@ pub struct InputMappingEventHandler {
     pub base: BasicEventHandler,
 }
 
-thread_local! { pub static InputMappingEventHandler_gameKeyEventHandler: Option<Rc<RefCell<InputMappingEventHandler>>> = InputMappingEventHandler::new(); }
+pub static InputMappingEventHandler_gameKeyEventHandler: crate::JavaStatic<Option<Rc<RefCell<InputMappingEventHandler>>>> = crate::JavaStatic::new(|| InputMappingEventHandler::new());
 
 impl InputMappingEventHandler {
     

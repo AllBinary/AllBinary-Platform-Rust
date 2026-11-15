@@ -39,7 +39,7 @@ pub struct TransformTemplateFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static TransformTemplateFactory_instance: Option<Rc<RefCell<TransformTemplateFactory>>> = TransformTemplateFactory::new(); }
+pub static TransformTemplateFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TransformTemplateFactory>>>> = crate::JavaStatic::new(|| TransformTemplateFactory::new());
 
 impl TransformTemplateFactory {
 

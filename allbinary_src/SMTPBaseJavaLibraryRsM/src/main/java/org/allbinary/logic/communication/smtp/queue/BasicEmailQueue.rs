@@ -36,7 +36,7 @@ pub struct BasicEmailQueue {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static BasicEmailQueue_instance: Option<Rc<RefCell<BasicEmailQueue>>> = BasicEmailQueue::new(); }
+pub static BasicEmailQueue_instance: crate::JavaStatic<Option<Rc<RefCell<BasicEmailQueue>>>> = crate::JavaStatic::new(|| BasicEmailQueue::new());
 pub static mut BasicEmailQueue_basicEmailQueue: std::cell::LazyCell<Option<Rc<RefCell<BasicEmailQueue>>>> = std::cell::LazyCell::new(|| None);
 impl EmailQueueInterface for BasicEmailQueue {
     fn offer(&mut self, mut emailInterface: Option<Rc<RefCell<dyn EmailInterface>>>) -> bool { Self::offer(self, emailInterface) }

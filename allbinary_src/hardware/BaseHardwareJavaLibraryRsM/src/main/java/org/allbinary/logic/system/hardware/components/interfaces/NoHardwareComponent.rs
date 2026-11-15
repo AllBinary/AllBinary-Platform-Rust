@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct NoHardwareComponent {
 }
 
-thread_local! { pub static NoHardwareComponent_instance: Option<Rc<RefCell<NoHardwareComponent>>> = NoHardwareComponent::new(); }
+pub static NoHardwareComponent_instance: crate::JavaStatic<Option<Rc<RefCell<NoHardwareComponent>>>> = crate::JavaStatic::new(|| NoHardwareComponent::new());
 impl HardwareComponentInterface for NoHardwareComponent {
     fn compareTo(&mut self, mut componentInterface: Option<Rc<RefCell<dyn HardwareComponentInterface>>>) -> bool { Self::compareTo(self, componentInterface) }
     fn toString(&mut self) -> String { Self::toString(self) }

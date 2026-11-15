@@ -41,7 +41,7 @@ pub struct OpenGLCapabilities {
     pub maxTextureSize: i32,
 }
 
-thread_local! { pub static OpenGLCapabilities_instance: Option<Rc<RefCell<OpenGLCapabilities>>> = OpenGLCapabilities::new(); }
+pub static OpenGLCapabilities_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLCapabilities>>>> = crate::JavaStatic::new(|| OpenGLCapabilities::new());
 
 impl OpenGLCapabilities {
 

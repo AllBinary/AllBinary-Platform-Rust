@@ -37,7 +37,7 @@ pub struct CellPositionsUtil {
     pub surroundArray: Vec<Vec<i32>>,
 }
 
-thread_local! { pub static CellPositionsUtil_instance: Option<Rc<RefCell<CellPositionsUtil>>> = CellPositionsUtil::new(); }
+pub static CellPositionsUtil_instance: crate::JavaStatic<Option<Rc<RefCell<CellPositionsUtil>>>> = crate::JavaStatic::new(|| CellPositionsUtil::new());
 
 impl CellPositionsUtil {
 

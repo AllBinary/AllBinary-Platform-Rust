@@ -44,7 +44,7 @@ pub struct GameInputStrings {
     pub ENABLE_PLAYER_GAME_INPUT: String,
 }
 
-thread_local! { pub static GameInputStrings_instance: Option<Rc<RefCell<GameInputStrings>>> = GameInputStrings::new(); }
+pub static GameInputStrings_instance: crate::JavaStatic<Option<Rc<RefCell<GameInputStrings>>>> = crate::JavaStatic::new(|| GameInputStrings::new());
 
 impl GameInputStrings {
 

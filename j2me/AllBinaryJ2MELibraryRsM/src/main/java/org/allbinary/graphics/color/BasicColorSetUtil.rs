@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct BasicColorSetUtil {
 }
 
-thread_local! { pub static BasicColorSetUtil_instance: Option<Rc<RefCell<dyn BasicColorSetUtilDyn>>> = BasicColorSetUtil::new().map(|reference| reference as Rc<RefCell<dyn BasicColorSetUtilDyn>>); }
+pub static BasicColorSetUtil_instance: crate::JavaStatic<Option<Rc<RefCell<dyn BasicColorSetUtilDyn>>>> = crate::JavaStatic::new(|| BasicColorSetUtil::new().map(|reference| reference as Rc<RefCell<dyn BasicColorSetUtilDyn>>));
 
 impl BasicColorSetUtil {
 

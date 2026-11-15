@@ -46,7 +46,7 @@ pub struct GameFeatureFactory {
     pub COLLISIONS_FORCED_TWO_DIMENSIONAL: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::GameFeature::GameFeatureDyn>>>,
 }
 
-thread_local! { pub static GameFeatureFactory_instance: Option<Rc<RefCell<GameFeatureFactory>>> = GameFeatureFactory::new(); }
+pub static GameFeatureFactory_instance: crate::JavaStatic<Option<Rc<RefCell<GameFeatureFactory>>>> = crate::JavaStatic::new(|| GameFeatureFactory::new());
 
 impl GameFeatureFactory {
 

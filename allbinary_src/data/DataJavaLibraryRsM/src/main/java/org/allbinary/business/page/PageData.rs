@@ -29,7 +29,7 @@ pub struct PageData {
     pub NAME: String,
 }
 
-thread_local! { pub static PageData_instance: Option<Rc<RefCell<PageData>>> = PageData::new(); }
+pub static PageData_instance: crate::JavaStatic<Option<Rc<RefCell<PageData>>>> = crate::JavaStatic::new(|| PageData::new());
 
 impl PageData {
 

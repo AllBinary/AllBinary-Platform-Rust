@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct CustomizerTransformInfoData {
 }
 
-thread_local! { pub static CustomizerTransformInfoData_NAME: String = String::from("CUSTOMIZER_TRANSFORM_INFO_NAME"); }
+pub static CustomizerTransformInfoData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("CUSTOMIZER_TRANSFORM_INFO_NAME"));
 
 impl CustomizerTransformInfoData {
 

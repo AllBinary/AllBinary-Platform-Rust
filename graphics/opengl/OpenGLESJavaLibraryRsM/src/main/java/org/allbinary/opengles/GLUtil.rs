@@ -34,7 +34,7 @@ pub struct GLUtil {
     pub NULL_FLOAT_BUFFER: Option<Rc<RefCell<FloatBuffer>>>,
 }
 
-thread_local! { pub static GLUtil_instance: Option<Rc<RefCell<GLUtil>>> = GLUtil::new(); }
+pub static GLUtil_instance: crate::JavaStatic<Option<Rc<RefCell<GLUtil>>>> = crate::JavaStatic::new(|| GLUtil::new());
 
 impl GLUtil {
 

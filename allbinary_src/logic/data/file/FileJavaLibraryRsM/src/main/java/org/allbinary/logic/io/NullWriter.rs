@@ -31,7 +31,7 @@ pub struct NullWriter {
     pub base: Writer,
 }
 
-thread_local! { pub static NullWriter_NULL_WRITER: Option<Rc<RefCell<NullWriter>>> = NullWriter::new(); }
+pub static NullWriter_NULL_WRITER: crate::JavaStatic<Option<Rc<RefCell<NullWriter>>>> = crate::JavaStatic::new(|| NullWriter::new());
 impl crate::java::io::Closeable::Closeable for NullWriter {
     fn close(&mut self) { Self::close(self) }
 }

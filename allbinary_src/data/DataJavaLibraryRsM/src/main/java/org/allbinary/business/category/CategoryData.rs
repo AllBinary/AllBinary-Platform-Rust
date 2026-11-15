@@ -39,7 +39,7 @@ pub struct CategoryData {
     pub ENCRYPTED_EXTENSION: String,
 }
 
-thread_local! { pub static CategoryData_instance: Option<Rc<RefCell<CategoryData>>> = CategoryData::new(); }
+pub static CategoryData_instance: crate::JavaStatic<Option<Rc<RefCell<CategoryData>>>> = crate::JavaStatic::new(|| CategoryData::new());
 
 impl CategoryData {
 

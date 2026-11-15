@@ -20,7 +20,7 @@ pub struct TimeTypeUtil {
     pub DAY: String,
 }
 
-thread_local! { pub static TimeTypeUtil_instance: Option<Rc<RefCell<TimeTypeUtil>>> = TimeTypeUtil::new(); }
+pub static TimeTypeUtil_instance: crate::JavaStatic<Option<Rc<RefCell<TimeTypeUtil>>>> = crate::JavaStatic::new(|| TimeTypeUtil::new());
 
 impl TimeTypeUtil {
 

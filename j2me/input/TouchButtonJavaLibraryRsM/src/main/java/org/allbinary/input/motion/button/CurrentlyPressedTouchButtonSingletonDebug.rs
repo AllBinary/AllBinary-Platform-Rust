@@ -44,7 +44,7 @@ pub struct CurrentlyPressedTouchButtonSingletonDebug {
     pub RELEASED_AND_NOT_FIRED: String,
 }
 
-thread_local! { pub static CurrentlyPressedTouchButtonSingletonDebug_instanceC: Option<Rc<RefCell<CurrentlyPressedTouchButtonSingletonDebug>>> = CurrentlyPressedTouchButtonSingletonDebug::new(); }
+pub static CurrentlyPressedTouchButtonSingletonDebug_instanceC: crate::JavaStatic<Option<Rc<RefCell<CurrentlyPressedTouchButtonSingletonDebug>>>> = crate::JavaStatic::new(|| CurrentlyPressedTouchButtonSingletonDebug::new());
 
 impl CurrentlyPressedTouchButtonSingletonDebug {
 

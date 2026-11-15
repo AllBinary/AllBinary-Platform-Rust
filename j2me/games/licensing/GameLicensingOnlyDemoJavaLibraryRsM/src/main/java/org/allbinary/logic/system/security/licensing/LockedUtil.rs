@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct LockedUtil {
 }
 
-thread_local! { pub static LockedUtil_instance: Option<Rc<RefCell<LockedUtil>>> = LockedUtil::new(); }
+pub static LockedUtil_instance: crate::JavaStatic<Option<Rc<RefCell<LockedUtil>>>> = crate::JavaStatic::new(|| LockedUtil::new());
 impl LockedUtilInterface for LockedUtil {
     fn isLocked(&mut self) -> bool { Self::isLocked(self) }
     fn isLockedFeature(&mut self, mut lockableFeatrue: Option<Rc<RefCell<LockableFeature>>>) -> bool { Self::isLockedFeature(self, lockableFeatrue) }

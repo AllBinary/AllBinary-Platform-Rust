@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct FinalPositionRaceTrackFactory {
 }
 
-thread_local! { pub static FinalPositionRaceTrackFactory_FIRST_POSITION: i32 = 1; }
+pub static FinalPositionRaceTrackFactory_FIRST_POSITION: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 1);
 pub static mut FinalPositionRaceTrackFactory_index: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| FinalPositionRaceTrackFactory_FIRST_POSITION.with(Clone::clone).clone());
 
 impl FinalPositionRaceTrackFactory {

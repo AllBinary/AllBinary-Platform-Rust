@@ -35,7 +35,7 @@ pub struct AllBinarySensor {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static AllBinarySensor_NULL_ALLBINARY_SENSOR: Option<Rc<RefCell<dyn AllBinarySensorDyn>>> = AllBinarySensor::new().map(|reference| reference as Rc<RefCell<dyn AllBinarySensorDyn>>); }
+pub static AllBinarySensor_NULL_ALLBINARY_SENSOR: crate::JavaStatic<Option<Rc<RefCell<dyn AllBinarySensorDyn>>>> = crate::JavaStatic::new(|| AllBinarySensor::new().map(|reference| reference as Rc<RefCell<dyn AllBinarySensorDyn>>));
 pub static mut AllBinarySensor_max: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 100);
 impl AllBinarySensorListener for AllBinarySensor {
     fn onSensorChange(&mut self) { Self::onSensorChange(self) }

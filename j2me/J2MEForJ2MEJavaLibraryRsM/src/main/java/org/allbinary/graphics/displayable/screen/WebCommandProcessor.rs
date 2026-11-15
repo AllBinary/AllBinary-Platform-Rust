@@ -40,7 +40,7 @@ pub struct WebCommandProcessor {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static WebCommandProcessor_instance: Option<Rc<RefCell<WebCommandProcessor>>> = WebCommandProcessor::new(); }
+pub static WebCommandProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<WebCommandProcessor>>>> = crate::JavaStatic::new(|| WebCommandProcessor::new());
 
 impl WebCommandProcessor {
 

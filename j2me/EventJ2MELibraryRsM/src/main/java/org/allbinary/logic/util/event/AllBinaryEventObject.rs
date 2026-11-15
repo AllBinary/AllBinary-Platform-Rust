@@ -34,7 +34,7 @@ pub struct AllBinaryEventObject {
     pub source: Option<Rc<RefCell<Box<dyn std::any::Any>>>>,
 }
 
-thread_local! { pub static AllBinaryEventObject_NULL_EVENT: Option<Rc<RefCell<dyn AllBinaryEventObjectDyn>>> = AllBinaryEventObject::new(crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone())).map(|reference| reference as Rc<RefCell<dyn AllBinaryEventObjectDyn>>); }
+pub static AllBinaryEventObject_NULL_EVENT: crate::JavaStatic<Option<Rc<RefCell<dyn AllBinaryEventObjectDyn>>>> = crate::JavaStatic::new(|| AllBinaryEventObject::new(crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone())).map(|reference| reference as Rc<RefCell<dyn AllBinaryEventObjectDyn>>));
 
 impl AllBinaryEventObject {
 

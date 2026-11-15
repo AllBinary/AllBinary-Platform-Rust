@@ -38,7 +38,7 @@ pub struct ScaleProcessor {
     pub imageScaleUtil: Option<Rc<RefCell<ImageScaleUtil>>>,
 }
 
-thread_local! { pub static ScaleProcessor_instanceC: Option<Rc<RefCell<ScaleProcessor>>> = ScaleProcessor::new(); }
+pub static ScaleProcessor_instanceC: crate::JavaStatic<Option<Rc<RefCell<ScaleProcessor>>>> = crate::JavaStatic::new(|| ScaleProcessor::new());
 
 impl ScaleProcessor {
 

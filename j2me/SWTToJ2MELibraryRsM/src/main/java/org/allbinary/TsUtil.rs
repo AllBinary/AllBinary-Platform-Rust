@@ -41,7 +41,7 @@ fn java_string_hash(text: &str) -> i32 {
 pub struct TsUtil {
 }
 
-thread_local! { pub static TsUtil_instance: Option<Rc<RefCell<TsUtil>>> = TsUtil::new(); }
+pub static TsUtil_instance: crate::JavaStatic<Option<Rc<RefCell<TsUtil>>>> = crate::JavaStatic::new(|| TsUtil::new());
 
 impl TsUtil {
 

@@ -43,7 +43,7 @@ pub struct MyFormUtil {
     pub popupMenuRectangle: Option<Rc<RefCell<Rectangle>>>,
 }
 
-thread_local! { pub static MyFormUtil_instance: Option<Rc<RefCell<MyFormUtil>>> = MyFormUtil::new(); }
+pub static MyFormUtil_instance: crate::JavaStatic<Option<Rc<RefCell<MyFormUtil>>>> = crate::JavaStatic::new(|| MyFormUtil::new());
 
 impl MyFormUtil {
 

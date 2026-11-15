@@ -32,7 +32,7 @@ pub struct ShaderStrings {
     pub UNIFORM_ATTRIBUTE_HANDLE: String,
 }
 
-thread_local! { pub static ShaderStrings_instance: Option<Rc<RefCell<ShaderStrings>>> = ShaderStrings::new(); }
+pub static ShaderStrings_instance: crate::JavaStatic<Option<Rc<RefCell<ShaderStrings>>>> = crate::JavaStatic::new(|| ShaderStrings::new());
 
 impl ShaderStrings {
 

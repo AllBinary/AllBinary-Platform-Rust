@@ -43,7 +43,7 @@ pub struct PointsDomUtil {
     pub LINE: String,
 }
 
-thread_local! { pub static PointsDomUtil_instance: Option<Rc<RefCell<PointsDomUtil>>> = PointsDomUtil::new(); }
+pub static PointsDomUtil_instance: crate::JavaStatic<Option<Rc<RefCell<PointsDomUtil>>>> = crate::JavaStatic::new(|| PointsDomUtil::new());
 
 impl PointsDomUtil {
 

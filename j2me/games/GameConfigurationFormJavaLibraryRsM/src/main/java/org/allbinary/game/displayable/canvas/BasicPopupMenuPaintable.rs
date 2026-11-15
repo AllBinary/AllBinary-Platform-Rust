@@ -62,7 +62,7 @@ pub struct BasicPopupMenuPaintable {
     pub animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>,
 }
 
-thread_local! { pub static BasicPopupMenuPaintable_NAME: String = String::from("MENU"); }
+pub static BasicPopupMenuPaintable_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("MENU"));
 impl UpdateMyFontInterface for BasicPopupMenuPaintable {
     fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }

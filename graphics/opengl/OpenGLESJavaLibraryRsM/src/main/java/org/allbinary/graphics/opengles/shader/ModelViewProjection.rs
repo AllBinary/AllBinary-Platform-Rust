@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct ModelViewProjection {
 }
 
-thread_local! { pub static ModelViewProjection_instance: Option<Rc<RefCell<ModelViewProjection>>> = ModelViewProjection::new(); }
+pub static ModelViewProjection_instance: crate::JavaStatic<Option<Rc<RefCell<ModelViewProjection>>>> = crate::JavaStatic::new(|| ModelViewProjection::new());
 
 impl ModelViewProjection {
 

@@ -67,7 +67,7 @@ pub struct RecordStoreHighScores {
     pub recordComparatorInterface: Option<Rc<RefCell<dyn RecordComparator>>>,
 }
 
-thread_local! { pub static RecordStoreHighScores_hashTable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>> = jcall!(StdUtil::getInstance()).createHashtable(); }
+pub static RecordStoreHighScores_hashTable: crate::JavaStatic<Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>> = crate::JavaStatic::new(|| jcall!(StdUtil::getInstance()).createHashtable());
 
 impl RecordStoreHighScores {
     

@@ -38,7 +38,7 @@ pub struct IconLayer {
     pub animationInterface: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>,
 }
 
-thread_local! { pub static IconLayer_NULL_ICON_LAYER: Option<Rc<RefCell<IconLayer>>> = IconLayer::new(jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0), 0, 0); }
+pub static IconLayer_NULL_ICON_LAYER: crate::JavaStatic<Option<Rc<RefCell<IconLayer>>>> = crate::JavaStatic::new(|| IconLayer::new(jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0), 0, 0));
 impl crate::org::allbinary::layer::LayerInterface::LayerInterface for IconLayer {
     fn getHeight(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getHeight(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }
     fn getWidth(&mut self) -> i32 { crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayer::getWidth(crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn::as_AllBinaryLayer_mut(self)) }

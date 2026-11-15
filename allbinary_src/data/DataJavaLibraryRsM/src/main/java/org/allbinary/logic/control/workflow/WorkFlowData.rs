@@ -32,7 +32,7 @@ pub struct WorkFlowData {
     pub DATA: String,
 }
 
-thread_local! { pub static WorkFlowData_instance: Option<Rc<RefCell<WorkFlowData>>> = WorkFlowData::new(); }
+pub static WorkFlowData_instance: crate::JavaStatic<Option<Rc<RefCell<WorkFlowData>>>> = crate::JavaStatic::new(|| WorkFlowData::new());
 
 impl WorkFlowData {
 

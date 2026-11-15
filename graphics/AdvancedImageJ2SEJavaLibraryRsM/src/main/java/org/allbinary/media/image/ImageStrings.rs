@@ -30,7 +30,7 @@ pub struct ImageStrings {
     pub PNG_EXTENSION: String,
 }
 
-thread_local! { pub static ImageStrings_instance: Option<Rc<RefCell<ImageStrings>>> = ImageStrings::new(); }
+pub static ImageStrings_instance: crate::JavaStatic<Option<Rc<RefCell<ImageStrings>>>> = crate::JavaStatic::new(|| ImageStrings::new());
 
 impl ImageStrings {
 

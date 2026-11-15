@@ -31,7 +31,7 @@ pub struct FilePathData {
     pub PATH_START: String,
 }
 
-thread_local! { pub static FilePathData_instance: Option<Rc<RefCell<FilePathData>>> = FilePathData::new(); }
+pub static FilePathData_instance: crate::JavaStatic<Option<Rc<RefCell<FilePathData>>>> = crate::JavaStatic::new(|| FilePathData::new());
 
 impl FilePathData {
 

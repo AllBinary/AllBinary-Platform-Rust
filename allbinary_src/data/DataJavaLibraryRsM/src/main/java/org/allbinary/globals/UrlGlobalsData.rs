@@ -28,11 +28,11 @@ macro_rules! jcall {
 pub struct UrlGlobalsData {
 }
 
-thread_local! { pub static UrlGlobalsData_NAME: String = String::from("URLGLOBALS_NAME"); }
-thread_local! { pub static UrlGlobalsData_WEBAPPPATH: String = String::from("URLGLOBALS_WEBAPPPATH"); }
-thread_local! { pub static UrlGlobalsData_TESTINGMODE: String = String::from("URLGLOBALS_TESTINGMODE"); }
-thread_local! { pub static UrlGlobalsData_TESTINGHTMLPATH: String = String::from("URLGLOBALS_TESTINGHTMLPATH"); }
-thread_local! { pub static UrlGlobalsData_MAINPATH: String = String::from("URLGLOBALS_MAINPATH"); }
+pub static UrlGlobalsData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("URLGLOBALS_NAME"));
+pub static UrlGlobalsData_WEBAPPPATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("URLGLOBALS_WEBAPPPATH"));
+pub static UrlGlobalsData_TESTINGMODE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("URLGLOBALS_TESTINGMODE"));
+pub static UrlGlobalsData_TESTINGHTMLPATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("URLGLOBALS_TESTINGHTMLPATH"));
+pub static UrlGlobalsData_MAINPATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("URLGLOBALS_MAINPATH"));
 
 impl UrlGlobalsData {
 

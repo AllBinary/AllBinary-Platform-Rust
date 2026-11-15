@@ -28,11 +28,11 @@ macro_rules! jcall {
 pub struct ColorLevel {
 }
 
-thread_local! { pub static ColorLevel_COLOR_MASK: i32 = 0x00FFFFFF; }
-thread_local! { pub static ColorLevel_MIN: i32 = 0x44; }
-thread_local! { pub static ColorLevel_AVG: i32 = 0x77; }
-thread_local! { pub static ColorLevel_LIGHT: i32 = 0xAA; }
-thread_local! { pub static ColorLevel_HIGH: i32 = 0xEE; }
+pub static ColorLevel_COLOR_MASK: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x00FFFFFF);
+pub static ColorLevel_MIN: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x44);
+pub static ColorLevel_AVG: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x77);
+pub static ColorLevel_LIGHT: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0xAA);
+pub static ColorLevel_HIGH: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0xEE);
 
 impl ColorLevel {
 

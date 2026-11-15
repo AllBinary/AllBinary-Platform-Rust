@@ -44,7 +44,7 @@ pub struct EmailEventHandlerUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static EmailEventHandlerUtil_instance: Option<Rc<RefCell<EmailEventHandlerUtil>>> = EmailEventHandlerUtil::new(); }
+pub static EmailEventHandlerUtil_instance: crate::JavaStatic<Option<Rc<RefCell<EmailEventHandlerUtil>>>> = crate::JavaStatic::new(|| EmailEventHandlerUtil::new());
 
 impl EmailEventHandlerUtil {
 

@@ -43,7 +43,7 @@ pub struct WaypointSelectedLogHelper {
     pub stringUtil: Option<Rc<RefCell<StringUtil>>>,
 }
 
-thread_local! { pub static WaypointSelectedLogHelper_instanceC: Option<Rc<RefCell<WaypointSelectedLogHelper>>> = WaypointSelectedLogHelper::new(); }
+pub static WaypointSelectedLogHelper_instanceC: crate::JavaStatic<Option<Rc<RefCell<WaypointSelectedLogHelper>>>> = crate::JavaStatic::new(|| WaypointSelectedLogHelper::new());
 
 impl WaypointSelectedLogHelper {
 

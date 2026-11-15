@@ -34,7 +34,7 @@ pub struct GeographicPathFinderBase {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static GeographicPathFinderBase_NULL_GEOGRAPHIC_PATH_FINDER_BASE: Option<Rc<RefCell<dyn GeographicPathFinderBaseDyn>>> = GeographicPathFinderBase::new().map(|reference| reference as Rc<RefCell<dyn GeographicPathFinderBaseDyn>>); }
+pub static GeographicPathFinderBase_NULL_GEOGRAPHIC_PATH_FINDER_BASE: crate::JavaStatic<Option<Rc<RefCell<dyn GeographicPathFinderBaseDyn>>>> = crate::JavaStatic::new(|| GeographicPathFinderBase::new().map(|reference| reference as Rc<RefCell<dyn GeographicPathFinderBaseDyn>>));
 
 impl GeographicPathFinderBase {
 

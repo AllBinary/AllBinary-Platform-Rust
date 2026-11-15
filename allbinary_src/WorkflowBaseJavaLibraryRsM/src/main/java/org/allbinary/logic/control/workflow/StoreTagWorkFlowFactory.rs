@@ -40,7 +40,7 @@ pub struct StoreTagWorkFlowFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static StoreTagWorkFlowFactory_instance: Option<Rc<RefCell<StoreTagWorkFlowFactory>>> = StoreTagWorkFlowFactory::new(); }
+pub static StoreTagWorkFlowFactory_instance: crate::JavaStatic<Option<Rc<RefCell<StoreTagWorkFlowFactory>>>> = crate::JavaStatic::new(|| StoreTagWorkFlowFactory::new());
 
 impl StoreTagWorkFlowFactory {
 

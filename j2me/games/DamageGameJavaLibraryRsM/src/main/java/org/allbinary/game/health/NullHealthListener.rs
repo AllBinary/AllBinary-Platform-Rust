@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct NullHealthListener {
 }
 
-thread_local! { pub static NullHealthListener_NULL_HEALTH_LISTENER: Option<Rc<RefCell<NullHealthListener>>> = NullHealthListener::new(); }
+pub static NullHealthListener_NULL_HEALTH_LISTENER: crate::JavaStatic<Option<Rc<RefCell<NullHealthListener>>>> = crate::JavaStatic::new(|| NullHealthListener::new());
 impl HealthListenerInterface for NullHealthListener {
     fn onHealthChange(&mut self) { Self::onHealthChange(self) }
 }

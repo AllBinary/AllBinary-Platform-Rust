@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct DisposalUtil {
 }
 
-thread_local! { pub static DisposalUtil_instance: Option<Rc<RefCell<DisposalUtil>>> = DisposalUtil::new(); }
+pub static DisposalUtil_instance: crate::JavaStatic<Option<Rc<RefCell<DisposalUtil>>>> = crate::JavaStatic::new(|| DisposalUtil::new());
 
 impl DisposalUtil {
 

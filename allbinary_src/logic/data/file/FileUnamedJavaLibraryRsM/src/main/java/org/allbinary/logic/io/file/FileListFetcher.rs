@@ -37,7 +37,7 @@ pub struct FileListFetcher {
     pub subDirectory: Option<Rc<RefCell<SubDirectory>>>,
 }
 
-thread_local! { pub static FileListFetcher_instance: Option<Rc<RefCell<FileListFetcher>>> = FileListFetcher::new(); }
+pub static FileListFetcher_instance: crate::JavaStatic<Option<Rc<RefCell<FileListFetcher>>>> = crate::JavaStatic::new(|| FileListFetcher::new());
 
 impl FileListFetcher {
 

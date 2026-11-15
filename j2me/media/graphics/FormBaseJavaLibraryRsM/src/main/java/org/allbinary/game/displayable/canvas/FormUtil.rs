@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct FormUtil {
 }
 
-thread_local! { pub static FormUtil_instance: Option<Rc<RefCell<FormUtil>>> = FormUtil::new(); }
+pub static FormUtil_instance: crate::JavaStatic<Option<Rc<RefCell<FormUtil>>>> = crate::JavaStatic::new(|| FormUtil::new());
 
 impl FormUtil {
 

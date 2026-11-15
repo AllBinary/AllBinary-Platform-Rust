@@ -39,7 +39,7 @@ pub struct GameNotification {
     pub colorList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static GameNotification_NULL_GAME_NOTIFICATION_EVENT: Option<Rc<RefCell<GameNotificationEvent>>> = GameNotificationEvent::new(crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), Some((0) as i32), { let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone()); }
+pub static GameNotification_NULL_GAME_NOTIFICATION_EVENT: crate::JavaStatic<Option<Rc<RefCell<GameNotificationEvent>>>> = crate::JavaStatic::new(|| GameNotificationEvent::new(crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), Some((0) as i32), { let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }.clone(), { let java_field = jcall!(BooleanFactory::getInstance()).FALSE.clone(); java_field }.clone()));
 
 impl GameNotification {
 

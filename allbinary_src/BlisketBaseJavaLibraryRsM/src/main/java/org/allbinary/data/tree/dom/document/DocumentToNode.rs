@@ -31,12 +31,12 @@ macro_rules! jcall {
 pub struct DocumentToNode {
 }
 
-thread_local! { pub static DocumentToNode_XMLROOT: String = String::from("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); }
-thread_local! { pub static DocumentToNode_XMLROOTSTART: String = String::from("<?xml"); }
-thread_local! { pub static DocumentToNode_XMLROOTEND: String = String::from("?>"); }
-thread_local! { pub static DocumentToNode_XMLJSPROOTSTART: String = String::from("<jsp:root"); }
-thread_local! { pub static DocumentToNode_XMLEND: String = String::from(">"); }
-thread_local! { pub static DocumentToNode_XMLJSPROOTENDSTART: String = String::from("</jsp:root"); }
+pub static DocumentToNode_XMLROOT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+pub static DocumentToNode_XMLROOTSTART: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("<?xml"));
+pub static DocumentToNode_XMLROOTEND: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("?>"));
+pub static DocumentToNode_XMLJSPROOTSTART: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("<jsp:root"));
+pub static DocumentToNode_XMLEND: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(">"));
+pub static DocumentToNode_XMLJSPROOTENDSTART: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("</jsp:root"));
 
 impl DocumentToNode {
 

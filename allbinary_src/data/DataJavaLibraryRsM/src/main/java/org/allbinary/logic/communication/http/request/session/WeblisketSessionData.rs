@@ -28,14 +28,14 @@ macro_rules! jcall {
 pub struct WeblisketSessionData {
 }
 
-thread_local! { pub static WeblisketSessionData_INVALIDATESESSION: String = String::from("SESSION_INVALIDATE_SESSION"); }
-thread_local! { pub static WeblisketSessionData_ATTEMPTS: String = String::from("SESSION_ATTEMPTS"); }
-thread_local! { pub static WeblisketSessionData_TIMEOUT: String = String::from("SESSION_TIMEOUT"); }
-thread_local! { pub static WeblisketSessionData_REMOVABLEUSERNAME: String = String::from("SESSION_REMOVABLE_USER_NAME"); }
-thread_local! { pub static WeblisketSessionData_REMOVABLEPASSWORD: String = String::from("SESSION_REMOVABLE_PASSWORD"); }
-thread_local! { pub static WeblisketSessionData_REMOVABLENEWPASSWORD: String = String::from("SESSION_REMOVABLE_NEW_PASSWORD"); }
-thread_local! { pub static WeblisketSessionData_REMOVABLEREENTERNEWPASSWORD: String = String::from("SESSION_REMOVABLE_REENTER_NEW_PASSWORD"); }
-thread_local! { pub static WeblisketSessionData_AUTHENTICATED: String = String::from("SESSION_AUTHENTICATED"); }
+pub static WeblisketSessionData_INVALIDATESESSION: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SESSION_INVALIDATE_SESSION"));
+pub static WeblisketSessionData_ATTEMPTS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SESSION_ATTEMPTS"));
+pub static WeblisketSessionData_TIMEOUT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SESSION_TIMEOUT"));
+pub static WeblisketSessionData_REMOVABLEUSERNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SESSION_REMOVABLE_USER_NAME"));
+pub static WeblisketSessionData_REMOVABLEPASSWORD: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SESSION_REMOVABLE_PASSWORD"));
+pub static WeblisketSessionData_REMOVABLENEWPASSWORD: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SESSION_REMOVABLE_NEW_PASSWORD"));
+pub static WeblisketSessionData_REMOVABLEREENTERNEWPASSWORD: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SESSION_REMOVABLE_REENTER_NEW_PASSWORD"));
+pub static WeblisketSessionData_AUTHENTICATED: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SESSION_AUTHENTICATED"));
 
 impl WeblisketSessionData {
 

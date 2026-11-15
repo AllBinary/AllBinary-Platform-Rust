@@ -70,7 +70,7 @@ impl PooledThread {
     }
 
     pub fn new(mut threadPool: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>>) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new_struct(threadPool))))
+        crate::java::lang::Thread::Thread::subclass({ Some(Rc::new(RefCell::new(Self::new_struct(threadPool)))) })
     }
     
 

@@ -34,7 +34,7 @@ pub struct BasicPaymentTypeUtil {
     pub paymentTypeVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static BasicPaymentTypeUtil_instance: Option<Rc<RefCell<BasicPaymentTypeUtil>>> = BasicPaymentTypeUtil::new(); }
+pub static BasicPaymentTypeUtil_instance: crate::JavaStatic<Option<Rc<RefCell<BasicPaymentTypeUtil>>>> = crate::JavaStatic::new(|| BasicPaymentTypeUtil::new());
 
 impl BasicPaymentTypeUtil {
 

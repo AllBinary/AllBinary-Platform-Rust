@@ -47,7 +47,7 @@ pub struct AbPath {
     pub numberOfSeps: i32,
 }
 
-thread_local! { pub static AbPath_NETWORK_SEP: String = String::from(":/"); }
+pub static AbPath_NETWORK_SEP: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(":/"));
 
 impl AbPath {
     

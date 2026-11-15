@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct PaintableToImageUtil {
 }
 
-thread_local! { pub static PaintableToImageUtil_instance: Option<Rc<RefCell<PaintableToImageUtil>>> = PaintableToImageUtil::new(); }
+pub static PaintableToImageUtil_instance: crate::JavaStatic<Option<Rc<RefCell<PaintableToImageUtil>>>> = crate::JavaStatic::new(|| PaintableToImageUtil::new());
 
 impl PaintableToImageUtil {
 

@@ -36,7 +36,7 @@ pub struct GraphicsStrings {
     pub HEIGHT: String,
 }
 
-thread_local! { pub static GraphicsStrings_instance: Option<Rc<RefCell<GraphicsStrings>>> = GraphicsStrings::new(); }
+pub static GraphicsStrings_instance: crate::JavaStatic<Option<Rc<RefCell<GraphicsStrings>>>> = crate::JavaStatic::new(|| GraphicsStrings::new());
 
 impl GraphicsStrings {
 

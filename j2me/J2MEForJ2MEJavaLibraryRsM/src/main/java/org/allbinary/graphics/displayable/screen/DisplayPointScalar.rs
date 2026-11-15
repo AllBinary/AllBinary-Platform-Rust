@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct DisplayPointScalar {
 }
 
-thread_local! { pub static DisplayPointScalar_instance: Option<Rc<RefCell<DisplayPointScalar>>> = DisplayPointScalar::new(); }
+pub static DisplayPointScalar_instance: crate::JavaStatic<Option<Rc<RefCell<DisplayPointScalar>>>> = crate::JavaStatic::new(|| DisplayPointScalar::new());
 
 impl DisplayPointScalar {
 

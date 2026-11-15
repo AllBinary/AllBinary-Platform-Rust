@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct SelectRTSLayerVisitorFactory {
 }
 
-thread_local! { pub static SelectRTSLayerVisitorFactory_instance: Option<Rc<RefCell<SelectRTSLayerVisitorFactory>>> = SelectRTSLayerVisitorFactory::new(); }
+pub static SelectRTSLayerVisitorFactory_instance: crate::JavaStatic<Option<Rc<RefCell<SelectRTSLayerVisitorFactory>>>> = crate::JavaStatic::new(|| SelectRTSLayerVisitorFactory::new());
 impl SelectRTSLayerVisitorFactoryInterface for SelectRTSLayerVisitorFactory {
     fn create(&mut self, mut selectedRTSLayersPlayerGameInput: Option<Rc<RefCell<SelectedRTSLayersPlayerGameInput>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::visitor::Visitor::VisitorDyn>>> { Self::create(self, selectedRTSLayersPlayerGameInput) }
 }

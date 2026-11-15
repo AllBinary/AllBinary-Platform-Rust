@@ -41,7 +41,7 @@ pub struct HtmlTableData {
     pub FRAMES: Vec<String>,
 }
 
-thread_local! { pub static HtmlTableData_instance: Option<Rc<RefCell<HtmlTableData>>> = HtmlTableData::new(); }
+pub static HtmlTableData_instance: crate::JavaStatic<Option<Rc<RefCell<HtmlTableData>>>> = crate::JavaStatic::new(|| HtmlTableData::new());
 
 impl HtmlTableData {
 

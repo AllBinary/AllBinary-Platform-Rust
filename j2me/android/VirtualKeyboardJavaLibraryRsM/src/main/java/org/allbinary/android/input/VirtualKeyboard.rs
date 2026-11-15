@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct VirtualKeyboard {
 }
 
-thread_local! { pub static VirtualKeyboard_NULL_VIRTUAL_KEYBOARD: Option<Rc<RefCell<dyn VirtualKeyboardDyn>>> = VirtualKeyboard::new().map(|reference| reference as Rc<RefCell<dyn VirtualKeyboardDyn>>); }
+pub static VirtualKeyboard_NULL_VIRTUAL_KEYBOARD: crate::JavaStatic<Option<Rc<RefCell<dyn VirtualKeyboardDyn>>>> = crate::JavaStatic::new(|| VirtualKeyboard::new().map(|reference| reference as Rc<RefCell<dyn VirtualKeyboardDyn>>));
 
 impl VirtualKeyboard {
 

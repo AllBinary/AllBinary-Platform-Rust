@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct AffiliateSalesEntityFactory {
 }
 
-thread_local! { pub static AffiliateSalesEntityFactory_CLASSNAME: String = String::from("org.allbinary.data.tables.AffiliatesSalesEntity"); }
+pub static AffiliateSalesEntityFactory_CLASSNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("org.allbinary.data.tables.AffiliatesSalesEntity"));
 
 impl AffiliateSalesEntityFactory {
 

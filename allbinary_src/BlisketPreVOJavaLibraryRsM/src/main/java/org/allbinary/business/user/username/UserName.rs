@@ -38,7 +38,7 @@ pub struct UserName {
     pub userName: String,
 }
 
-thread_local! { pub static UserName_instance: Option<Rc<RefCell<UserName>>> = UserName::new(); }
+pub static UserName_instance: crate::JavaStatic<Option<Rc<RefCell<UserName>>>> = crate::JavaStatic::new(|| UserName::new());
 
 impl UserName {
 

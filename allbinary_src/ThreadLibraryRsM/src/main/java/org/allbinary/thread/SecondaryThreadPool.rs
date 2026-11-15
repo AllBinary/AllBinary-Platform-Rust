@@ -35,7 +35,7 @@ pub struct SecondaryThreadPool {
     pub base: ThreadPool,
 }
 
-thread_local! { pub static SecondaryThreadPool_instance: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>> = SecondaryThreadPool::new(String::from("Secondary"), 1, ThreadPool_NORMAL_PRIORITY.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>); }
+pub static SecondaryThreadPool_instance: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>>> = crate::JavaStatic::new(|| SecondaryThreadPool::new(String::from("Secondary"), 1, ThreadPool_NORMAL_PRIORITY.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>));
 
 impl SecondaryThreadPool {
     

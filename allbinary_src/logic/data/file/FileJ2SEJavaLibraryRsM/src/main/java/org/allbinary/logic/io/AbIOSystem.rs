@@ -29,7 +29,7 @@ pub struct AbIOSystem {
     pub r#type: String,
 }
 
-thread_local! { pub static AbIOSystem_instance: Option<Rc<RefCell<AbIOSystem>>> = AbIOSystem::new(); }
+pub static AbIOSystem_instance: crate::JavaStatic<Option<Rc<RefCell<AbIOSystem>>>> = crate::JavaStatic::new(|| AbIOSystem::new());
 
 impl AbIOSystem {
 

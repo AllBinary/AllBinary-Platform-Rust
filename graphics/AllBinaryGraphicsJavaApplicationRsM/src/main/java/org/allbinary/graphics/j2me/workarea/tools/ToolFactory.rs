@@ -38,7 +38,7 @@ pub struct ToolFactory {
     pub SELECTED_LABEL: String,
 }
 
-thread_local! { pub static ToolFactory_instance: Option<Rc<RefCell<ToolFactory>>> = ToolFactory::new(); }
+pub static ToolFactory_instance: crate::JavaStatic<Option<Rc<RefCell<ToolFactory>>>> = crate::JavaStatic::new(|| ToolFactory::new());
 
 impl ToolFactory {
 

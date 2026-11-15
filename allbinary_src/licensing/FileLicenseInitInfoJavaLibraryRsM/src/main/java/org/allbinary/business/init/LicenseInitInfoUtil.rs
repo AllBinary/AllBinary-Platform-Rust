@@ -50,7 +50,7 @@ pub struct LicenseInitInfoUtil {
     pub filePath: String,
 }
 
-thread_local! { pub static LicenseInitInfoUtil_instance: Option<Rc<RefCell<LicenseInitInfoUtil>>> = LicenseInitInfoUtil::new(); }
+pub static LicenseInitInfoUtil_instance: crate::JavaStatic<Option<Rc<RefCell<LicenseInitInfoUtil>>>> = crate::JavaStatic::new(|| LicenseInitInfoUtil::new());
 
 impl LicenseInitInfoUtil {
 

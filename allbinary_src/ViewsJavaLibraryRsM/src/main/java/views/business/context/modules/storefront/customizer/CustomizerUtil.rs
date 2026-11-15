@@ -43,7 +43,7 @@ pub struct CustomizerUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static CustomizerUtil_instance: Option<Rc<RefCell<CustomizerUtil>>> = CustomizerUtil::new(); }
+pub static CustomizerUtil_instance: crate::JavaStatic<Option<Rc<RefCell<CustomizerUtil>>>> = crate::JavaStatic::new(|| CustomizerUtil::new());
 
 impl CustomizerUtil {
 

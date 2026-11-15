@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct NullCloseable {
 }
 
-thread_local! { pub static NullCloseable_NULL_CLOSEABLE: Option<Rc<RefCell<NullCloseable>>> = NullCloseable::new(); }
+pub static NullCloseable_NULL_CLOSEABLE: crate::JavaStatic<Option<Rc<RefCell<NullCloseable>>>> = crate::JavaStatic::new(|| NullCloseable::new());
 impl Closeable for NullCloseable {
     fn close(&mut self) { Self::close(self) }
 }

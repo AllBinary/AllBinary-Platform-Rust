@@ -43,8 +43,8 @@ macro_rules! jcall {
 pub struct LoggingInitInfo {
 }
 
-thread_local! { pub static LoggingInitInfo_INITFILENAME: String = String::from("logConfig.xml"); }
-thread_local! { pub static LoggingInitInfo_PACKAGE: String = { let java_field = jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field }.clone(); }
+pub static LoggingInitInfo_INITFILENAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("logConfig.xml"));
+pub static LoggingInitInfo_PACKAGE: crate::JavaStatic<String> = crate::JavaStatic::new(|| { let java_field = jcall!(PATH_GLOBALS::getInstance()).INIT_PATH.clone(); java_field }.clone());
 pub static mut LoggingInitInfo_logConfigInfoList: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = std::cell::LazyCell::new(|| None);
 pub static mut LoggingInitInfo_hasRead: std::cell::LazyCell<bool> = std::cell::LazyCell::new(|| false);
 

@@ -47,8 +47,8 @@ pub struct MotionGestureEvent {
     pub commonLabels: Option<Rc<RefCell<CommonLabels>>>,
 }
 
-thread_local! { pub static MotionGestureEvent_PREVIOUS: String = String::from(" Previous: "); }
-thread_local! { pub static MotionGestureEvent_HASHCODE: String = String::from(" hashcode: "); }
+pub static MotionGestureEvent_PREVIOUS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(" Previous: "));
+pub static MotionGestureEvent_HASHCODE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(" hashcode: "));
 
 impl MotionGestureEvent {
     

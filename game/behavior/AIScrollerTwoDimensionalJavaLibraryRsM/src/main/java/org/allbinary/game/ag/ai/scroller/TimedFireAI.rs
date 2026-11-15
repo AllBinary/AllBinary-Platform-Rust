@@ -41,7 +41,7 @@ pub struct TimedFireAI {
     pub delay: i32,
 }
 
-thread_local! { pub static TimedFireAI_TIME: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(1); }
+pub static TimedFireAI_TIME: crate::JavaStatic<Option<i32>> = crate::JavaStatic::new(|| jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(1));
 impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntelligenceInterface for TimedFireAI {
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }

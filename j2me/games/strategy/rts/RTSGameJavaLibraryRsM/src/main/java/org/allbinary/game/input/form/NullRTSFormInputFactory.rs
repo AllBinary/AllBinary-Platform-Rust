@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct NullRTSFormInputFactory {
 }
 
-thread_local! { pub static NullRTSFormInputFactory_SINGLETON: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::form::RTSFormInput::RTSFormInputDyn>>> = RTSFormInput::new({ let java_field = jcall!(BasicGroupFactory::getInstance()).NONE_ARRAY.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::form::RTSFormInput::RTSFormInputDyn>>); }
+pub static NullRTSFormInputFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::game::input::form::RTSFormInput::RTSFormInputDyn>>>> = crate::JavaStatic::new(|| RTSFormInput::new({ let java_field = jcall!(BasicGroupFactory::getInstance()).NONE_ARRAY.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::input::form::RTSFormInput::RTSFormInputDyn>>));
 
 impl NullRTSFormInputFactory {
 

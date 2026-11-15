@@ -39,7 +39,7 @@ pub struct VirtualKeyboardEventHandler {
     pub HIDE_EVENT: Option<Rc<RefCell<VirtualKeyboardEvent>>>,
 }
 
-thread_local! { pub static VirtualKeyboardEventHandler_gameKeyEventHandler: Option<Rc<RefCell<VirtualKeyboardEventHandler>>> = VirtualKeyboardEventHandler::new(); }
+pub static VirtualKeyboardEventHandler_gameKeyEventHandler: crate::JavaStatic<Option<Rc<RefCell<VirtualKeyboardEventHandler>>>> = crate::JavaStatic::new(|| VirtualKeyboardEventHandler::new());
 
 impl VirtualKeyboardEventHandler {
     

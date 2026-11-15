@@ -33,7 +33,7 @@ pub struct RendererStrings {
     pub ON_DRAW_FRAME_2D: String,
 }
 
-thread_local! { pub static RendererStrings_instance: Option<Rc<RefCell<RendererStrings>>> = RendererStrings::new(); }
+pub static RendererStrings_instance: crate::JavaStatic<Option<Rc<RefCell<RendererStrings>>>> = crate::JavaStatic::new(|| RendererStrings::new());
 
 impl RendererStrings {
 

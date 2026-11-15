@@ -31,7 +31,7 @@ pub struct SensorActionFactory {
     pub EVADE: Option<Rc<RefCell<SensorAction>>>,
 }
 
-thread_local! { pub static SensorActionFactory_instance: Option<Rc<RefCell<SensorActionFactory>>> = SensorActionFactory::new(); }
+pub static SensorActionFactory_instance: crate::JavaStatic<Option<Rc<RefCell<SensorActionFactory>>>> = crate::JavaStatic::new(|| SensorActionFactory::new());
 
 impl SensorActionFactory {
 

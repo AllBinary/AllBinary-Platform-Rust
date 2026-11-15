@@ -32,7 +32,7 @@ pub struct NoPlayerGameInput {
     pub base: PlayerGameInput,
 }
 
-thread_local! { pub static NoPlayerGameInput_SINGLETON: Option<Rc<RefCell<NoPlayerGameInput>>> = NoPlayerGameInput::new(); }
+pub static NoPlayerGameInput_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<NoPlayerGameInput>>>> = crate::JavaStatic::new(|| NoPlayerGameInput::new());
 
 impl NoPlayerGameInput {
     

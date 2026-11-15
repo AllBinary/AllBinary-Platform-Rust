@@ -41,7 +41,7 @@ pub struct CountedPickedUpLayerInterfaceFactory {
     pub id: i32,
 }
 
-thread_local! { pub static CountedPickedUpLayerInterfaceFactory_NULL_COUNTED_PICKUP_LAYER_FACTORY: Option<Rc<RefCell<dyn CountedPickedUpLayerInterfaceFactoryDyn>>> = CountedPickedUpLayerInterfaceFactory::new({ let java_field = jcall!(PickedUpLayerTypeFactory::PickedUpLayerTypeFactory::getInstance()).NONE.clone(); java_field }.clone(), IconLayer_NULL_ICON_LAYER.with(Clone::clone).clone(), jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0)).map(|reference| reference as Rc<RefCell<dyn CountedPickedUpLayerInterfaceFactoryDyn>>); }
+pub static CountedPickedUpLayerInterfaceFactory_NULL_COUNTED_PICKUP_LAYER_FACTORY: crate::JavaStatic<Option<Rc<RefCell<dyn CountedPickedUpLayerInterfaceFactoryDyn>>>> = crate::JavaStatic::new(|| CountedPickedUpLayerInterfaceFactory::new({ let java_field = jcall!(PickedUpLayerTypeFactory::PickedUpLayerTypeFactory::getInstance()).NONE.clone(); java_field }.clone(), IconLayer_NULL_ICON_LAYER.with(Clone::clone).clone(), jcall!(NullAnimationFactory::getFactoryInstance()).getInstance(0)).map(|reference| reference as Rc<RefCell<dyn CountedPickedUpLayerInterfaceFactoryDyn>>));
 // impl CountedPickedUpLayerInterfaceFactoryInterface for CountedPickedUpLayerInterfaceFactory with the methods of the trait
 
 impl CountedPickedUpLayerInterfaceFactory {

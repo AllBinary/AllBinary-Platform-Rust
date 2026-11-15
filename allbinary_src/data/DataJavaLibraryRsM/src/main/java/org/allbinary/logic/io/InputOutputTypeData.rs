@@ -39,7 +39,7 @@ pub struct InputOutputTypeData {
     pub DEFAULT_FRAGMENT: String,
 }
 
-thread_local! { pub static InputOutputTypeData_instance: Option<Rc<RefCell<InputOutputTypeData>>> = InputOutputTypeData::new(); }
+pub static InputOutputTypeData_instance: crate::JavaStatic<Option<Rc<RefCell<InputOutputTypeData>>>> = crate::JavaStatic::new(|| InputOutputTypeData::new());
 
 impl InputOutputTypeData {
 

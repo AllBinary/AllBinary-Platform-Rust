@@ -32,7 +32,7 @@ pub struct PlayerTypesFactory {
     pub PLAYER_TYPE_THREE: Option<Rc<RefCell<PlayerType>>>,
 }
 
-thread_local! { pub static PlayerTypesFactory_SINGLETON: Option<Rc<RefCell<PlayerTypesFactory>>> = PlayerTypesFactory::new(); }
+pub static PlayerTypesFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<PlayerTypesFactory>>>> = crate::JavaStatic::new(|| PlayerTypesFactory::new());
 
 impl PlayerTypesFactory {
 

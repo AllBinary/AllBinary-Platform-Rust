@@ -30,7 +30,7 @@ pub struct FontFamilyData {
     pub VALUE: String,
 }
 
-thread_local! { pub static FontFamilyData_instance: Option<Rc<RefCell<FontFamilyData>>> = FontFamilyData::new(); }
+pub static FontFamilyData_instance: crate::JavaStatic<Option<Rc<RefCell<FontFamilyData>>>> = crate::JavaStatic::new(|| FontFamilyData::new());
 
 impl FontFamilyData {
 

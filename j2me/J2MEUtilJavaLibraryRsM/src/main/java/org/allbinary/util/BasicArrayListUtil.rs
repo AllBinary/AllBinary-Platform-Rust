@@ -41,7 +41,7 @@ pub struct BasicArrayListUtil {
     pub immutableInstance: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static BasicArrayListUtil_instance: Option<Rc<RefCell<BasicArrayListUtil>>> = BasicArrayListUtil::new(); }
+pub static BasicArrayListUtil_instance: crate::JavaStatic<Option<Rc<RefCell<BasicArrayListUtil>>>> = crate::JavaStatic::new(|| BasicArrayListUtil::new());
 
 impl BasicArrayListUtil {
 

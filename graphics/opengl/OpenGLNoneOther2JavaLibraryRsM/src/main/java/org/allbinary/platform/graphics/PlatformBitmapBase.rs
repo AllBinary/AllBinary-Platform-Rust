@@ -34,7 +34,7 @@ pub struct PlatformBitmapBase {
     pub basicColor: Option<Rc<RefCell<BasicColor>>>,
 }
 
-thread_local! { pub static PlatformBitmapBase_NULL_PLATFORM_BITMAP_BASE: Option<Rc<RefCell<dyn PlatformBitmapBaseDyn>>> = PlatformBitmapBase::new().map(|reference| reference as Rc<RefCell<dyn PlatformBitmapBaseDyn>>); }
+pub static PlatformBitmapBase_NULL_PLATFORM_BITMAP_BASE: crate::JavaStatic<Option<Rc<RefCell<dyn PlatformBitmapBaseDyn>>>> = crate::JavaStatic::new(|| PlatformBitmapBase::new().map(|reference| reference as Rc<RefCell<dyn PlatformBitmapBaseDyn>>));
 
 impl PlatformBitmapBase {
 

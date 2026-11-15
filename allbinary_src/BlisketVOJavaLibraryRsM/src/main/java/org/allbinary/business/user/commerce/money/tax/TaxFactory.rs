@@ -54,7 +54,7 @@ pub struct TaxFactory {
     pub TAXATIONFILENAME: String,
 }
 
-thread_local! { pub static TaxFactory_instance: Option<Rc<RefCell<TaxFactory>>> = TaxFactory::new(); }
+pub static TaxFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TaxFactory>>>> = crate::JavaStatic::new(|| TaxFactory::new());
 
 impl TaxFactory {
 

@@ -35,7 +35,7 @@ pub struct RelativeRelationship {
     pub z: i32,
 }
 
-thread_local! { pub static RelativeRelationship_NULL_RELATIVE_RELATIONSHIP: Option<Rc<RefCell<dyn RelativeRelationshipDyn>>> = RelativeRelationship::new({ let java_field = jcall!(PointFactory::PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone(), jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance()).map(|reference| reference as Rc<RefCell<dyn RelativeRelationshipDyn>>); }
+pub static RelativeRelationship_NULL_RELATIVE_RELATIONSHIP: crate::JavaStatic<Option<Rc<RefCell<dyn RelativeRelationshipDyn>>>> = crate::JavaStatic::new(|| RelativeRelationship::new({ let java_field = jcall!(PointFactory::PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone(), jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance()).map(|reference| reference as Rc<RefCell<dyn RelativeRelationshipDyn>>));
 
 impl RelativeRelationship {
 

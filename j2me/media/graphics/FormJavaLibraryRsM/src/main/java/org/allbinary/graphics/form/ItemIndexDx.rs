@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct ItemIndexDx {
 }
 
-thread_local! { pub static ItemIndexDx_instance: Option<Rc<RefCell<dyn ItemIndexDxDyn>>> = ItemIndexDx::new().map(|reference| reference as Rc<RefCell<dyn ItemIndexDxDyn>>); }
+pub static ItemIndexDx_instance: crate::JavaStatic<Option<Rc<RefCell<dyn ItemIndexDxDyn>>>> = crate::JavaStatic::new(|| ItemIndexDx::new().map(|reference| reference as Rc<RefCell<dyn ItemIndexDxDyn>>));
 
 impl ItemIndexDx {
 

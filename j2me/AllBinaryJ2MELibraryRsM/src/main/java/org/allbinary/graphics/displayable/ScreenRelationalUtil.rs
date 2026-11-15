@@ -18,7 +18,7 @@ macro_rules! jcall {
 pub struct ScreenRelationalUtil {
 }
 
-thread_local! { pub static ScreenRelationalUtil_instance: Option<Rc<RefCell<ScreenRelationalUtil>>> = ScreenRelationalUtil::new(); }
+pub static ScreenRelationalUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ScreenRelationalUtil>>>> = crate::JavaStatic::new(|| ScreenRelationalUtil::new());
 
 impl ScreenRelationalUtil {
 

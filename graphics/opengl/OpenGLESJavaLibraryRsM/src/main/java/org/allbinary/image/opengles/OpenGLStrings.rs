@@ -18,7 +18,7 @@ pub struct OpenGLStrings {
     pub SET: String,
 }
 
-thread_local! { pub static OpenGLStrings_instance: Option<Rc<RefCell<OpenGLStrings>>> = OpenGLStrings::new(); }
+pub static OpenGLStrings_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLStrings>>>> = crate::JavaStatic::new(|| OpenGLStrings::new());
 
 impl OpenGLStrings {
 

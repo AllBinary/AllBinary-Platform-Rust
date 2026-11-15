@@ -29,7 +29,7 @@ pub struct MidletStrings {
     pub COMMAND_ACTION: String,
 }
 
-thread_local! { pub static MidletStrings_instance: Option<Rc<RefCell<MidletStrings>>> = MidletStrings::new(); }
+pub static MidletStrings_instance: crate::JavaStatic<Option<Rc<RefCell<MidletStrings>>>> = crate::JavaStatic::new(|| MidletStrings::new());
 
 impl MidletStrings {
 

@@ -48,7 +48,7 @@ pub struct RTSLayerUtil {
     pub MAX_RELOAD_TIME: i64,
 }
 
-thread_local! { pub static RTSLayerUtil_instance: Option<Rc<RefCell<RTSLayerUtil>>> = RTSLayerUtil::new(); }
+pub static RTSLayerUtil_instance: crate::JavaStatic<Option<Rc<RefCell<RTSLayerUtil>>>> = crate::JavaStatic::new(|| RTSLayerUtil::new());
 
 impl RTSLayerUtil {
 

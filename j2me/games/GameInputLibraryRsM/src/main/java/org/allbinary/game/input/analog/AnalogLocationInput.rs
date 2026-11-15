@@ -22,7 +22,7 @@ pub struct AnalogLocationInput {
     pub leftTrigger: i32,
 }
 
-thread_local! { pub static AnalogLocationInput_NULL_ANALOG_LOCATION_INPUT: Option<Rc<RefCell<AnalogLocationInput>>> = AnalogLocationInput::new(-1); }
+pub static AnalogLocationInput_NULL_ANALOG_LOCATION_INPUT: crate::JavaStatic<Option<Rc<RefCell<AnalogLocationInput>>>> = crate::JavaStatic::new(|| AnalogLocationInput::new(-1));
 
 impl AnalogLocationInput {
 

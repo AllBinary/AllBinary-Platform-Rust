@@ -36,7 +36,7 @@ pub struct AnalogControllerConfigurationFactory {
     pub analogControllerConfigurationEvent: Option<Rc<RefCell<AnalogControllerConfigurationEvent>>>,
 }
 
-thread_local! { pub static AnalogControllerConfigurationFactory_instance: Option<Rc<RefCell<AnalogControllerConfigurationFactory>>> = AnalogControllerConfigurationFactory::new(); }
+pub static AnalogControllerConfigurationFactory_instance: crate::JavaStatic<Option<Rc<RefCell<AnalogControllerConfigurationFactory>>>> = crate::JavaStatic::new(|| AnalogControllerConfigurationFactory::new());
 
 impl AnalogControllerConfigurationFactory {
 

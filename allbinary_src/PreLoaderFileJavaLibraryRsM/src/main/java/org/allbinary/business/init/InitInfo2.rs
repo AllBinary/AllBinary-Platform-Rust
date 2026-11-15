@@ -31,7 +31,7 @@ pub struct InitInfo2 {
     pub directory: Option<Rc<RefCell<Directory>>>,
 }
 
-thread_local! { pub static InitInfo2_instance: Option<Rc<RefCell<InitInfo2>>> = InitInfo2::new(); }
+pub static InitInfo2_instance: crate::JavaStatic<Option<Rc<RefCell<InitInfo2>>>> = crate::JavaStatic::new(|| InitInfo2::new());
 
 impl InitInfo2 {
 

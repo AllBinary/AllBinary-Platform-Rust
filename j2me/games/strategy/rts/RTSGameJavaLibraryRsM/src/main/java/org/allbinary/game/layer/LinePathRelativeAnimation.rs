@@ -33,7 +33,7 @@ pub struct LinePathRelativeAnimation {
     pub base: LinePathAnimation,
 }
 
-thread_local! { pub static LinePathRelativeAnimation_instanceC: Option<Rc<RefCell<LinePathRelativeAnimation>>> = LinePathRelativeAnimation::new(); }
+pub static LinePathRelativeAnimation_instanceC: crate::JavaStatic<Option<Rc<RefCell<LinePathRelativeAnimation>>>> = crate::JavaStatic::new(|| LinePathRelativeAnimation::new());
 
 impl LinePathRelativeAnimation {
 

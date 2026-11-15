@@ -55,7 +55,7 @@ pub struct LazyImageRotationAnimation {
     pub scaleProperties: Option<Rc<RefCell<ScaleProperties>>>,
 }
 
-thread_local! { pub static LazyImageRotationAnimation_SET_REAL_ANIMATION: String = String::from("setRealAnimation"); }
+pub static LazyImageRotationAnimation_SET_REAL_ANIMATION: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("setRealAnimation"));
 impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for LazyImageRotationAnimation {
     fn nextFrame(&mut self) { Self::nextFrame(self) }
     fn paintThreedXYZ(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, mut x: i32, mut y: i32, mut z: i32) { Self::paintThreedXYZ(self, graphics, x, y, z) }

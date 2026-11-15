@@ -39,7 +39,7 @@ pub struct AngleInfo {
     pub frameUtil: Option<Rc<RefCell<FrameUtil>>>,
 }
 
-thread_local! { pub static AngleInfo_ANGLE: String = String::from("Angle: "); }
+pub static AngleInfo_ANGLE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Angle: "));
 
 impl AngleInfo {
     

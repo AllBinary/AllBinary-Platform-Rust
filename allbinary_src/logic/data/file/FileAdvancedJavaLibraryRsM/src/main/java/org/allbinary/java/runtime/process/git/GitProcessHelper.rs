@@ -44,7 +44,7 @@ pub struct GitProcessHelper {
     pub trackedStrings: Option<Rc<RefCell<TrackedStrings>>>,
 }
 
-thread_local! { pub static GitProcessHelper_instance: Option<Rc<RefCell<GitProcessHelper>>> = GitProcessHelper::new(); }
+pub static GitProcessHelper_instance: crate::JavaStatic<Option<Rc<RefCell<GitProcessHelper>>>> = crate::JavaStatic::new(|| GitProcessHelper::new());
 
 impl GitProcessHelper {
 

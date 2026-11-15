@@ -38,7 +38,7 @@ pub struct TransformInfoObjectConfigGeneratorFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static TransformInfoObjectConfigGeneratorFactory_instance: Option<Rc<RefCell<TransformInfoObjectConfigGeneratorFactory>>> = TransformInfoObjectConfigGeneratorFactory::new(); }
+pub static TransformInfoObjectConfigGeneratorFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TransformInfoObjectConfigGeneratorFactory>>>> = crate::JavaStatic::new(|| TransformInfoObjectConfigGeneratorFactory::new());
 impl TransformInfoObjectConfigGeneratorFactoryInterface for TransformInfoObjectConfigGeneratorFactory {
     fn getInstance(&mut self, mut transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::objectConfig::generator::TransformInfoObjectConfigGenerator::TransformInfoObjectConfigGeneratorDyn>>> { Self::getInstance1(self, transformInfoInterface) }
 }

@@ -42,7 +42,7 @@ pub struct LayerInterfaceFactory {
     pub HASHTABLE_LABEL: String,
 }
 
-thread_local! { pub static LayerInterfaceFactory_SINGLETON: Option<Rc<RefCell<LayerInterfaceFactory>>> = LayerInterfaceFactory::new(); }
+pub static LayerInterfaceFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<LayerInterfaceFactory>>>> = crate::JavaStatic::new(|| LayerInterfaceFactory::new());
 
 impl LayerInterfaceFactory {
 

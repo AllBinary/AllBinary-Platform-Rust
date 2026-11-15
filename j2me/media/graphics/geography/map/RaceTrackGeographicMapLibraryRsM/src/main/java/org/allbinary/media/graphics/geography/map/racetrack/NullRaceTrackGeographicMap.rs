@@ -40,7 +40,7 @@ macro_rules! jcall {
 pub struct NullRaceTrackGeographicMap {
 }
 
-thread_local! { pub static NullRaceTrackGeographicMap_NULL_RACE_TRACK_GEOGRAPHIC_MAP: Option<Rc<RefCell<NullRaceTrackGeographicMap>>> = NullRaceTrackGeographicMap::new(); }
+pub static NullRaceTrackGeographicMap_NULL_RACE_TRACK_GEOGRAPHIC_MAP: crate::JavaStatic<Option<Rc<RefCell<NullRaceTrackGeographicMap>>>> = crate::JavaStatic::new(|| NullRaceTrackGeographicMap::new());
 impl RaceTrackGeographicMapInterface for NullRaceTrackGeographicMap {
     fn getRaceTrackInfo(&mut self) -> Option<Rc<RefCell<RaceTrackInfo>>> { Self::getRaceTrackInfo(self) }
     fn setRaceTrackInfo(&mut self, mut aRaceTrackInfo: Option<Rc<RefCell<RaceTrackInfo>>>) { Self::setRaceTrackInfo(self, aRaceTrackInfo) }

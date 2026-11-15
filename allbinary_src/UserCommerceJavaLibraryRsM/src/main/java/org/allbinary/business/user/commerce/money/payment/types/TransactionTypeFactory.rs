@@ -35,7 +35,7 @@ pub struct TransactionTypeFactory {
     pub INQUIRY: Option<Rc<RefCell<TransactionType>>>,
 }
 
-thread_local! { pub static TransactionTypeFactory_instance: Option<Rc<RefCell<TransactionTypeFactory>>> = TransactionTypeFactory::new(); }
+pub static TransactionTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TransactionTypeFactory>>>> = crate::JavaStatic::new(|| TransactionTypeFactory::new());
 
 impl TransactionTypeFactory {
 

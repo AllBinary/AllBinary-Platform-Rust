@@ -36,7 +36,7 @@ pub struct CanvasTrimUtil {
     pub stringUtil: Option<Rc<RefCell<StringUtil>>>,
 }
 
-thread_local! { pub static CanvasTrimUtil_instance: Option<Rc<RefCell<CanvasTrimUtil>>> = CanvasTrimUtil::new(); }
+pub static CanvasTrimUtil_instance: crate::JavaStatic<Option<Rc<RefCell<CanvasTrimUtil>>>> = crate::JavaStatic::new(|| CanvasTrimUtil::new());
 
 impl CanvasTrimUtil {
 

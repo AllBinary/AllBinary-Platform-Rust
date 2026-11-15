@@ -34,7 +34,7 @@ pub struct BasicGeographicMapUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static BasicGeographicMapUtil_instance: Option<Rc<RefCell<BasicGeographicMapUtil>>> = BasicGeographicMapUtil::new(); }
+pub static BasicGeographicMapUtil_instance: crate::JavaStatic<Option<Rc<RefCell<BasicGeographicMapUtil>>>> = crate::JavaStatic::new(|| BasicGeographicMapUtil::new());
 
 impl BasicGeographicMapUtil {
 

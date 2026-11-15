@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct NullEventListener {
 }
 
-thread_local! { pub static NullEventListener_NULL_EVENT_LISTENER: Option<Rc<RefCell<NullEventListener>>> = NullEventListener::new(); }
+pub static NullEventListener_NULL_EVENT_LISTENER: crate::JavaStatic<Option<Rc<RefCell<NullEventListener>>>> = crate::JavaStatic::new(|| NullEventListener::new());
 impl EventListenerInterface for NullEventListener {
     fn onEvent(&mut self, mut eventObject: Option<Rc<RefCell<dyn crate::org::allbinary::logic::util::event::AllBinaryEventObject::AllBinaryEventObjectDyn>>>) { Self::onEvent(self, eventObject) }
 }

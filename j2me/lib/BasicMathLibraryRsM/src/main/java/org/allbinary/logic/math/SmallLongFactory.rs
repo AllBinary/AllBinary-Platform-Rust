@@ -35,7 +35,7 @@ pub struct SmallLongFactory {
     pub lastNegativeMin: i32,
 }
 
-thread_local! { pub static SmallLongFactory_instance: Option<Rc<RefCell<SmallLongFactory>>> = SmallLongFactory::new(); }
+pub static SmallLongFactory_instance: crate::JavaStatic<Option<Rc<RefCell<SmallLongFactory>>>> = crate::JavaStatic::new(|| SmallLongFactory::new());
 
 impl SmallLongFactory {
 

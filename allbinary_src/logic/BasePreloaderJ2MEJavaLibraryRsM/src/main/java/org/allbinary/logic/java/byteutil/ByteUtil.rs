@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct ByteUtil {
 }
 
-thread_local! { pub static ByteUtil_instance: Option<Rc<RefCell<ByteUtil>>> = ByteUtil::new(); }
+pub static ByteUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ByteUtil>>>> = crate::JavaStatic::new(|| ByteUtil::new());
 
 impl ByteUtil {
 

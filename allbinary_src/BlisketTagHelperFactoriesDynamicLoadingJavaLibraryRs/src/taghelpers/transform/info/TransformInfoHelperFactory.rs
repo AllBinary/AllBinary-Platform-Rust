@@ -33,8 +33,8 @@ macro_rules! jcall {
 pub struct TransformInfoHelperFactory {
 }
 
-thread_local! { pub static TransformInfoHelperFactory_CLASSNAME: String = String::from("taghelpers.transform.info.TransformInfoHelper"); }
-thread_local! { pub static TransformInfoHelperFactory_FACTORYNAME: String = String::from("TransformInfoHelperFactory"); }
+pub static TransformInfoHelperFactory_CLASSNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("taghelpers.transform.info.TransformInfoHelper"));
+pub static TransformInfoHelperFactory_FACTORYNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("TransformInfoHelperFactory"));
 // impl TagHelperFactoryInterface for TransformInfoHelperFactory with the methods of the trait
 
 impl TransformInfoHelperFactory {

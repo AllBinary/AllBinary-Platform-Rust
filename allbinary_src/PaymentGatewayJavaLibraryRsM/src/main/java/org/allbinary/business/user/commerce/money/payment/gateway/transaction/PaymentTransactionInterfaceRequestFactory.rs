@@ -57,7 +57,7 @@ pub struct PaymentTransactionInterfaceRequestFactory {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static PaymentTransactionInterfaceRequestFactory_instance: Option<Rc<RefCell<PaymentTransactionInterfaceRequestFactory>>> = PaymentTransactionInterfaceRequestFactory::new(); }
+pub static PaymentTransactionInterfaceRequestFactory_instance: crate::JavaStatic<Option<Rc<RefCell<PaymentTransactionInterfaceRequestFactory>>>> = crate::JavaStatic::new(|| PaymentTransactionInterfaceRequestFactory::new());
 
 impl PaymentTransactionInterfaceRequestFactory {
 

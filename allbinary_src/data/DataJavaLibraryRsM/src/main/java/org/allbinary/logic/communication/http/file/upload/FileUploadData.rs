@@ -31,7 +31,7 @@ pub struct FileUploadData {
     pub FILE_DATA: String,
 }
 
-thread_local! { pub static FileUploadData_instance: Option<Rc<RefCell<FileUploadData>>> = FileUploadData::new(); }
+pub static FileUploadData_instance: crate::JavaStatic<Option<Rc<RefCell<FileUploadData>>>> = crate::JavaStatic::new(|| FileUploadData::new());
 
 impl FileUploadData {
 

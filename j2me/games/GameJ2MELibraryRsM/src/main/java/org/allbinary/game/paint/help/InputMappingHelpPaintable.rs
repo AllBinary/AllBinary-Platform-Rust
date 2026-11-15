@@ -63,9 +63,9 @@ pub struct InputMappingHelpPaintable {
     pub updateMyFontProperties: Option<Rc<RefCell<UpdateMyFontProperties>>>,
 }
 
-thread_local! { pub static InputMappingHelpPaintable_AND: String = String::from(" and "); }
-thread_local! { pub static InputMappingHelpPaintable_SEP: String = String::from(", "); }
-thread_local! { pub static InputMappingHelpPaintable_MORE_THAN_TWO_IN_LIST_AND: String = String::from(", and "); }
+pub static InputMappingHelpPaintable_AND: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(" and "));
+pub static InputMappingHelpPaintable_SEP: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(", "));
+pub static InputMappingHelpPaintable_MORE_THAN_TWO_IN_LIST_AND: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(", and "));
 
 impl InputMappingHelpPaintable {
     

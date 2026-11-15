@@ -38,7 +38,7 @@ pub struct BaseGameBehavior {
     pub base: DemoGameBehavior,
 }
 
-thread_local! { pub static BaseGameBehavior_instanceC: Option<Rc<RefCell<BaseGameBehavior>>> = BaseGameBehavior::new(); }
+pub static BaseGameBehavior_instanceC: crate::JavaStatic<Option<Rc<RefCell<BaseGameBehavior>>>> = crate::JavaStatic::new(|| BaseGameBehavior::new());
 
 impl BaseGameBehavior {
 

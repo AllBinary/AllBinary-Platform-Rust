@@ -47,7 +47,7 @@ macro_rules! jcall {
 pub struct AllBinaryMediaManager {
 }
 
-thread_local! { pub static AllBinaryMediaManager_THIS: String = String::from("AllBinaryMediaManagerAndroid"); }
+pub static AllBinaryMediaManager_THIS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("AllBinaryMediaManagerAndroid"));
 pub static mut AllBinaryMediaManager_mostUsedTotal: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 0);
 
 impl AllBinaryMediaManager {

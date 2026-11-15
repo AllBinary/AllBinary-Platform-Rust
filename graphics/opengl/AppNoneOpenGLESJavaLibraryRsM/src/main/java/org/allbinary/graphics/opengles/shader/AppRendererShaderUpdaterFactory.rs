@@ -35,7 +35,7 @@ pub struct AppRendererShaderUpdaterFactory {
     pub shaderOpenGLProcessorArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::shader::ShaderOpenGLProcessor::ShaderOpenGLProcessorDyn>>>>,
 }
 
-thread_local! { pub static AppRendererShaderUpdaterFactory_instanceC: Option<Rc<RefCell<AppRendererShaderUpdaterFactory>>> = AppRendererShaderUpdaterFactory::new(); }
+pub static AppRendererShaderUpdaterFactory_instanceC: crate::JavaStatic<Option<Rc<RefCell<AppRendererShaderUpdaterFactory>>>> = crate::JavaStatic::new(|| AppRendererShaderUpdaterFactory::new());
 
 impl AppRendererShaderUpdaterFactory {
 

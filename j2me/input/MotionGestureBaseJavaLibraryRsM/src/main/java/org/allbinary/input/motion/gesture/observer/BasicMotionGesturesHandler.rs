@@ -35,7 +35,7 @@ pub struct BasicMotionGesturesHandler {
     pub base: BasicEventHandler,
 }
 
-thread_local! { pub static BasicMotionGesturesHandler_SINGLETON: Option<Rc<RefCell<BasicMotionGesturesHandler>>> = BasicMotionGesturesHandler::new(); }
+pub static BasicMotionGesturesHandler_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<BasicMotionGesturesHandler>>>> = crate::JavaStatic::new(|| BasicMotionGesturesHandler::new());
 
 impl BasicMotionGesturesHandler {
     

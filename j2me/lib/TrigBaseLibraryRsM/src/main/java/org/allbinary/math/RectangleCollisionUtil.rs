@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct RectangleCollisionUtil {
 }
 
-thread_local! { pub static RectangleCollisionUtil_instance: Option<Rc<RefCell<RectangleCollisionUtil>>> = RectangleCollisionUtil::new(); }
+pub static RectangleCollisionUtil_instance: crate::JavaStatic<Option<Rc<RefCell<RectangleCollisionUtil>>>> = crate::JavaStatic::new(|| RectangleCollisionUtil::new());
 
 impl RectangleCollisionUtil {
 

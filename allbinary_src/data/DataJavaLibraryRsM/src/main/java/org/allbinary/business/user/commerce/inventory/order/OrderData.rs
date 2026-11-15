@@ -28,13 +28,13 @@ macro_rules! jcall {
 pub struct OrderData {
 }
 
-thread_local! { pub static OrderData_ORDERS: String = String::from("ORDERS"); }
-thread_local! { pub static OrderData_ORDER: String = String::from("ORDER"); }
-thread_local! { pub static OrderData_ID: String = String::from("ORDER_ID"); }
-thread_local! { pub static OrderData_CUSTOMERCOMMENT: String = String::from("ORDER_CUSTOMER_COMMENT"); }
-thread_local! { pub static OrderData_CUSTOMERCANCELCOMMENT: String = String::from("ORDER_CUSTOMER_CANCEL_COMMENT"); }
-thread_local! { pub static OrderData_STORECOMMENT: String = String::from("ORDER_STORE_COMMENT"); }
-thread_local! { pub static OrderData_STORECANCELCOMMENT: String = String::from("ORDER_STORE_CANCEL_COMMENT"); }
+pub static OrderData_ORDERS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("ORDERS"));
+pub static OrderData_ORDER: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("ORDER"));
+pub static OrderData_ID: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("ORDER_ID"));
+pub static OrderData_CUSTOMERCOMMENT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("ORDER_CUSTOMER_COMMENT"));
+pub static OrderData_CUSTOMERCANCELCOMMENT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("ORDER_CUSTOMER_CANCEL_COMMENT"));
+pub static OrderData_STORECOMMENT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("ORDER_STORE_COMMENT"));
+pub static OrderData_STORECANCELCOMMENT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("ORDER_STORE_CANCEL_COMMENT"));
 
 impl OrderData {
 

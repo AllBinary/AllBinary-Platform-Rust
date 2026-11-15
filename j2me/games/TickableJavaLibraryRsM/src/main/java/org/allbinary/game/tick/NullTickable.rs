@@ -32,7 +32,7 @@ pub struct NullTickable {
     pub NAME: String,
 }
 
-thread_local! { pub static NullTickable_SINGLETON: Option<Rc<RefCell<NullTickable>>> = NullTickable::new(); }
+pub static NullTickable_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<NullTickable>>>> = crate::JavaStatic::new(|| NullTickable::new());
 impl TickableInterface for NullTickable {
     fn processTick(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processTick(self, allBinaryLayerManager) }
 }

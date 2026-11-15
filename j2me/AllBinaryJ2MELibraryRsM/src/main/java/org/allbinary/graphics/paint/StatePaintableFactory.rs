@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct StatePaintableFactory {
 }
 
-thread_local! { pub static StatePaintableFactory_instance: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::StatePaintable::StatePaintableDyn>>> = StatePaintable::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::StatePaintable::StatePaintableDyn>>); }
+pub static StatePaintableFactory_instance: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::StatePaintable::StatePaintableDyn>>>> = crate::JavaStatic::new(|| StatePaintable::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::StatePaintable::StatePaintableDyn>>));
 
 impl StatePaintableFactory {
 

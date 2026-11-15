@@ -37,7 +37,7 @@ pub struct GameKeyEvent {
     pub originalKey: i32,
 }
 
-thread_local! { pub static GameKeyEvent_NONE: Option<Rc<RefCell<GameKeyEvent>>> = GameKeyEvent::new(crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()), -1, -1, -1, -1, false); }
+pub static GameKeyEvent_NONE: crate::JavaStatic<Option<Rc<RefCell<GameKeyEvent>>>> = crate::JavaStatic::new(|| GameKeyEvent::new(crate::java_into_object({ let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone()), -1, -1, -1, -1, false));
 
 impl GameKeyEvent {
     

@@ -29,8 +29,8 @@ macro_rules! jcall {
 pub struct RectangleFactory {
 }
 
-thread_local! { pub static RectangleFactory_SINGLETON: Option<Rc<RefCell<Rectangle>>> = Rectangle::new({ let java_field = jcall!(PointFactory::PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone(), 0, 0); }
-thread_local! { pub static RectangleFactory_ARRAY_OF_ARRAYS: Vec<Vec<Option<Rc<RefCell<Rectangle>>>>> = vec![vec![None; (0) as usize]; (0) as usize]; }
+pub static RectangleFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<Rectangle>>>> = crate::JavaStatic::new(|| Rectangle::new({ let java_field = jcall!(PointFactory::PointFactory::getInstance()).ZERO_ZERO.clone(); java_field }.clone(), 0, 0));
+pub static RectangleFactory_ARRAY_OF_ARRAYS: crate::JavaStatic<Vec<Vec<Option<Rc<RefCell<Rectangle>>>>>> = crate::JavaStatic::new(|| vec![vec![None; (0) as usize]; (0) as usize]);
 
 impl RectangleFactory {
 

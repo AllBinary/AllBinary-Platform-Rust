@@ -34,7 +34,7 @@ pub struct GeologicalGameResources {
     pub base: BasicGameResources,
 }
 
-thread_local! { pub static GeologicalGameResources_instance: Option<Rc<RefCell<GeologicalGameResources>>> = GeologicalGameResources::new(); }
+pub static GeologicalGameResources_instance: crate::JavaStatic<Option<Rc<RefCell<GeologicalGameResources>>>> = crate::JavaStatic::new(|| GeologicalGameResources::new());
 
 impl GeologicalGameResources {
     

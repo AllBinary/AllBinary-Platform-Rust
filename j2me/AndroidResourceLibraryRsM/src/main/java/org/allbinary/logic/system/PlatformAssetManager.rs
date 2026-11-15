@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct PlatformAssetManager {
 }
 
-thread_local! { pub static PlatformAssetManager_instance: Option<Rc<RefCell<PlatformAssetManager>>> = PlatformAssetManager::new(); }
+pub static PlatformAssetManager_instance: crate::JavaStatic<Option<Rc<RefCell<PlatformAssetManager>>>> = crate::JavaStatic::new(|| PlatformAssetManager::new());
 
 impl PlatformAssetManager {
 

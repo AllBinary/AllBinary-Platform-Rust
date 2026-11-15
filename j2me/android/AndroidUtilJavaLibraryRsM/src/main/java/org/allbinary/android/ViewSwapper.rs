@@ -24,7 +24,7 @@ pub struct ViewSwapper {
     pub topViewArray: Vec<Option<Rc<RefCell<View>>>>,
 }
 
-thread_local! { pub static ViewSwapper_NULL_VIEW_ARRAY: Vec<Option<Rc<RefCell<View>>>> = vec![None; (0) as usize]; }
+pub static ViewSwapper_NULL_VIEW_ARRAY: crate::JavaStatic<Vec<Option<Rc<RefCell<View>>>>> = crate::JavaStatic::new(|| vec![None; (0) as usize]);
 
 impl ViewSwapper {
 

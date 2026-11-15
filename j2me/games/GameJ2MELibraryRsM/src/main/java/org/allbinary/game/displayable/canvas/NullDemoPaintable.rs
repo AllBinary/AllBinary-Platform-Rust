@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct NullDemoPaintable {
 }
 
-thread_local! { pub static NullDemoPaintable_NULL_DEMO_PAINTABLE: Option<Rc<RefCell<NullDemoPaintable>>> = NullDemoPaintable::new(); }
+pub static NullDemoPaintable_NULL_DEMO_PAINTABLE: crate::JavaStatic<Option<Rc<RefCell<NullDemoPaintable>>>> = crate::JavaStatic::new(|| NullDemoPaintable::new());
 impl DemoPaintableInterface for NullDemoPaintable {
     fn showGamePaintable(&mut self) { Self::showGamePaintable(self) }
 }

@@ -32,7 +32,7 @@ pub struct GamePersistanceStrings {
     pub SAVED_INPUT_CONFIGURATION_RECORD_ID: String,
 }
 
-thread_local! { pub static GamePersistanceStrings_instance: Option<Rc<RefCell<GamePersistanceStrings>>> = GamePersistanceStrings::new(); }
+pub static GamePersistanceStrings_instance: crate::JavaStatic<Option<Rc<RefCell<GamePersistanceStrings>>>> = crate::JavaStatic::new(|| GamePersistanceStrings::new());
 
 impl GamePersistanceStrings {
 

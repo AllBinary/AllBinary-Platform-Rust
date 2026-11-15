@@ -35,7 +35,7 @@ pub struct ScaleProperties {
     pub shouldScale: bool,
 }
 
-thread_local! { pub static ScaleProperties_instance: Option<Rc<RefCell<ScaleProperties>>> = ScaleProperties::new(); }
+pub static ScaleProperties_instance: crate::JavaStatic<Option<Rc<RefCell<ScaleProperties>>>> = crate::JavaStatic::new(|| ScaleProperties::new());
 
 impl ScaleProperties {
 

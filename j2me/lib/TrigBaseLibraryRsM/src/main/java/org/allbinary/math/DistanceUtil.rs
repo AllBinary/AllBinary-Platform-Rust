@@ -30,7 +30,7 @@ pub struct DistanceUtil {
     pub mathUtil: Option<Rc<RefCell<MathUtil>>>,
 }
 
-thread_local! { pub static DistanceUtil_instance: Option<Rc<RefCell<DistanceUtil>>> = DistanceUtil::new(); }
+pub static DistanceUtil_instance: crate::JavaStatic<Option<Rc<RefCell<DistanceUtil>>>> = crate::JavaStatic::new(|| DistanceUtil::new());
 
 impl DistanceUtil {
 

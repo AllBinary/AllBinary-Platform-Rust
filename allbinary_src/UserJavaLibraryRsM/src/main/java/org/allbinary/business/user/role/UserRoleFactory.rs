@@ -65,7 +65,7 @@ pub struct UserRoleFactory {
     pub VIEWEDITOR: Option<Rc<RefCell<dyn crate::org::allbinary::business::user::role::UserRole::UserRoleDyn>>>,
 }
 
-thread_local! { pub static UserRoleFactory_instance: Option<Rc<RefCell<UserRoleFactory>>> = UserRoleFactory::new(); }
+pub static UserRoleFactory_instance: crate::JavaStatic<Option<Rc<RefCell<UserRoleFactory>>>> = crate::JavaStatic::new(|| UserRoleFactory::new());
 
 impl UserRoleFactory {
 

@@ -40,7 +40,7 @@ pub struct AndroidServicesUtil {
     pub SERVICE_NOT_FOUND_RUNNING: String,
 }
 
-thread_local! { pub static AndroidServicesUtil_instance: Option<Rc<RefCell<AndroidServicesUtil>>> = AndroidServicesUtil::new(); }
+pub static AndroidServicesUtil_instance: crate::JavaStatic<Option<Rc<RefCell<AndroidServicesUtil>>>> = crate::JavaStatic::new(|| AndroidServicesUtil::new());
 
 impl AndroidServicesUtil {
 

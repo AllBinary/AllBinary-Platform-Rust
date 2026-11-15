@@ -28,14 +28,14 @@ macro_rules! jcall {
 pub struct AuthorizeNetAimData {
 }
 
-thread_local! { pub static AuthorizeNetAimData_X_DELIM_DATA: String = String::from("x_delim_data"); }
-thread_local! { pub static AuthorizeNetAimData_X_DELIM_CHAR: String = String::from("x_delim_char"); }
-thread_local! { pub static AuthorizeNetAimData_X_ENCAP_CHAR: String = String::from("x_encap_char"); }
-thread_local! { pub static AuthorizeNetAimData_X_AUTHENTICATION_INDICATOR: String = String::from("x_authentication_indicator"); }
-thread_local! { pub static AuthorizeNetAimData_X_CARDHOLDER_AUTHENTICATION_VALUE: String = String::from("x_cardholder_authentication_value"); }
-thread_local! { pub static AuthorizeNetAimData_X_DRIVERS_LICENSE_NUM: String = String::from("x_drivers_license_num"); }
-thread_local! { pub static AuthorizeNetAimData_X_DRIVERS_LICENSE_STATE: String = String::from("x_drivers_license_state"); }
-thread_local! { pub static AuthorizeNetAimData_X_DRIVERS_LICENSE_DOB: String = String::from("x_drivers_license_dob"); }
+pub static AuthorizeNetAimData_X_DELIM_DATA: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_delim_data"));
+pub static AuthorizeNetAimData_X_DELIM_CHAR: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_delim_char"));
+pub static AuthorizeNetAimData_X_ENCAP_CHAR: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_encap_char"));
+pub static AuthorizeNetAimData_X_AUTHENTICATION_INDICATOR: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_authentication_indicator"));
+pub static AuthorizeNetAimData_X_CARDHOLDER_AUTHENTICATION_VALUE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_cardholder_authentication_value"));
+pub static AuthorizeNetAimData_X_DRIVERS_LICENSE_NUM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_drivers_license_num"));
+pub static AuthorizeNetAimData_X_DRIVERS_LICENSE_STATE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_drivers_license_state"));
+pub static AuthorizeNetAimData_X_DRIVERS_LICENSE_DOB: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_drivers_license_dob"));
 
 impl AuthorizeNetAimData {
 

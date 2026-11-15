@@ -39,11 +39,11 @@ pub struct PaymentGatewayPageData {
     pub FINISH: String,
 }
 
-thread_local! { pub static PaymentGatewayPageData_EXTENSION: String = String::from(".jsp"); }
-thread_local! { pub static PaymentGatewayPageData_NAME: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(); }
-thread_local! { pub static PaymentGatewayPageData_FORWARDMAKEPAYMENT: String = String::from("MakePayment.jsp"); }
-thread_local! { pub static PaymentGatewayPageData_PAYMENTOPTIONS: String = format!("{}{}", String::from("PaymentOptions"), PaymentGatewayPageData_EXTENSION.with(Clone::clone)); }
-thread_local! { pub static PaymentGatewayPageData_STARTCHECKOUT: String = format!("{}{}", String::from("StartCheckout"), PaymentGatewayPageData_EXTENSION.with(Clone::clone)); }
+pub static PaymentGatewayPageData_EXTENSION: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(".jsp"));
+pub static PaymentGatewayPageData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
+pub static PaymentGatewayPageData_FORWARDMAKEPAYMENT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("MakePayment.jsp"));
+pub static PaymentGatewayPageData_PAYMENTOPTIONS: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", String::from("PaymentOptions"), PaymentGatewayPageData_EXTENSION.with(Clone::clone)));
+pub static PaymentGatewayPageData_STARTCHECKOUT: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", String::from("StartCheckout"), PaymentGatewayPageData_EXTENSION.with(Clone::clone)));
 
 impl PaymentGatewayPageData {
 

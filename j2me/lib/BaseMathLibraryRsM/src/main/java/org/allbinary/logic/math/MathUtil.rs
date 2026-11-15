@@ -18,7 +18,7 @@ pub struct MathUtil {
     pub ACCURACY: i32,
 }
 
-thread_local! { pub static MathUtil_instance: Option<Rc<RefCell<MathUtil>>> = MathUtil::new(); }
+pub static MathUtil_instance: crate::JavaStatic<Option<Rc<RefCell<MathUtil>>>> = crate::JavaStatic::new(|| MathUtil::new());
 
 impl MathUtil {
 

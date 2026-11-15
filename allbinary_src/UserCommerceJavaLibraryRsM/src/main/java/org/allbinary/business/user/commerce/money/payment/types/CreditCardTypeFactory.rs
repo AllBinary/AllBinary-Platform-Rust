@@ -33,7 +33,7 @@ pub struct CreditCardTypeFactory {
     pub AMERICANEXPRESS: Option<Rc<RefCell<CreditCardType>>>,
 }
 
-thread_local! { pub static CreditCardTypeFactory_instance: Option<Rc<RefCell<CreditCardTypeFactory>>> = CreditCardTypeFactory::new(); }
+pub static CreditCardTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<CreditCardTypeFactory>>>> = crate::JavaStatic::new(|| CreditCardTypeFactory::new());
 
 impl CreditCardTypeFactory {
 

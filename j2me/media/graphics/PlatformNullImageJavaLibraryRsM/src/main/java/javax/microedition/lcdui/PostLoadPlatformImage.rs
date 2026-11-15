@@ -31,7 +31,7 @@ pub struct PostLoadPlatformImage {
     pub base: PlatformImage,
 }
 
-thread_local! { pub static PostLoadPlatformImage_instance: Option<Rc<RefCell<dyn PostLoadPlatformImageDyn>>> = PostLoadPlatformImage::new().map(|reference| reference as Rc<RefCell<dyn PostLoadPlatformImageDyn>>); }
+pub static PostLoadPlatformImage_instance: crate::JavaStatic<Option<Rc<RefCell<dyn PostLoadPlatformImageDyn>>>> = crate::JavaStatic::new(|| PostLoadPlatformImage::new().map(|reference| reference as Rc<RefCell<dyn PostLoadPlatformImageDyn>>));
 
 impl PostLoadPlatformImage {
 

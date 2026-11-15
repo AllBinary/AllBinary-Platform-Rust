@@ -41,7 +41,7 @@ pub struct AbeFactory {
     pub useCustomLoader: bool,
 }
 
-thread_local! { pub static AbeFactory_instance: Option<Rc<RefCell<AbeFactory>>> = AbeFactory::new(); }
+pub static AbeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<AbeFactory>>>> = crate::JavaStatic::new(|| AbeFactory::new());
 
 impl AbeFactory {
 

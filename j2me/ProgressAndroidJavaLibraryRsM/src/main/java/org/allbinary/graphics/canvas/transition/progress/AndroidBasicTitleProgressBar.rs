@@ -71,7 +71,7 @@ pub struct AndroidBasicTitleProgressBar {
     pub animation: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>,
 }
 
-thread_local! { pub static AndroidBasicTitleProgressBar_RESOURCE: String = String::from("ProgressImage"); }
+pub static AndroidBasicTitleProgressBar_RESOURCE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("ProgressImage"));
 pub static mut AndroidBasicTitleProgressBar_background: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 0);
 impl DisplayChangeEventListener for AndroidBasicTitleProgressBar {
     fn onDisplayChangeEvent(&mut self, mut displayChangeEvent: Option<Rc<RefCell<DisplayChangeEvent>>>) { Self::onDisplayChangeEvent(self, displayChangeEvent) }

@@ -28,8 +28,8 @@ macro_rules! jcall {
 pub struct SpecialItemData {
 }
 
-thread_local! { pub static SpecialItemData_START_TIME: String = String::from("SPECIALITEM_START_TIME"); }
-thread_local! { pub static SpecialItemData_END_TIME: String = String::from("SPECIALITEM_END_TIME"); }
+pub static SpecialItemData_START_TIME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SPECIALITEM_START_TIME"));
+pub static SpecialItemData_END_TIME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SPECIALITEM_END_TIME"));
 
 impl SpecialItemData {
 

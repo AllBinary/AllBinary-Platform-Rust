@@ -28,7 +28,7 @@ pub struct FileItemUtil {
     pub DEFAULT_CHARSET: String,
 }
 
-thread_local! { pub static FileItemUtil_instance: Option<Rc<RefCell<FileItemUtil>>> = FileItemUtil::new(); }
+pub static FileItemUtil_instance: crate::JavaStatic<Option<Rc<RefCell<FileItemUtil>>>> = crate::JavaStatic::new(|| FileItemUtil::new());
 
 impl FileItemUtil {
 

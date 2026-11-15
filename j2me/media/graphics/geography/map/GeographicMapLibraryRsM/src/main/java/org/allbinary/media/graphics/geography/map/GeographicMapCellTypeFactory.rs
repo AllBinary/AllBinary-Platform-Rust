@@ -33,7 +33,7 @@ pub struct GeographicMapCellTypeFactory {
     pub geographicMapCellTypeArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellType::GeographicMapCellTypeDyn>>>>,
 }
 
-thread_local! { pub static GeographicMapCellTypeFactory_instance: Option<Rc<RefCell<dyn GeographicMapCellTypeFactoryDyn>>> = GeographicMapCellTypeFactory::new().map(|reference| reference as Rc<RefCell<dyn GeographicMapCellTypeFactoryDyn>>); }
+pub static GeographicMapCellTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<dyn GeographicMapCellTypeFactoryDyn>>>> = crate::JavaStatic::new(|| GeographicMapCellTypeFactory::new().map(|reference| reference as Rc<RefCell<dyn GeographicMapCellTypeFactoryDyn>>));
 
 impl GeographicMapCellTypeFactory {
 

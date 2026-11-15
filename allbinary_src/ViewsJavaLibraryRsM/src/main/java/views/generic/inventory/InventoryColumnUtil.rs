@@ -37,7 +37,7 @@ pub struct InventoryColumnUtil {
     pub basicItemData: Option<Rc<RefCell<BasicItemData>>>,
 }
 
-thread_local! { pub static InventoryColumnUtil_instance: Option<Rc<RefCell<InventoryColumnUtil>>> = InventoryColumnUtil::new(); }
+pub static InventoryColumnUtil_instance: crate::JavaStatic<Option<Rc<RefCell<InventoryColumnUtil>>>> = crate::JavaStatic::new(|| InventoryColumnUtil::new());
 
 impl InventoryColumnUtil {
 

@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct RootTransformInfoData {
 }
 
-thread_local! { pub static RootTransformInfoData_NAME: String = String::from("ROOT_TRANSFORM_INFO_NAME"); }
+pub static RootTransformInfoData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("ROOT_TRANSFORM_INFO_NAME"));
 
 impl RootTransformInfoData {
 

@@ -30,7 +30,7 @@ pub struct GameInputMotionInfoAPI5 {
     pub base: GameInputMotionInfo,
 }
 
-thread_local! { pub static GameInputMotionInfoAPI5_instance: Option<Rc<RefCell<GameInputMotionInfoAPI5>>> = GameInputMotionInfoAPI5::new(); }
+pub static GameInputMotionInfoAPI5_instance: crate::JavaStatic<Option<Rc<RefCell<GameInputMotionInfoAPI5>>>> = crate::JavaStatic::new(|| GameInputMotionInfoAPI5::new());
 
 impl GameInputMotionInfoAPI5 {
     

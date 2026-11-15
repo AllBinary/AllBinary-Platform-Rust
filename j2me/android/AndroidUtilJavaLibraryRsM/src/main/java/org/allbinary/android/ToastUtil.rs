@@ -24,7 +24,7 @@ pub struct ToastUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static ToastUtil_instance: Option<Rc<RefCell<ToastUtil>>> = ToastUtil::new(); }
+pub static ToastUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ToastUtil>>>> = crate::JavaStatic::new(|| ToastUtil::new());
 
 impl ToastUtil {
 

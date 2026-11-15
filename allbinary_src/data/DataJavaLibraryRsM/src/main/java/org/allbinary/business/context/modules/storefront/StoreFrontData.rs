@@ -62,7 +62,7 @@ pub struct StoreFrontData {
     pub SELECTSTORENAME: String,
 }
 
-thread_local! { pub static StoreFrontData_instance: Option<Rc<RefCell<StoreFrontData>>> = StoreFrontData::new(); }
+pub static StoreFrontData_instance: crate::JavaStatic<Option<Rc<RefCell<StoreFrontData>>>> = crate::JavaStatic::new(|| StoreFrontData::new());
 
 impl StoreFrontData {
 

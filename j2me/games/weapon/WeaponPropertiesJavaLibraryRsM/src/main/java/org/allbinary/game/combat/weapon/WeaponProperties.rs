@@ -40,11 +40,11 @@ pub struct WeaponProperties {
     pub ZERO: i16,
 }
 
-thread_local! { pub static WeaponProperties_NULL_WEAPON_PROPERTIES: Option<Rc<RefCell<WeaponProperties>>> = WeaponProperties::new(0_i64, 0_i64, 0_i64, 0, ((0) as i16)); }
+pub static WeaponProperties_NULL_WEAPON_PROPERTIES: crate::JavaStatic<Option<Rc<RefCell<WeaponProperties>>>> = crate::JavaStatic::new(|| WeaponProperties::new(0_i64, 0_i64, 0_i64, 0, ((0) as i16)));
 pub static mut WeaponProperties_messageSent: std::cell::LazyCell<bool> = std::cell::LazyCell::new(|| false);
-thread_local! { pub static WeaponProperties_DAMAGE: String = String::from("Damage: "); }
-thread_local! { pub static WeaponProperties_RANGE: String = String::from("Range: "); }
-thread_local! { pub static WeaponProperties_RELOAD: String = String::from("Reload: "); }
+pub static WeaponProperties_DAMAGE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Damage: "));
+pub static WeaponProperties_RANGE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Range: "));
+pub static WeaponProperties_RELOAD: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Reload: "));
 
 impl WeaponProperties {
     

@@ -29,7 +29,7 @@ pub struct CssElementData {
     pub NAME: String,
 }
 
-thread_local! { pub static CssElementData_instance: Option<Rc<RefCell<CssElementData>>> = CssElementData::new(); }
+pub static CssElementData_instance: crate::JavaStatic<Option<Rc<RefCell<CssElementData>>>> = crate::JavaStatic::new(|| CssElementData::new());
 
 impl CssElementData {
 

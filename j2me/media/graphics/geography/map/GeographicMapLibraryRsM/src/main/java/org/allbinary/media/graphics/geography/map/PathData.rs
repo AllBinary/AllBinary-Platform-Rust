@@ -29,7 +29,7 @@ pub struct PathData {
     pub OFFSET: i32,
 }
 
-thread_local! { pub static PathData_instance: Option<Rc<RefCell<PathData>>> = PathData::new(); }
+pub static PathData_instance: crate::JavaStatic<Option<Rc<RefCell<PathData>>>> = crate::JavaStatic::new(|| PathData::new());
 
 impl PathData {
 

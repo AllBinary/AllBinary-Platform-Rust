@@ -52,7 +52,7 @@ pub struct HorizontalScreenPatrolAI {
     pub sound: Option<Rc<RefCell<dyn crate::org::allbinary::media::audio::Sound::SoundDyn>>>,
 }
 
-thread_local! { pub static HorizontalScreenPatrolAI_SOUND: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(433); }
+pub static HorizontalScreenPatrolAI_SOUND: crate::JavaStatic<Option<i32>> = crate::JavaStatic::new(|| jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(433));
 impl crate::org::allbinary::ai::ArtificialIntelligenceInterface::ArtificialIntelligenceInterface for HorizontalScreenPatrolAI {
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }

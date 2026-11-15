@@ -37,7 +37,7 @@ pub struct GeographicMapDirectionUtil {
     pub EQUAL: String,
 }
 
-thread_local! { pub static GeographicMapDirectionUtil_instance: Option<Rc<RefCell<GeographicMapDirectionUtil>>> = GeographicMapDirectionUtil::new(); }
+pub static GeographicMapDirectionUtil_instance: crate::JavaStatic<Option<Rc<RefCell<GeographicMapDirectionUtil>>>> = crate::JavaStatic::new(|| GeographicMapDirectionUtil::new());
 
 impl GeographicMapDirectionUtil {
 

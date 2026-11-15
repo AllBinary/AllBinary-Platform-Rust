@@ -32,7 +32,7 @@ pub struct LogoData {
     pub IMAGE: String,
 }
 
-thread_local! { pub static LogoData_instance: Option<Rc<RefCell<LogoData>>> = LogoData::new(); }
+pub static LogoData_instance: crate::JavaStatic<Option<Rc<RefCell<LogoData>>>> = crate::JavaStatic::new(|| LogoData::new());
 
 impl LogoData {
 

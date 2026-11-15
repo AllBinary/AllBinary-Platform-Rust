@@ -34,7 +34,7 @@ pub struct Life {
     pub maxlives: i16,
 }
 
-thread_local! { pub static Life_NO_LIFE: Option<Rc<RefCell<Life>>> = Life::createLife(); }
+pub static Life_NO_LIFE: crate::JavaStatic<Option<Rc<RefCell<Life>>>> = crate::JavaStatic::new(|| Life::createLife());
 impl LifeInterface for Life {
     fn get(&mut self) -> i16 { Self::get(self) }
     fn set(&mut self, mut lives: i16) { Self::set(self, lives) }

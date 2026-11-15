@@ -39,7 +39,7 @@ pub struct PersistanceStrings {
     pub GAME_ACTION_INPUT: String,
 }
 
-thread_local! { pub static PersistanceStrings_instance: Option<Rc<RefCell<PersistanceStrings>>> = PersistanceStrings::new(); }
+pub static PersistanceStrings_instance: crate::JavaStatic<Option<Rc<RefCell<PersistanceStrings>>>> = crate::JavaStatic::new(|| PersistanceStrings::new());
 
 impl PersistanceStrings {
 

@@ -47,7 +47,7 @@ pub struct InventorySearchProductUtil {
     pub ITEM_NOT_FOUND: String,
 }
 
-thread_local! { pub static InventorySearchProductUtil_instance: Option<Rc<RefCell<InventorySearchProductUtil>>> = InventorySearchProductUtil::new(); }
+pub static InventorySearchProductUtil_instance: crate::JavaStatic<Option<Rc<RefCell<InventorySearchProductUtil>>>> = crate::JavaStatic::new(|| InventorySearchProductUtil::new());
 
 impl InventorySearchProductUtil {
 

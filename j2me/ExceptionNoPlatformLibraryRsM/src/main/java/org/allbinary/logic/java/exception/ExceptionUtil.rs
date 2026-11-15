@@ -32,7 +32,7 @@ pub struct ExceptionUtil {
     pub PRETEND_EXCEPTION: String,
 }
 
-thread_local! { pub static ExceptionUtil_instance: Option<Rc<RefCell<ExceptionUtil>>> = ExceptionUtil::new(); }
+pub static ExceptionUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ExceptionUtil>>>> = crate::JavaStatic::new(|| ExceptionUtil::new());
 
 impl ExceptionUtil {
 

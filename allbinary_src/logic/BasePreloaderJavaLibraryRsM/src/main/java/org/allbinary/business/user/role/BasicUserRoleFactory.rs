@@ -50,7 +50,7 @@ pub struct BasicUserRoleFactory {
     pub VIEWEDITOR: Option<Rc<RefCell<BasicUserRole>>>,
 }
 
-thread_local! { pub static BasicUserRoleFactory_instance: Option<Rc<RefCell<BasicUserRoleFactory>>> = BasicUserRoleFactory::new(); }
+pub static BasicUserRoleFactory_instance: crate::JavaStatic<Option<Rc<RefCell<BasicUserRoleFactory>>>> = crate::JavaStatic::new(|| BasicUserRoleFactory::new());
 
 impl BasicUserRoleFactory {
 

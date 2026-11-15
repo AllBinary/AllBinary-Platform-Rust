@@ -34,7 +34,7 @@ pub struct MainFeatureFactory {
     pub LOAD_ALL: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::Feature::FeatureDyn>>>,
 }
 
-thread_local! { pub static MainFeatureFactory_instance: Option<Rc<RefCell<MainFeatureFactory>>> = MainFeatureFactory::new(); }
+pub static MainFeatureFactory_instance: crate::JavaStatic<Option<Rc<RefCell<MainFeatureFactory>>>> = crate::JavaStatic::new(|| MainFeatureFactory::new());
 
 impl MainFeatureFactory {
 

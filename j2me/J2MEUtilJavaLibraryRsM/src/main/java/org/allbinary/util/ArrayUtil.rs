@@ -23,7 +23,7 @@ pub struct ArrayUtil {
     pub mathUtil: Option<Rc<RefCell<MathUtil>>>,
 }
 
-thread_local! { pub static ArrayUtil_instance: Option<Rc<RefCell<ArrayUtil>>> = ArrayUtil::new(); }
+pub static ArrayUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ArrayUtil>>>> = crate::JavaStatic::new(|| ArrayUtil::new());
 
 impl ArrayUtil {
 

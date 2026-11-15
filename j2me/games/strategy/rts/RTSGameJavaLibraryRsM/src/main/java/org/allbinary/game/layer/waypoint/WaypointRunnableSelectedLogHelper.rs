@@ -36,7 +36,7 @@ pub struct WaypointRunnableSelectedLogHelper {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static WaypointRunnableSelectedLogHelper_instanceC: Option<Rc<RefCell<WaypointRunnableSelectedLogHelper>>> = WaypointRunnableSelectedLogHelper::new(); }
+pub static WaypointRunnableSelectedLogHelper_instanceC: crate::JavaStatic<Option<Rc<RefCell<WaypointRunnableSelectedLogHelper>>>> = crate::JavaStatic::new(|| WaypointRunnableSelectedLogHelper::new());
 
 impl WaypointRunnableSelectedLogHelper {
 

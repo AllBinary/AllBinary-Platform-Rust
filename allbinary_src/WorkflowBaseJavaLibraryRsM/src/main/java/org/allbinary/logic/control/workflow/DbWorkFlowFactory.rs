@@ -39,7 +39,7 @@ pub struct DbWorkFlowFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static DbWorkFlowFactory_instance: Option<Rc<RefCell<DbWorkFlowFactory>>> = DbWorkFlowFactory::new(); }
+pub static DbWorkFlowFactory_instance: crate::JavaStatic<Option<Rc<RefCell<DbWorkFlowFactory>>>> = crate::JavaStatic::new(|| DbWorkFlowFactory::new());
 
 impl DbWorkFlowFactory {
 

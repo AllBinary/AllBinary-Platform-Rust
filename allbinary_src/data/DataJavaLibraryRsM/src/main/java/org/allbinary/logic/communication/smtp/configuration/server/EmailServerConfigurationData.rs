@@ -28,10 +28,10 @@ macro_rules! jcall {
 pub struct EmailServerConfigurationData {
 }
 
-thread_local! { pub static EmailServerConfigurationData_NAME: String = String::from("EMAIL_SERVER_CONFIGURATION_NAME"); }
-thread_local! { pub static EmailServerConfigurationData_SERVER: String = String::from("EMAIL_SERVER_CONFIGURATION_SERVER"); }
-thread_local! { pub static EmailServerConfigurationData_ACCOUNT: String = String::from("EMAIL_SERVER_CONFIGURATION_ACCOUNT"); }
-thread_local! { pub static EmailServerConfigurationData_PASSWORD: String = String::from("EMAIL_SERVER_CONFIGURATION_PASSWORD"); }
+pub static EmailServerConfigurationData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("EMAIL_SERVER_CONFIGURATION_NAME"));
+pub static EmailServerConfigurationData_SERVER: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("EMAIL_SERVER_CONFIGURATION_SERVER"));
+pub static EmailServerConfigurationData_ACCOUNT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("EMAIL_SERVER_CONFIGURATION_ACCOUNT"));
+pub static EmailServerConfigurationData_PASSWORD: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("EMAIL_SERVER_CONFIGURATION_PASSWORD"));
 
 impl EmailServerConfigurationData {
 

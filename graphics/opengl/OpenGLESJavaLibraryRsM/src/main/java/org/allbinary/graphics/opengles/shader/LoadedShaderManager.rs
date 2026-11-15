@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct LoadedShaderManager {
 }
 
-thread_local! { pub static LoadedShaderManager_instance: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::shader::ShaderManager::ShaderManagerDyn>>> = ShaderManager::new(-1, -1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::shader::ShaderManager::ShaderManagerDyn>>); }
+pub static LoadedShaderManager_instance: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::shader::ShaderManager::ShaderManagerDyn>>>> = crate::JavaStatic::new(|| ShaderManager::new(-1, -1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::shader::ShaderManager::ShaderManagerDyn>>));
 
 impl LoadedShaderManager {
 

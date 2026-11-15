@@ -18,7 +18,7 @@ macro_rules! jcall {
 pub struct AndroidNumberKeyToJ2MECanvasNumberKey {
 }
 
-thread_local! { pub static AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap: Vec<i32> = vec![0; (17) as usize]; }
+pub static AndroidNumberKeyToJ2MECanvasNumberKey_androidtoJavaMicroEditionKeyMap: crate::JavaStatic<Vec<i32>> = crate::JavaStatic::new(|| vec![0; (17) as usize]);
 
 impl AndroidNumberKeyToJ2MECanvasNumberKey {
 

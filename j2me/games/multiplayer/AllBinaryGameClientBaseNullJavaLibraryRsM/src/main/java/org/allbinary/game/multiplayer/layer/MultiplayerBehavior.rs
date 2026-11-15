@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct MultiplayerBehavior {
 }
 
-thread_local! { pub static MultiplayerBehavior_NULL_MULTIPLAYER_BEHAVIOR: Option<Rc<RefCell<dyn MultiplayerBehaviorDyn>>> = MultiplayerBehavior::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn MultiplayerBehaviorDyn>>); }
+pub static MultiplayerBehavior_NULL_MULTIPLAYER_BEHAVIOR: crate::JavaStatic<Option<Rc<RefCell<dyn MultiplayerBehaviorDyn>>>> = crate::JavaStatic::new(|| MultiplayerBehavior::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn MultiplayerBehaviorDyn>>));
 
 impl MultiplayerBehavior {
 

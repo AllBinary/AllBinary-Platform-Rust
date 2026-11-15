@@ -35,7 +35,7 @@ pub struct StoreFrontsData {
     pub FORUM: String,
 }
 
-thread_local! { pub static StoreFrontsData_instance: Option<Rc<RefCell<StoreFrontsData>>> = StoreFrontsData::new(); }
+pub static StoreFrontsData_instance: crate::JavaStatic<Option<Rc<RefCell<StoreFrontsData>>>> = crate::JavaStatic::new(|| StoreFrontsData::new());
 
 impl StoreFrontsData {
 

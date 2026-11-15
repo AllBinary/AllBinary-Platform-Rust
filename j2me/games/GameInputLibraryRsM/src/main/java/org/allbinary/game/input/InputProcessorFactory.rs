@@ -30,7 +30,7 @@ pub struct InputProcessorFactory {
     pub inputProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::InputProcessor::InputProcessorDyn>>>,
 }
 
-thread_local! { pub static InputProcessorFactory_instance: Option<Rc<RefCell<InputProcessorFactory>>> = InputProcessorFactory::new(); }
+pub static InputProcessorFactory_instance: crate::JavaStatic<Option<Rc<RefCell<InputProcessorFactory>>>> = crate::JavaStatic::new(|| InputProcessorFactory::new());
 
 impl InputProcessorFactory {
 

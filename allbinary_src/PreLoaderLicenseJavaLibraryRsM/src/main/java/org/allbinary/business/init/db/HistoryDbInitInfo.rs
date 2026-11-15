@@ -30,7 +30,7 @@ pub struct HistoryDbInitInfo {
     pub base: DbInitInfo,
 }
 
-thread_local! { pub static HistoryDbInitInfo_INITFILE: String = String::from("historydbinitdata.dat"); }
+pub static HistoryDbInitInfo_INITFILE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("historydbinitdata.dat"));
 
 impl HistoryDbInitInfo {
     

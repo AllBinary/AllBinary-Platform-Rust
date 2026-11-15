@@ -37,7 +37,7 @@ pub struct PaymentTransactionInterfaceFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static PaymentTransactionInterfaceFactory_instance: Option<Rc<RefCell<PaymentTransactionInterfaceFactory>>> = PaymentTransactionInterfaceFactory::new(); }
+pub static PaymentTransactionInterfaceFactory_instance: crate::JavaStatic<Option<Rc<RefCell<PaymentTransactionInterfaceFactory>>>> = crate::JavaStatic::new(|| PaymentTransactionInterfaceFactory::new());
 
 impl PaymentTransactionInterfaceFactory {
 

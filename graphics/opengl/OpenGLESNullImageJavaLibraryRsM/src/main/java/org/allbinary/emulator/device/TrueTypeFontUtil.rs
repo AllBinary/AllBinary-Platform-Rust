@@ -36,7 +36,7 @@ pub struct TrueTypeFontUtil {
     pub fontImage: Option<Rc<RefCell<dyn crate::org::allbinary::image::opengles::OpenGLESImage::OpenGLESImageDyn>>>,
 }
 
-thread_local! { pub static TrueTypeFontUtil_instance: Option<Rc<RefCell<TrueTypeFontUtil>>> = TrueTypeFontUtil::new(); }
+pub static TrueTypeFontUtil_instance: crate::JavaStatic<Option<Rc<RefCell<TrueTypeFontUtil>>>> = crate::JavaStatic::new(|| TrueTypeFontUtil::new());
 
 impl TrueTypeFontUtil {
     

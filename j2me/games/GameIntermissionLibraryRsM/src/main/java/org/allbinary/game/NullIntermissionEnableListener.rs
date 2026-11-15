@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct NullIntermissionEnableListener {
 }
 
-thread_local! { pub static NullIntermissionEnableListener_SINGLETON: Option<Rc<RefCell<dyn IntermissionEnableListenerInterface>>> = NullIntermissionEnableListener::new().map(|reference| reference as Rc<RefCell<dyn IntermissionEnableListenerInterface>>).map(|reference| reference as Rc<RefCell<dyn IntermissionEnableListenerInterface>>); }
+pub static NullIntermissionEnableListener_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<dyn IntermissionEnableListenerInterface>>>> = crate::JavaStatic::new(|| NullIntermissionEnableListener::new().map(|reference| reference as Rc<RefCell<dyn IntermissionEnableListenerInterface>>).map(|reference| reference as Rc<RefCell<dyn IntermissionEnableListenerInterface>>));
 impl IntermissionEnableListenerInterface for NullIntermissionEnableListener {
     fn notifyIntermission(&mut self, mut enable: bool) { Self::notifyIntermission(self, enable) }
 }

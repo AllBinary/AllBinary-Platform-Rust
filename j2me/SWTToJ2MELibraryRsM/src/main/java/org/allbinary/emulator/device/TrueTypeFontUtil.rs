@@ -57,7 +57,7 @@ pub struct TrueTypeFontUtil {
     pub widthScale: f32,
 }
 
-thread_local! { pub static TrueTypeFontUtil_instance: Option<Rc<RefCell<TrueTypeFontUtil>>> = TrueTypeFontUtil::new(); }
+pub static TrueTypeFontUtil_instance: crate::JavaStatic<Option<Rc<RefCell<TrueTypeFontUtil>>>> = crate::JavaStatic::new(|| TrueTypeFontUtil::new());
 
 impl TrueTypeFontUtil {
     

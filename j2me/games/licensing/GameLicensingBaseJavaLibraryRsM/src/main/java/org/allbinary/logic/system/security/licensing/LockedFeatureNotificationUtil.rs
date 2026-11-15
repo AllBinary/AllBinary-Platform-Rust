@@ -38,7 +38,7 @@ pub struct LockedFeatureNotificationUtil {
     pub gameNotificationEvent: Option<Rc<RefCell<GameNotificationEvent>>>,
 }
 
-thread_local! { pub static LockedFeatureNotificationUtil_instance: Option<Rc<RefCell<LockedFeatureNotificationUtil>>> = LockedFeatureNotificationUtil::new(); }
+pub static LockedFeatureNotificationUtil_instance: crate::JavaStatic<Option<Rc<RefCell<LockedFeatureNotificationUtil>>>> = crate::JavaStatic::new(|| LockedFeatureNotificationUtil::new());
 
 impl LockedFeatureNotificationUtil {
 

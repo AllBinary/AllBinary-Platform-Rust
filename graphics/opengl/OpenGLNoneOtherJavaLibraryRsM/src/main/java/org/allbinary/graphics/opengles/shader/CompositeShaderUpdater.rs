@@ -36,7 +36,7 @@ pub struct CompositeShaderUpdater {
     pub commonSeps: Option<Rc<RefCell<CommonSeps>>>,
 }
 
-thread_local! { pub static CompositeShaderUpdater_instanceC: Option<Rc<RefCell<dyn CompositeShaderUpdaterDyn>>> = CompositeShaderUpdater::new(jcall!(StringUtil::getInstance()).getArrayInstance(), jcall!(StringUtil::getInstance()).getArrayInstance(), jcall!(StringUtil::getInstance()).getArrayInstance(), { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn CompositeShaderUpdaterDyn>>); }
+pub static CompositeShaderUpdater_instanceC: crate::JavaStatic<Option<Rc<RefCell<dyn CompositeShaderUpdaterDyn>>>> = crate::JavaStatic::new(|| CompositeShaderUpdater::new(jcall!(StringUtil::getInstance()).getArrayInstance(), jcall!(StringUtil::getInstance()).getArrayInstance(), jcall!(StringUtil::getInstance()).getArrayInstance(), { let java_field = jcall!(NullUtil::getInstance()).NULL_INT_ARRAY.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn CompositeShaderUpdaterDyn>>));
 
 impl CompositeShaderUpdater {
     

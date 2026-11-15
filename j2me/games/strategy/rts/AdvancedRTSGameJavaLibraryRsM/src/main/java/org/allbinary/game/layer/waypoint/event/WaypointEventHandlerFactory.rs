@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct WaypointEventHandlerFactory {
 }
 
-thread_local! { pub static WaypointEventHandlerFactory_eventHandlerArray: Vec<Option<Rc<RefCell<WaypointEventHandler>>>> = vec![WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new()]; }
+pub static WaypointEventHandlerFactory_eventHandlerArray: crate::JavaStatic<Vec<Option<Rc<RefCell<WaypointEventHandler>>>>> = crate::JavaStatic::new(|| vec![WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new(), WaypointEventHandler::new()]);
 
 impl WaypointEventHandlerFactory {
 

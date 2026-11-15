@@ -55,7 +55,7 @@ pub struct KeyboardActionScriptInput {
     pub delayBetweenKeys: i32,
 }
 
-thread_local! { pub static KeyboardActionScriptInput_NAME: String = String::from("Keyboard"); }
+pub static KeyboardActionScriptInput_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Keyboard"));
 // impl KeyboardActionScriptInputInterface for KeyboardActionScriptInput with the methods of the trait
 impl crate::org::allbinary::data::tree::dom::DomNodeInterface::DomNodeInterface for KeyboardActionScriptInput {
     fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { Self::toXmlNode(self, document) }

@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct MultipartRequestParamsData {
 }
 
-thread_local! { pub static MultipartRequestParamsData_HASHMAP: String = String::from("MULTIPART_REQUEST_HASHMAP"); }
+pub static MultipartRequestParamsData_HASHMAP: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("MULTIPART_REQUEST_HASHMAP"));
 
 impl MultipartRequestParamsData {
 

@@ -49,7 +49,7 @@ pub struct SqlTypeStrings {
     pub BLOB_NOT_NULL: String,
 }
 
-thread_local! { pub static SqlTypeStrings_instance: Option<Rc<RefCell<SqlTypeStrings>>> = SqlTypeStrings::new(); }
+pub static SqlTypeStrings_instance: crate::JavaStatic<Option<Rc<RefCell<SqlTypeStrings>>>> = crate::JavaStatic::new(|| SqlTypeStrings::new());
 
 impl SqlTypeStrings {
 

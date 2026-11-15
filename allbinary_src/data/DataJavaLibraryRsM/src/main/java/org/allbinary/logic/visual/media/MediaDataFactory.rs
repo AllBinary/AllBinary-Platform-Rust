@@ -49,7 +49,7 @@ pub struct MediaDataFactory {
     pub WMF: Option<Rc<RefCell<MediaData>>>,
 }
 
-thread_local! { pub static MediaDataFactory_instance: Option<Rc<RefCell<MediaDataFactory>>> = MediaDataFactory::new(); }
+pub static MediaDataFactory_instance: crate::JavaStatic<Option<Rc<RefCell<MediaDataFactory>>>> = crate::JavaStatic::new(|| MediaDataFactory::new());
 
 impl MediaDataFactory {
 

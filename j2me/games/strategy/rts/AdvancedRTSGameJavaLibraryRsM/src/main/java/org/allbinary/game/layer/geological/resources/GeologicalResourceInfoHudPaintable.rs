@@ -38,7 +38,7 @@ pub struct GeologicalResourceInfoHudPaintable {
     pub fontHeight: i32,
 }
 
-thread_local! { pub static GeologicalResourceInfoHudPaintable_RESOURCES: String = String::from("Resources: "); }
+pub static GeologicalResourceInfoHudPaintable_RESOURCES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Resources: "));
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintableInterface::InitUpdatePaintableInterface for GeologicalResourceInfoHudPaintable {
 }
 impl crate::org::allbinary::init::InitInterface::InitInterface for GeologicalResourceInfoHudPaintable {

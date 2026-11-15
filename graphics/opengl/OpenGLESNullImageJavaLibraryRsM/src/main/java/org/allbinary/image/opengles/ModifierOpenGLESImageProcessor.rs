@@ -30,7 +30,7 @@ pub struct ModifierOpenGLESImageProcessor {
     pub base: OpenGLESImageProcessor,
 }
 
-thread_local! { pub static ModifierOpenGLESImageProcessor_instanceC: Option<Rc<RefCell<ModifierOpenGLESImageProcessor>>> = ModifierOpenGLESImageProcessor::new(); }
+pub static ModifierOpenGLESImageProcessor_instanceC: crate::JavaStatic<Option<Rc<RefCell<ModifierOpenGLESImageProcessor>>>> = crate::JavaStatic::new(|| ModifierOpenGLESImageProcessor::new());
 
 impl ModifierOpenGLESImageProcessor {
 

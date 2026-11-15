@@ -43,7 +43,7 @@ pub struct StylesValidationFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static StylesValidationFactory_instance: Option<Rc<RefCell<StylesValidationFactory>>> = StylesValidationFactory::new(); }
+pub static StylesValidationFactory_instance: crate::JavaStatic<Option<Rc<RefCell<StylesValidationFactory>>>> = crate::JavaStatic::new(|| StylesValidationFactory::new());
 
 impl StylesValidationFactory {
 

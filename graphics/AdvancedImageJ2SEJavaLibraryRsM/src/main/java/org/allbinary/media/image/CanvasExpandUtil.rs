@@ -37,7 +37,7 @@ pub struct CanvasExpandUtil {
     pub stringUtil: Option<Rc<RefCell<StringUtil>>>,
 }
 
-thread_local! { pub static CanvasExpandUtil_instance: Option<Rc<RefCell<CanvasExpandUtil>>> = CanvasExpandUtil::new(); }
+pub static CanvasExpandUtil_instance: crate::JavaStatic<Option<Rc<RefCell<CanvasExpandUtil>>>> = crate::JavaStatic::new(|| CanvasExpandUtil::new());
 
 impl CanvasExpandUtil {
 

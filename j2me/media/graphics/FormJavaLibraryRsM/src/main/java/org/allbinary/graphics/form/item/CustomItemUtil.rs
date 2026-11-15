@@ -30,7 +30,7 @@ pub struct CustomItemUtil {
     pub CUSTOM_ITEM_ARRAY: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::form::item::ABCustomItem::ABCustomItemDyn>>>>,
 }
 
-thread_local! { pub static CustomItemUtil_instance: Option<Rc<RefCell<CustomItemUtil>>> = CustomItemUtil::new(); }
+pub static CustomItemUtil_instance: crate::JavaStatic<Option<Rc<RefCell<CustomItemUtil>>>> = crate::JavaStatic::new(|| CustomItemUtil::new());
 
 impl CustomItemUtil {
 

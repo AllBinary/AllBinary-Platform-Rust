@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct TiledLayerUtil {
 }
 
-thread_local! { pub static TiledLayerUtil_instance: Option<Rc<RefCell<TiledLayerUtil>>> = TiledLayerUtil::new(); }
+pub static TiledLayerUtil_instance: crate::JavaStatic<Option<Rc<RefCell<TiledLayerUtil>>>> = crate::JavaStatic::new(|| TiledLayerUtil::new());
 
 impl TiledLayerUtil {
 

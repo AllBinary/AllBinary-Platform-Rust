@@ -52,7 +52,7 @@ pub struct AngleFactory {
     pub frameUtil: Option<Rc<RefCell<FrameUtil>>>,
 }
 
-thread_local! { pub static AngleFactory_instance: Option<Rc<RefCell<AngleFactory>>> = AngleFactory::new(); }
+pub static AngleFactory_instance: crate::JavaStatic<Option<Rc<RefCell<AngleFactory>>>> = crate::JavaStatic::new(|| AngleFactory::new());
 
 impl AngleFactory {
 

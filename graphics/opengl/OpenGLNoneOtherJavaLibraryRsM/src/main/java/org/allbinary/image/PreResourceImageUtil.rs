@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct PreResourceImageUtil {
 }
 
-thread_local! { pub static PreResourceImageUtil_instance: Option<Rc<RefCell<PreResourceImageUtil>>> = PreResourceImageUtil::new(); }
+pub static PreResourceImageUtil_instance: crate::JavaStatic<Option<Rc<RefCell<PreResourceImageUtil>>>> = crate::JavaStatic::new(|| PreResourceImageUtil::new());
 
 impl PreResourceImageUtil {
 

@@ -40,8 +40,8 @@ pub struct LogUtil {
     pub logFormatUtil: Option<Rc<RefCell<LogFormatUtil>>>,
 }
 
-thread_local! { pub static LogUtil_instance: Option<Rc<RefCell<LogUtil>>> = LogUtil::new(); }
-thread_local! { pub static LogUtil_LOG_SUCCESS: String = String::from("org.allbinary: "); }
+pub static LogUtil_instance: crate::JavaStatic<Option<Rc<RefCell<LogUtil>>>> = crate::JavaStatic::new(|| LogUtil::new());
+pub static LogUtil_LOG_SUCCESS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("org.allbinary: "));
 
 impl LogUtil {
 

@@ -28,23 +28,23 @@ macro_rules! jcall {
 pub struct BillingAddressData {
 }
 
-thread_local! { pub static BillingAddressData_MAX: i32 = 255; }
-thread_local! { pub static BillingAddressData_MIN: i32 = 0; }
-thread_local! { pub static BillingAddressData_MULTIPLE: String = String::from("BILLINGADDRESSES"); }
-thread_local! { pub static BillingAddressData_STATES: String = String::from("BILLINGADDRESS_STATES"); }
-thread_local! { pub static BillingAddressData_SETTOSHIPPINGADDRESS: String = String::from("Set To Shipping Address"); }
-thread_local! { pub static BillingAddressData_SELECT: String = String::from("Select Billing Address"); }
-thread_local! { pub static BillingAddressData_SETTOSHIPPINGADDRESSNAME: String = String::from("SETTOSHIPPINGADDRESS"); }
-thread_local! { pub static BillingAddressData_BILLINGADDRESSES: String = String::from("BILLINGADDRESSES"); }
-thread_local! { pub static BillingAddressData_BILLINGADDRESS: String = String::from("BILLINGADDRESS"); }
-thread_local! { pub static BillingAddressData_ID: String = String::from("BILLINGADDRESS_ID"); }
-thread_local! { pub static BillingAddressData_ADDRESS: String = String::from("BILLINGADDRESS_ADDRESS"); }
-thread_local! { pub static BillingAddressData_NAME: String = String::from("BILLINGADDRESS_NAME"); }
-thread_local! { pub static BillingAddressData_STREET: String = String::from("BILLINGADDRESS_STREET"); }
-thread_local! { pub static BillingAddressData_CITY: String = String::from("BILLINGADDRESS_CITY"); }
-thread_local! { pub static BillingAddressData_STATE: String = String::from("BILLINGADDRESS_STATE"); }
-thread_local! { pub static BillingAddressData_CODE: String = String::from("BILLINGADDRESS_CODE"); }
-thread_local! { pub static BillingAddressData_COUNTRY: String = String::from("BILLINGADDRESS_COUNTRY"); }
+pub static BillingAddressData_MAX: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 255);
+pub static BillingAddressData_MIN: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0);
+pub static BillingAddressData_MULTIPLE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BILLINGADDRESSES"));
+pub static BillingAddressData_STATES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BILLINGADDRESS_STATES"));
+pub static BillingAddressData_SETTOSHIPPINGADDRESS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Set To Shipping Address"));
+pub static BillingAddressData_SELECT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Select Billing Address"));
+pub static BillingAddressData_SETTOSHIPPINGADDRESSNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SETTOSHIPPINGADDRESS"));
+pub static BillingAddressData_BILLINGADDRESSES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BILLINGADDRESSES"));
+pub static BillingAddressData_BILLINGADDRESS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BILLINGADDRESS"));
+pub static BillingAddressData_ID: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BILLINGADDRESS_ID"));
+pub static BillingAddressData_ADDRESS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BILLINGADDRESS_ADDRESS"));
+pub static BillingAddressData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BILLINGADDRESS_NAME"));
+pub static BillingAddressData_STREET: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BILLINGADDRESS_STREET"));
+pub static BillingAddressData_CITY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BILLINGADDRESS_CITY"));
+pub static BillingAddressData_STATE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BILLINGADDRESS_STATE"));
+pub static BillingAddressData_CODE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BILLINGADDRESS_CODE"));
+pub static BillingAddressData_COUNTRY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BILLINGADDRESS_COUNTRY"));
 
 impl BillingAddressData {
 

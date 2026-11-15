@@ -40,7 +40,7 @@ pub struct SequenceAI {
     pub index: i32,
 }
 
-thread_local! { pub static SequenceAI_SEQUENCE_AI: String = String::from("Sequence AI"); }
+pub static SequenceAI_SEQUENCE_AI: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Sequence AI"));
 impl ArtificialIntelligenceInterface for SequenceAI {
     fn processAI(&mut self, mut allBinaryLayerManager: Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayerManager::AllBinaryLayerManagerDyn>>>) { Self::processAI(self, allBinaryLayerManager) }
 }

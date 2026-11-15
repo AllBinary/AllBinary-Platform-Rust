@@ -34,7 +34,7 @@ pub struct AbKeys {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static AbKeys_instance: Option<Rc<RefCell<AbKeys>>> = AbKeys::new(); }
+pub static AbKeys_instance: crate::JavaStatic<Option<Rc<RefCell<AbKeys>>>> = crate::JavaStatic::new(|| AbKeys::new());
 
 impl AbKeys {
 

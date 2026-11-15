@@ -48,7 +48,7 @@ pub struct SpriteSplitterUtil {
     pub _ROW: String,
 }
 
-thread_local! { pub static SpriteSplitterUtil_instance: Option<Rc<RefCell<SpriteSplitterUtil>>> = SpriteSplitterUtil::new(); }
+pub static SpriteSplitterUtil_instance: crate::JavaStatic<Option<Rc<RefCell<SpriteSplitterUtil>>>> = crate::JavaStatic::new(|| SpriteSplitterUtil::new());
 
 impl SpriteSplitterUtil {
 

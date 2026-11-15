@@ -46,7 +46,7 @@ pub struct CommonLabels {
     pub COLON_SEP: String,
 }
 
-thread_local! { pub static CommonLabels_instance: Option<Rc<RefCell<CommonLabels>>> = CommonLabels::new(); }
+pub static CommonLabels_instance: crate::JavaStatic<Option<Rc<RefCell<CommonLabels>>>> = crate::JavaStatic::new(|| CommonLabels::new());
 
 impl CommonLabels {
 

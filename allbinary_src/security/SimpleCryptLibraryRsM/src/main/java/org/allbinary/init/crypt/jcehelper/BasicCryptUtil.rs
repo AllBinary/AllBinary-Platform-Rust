@@ -38,7 +38,7 @@ pub struct BasicCryptUtil {
     pub XML_START: String,
 }
 
-thread_local! { pub static BasicCryptUtil_instance: Option<Rc<RefCell<BasicCryptUtil>>> = BasicCryptUtil::new(); }
+pub static BasicCryptUtil_instance: crate::JavaStatic<Option<Rc<RefCell<BasicCryptUtil>>>> = crate::JavaStatic::new(|| BasicCryptUtil::new());
 
 impl BasicCryptUtil {
 

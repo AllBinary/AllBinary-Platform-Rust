@@ -36,7 +36,7 @@ pub struct ImageJ2SERotationUtil {
     pub TWO_PIE: f64,
 }
 
-thread_local! { pub static ImageJ2SERotationUtil_instance: Option<Rc<RefCell<ImageJ2SERotationUtil>>> = ImageJ2SERotationUtil::new(); }
+pub static ImageJ2SERotationUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImageJ2SERotationUtil>>>> = crate::JavaStatic::new(|| ImageJ2SERotationUtil::new());
 
 impl ImageJ2SERotationUtil {
 

@@ -38,7 +38,7 @@ pub struct PathFindingInfo {
     pub pathFindingNodeCostInfoFactoryInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::pathfinding::PathFindingNodeCostInfoFactoryBase::PathFindingNodeCostInfoFactoryBaseDyn>>>,
 }
 
-thread_local! { pub static PathFindingInfo_NULL_PATH_FINDING_INFO: Option<Rc<RefCell<PathFindingInfo>>> = PathFindingInfo::new(PathFindingNodeCostInfoFactoryBase_NULL_PATH_FINDING_NODE_COST_INFO_FACTORY_BASE.with(Clone::clone).clone(), jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance(), jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance()); }
+pub static PathFindingInfo_NULL_PATH_FINDING_INFO: crate::JavaStatic<Option<Rc<RefCell<PathFindingInfo>>>> = crate::JavaStatic::new(|| PathFindingInfo::new(PathFindingNodeCostInfoFactoryBase_NULL_PATH_FINDING_NODE_COST_INFO_FACTORY_BASE.with(Clone::clone).clone(), jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance(), jcall!(BasicArrayListUtil::getInstance()).getImmutableInstance()));
 impl PathFindingInfoInterface for PathFindingInfo {
     fn getStartPathFindingNodeList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::getStartPathFindingNodeList(self) }
     fn getEndPathFindingNodeList(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> { Self::getEndPathFindingNodeList(self) }

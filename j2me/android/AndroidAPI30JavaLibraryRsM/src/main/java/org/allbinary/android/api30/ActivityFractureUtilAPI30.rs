@@ -35,7 +35,7 @@ pub struct ActivityFractureUtilAPI30 {
     pub base: ActivityFractureUtilAPI5,
 }
 
-thread_local! { pub static ActivityFractureUtilAPI30_instance30: Option<Rc<RefCell<ActivityFractureUtilAPI30>>> = ActivityFractureUtilAPI30::new(); }
+pub static ActivityFractureUtilAPI30_instance30: crate::JavaStatic<Option<Rc<RefCell<ActivityFractureUtilAPI30>>>> = crate::JavaStatic::new(|| ActivityFractureUtilAPI30::new());
 
 impl ActivityFractureUtilAPI30 {
 

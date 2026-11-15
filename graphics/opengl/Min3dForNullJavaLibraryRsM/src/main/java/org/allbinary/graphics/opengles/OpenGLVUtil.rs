@@ -30,7 +30,7 @@ pub struct OpenGLVUtil {
     pub base: OpenGLVUtilBase,
 }
 
-thread_local! { pub static OpenGLVUtil_instance: Option<Rc<RefCell<OpenGLVUtil>>> = OpenGLVUtil::new(); }
+pub static OpenGLVUtil_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLVUtil>>>> = crate::JavaStatic::new(|| OpenGLVUtil::new());
 
 impl OpenGLVUtil {
 

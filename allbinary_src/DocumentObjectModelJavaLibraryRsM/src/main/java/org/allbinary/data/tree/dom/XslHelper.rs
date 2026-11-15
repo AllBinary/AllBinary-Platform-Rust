@@ -41,7 +41,7 @@ macro_rules! jcall {
 pub struct XslHelper {
 }
 
-thread_local! { pub static XslHelper_instance: Option<Rc<RefCell<XslHelper>>> = XslHelper::new(); }
+pub static XslHelper_instance: crate::JavaStatic<Option<Rc<RefCell<XslHelper>>>> = crate::JavaStatic::new(|| XslHelper::new());
 
 impl XslHelper {
 

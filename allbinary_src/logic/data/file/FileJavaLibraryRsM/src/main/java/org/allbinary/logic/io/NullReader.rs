@@ -31,7 +31,7 @@ pub struct NullReader {
     pub base: Reader,
 }
 
-thread_local! { pub static NullReader_NULL_READER: Option<Rc<RefCell<NullReader>>> = NullReader::new(); }
+pub static NullReader_NULL_READER: crate::JavaStatic<Option<Rc<RefCell<NullReader>>>> = crate::JavaStatic::new(|| NullReader::new());
 impl crate::java::io::Closeable::Closeable for NullReader {
     fn close(&mut self) { Self::close(self) }
 }

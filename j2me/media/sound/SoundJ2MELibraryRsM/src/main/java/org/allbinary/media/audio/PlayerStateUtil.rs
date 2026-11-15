@@ -36,7 +36,7 @@ pub struct PlayerStateUtil {
     pub CLOSED: String,
 }
 
-thread_local! { pub static PlayerStateUtil_instance: Option<Rc<RefCell<PlayerStateUtil>>> = PlayerStateUtil::new(); }
+pub static PlayerStateUtil_instance: crate::JavaStatic<Option<Rc<RefCell<PlayerStateUtil>>>> = crate::JavaStatic::new(|| PlayerStateUtil::new());
 
 impl PlayerStateUtil {
 

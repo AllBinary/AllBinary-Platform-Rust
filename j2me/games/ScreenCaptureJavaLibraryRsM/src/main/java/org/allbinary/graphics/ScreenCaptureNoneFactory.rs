@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct ScreenCaptureNoneFactory {
 }
 
-thread_local! { pub static ScreenCaptureNoneFactory_instance: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::ScreenCapture::ScreenCaptureDyn>>> = ScreenCapture::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::ScreenCapture::ScreenCaptureDyn>>); }
+pub static ScreenCaptureNoneFactory_instance: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::ScreenCapture::ScreenCaptureDyn>>>> = crate::JavaStatic::new(|| ScreenCapture::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::ScreenCapture::ScreenCaptureDyn>>));
 
 impl ScreenCaptureNoneFactory {
 

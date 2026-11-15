@@ -48,7 +48,7 @@ pub struct XmlDocumentHelper {
     pub transformer: Option<Rc<RefCell<Transformer>>>,
 }
 
-thread_local! { pub static XmlDocumentHelper_instance: Option<Rc<RefCell<XmlDocumentHelper>>> = XmlDocumentHelper::new(); }
+pub static XmlDocumentHelper_instance: crate::JavaStatic<Option<Rc<RefCell<XmlDocumentHelper>>>> = crate::JavaStatic::new(|| XmlDocumentHelper::new());
 
 impl XmlDocumentHelper {
     

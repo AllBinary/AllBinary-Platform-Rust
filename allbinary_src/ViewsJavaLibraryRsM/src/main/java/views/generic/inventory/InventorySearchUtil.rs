@@ -65,7 +65,7 @@ pub struct InventorySearchUtil {
     pub basicItemData: Option<Rc<RefCell<BasicItemData>>>,
 }
 
-thread_local! { pub static InventorySearchUtil_instance: Option<Rc<RefCell<InventorySearchUtil>>> = InventorySearchUtil::new(); }
+pub static InventorySearchUtil_instance: crate::JavaStatic<Option<Rc<RefCell<InventorySearchUtil>>>> = crate::JavaStatic::new(|| InventorySearchUtil::new());
 
 impl InventorySearchUtil {
 

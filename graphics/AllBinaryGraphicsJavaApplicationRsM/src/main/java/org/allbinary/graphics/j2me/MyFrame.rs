@@ -112,11 +112,11 @@ pub struct MyFrame {
     pub zoomOutJMenuItem: Option<Rc<RefCell<JMenuItem>>>,
 }
 
-thread_local! { pub static MyFrame_MAXWORKAREAS: i32 = 10; }
+pub static MyFrame_MAXWORKAREAS: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 10);
 pub static mut MyFrame_numberOfWorkAreas: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 0);
-thread_local! { pub static MyFrame_PATH: String = String::from("G:/mnt/bc/mydev/work/graphics/AllBinaryGraphicsJavaApplication"); }
-thread_local! { pub static MyFrame_SAVE_PATH: String = format!("{}{}", MyFrame_PATH.with(Clone::clone), String::from("/save")); }
-thread_local! { pub static MyFrame_TEMPLATE_EXPORT_PATH: String = format!("{}{}", MyFrame_PATH.with(Clone::clone), String::from("/templates/export")); }
+pub static MyFrame_PATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("G:/mnt/bc/mydev/work/graphics/AllBinaryGraphicsJavaApplication"));
+pub static MyFrame_SAVE_PATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", MyFrame_PATH.with(Clone::clone), String::from("/save")));
+pub static MyFrame_TEMPLATE_EXPORT_PATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", MyFrame_PATH.with(Clone::clone), String::from("/templates/export")));
 pub static mut MyFrame_statusJLabel: std::cell::LazyCell<Option<Rc<RefCell<JLabel>>>> = std::cell::LazyCell::new(|| None);
 impl FileJDialogListenerInterface for MyFrame {
     fn onFiles(&mut self, mut files: Vec<Option<Rc<RefCell<File>>>>) { Self::onFiles(self, files) }

@@ -36,7 +36,7 @@ pub struct MathData {
     pub MULTIPLY: String,
 }
 
-thread_local! { pub static MathData_instance: Option<Rc<RefCell<MathData>>> = MathData::new(); }
+pub static MathData_instance: crate::JavaStatic<Option<Rc<RefCell<MathData>>>> = crate::JavaStatic::new(|| MathData::new());
 
 impl MathData {
 

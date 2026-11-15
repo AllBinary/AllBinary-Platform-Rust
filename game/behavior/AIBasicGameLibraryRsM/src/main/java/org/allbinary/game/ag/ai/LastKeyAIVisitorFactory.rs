@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct LastKeyAIVisitorFactory {
 }
 
-thread_local! { pub static LastKeyAIVisitorFactory_instance: Option<Rc<RefCell<LastKeyAIVisitor>>> = LastKeyAIVisitor::new(); }
+pub static LastKeyAIVisitorFactory_instance: crate::JavaStatic<Option<Rc<RefCell<LastKeyAIVisitor>>>> = crate::JavaStatic::new(|| LastKeyAIVisitor::new());
 
 impl LastKeyAIVisitorFactory {
 

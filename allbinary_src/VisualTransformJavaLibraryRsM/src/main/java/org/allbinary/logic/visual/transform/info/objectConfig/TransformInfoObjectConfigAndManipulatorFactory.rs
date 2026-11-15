@@ -43,7 +43,7 @@ pub struct TransformInfoObjectConfigAndManipulatorFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static TransformInfoObjectConfigAndManipulatorFactory_instance: Option<Rc<RefCell<TransformInfoObjectConfigAndManipulatorFactory>>> = TransformInfoObjectConfigAndManipulatorFactory::new(); }
+pub static TransformInfoObjectConfigAndManipulatorFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TransformInfoObjectConfigAndManipulatorFactory>>>> = crate::JavaStatic::new(|| TransformInfoObjectConfigAndManipulatorFactory::new());
 
 impl TransformInfoObjectConfigAndManipulatorFactory {
     

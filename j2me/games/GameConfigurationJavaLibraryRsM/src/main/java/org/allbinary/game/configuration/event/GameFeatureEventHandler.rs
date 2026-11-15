@@ -35,7 +35,7 @@ pub struct GameFeatureEventHandler {
     pub base: BasicEventHandler,
 }
 
-thread_local! { pub static GameFeatureEventHandler_gameKeyEventHandler: Option<Rc<RefCell<GameFeatureEventHandler>>> = GameFeatureEventHandler::new(); }
+pub static GameFeatureEventHandler_gameKeyEventHandler: crate::JavaStatic<Option<Rc<RefCell<GameFeatureEventHandler>>>> = crate::JavaStatic::new(|| GameFeatureEventHandler::new());
 
 impl GameFeatureEventHandler {
     

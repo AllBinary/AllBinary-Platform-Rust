@@ -34,8 +34,8 @@ pub struct GeographicMapCellType {
     pub r#type: i32,
 }
 
-thread_local! { pub static GeographicMapCellType_NULL_GEOGRAPHIC_MAP_CELL_TYPE_ARRAY: Vec<Option<Rc<RefCell<dyn GeographicMapCellTypeDyn>>>> = vec![None; (0) as usize]; }
-thread_local! { pub static GeographicMapCellType_NULL_GEOGRAPHIC_MAP_CELL_TYPE: Option<Rc<RefCell<dyn GeographicMapCellTypeDyn>>> = GeographicMapCellType::new(i32::MIN.clone(), 0).map(|reference| reference as Rc<RefCell<dyn GeographicMapCellTypeDyn>>); }
+pub static GeographicMapCellType_NULL_GEOGRAPHIC_MAP_CELL_TYPE_ARRAY: crate::JavaStatic<Vec<Option<Rc<RefCell<dyn GeographicMapCellTypeDyn>>>>> = crate::JavaStatic::new(|| vec![None; (0) as usize]);
+pub static GeographicMapCellType_NULL_GEOGRAPHIC_MAP_CELL_TYPE: crate::JavaStatic<Option<Rc<RefCell<dyn GeographicMapCellTypeDyn>>>> = crate::JavaStatic::new(|| GeographicMapCellType::new(i32::MIN.clone(), 0).map(|reference| reference as Rc<RefCell<dyn GeographicMapCellTypeDyn>>));
 
 impl GeographicMapCellType {
     

@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct SpecialGameInputFactory {
 }
 
-thread_local! { pub static SpecialGameInputFactory_NO_SPECIAL_GAME_INPUT: Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::SpecialGameInput::SpecialGameInputDyn>>> = SpecialGameInput::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::special::SpecialGameInput::SpecialGameInputDyn>>); }
+pub static SpecialGameInputFactory_NO_SPECIAL_GAME_INPUT: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::special::SpecialGameInput::SpecialGameInputDyn>>>> = crate::JavaStatic::new(|| SpecialGameInput::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::layer::special::SpecialGameInput::SpecialGameInputDyn>>));
 
 impl SpecialGameInputFactory {
 

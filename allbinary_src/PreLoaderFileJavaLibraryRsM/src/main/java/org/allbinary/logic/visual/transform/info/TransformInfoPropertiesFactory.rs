@@ -40,7 +40,7 @@ pub struct TransformInfoPropertiesFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static TransformInfoPropertiesFactory_instance: Option<Rc<RefCell<TransformInfoPropertiesFactory>>> = TransformInfoPropertiesFactory::new(); }
+pub static TransformInfoPropertiesFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TransformInfoPropertiesFactory>>>> = crate::JavaStatic::new(|| TransformInfoPropertiesFactory::new());
 
 impl TransformInfoPropertiesFactory {
 

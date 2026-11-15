@@ -34,7 +34,7 @@ macro_rules! jcall {
 pub struct AbXslHelper {
 }
 
-thread_local! { pub static AbXslHelper_instance: Option<Rc<RefCell<AbXslHelper>>> = AbXslHelper::new(); }
+pub static AbXslHelper_instance: crate::JavaStatic<Option<Rc<RefCell<AbXslHelper>>>> = crate::JavaStatic::new(|| AbXslHelper::new());
 
 impl AbXslHelper {
 

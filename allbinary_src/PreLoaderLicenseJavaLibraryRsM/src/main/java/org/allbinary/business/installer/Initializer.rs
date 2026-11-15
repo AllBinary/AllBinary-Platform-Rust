@@ -79,10 +79,10 @@ pub struct Initializer {
     pub staticPagesPort: String,
 }
 
-thread_local! { pub static Initializer_MAXDB: i32 = 30; }
-thread_local! { pub static Initializer_MAX: i32 = 16; }
-thread_local! { pub static Initializer_MIN: i32 = 4; }
-thread_local! { pub static Initializer_MINPASSWORD: i32 = 0; }
+pub static Initializer_MAXDB: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 30);
+pub static Initializer_MAX: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 16);
+pub static Initializer_MIN: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 4);
+pub static Initializer_MINPASSWORD: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0);
 
 impl Initializer {
 

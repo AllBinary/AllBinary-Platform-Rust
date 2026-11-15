@@ -32,7 +32,7 @@ pub struct HtmlMetaAttributeDataFactory {
     pub CONTENT: Option<Rc<RefCell<HtmlMetaAttributeData>>>,
 }
 
-thread_local! { pub static HtmlMetaAttributeDataFactory_instance: Option<Rc<RefCell<HtmlMetaAttributeDataFactory>>> = HtmlMetaAttributeDataFactory::new(); }
+pub static HtmlMetaAttributeDataFactory_instance: crate::JavaStatic<Option<Rc<RefCell<HtmlMetaAttributeDataFactory>>>> = crate::JavaStatic::new(|| HtmlMetaAttributeDataFactory::new());
 
 impl HtmlMetaAttributeDataFactory {
 

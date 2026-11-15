@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct ProcessPaintableSingletonFactory {
 }
 
-thread_local! { pub static ProcessPaintableSingletonFactory_SINGLETON: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintableDyn>>> = ProcessPaintable::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintableDyn>>); }
+pub static ProcessPaintableSingletonFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintableDyn>>>> = crate::JavaStatic::new(|| ProcessPaintable::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::paint::ProcessPaintable::ProcessPaintableDyn>>));
 
 impl ProcessPaintableSingletonFactory {
 

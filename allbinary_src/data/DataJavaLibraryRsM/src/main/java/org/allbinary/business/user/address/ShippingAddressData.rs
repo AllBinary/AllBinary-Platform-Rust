@@ -28,21 +28,21 @@ macro_rules! jcall {
 pub struct ShippingAddressData {
 }
 
-thread_local! { pub static ShippingAddressData_SETTOBILLINGADDRESS: String = String::from("Set To Billing Address"); }
-thread_local! { pub static ShippingAddressData_SELECT: String = String::from("Select Shipping Address"); }
-thread_local! { pub static ShippingAddressData_SELECTNAME: String = String::from("SELECTSHIPPINGADDRESS"); }
-thread_local! { pub static ShippingAddressData_MULTIPLE: String = String::from("SHIPPINGADDRESSES"); }
-thread_local! { pub static ShippingAddressData_SHIPPINGADDRESSES: String = String::from("SHIPPINGADDRESSES"); }
-thread_local! { pub static ShippingAddressData_SHIPPINGADDRESS: String = String::from("SHIPPINGADDRESS"); }
-thread_local! { pub static ShippingAddressData_ID: String = String::from("SHIPPINGADDRESS_ID"); }
-thread_local! { pub static ShippingAddressData_ADDRESS: String = String::from("SHIPPINGADDRESS_ADDRESS"); }
-thread_local! { pub static ShippingAddressData_NAME: String = String::from("SHIPPINGADDRESS_NAME"); }
-thread_local! { pub static ShippingAddressData_STREET: String = String::from("SHIPPINGADDRESS_STREET"); }
-thread_local! { pub static ShippingAddressData_CITY: String = String::from("SHIPPINGADDRESS_CITY"); }
-thread_local! { pub static ShippingAddressData_STATE: String = String::from("SHIPPINGADDRESS_STATE"); }
-thread_local! { pub static ShippingAddressData_CODE: String = String::from("SHIPPINGADDRESS_CODE"); }
-thread_local! { pub static ShippingAddressData_COUNTRY: String = String::from("SHIPPINGADDRESS_COUNTRY"); }
-thread_local! { pub static ShippingAddressData_TAX: String = String::from("SHIPPINGADDRESS_TAX"); }
+pub static ShippingAddressData_SETTOBILLINGADDRESS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Set To Billing Address"));
+pub static ShippingAddressData_SELECT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Select Shipping Address"));
+pub static ShippingAddressData_SELECTNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SELECTSHIPPINGADDRESS"));
+pub static ShippingAddressData_MULTIPLE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGADDRESSES"));
+pub static ShippingAddressData_SHIPPINGADDRESSES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGADDRESSES"));
+pub static ShippingAddressData_SHIPPINGADDRESS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGADDRESS"));
+pub static ShippingAddressData_ID: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGADDRESS_ID"));
+pub static ShippingAddressData_ADDRESS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGADDRESS_ADDRESS"));
+pub static ShippingAddressData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGADDRESS_NAME"));
+pub static ShippingAddressData_STREET: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGADDRESS_STREET"));
+pub static ShippingAddressData_CITY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGADDRESS_CITY"));
+pub static ShippingAddressData_STATE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGADDRESS_STATE"));
+pub static ShippingAddressData_CODE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGADDRESS_CODE"));
+pub static ShippingAddressData_COUNTRY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGADDRESS_COUNTRY"));
+pub static ShippingAddressData_TAX: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("SHIPPINGADDRESS_TAX"));
 
 impl ShippingAddressData {
 

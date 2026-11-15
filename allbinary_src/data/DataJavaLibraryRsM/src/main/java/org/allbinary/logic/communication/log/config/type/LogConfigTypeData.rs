@@ -30,7 +30,7 @@ pub struct LogConfigTypeData {
     pub DESCRIPTION: String,
 }
 
-thread_local! { pub static LogConfigTypeData_instance: Option<Rc<RefCell<LogConfigTypeData>>> = LogConfigTypeData::new(); }
+pub static LogConfigTypeData_instance: crate::JavaStatic<Option<Rc<RefCell<LogConfigTypeData>>>> = crate::JavaStatic::new(|| LogConfigTypeData::new());
 
 impl LogConfigTypeData {
 

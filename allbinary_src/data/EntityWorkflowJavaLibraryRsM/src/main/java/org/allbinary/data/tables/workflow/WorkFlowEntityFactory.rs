@@ -33,7 +33,7 @@ pub struct WorkFlowEntityFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static WorkFlowEntityFactory_instance: Option<Rc<RefCell<WorkFlowEntityFactory>>> = WorkFlowEntityFactory::new(); }
+pub static WorkFlowEntityFactory_instance: crate::JavaStatic<Option<Rc<RefCell<WorkFlowEntityFactory>>>> = crate::JavaStatic::new(|| WorkFlowEntityFactory::new());
 
 impl WorkFlowEntityFactory {
 

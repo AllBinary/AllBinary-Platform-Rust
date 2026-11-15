@@ -32,7 +32,7 @@ pub struct PrimaryWaypointHelper {
     pub waypointLayer: Option<Rc<RefCell<dyn PathFindingLayerInterface>>>,
 }
 
-thread_local! { pub static PrimaryWaypointHelper_instance: Option<Rc<RefCell<PrimaryWaypointHelper>>> = PrimaryWaypointHelper::new(); }
+pub static PrimaryWaypointHelper_instance: crate::JavaStatic<Option<Rc<RefCell<PrimaryWaypointHelper>>>> = crate::JavaStatic::new(|| PrimaryWaypointHelper::new());
 
 impl PrimaryWaypointHelper {
 

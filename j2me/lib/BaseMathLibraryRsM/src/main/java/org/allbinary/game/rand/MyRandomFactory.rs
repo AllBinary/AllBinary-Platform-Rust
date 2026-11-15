@@ -51,7 +51,7 @@ pub struct MyRandomFactory {
     pub rand: Option<Rc<RefCell<Random>>>,
 }
 
-thread_local! { pub static MyRandomFactory_instance: Option<Rc<RefCell<MyRandomFactory>>> = MyRandomFactory::new(); }
+pub static MyRandomFactory_instance: crate::JavaStatic<Option<Rc<RefCell<MyRandomFactory>>>> = crate::JavaStatic::new(|| MyRandomFactory::new());
 
 impl MyRandomFactory {
 

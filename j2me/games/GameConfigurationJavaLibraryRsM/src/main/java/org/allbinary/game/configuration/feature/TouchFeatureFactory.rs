@@ -33,7 +33,7 @@ pub struct TouchFeatureFactory {
     pub HIDE_SCREEN_BUTTONS: Option<Rc<RefCell<TouchFeature>>>,
 }
 
-thread_local! { pub static TouchFeatureFactory_instance: Option<Rc<RefCell<TouchFeatureFactory>>> = TouchFeatureFactory::new(); }
+pub static TouchFeatureFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TouchFeatureFactory>>>> = crate::JavaStatic::new(|| TouchFeatureFactory::new());
 
 impl TouchFeatureFactory {
 

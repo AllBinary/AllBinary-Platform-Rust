@@ -30,7 +30,7 @@ pub struct NullPaintable {
     pub base: Paintable,
 }
 
-thread_local! { pub static NullPaintable_SINGLETON: Option<Rc<RefCell<NullPaintable>>> = NullPaintable::new(); }
+pub static NullPaintable_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<NullPaintable>>>> = crate::JavaStatic::new(|| NullPaintable::new());
 
 impl NullPaintable {
     

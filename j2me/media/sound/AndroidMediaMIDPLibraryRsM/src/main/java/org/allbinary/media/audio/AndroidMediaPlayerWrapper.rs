@@ -44,7 +44,7 @@ pub struct AndroidMediaPlayerWrapper {
     pub mediaPlayer: Option<Rc<RefCell<MediaPlayer>>>,
 }
 
-thread_local! { pub static AndroidMediaPlayerWrapper_NULL_ANDROID_MEDIA_PLAYER_WRAPPER: Option<Rc<RefCell<AndroidMediaPlayerWrapper>>> = AndroidMediaPlayerWrapper::createPlayerWrapper(); }
+pub static AndroidMediaPlayerWrapper_NULL_ANDROID_MEDIA_PLAYER_WRAPPER: crate::JavaStatic<Option<Rc<RefCell<AndroidMediaPlayerWrapper>>>> = crate::JavaStatic::new(|| AndroidMediaPlayerWrapper::createPlayerWrapper());
 impl crate::javax::microedition::media::Controllable::Controllable for AndroidMediaPlayerWrapper {
     fn getControls(&mut self) -> Vec<Option<Rc<RefCell<dyn crate::javax::microedition::media::Control::Control>>>> { crate::org::allbinary::media::audio::BasicPlayer::BasicPlayer::getControls(crate::org::allbinary::media::audio::BasicPlayer::BasicPlayerDyn::as_BasicPlayer_mut(self)) }
     fn getControl(&mut self, p1: String) -> Option<Rc<RefCell<dyn crate::javax::microedition::media::Control::Control>>> { crate::org::allbinary::media::audio::BasicPlayer::BasicPlayer::getControl(crate::org::allbinary::media::audio::BasicPlayer::BasicPlayerDyn::as_BasicPlayer_mut(self), p1) }

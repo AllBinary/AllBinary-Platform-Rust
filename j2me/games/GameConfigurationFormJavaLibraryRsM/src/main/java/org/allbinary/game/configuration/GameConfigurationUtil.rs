@@ -45,7 +45,7 @@ pub struct GameConfigurationUtil {
     pub COMPETITION_VALUE: i32,
 }
 
-thread_local! { pub static GameConfigurationUtil_instance: Option<Rc<RefCell<GameConfigurationUtil>>> = GameConfigurationUtil::new(); }
+pub static GameConfigurationUtil_instance: crate::JavaStatic<Option<Rc<RefCell<GameConfigurationUtil>>>> = crate::JavaStatic::new(|| GameConfigurationUtil::new());
 
 impl GameConfigurationUtil {
 

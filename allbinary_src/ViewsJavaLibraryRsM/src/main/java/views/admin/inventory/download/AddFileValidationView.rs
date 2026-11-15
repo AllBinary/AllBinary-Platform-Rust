@@ -58,8 +58,8 @@ pub struct AddFileValidationView {
     pub basicItemData: Option<Rc<RefCell<BasicItemData>>>,
 }
 
-thread_local! { pub static AddFileValidationView_ADDPRODUCT: String = String::from("Finish"); }
-thread_local! { pub static AddFileValidationView_ADDANOTHERDOWNLOADABLE: String = String::from("Add Another"); }
+pub static AddFileValidationView_ADDPRODUCT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Finish"));
+pub static AddFileValidationView_ADDANOTHERDOWNLOADABLE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Add Another"));
 // impl ValidationComponentInterface for AddFileValidationView with the methods of the trait
 impl crate::org::allbinary::logic::visual::transform::info::CompositeTransformInfoInterface::CompositeTransformInfoInterface for AddFileValidationView {
     fn getTransformInfoInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::visual::transform::info::TransformInfoInterface::TransformInfoInterface>>> { crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpComposite::getTransformInfoInterface(crate::org::allbinary::logic::visual::transform::info::TransformInfoHttpComposite::TransformInfoHttpCompositeDyn::as_TransformInfoHttpComposite_mut(self)) }

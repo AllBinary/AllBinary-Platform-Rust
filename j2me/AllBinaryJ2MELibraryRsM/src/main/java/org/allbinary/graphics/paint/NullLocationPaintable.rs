@@ -30,7 +30,7 @@ pub struct NullLocationPaintable {
     pub base: LocationPaintable,
 }
 
-thread_local! { pub static NullLocationPaintable_instanceC: Option<Rc<RefCell<NullLocationPaintable>>> = NullLocationPaintable::new(); }
+pub static NullLocationPaintable_instanceC: crate::JavaStatic<Option<Rc<RefCell<NullLocationPaintable>>>> = crate::JavaStatic::new(|| NullLocationPaintable::new());
 
 impl NullLocationPaintable {
 

@@ -36,7 +36,7 @@ pub struct StreamUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static StreamUtil_instance: Option<Rc<RefCell<StreamUtil>>> = StreamUtil::new(); }
+pub static StreamUtil_instance: crate::JavaStatic<Option<Rc<RefCell<StreamUtil>>>> = crate::JavaStatic::new(|| StreamUtil::new());
 
 impl StreamUtil {
 

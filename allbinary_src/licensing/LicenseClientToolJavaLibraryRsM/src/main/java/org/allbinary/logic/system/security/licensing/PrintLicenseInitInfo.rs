@@ -34,7 +34,7 @@ macro_rules! jcall {
 pub struct PrintLicenseInitInfo {
 }
 
-thread_local! { pub static PrintLicenseInitInfo_PATH: String = String::from("G:\\mnt\\bc\\mydev\\work\\allbinary_src\\licensing\\data\\"); }
+pub static PrintLicenseInitInfo_PATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("G:\\mnt\\bc\\mydev\\work\\allbinary_src\\licensing\\data\\"));
 
 impl PrintLicenseInitInfo {
 

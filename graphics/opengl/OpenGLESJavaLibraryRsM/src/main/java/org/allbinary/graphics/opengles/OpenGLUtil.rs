@@ -50,7 +50,7 @@ pub struct OpenGLUtil {
     pub surfaceCreatedAndInitialized: bool,
 }
 
-thread_local! { pub static OpenGLUtil_instance: Option<Rc<RefCell<OpenGLUtil>>> = OpenGLUtil::new(); }
+pub static OpenGLUtil_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLUtil>>>> = crate::JavaStatic::new(|| OpenGLUtil::new());
 
 impl OpenGLUtil {
 

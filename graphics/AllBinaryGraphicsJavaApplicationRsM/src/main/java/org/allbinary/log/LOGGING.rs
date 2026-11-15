@@ -33,25 +33,25 @@ pub struct LOGGING {
 }
 
 pub static mut LOGGING_logging: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = std::cell::LazyCell::new(|| BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
-thread_local! { pub static LOGGING_GRAPHICSPAINT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Graphics Paint")); }
-thread_local! { pub static LOGGING_GRAPHICSCREATION: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Graphics Creation")); }
-thread_local! { pub static LOGGING_GRAPHICSDELETION: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Graphics Deletion")); }
-thread_local! { pub static LOGGING_LOADINGERROR: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Loading Error")); }
-thread_local! { pub static LOGGING_MENUEVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Menu Action Event")); }
-thread_local! { pub static LOGGING_MOUSEEVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Mouse Action Event")); }
-thread_local! { pub static LOGGING_KEYEVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Keyboard Action Event")); }
-thread_local! { pub static LOGGING_ACTIONEVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Action Event")); }
-thread_local! { pub static LOGGING_ADJUSTMENTEVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Adjustment Action Event")); }
-thread_local! { pub static LOGGING_COMPONENTEVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Component Action Event")); }
-thread_local! { pub static LOGGING_CONTAINEREVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Container Action Event")); }
-thread_local! { pub static LOGGING_FOCUSEVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Focus Action Event")); }
-thread_local! { pub static LOGGING_HIERARCHYEVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Hierarchy Action Event")); }
-thread_local! { pub static LOGGING_INPUTEVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Input Action Event")); }
-thread_local! { pub static LOGGING_INVOCATIONEVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Invocation Action Event")); }
-thread_local! { pub static LOGGING_ITEMEVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Item Action Event")); }
-thread_local! { pub static LOGGING_PAINTEVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Paint Action Event")); }
-thread_local! { pub static LOGGING_TEXTEVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Text Action Event")); }
-thread_local! { pub static LOGGING_WINDOWEVENT: Option<Rc<RefCell<LOGGING>>> = LOGGING::new(String::from("Window Action Event")); }
+pub static LOGGING_GRAPHICSPAINT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Graphics Paint")));
+pub static LOGGING_GRAPHICSCREATION: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Graphics Creation")));
+pub static LOGGING_GRAPHICSDELETION: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Graphics Deletion")));
+pub static LOGGING_LOADINGERROR: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Loading Error")));
+pub static LOGGING_MENUEVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Menu Action Event")));
+pub static LOGGING_MOUSEEVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Mouse Action Event")));
+pub static LOGGING_KEYEVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Keyboard Action Event")));
+pub static LOGGING_ACTIONEVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Action Event")));
+pub static LOGGING_ADJUSTMENTEVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Adjustment Action Event")));
+pub static LOGGING_COMPONENTEVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Component Action Event")));
+pub static LOGGING_CONTAINEREVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Container Action Event")));
+pub static LOGGING_FOCUSEVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Focus Action Event")));
+pub static LOGGING_HIERARCHYEVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Hierarchy Action Event")));
+pub static LOGGING_INPUTEVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Input Action Event")));
+pub static LOGGING_INVOCATIONEVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Invocation Action Event")));
+pub static LOGGING_ITEMEVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Item Action Event")));
+pub static LOGGING_PAINTEVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Paint Action Event")));
+pub static LOGGING_TEXTEVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Text Action Event")));
+pub static LOGGING_WINDOWEVENT: crate::JavaStatic<Option<Rc<RefCell<LOGGING>>>> = crate::JavaStatic::new(|| LOGGING::new(String::from("Window Action Event")));
 
 impl LOGGING {
     

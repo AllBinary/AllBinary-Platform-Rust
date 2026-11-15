@@ -87,7 +87,7 @@ pub struct DisplayInfoSingleton {
     pub LAST_HALF: String,
 }
 
-thread_local! { pub static DisplayInfoSingleton_SINGLETON: Option<Rc<RefCell<DisplayInfoSingleton>>> = DisplayInfoSingleton::new(); }
+pub static DisplayInfoSingleton_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<DisplayInfoSingleton>>>> = crate::JavaStatic::new(|| DisplayInfoSingleton::new());
 
 impl DisplayInfoSingleton {
     

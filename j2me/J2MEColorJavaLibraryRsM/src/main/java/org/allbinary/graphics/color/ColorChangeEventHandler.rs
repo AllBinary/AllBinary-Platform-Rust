@@ -30,7 +30,7 @@ pub struct ColorChangeEventHandler {
     pub base: BasicEventHandler,
 }
 
-thread_local! { pub static ColorChangeEventHandler_eventHandler: Option<Rc<RefCell<ColorChangeEventHandler>>> = ColorChangeEventHandler::new(); }
+pub static ColorChangeEventHandler_eventHandler: crate::JavaStatic<Option<Rc<RefCell<ColorChangeEventHandler>>>> = crate::JavaStatic::new(|| ColorChangeEventHandler::new());
 
 impl ColorChangeEventHandler {
     

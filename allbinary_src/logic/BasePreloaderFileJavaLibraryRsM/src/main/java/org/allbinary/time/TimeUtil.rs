@@ -29,8 +29,8 @@ macro_rules! jcall {
 pub struct TimeUtil {
 }
 
-thread_local! { pub static TimeUtil_instance: Option<Rc<RefCell<TimeUtil>>> = TimeUtil::new(); }
-thread_local! { pub static TimeUtil_calendar: Option<Rc<RefCell<Calendar>>> = Calendar::getInstance(); }
+pub static TimeUtil_instance: crate::JavaStatic<Option<Rc<RefCell<TimeUtil>>>> = crate::JavaStatic::new(|| TimeUtil::new());
+pub static TimeUtil_calendar: crate::JavaStatic<Option<Rc<RefCell<Calendar>>>> = crate::JavaStatic::new(|| Calendar::getInstance());
 
 impl TimeUtil {
 

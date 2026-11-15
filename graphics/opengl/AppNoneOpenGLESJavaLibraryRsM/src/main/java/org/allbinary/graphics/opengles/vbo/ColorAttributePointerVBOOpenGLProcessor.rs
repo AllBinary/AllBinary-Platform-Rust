@@ -32,7 +32,7 @@ pub struct ColorAttributePointerVBOOpenGLProcessor {
     pub base: ObjectThreedOpenGLProcessor,
 }
 
-thread_local! { pub static ColorAttributePointerVBOOpenGLProcessor_instance: Option<Rc<RefCell<ColorAttributePointerVBOOpenGLProcessor>>> = ColorAttributePointerVBOOpenGLProcessor::new(); }
+pub static ColorAttributePointerVBOOpenGLProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<ColorAttributePointerVBOOpenGLProcessor>>>> = crate::JavaStatic::new(|| ColorAttributePointerVBOOpenGLProcessor::new());
 
 impl ColorAttributePointerVBOOpenGLProcessor {
     

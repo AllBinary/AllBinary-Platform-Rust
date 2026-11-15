@@ -28,18 +28,18 @@ macro_rules! jcall {
 pub struct JvmStatisticsData {
 }
 
-thread_local! { pub static JvmStatisticsData_JVM_STATISTICS: String = String::from("JVM_STATISTICS_"); }
-thread_local! { pub static JvmStatisticsData_NAME: String = format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("NAME")); }
-thread_local! { pub static JvmStatisticsData_TOTAL_MEMORY_BYTES: String = format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("TOTAL_MEMORY_BYTES")); }
-thread_local! { pub static JvmStatisticsData_TOTAL_MEMORY_KILOBYTES: String = format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("TOTAL_MEMORY_KILOBYTES")); }
-thread_local! { pub static JvmStatisticsData_TOTAL_MEMORY_MEGABYTES: String = format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("TOTAL_MEMORY_MEGABYTES")); }
-thread_local! { pub static JvmStatisticsData_FREE_MEMORY_BYTES: String = format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("FREE_MEMORY_BYTES")); }
-thread_local! { pub static JvmStatisticsData_FREE_MEMORY_KILOBYTES: String = format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("FREE_MEMORY_KILOBYTES")); }
-thread_local! { pub static JvmStatisticsData_FREE_MEMORY_MEGABYTES: String = format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("FREE_MEMORY_MEGABYTES")); }
-thread_local! { pub static JvmStatisticsData_MAX_MEMORY_BYTES: String = format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("MAX_MEMORY_BYTES")); }
-thread_local! { pub static JvmStatisticsData_MAX_MEMORY_KILOBYTES: String = format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("MAX_MEMORY_KILOBYTES")); }
-thread_local! { pub static JvmStatisticsData_MAX_MEMORY_MEGABYTES: String = format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("MAX_MEMORY_MEGABYTES")); }
-thread_local! { pub static JvmStatisticsData_NUMBER_OF_THREADS: String = format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("NUMBER_OF_THREADS")); }
+pub static JvmStatisticsData_JVM_STATISTICS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("JVM_STATISTICS_"));
+pub static JvmStatisticsData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("NAME")));
+pub static JvmStatisticsData_TOTAL_MEMORY_BYTES: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("TOTAL_MEMORY_BYTES")));
+pub static JvmStatisticsData_TOTAL_MEMORY_KILOBYTES: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("TOTAL_MEMORY_KILOBYTES")));
+pub static JvmStatisticsData_TOTAL_MEMORY_MEGABYTES: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("TOTAL_MEMORY_MEGABYTES")));
+pub static JvmStatisticsData_FREE_MEMORY_BYTES: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("FREE_MEMORY_BYTES")));
+pub static JvmStatisticsData_FREE_MEMORY_KILOBYTES: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("FREE_MEMORY_KILOBYTES")));
+pub static JvmStatisticsData_FREE_MEMORY_MEGABYTES: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("FREE_MEMORY_MEGABYTES")));
+pub static JvmStatisticsData_MAX_MEMORY_BYTES: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("MAX_MEMORY_BYTES")));
+pub static JvmStatisticsData_MAX_MEMORY_KILOBYTES: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("MAX_MEMORY_KILOBYTES")));
+pub static JvmStatisticsData_MAX_MEMORY_MEGABYTES: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("MAX_MEMORY_MEGABYTES")));
+pub static JvmStatisticsData_NUMBER_OF_THREADS: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", JvmStatisticsData_JVM_STATISTICS.with(Clone::clone), String::from("NUMBER_OF_THREADS")));
 
 impl JvmStatisticsData {
 

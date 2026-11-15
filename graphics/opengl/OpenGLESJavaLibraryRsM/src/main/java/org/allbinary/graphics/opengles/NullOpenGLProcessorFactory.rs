@@ -17,7 +17,7 @@ macro_rules! jcall {
 pub struct NullOpenGLProcessorFactory {
 }
 
-thread_local! { pub static NullOpenGLProcessorFactory_instance: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::OpenGLProcessor::OpenGLProcessorDyn>>> = OpenGLProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::OpenGLProcessor::OpenGLProcessorDyn>>); }
+pub static NullOpenGLProcessorFactory_instance: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::OpenGLProcessor::OpenGLProcessorDyn>>>> = crate::JavaStatic::new(|| OpenGLProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::graphics::opengles::OpenGLProcessor::OpenGLProcessorDyn>>));
 
 impl NullOpenGLProcessorFactory {
 

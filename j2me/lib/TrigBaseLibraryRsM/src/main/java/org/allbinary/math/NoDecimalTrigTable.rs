@@ -45,7 +45,7 @@ pub struct NoDecimalTrigTable {
     pub SCALE: i32,
 }
 
-thread_local! { pub static NoDecimalTrigTable_instance: Option<Rc<RefCell<NoDecimalTrigTable>>> = NoDecimalTrigTable::new(); }
+pub static NoDecimalTrigTable_instance: crate::JavaStatic<Option<Rc<RefCell<NoDecimalTrigTable>>>> = crate::JavaStatic::new(|| NoDecimalTrigTable::new());
 
 impl NoDecimalTrigTable {
 

@@ -35,7 +35,7 @@ macro_rules! jcall {
 pub struct DecalAnimationInterfaceFactory {
 }
 
-thread_local! { pub static DecalAnimationInterfaceFactory_instance: Option<Rc<RefCell<DecalAnimationInterfaceFactory>>> = DecalAnimationInterfaceFactory::new(); }
+pub static DecalAnimationInterfaceFactory_instance: crate::JavaStatic<Option<Rc<RefCell<DecalAnimationInterfaceFactory>>>> = crate::JavaStatic::new(|| DecalAnimationInterfaceFactory::new());
 
 impl DecalAnimationInterfaceFactory {
 

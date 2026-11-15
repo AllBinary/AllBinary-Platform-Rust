@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct BaseImageLoadingProcessor {
 }
 
-thread_local! { pub static BaseImageLoadingProcessor_instance: Option<Rc<RefCell<dyn BaseImageLoadingProcessorDyn>>> = BaseImageLoadingProcessor::new().map(|reference| reference as Rc<RefCell<dyn BaseImageLoadingProcessorDyn>>); }
+pub static BaseImageLoadingProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<dyn BaseImageLoadingProcessorDyn>>>> = crate::JavaStatic::new(|| BaseImageLoadingProcessor::new().map(|reference| reference as Rc<RefCell<dyn BaseImageLoadingProcessorDyn>>));
 
 impl BaseImageLoadingProcessor {
 

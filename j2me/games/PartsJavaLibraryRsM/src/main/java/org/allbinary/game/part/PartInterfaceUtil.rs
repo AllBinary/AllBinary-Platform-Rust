@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct PartInterfaceUtil {
 }
 
-thread_local! { pub static PartInterfaceUtil_SINGLETON: Vec<Option<Rc<RefCell<dyn PartInterface>>>> = vec![None; (0) as usize]; }
+pub static PartInterfaceUtil_SINGLETON: crate::JavaStatic<Vec<Option<Rc<RefCell<dyn PartInterface>>>>> = crate::JavaStatic::new(|| vec![None; (0) as usize]);
 
 impl PartInterfaceUtil {
 

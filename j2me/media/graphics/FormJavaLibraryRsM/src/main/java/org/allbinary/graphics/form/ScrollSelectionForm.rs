@@ -68,9 +68,9 @@ pub struct ScrollSelectionForm {
 
 pub static mut ScrollSelectionForm_NULL_SCROLL_SELECTION_FORM: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
 pub static mut ScrollSelectionForm_NULL_SCROLL_SELECTION_HORIZONTAL_FORM: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
-thread_local! { pub static ScrollSelectionForm_INSIDE_FORM: String = String::from(" inside form"); }
-thread_local! { pub static ScrollSelectionForm_IS_IN_FORM: String = String::from("isInForm"); }
-thread_local! { pub static ScrollSelectionForm_GET_SELECTED_INDEX: String = String::from("getSelectedIndexForPoint"); }
+pub static ScrollSelectionForm_INSIDE_FORM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(" inside form"));
+pub static ScrollSelectionForm_IS_IN_FORM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("isInForm"));
+pub static ScrollSelectionForm_GET_SELECTED_INDEX: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("getSelectedIndexForPoint"));
 
 impl ScrollSelectionForm {
     

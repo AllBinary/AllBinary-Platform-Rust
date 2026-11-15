@@ -36,7 +36,7 @@ pub struct NoGameNotificationHudSingleton {
     pub gameNotificationHud: Option<Rc<RefCell<dyn crate::org::allbinary::game::ag::layer::hud::basic::notification::GameNotificationHud::GameNotificationHudDyn>>>,
 }
 
-thread_local! { pub static NoGameNotificationHudSingleton_instance: Option<Rc<RefCell<NoGameNotificationHudSingleton>>> = NoGameNotificationHudSingleton::new(); }
+pub static NoGameNotificationHudSingleton_instance: crate::JavaStatic<Option<Rc<RefCell<NoGameNotificationHudSingleton>>>> = crate::JavaStatic::new(|| NoGameNotificationHudSingleton::new());
 
 impl NoGameNotificationHudSingleton {
 

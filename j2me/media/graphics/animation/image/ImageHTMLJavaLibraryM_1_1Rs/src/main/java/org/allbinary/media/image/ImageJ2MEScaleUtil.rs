@@ -36,7 +36,7 @@ pub struct ImageJ2MEScaleUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static ImageJ2MEScaleUtil_instance: Option<Rc<RefCell<ImageJ2MEScaleUtil>>> = ImageJ2MEScaleUtil::new(); }
+pub static ImageJ2MEScaleUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImageJ2MEScaleUtil>>>> = crate::JavaStatic::new(|| ImageJ2MEScaleUtil::new());
 
 impl ImageJ2MEScaleUtil {
 

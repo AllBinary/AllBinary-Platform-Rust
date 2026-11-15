@@ -33,7 +33,7 @@ pub struct SystemProperties {
     pub OS_VERSION: String,
 }
 
-thread_local! { pub static SystemProperties_instance: Option<Rc<RefCell<SystemProperties>>> = SystemProperties::new(); }
+pub static SystemProperties_instance: crate::JavaStatic<Option<Rc<RefCell<SystemProperties>>>> = crate::JavaStatic::new(|| SystemProperties::new());
 
 impl SystemProperties {
 

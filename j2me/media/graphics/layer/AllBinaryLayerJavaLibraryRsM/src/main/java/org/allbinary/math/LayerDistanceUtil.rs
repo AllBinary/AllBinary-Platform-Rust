@@ -32,7 +32,7 @@ pub struct LayerDistanceUtil {
     pub mathUtil: Option<Rc<RefCell<MathUtil>>>,
 }
 
-thread_local! { pub static LayerDistanceUtil_instance: Option<Rc<RefCell<LayerDistanceUtil>>> = LayerDistanceUtil::new(); }
+pub static LayerDistanceUtil_instance: crate::JavaStatic<Option<Rc<RefCell<LayerDistanceUtil>>>> = crate::JavaStatic::new(|| LayerDistanceUtil::new());
 
 impl LayerDistanceUtil {
 

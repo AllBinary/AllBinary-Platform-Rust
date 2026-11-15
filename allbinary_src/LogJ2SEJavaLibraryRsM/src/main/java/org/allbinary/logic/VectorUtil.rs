@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct VectorUtil {
 }
 
-thread_local! { pub static VectorUtil_instance: Option<Rc<RefCell<VectorUtil>>> = VectorUtil::new(); }
+pub static VectorUtil_instance: crate::JavaStatic<Option<Rc<RefCell<VectorUtil>>>> = crate::JavaStatic::new(|| VectorUtil::new());
 
 impl VectorUtil {
 

@@ -30,7 +30,7 @@ pub struct InventoryDbInitInfo {
     pub base: DbInitInfo,
 }
 
-thread_local! { pub static InventoryDbInitInfo_INITFILE: String = String::from("inventorydbinitdata.dat"); }
+pub static InventoryDbInitInfo_INITFILE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("inventorydbinitdata.dat"));
 
 impl InventoryDbInitInfo {
     

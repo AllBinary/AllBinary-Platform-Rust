@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct NullXmlRpcHandler {
 }
 
-thread_local! { pub static NullXmlRpcHandler_NULL_XML_RPC_HANDLER: Option<Rc<RefCell<NullXmlRpcHandler>>> = NullXmlRpcHandler::new(); }
+pub static NullXmlRpcHandler_NULL_XML_RPC_HANDLER: crate::JavaStatic<Option<Rc<RefCell<NullXmlRpcHandler>>>> = crate::JavaStatic::new(|| NullXmlRpcHandler::new());
 impl XmlRpcHandler for NullXmlRpcHandler {
     fn execute(&mut self, mut method: String, mut params: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::execute(self, method, params) }
 }

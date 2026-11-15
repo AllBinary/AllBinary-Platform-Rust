@@ -29,7 +29,7 @@ pub struct CreditCardType {
     pub name: String,
 }
 
-thread_local! { pub static CreditCardType_MAXLEN: i32 = 19; }
+pub static CreditCardType_MAXLEN: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 19);
 
 impl CreditCardType {
     

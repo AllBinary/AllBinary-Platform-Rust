@@ -30,7 +30,7 @@ pub struct RendererStateFactory {
     pub surfaceChanged: bool,
 }
 
-thread_local! { pub static RendererStateFactory_instance: Option<Rc<RefCell<RendererStateFactory>>> = RendererStateFactory::new(); }
+pub static RendererStateFactory_instance: crate::JavaStatic<Option<Rc<RefCell<RendererStateFactory>>>> = crate::JavaStatic::new(|| RendererStateFactory::new());
 
 impl RendererStateFactory {
 

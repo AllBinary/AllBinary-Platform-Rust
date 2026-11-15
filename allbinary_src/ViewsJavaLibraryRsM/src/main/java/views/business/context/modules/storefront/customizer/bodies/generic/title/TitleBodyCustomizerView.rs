@@ -46,7 +46,7 @@ pub struct TitleBodyCustomizerView {
     pub titleBody: Option<Rc<RefCell<TitleBodyValidation>>>,
 }
 
-thread_local! { pub static TitleBodyCustomizerView_NAME: String = String::from("None"); }
+pub static TitleBodyCustomizerView_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("None"));
 impl DomNodeInterface for TitleBodyCustomizerView {
     fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { Self::toXmlNode(self, document) }
 }

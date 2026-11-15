@@ -28,12 +28,12 @@ macro_rules! jcall {
 pub struct AbSqlData {
 }
 
-thread_local! { pub static AbSqlData_ANYSINGLECHARACTERMATCH: String = String::from("_"); }
-thread_local! { pub static AbSqlData_ANYMULTICHARACTERMATCH: String = String::from("%"); }
-thread_local! { pub static AbSqlData_MAXNUM: i32 = 19; }
-thread_local! { pub static AbSqlData_MINSTRING: i32 = 1; }
-thread_local! { pub static AbSqlData_MAXSTRING: i32 = 255; }
-thread_local! { pub static AbSqlData_MAXBLOB: i32 = 32000; }
+pub static AbSqlData_ANYSINGLECHARACTERMATCH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("_"));
+pub static AbSqlData_ANYMULTICHARACTERMATCH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("%"));
+pub static AbSqlData_MAXNUM: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 19);
+pub static AbSqlData_MINSTRING: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 1);
+pub static AbSqlData_MAXSTRING: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 255);
+pub static AbSqlData_MAXBLOB: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 32000);
 
 impl AbSqlData {
 

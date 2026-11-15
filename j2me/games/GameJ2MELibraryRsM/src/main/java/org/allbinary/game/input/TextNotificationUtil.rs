@@ -40,7 +40,7 @@ pub struct TextNotificationUtil {
     pub gameNotificationEventHandler: Option<Rc<RefCell<GameNotificationEventHandler>>>,
 }
 
-thread_local! { pub static TextNotificationUtil_instance: Option<Rc<RefCell<TextNotificationUtil>>> = TextNotificationUtil::new(); }
+pub static TextNotificationUtil_instance: crate::JavaStatic<Option<Rc<RefCell<TextNotificationUtil>>>> = crate::JavaStatic::new(|| TextNotificationUtil::new());
 
 impl TextNotificationUtil {
 

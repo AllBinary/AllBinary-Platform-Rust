@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct LayerUtil {
 }
 
-thread_local! { pub static LayerUtil_HASHTABLE: String = String::from("Hashtable: "); }
+pub static LayerUtil_HASHTABLE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Hashtable: "));
 
 impl LayerUtil {
 

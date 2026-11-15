@@ -38,7 +38,7 @@ pub struct FileUtil2 {
     pub streamUtil: Option<Rc<RefCell<StreamUtil>>>,
 }
 
-thread_local! { pub static FileUtil2_instance: Option<Rc<RefCell<FileUtil2>>> = FileUtil2::new(); }
+pub static FileUtil2_instance: crate::JavaStatic<Option<Rc<RefCell<FileUtil2>>>> = crate::JavaStatic::new(|| FileUtil2::new());
 
 impl FileUtil2 {
 

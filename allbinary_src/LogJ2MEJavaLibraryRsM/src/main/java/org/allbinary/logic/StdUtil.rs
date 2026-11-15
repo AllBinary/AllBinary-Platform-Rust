@@ -34,7 +34,7 @@ pub struct StdUtil {
     pub NULL_TABLE: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
 }
 
-thread_local! { pub static StdUtil_instance: Option<Rc<RefCell<StdUtil>>> = StdUtil::new(); }
+pub static StdUtil_instance: crate::JavaStatic<Option<Rc<RefCell<StdUtil>>>> = crate::JavaStatic::new(|| StdUtil::new());
 
 impl StdUtil {
 

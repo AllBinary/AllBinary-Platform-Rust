@@ -39,7 +39,7 @@ pub struct PathFindingNodeCost {
     pub pathFindingNodeCostInfoP: Option<Rc<RefCell<PathFindingNodeCostInfo>>>,
 }
 
-thread_local! { pub static PathFindingNodeCost_NULL_PATH_FINDING_NODE_COST_ARRAY_ARRAY: Vec<Vec<Option<Rc<RefCell<PathFindingNodeCost>>>>> = vec![vec![None; (0) as usize]; (0) as usize]; }
+pub static PathFindingNodeCost_NULL_PATH_FINDING_NODE_COST_ARRAY_ARRAY: crate::JavaStatic<Vec<Vec<Option<Rc<RefCell<PathFindingNodeCost>>>>>> = crate::JavaStatic::new(|| vec![vec![None; (0) as usize]; (0) as usize]);
 // impl Comparable for PathFindingNodeCost with the methods of the trait
 
 impl PathFindingNodeCost {

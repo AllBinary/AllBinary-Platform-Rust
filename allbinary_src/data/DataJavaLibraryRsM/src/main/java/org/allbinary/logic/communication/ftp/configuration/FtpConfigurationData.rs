@@ -28,11 +28,11 @@ macro_rules! jcall {
 pub struct FtpConfigurationData {
 }
 
-thread_local! { pub static FtpConfigurationData_NAME: String = String::from("FTP_NAME"); }
-thread_local! { pub static FtpConfigurationData_SERVER: String = String::from("FTP_SERVER"); }
-thread_local! { pub static FtpConfigurationData_PATH: String = String::from("FTP_PATH"); }
-thread_local! { pub static FtpConfigurationData_USERNAME: String = String::from("FTP_USERNAME"); }
-thread_local! { pub static FtpConfigurationData_PASSWORD: String = String::from("FTP_PASSWORD"); }
+pub static FtpConfigurationData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("FTP_NAME"));
+pub static FtpConfigurationData_SERVER: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("FTP_SERVER"));
+pub static FtpConfigurationData_PATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("FTP_PATH"));
+pub static FtpConfigurationData_USERNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("FTP_USERNAME"));
+pub static FtpConfigurationData_PASSWORD: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("FTP_PASSWORD"));
 
 impl FtpConfigurationData {
 

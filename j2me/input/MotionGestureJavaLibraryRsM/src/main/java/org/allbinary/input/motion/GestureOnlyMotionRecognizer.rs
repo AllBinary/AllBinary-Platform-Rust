@@ -37,7 +37,7 @@ pub struct GestureOnlyMotionRecognizer {
 }
 
 pub static mut GestureOnlyMotionRecognizer_index: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 0);
-thread_local! { pub static GestureOnlyMotionRecognizer_pointCircularPool: Option<Rc<RefCell<GPointCircularPool>>> = GPointCircularPool::new(40); }
+pub static GestureOnlyMotionRecognizer_pointCircularPool: crate::JavaStatic<Option<Rc<RefCell<GPointCircularPool>>>> = crate::JavaStatic::new(|| GPointCircularPool::new(40));
 
 impl GestureOnlyMotionRecognizer {
     

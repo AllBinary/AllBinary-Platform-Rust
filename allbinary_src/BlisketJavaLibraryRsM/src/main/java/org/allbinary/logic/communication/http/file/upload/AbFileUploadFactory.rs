@@ -41,7 +41,7 @@ pub struct AbFileUploadFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static AbFileUploadFactory_instance: Option<Rc<RefCell<AbFileUploadFactory>>> = AbFileUploadFactory::new(); }
+pub static AbFileUploadFactory_instance: crate::JavaStatic<Option<Rc<RefCell<AbFileUploadFactory>>>> = crate::JavaStatic::new(|| AbFileUploadFactory::new());
 
 impl AbFileUploadFactory {
 

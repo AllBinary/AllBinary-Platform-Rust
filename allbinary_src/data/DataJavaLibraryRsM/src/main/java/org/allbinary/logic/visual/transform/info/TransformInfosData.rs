@@ -33,7 +33,7 @@ pub struct TransformInfosData {
     pub SMALL_PREVIEW: String,
 }
 
-thread_local! { pub static TransformInfosData_instance: Option<Rc<RefCell<TransformInfosData>>> = TransformInfosData::new(); }
+pub static TransformInfosData_instance: crate::JavaStatic<Option<Rc<RefCell<TransformInfosData>>>> = crate::JavaStatic::new(|| TransformInfosData::new());
 
 impl TransformInfosData {
 

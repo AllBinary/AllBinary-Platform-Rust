@@ -38,7 +38,7 @@ pub struct AcceptableResponseUtil {
     pub tagNameVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static AcceptableResponseUtil_instance: Option<Rc<RefCell<AcceptableResponseUtil>>> = AcceptableResponseUtil::new(); }
+pub static AcceptableResponseUtil_instance: crate::JavaStatic<Option<Rc<RefCell<AcceptableResponseUtil>>>> = crate::JavaStatic::new(|| AcceptableResponseUtil::new());
 
 impl AcceptableResponseUtil {
 

@@ -40,7 +40,7 @@ pub struct AlwaysRepaintBehavior {
     pub NAME: String,
 }
 
-thread_local! { pub static AlwaysRepaintBehavior_instanceC: Option<Rc<RefCell<AlwaysRepaintBehavior>>> = AlwaysRepaintBehavior::new(); }
+pub static AlwaysRepaintBehavior_instanceC: crate::JavaStatic<Option<Rc<RefCell<AlwaysRepaintBehavior>>>> = crate::JavaStatic::new(|| AlwaysRepaintBehavior::new());
 
 impl AlwaysRepaintBehavior {
 

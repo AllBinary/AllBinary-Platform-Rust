@@ -33,7 +33,7 @@ pub struct MediaPlayerUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static MediaPlayerUtil_instance: Option<Rc<RefCell<MediaPlayerUtil>>> = MediaPlayerUtil::new(); }
+pub static MediaPlayerUtil_instance: crate::JavaStatic<Option<Rc<RefCell<MediaPlayerUtil>>>> = crate::JavaStatic::new(|| MediaPlayerUtil::new());
 
 impl MediaPlayerUtil {
 

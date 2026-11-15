@@ -36,7 +36,7 @@ pub struct ImageRotationUtil {
     pub imageJ2SERotationUtil: Option<Rc<RefCell<ImageJ2SERotationUtil>>>,
 }
 
-thread_local! { pub static ImageRotationUtil_instance: Option<Rc<RefCell<ImageRotationUtil>>> = ImageRotationUtil::new(); }
+pub static ImageRotationUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImageRotationUtil>>>> = crate::JavaStatic::new(|| ImageRotationUtil::new());
 
 impl ImageRotationUtil {
 

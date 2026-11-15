@@ -30,7 +30,7 @@ pub struct SWTProcessorUtil {
     pub swtProcessor: Option<Rc<RefCell<dyn crate::org::allbinary::emulator::swt::SWTProcessor::SWTProcessorDyn>>>,
 }
 
-thread_local! { pub static SWTProcessorUtil_instance: Option<Rc<RefCell<SWTProcessorUtil>>> = SWTProcessorUtil::new(); }
+pub static SWTProcessorUtil_instance: crate::JavaStatic<Option<Rc<RefCell<SWTProcessorUtil>>>> = crate::JavaStatic::new(|| SWTProcessorUtil::new());
 
 impl SWTProcessorUtil {
 

@@ -30,7 +30,7 @@ pub struct PathFindingNodeCostInfoData {
     pub MAX_NODE_COST: i32,
 }
 
-thread_local! { pub static PathFindingNodeCostInfoData_instance: Option<Rc<RefCell<PathFindingNodeCostInfoData>>> = PathFindingNodeCostInfoData::new(); }
+pub static PathFindingNodeCostInfoData_instance: crate::JavaStatic<Option<Rc<RefCell<PathFindingNodeCostInfoData>>>> = crate::JavaStatic::new(|| PathFindingNodeCostInfoData::new());
 
 impl PathFindingNodeCostInfoData {
 

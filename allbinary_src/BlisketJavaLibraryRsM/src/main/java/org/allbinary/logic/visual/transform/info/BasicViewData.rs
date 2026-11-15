@@ -70,7 +70,7 @@ pub struct BasicViewData {
     pub MAKEPAYMENTVIEWXSL: String,
 }
 
-thread_local! { pub static BasicViewData_instance: Option<Rc<RefCell<BasicViewData>>> = BasicViewData::new(); }
+pub static BasicViewData_instance: crate::JavaStatic<Option<Rc<RefCell<BasicViewData>>>> = crate::JavaStatic::new(|| BasicViewData::new());
 
 impl BasicViewData {
 

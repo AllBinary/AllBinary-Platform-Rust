@@ -42,7 +42,7 @@ pub struct AdminRoleFactory {
     pub webManagementRoles: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static AdminRoleFactory_instance: Option<Rc<RefCell<AdminRoleFactory>>> = AdminRoleFactory::new(); }
+pub static AdminRoleFactory_instance: crate::JavaStatic<Option<Rc<RefCell<AdminRoleFactory>>>> = crate::JavaStatic::new(|| AdminRoleFactory::new());
 
 impl AdminRoleFactory {
 

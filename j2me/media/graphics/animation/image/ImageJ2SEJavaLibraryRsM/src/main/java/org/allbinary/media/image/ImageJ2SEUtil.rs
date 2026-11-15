@@ -30,7 +30,7 @@ pub struct ImageJ2SEUtil {
     pub TRANSPARENT_COLOR: Option<Rc<RefCell<Color>>>,
 }
 
-thread_local! { pub static ImageJ2SEUtil_instance: Option<Rc<RefCell<ImageJ2SEUtil>>> = ImageJ2SEUtil::new(); }
+pub static ImageJ2SEUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImageJ2SEUtil>>>> = crate::JavaStatic::new(|| ImageJ2SEUtil::new());
 
 impl ImageJ2SEUtil {
 

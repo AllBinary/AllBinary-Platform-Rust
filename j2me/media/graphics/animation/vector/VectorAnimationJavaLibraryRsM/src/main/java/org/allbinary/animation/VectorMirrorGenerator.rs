@@ -39,7 +39,7 @@ pub struct VectorMirrorGenerator {
     pub vectorAnimationUtil: Option<Rc<RefCell<VectorAnimationUtil>>>,
 }
 
-thread_local! { pub static VectorMirrorGenerator_instance: Option<Rc<RefCell<VectorMirrorGenerator>>> = VectorMirrorGenerator::new(); }
+pub static VectorMirrorGenerator_instance: crate::JavaStatic<Option<Rc<RefCell<VectorMirrorGenerator>>>> = crate::JavaStatic::new(|| VectorMirrorGenerator::new());
 
 impl VectorMirrorGenerator {
 

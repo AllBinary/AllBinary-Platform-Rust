@@ -37,7 +37,7 @@ macro_rules! jcall {
 pub struct LogFormatUtil {
 }
 
-thread_local! { pub static LogFormatUtil_instance: Option<Rc<RefCell<LogFormatUtil>>> = LogFormatUtil::new(); }
+pub static LogFormatUtil_instance: crate::JavaStatic<Option<Rc<RefCell<LogFormatUtil>>>> = crate::JavaStatic::new(|| LogFormatUtil::new());
 
 impl LogFormatUtil {
 

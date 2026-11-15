@@ -33,7 +33,7 @@ pub struct GameStatisticsFactory {
     pub stringBuffer: Option<Rc<RefCell<StringMaker>>>,
 }
 
-thread_local! { pub static GameStatisticsFactory_SINGLETON: Option<Rc<RefCell<dyn crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn>>> = GameStatisticsFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn>>); }
+pub static GameStatisticsFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn>>>> = crate::JavaStatic::new(|| GameStatisticsFactory::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::canvas::AndroidGameStatistics::AndroidGameStatisticsDyn>>));
 
 impl GameStatisticsFactory {
 

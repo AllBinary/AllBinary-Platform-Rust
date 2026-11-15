@@ -40,7 +40,7 @@ pub struct GraphicItemFactory {
     pub DEFAULT: Option<Rc<RefCell<dyn GraphicsItemInterfaceFactoryInterface>>>,
 }
 
-thread_local! { pub static GraphicItemFactory_instance: Option<Rc<RefCell<GraphicItemFactory>>> = GraphicItemFactory::new(); }
+pub static GraphicItemFactory_instance: crate::JavaStatic<Option<Rc<RefCell<GraphicItemFactory>>>> = crate::JavaStatic::new(|| GraphicItemFactory::new());
 
 impl GraphicItemFactory {
 

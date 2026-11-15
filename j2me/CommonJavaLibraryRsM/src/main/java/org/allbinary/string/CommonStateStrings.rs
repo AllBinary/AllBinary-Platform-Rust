@@ -40,7 +40,7 @@ pub struct CommonStateStrings {
     pub ON_START_COMMAND: String,
 }
 
-thread_local! { pub static CommonStateStrings_instance: Option<Rc<RefCell<CommonStateStrings>>> = CommonStateStrings::new(); }
+pub static CommonStateStrings_instance: crate::JavaStatic<Option<Rc<RefCell<CommonStateStrings>>>> = crate::JavaStatic::new(|| CommonStateStrings::new());
 
 impl CommonStateStrings {
 

@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct ProgressEndListener {
 }
 
-thread_local! { pub static ProgressEndListener_instance: Option<Rc<RefCell<ProgressEndListener>>> = ProgressEndListener::new(); }
+pub static ProgressEndListener_instance: crate::JavaStatic<Option<Rc<RefCell<ProgressEndListener>>>> = crate::JavaStatic::new(|| ProgressEndListener::new());
 
 impl ProgressEndListener {
 

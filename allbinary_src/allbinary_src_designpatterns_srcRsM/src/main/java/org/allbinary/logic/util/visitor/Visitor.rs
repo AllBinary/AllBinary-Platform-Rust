@@ -31,7 +31,7 @@ pub struct Visitor {
     pub nullUtil: Option<Rc<RefCell<NullUtil>>>,
 }
 
-thread_local! { pub static Visitor_instance: Option<Rc<RefCell<dyn VisitorDyn>>> = Visitor::new().map(|reference| reference as Rc<RefCell<dyn VisitorDyn>>); }
+pub static Visitor_instance: crate::JavaStatic<Option<Rc<RefCell<dyn VisitorDyn>>>> = crate::JavaStatic::new(|| Visitor::new().map(|reference| reference as Rc<RefCell<dyn VisitorDyn>>));
 impl VisitorInterface for Visitor {
     fn visit(&mut self, mut anyType: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::visit(self, anyType) }
 }

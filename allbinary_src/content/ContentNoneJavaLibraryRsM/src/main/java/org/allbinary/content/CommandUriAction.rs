@@ -31,7 +31,7 @@ pub struct CommandUriAction {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static CommandUriAction_instance: Option<Rc<RefCell<CommandUriAction>>> = CommandUriAction::new(); }
+pub static CommandUriAction_instance: crate::JavaStatic<Option<Rc<RefCell<CommandUriAction>>>> = crate::JavaStatic::new(|| CommandUriAction::new());
 
 impl CommandUriAction {
 

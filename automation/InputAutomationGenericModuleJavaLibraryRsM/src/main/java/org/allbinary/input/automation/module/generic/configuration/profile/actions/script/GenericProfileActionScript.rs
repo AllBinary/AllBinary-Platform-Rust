@@ -50,7 +50,7 @@ pub struct GenericProfileActionScript {
     pub profileActionConditionInterfaceVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static GenericProfileActionScript_NAME: String = String::from("Root"); }
+pub static GenericProfileActionScript_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Root"));
 impl ProfileActionScriptNodeInterface for GenericProfileActionScript {
     fn addCondition(&mut self, mut profileActionScriptNodeInterface: Option<Rc<RefCell<dyn ProfileActionScriptNodeInterface>>>) { Self::addCondition(self, profileActionScriptNodeInterface) }
     fn removeCondition(&mut self, mut profileActionScriptNodeInterface: Option<Rc<RefCell<dyn ProfileActionScriptNodeInterface>>>) { Self::removeCondition(self, profileActionScriptNodeInterface) }

@@ -17,7 +17,7 @@ macro_rules! jcall {
 pub struct PGUtil {
 }
 
-thread_local! { pub static PGUtil_instance: Option<Rc<RefCell<PGUtil>>> = PGUtil::new(); }
+pub static PGUtil_instance: crate::JavaStatic<Option<Rc<RefCell<PGUtil>>>> = crate::JavaStatic::new(|| PGUtil::new());
 
 impl PGUtil {
 

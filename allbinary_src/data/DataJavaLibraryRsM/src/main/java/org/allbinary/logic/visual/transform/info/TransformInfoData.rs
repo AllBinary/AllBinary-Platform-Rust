@@ -44,7 +44,7 @@ pub struct TransformInfoData {
     pub PARTIAL: String,
 }
 
-thread_local! { pub static TransformInfoData_instance: Option<Rc<RefCell<TransformInfoData>>> = TransformInfoData::new(); }
+pub static TransformInfoData_instance: crate::JavaStatic<Option<Rc<RefCell<TransformInfoData>>>> = crate::JavaStatic::new(|| TransformInfoData::new());
 
 impl TransformInfoData {
 

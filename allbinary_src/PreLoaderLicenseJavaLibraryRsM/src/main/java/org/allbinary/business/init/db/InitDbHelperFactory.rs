@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct InitDbHelperFactory {
 }
 
-thread_local! { pub static InitDbHelperFactory_CLASSNAME: String = String::from("org.allbinary.business.installer.InitDbCrypted"); }
+pub static InitDbHelperFactory_CLASSNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("org.allbinary.business.installer.InitDbCrypted"));
 
 impl InitDbHelperFactory {
 

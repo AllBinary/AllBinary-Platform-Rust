@@ -30,7 +30,7 @@ pub struct NullDropCellPositionGenerator {
     pub base: BaseDropCellPositionGenerator,
 }
 
-thread_local! { pub static NullDropCellPositionGenerator_instance: Option<Rc<RefCell<NullDropCellPositionGenerator>>> = NullDropCellPositionGenerator::new(); }
+pub static NullDropCellPositionGenerator_instance: crate::JavaStatic<Option<Rc<RefCell<NullDropCellPositionGenerator>>>> = crate::JavaStatic::new(|| NullDropCellPositionGenerator::new());
 
 impl NullDropCellPositionGenerator {
 

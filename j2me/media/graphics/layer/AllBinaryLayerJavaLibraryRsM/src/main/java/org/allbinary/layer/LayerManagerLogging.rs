@@ -52,7 +52,7 @@ pub struct LayerManagerLogging {
     pub CLEAR: String,
 }
 
-thread_local! { pub static LayerManagerLogging_instance: Option<Rc<RefCell<LayerManagerLogging>>> = LayerManagerLogging::new(); }
+pub static LayerManagerLogging_instance: crate::JavaStatic<Option<Rc<RefCell<LayerManagerLogging>>>> = crate::JavaStatic::new(|| LayerManagerLogging::new());
 pub static mut LayerManagerLogging_removeFailed: std::cell::LazyCell<bool> = std::cell::LazyCell::new(|| false);
 
 impl LayerManagerLogging {

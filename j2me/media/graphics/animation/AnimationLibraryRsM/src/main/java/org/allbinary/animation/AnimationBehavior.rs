@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct AnimationBehavior {
 }
 
-thread_local! { pub static AnimationBehavior_instance: Option<Rc<RefCell<dyn AnimationBehaviorDyn>>> = AnimationBehavior::new().map(|reference| reference as Rc<RefCell<dyn AnimationBehaviorDyn>>); }
+pub static AnimationBehavior_instance: crate::JavaStatic<Option<Rc<RefCell<dyn AnimationBehaviorDyn>>>> = crate::JavaStatic::new(|| AnimationBehavior::new().map(|reference| reference as Rc<RefCell<dyn AnimationBehaviorDyn>>));
 
 impl AnimationBehavior {
 

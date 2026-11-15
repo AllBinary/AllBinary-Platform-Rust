@@ -51,10 +51,10 @@ pub struct InitializerDatabase {
     pub initDb: Option<Rc<RefCell<DynamicInitDb>>>,
 }
 
-thread_local! { pub static InitializerDatabase_MAXDB: i32 = 30; }
-thread_local! { pub static InitializerDatabase_MAX: i32 = 16; }
-thread_local! { pub static InitializerDatabase_MIN: i32 = 4; }
-thread_local! { pub static InitializerDatabase_MINPASSWORD: i32 = 0; }
+pub static InitializerDatabase_MAXDB: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 30);
+pub static InitializerDatabase_MAX: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 16);
+pub static InitializerDatabase_MIN: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 4);
+pub static InitializerDatabase_MINPASSWORD: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0);
 
 impl InitializerDatabase {
 

@@ -30,7 +30,7 @@ pub struct StaticPagesDbInitInfo {
     pub base: DbInitInfo,
 }
 
-thread_local! { pub static StaticPagesDbInitInfo_INITFILE: String = String::from("staticpagesbinitdata.dat"); }
+pub static StaticPagesDbInitInfo_INITFILE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("staticpagesbinitdata.dat"));
 
 impl StaticPagesDbInitInfo {
     

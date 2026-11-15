@@ -31,7 +31,7 @@ pub struct NoSound {
     pub base: Sound,
 }
 
-thread_local! { pub static NoSound_instance: Option<Rc<RefCell<NoSound>>> = NoSound::new(); }
+pub static NoSound_instance: crate::JavaStatic<Option<Rc<RefCell<NoSound>>>> = crate::JavaStatic::new(|| NoSound::new());
 
 impl NoSound {
     

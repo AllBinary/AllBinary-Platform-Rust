@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct TimeStampUtil {
 }
 
-thread_local! { pub static TimeStampUtil_instance: Option<Rc<RefCell<TimeStampUtil>>> = TimeStampUtil::new(); }
+pub static TimeStampUtil_instance: crate::JavaStatic<Option<Rc<RefCell<TimeStampUtil>>>> = crate::JavaStatic::new(|| TimeStampUtil::new());
 
 impl TimeStampUtil {
 

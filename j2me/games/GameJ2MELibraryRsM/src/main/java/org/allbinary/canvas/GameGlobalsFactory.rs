@@ -33,7 +33,7 @@ pub struct GameGlobalsFactory {
     pub point: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>,
 }
 
-thread_local! { pub static GameGlobalsFactory_instance: Option<Rc<RefCell<GameGlobalsFactory>>> = GameGlobalsFactory::new(); }
+pub static GameGlobalsFactory_instance: crate::JavaStatic<Option<Rc<RefCell<GameGlobalsFactory>>>> = crate::JavaStatic::new(|| GameGlobalsFactory::new());
 
 impl GameGlobalsFactory {
 

@@ -19,7 +19,7 @@ pub struct BufferedImageUtil2 {
     pub imageUtil: Option<Rc<RefCell<ImageUtil>>>,
 }
 
-thread_local! { pub static BufferedImageUtil2_instance: Option<Rc<RefCell<BufferedImageUtil2>>> = BufferedImageUtil2::new(); }
+pub static BufferedImageUtil2_instance: crate::JavaStatic<Option<Rc<RefCell<BufferedImageUtil2>>>> = crate::JavaStatic::new(|| BufferedImageUtil2::new());
 
 impl BufferedImageUtil2 {
 

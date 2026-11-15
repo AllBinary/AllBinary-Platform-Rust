@@ -37,7 +37,7 @@ macro_rules! jcall {
 pub struct MIDPUtil {
 }
 
-thread_local! { pub static MIDPUtil_instance: Option<Rc<RefCell<MIDPUtil>>> = MIDPUtil::new(); }
+pub static MIDPUtil_instance: crate::JavaStatic<Option<Rc<RefCell<MIDPUtil>>>> = crate::JavaStatic::new(|| MIDPUtil::new());
 
 impl MIDPUtil {
 

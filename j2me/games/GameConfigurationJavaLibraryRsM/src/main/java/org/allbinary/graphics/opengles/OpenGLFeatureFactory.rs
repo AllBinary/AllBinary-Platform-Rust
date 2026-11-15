@@ -51,7 +51,7 @@ pub struct OpenGLFeatureFactory {
     pub OPENGL_COMPLEX_TEXTURE_PROCESSOR: Option<Rc<RefCell<OpenGLFeature>>>,
 }
 
-thread_local! { pub static OpenGLFeatureFactory_instance: Option<Rc<RefCell<OpenGLFeatureFactory>>> = OpenGLFeatureFactory::new(); }
+pub static OpenGLFeatureFactory_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLFeatureFactory>>>> = crate::JavaStatic::new(|| OpenGLFeatureFactory::new());
 
 impl OpenGLFeatureFactory {
 

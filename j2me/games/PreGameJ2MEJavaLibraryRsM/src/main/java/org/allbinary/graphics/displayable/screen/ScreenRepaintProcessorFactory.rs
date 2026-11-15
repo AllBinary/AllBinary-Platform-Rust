@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct ScreenRepaintProcessorFactory {
 }
 
-thread_local! { pub static ScreenRepaintProcessorFactory_instance: Option<Rc<RefCell<ScreenRepaintProcessorFactory>>> = ScreenRepaintProcessorFactory::new(); }
+pub static ScreenRepaintProcessorFactory_instance: crate::JavaStatic<Option<Rc<RefCell<ScreenRepaintProcessorFactory>>>> = crate::JavaStatic::new(|| ScreenRepaintProcessorFactory::new());
 
 impl ScreenRepaintProcessorFactory {
 

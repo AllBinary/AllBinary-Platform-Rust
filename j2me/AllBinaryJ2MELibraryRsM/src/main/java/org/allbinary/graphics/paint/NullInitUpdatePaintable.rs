@@ -30,7 +30,7 @@ pub struct NullInitUpdatePaintable {
     pub base: InitUpdatePaintable,
 }
 
-thread_local! { pub static NullInitUpdatePaintable_SINGLETON: Option<Rc<RefCell<NullInitUpdatePaintable>>> = NullInitUpdatePaintable::new(); }
+pub static NullInitUpdatePaintable_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<NullInitUpdatePaintable>>>> = crate::JavaStatic::new(|| NullInitUpdatePaintable::new());
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintableInterface::InitUpdatePaintableInterface for NullInitUpdatePaintable {
 }
 impl crate::org::allbinary::init::InitInterface::InitInterface for NullInitUpdatePaintable {

@@ -37,7 +37,7 @@ pub struct AllBinaryOrientationSensor {
     pub listener: Option<Rc<RefCell<dyn CompleteMotionGestureInputEventListenerInterface>>>,
 }
 
-thread_local! { pub static AllBinaryOrientationSensor_NULL_ALLBINARY_ORIENTATION_SENSOR: Option<Rc<RefCell<dyn AllBinaryOrientationSensorDyn>>> = AllBinaryOrientationSensor::new().map(|reference| reference as Rc<RefCell<dyn AllBinaryOrientationSensorDyn>>); }
+pub static AllBinaryOrientationSensor_NULL_ALLBINARY_ORIENTATION_SENSOR: crate::JavaStatic<Option<Rc<RefCell<dyn AllBinaryOrientationSensorDyn>>>> = crate::JavaStatic::new(|| AllBinaryOrientationSensor::new().map(|reference| reference as Rc<RefCell<dyn AllBinaryOrientationSensorDyn>>));
 
 impl AllBinaryOrientationSensor {
     

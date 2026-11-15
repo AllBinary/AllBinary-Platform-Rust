@@ -36,7 +36,7 @@ pub struct URIResolverStrings {
     pub RESOLVE: String,
 }
 
-thread_local! { pub static URIResolverStrings_instance: Option<Rc<RefCell<URIResolverStrings>>> = URIResolverStrings::new(); }
+pub static URIResolverStrings_instance: crate::JavaStatic<Option<Rc<RefCell<URIResolverStrings>>>> = crate::JavaStatic::new(|| URIResolverStrings::new());
 
 impl URIResolverStrings {
 

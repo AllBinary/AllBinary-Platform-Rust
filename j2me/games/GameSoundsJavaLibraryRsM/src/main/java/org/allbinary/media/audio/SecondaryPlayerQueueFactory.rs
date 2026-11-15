@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct SecondaryPlayerQueueFactory {
 }
 
-thread_local! { pub static SecondaryPlayerQueueFactory_SINGLETON: Option<Rc<RefCell<PlayerQueue>>> = PlayerQueue::new(4); }
+pub static SecondaryPlayerQueueFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<PlayerQueue>>>> = crate::JavaStatic::new(|| PlayerQueue::new(4));
 
 impl SecondaryPlayerQueueFactory {
 

@@ -34,7 +34,7 @@ macro_rules! jcall {
 pub struct RTSLayerLogHelper {
 }
 
-thread_local! { pub static RTSLayerLogHelper_instance: Option<Rc<RefCell<dyn RTSLayerLogHelperDyn>>> = RTSLayerLogHelper::new().map(|reference| reference as Rc<RefCell<dyn RTSLayerLogHelperDyn>>); }
+pub static RTSLayerLogHelper_instance: crate::JavaStatic<Option<Rc<RefCell<dyn RTSLayerLogHelperDyn>>>> = crate::JavaStatic::new(|| RTSLayerLogHelper::new().map(|reference| reference as Rc<RefCell<dyn RTSLayerLogHelperDyn>>));
 
 impl RTSLayerLogHelper {
 

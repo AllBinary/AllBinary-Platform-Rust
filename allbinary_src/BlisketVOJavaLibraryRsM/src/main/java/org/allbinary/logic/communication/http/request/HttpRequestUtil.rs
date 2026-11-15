@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct HttpRequestUtil {
 }
 
-thread_local! { pub static HttpRequestUtil_instance: Option<Rc<RefCell<HttpRequestUtil>>> = HttpRequestUtil::new(); }
+pub static HttpRequestUtil_instance: crate::JavaStatic<Option<Rc<RefCell<HttpRequestUtil>>>> = crate::JavaStatic::new(|| HttpRequestUtil::new());
 
 impl HttpRequestUtil {
 

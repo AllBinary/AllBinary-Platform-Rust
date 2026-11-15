@@ -39,7 +39,7 @@ pub struct FallingPickupLayer {
     pub base: PickupLayer,
 }
 
-thread_local! { pub static FallingPickupLayer_NAME: String = String::from("FallingPickupLayer"); }
+pub static FallingPickupLayer_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("FallingPickupLayer"));
 // impl TickableInterface for FallingPickupLayer with the methods of the trait
 impl crate::org::allbinary::game::layer::pickup::PickedUpLayerInterface::PickedUpLayerInterface for FallingPickupLayer {
     fn getPickedUpLayerInterfaceFactoryInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactoryInterface::PickedUpLayerInterfaceFactoryInterface>>> { crate::org::allbinary::game::layer::pickup::PickupLayer::PickupLayer::getPickedUpLayerInterfaceFactoryInterface(crate::org::allbinary::game::layer::pickup::PickupLayer::PickupLayerDyn::as_PickupLayer_mut(self)) }

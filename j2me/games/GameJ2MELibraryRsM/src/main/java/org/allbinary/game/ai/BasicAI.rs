@@ -48,8 +48,8 @@ pub struct BasicAI {
     pub lastKey: i32,
 }
 
-thread_local! { pub static BasicAI_AI_VISITOR: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(2); }
-thread_local! { pub static BasicAI_ID: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(1); }
+pub static BasicAI_AI_VISITOR: crate::JavaStatic<Option<i32>> = crate::JavaStatic::new(|| jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(2));
+pub static BasicAI_ID: crate::JavaStatic<Option<i32>> = crate::JavaStatic::new(|| jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(1));
 impl GameKeyEventSourceInterface for BasicAI {
     fn getSourceId(&mut self) -> i32 { Self::getSourceId(self) }
 }

@@ -35,6 +35,7 @@
         <module>../working_thirdpartyrust/embedded/j2me/microemulator/2_0_4/microemu-cldcRs</module>
         <module>../working_thirdpartyrust/embedded/j2me/microemulator/2_0_4/microemu-midpRs</module>
         <module>../working_thirdpartyrust/embedded/j2me/microemulator/2_0_4/microemu-extensions/microemu-jsr-135Rs</module>
+        <module>../working_thirdpartyrust/graphics/swt/SWTStubJavaLibraryRsM</module>
         
         <module>./j2me/AllBinaryBaseLibraryPORsM</module>
         <module>./j2me/AllBinaryJ2MELibraryRsP</module>

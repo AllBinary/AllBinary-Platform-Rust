@@ -21,8 +21,8 @@ macro_rules! jcall {
 pub struct RemoteInfo {
 }
 
-thread_local! { pub static RemoteInfo_NEW_PLAYER_ID: i32 = 0; }
-thread_local! { pub static RemoteInfo_REMOTE_INFO: Option<Rc<RefCell<RemoteInfo>>> = RemoteInfo::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), -1, -1, RemoteInfo_NEW_PLAYER_ID.with(Clone::clone).clone()); }
+pub static RemoteInfo_NEW_PLAYER_ID: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0);
+pub static RemoteInfo_REMOTE_INFO: crate::JavaStatic<Option<Rc<RefCell<RemoteInfo>>>> = crate::JavaStatic::new(|| RemoteInfo::new({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), -1, -1, RemoteInfo_NEW_PLAYER_ID.with(Clone::clone).clone()));
 
 impl RemoteInfo {
 

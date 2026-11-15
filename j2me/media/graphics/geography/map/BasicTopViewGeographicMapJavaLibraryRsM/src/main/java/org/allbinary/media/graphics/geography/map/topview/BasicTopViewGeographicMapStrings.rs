@@ -36,7 +36,7 @@ pub struct BasicTopViewGeographicMapStrings {
     pub STAIRS_DOWN: String,
 }
 
-thread_local! { pub static BasicTopViewGeographicMapStrings_instance: Option<Rc<RefCell<BasicTopViewGeographicMapStrings>>> = BasicTopViewGeographicMapStrings::new(); }
+pub static BasicTopViewGeographicMapStrings_instance: crate::JavaStatic<Option<Rc<RefCell<BasicTopViewGeographicMapStrings>>>> = crate::JavaStatic::new(|| BasicTopViewGeographicMapStrings::new());
 
 impl BasicTopViewGeographicMapStrings {
 

@@ -35,7 +35,7 @@ pub struct RandomRotationFactory {
     pub angleFactory: Option<Rc<RefCell<AngleFactory>>>,
 }
 
-thread_local! { pub static RandomRotationFactory_instance: Option<Rc<RefCell<RandomRotationFactory>>> = RandomRotationFactory::new(); }
+pub static RandomRotationFactory_instance: crate::JavaStatic<Option<Rc<RefCell<RandomRotationFactory>>>> = crate::JavaStatic::new(|| RandomRotationFactory::new());
 
 impl RandomRotationFactory {
 

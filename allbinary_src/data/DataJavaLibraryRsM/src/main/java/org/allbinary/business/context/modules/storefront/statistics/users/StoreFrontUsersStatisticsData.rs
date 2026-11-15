@@ -30,7 +30,7 @@ pub struct StoreFrontUsersStatisticsData {
     pub NUMBEROFUSERS: String,
 }
 
-thread_local! { pub static StoreFrontUsersStatisticsData_instance: Option<Rc<RefCell<StoreFrontUsersStatisticsData>>> = StoreFrontUsersStatisticsData::new(); }
+pub static StoreFrontUsersStatisticsData_instance: crate::JavaStatic<Option<Rc<RefCell<StoreFrontUsersStatisticsData>>>> = crate::JavaStatic::new(|| StoreFrontUsersStatisticsData::new());
 
 impl StoreFrontUsersStatisticsData {
 

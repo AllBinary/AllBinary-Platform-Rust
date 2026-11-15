@@ -35,7 +35,7 @@ pub struct CloudStreamUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static CloudStreamUtil_instance: Option<Rc<RefCell<CloudStreamUtil>>> = CloudStreamUtil::new(); }
+pub static CloudStreamUtil_instance: crate::JavaStatic<Option<Rc<RefCell<CloudStreamUtil>>>> = crate::JavaStatic::new(|| CloudStreamUtil::new());
 
 impl CloudStreamUtil {
 

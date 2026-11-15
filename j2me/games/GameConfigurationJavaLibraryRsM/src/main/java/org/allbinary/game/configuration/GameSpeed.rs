@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct GameSpeed {
 }
 
-thread_local! { pub static GameSpeed_instance: Option<Rc<RefCell<GameSpeed>>> = GameSpeed::new(); }
+pub static GameSpeed_instance: crate::JavaStatic<Option<Rc<RefCell<GameSpeed>>>> = crate::JavaStatic::new(|| GameSpeed::new());
 
 impl GameSpeed {
 

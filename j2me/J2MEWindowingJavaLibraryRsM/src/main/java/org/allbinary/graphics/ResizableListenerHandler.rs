@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct ResizableListenerHandler {
 }
 
-thread_local! { pub static ResizableListenerHandler_instance: Option<Rc<RefCell<ResizableListenerHandler>>> = ResizableListenerHandler::new(); }
+pub static ResizableListenerHandler_instance: crate::JavaStatic<Option<Rc<RefCell<ResizableListenerHandler>>>> = crate::JavaStatic::new(|| ResizableListenerHandler::new());
 
 impl ResizableListenerHandler {
 

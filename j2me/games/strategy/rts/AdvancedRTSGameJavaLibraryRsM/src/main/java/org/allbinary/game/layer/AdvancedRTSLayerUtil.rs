@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct AdvancedRTSLayerUtil {
 }
 
-thread_local! { pub static AdvancedRTSLayerUtil_instance: Option<Rc<RefCell<AdvancedRTSLayerUtil>>> = AdvancedRTSLayerUtil::new(); }
+pub static AdvancedRTSLayerUtil_instance: crate::JavaStatic<Option<Rc<RefCell<AdvancedRTSLayerUtil>>>> = crate::JavaStatic::new(|| AdvancedRTSLayerUtil::new());
 
 impl AdvancedRTSLayerUtil {
 

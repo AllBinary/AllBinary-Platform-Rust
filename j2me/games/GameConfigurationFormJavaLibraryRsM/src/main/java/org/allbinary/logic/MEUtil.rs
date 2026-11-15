@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct MEUtil {
 }
 
-thread_local! { pub static MEUtil_instance: Option<Rc<RefCell<MEUtil>>> = MEUtil::new(); }
+pub static MEUtil_instance: crate::JavaStatic<Option<Rc<RefCell<MEUtil>>>> = crate::JavaStatic::new(|| MEUtil::new());
 
 impl MEUtil {
 

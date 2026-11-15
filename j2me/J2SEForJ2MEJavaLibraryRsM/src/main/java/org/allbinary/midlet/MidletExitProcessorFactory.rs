@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct MidletExitProcessorFactory {
 }
 
-thread_local! { pub static MidletExitProcessorFactory_instance: Option<Rc<RefCell<MidletExitProcessorFactory>>> = MidletExitProcessorFactory::new(); }
+pub static MidletExitProcessorFactory_instance: crate::JavaStatic<Option<Rc<RefCell<MidletExitProcessorFactory>>>> = crate::JavaStatic::new(|| MidletExitProcessorFactory::new());
 
 impl MidletExitProcessorFactory {
 

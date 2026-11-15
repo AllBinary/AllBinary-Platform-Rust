@@ -30,7 +30,7 @@ pub struct TransformInfoObjectData {
     pub ENCRYPTED_EXTENSION: String,
 }
 
-thread_local! { pub static TransformInfoObjectData_instance: Option<Rc<RefCell<TransformInfoObjectData>>> = TransformInfoObjectData::new(); }
+pub static TransformInfoObjectData_instance: crate::JavaStatic<Option<Rc<RefCell<TransformInfoObjectData>>>> = crate::JavaStatic::new(|| TransformInfoObjectData::new());
 
 impl TransformInfoObjectData {
 

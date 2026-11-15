@@ -57,7 +57,7 @@ pub struct BasicItemData {
     pub SPECIALS: String,
 }
 
-thread_local! { pub static BasicItemData_instance: Option<Rc<RefCell<BasicItemData>>> = BasicItemData::new(); }
+pub static BasicItemData_instance: crate::JavaStatic<Option<Rc<RefCell<BasicItemData>>>> = crate::JavaStatic::new(|| BasicItemData::new());
 
 impl BasicItemData {
 

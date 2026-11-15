@@ -38,7 +38,7 @@ pub struct StringUtil {
     pub stringArray: Vec<String>,
 }
 
-thread_local! { pub static StringUtil_instance: Option<Rc<RefCell<StringUtil>>> = StringUtil::new(); }
+pub static StringUtil_instance: crate::JavaStatic<Option<Rc<RefCell<StringUtil>>>> = crate::JavaStatic::new(|| StringUtil::new());
 
 impl StringUtil {
     

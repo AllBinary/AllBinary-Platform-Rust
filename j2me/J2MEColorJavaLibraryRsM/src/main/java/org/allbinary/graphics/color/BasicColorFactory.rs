@@ -62,7 +62,7 @@ pub struct BasicColorFactory {
     pub BORDER_COLOR: Option<Rc<RefCell<BasicColor>>>,
 }
 
-thread_local! { pub static BasicColorFactory_instance: Option<Rc<RefCell<BasicColorFactory>>> = BasicColorFactory::new(); }
+pub static BasicColorFactory_instance: crate::JavaStatic<Option<Rc<RefCell<BasicColorFactory>>>> = crate::JavaStatic::new(|| BasicColorFactory::new());
 
 impl BasicColorFactory {
 

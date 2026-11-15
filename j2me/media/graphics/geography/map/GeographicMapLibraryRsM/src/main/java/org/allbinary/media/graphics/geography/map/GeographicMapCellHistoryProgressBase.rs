@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct GeographicMapCellHistoryProgressBase {
 }
 
-thread_local! { pub static GeographicMapCellHistoryProgressBase_instance: Option<Rc<RefCell<dyn GeographicMapCellHistoryProgressBaseDyn>>> = GeographicMapCellHistoryProgressBase::new().map(|reference| reference as Rc<RefCell<dyn GeographicMapCellHistoryProgressBaseDyn>>); }
+pub static GeographicMapCellHistoryProgressBase_instance: crate::JavaStatic<Option<Rc<RefCell<dyn GeographicMapCellHistoryProgressBaseDyn>>>> = crate::JavaStatic::new(|| GeographicMapCellHistoryProgressBase::new().map(|reference| reference as Rc<RefCell<dyn GeographicMapCellHistoryProgressBaseDyn>>));
 
 impl GeographicMapCellHistoryProgressBase {
 

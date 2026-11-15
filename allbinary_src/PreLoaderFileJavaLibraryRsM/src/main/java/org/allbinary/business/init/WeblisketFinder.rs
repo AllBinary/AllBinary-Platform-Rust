@@ -41,8 +41,8 @@ pub struct WeblisketFinder {
     pub subDirectory: Option<Rc<RefCell<SubDirectory>>>,
 }
 
-thread_local! { pub static WeblisketFinder_instance: Option<Rc<RefCell<WeblisketFinder>>> = WeblisketFinder::new(); }
-thread_local! { pub static WeblisketFinder_KEY: String = String::from("installerdata.dat"); }
+pub static WeblisketFinder_instance: crate::JavaStatic<Option<Rc<RefCell<WeblisketFinder>>>> = crate::JavaStatic::new(|| WeblisketFinder::new());
+pub static WeblisketFinder_KEY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("installerdata.dat"));
 
 impl WeblisketFinder {
 

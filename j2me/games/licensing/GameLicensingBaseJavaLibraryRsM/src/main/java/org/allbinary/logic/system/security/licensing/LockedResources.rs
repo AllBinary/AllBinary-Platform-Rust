@@ -29,7 +29,7 @@ pub struct LockedResources {
     pub LOCKED_DEMO_GAME_FEATURE_RESOURCE: String,
 }
 
-thread_local! { pub static LockedResources_instance: Option<Rc<RefCell<LockedResources>>> = LockedResources::new(); }
+pub static LockedResources_instance: crate::JavaStatic<Option<Rc<RefCell<LockedResources>>>> = crate::JavaStatic::new(|| LockedResources::new());
 
 impl LockedResources {
 

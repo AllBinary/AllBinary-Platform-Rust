@@ -18,7 +18,7 @@ macro_rules! jcall {
 pub struct MultiPlayerGameFeatureFactory {
 }
 
-thread_local! { pub static MultiPlayerGameFeatureFactory_instance: Option<Rc<RefCell<MultiPlayerGameFeatureFactory>>> = MultiPlayerGameFeatureFactory::new(); }
+pub static MultiPlayerGameFeatureFactory_instance: crate::JavaStatic<Option<Rc<RefCell<MultiPlayerGameFeatureFactory>>>> = crate::JavaStatic::new(|| MultiPlayerGameFeatureFactory::new());
 
 impl MultiPlayerGameFeatureFactory {
 

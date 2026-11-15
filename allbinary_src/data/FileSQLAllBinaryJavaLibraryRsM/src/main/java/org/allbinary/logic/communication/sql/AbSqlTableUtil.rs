@@ -76,7 +76,7 @@ pub struct AbSqlTableUtil {
     pub sqlStrings: Option<Rc<RefCell<SqlStrings>>>,
 }
 
-thread_local! { pub static AbSqlTableUtil_instance: Option<Rc<RefCell<AbSqlTableUtil>>> = AbSqlTableUtil::new(); }
+pub static AbSqlTableUtil_instance: crate::JavaStatic<Option<Rc<RefCell<AbSqlTableUtil>>>> = crate::JavaStatic::new(|| AbSqlTableUtil::new());
 
 impl AbSqlTableUtil {
 

@@ -35,7 +35,7 @@ macro_rules! jcall {
 pub struct ValidatorBase {
 }
 
-thread_local! { pub static ValidatorBase_instance: Option<Rc<RefCell<dyn ValidatorBaseDyn>>> = ValidatorBase::new().map(|reference| reference as Rc<RefCell<dyn ValidatorBaseDyn>>); }
+pub static ValidatorBase_instance: crate::JavaStatic<Option<Rc<RefCell<dyn ValidatorBaseDyn>>>> = crate::JavaStatic::new(|| ValidatorBase::new().map(|reference| reference as Rc<RefCell<dyn ValidatorBaseDyn>>));
 impl ValidatorBaseInterface for ValidatorBase {
     fn isValid(&mut self) -> Option<bool> { Self::isValid(self) }
     fn validationInfo(&mut self) -> String { Self::validationInfo(self) }

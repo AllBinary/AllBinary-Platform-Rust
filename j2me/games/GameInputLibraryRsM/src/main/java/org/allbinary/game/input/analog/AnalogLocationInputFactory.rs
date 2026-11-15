@@ -20,7 +20,7 @@ pub struct AnalogLocationInputFactory {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static AnalogLocationInputFactory_instance: Option<Rc<RefCell<AnalogLocationInputFactory>>> = AnalogLocationInputFactory::new(); }
+pub static AnalogLocationInputFactory_instance: crate::JavaStatic<Option<Rc<RefCell<AnalogLocationInputFactory>>>> = crate::JavaStatic::new(|| AnalogLocationInputFactory::new());
 
 impl AnalogLocationInputFactory {
 

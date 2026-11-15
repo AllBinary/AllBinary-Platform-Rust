@@ -41,7 +41,7 @@ pub struct GameConfiguration {
     pub modifiable: Option<bool>,
 }
 
-thread_local! { pub static GameConfiguration_MIN_VALUE: Option<i32> = Some((i32::MIN.clone()) as i32); }
+pub static GameConfiguration_MIN_VALUE: crate::JavaStatic<Option<i32>> = crate::JavaStatic::new(|| Some((i32::MIN.clone()) as i32));
 
 impl GameConfiguration {
     

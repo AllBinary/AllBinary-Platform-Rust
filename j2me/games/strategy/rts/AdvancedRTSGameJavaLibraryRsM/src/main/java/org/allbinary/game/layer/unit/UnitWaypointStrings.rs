@@ -42,7 +42,7 @@ pub struct UnitWaypointStrings {
     pub NEXT_PATH_NODE: String,
 }
 
-thread_local! { pub static UnitWaypointStrings_instance: Option<Rc<RefCell<UnitWaypointStrings>>> = UnitWaypointStrings::new(); }
+pub static UnitWaypointStrings_instance: crate::JavaStatic<Option<Rc<RefCell<UnitWaypointStrings>>>> = crate::JavaStatic::new(|| UnitWaypointStrings::new());
 
 impl UnitWaypointStrings {
 

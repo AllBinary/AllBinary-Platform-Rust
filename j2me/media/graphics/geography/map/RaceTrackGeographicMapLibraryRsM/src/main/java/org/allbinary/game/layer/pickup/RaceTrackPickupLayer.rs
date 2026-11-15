@@ -42,7 +42,7 @@ pub struct RaceTrackPickupLayer {
     pub viewPositionEventHandler: Option<Rc<RefCell<ViewPositionEventHandler>>>,
 }
 
-thread_local! { pub static RaceTrackPickupLayer_NAME: String = String::from("RaceTrackPickupLayer"); }
+pub static RaceTrackPickupLayer_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("RaceTrackPickupLayer"));
 impl crate::org::allbinary::game::layer::pickup::PickedUpLayerInterface::PickedUpLayerInterface for RaceTrackPickupLayer {
     fn getPickedUpLayerInterfaceFactoryInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::pickup::PickedUpLayerInterfaceFactoryInterface::PickedUpLayerInterfaceFactoryInterface>>> { crate::org::allbinary::game::layer::pickup::PickupLayer::PickupLayer::getPickedUpLayerInterfaceFactoryInterface(crate::org::allbinary::game::layer::pickup::PickupLayer::PickupLayerDyn::as_PickupLayer_mut(self)) }
     fn setPickedUp(&mut self) { crate::org::allbinary::game::layer::pickup::PickupLayer::PickupLayer::setPickedUp(crate::org::allbinary::game::layer::pickup::PickupLayer::PickupLayerDyn::as_PickupLayer_mut(self)) }

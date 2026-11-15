@@ -30,7 +30,7 @@ pub struct ScaleFactorFactory {
     pub DEFAULT_SCALE_VALUE: i32,
 }
 
-thread_local! { pub static ScaleFactorFactory_instance: Option<Rc<RefCell<ScaleFactorFactory>>> = ScaleFactorFactory::new(); }
+pub static ScaleFactorFactory_instance: crate::JavaStatic<Option<Rc<RefCell<ScaleFactorFactory>>>> = crate::JavaStatic::new(|| ScaleFactorFactory::new());
 
 impl ScaleFactorFactory {
 

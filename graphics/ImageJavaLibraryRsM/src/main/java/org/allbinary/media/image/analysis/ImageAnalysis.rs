@@ -37,7 +37,7 @@ pub struct ImageAnalysis {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static ImageAnalysis_instance: Option<Rc<RefCell<ImageAnalysis>>> = ImageAnalysis::new(); }
+pub static ImageAnalysis_instance: crate::JavaStatic<Option<Rc<RefCell<ImageAnalysis>>>> = crate::JavaStatic::new(|| ImageAnalysis::new());
 
 impl ImageAnalysis {
 

@@ -31,7 +31,7 @@ pub struct SWTRunnableProcessor {
     pub base: SWTProcessor,
 }
 
-thread_local! { pub static SWTRunnableProcessor_instanceR: Option<Rc<RefCell<SWTRunnableProcessor>>> = SWTRunnableProcessor::new(); }
+pub static SWTRunnableProcessor_instanceR: crate::JavaStatic<Option<Rc<RefCell<SWTRunnableProcessor>>>> = crate::JavaStatic::new(|| SWTRunnableProcessor::new());
 
 impl SWTRunnableProcessor {
     

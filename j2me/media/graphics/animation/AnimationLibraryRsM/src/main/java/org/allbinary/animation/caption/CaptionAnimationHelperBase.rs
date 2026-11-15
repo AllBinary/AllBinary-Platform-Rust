@@ -32,7 +32,7 @@ pub struct CaptionAnimationHelperBase {
     pub base: Animation,
 }
 
-thread_local! { pub static CaptionAnimationHelperBase_INSTANCE: Option<Rc<RefCell<dyn CaptionAnimationHelperBaseDyn>>> = CaptionAnimationHelperBase::new().map(|reference| reference as Rc<RefCell<dyn CaptionAnimationHelperBaseDyn>>); }
+pub static CaptionAnimationHelperBase_INSTANCE: crate::JavaStatic<Option<Rc<RefCell<dyn CaptionAnimationHelperBaseDyn>>>> = crate::JavaStatic::new(|| CaptionAnimationHelperBase::new().map(|reference| reference as Rc<RefCell<dyn CaptionAnimationHelperBaseDyn>>));
 impl crate::org::allbinary::animation::AnimationInterface::AnimationInterface for CaptionAnimationHelperBase {
     fn nextFrame(&mut self) { crate::org::allbinary::animation::Animation::Animation::nextFrame(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self)) }
     fn paintThreedXYZ(&mut self, p1: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>, p2: i32, p3: i32, p4: i32) { crate::org::allbinary::animation::Animation::Animation::paintThreedXYZ(crate::org::allbinary::animation::Animation::AnimationDyn::as_Animation_mut(self), p1, p2, p3, p4) }

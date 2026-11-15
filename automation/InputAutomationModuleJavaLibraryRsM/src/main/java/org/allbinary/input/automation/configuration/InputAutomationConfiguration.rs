@@ -51,7 +51,7 @@ pub struct InputAutomationConfiguration {
     pub inputAutomationModuleConfigurationList: Option<Rc<RefCell<dyn List<Option<Rc<RefCell<InputAutomationModuleConfiguration>>>>>>>,
 }
 
-thread_local! { pub static InputAutomationConfiguration_FILENAME: String = String::from("InputAutomationConfig.xml"); }
+pub static InputAutomationConfiguration_FILENAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("InputAutomationConfig.xml"));
 
 impl InputAutomationConfiguration {
 

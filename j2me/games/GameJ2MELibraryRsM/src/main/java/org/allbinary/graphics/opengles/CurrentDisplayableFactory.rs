@@ -65,7 +65,7 @@ pub struct CurrentDisplayableFactory {
     pub usedRunnable: Option<Rc<RefCell<dyn crate::org::allbinary::game::displayable::canvas::GameRunnable::GameRunnableDyn>>>,
 }
 
-thread_local! { pub static CurrentDisplayableFactory_instance: Option<Rc<RefCell<CurrentDisplayableFactory>>> = CurrentDisplayableFactory::new(); }
+pub static CurrentDisplayableFactory_instance: crate::JavaStatic<Option<Rc<RefCell<CurrentDisplayableFactory>>>> = crate::JavaStatic::new(|| CurrentDisplayableFactory::new());
 
 impl CurrentDisplayableFactory {
 

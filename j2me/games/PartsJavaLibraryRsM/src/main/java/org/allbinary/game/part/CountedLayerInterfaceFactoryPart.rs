@@ -50,7 +50,7 @@ pub struct CountedLayerInterfaceFactoryPart {
     pub primitiveLongUtil: Option<Rc<RefCell<PrimitiveLongUtil>>>,
 }
 
-thread_local! { pub static CountedLayerInterfaceFactoryPart_NULL_COUNTED_LAYER_INTERFACE_FACTORY: Option<Rc<RefCell<CountedLayerInterfaceFactoryPart>>> = CountedLayerInterfaceFactoryPart::new(0, crate::org::allbinary::game::layer::pickup::CountedPickedUpLayerInterfaceFactory::CountedPickedUpLayerInterfaceFactory_NULL_COUNTED_PICKUP_LAYER_FACTORY.with(Clone::clone).clone()); }
+pub static CountedLayerInterfaceFactoryPart_NULL_COUNTED_LAYER_INTERFACE_FACTORY: crate::JavaStatic<Option<Rc<RefCell<CountedLayerInterfaceFactoryPart>>>> = crate::JavaStatic::new(|| CountedLayerInterfaceFactoryPart::new(0, crate::org::allbinary::game::layer::pickup::CountedPickedUpLayerInterfaceFactory::CountedPickedUpLayerInterfaceFactory_NULL_COUNTED_PICKUP_LAYER_FACTORY.with(Clone::clone).clone()));
 impl PartInterface for CountedLayerInterfaceFactoryPart {
 }
 impl crate::org::allbinary::animation::AnimationInterfaceCompositeInterface::AnimationInterfaceCompositeInterface for CountedLayerInterfaceFactoryPart {

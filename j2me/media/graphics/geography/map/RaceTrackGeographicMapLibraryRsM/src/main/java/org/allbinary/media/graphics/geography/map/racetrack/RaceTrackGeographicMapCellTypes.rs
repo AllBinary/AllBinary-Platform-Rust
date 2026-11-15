@@ -37,7 +37,7 @@ pub struct RaceTrackGeographicMapCellTypes {
     pub DEFAULT_FINISH_LINE_ROAD_CELL_TYPE: Option<Rc<RefCell<RaceTrackGeographicMapCellType>>>,
 }
 
-thread_local! { pub static RaceTrackGeographicMapCellTypes_instance: Option<Rc<RefCell<RaceTrackGeographicMapCellTypes>>> = RaceTrackGeographicMapCellTypes::new(); }
+pub static RaceTrackGeographicMapCellTypes_instance: crate::JavaStatic<Option<Rc<RefCell<RaceTrackGeographicMapCellTypes>>>> = crate::JavaStatic::new(|| RaceTrackGeographicMapCellTypes::new());
 
 impl RaceTrackGeographicMapCellTypes {
 

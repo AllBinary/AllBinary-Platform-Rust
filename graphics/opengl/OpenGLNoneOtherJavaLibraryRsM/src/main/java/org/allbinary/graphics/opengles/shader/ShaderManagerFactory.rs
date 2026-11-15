@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct ShaderManagerFactory {
 }
 
-thread_local! { pub static ShaderManagerFactory_instance: Option<Rc<RefCell<ShaderManagerFactory>>> = ShaderManagerFactory::new(); }
+pub static ShaderManagerFactory_instance: crate::JavaStatic<Option<Rc<RefCell<ShaderManagerFactory>>>> = crate::JavaStatic::new(|| ShaderManagerFactory::new());
 
 impl ShaderManagerFactory {
 

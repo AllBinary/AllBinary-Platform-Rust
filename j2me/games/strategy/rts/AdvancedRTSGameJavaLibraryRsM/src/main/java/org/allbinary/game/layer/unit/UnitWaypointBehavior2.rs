@@ -78,9 +78,9 @@ pub struct UnitWaypointBehavior2 {
     pub buildingSteeringVisitor: Option<Rc<RefCell<BuildingSteeringVisitor>>>,
 }
 
-thread_local! { pub static UnitWaypointBehavior2_runningWaypointPathList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>); }
-thread_local! { pub static UnitWaypointBehavior2_TARGET_DISTANCE: String = String::from("Target Distance"); }
-thread_local! { pub static UnitWaypointBehavior2_TARGET_LAYER: String = String::from("Target Layer"); }
+pub static UnitWaypointBehavior2_runningWaypointPathList: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = crate::JavaStatic::new(|| BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
+pub static UnitWaypointBehavior2_TARGET_DISTANCE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Target Distance"));
+pub static UnitWaypointBehavior2_TARGET_LAYER: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Target Layer"));
 impl crate::org::allbinary::layer::NamedInterface::NamedInterface for UnitWaypointBehavior2 {
     fn getName(&mut self) -> String { crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBase::getName(crate::org::allbinary::game::layer::WaypointBehaviorBase::WaypointBehaviorBaseDyn::as_WaypointBehaviorBase_mut(self)) }
 }

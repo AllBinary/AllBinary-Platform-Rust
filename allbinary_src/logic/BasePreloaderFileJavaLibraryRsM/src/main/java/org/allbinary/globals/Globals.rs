@@ -37,7 +37,7 @@ pub struct Globals {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static Globals_instance: Option<Rc<RefCell<Globals>>> = Globals::new(); }
+pub static Globals_instance: crate::JavaStatic<Option<Rc<RefCell<Globals>>>> = crate::JavaStatic::new(|| Globals::new());
 
 impl Globals {
 

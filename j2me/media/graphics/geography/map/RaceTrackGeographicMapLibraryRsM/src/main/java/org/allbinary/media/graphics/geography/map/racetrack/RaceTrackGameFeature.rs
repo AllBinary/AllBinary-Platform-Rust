@@ -30,8 +30,8 @@ pub struct RaceTrackGameFeature {
     pub base: GameFeature,
 }
 
-thread_local! { pub static RaceTrackGameFeature_MINI_MAP: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::GameFeature::GameFeatureDyn>>> = RaceTrackGameFeature::new(String::from("Mini Map")).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::GameFeature::GameFeatureDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::GameFeature::GameFeatureDyn>>); }
-thread_local! { pub static RaceTrackGameFeature_AUTO_FINISH_AI: Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::GameFeature::GameFeatureDyn>>> = RaceTrackGameFeature::new(String::from("Auto Finish AI")).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::GameFeature::GameFeatureDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::GameFeature::GameFeatureDyn>>); }
+pub static RaceTrackGameFeature_MINI_MAP: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::GameFeature::GameFeatureDyn>>>> = crate::JavaStatic::new(|| RaceTrackGameFeature::new(String::from("Mini Map")).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::GameFeature::GameFeatureDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::GameFeature::GameFeatureDyn>>));
+pub static RaceTrackGameFeature_AUTO_FINISH_AI: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::GameFeature::GameFeatureDyn>>>> = crate::JavaStatic::new(|| RaceTrackGameFeature::new(String::from("Auto Finish AI")).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::GameFeature::GameFeatureDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::configuration::feature::GameFeature::GameFeatureDyn>>));
 
 impl RaceTrackGameFeature {
     

@@ -30,7 +30,7 @@ pub struct DamageFloaters {
     pub base: Paintable,
 }
 
-thread_local! { pub static DamageFloaters_SINGLETON: Option<Rc<RefCell<dyn DamageFloatersDyn>>> = DamageFloaters::new().map(|reference| reference as Rc<RefCell<dyn DamageFloatersDyn>>); }
+pub static DamageFloaters_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<dyn DamageFloatersDyn>>>> = crate::JavaStatic::new(|| DamageFloaters::new().map(|reference| reference as Rc<RefCell<dyn DamageFloatersDyn>>));
 
 impl DamageFloaters {
 

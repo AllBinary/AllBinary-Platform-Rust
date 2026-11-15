@@ -37,7 +37,7 @@ macro_rules! jcall {
 pub struct Directory {
 }
 
-thread_local! { pub static Directory_instance: Option<Rc<RefCell<Directory>>> = Directory::new(); }
+pub static Directory_instance: crate::JavaStatic<Option<Rc<RefCell<Directory>>>> = crate::JavaStatic::new(|| Directory::new());
 
 impl Directory {
 

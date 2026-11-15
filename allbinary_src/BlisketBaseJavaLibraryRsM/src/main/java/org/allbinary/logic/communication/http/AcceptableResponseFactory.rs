@@ -32,7 +32,7 @@ pub struct AcceptableResponseFactory {
     pub VXML: Option<Rc<RefCell<AcceptableResponse>>>,
 }
 
-thread_local! { pub static AcceptableResponseFactory_instance: Option<Rc<RefCell<AcceptableResponseFactory>>> = AcceptableResponseFactory::new(); }
+pub static AcceptableResponseFactory_instance: crate::JavaStatic<Option<Rc<RefCell<AcceptableResponseFactory>>>> = crate::JavaStatic::new(|| AcceptableResponseFactory::new());
 
 impl AcceptableResponseFactory {
 

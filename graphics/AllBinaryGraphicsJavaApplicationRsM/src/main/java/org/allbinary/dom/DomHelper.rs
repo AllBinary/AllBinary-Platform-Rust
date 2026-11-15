@@ -44,7 +44,7 @@ pub struct DomHelper {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static DomHelper_instance: Option<Rc<RefCell<DomHelper>>> = DomHelper::new(); }
+pub static DomHelper_instance: crate::JavaStatic<Option<Rc<RefCell<DomHelper>>>> = crate::JavaStatic::new(|| DomHelper::new());
 
 impl DomHelper {
     

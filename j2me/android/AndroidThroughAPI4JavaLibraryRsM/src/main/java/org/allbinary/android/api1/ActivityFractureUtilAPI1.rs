@@ -33,7 +33,7 @@ pub struct ActivityFractureUtilAPI1 {
     pub base: ActivityFractureUtil,
 }
 
-thread_local! { pub static ActivityFractureUtilAPI1_instance: Option<Rc<RefCell<dyn ActivityFractureUtilAPI1Dyn>>> = ActivityFractureUtilAPI1::new().map(|reference| reference as Rc<RefCell<dyn ActivityFractureUtilAPI1Dyn>>); }
+pub static ActivityFractureUtilAPI1_instance: crate::JavaStatic<Option<Rc<RefCell<dyn ActivityFractureUtilAPI1Dyn>>>> = crate::JavaStatic::new(|| ActivityFractureUtilAPI1::new().map(|reference| reference as Rc<RefCell<dyn ActivityFractureUtilAPI1Dyn>>));
 
 impl ActivityFractureUtilAPI1 {
 

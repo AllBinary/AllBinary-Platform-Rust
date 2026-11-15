@@ -31,7 +31,7 @@ pub struct GDLazyResources {
     pub requiredResourcesBeforeLoadingArray: Vec<String>,
 }
 
-thread_local! { pub static GDLazyResources_instance: Option<Rc<RefCell<GDLazyResources>>> = GDLazyResources::new(); }
+pub static GDLazyResources_instance: crate::JavaStatic<Option<Rc<RefCell<GDLazyResources>>>> = crate::JavaStatic::new(|| GDLazyResources::new());
 
 impl GDLazyResources {
 

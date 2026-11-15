@@ -40,7 +40,7 @@ pub struct ResourceUtil {
 }
 
 pub static mut ResourceUtil_classLoader: std::cell::LazyCell<Option<Rc<RefCell<Box<dyn std::any::Any>>>>> = std::cell::LazyCell::new(|| { let java_field = jcall!(NullUtil::getInstance()).NULL_OBJECT.clone(); java_field }.clone());
-thread_local! { pub static ResourceUtil_instance: Option<Rc<RefCell<ResourceUtil>>> = ResourceUtil::new(); }
+pub static ResourceUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ResourceUtil>>>> = crate::JavaStatic::new(|| ResourceUtil::new());
 
 impl ResourceUtil {
 

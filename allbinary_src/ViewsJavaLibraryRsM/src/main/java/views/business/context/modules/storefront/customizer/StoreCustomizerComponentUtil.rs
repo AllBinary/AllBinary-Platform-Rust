@@ -39,7 +39,7 @@ pub struct StoreCustomizerComponentUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static StoreCustomizerComponentUtil_instance: Option<Rc<RefCell<StoreCustomizerComponentUtil>>> = StoreCustomizerComponentUtil::new(); }
+pub static StoreCustomizerComponentUtil_instance: crate::JavaStatic<Option<Rc<RefCell<StoreCustomizerComponentUtil>>>> = crate::JavaStatic::new(|| StoreCustomizerComponentUtil::new());
 
 impl StoreCustomizerComponentUtil {
 

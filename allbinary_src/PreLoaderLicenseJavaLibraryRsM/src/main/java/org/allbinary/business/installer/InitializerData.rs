@@ -70,7 +70,7 @@ pub struct InitializerData {
     pub STATICPAGESPORT: String,
 }
 
-thread_local! { pub static InitializerData_instance: Option<Rc<RefCell<InitializerData>>> = InitializerData::new(); }
+pub static InitializerData_instance: crate::JavaStatic<Option<Rc<RefCell<InitializerData>>>> = crate::JavaStatic::new(|| InitializerData::new());
 
 impl InitializerData {
 

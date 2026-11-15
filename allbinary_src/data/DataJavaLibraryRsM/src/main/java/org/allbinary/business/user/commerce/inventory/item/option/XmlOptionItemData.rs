@@ -28,8 +28,8 @@ macro_rules! jcall {
 pub struct XmlOptionItemData {
 }
 
-thread_local! { pub static XmlOptionItemData_XML_FILE_STATUS: String = String::from("XMLOPTIONITEM_XML_FILE_STATUS"); }
-thread_local! { pub static XmlOptionItemData_OPTION_XML_FILE: String = String::from("XMLOPTIONITEM_OPTION_XML_FILE"); }
+pub static XmlOptionItemData_XML_FILE_STATUS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("XMLOPTIONITEM_XML_FILE_STATUS"));
+pub static XmlOptionItemData_OPTION_XML_FILE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("XMLOPTIONITEM_OPTION_XML_FILE"));
 
 impl XmlOptionItemData {
 

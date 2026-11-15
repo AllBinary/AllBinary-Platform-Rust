@@ -55,8 +55,8 @@ pub struct ShippingMethodsFactory {
     pub shippingVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static ShippingMethodsFactory_SHIPPINGMETHODSFILEPATHSTRING: String = String::new(); }
-thread_local! { pub static ShippingMethodsFactory_SHIPPINGMETHODSFILENAME: String = String::from("shippingMethods.xml"); }
+pub static ShippingMethodsFactory_SHIPPINGMETHODSFILEPATHSTRING: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::new());
+pub static ShippingMethodsFactory_SHIPPINGMETHODSFILENAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("shippingMethods.xml"));
 
 impl ShippingMethodsFactory {
 

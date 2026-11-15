@@ -33,7 +33,7 @@ pub struct VelocityProperties {
     pub maxReverseVelocity: i32,
 }
 
-thread_local! { pub static VelocityProperties_NULL_VELOCITY_PROPERTIES: Option<Rc<RefCell<VelocityProperties>>> = VelocityProperties::new(0, 0); }
+pub static VelocityProperties_NULL_VELOCITY_PROPERTIES: crate::JavaStatic<Option<Rc<RefCell<VelocityProperties>>>> = crate::JavaStatic::new(|| VelocityProperties::new(0, 0));
 // impl VelocityInterface for VelocityProperties with the methods of the trait
 
 impl VelocityProperties {

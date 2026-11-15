@@ -33,7 +33,7 @@ pub struct ChangeColorProcessor {
     pub base: ModifierBaseProcessor,
 }
 
-thread_local! { pub static ChangeColorProcessor_instanceC: Option<Rc<RefCell<ChangeColorProcessor>>> = ChangeColorProcessor::new(); }
+pub static ChangeColorProcessor_instanceC: crate::JavaStatic<Option<Rc<RefCell<ChangeColorProcessor>>>> = crate::JavaStatic::new(|| ChangeColorProcessor::new());
 
 impl ChangeColorProcessor {
 

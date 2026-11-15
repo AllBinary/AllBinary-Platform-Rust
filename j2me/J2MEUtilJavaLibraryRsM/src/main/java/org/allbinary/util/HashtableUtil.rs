@@ -36,7 +36,7 @@ pub struct HashtableUtil {
     pub enumerationUtil: Option<Rc<RefCell<EnumerationUtil>>>,
 }
 
-thread_local! { pub static HashtableUtil_instance: Option<Rc<RefCell<HashtableUtil>>> = HashtableUtil::new(); }
+pub static HashtableUtil_instance: crate::JavaStatic<Option<Rc<RefCell<HashtableUtil>>>> = crate::JavaStatic::new(|| HashtableUtil::new());
 
 impl HashtableUtil {
 

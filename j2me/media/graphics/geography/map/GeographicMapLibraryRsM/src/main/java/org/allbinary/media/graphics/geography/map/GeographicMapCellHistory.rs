@@ -59,7 +59,7 @@ pub struct GeographicMapCellHistory {
     pub RED: i32,
 }
 
-thread_local! { pub static GeographicMapCellHistory_NULL_GEOGRPAHIC_MAP_HISTORY_ARRAY: Vec<Option<Rc<RefCell<GeographicMapCellHistory>>>> = vec![None; (0) as usize]; }
+pub static GeographicMapCellHistory_NULL_GEOGRPAHIC_MAP_HISTORY_ARRAY: crate::JavaStatic<Vec<Option<Rc<RefCell<GeographicMapCellHistory>>>>> = crate::JavaStatic::new(|| vec![None; (0) as usize]);
 impl UpdateMyFontInterface for GeographicMapCellHistory {
     fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }

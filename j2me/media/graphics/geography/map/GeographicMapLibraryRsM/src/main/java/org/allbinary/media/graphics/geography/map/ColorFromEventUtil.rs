@@ -35,7 +35,7 @@ pub struct ColorFromEventUtil {
     pub COLOR_INT: i32,
 }
 
-thread_local! { pub static ColorFromEventUtil_instance: Option<Rc<RefCell<ColorFromEventUtil>>> = ColorFromEventUtil::new(); }
+pub static ColorFromEventUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ColorFromEventUtil>>>> = crate::JavaStatic::new(|| ColorFromEventUtil::new());
 
 impl ColorFromEventUtil {
 

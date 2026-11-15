@@ -31,7 +31,7 @@ pub struct ItemColorFactory {
     pub TEXT_FIELD_NO_FOCUS: i32,
 }
 
-thread_local! { pub static ItemColorFactory_instance: Option<Rc<RefCell<ItemColorFactory>>> = ItemColorFactory::new(); }
+pub static ItemColorFactory_instance: crate::JavaStatic<Option<Rc<RefCell<ItemColorFactory>>>> = crate::JavaStatic::new(|| ItemColorFactory::new());
 
 impl ItemColorFactory {
 

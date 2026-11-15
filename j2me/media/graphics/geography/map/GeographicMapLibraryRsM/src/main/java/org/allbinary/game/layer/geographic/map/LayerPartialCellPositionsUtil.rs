@@ -34,7 +34,7 @@ macro_rules! jcall {
 pub struct LayerPartialCellPositionsUtil {
 }
 
-thread_local! { pub static LayerPartialCellPositionsUtil_instance: Option<Rc<RefCell<LayerPartialCellPositionsUtil>>> = LayerPartialCellPositionsUtil::new(); }
+pub static LayerPartialCellPositionsUtil_instance: crate::JavaStatic<Option<Rc<RefCell<LayerPartialCellPositionsUtil>>>> = crate::JavaStatic::new(|| LayerPartialCellPositionsUtil::new());
 
 impl LayerPartialCellPositionsUtil {
 

@@ -29,7 +29,7 @@ pub struct LicenseStrings {
     pub LOCKED: String,
 }
 
-thread_local! { pub static LicenseStrings_instance: Option<Rc<RefCell<LicenseStrings>>> = LicenseStrings::new(); }
+pub static LicenseStrings_instance: crate::JavaStatic<Option<Rc<RefCell<LicenseStrings>>>> = crate::JavaStatic::new(|| LicenseStrings::new());
 
 impl LicenseStrings {
 

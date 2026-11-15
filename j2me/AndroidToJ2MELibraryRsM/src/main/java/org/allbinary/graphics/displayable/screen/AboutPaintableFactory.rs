@@ -31,7 +31,7 @@ pub struct AboutPaintableFactory {
     pub paintableArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::graphics::paint::Paintable::PaintableDyn>>>>,
 }
 
-thread_local! { pub static AboutPaintableFactory_instance: Option<Rc<RefCell<AboutPaintableFactory>>> = AboutPaintableFactory::new(); }
+pub static AboutPaintableFactory_instance: crate::JavaStatic<Option<Rc<RefCell<AboutPaintableFactory>>>> = crate::JavaStatic::new(|| AboutPaintableFactory::new());
 
 impl AboutPaintableFactory {
 

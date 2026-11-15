@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct ThrustAIVisitorFactory {
 }
 
-thread_local! { pub static ThrustAIVisitorFactory_instance: Option<Rc<RefCell<ThrustAIVisitor>>> = ThrustAIVisitor::new(); }
+pub static ThrustAIVisitorFactory_instance: crate::JavaStatic<Option<Rc<RefCell<ThrustAIVisitor>>>> = crate::JavaStatic::new(|| ThrustAIVisitor::new());
 
 impl ThrustAIVisitorFactory {
 

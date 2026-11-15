@@ -35,7 +35,7 @@ pub struct GameTypeFactory {
     pub BOT: Option<Rc<RefCell<GameType>>>,
 }
 
-thread_local! { pub static GameTypeFactory_instance: Option<Rc<RefCell<GameTypeFactory>>> = GameTypeFactory::new(); }
+pub static GameTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<GameTypeFactory>>>> = crate::JavaStatic::new(|| GameTypeFactory::new());
 
 impl GameTypeFactory {
 

@@ -37,7 +37,7 @@ pub struct ImageThreadPool {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static ImageThreadPool_instance: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>> = ImageThreadPool::new(String::from("ImageLoader"), 1, ThreadPool_NORMAL_PRIORITY.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>); }
+pub static ImageThreadPool_instance: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>>> = crate::JavaStatic::new(|| ImageThreadPool::new(String::from("ImageLoader"), 1, ThreadPool_NORMAL_PRIORITY.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>));
 
 impl ImageThreadPool {
     

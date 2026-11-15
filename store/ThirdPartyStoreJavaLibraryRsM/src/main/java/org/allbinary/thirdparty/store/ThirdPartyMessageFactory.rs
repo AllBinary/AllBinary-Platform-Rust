@@ -31,7 +31,7 @@ pub struct ThirdPartyMessageFactory {
     pub LINKAGE_ERROR: String,
 }
 
-thread_local! { pub static ThirdPartyMessageFactory_instance: Option<Rc<RefCell<ThirdPartyMessageFactory>>> = ThirdPartyMessageFactory::new(); }
+pub static ThirdPartyMessageFactory_instance: crate::JavaStatic<Option<Rc<RefCell<ThirdPartyMessageFactory>>>> = crate::JavaStatic::new(|| ThirdPartyMessageFactory::new());
 
 impl ThirdPartyMessageFactory {
 

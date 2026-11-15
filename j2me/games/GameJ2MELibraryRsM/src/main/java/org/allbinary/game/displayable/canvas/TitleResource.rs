@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct TitleResource {
 }
 
-thread_local! { pub static TitleResource_RESOURCE_TITLE: String = String::from("/title_sprite_100_by_100.png"); }
+pub static TitleResource_RESOURCE_TITLE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("/title_sprite_100_by_100.png"));
 
 impl TitleResource {
 

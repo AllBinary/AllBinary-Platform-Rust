@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct ABSystemWrapper {
 }
 
-thread_local! { pub static ABSystemWrapper_instance: Option<Rc<RefCell<ABSystemWrapper>>> = ABSystemWrapper::new(); }
+pub static ABSystemWrapper_instance: crate::JavaStatic<Option<Rc<RefCell<ABSystemWrapper>>>> = crate::JavaStatic::new(|| ABSystemWrapper::new());
 
 impl ABSystemWrapper {
 

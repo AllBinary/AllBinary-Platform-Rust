@@ -39,7 +39,7 @@ pub struct PlayerQueue {
     pub max: i32,
 }
 
-thread_local! { pub static PlayerQueue_TOTAL: String = String::from("Sounds In Queue: "); }
+pub static PlayerQueue_TOTAL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Sounds In Queue: "));
 
 impl PlayerQueue {
     

@@ -36,7 +36,7 @@ pub struct ShaderManager {
     pub GL_FRAGMENT_SHADER: i32,
 }
 
-thread_local! { pub static ShaderManager_instance: Option<Rc<RefCell<dyn ShaderManagerDyn>>> = ShaderManager::new(-1, -1).map(|reference| reference as Rc<RefCell<dyn ShaderManagerDyn>>); }
+pub static ShaderManager_instance: crate::JavaStatic<Option<Rc<RefCell<dyn ShaderManagerDyn>>>> = crate::JavaStatic::new(|| ShaderManager::new(-1, -1).map(|reference| reference as Rc<RefCell<dyn ShaderManagerDyn>>));
 
 impl ShaderManager {
 

@@ -17,7 +17,7 @@ macro_rules! jcall {
 pub struct PolygonRasterizer {
 }
 
-thread_local! { pub static PolygonRasterizer_instance: Option<Rc<RefCell<PolygonRasterizer>>> = PolygonRasterizer::new(); }
+pub static PolygonRasterizer_instance: crate::JavaStatic<Option<Rc<RefCell<PolygonRasterizer>>>> = crate::JavaStatic::new(|| PolygonRasterizer::new());
 
 impl PolygonRasterizer {
 

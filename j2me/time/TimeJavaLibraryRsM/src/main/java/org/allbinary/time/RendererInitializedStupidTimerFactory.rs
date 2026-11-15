@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct RendererInitializedStupidTimerFactory {
 }
 
-thread_local! { pub static RendererInitializedStupidTimerFactory_instance: Option<Rc<RefCell<StupidTimer>>> = StupidTimer::new(); }
+pub static RendererInitializedStupidTimerFactory_instance: crate::JavaStatic<Option<Rc<RefCell<StupidTimer>>>> = crate::JavaStatic::new(|| StupidTimer::new());
 
 impl RendererInitializedStupidTimerFactory {
 

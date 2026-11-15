@@ -90,20 +90,20 @@ pub trait GL11Ext: GL {
     fn glWeightPointerOES_int_int_int_int(&mut self, size: i32, r#type: i32, stride: i32, offset: i32);
 }
 
-thread_local! { pub static GL11Ext_GL_MATRIX_INDEX_ARRAY_BUFFER_BINDING_OES: i32 = 35742; }
-thread_local! { pub static GL11Ext_GL_MATRIX_INDEX_ARRAY_OES: i32 = 34884; }
-thread_local! { pub static GL11Ext_GL_MATRIX_INDEX_ARRAY_POINTER_OES: i32 = 34889; }
-thread_local! { pub static GL11Ext_GL_MATRIX_INDEX_ARRAY_SIZE_OES: i32 = 34886; }
-thread_local! { pub static GL11Ext_GL_MATRIX_INDEX_ARRAY_STRIDE_OES: i32 = 34888; }
-thread_local! { pub static GL11Ext_GL_MATRIX_INDEX_ARRAY_TYPE_OES: i32 = 34887; }
-thread_local! { pub static GL11Ext_GL_MATRIX_PALETTE_OES: i32 = 34880; }
-thread_local! { pub static GL11Ext_GL_MAX_PALETTE_MATRICES_OES: i32 = 34882; }
-thread_local! { pub static GL11Ext_GL_MAX_VERTEX_UNITS_OES: i32 = 34468; }
-thread_local! { pub static GL11Ext_GL_TEXTURE_CROP_RECT_OES: i32 = 35741; }
-thread_local! { pub static GL11Ext_GL_WEIGHT_ARRAY_BUFFER_BINDING_OES: i32 = 34974; }
-thread_local! { pub static GL11Ext_GL_WEIGHT_ARRAY_OES: i32 = 34477; }
-thread_local! { pub static GL11Ext_GL_WEIGHT_ARRAY_POINTER_OES: i32 = 34476; }
-thread_local! { pub static GL11Ext_GL_WEIGHT_ARRAY_SIZE_OES: i32 = 34475; }
-thread_local! { pub static GL11Ext_GL_WEIGHT_ARRAY_STRIDE_OES: i32 = 34474; }
-thread_local! { pub static GL11Ext_GL_WEIGHT_ARRAY_TYPE_OES: i32 = 34473; }
+pub static GL11Ext_GL_MATRIX_INDEX_ARRAY_BUFFER_BINDING_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 35742);
+pub static GL11Ext_GL_MATRIX_INDEX_ARRAY_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 34884);
+pub static GL11Ext_GL_MATRIX_INDEX_ARRAY_POINTER_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 34889);
+pub static GL11Ext_GL_MATRIX_INDEX_ARRAY_SIZE_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 34886);
+pub static GL11Ext_GL_MATRIX_INDEX_ARRAY_STRIDE_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 34888);
+pub static GL11Ext_GL_MATRIX_INDEX_ARRAY_TYPE_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 34887);
+pub static GL11Ext_GL_MATRIX_PALETTE_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 34880);
+pub static GL11Ext_GL_MAX_PALETTE_MATRICES_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 34882);
+pub static GL11Ext_GL_MAX_VERTEX_UNITS_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 34468);
+pub static GL11Ext_GL_TEXTURE_CROP_RECT_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 35741);
+pub static GL11Ext_GL_WEIGHT_ARRAY_BUFFER_BINDING_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 34974);
+pub static GL11Ext_GL_WEIGHT_ARRAY_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 34477);
+pub static GL11Ext_GL_WEIGHT_ARRAY_POINTER_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 34476);
+pub static GL11Ext_GL_WEIGHT_ARRAY_SIZE_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 34475);
+pub static GL11Ext_GL_WEIGHT_ARRAY_STRIDE_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 34474);
+pub static GL11Ext_GL_WEIGHT_ARRAY_TYPE_OES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 34473);
 

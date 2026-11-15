@@ -46,8 +46,8 @@ pub struct TransformHttpRequestDocument {
     pub document: Option<Rc<RefCell<Document>>>,
 }
 
-thread_local! { pub static TransformHttpRequestDocument_language: String = String::from("en"); }
-thread_local! { pub static TransformHttpRequestDocument_local: String = String::from("US"); }
+pub static TransformHttpRequestDocument_language: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("en"));
+pub static TransformHttpRequestDocument_local: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("US"));
 impl TransformDocumentInterface for TransformHttpRequestDocument {
     fn getBaseNode(&mut self) -> Option<Rc<RefCell<Node>>> { Self::getBaseNode(self) }
     fn getDoc(&mut self) -> Option<Rc<RefCell<Document>>> { Self::getDoc(self) }

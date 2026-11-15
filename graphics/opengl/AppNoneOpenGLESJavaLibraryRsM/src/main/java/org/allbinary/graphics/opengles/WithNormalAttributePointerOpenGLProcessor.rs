@@ -32,7 +32,7 @@ pub struct WithNormalAttributePointerOpenGLProcessor {
     pub base: ObjectThreedOpenGLProcessor,
 }
 
-thread_local! { pub static WithNormalAttributePointerOpenGLProcessor_instance: Option<Rc<RefCell<WithNormalAttributePointerOpenGLProcessor>>> = WithNormalAttributePointerOpenGLProcessor::new(); }
+pub static WithNormalAttributePointerOpenGLProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<WithNormalAttributePointerOpenGLProcessor>>>> = crate::JavaStatic::new(|| WithNormalAttributePointerOpenGLProcessor::new());
 
 impl WithNormalAttributePointerOpenGLProcessor {
     

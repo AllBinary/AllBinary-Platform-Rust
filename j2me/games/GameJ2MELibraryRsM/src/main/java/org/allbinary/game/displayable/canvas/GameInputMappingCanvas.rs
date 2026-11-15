@@ -61,9 +61,9 @@ pub struct GameInputMappingCanvas {
     pub inputFactory: Option<Rc<RefCell<InputFactory>>>,
 }
 
-thread_local! { pub static GameInputMappingCanvas_NAME: String = String::from("GameInputMappingCanvas"); }
-thread_local! { pub static GameInputMappingCanvas_DISPLAY: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>> = Command::new4(String::from("Controls"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 2).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>); }
-thread_local! { pub static GameInputMappingCanvas_DEFAULT: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>> = Command::new4(String::from("Default"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 2).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>); }
+pub static GameInputMappingCanvas_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("GameInputMappingCanvas"));
+pub static GameInputMappingCanvas_DISPLAY: crate::JavaStatic<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>> = crate::JavaStatic::new(|| Command::new4(String::from("Controls"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 2).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>));
+pub static GameInputMappingCanvas_DEFAULT: crate::JavaStatic<Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>> = crate::JavaStatic::new(|| Command::new4(String::from("Default"), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(), crate::javax::microedition::lcdui::Command::Command_SCREEN.with(Clone::clone).clone(), 2).map(|reference| reference as Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>));
 impl InputMappingInterface for GameInputMappingCanvas {
     fn processInputMapping(&mut self, mut gameKey: Option<Rc<RefCell<GameKey>>>, mut input: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::Input::InputDyn>>>) { Self::processInputMapping(self, gameKey, input) }
 }

@@ -38,7 +38,7 @@ pub struct ImageCompleteUtil {
     pub allTimeDelayHelper: Option<Rc<RefCell<dyn crate::org::allbinary::time::TimeDelayHelper::TimeDelayHelperDyn>>>,
 }
 
-thread_local! { pub static ImageCompleteUtil_instance: Option<Rc<RefCell<dyn ImageCompleteUtilDyn>>> = ImageCompleteUtil::new().map(|reference| reference as Rc<RefCell<dyn ImageCompleteUtilDyn>>); }
+pub static ImageCompleteUtil_instance: crate::JavaStatic<Option<Rc<RefCell<dyn ImageCompleteUtilDyn>>>> = crate::JavaStatic::new(|| ImageCompleteUtil::new().map(|reference| reference as Rc<RefCell<dyn ImageCompleteUtilDyn>>));
 
 impl ImageCompleteUtil {
 

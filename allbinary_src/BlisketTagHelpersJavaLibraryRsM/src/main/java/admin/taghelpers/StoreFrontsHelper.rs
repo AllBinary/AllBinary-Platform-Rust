@@ -47,8 +47,8 @@ pub struct StoreFrontsHelper {
     pub commonPhoneStrings: Option<Rc<RefCell<CommonPhoneStrings>>>,
 }
 
-thread_local! { pub static StoreFrontsHelper_CLASS: String = String::from("class"); }
-thread_local! { pub static StoreFrontsHelper_TEXT: String = String::from("text"); }
+pub static StoreFrontsHelper_CLASS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("class"));
+pub static StoreFrontsHelper_TEXT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("text"));
 
 impl StoreFrontsHelper {
     

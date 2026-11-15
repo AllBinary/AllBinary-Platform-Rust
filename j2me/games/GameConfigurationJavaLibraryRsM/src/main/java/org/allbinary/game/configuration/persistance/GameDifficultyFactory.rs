@@ -29,7 +29,7 @@ pub struct GameDifficultyFactory {
     pub level: i32,
 }
 
-thread_local! { pub static GameDifficultyFactory_instance: Option<Rc<RefCell<GameDifficultyFactory>>> = GameDifficultyFactory::new(); }
+pub static GameDifficultyFactory_instance: crate::JavaStatic<Option<Rc<RefCell<GameDifficultyFactory>>>> = crate::JavaStatic::new(|| GameDifficultyFactory::new());
 
 impl GameDifficultyFactory {
 

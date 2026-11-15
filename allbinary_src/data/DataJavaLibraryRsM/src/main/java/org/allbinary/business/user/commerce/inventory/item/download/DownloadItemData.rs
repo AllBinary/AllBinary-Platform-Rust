@@ -28,25 +28,25 @@ macro_rules! jcall {
 pub struct DownloadItemData {
 }
 
-thread_local! { pub static DownloadItemData_NAME: String = String::from("DOWNLOADITEM_NAME"); }
-thread_local! { pub static DownloadItemData_ID: String = String::from("DOWNLOADITEM_ID"); }
-thread_local! { pub static DownloadItemData_SYSTEM: String = String::from("DOWNLOADITEM_SYSTEM"); }
-thread_local! { pub static DownloadItemData_PLATFORM: String = String::from("DOWNLOADITEM_PLATFORM"); }
-thread_local! { pub static DownloadItemData_SPECIAL_NAME: String = String::from("DOWNLOADITEM_SPECIAL_NAME"); }
-thread_local! { pub static DownloadItemData_VERSION: String = String::from("DOWNLOADITEM_VERSION"); }
-thread_local! { pub static DownloadItemData_CHANGES: String = String::from("DOWNLOADITEM_CHANGES"); }
-thread_local! { pub static DownloadItemData_LICENSE_FILE: String = String::from("DOWNLOADITEM_LICENSE_FILE"); }
-thread_local! { pub static DownloadItemData_FILE: String = String::from("DOWNLOADITEM_FILE"); }
-thread_local! { pub static DownloadItemData_EXTRA_FILES: String = String::from("DOWNLOADITEM_EXTRA_FILES"); }
-thread_local! { pub static DownloadItemData_SIZE: String = String::from("DOWNLOADITEM_SIZE"); }
-thread_local! { pub static DownloadItemData_VALID_TIME: String = String::from("DOWNLOADITEM_VALID_TIME"); }
-thread_local! { pub static DownloadItemData_VALID_TIME_YEARS: String = String::from("DOWNLOADITEM_VALID_TIME_YEAR"); }
-thread_local! { pub static DownloadItemData_VALID_TIME_MONTHS: String = String::from("DOWNLOADITEM_VALID_TIME_MONTH"); }
-thread_local! { pub static DownloadItemData_VALID_TIME_DAYS: String = String::from("DOWNLOADITEM_VALID_TIME_DAY"); }
-thread_local! { pub static DownloadItemData_VALID_TIME_HOURS: String = String::from("DOWNLOADITEM_VALID_TIME_HOUR"); }
-thread_local! { pub static DownloadItemData_VALID_TIME_MINUTES: String = String::from("DOWNLOADITEM_VALID_TIME_MINUTES"); }
-thread_local! { pub static DownloadItemData_VALID_TIME_SECONDS: String = String::from("DOWNLOADITEM_VALID_TIME_SECONDS"); }
-thread_local! { pub static DownloadItemData_RETRIES: String = String::from("DOWNLOADITEM_RETRIES"); }
+pub static DownloadItemData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_NAME"));
+pub static DownloadItemData_ID: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_ID"));
+pub static DownloadItemData_SYSTEM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_SYSTEM"));
+pub static DownloadItemData_PLATFORM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_PLATFORM"));
+pub static DownloadItemData_SPECIAL_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_SPECIAL_NAME"));
+pub static DownloadItemData_VERSION: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_VERSION"));
+pub static DownloadItemData_CHANGES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_CHANGES"));
+pub static DownloadItemData_LICENSE_FILE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_LICENSE_FILE"));
+pub static DownloadItemData_FILE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_FILE"));
+pub static DownloadItemData_EXTRA_FILES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_EXTRA_FILES"));
+pub static DownloadItemData_SIZE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_SIZE"));
+pub static DownloadItemData_VALID_TIME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_VALID_TIME"));
+pub static DownloadItemData_VALID_TIME_YEARS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_VALID_TIME_YEAR"));
+pub static DownloadItemData_VALID_TIME_MONTHS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_VALID_TIME_MONTH"));
+pub static DownloadItemData_VALID_TIME_DAYS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_VALID_TIME_DAY"));
+pub static DownloadItemData_VALID_TIME_HOURS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_VALID_TIME_HOUR"));
+pub static DownloadItemData_VALID_TIME_MINUTES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_VALID_TIME_MINUTES"));
+pub static DownloadItemData_VALID_TIME_SECONDS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_VALID_TIME_SECONDS"));
+pub static DownloadItemData_RETRIES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DOWNLOADITEM_RETRIES"));
 
 impl DownloadItemData {
 

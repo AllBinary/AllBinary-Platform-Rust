@@ -47,7 +47,7 @@ pub struct GameFeatureUtil {
     pub GAME_FEATURE_CHANGED: String,
 }
 
-thread_local! { pub static GameFeatureUtil_instance: Option<Rc<RefCell<GameFeatureUtil>>> = GameFeatureUtil::new(); }
+pub static GameFeatureUtil_instance: crate::JavaStatic<Option<Rc<RefCell<GameFeatureUtil>>>> = crate::JavaStatic::new(|| GameFeatureUtil::new());
 
 impl GameFeatureUtil {
 

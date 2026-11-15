@@ -32,7 +32,7 @@ pub struct ExplosionResources {
     pub THIRD_EXPLOSION_RESOURCE: String,
 }
 
-thread_local! { pub static ExplosionResources_instance: Option<Rc<RefCell<ExplosionResources>>> = ExplosionResources::new(); }
+pub static ExplosionResources_instance: crate::JavaStatic<Option<Rc<RefCell<ExplosionResources>>>> = crate::JavaStatic::new(|| ExplosionResources::new());
 
 impl ExplosionResources {
 

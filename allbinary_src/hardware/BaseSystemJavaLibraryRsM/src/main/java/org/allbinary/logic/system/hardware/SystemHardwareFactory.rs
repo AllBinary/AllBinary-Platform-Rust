@@ -38,7 +38,7 @@ pub struct SystemHardwareFactory {
     pub hardwareInterface: Option<Rc<RefCell<dyn HardwareInterface>>>,
 }
 
-thread_local! { pub static SystemHardwareFactory_instance: Option<Rc<RefCell<SystemHardwareFactory>>> = SystemHardwareFactory::new(); }
+pub static SystemHardwareFactory_instance: crate::JavaStatic<Option<Rc<RefCell<SystemHardwareFactory>>>> = crate::JavaStatic::new(|| SystemHardwareFactory::new());
 
 impl SystemHardwareFactory {
 

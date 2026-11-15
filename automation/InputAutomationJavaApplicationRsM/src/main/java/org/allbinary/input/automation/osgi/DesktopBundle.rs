@@ -35,7 +35,7 @@ pub struct DesktopBundle {
     pub bundle: Option<Rc<RefCell<dyn Bundle>>>,
 }
 
-thread_local! { pub static DesktopBundle_DESKTOP_SYMBOLIC_NAME: String = String::from("org.knopflerfish.bundle.desktop"); }
+pub static DesktopBundle_DESKTOP_SYMBOLIC_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("org.knopflerfish.bundle.desktop"));
 
 impl DesktopBundle {
 

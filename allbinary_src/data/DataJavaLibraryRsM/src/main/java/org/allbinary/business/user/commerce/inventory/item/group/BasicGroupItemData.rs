@@ -28,16 +28,16 @@ macro_rules! jcall {
 pub struct BasicGroupItemData {
 }
 
-thread_local! { pub static BasicGroupItemData_ITEM_ONE: String = String::from("BASICGROUPITEM_ONE"); }
-thread_local! { pub static BasicGroupItemData_ITEM_TWO: String = String::from("BASICGROUPITEM_TWO"); }
-thread_local! { pub static BasicGroupItemData_ITEM_THREE: String = String::from("BASICGROUPITEM_THREE"); }
-thread_local! { pub static BasicGroupItemData_ITEM_FOUR: String = String::from("BASICGROUPITEM_FOUR"); }
-thread_local! { pub static BasicGroupItemData_ITEM_FIVE: String = String::from("BASICGROUPITEM_FIVE"); }
-thread_local! { pub static BasicGroupItemData_ITEM_SIX: String = String::from("BASICGROUPITEM_SIX"); }
-thread_local! { pub static BasicGroupItemData_ITEM_SEVEN: String = String::from("BASICGROUPITEM_SEVEN"); }
-thread_local! { pub static BasicGroupItemData_ITEM_EIGHT: String = String::from("BASICGROUPITEM_EIGHT"); }
-thread_local! { pub static BasicGroupItemData_ITEM_NINE: String = String::from("BASICGROUPITEM_NINE"); }
-thread_local! { pub static BasicGroupItemData_ITEM_TEN: String = String::from("BASICGROUPITEM_TEN"); }
+pub static BasicGroupItemData_ITEM_ONE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICGROUPITEM_ONE"));
+pub static BasicGroupItemData_ITEM_TWO: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICGROUPITEM_TWO"));
+pub static BasicGroupItemData_ITEM_THREE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICGROUPITEM_THREE"));
+pub static BasicGroupItemData_ITEM_FOUR: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICGROUPITEM_FOUR"));
+pub static BasicGroupItemData_ITEM_FIVE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICGROUPITEM_FIVE"));
+pub static BasicGroupItemData_ITEM_SIX: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICGROUPITEM_SIX"));
+pub static BasicGroupItemData_ITEM_SEVEN: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICGROUPITEM_SEVEN"));
+pub static BasicGroupItemData_ITEM_EIGHT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICGROUPITEM_EIGHT"));
+pub static BasicGroupItemData_ITEM_NINE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICGROUPITEM_NINE"));
+pub static BasicGroupItemData_ITEM_TEN: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASICGROUPITEM_TEN"));
 
 impl BasicGroupItemData {
 

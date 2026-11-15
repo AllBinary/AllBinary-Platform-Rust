@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct DynamicObjectData {
 }
 
-thread_local! { pub static DynamicObjectData_NAME: String = String::from("DYNAMICCOMPONENT_NAME"); }
+pub static DynamicObjectData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DYNAMICCOMPONENT_NAME"));
 
 impl DynamicObjectData {
 

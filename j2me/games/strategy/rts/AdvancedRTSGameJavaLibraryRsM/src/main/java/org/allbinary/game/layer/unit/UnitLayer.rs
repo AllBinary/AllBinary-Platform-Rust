@@ -174,9 +174,9 @@ pub struct UnitLayer {
     pub CAPITAL_EVENT: Option<Rc<RefCell<CapitalEvent>>>,
 }
 
-thread_local! { pub static UnitLayer_partialPositionList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>> = BasicArrayListS::new(4).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>); }
-thread_local! { pub static UnitLayer_SENSOR_RANGE_MULTIPLIER: i32 = 6; }
-thread_local! { pub static UnitLayer_MOVE: String = String::from("Moving"); }
+pub static UnitLayer_partialPositionList: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = crate::JavaStatic::new(|| BasicArrayListS::new(4).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
+pub static UnitLayer_SENSOR_RANGE_MULTIPLIER: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 6);
+pub static UnitLayer_MOVE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Moving"));
 // impl BuildingEventListenerInterface for UnitLayer with the methods of the trait
 impl TrackingEventListenerInterface for UnitLayer {
     fn onMovement(&mut self, mut trackingEvent: Option<Rc<RefCell<TrackingEvent>>>) { Self::onMovement(self, trackingEvent) }

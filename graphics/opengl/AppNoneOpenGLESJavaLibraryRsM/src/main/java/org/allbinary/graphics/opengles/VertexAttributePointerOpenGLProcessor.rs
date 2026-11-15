@@ -32,7 +32,7 @@ pub struct VertexAttributePointerOpenGLProcessor {
     pub base: ObjectThreedOpenGLProcessor,
 }
 
-thread_local! { pub static VertexAttributePointerOpenGLProcessor_instance: Option<Rc<RefCell<VertexAttributePointerOpenGLProcessor>>> = VertexAttributePointerOpenGLProcessor::new(); }
+pub static VertexAttributePointerOpenGLProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<VertexAttributePointerOpenGLProcessor>>>> = crate::JavaStatic::new(|| VertexAttributePointerOpenGLProcessor::new());
 
 impl VertexAttributePointerOpenGLProcessor {
     

@@ -33,7 +33,7 @@ pub struct J2MEKeyFactory {
     pub gameKeyFactory: Option<Rc<RefCell<GameKeyFactory>>>,
 }
 
-thread_local! { pub static J2MEKeyFactory_instance: Option<Rc<RefCell<J2MEKeyFactory>>> = J2MEKeyFactory::new(); }
+pub static J2MEKeyFactory_instance: crate::JavaStatic<Option<Rc<RefCell<J2MEKeyFactory>>>> = crate::JavaStatic::new(|| J2MEKeyFactory::new());
 
 impl J2MEKeyFactory {
 

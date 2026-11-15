@@ -32,7 +32,7 @@ pub struct GameKey {
     pub base: Input,
 }
 
-thread_local! { pub static GameKey_NULL_GAME_KEY: Option<Rc<RefCell<GameKey>>> = GameKey::new(-1, { let java_field = jcall!(StringUtil::getInstance()).NULL_STRING.clone(); java_field }.clone()); }
+pub static GameKey_NULL_GAME_KEY: crate::JavaStatic<Option<Rc<RefCell<GameKey>>>> = crate::JavaStatic::new(|| GameKey::new(-1, { let java_field = jcall!(StringUtil::getInstance()).NULL_STRING.clone(); java_field }.clone()));
 
 impl GameKey {
     

@@ -30,7 +30,7 @@ pub struct TouchButtonUpgradeResource {
     pub base: TouchButtonResource,
 }
 
-thread_local! { pub static TouchButtonUpgradeResource_instance: Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButtonResource::TouchButtonResourceDyn>>> = TouchButtonUpgradeResource::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButtonResource::TouchButtonResourceDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButtonResource::TouchButtonResourceDyn>>); }
+pub static TouchButtonUpgradeResource_instance: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButtonResource::TouchButtonResourceDyn>>>> = crate::JavaStatic::new(|| TouchButtonUpgradeResource::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButtonResource::TouchButtonResourceDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::input::motion::button::TouchButtonResource::TouchButtonResourceDyn>>));
 
 impl TouchButtonUpgradeResource {
     

@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct GroupData {
 }
 
-thread_local! { pub static GroupData_NAME: String = String::from("GROUP_NAME"); }
+pub static GroupData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("GROUP_NAME"));
 
 impl GroupData {
 

@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct NullProgressActivity {
 }
 
-thread_local! { pub static NullProgressActivity_NULL_PROGRESS_ACTIVITY: Option<Rc<RefCell<NullProgressActivity>>> = NullProgressActivity::new(); }
+pub static NullProgressActivity_NULL_PROGRESS_ACTIVITY: crate::JavaStatic<Option<Rc<RefCell<NullProgressActivity>>>> = crate::JavaStatic::new(|| NullProgressActivity::new());
 impl ProgressActivityInterface for NullProgressActivity {
     fn runOnUiThread(&mut self, mut action: Option<Rc<RefCell<dyn Runnable>>>) { Self::runOnUiThread(self, action) }
     fn onDismissTitleProgressBar(&mut self) { Self::onDismissTitleProgressBar(self) }

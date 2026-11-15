@@ -39,7 +39,7 @@ pub struct AnalogControllerConfigurationEventHandler {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static AnalogControllerConfigurationEventHandler_instance: Option<Rc<RefCell<AnalogControllerConfigurationEventHandler>>> = AnalogControllerConfigurationEventHandler::new(); }
+pub static AnalogControllerConfigurationEventHandler_instance: crate::JavaStatic<Option<Rc<RefCell<AnalogControllerConfigurationEventHandler>>>> = crate::JavaStatic::new(|| AnalogControllerConfigurationEventHandler::new());
 
 impl AnalogControllerConfigurationEventHandler {
     

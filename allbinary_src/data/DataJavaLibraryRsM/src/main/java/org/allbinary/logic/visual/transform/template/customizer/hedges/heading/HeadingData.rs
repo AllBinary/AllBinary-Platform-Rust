@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct HeadingData {
 }
 
-thread_local! { pub static HeadingData_NAME: String = String::from("HEADER_NAME"); }
+pub static HeadingData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("HEADER_NAME"));
 
 impl HeadingData {
 

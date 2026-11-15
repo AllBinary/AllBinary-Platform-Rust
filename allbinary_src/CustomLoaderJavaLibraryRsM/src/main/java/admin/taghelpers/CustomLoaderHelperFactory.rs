@@ -34,8 +34,8 @@ macro_rules! jcall {
 pub struct CustomLoaderHelperFactory {
 }
 
-thread_local! { pub static CustomLoaderHelperFactory_CLASSNAME: String = String::from("admin.taghelpers.CustomLoaderHelper"); }
-thread_local! { pub static CustomLoaderHelperFactory_FACTORYNAME: String = String::from("CustomLoaderHelperFactory"); }
+pub static CustomLoaderHelperFactory_CLASSNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("admin.taghelpers.CustomLoaderHelper"));
+pub static CustomLoaderHelperFactory_FACTORYNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("CustomLoaderHelperFactory"));
 impl TagHelperFactoryInterface for CustomLoaderHelperFactory {
     fn getInstance(&mut self, mut hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<Box<dyn std::any::Any>>>> { Self::getInstance2(self, hashMap, pageContext) }
 }

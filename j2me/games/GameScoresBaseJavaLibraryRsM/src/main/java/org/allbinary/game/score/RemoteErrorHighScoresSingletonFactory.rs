@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct RemoteErrorHighScoresSingletonFactory {
 }
 
-thread_local! { pub static RemoteErrorHighScoresSingletonFactory_SINGLETON: Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>> = HighScores::new({ let java_field = jcall!(CommonStrings::getInstance()).LOADING.clone(); java_field }.clone(), String::from("Remote High Scores Did Not Load"), { let java_field = jcall!(CommonStrings::getInstance()).PERIODS.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>); }
+pub static RemoteErrorHighScoresSingletonFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>>> = crate::JavaStatic::new(|| HighScores::new({ let java_field = jcall!(CommonStrings::getInstance()).LOADING.clone(); java_field }.clone(), String::from("Remote High Scores Did Not Load"), { let java_field = jcall!(CommonStrings::getInstance()).PERIODS.clone(); java_field }.clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>));
 
 impl RemoteErrorHighScoresSingletonFactory {
 

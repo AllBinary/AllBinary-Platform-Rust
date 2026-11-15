@@ -46,7 +46,7 @@ pub struct InitInfo {
     pub hasRead: bool,
 }
 
-thread_local! { pub static InitInfo_instance: Option<Rc<RefCell<InitInfo>>> = InitInfo::new(); }
+pub static InitInfo_instance: crate::JavaStatic<Option<Rc<RefCell<InitInfo>>>> = crate::JavaStatic::new(|| InitInfo::new());
 
 impl InitInfo {
 

@@ -49,7 +49,7 @@
 
         <module>../../games/licensing/PartnerJ2MEJavaLibraryRsM</module>
         <module>../../games/licensing/PartnerHTMLJavaLibraryRsM</module>
-        <module>../../games/licensing/PartnerAndroidJavaLibraryRsM</module>
+        <!--<module>../../games/licensing/PartnerAndroidJavaLibraryRsM</module>-->
         <module>../../games/licensing/NoGameLicensingJavaLibraryRsM</module>
         <module>../../games/licensing/GameLicensingOnlyDemoJavaLibraryRsM</module>
         <module>../../games/licensing/GameLicensingOnlyNormalJavaLibraryRsM</module>
@@ -61,7 +61,7 @@
         <module>../../games/GameScoresBaseJ2MELibraryRsM</module>
         -->
         <module>../../games/GameScoresLocalJavaLibraryRsM</module>
-        <module>../../games/GameScoresRemoteAndLocalJavaLibraryRsM</module>
+<!--        <module>../../games/GameScoresRemoteAndLocalJavaLibraryRsM</module>-->
 
         <module>../../../store/ThirdPartyStoreJavaLibraryRsM</module>
         <module>../../../store/NoThirdPartyStoreJavaLibraryRsM</module>
@@ -124,7 +124,7 @@
 
         <module>../../../allbinary_src/licensing/ApplicationConfigurationJavaLibraryRsM</module>
         <module>../../../allbinary_src/licensing/ApplicationConfigurationNoFSJavaLibraryRsM</module>
-        <module>../../input/AllBinaryMagneticFieldSensorJavaLibraryRsM</module>
+<!--        <module>../../input/AllBinaryMagneticFieldSensorJavaLibraryRsM</module>-->
         <module>../../android/VirtualKeyboardJavaLibraryRsM</module>
 
     </modules>

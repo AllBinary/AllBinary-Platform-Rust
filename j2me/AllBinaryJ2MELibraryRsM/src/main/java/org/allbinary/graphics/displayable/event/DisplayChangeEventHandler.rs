@@ -35,7 +35,7 @@ pub struct DisplayChangeEventHandler {
     pub base: BasicEventHandler,
 }
 
-thread_local! { pub static DisplayChangeEventHandler_SINGLETON: Option<Rc<RefCell<DisplayChangeEventHandler>>> = DisplayChangeEventHandler::new(); }
+pub static DisplayChangeEventHandler_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<DisplayChangeEventHandler>>>> = crate::JavaStatic::new(|| DisplayChangeEventHandler::new());
 
 impl DisplayChangeEventHandler {
     

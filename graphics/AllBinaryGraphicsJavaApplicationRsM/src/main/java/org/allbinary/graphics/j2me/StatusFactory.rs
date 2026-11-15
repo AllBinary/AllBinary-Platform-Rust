@@ -32,7 +32,7 @@ pub struct StatusFactory {
     pub STATUS_LABEL: String,
 }
 
-thread_local! { pub static StatusFactory_instance: Option<Rc<RefCell<StatusFactory>>> = StatusFactory::new(); }
+pub static StatusFactory_instance: crate::JavaStatic<Option<Rc<RefCell<StatusFactory>>>> = crate::JavaStatic::new(|| StatusFactory::new());
 
 impl StatusFactory {
 

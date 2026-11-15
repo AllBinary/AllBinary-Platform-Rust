@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct NullPlayerGameInputComposite {
 }
 
-thread_local! { pub static NullPlayerGameInputComposite_NULL_PLAYER_GAME_INPUT_COMPOSITE: Option<Rc<RefCell<NullPlayerGameInputComposite>>> = NullPlayerGameInputComposite::new(); }
+pub static NullPlayerGameInputComposite_NULL_PLAYER_GAME_INPUT_COMPOSITE: crate::JavaStatic<Option<Rc<RefCell<NullPlayerGameInputComposite>>>> = crate::JavaStatic::new(|| NullPlayerGameInputComposite::new());
 impl PlayerGameInputCompositeInterface for NullPlayerGameInputComposite {
     fn getPlayerGameInput(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::input::PlayerGameInput::PlayerGameInputDyn>>> { Self::getPlayerGameInput(self) }
 }

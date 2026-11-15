@@ -34,7 +34,7 @@ pub struct IntermissionFactory {
     pub SHOW_HIGH_SCORE_LEVEL_INTERMISSION_GAME_STATE: Option<Rc<RefCell<GameState>>>,
 }
 
-thread_local! { pub static IntermissionFactory_instance: Option<Rc<RefCell<IntermissionFactory>>> = IntermissionFactory::new(); }
+pub static IntermissionFactory_instance: crate::JavaStatic<Option<Rc<RefCell<IntermissionFactory>>>> = crate::JavaStatic::new(|| IntermissionFactory::new());
 
 impl IntermissionFactory {
 

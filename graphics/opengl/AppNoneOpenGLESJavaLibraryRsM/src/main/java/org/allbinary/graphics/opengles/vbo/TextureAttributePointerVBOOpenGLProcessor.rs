@@ -32,7 +32,7 @@ pub struct TextureAttributePointerVBOOpenGLProcessor {
     pub base: ObjectThreedOpenGLProcessor,
 }
 
-thread_local! { pub static TextureAttributePointerVBOOpenGLProcessor_instance: Option<Rc<RefCell<TextureAttributePointerVBOOpenGLProcessor>>> = TextureAttributePointerVBOOpenGLProcessor::new(); }
+pub static TextureAttributePointerVBOOpenGLProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<TextureAttributePointerVBOOpenGLProcessor>>>> = crate::JavaStatic::new(|| TextureAttributePointerVBOOpenGLProcessor::new());
 
 impl TextureAttributePointerVBOOpenGLProcessor {
     

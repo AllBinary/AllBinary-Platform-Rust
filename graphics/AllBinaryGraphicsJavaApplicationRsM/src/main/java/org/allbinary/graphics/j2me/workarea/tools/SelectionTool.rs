@@ -50,7 +50,7 @@ pub struct SelectionTool {
     pub endPoint: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>,
 }
 
-thread_local! { pub static SelectionTool_NAME: String = String::from("Selection Tool"); }
+pub static SelectionTool_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Selection Tool"));
 impl GraphicItemInterface for SelectionTool {
     fn getName(&mut self) -> String { Self::getName(self) }
     fn setColor(&mut self, mut color: Option<Rc<RefCell<Color>>>) { Self::setColor(self, color) }

@@ -18,7 +18,7 @@ pub struct OpenGLImageUtil {
     pub base: OpenGLImageUtilBase,
 }
 
-thread_local! { pub static OpenGLImageUtil_instance: Option<Rc<RefCell<OpenGLImageUtil>>> = OpenGLImageUtil::new(); }
+pub static OpenGLImageUtil_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLImageUtil>>>> = crate::JavaStatic::new(|| OpenGLImageUtil::new());
 
 impl OpenGLImageUtil {
 

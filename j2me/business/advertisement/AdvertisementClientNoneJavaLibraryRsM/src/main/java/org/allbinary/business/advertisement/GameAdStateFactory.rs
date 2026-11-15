@@ -24,7 +24,7 @@ pub struct GameAdStateFactory {
     pub gameAdState: Option<Rc<RefCell<GameAdState>>>,
 }
 
-thread_local! { pub static GameAdStateFactory_instance: Option<Rc<RefCell<GameAdStateFactory>>> = GameAdStateFactory::new(); }
+pub static GameAdStateFactory_instance: crate::JavaStatic<Option<Rc<RefCell<GameAdStateFactory>>>> = crate::JavaStatic::new(|| GameAdStateFactory::new());
 impl GameAdStateFactoryInterface for GameAdStateFactory {
     fn getInstanceForApp(&mut self, mut softwareInformation: Option<Rc<RefCell<SoftwareInformation>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::business::advertisement::GameAdStateBase::GameAdStateBaseDyn>>> { Self::getInstanceForApp(self, softwareInformation) }
 }

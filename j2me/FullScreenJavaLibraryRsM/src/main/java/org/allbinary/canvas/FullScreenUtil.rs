@@ -34,7 +34,7 @@ macro_rules! jcall {
 pub struct FullScreenUtil {
 }
 
-thread_local! { pub static FullScreenUtil_instance: Option<Rc<RefCell<FullScreenUtil>>> = FullScreenUtil::new(); }
+pub static FullScreenUtil_instance: crate::JavaStatic<Option<Rc<RefCell<FullScreenUtil>>>> = crate::JavaStatic::new(|| FullScreenUtil::new());
 
 impl FullScreenUtil {
 

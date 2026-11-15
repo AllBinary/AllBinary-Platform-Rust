@@ -46,7 +46,7 @@ pub struct GenericBodyCustomizerView {
     pub body: Option<Rc<RefCell<GenericBodyValidation>>>,
 }
 
-thread_local! { pub static GenericBodyCustomizerView_NAME: String = String::from("None"); }
+pub static GenericBodyCustomizerView_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("None"));
 impl DomNodeInterface for GenericBodyCustomizerView {
     fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { Self::toXmlNode(self, document) }
 }

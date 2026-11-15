@@ -31,7 +31,7 @@ pub struct NullOutputStream {
     pub base: OutputStream,
 }
 
-thread_local! { pub static NullOutputStream_NULL_OUTPUT_STREAM: Option<Rc<RefCell<NullOutputStream>>> = NullOutputStream::new(); }
+pub static NullOutputStream_NULL_OUTPUT_STREAM: crate::JavaStatic<Option<Rc<RefCell<NullOutputStream>>>> = crate::JavaStatic::new(|| NullOutputStream::new());
 impl crate::java::io::Closeable::Closeable for NullOutputStream {
     fn close(&mut self) { Self::close(self) }
 }

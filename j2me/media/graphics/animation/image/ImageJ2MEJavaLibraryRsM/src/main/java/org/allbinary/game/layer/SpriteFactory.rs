@@ -33,7 +33,7 @@ pub struct SpriteFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static SpriteFactory_instance: Option<Rc<RefCell<SpriteFactory>>> = SpriteFactory::new(); }
+pub static SpriteFactory_instance: crate::JavaStatic<Option<Rc<RefCell<SpriteFactory>>>> = crate::JavaStatic::new(|| SpriteFactory::new());
 impl SpriteFactoryInterface for SpriteFactory {
     fn createSprite(&mut self, mut image: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Image::ImageDyn>>>, mut frameWidth: i32, mut frameHeight: i32) -> Option<Rc<RefCell<Sprite>>> { Self::createSprite(self, image, frameWidth, frameHeight) }
 }

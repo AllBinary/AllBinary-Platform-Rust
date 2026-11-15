@@ -31,7 +31,7 @@ pub struct HtmlMetaData {
     pub VALUE: String,
 }
 
-thread_local! { pub static HtmlMetaData_instance: Option<Rc<RefCell<HtmlMetaData>>> = HtmlMetaData::new(); }
+pub static HtmlMetaData_instance: crate::JavaStatic<Option<Rc<RefCell<HtmlMetaData>>>> = crate::JavaStatic::new(|| HtmlMetaData::new());
 
 impl HtmlMetaData {
 

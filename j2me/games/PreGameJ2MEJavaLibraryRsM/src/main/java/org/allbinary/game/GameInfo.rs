@@ -49,8 +49,8 @@ pub struct GameInfo {
     pub NEXT_GAME_LEVEL: String,
 }
 
-thread_local! { pub static GameInfo_NONE: Option<Rc<RefCell<GameInfo>>> = GameInfo::new({ let java_field = jcall!(GameTypeFactory::GameTypeFactory::getInstance()).NONE.clone(); java_field }.clone(), unsafe { GameMode_NONE.clone() }.clone(), { let java_field = jcall!(PlayerTypesFactory::PlayerTypesFactory::getInstance()).PLAYER_TYPE_ONE.clone(); java_field }.clone(), -1, -1); }
-thread_local! { pub static GameInfo_LEVEL_NAME: String = String::from("LEVEL"); }
+pub static GameInfo_NONE: crate::JavaStatic<Option<Rc<RefCell<GameInfo>>>> = crate::JavaStatic::new(|| GameInfo::new({ let java_field = jcall!(GameTypeFactory::GameTypeFactory::getInstance()).NONE.clone(); java_field }.clone(), unsafe { GameMode_NONE.clone() }.clone(), { let java_field = jcall!(PlayerTypesFactory::PlayerTypesFactory::getInstance()).PLAYER_TYPE_ONE.clone(); java_field }.clone(), -1, -1));
+pub static GameInfo_LEVEL_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("LEVEL"));
 
 impl GameInfo {
     

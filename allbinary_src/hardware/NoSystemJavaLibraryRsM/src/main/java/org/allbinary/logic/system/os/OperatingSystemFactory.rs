@@ -35,7 +35,7 @@ pub struct OperatingSystemFactory {
     pub genericOperatingSystem: Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>>,
 }
 
-thread_local! { pub static OperatingSystemFactory_instance: Option<Rc<RefCell<OperatingSystemFactory>>> = OperatingSystemFactory::new(); }
+pub static OperatingSystemFactory_instance: crate::JavaStatic<Option<Rc<RefCell<OperatingSystemFactory>>>> = crate::JavaStatic::new(|| OperatingSystemFactory::new());
 
 impl OperatingSystemFactory {
 

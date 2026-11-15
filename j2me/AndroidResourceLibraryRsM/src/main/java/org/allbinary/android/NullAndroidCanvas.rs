@@ -30,8 +30,8 @@ macro_rules! jcall {
 pub struct NullAndroidCanvas {
 }
 
-thread_local! { pub static NullAndroidCanvas_NULL_CANVAS: Option<Rc<RefCell<Canvas>>> = Canvas::new(); }
-thread_local! { pub static NullAndroidCanvas_NULL_MEDIA_PLAYER: Option<Rc<RefCell<MediaPlayer>>> = MediaPlayer::new(); }
+pub static NullAndroidCanvas_NULL_CANVAS: crate::JavaStatic<Option<Rc<RefCell<Canvas>>>> = crate::JavaStatic::new(|| Canvas::new());
+pub static NullAndroidCanvas_NULL_MEDIA_PLAYER: crate::JavaStatic<Option<Rc<RefCell<MediaPlayer>>>> = crate::JavaStatic::new(|| MediaPlayer::new());
 
 impl NullAndroidCanvas {
 

@@ -50,7 +50,7 @@ pub struct InputRobotFactory {
     pub helpSetListenerInterface: Option<Rc<RefCell<HelpSetListener>>>,
 }
 
-thread_local! { pub static InputRobotFactory_inputRobotFactory: Option<Rc<RefCell<InputRobotFactory>>> = InputRobotFactory::new(); }
+pub static InputRobotFactory_inputRobotFactory: crate::JavaStatic<Option<Rc<RefCell<InputRobotFactory>>>> = crate::JavaStatic::new(|| InputRobotFactory::new());
 
 impl InputRobotFactory {
 

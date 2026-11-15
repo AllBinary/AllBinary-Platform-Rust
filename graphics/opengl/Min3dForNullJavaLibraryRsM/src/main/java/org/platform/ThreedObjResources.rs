@@ -31,7 +31,7 @@ pub struct ThreedObjResources {
     pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
 }
 
-thread_local! { pub static ThreedObjResources_instance: Option<Rc<RefCell<ThreedObjResources>>> = ThreedObjResources::new(); }
+pub static ThreedObjResources_instance: crate::JavaStatic<Option<Rc<RefCell<ThreedObjResources>>>> = crate::JavaStatic::new(|| ThreedObjResources::new());
 
 impl ThreedObjResources {
 

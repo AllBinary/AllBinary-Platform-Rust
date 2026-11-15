@@ -20,7 +20,7 @@ pub struct FontDebugBase {
     pub SET_FONT: String,
 }
 
-thread_local! { pub static FontDebugBase_instanceBase: Option<Rc<RefCell<dyn FontDebugBaseDyn>>> = FontDebugBase::new().map(|reference| reference as Rc<RefCell<dyn FontDebugBaseDyn>>); }
+pub static FontDebugBase_instanceBase: crate::JavaStatic<Option<Rc<RefCell<dyn FontDebugBaseDyn>>>> = crate::JavaStatic::new(|| FontDebugBase::new().map(|reference| reference as Rc<RefCell<dyn FontDebugBaseDyn>>));
 
 impl FontDebugBase {
 

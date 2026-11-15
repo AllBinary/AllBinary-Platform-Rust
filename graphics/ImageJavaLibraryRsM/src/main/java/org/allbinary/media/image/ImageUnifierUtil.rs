@@ -34,7 +34,7 @@ pub struct ImageUnifierUtil {
     pub imageUtil: Option<Rc<RefCell<ImageUtil>>>,
 }
 
-thread_local! { pub static ImageUnifierUtil_instance: Option<Rc<RefCell<ImageUnifierUtil>>> = ImageUnifierUtil::new(); }
+pub static ImageUnifierUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImageUnifierUtil>>>> = crate::JavaStatic::new(|| ImageUnifierUtil::new());
 
 impl ImageUnifierUtil {
 

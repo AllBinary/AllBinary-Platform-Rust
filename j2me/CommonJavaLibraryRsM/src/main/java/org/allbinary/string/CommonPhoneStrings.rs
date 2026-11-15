@@ -46,7 +46,7 @@ pub struct CommonPhoneStrings {
     pub FIRE: String,
 }
 
-thread_local! { pub static CommonPhoneStrings_instance: Option<Rc<RefCell<CommonPhoneStrings>>> = CommonPhoneStrings::new(); }
+pub static CommonPhoneStrings_instance: crate::JavaStatic<Option<Rc<RefCell<CommonPhoneStrings>>>> = crate::JavaStatic::new(|| CommonPhoneStrings::new());
 
 impl CommonPhoneStrings {
 

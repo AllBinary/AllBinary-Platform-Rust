@@ -35,7 +35,7 @@ pub struct ValidationOnlyTempUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static ValidationOnlyTempUtil_instance: Option<Rc<RefCell<ValidationOnlyTempUtil>>> = ValidationOnlyTempUtil::new(); }
+pub static ValidationOnlyTempUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ValidationOnlyTempUtil>>>> = crate::JavaStatic::new(|| ValidationOnlyTempUtil::new());
 
 impl ValidationOnlyTempUtil {
 

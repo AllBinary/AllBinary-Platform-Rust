@@ -39,7 +39,7 @@ pub struct KeySpecFactory {
     pub BLOWFISH: String,
 }
 
-thread_local! { pub static KeySpecFactory_instance: Option<Rc<RefCell<KeySpecFactory>>> = KeySpecFactory::new(); }
+pub static KeySpecFactory_instance: crate::JavaStatic<Option<Rc<RefCell<KeySpecFactory>>>> = crate::JavaStatic::new(|| KeySpecFactory::new());
 
 impl KeySpecFactory {
 

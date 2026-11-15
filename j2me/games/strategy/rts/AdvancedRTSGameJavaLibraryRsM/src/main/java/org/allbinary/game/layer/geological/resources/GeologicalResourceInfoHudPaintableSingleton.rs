@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct GeologicalResourceInfoHudPaintableSingleton {
 }
 
-thread_local! { pub static GeologicalResourceInfoHudPaintableSingleton_instance: Option<Rc<RefCell<GeologicalResourceInfoHudPaintable>>> = GeologicalResourceInfoHudPaintable::new(); }
+pub static GeologicalResourceInfoHudPaintableSingleton_instance: crate::JavaStatic<Option<Rc<RefCell<GeologicalResourceInfoHudPaintable>>>> = crate::JavaStatic::new(|| GeologicalResourceInfoHudPaintable::new());
 
 impl GeologicalResourceInfoHudPaintableSingleton {
 

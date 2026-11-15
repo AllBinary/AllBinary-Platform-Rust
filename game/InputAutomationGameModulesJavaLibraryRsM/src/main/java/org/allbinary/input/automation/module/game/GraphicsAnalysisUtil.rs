@@ -34,7 +34,7 @@ macro_rules! jcall {
 pub struct GraphicsAnalysisUtil {
 }
 
-thread_local! { pub static GraphicsAnalysisUtil_MAX: i32 = 122; }
+pub static GraphicsAnalysisUtil_MAX: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 122);
 
 impl GraphicsAnalysisUtil {
 

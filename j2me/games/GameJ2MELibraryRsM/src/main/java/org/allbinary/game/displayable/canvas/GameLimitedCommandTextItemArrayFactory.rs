@@ -31,7 +31,7 @@ pub struct GameLimitedCommandTextItemArrayFactory {
     pub commandTextItemArrayFactory: Option<Rc<RefCell<CommandTextItemArrayFactory>>>,
 }
 
-thread_local! { pub static GameLimitedCommandTextItemArrayFactory_instance: Option<Rc<RefCell<GameLimitedCommandTextItemArrayFactory>>> = GameLimitedCommandTextItemArrayFactory::new(); }
+pub static GameLimitedCommandTextItemArrayFactory_instance: crate::JavaStatic<Option<Rc<RefCell<GameLimitedCommandTextItemArrayFactory>>>> = crate::JavaStatic::new(|| GameLimitedCommandTextItemArrayFactory::new());
 
 impl GameLimitedCommandTextItemArrayFactory {
 

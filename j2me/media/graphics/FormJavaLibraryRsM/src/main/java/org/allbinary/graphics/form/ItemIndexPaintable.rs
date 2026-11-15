@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct ItemIndexPaintable {
 }
 
-thread_local! { pub static ItemIndexPaintable_instance: Option<Rc<RefCell<dyn ItemIndexPaintableDyn>>> = ItemIndexPaintable::new().map(|reference| reference as Rc<RefCell<dyn ItemIndexPaintableDyn>>); }
+pub static ItemIndexPaintable_instance: crate::JavaStatic<Option<Rc<RefCell<dyn ItemIndexPaintableDyn>>>> = crate::JavaStatic::new(|| ItemIndexPaintable::new().map(|reference| reference as Rc<RefCell<dyn ItemIndexPaintableDyn>>));
 
 impl ItemIndexPaintable {
 

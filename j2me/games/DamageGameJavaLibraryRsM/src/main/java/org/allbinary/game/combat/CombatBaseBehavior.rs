@@ -33,7 +33,7 @@ pub struct CombatBaseBehavior {
     pub readyForExplosion: bool,
 }
 
-thread_local! { pub static CombatBaseBehavior_NULL_COMBAT_BEHAVIOR: Option<Rc<RefCell<CombatBaseBehavior>>> = CombatBaseBehavior::new(DamageableBaseBehavior::getInstance(), DestroyableBaseBehavior::getInstance()); }
+pub static CombatBaseBehavior_NULL_COMBAT_BEHAVIOR: crate::JavaStatic<Option<Rc<RefCell<CombatBaseBehavior>>>> = crate::JavaStatic::new(|| CombatBaseBehavior::new(DamageableBaseBehavior::getInstance(), DestroyableBaseBehavior::getInstance()));
 
 impl CombatBaseBehavior {
 

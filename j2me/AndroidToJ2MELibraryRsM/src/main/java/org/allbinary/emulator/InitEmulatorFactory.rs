@@ -29,7 +29,7 @@ pub struct InitEmulatorFactory {
     pub initEmulator: bool,
 }
 
-thread_local! { pub static InitEmulatorFactory_instance: Option<Rc<RefCell<InitEmulatorFactory>>> = InitEmulatorFactory::new(); }
+pub static InitEmulatorFactory_instance: crate::JavaStatic<Option<Rc<RefCell<InitEmulatorFactory>>>> = crate::JavaStatic::new(|| InitEmulatorFactory::new());
 
 impl InitEmulatorFactory {
 

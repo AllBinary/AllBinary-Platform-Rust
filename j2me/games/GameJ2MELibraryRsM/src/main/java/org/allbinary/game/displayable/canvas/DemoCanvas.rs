@@ -180,9 +180,9 @@ pub struct DemoCanvas {
     pub baseGameStatistics: Option<Rc<RefCell<dyn crate::org::allbinary::canvas::BaseGameStatistics::BaseGameStatisticsDyn>>>,
 }
 
-thread_local! { pub static DemoCanvas_id: i32 = 0; }
-thread_local! { pub static DemoCanvas_BOT_GAME_STATS: String = String::from("Bot Game Statistics: "); }
-thread_local! { pub static DemoCanvas_TYPE: i32 = 3; }
+pub static DemoCanvas_id: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0);
+pub static DemoCanvas_BOT_GAME_STATS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Bot Game Statistics: "));
+pub static DemoCanvas_TYPE: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 3);
 // impl GameCanvasRunnableInterface for DemoCanvas with the methods of the trait
 impl MenuListener for DemoCanvas {
     fn open(&mut self) { Self::open(self) }

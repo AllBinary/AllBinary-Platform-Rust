@@ -148,7 +148,7 @@ pub struct CommonDataFileStrings {
     pub ENCRYPTED_EXTENSION: String,
 }
 
-thread_local! { pub static CommonDataFileStrings_instance: Option<Rc<RefCell<CommonDataFileStrings>>> = CommonDataFileStrings::new(); }
+pub static CommonDataFileStrings_instance: crate::JavaStatic<Option<Rc<RefCell<CommonDataFileStrings>>>> = crate::JavaStatic::new(|| CommonDataFileStrings::new());
 
 impl CommonDataFileStrings {
 

@@ -41,18 +41,18 @@ pub struct ProfileActionScriptItem {
     pub jPopupMenu: Option<Rc<RefCell<JPopupMenu>>>,
 }
 
-thread_local! { pub static ProfileActionScriptItem_EDIT: String = String::from("Edit"); }
-thread_local! { pub static ProfileActionScriptItem_DELETE: String = String::from("Delete"); }
-thread_local! { pub static ProfileActionScriptItem_NEW_CONDITION: String = String::from("New Condition"); }
-thread_local! { pub static ProfileActionScriptItem_NEW_INPUT: String = String::from("New Input"); }
-thread_local! { pub static ProfileActionScriptItem_NEW_OUTPUT: String = String::from("New Output"); }
-thread_local! { pub static ProfileActionScriptItem_NEW_COLOR_AT: String = String::from("Color At"); }
-thread_local! { pub static ProfileActionScriptItem_NEW_TIME_INTERVAL: String = String::from("Time Interval"); }
-thread_local! { pub static ProfileActionScriptItem_NEW_ALWAYS: String = String::from("Always On/Off"); }
-thread_local! { pub static ProfileActionScriptItem_NEW_KEY_INPUT: String = String::from("Key"); }
-thread_local! { pub static ProfileActionScriptItem_NEW_MOUSE_INPUT: String = String::from("Mouse"); }
-thread_local! { pub static ProfileActionScriptItem_NEW_JOYSTICK_INPUT: String = String::from("Joystick"); }
-thread_local! { pub static ProfileActionScriptItem_NEW_IMAGE_OUTPUT: String = String::from("Image"); }
+pub static ProfileActionScriptItem_EDIT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Edit"));
+pub static ProfileActionScriptItem_DELETE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Delete"));
+pub static ProfileActionScriptItem_NEW_CONDITION: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("New Condition"));
+pub static ProfileActionScriptItem_NEW_INPUT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("New Input"));
+pub static ProfileActionScriptItem_NEW_OUTPUT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("New Output"));
+pub static ProfileActionScriptItem_NEW_COLOR_AT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Color At"));
+pub static ProfileActionScriptItem_NEW_TIME_INTERVAL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Time Interval"));
+pub static ProfileActionScriptItem_NEW_ALWAYS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Always On/Off"));
+pub static ProfileActionScriptItem_NEW_KEY_INPUT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Key"));
+pub static ProfileActionScriptItem_NEW_MOUSE_INPUT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Mouse"));
+pub static ProfileActionScriptItem_NEW_JOYSTICK_INPUT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Joystick"));
+pub static ProfileActionScriptItem_NEW_IMAGE_OUTPUT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Image"));
 impl ProfileActionScriptItemInterface for ProfileActionScriptItem {
     fn process(&mut self, mut frame: Option<i64>) { Self::process(self, frame) }
 }

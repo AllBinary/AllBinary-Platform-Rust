@@ -32,7 +32,7 @@ pub struct StringValidationUtil {
     pub tsUtil: Option<Rc<RefCell<TsUtil>>>,
 }
 
-thread_local! { pub static StringValidationUtil_instance: Option<Rc<RefCell<StringValidationUtil>>> = StringValidationUtil::new(); }
+pub static StringValidationUtil_instance: crate::JavaStatic<Option<Rc<RefCell<StringValidationUtil>>>> = crate::JavaStatic::new(|| StringValidationUtil::new());
 
 impl StringValidationUtil {
 

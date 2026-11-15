@@ -44,7 +44,7 @@ pub struct RTSGameStrings {
     pub DRAGGABLE: String,
 }
 
-thread_local! { pub static RTSGameStrings_instance: Option<Rc<RefCell<RTSGameStrings>>> = RTSGameStrings::new(); }
+pub static RTSGameStrings_instance: crate::JavaStatic<Option<Rc<RefCell<RTSGameStrings>>>> = crate::JavaStatic::new(|| RTSGameStrings::new());
 
 impl RTSGameStrings {
 

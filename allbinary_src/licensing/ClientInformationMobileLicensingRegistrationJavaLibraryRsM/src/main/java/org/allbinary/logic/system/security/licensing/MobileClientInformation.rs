@@ -35,8 +35,8 @@ pub struct MobileClientInformation {
     pub base: AbeClientInformation,
 }
 
-thread_local! { pub static MobileClientInformation_DESC: String = String::from("Mobile"); }
-thread_local! { pub static MobileClientInformation_ANDROID_DESC: String = format!("{}{}", String::from("Android"), MobileClientInformation_DESC.with(Clone::clone)); }
+pub static MobileClientInformation_DESC: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Mobile"));
+pub static MobileClientInformation_ANDROID_DESC: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", String::from("Android"), MobileClientInformation_DESC.with(Clone::clone)));
 impl crate::org::allbinary::logic::system::security::licensing::AbeClientInformationInterface::AbeClientInformationInterface for MobileClientInformation {
     fn init(&mut self) { crate::org::allbinary::logic::system::security::licensing::AbeClientInformation::AbeClientInformation::init(crate::org::allbinary::logic::system::security::licensing::AbeClientInformation::AbeClientInformationDyn::as_AbeClientInformation_mut(self)) }
     fn getOperatingSystemInterface(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::logic::system::os::GenericOperatingSystem::GenericOperatingSystemDyn>>> { crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformation::getOperatingSystemInterface(crate::org::allbinary::logic::system::security::licensing::ClientInformation::ClientInformationDyn::as_ClientInformation_mut(self)) }

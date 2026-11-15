@@ -39,7 +39,7 @@ pub struct TransformGeneratorUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static TransformGeneratorUtil_instance: Option<Rc<RefCell<TransformGeneratorUtil>>> = TransformGeneratorUtil::new(); }
+pub static TransformGeneratorUtil_instance: crate::JavaStatic<Option<Rc<RefCell<TransformGeneratorUtil>>>> = crate::JavaStatic::new(|| TransformGeneratorUtil::new());
 
 impl TransformGeneratorUtil {
 

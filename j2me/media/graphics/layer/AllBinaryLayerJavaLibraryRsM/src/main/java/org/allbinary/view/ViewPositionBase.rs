@@ -30,7 +30,7 @@ pub struct ViewPositionBase {
     pub base: GPoint,
 }
 
-thread_local! { pub static ViewPositionBase_NULL_VIEW_POSITION: Option<Rc<RefCell<dyn ViewPositionBaseDyn>>> = ViewPositionBase::new(0, 0, 0).map(|reference| reference as Rc<RefCell<dyn ViewPositionBaseDyn>>); }
+pub static ViewPositionBase_NULL_VIEW_POSITION: crate::JavaStatic<Option<Rc<RefCell<dyn ViewPositionBaseDyn>>>> = crate::JavaStatic::new(|| ViewPositionBase::new(0, 0, 0).map(|reference| reference as Rc<RefCell<dyn ViewPositionBaseDyn>>));
 
 impl ViewPositionBase {
     

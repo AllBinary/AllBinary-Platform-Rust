@@ -45,7 +45,7 @@ pub struct AlwaysActionScriptCondition {
     pub isOn: bool,
 }
 
-thread_local! { pub static AlwaysActionScriptCondition_NAME: String = String::from("Always On/Off"); }
+pub static AlwaysActionScriptCondition_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Always On/Off"));
 impl AlwaysActionScriptConditionInterface for AlwaysActionScriptCondition {
     fn setIsOn(&mut self, mut isOn: bool) { Self::setIsOn(self, isOn) }
     fn isIsOn(&mut self) -> bool { Self::isIsOn(self) }

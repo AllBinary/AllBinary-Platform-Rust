@@ -30,7 +30,7 @@ pub struct MediaTypeData {
     pub NOT_RESIZABLE_MEDIA: String,
 }
 
-thread_local! { pub static MediaTypeData_instance: Option<Rc<RefCell<MediaTypeData>>> = MediaTypeData::new(); }
+pub static MediaTypeData_instance: crate::JavaStatic<Option<Rc<RefCell<MediaTypeData>>>> = crate::JavaStatic::new(|| MediaTypeData::new());
 
 impl MediaTypeData {
 

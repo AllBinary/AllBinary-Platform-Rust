@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct BaseSecretComposite {
 }
 
-thread_local! { pub static BaseSecretComposite_NULL_SECRET_COMPOSITE: Option<Rc<RefCell<dyn BaseSecretCompositeDyn>>> = BaseSecretComposite::new().map(|reference| reference as Rc<RefCell<dyn BaseSecretCompositeDyn>>); }
+pub static BaseSecretComposite_NULL_SECRET_COMPOSITE: crate::JavaStatic<Option<Rc<RefCell<dyn BaseSecretCompositeDyn>>>> = crate::JavaStatic::new(|| BaseSecretComposite::new().map(|reference| reference as Rc<RefCell<dyn BaseSecretCompositeDyn>>));
 
 impl BaseSecretComposite {
 

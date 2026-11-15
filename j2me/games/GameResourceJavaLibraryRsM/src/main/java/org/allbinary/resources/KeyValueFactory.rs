@@ -31,7 +31,7 @@ pub struct KeyValueFactory {
     pub MAP: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
 }
 
-thread_local! { pub static KeyValueFactory_instance: Option<Rc<RefCell<KeyValueFactory>>> = KeyValueFactory::new(); }
+pub static KeyValueFactory_instance: crate::JavaStatic<Option<Rc<RefCell<KeyValueFactory>>>> = crate::JavaStatic::new(|| KeyValueFactory::new());
 
 impl KeyValueFactory {
 

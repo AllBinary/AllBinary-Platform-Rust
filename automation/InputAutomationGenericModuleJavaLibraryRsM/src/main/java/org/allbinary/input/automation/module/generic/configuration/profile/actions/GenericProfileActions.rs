@@ -56,7 +56,7 @@ pub struct GenericProfileActions {
     pub hashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
 }
 
-thread_local! { pub static GenericProfileActions_DEFAULT_PROFILE_ACTIONS_PATH: String = format!("{}{}", crate::org::allbinary::input::automation::module::generic::configuration::profile::GenericProfiles::GenericProfiles_DEFAULT_PROFILES_PATH.with(Clone::clone), String::from("actions/")); }
+pub static GenericProfileActions_DEFAULT_PROFILE_ACTIONS_PATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", crate::org::allbinary::input::automation::module::generic::configuration::profile::GenericProfiles::GenericProfiles_DEFAULT_PROFILES_PATH.with(Clone::clone), String::from("actions/")));
 impl DomNodeInterface for GenericProfileActions {
     fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { Self::toXmlNode(self, document) }
 }

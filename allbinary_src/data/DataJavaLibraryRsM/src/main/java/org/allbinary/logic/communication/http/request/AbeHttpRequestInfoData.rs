@@ -34,7 +34,7 @@ pub struct AbeHttpRequestInfoData {
     pub REQUEST_FILE_PATH: String,
 }
 
-thread_local! { pub static AbeHttpRequestInfoData_instance: Option<Rc<RefCell<AbeHttpRequestInfoData>>> = AbeHttpRequestInfoData::new(); }
+pub static AbeHttpRequestInfoData_instance: crate::JavaStatic<Option<Rc<RefCell<AbeHttpRequestInfoData>>>> = crate::JavaStatic::new(|| AbeHttpRequestInfoData::new());
 
 impl AbeHttpRequestInfoData {
 

@@ -39,7 +39,7 @@ pub struct AbFileSystem {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static AbFileSystem_instance: Option<Rc<RefCell<AbFileSystem>>> = AbFileSystem::new(); }
+pub static AbFileSystem_instance: crate::JavaStatic<Option<Rc<RefCell<AbFileSystem>>>> = crate::JavaStatic::new(|| AbFileSystem::new());
 
 impl AbFileSystem {
 

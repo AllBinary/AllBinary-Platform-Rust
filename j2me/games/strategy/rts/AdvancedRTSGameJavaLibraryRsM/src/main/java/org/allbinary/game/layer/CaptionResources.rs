@@ -29,7 +29,7 @@ pub struct CaptionResources {
     pub RESOURCE: String,
 }
 
-thread_local! { pub static CaptionResources_instance: Option<Rc<RefCell<CaptionResources>>> = CaptionResources::new(); }
+pub static CaptionResources_instance: crate::JavaStatic<Option<Rc<RefCell<CaptionResources>>>> = crate::JavaStatic::new(|| CaptionResources::new());
 
 impl CaptionResources {
 

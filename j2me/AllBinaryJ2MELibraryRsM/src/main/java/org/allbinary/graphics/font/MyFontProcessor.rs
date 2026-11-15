@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct MyFontProcessor {
 }
 
-thread_local! { pub static MyFontProcessor_instance: Option<Rc<RefCell<dyn MyFontProcessorDyn>>> = MyFontProcessor::new().map(|reference| reference as Rc<RefCell<dyn MyFontProcessorDyn>>); }
+pub static MyFontProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<dyn MyFontProcessorDyn>>>> = crate::JavaStatic::new(|| MyFontProcessor::new().map(|reference| reference as Rc<RefCell<dyn MyFontProcessorDyn>>));
 
 impl MyFontProcessor {
 

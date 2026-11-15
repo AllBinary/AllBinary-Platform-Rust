@@ -37,8 +37,8 @@ pub struct NullInputRobot {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static NullInputRobot_LIBRARY_NAME: String = String::from("null"); }
-thread_local! { pub static NullInputRobot_NAME: String = String::from("NULL"); }
+pub static NullInputRobot_LIBRARY_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("null"));
+pub static NullInputRobot_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("NULL"));
 // impl InputRobotInterface for NullInputRobot with the methods of the trait
 
 impl NullInputRobot {

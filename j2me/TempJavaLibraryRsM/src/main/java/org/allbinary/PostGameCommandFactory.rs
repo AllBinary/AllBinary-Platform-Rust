@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct PostGameCommandFactory {
 }
 
-thread_local! { pub static PostGameCommandFactory_instance: Option<Rc<RefCell<PostGameCommandFactory>>> = PostGameCommandFactory::new(); }
+pub static PostGameCommandFactory_instance: crate::JavaStatic<Option<Rc<RefCell<PostGameCommandFactory>>>> = crate::JavaStatic::new(|| PostGameCommandFactory::new());
 
 impl PostGameCommandFactory {
 

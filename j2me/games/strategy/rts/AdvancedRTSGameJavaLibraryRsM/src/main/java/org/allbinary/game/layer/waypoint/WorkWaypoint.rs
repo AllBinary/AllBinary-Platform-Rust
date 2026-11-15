@@ -41,7 +41,7 @@ pub struct WorkWaypoint {
     pub base: Waypoint,
 }
 
-thread_local! { pub static WorkWaypoint_ID: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(25); }
+pub static WorkWaypoint_ID: crate::JavaStatic<Option<i32>> = crate::JavaStatic::new(|| jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(25));
 impl crate::org::allbinary::game::layer::building::event::BuildingEventListenerInterface::BuildingEventListenerInterface for WorkWaypoint {
     fn onBuildingEvent(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::layer::RTSLayerEvent::RTSLayerEvent>>>) { crate::org::allbinary::game::layer::waypoint::Waypoint::Waypoint::onBuildingEvent(crate::org::allbinary::game::layer::waypoint::Waypoint::WaypointDyn::as_Waypoint_mut(self), p1) }
 }

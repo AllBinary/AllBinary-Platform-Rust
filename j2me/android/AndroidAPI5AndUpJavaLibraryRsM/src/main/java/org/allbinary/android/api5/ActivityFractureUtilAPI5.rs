@@ -38,7 +38,7 @@ pub struct ActivityFractureUtilAPI5 {
     pub FEATURE_TOUCHSCREEN_MULTITOUCH_DISTINCT: String,
 }
 
-thread_local! { pub static ActivityFractureUtilAPI5_instance5: Option<Rc<RefCell<dyn ActivityFractureUtilAPI5Dyn>>> = ActivityFractureUtilAPI5::new().map(|reference| reference as Rc<RefCell<dyn ActivityFractureUtilAPI5Dyn>>); }
+pub static ActivityFractureUtilAPI5_instance5: crate::JavaStatic<Option<Rc<RefCell<dyn ActivityFractureUtilAPI5Dyn>>>> = crate::JavaStatic::new(|| ActivityFractureUtilAPI5::new().map(|reference| reference as Rc<RefCell<dyn ActivityFractureUtilAPI5Dyn>>));
 
 impl ActivityFractureUtilAPI5 {
 

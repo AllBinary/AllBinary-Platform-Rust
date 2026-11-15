@@ -41,7 +41,7 @@ pub struct AssignWaypointsUtil {
     pub WAYPOINT_EVENT: Option<Rc<RefCell<RTSLayerEvent>>>,
 }
 
-thread_local! { pub static AssignWaypointsUtil_instance: Option<Rc<RefCell<AssignWaypointsUtil>>> = AssignWaypointsUtil::new(); }
+pub static AssignWaypointsUtil_instance: crate::JavaStatic<Option<Rc<RefCell<AssignWaypointsUtil>>>> = crate::JavaStatic::new(|| AssignWaypointsUtil::new());
 
 impl AssignWaypointsUtil {
 

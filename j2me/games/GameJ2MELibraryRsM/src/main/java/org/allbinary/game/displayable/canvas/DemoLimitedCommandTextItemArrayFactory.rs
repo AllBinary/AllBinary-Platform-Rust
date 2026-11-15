@@ -31,7 +31,7 @@ pub struct DemoLimitedCommandTextItemArrayFactory {
     pub commandTextItemArrayFactory: Option<Rc<RefCell<CommandTextItemArrayFactory>>>,
 }
 
-thread_local! { pub static DemoLimitedCommandTextItemArrayFactory_instance: Option<Rc<RefCell<DemoLimitedCommandTextItemArrayFactory>>> = DemoLimitedCommandTextItemArrayFactory::new(); }
+pub static DemoLimitedCommandTextItemArrayFactory_instance: crate::JavaStatic<Option<Rc<RefCell<DemoLimitedCommandTextItemArrayFactory>>>> = crate::JavaStatic::new(|| DemoLimitedCommandTextItemArrayFactory::new());
 
 impl DemoLimitedCommandTextItemArrayFactory {
 

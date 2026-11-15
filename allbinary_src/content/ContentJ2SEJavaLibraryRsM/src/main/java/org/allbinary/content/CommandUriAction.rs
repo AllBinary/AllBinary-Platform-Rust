@@ -38,7 +38,7 @@ pub struct CommandUriAction {
     pub hashtable: Option<Rc<RefCell<ABHashtable<crate::JavaObject, crate::JavaObject>>>>,
 }
 
-thread_local! { pub static CommandUriAction_instance: Option<Rc<RefCell<CommandUriAction>>> = CommandUriAction::new(); }
+pub static CommandUriAction_instance: crate::JavaStatic<Option<Rc<RefCell<CommandUriAction>>>> = crate::JavaStatic::new(|| CommandUriAction::new());
 
 impl CommandUriAction {
 

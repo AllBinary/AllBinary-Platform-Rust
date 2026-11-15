@@ -43,7 +43,7 @@ pub struct PathFindingInfoFactory {
     pub pathFinder: Option<Rc<RefCell<PathFinder>>>,
 }
 
-thread_local! { pub static PathFindingInfoFactory_instance: Option<Rc<RefCell<PathFindingInfoFactory>>> = PathFindingInfoFactory::new(); }
+pub static PathFindingInfoFactory_instance: crate::JavaStatic<Option<Rc<RefCell<PathFindingInfoFactory>>>> = crate::JavaStatic::new(|| PathFindingInfoFactory::new());
 pub static mut PathFindingInfoFactory_MAX: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| 32768);
 
 impl PathFindingInfoFactory {

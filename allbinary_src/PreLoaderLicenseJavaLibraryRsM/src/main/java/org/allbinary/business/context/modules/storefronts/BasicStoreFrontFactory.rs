@@ -34,7 +34,7 @@ pub struct BasicStoreFrontFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static BasicStoreFrontFactory_instance: Option<Rc<RefCell<BasicStoreFrontFactory>>> = BasicStoreFrontFactory::new(); }
+pub static BasicStoreFrontFactory_instance: crate::JavaStatic<Option<Rc<RefCell<BasicStoreFrontFactory>>>> = crate::JavaStatic::new(|| BasicStoreFrontFactory::new());
 
 impl BasicStoreFrontFactory {
 

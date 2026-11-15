@@ -36,7 +36,7 @@ macro_rules! jcall {
 pub struct InventoryItemViewParentTagHelper {
 }
 
-thread_local! { pub static InventoryItemViewParentTagHelper_instance: Option<Rc<RefCell<InventoryItemViewParentTagHelper>>> = InventoryItemViewParentTagHelper::new(); }
+pub static InventoryItemViewParentTagHelper_instance: crate::JavaStatic<Option<Rc<RefCell<InventoryItemViewParentTagHelper>>>> = crate::JavaStatic::new(|| InventoryItemViewParentTagHelper::new());
 
 impl InventoryItemViewParentTagHelper {
 

@@ -37,7 +37,7 @@ macro_rules! jcall {
 pub struct LogConfigTypes {
 }
 
-thread_local! { pub static LogConfigTypes_JSP_ERROR_NO_FUNCTION: String = String::from("in JSP Not In Function"); }
+pub static LogConfigTypes_JSP_ERROR_NO_FUNCTION: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("in JSP Not In Function"));
 pub static mut LogConfigTypes_LOGGING: std::cell::LazyCell<Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>> = std::cell::LazyCell::new(|| BasicArrayListD::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>));
 
 impl LogConfigTypes {

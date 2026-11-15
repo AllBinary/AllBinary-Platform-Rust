@@ -37,7 +37,7 @@ pub struct CircularIndexUtil {
     pub size: i32,
 }
 
-thread_local! { pub static CircularIndexUtil_NULL_CIRCULAR_INDEX_UTIL: Option<Rc<RefCell<CircularIndexUtil>>> = CircularIndexUtil::new(0, 0); }
+pub static CircularIndexUtil_NULL_CIRCULAR_INDEX_UTIL: crate::JavaStatic<Option<Rc<RefCell<CircularIndexUtil>>>> = crate::JavaStatic::new(|| CircularIndexUtil::new(0, 0));
 
 impl CircularIndexUtil {
     

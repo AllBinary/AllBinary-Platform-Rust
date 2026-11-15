@@ -30,7 +30,7 @@ pub struct HudResources {
     pub RESOURCE_HEALTH: String,
 }
 
-thread_local! { pub static HudResources_instance: Option<Rc<RefCell<HudResources>>> = HudResources::new(); }
+pub static HudResources_instance: crate::JavaStatic<Option<Rc<RefCell<HudResources>>>> = crate::JavaStatic::new(|| HudResources::new());
 
 impl HudResources {
 

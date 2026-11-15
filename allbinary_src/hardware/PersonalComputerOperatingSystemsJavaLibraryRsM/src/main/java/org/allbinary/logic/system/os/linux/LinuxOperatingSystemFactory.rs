@@ -39,7 +39,7 @@ pub struct LinuxOperatingSystemFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static LinuxOperatingSystemFactory_instance: Option<Rc<RefCell<LinuxOperatingSystemFactory>>> = LinuxOperatingSystemFactory::new(); }
+pub static LinuxOperatingSystemFactory_instance: crate::JavaStatic<Option<Rc<RefCell<LinuxOperatingSystemFactory>>>> = crate::JavaStatic::new(|| LinuxOperatingSystemFactory::new());
 
 impl LinuxOperatingSystemFactory {
 

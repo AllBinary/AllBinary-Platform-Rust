@@ -32,7 +32,7 @@ pub struct OpenGLFeatureUtil {
     pub anyThreed: bool,
 }
 
-thread_local! { pub static OpenGLFeatureUtil_instance: Option<Rc<RefCell<OpenGLFeatureUtil>>> = OpenGLFeatureUtil::new(); }
+pub static OpenGLFeatureUtil_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLFeatureUtil>>>> = crate::JavaStatic::new(|| OpenGLFeatureUtil::new());
 
 impl OpenGLFeatureUtil {
 

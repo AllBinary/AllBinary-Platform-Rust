@@ -34,7 +34,7 @@ pub struct StoreFrontOrdersHistoryStatisticsData {
     pub TOTAL: String,
 }
 
-thread_local! { pub static StoreFrontOrdersHistoryStatisticsData_instance: Option<Rc<RefCell<StoreFrontOrdersHistoryStatisticsData>>> = StoreFrontOrdersHistoryStatisticsData::new(); }
+pub static StoreFrontOrdersHistoryStatisticsData_instance: crate::JavaStatic<Option<Rc<RefCell<StoreFrontOrdersHistoryStatisticsData>>>> = crate::JavaStatic::new(|| StoreFrontOrdersHistoryStatisticsData::new());
 
 impl StoreFrontOrdersHistoryStatisticsData {
 

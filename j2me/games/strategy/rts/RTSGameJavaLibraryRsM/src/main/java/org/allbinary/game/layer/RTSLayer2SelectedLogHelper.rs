@@ -36,7 +36,7 @@ pub struct RTSLayer2SelectedLogHelper {
     pub BUILDING_CHASE: String,
 }
 
-thread_local! { pub static RTSLayer2SelectedLogHelper_instanceC: Option<Rc<RefCell<RTSLayer2SelectedLogHelper>>> = RTSLayer2SelectedLogHelper::new(); }
+pub static RTSLayer2SelectedLogHelper_instanceC: crate::JavaStatic<Option<Rc<RefCell<RTSLayer2SelectedLogHelper>>>> = crate::JavaStatic::new(|| RTSLayer2SelectedLogHelper::new());
 
 impl RTSLayer2SelectedLogHelper {
 

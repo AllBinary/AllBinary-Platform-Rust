@@ -32,7 +32,7 @@ pub struct EarlySoundsFactory {
     pub base: BaseSoundsFactory,
 }
 
-thread_local! { pub static EarlySoundsFactory_instance: Option<Rc<RefCell<EarlySoundsFactory>>> = EarlySoundsFactory::new(); }
+pub static EarlySoundsFactory_instance: crate::JavaStatic<Option<Rc<RefCell<EarlySoundsFactory>>>> = crate::JavaStatic::new(|| EarlySoundsFactory::new());
 
 impl EarlySoundsFactory {
 

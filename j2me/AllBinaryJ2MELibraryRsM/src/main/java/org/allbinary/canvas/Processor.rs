@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct Processor {
 }
 
-thread_local! { pub static Processor_SINGLETON: Option<Rc<RefCell<dyn ProcessorDyn>>> = Processor::new().map(|reference| reference as Rc<RefCell<dyn ProcessorDyn>>); }
+pub static Processor_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<dyn ProcessorDyn>>>> = crate::JavaStatic::new(|| Processor::new().map(|reference| reference as Rc<RefCell<dyn ProcessorDyn>>));
 
 impl Processor {
 

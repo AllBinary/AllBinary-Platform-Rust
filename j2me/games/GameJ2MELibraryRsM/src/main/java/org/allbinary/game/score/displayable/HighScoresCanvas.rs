@@ -69,7 +69,7 @@ pub struct HighScoresCanvas {
     pub hasPainted: bool,
 }
 
-thread_local! { pub static HighScoresCanvas_NAME: String = String::from("HighScoresCanvas"); }
+pub static HighScoresCanvas_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("HighScoresCanvas"));
 impl HighScoresResultsListener for HighScoresCanvas {
     fn setHighScoresArray(&mut self, mut highScoresArray: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::game::score::HighScores::HighScoresDyn>>>>) { Self::setHighScoresArray(self, highScoresArray) }
 }

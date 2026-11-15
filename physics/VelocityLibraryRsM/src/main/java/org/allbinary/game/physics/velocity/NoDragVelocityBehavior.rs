@@ -30,7 +30,7 @@ pub struct NoDragVelocityBehavior {
     pub base: VelocityBehaviorBase,
 }
 
-thread_local! { pub static NoDragVelocityBehavior_instance: Option<Rc<RefCell<NoDragVelocityBehavior>>> = NoDragVelocityBehavior::new(); }
+pub static NoDragVelocityBehavior_instance: crate::JavaStatic<Option<Rc<RefCell<NoDragVelocityBehavior>>>> = crate::JavaStatic::new(|| NoDragVelocityBehavior::new());
 
 impl NoDragVelocityBehavior {
 

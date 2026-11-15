@@ -30,7 +30,7 @@ pub struct NullServiceReferenceFactory {
     pub NULL_SERVICE_REFERENCE: Option<Rc<RefCell<NullServiceReference>>>,
 }
 
-thread_local! { pub static NullServiceReferenceFactory_instance: Option<Rc<RefCell<NullServiceReferenceFactory>>> = NullServiceReferenceFactory::new(); }
+pub static NullServiceReferenceFactory_instance: crate::JavaStatic<Option<Rc<RefCell<NullServiceReferenceFactory>>>> = crate::JavaStatic::new(|| NullServiceReferenceFactory::new());
 
 impl NullServiceReferenceFactory {
 

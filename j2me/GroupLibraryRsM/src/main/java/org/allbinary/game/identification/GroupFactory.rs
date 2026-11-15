@@ -38,7 +38,7 @@ pub struct GroupFactory {
     pub index: i32,
 }
 
-thread_local! { pub static GroupFactory_instance: Option<Rc<RefCell<GroupFactory>>> = GroupFactory::new(); }
+pub static GroupFactory_instance: crate::JavaStatic<Option<Rc<RefCell<GroupFactory>>>> = crate::JavaStatic::new(|| GroupFactory::new());
 
 impl GroupFactory {
 

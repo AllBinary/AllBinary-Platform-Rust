@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct NoCompleteMotionGestureInputEventListener {
 }
 
-thread_local! { pub static NoCompleteMotionGestureInputEventListener_instance: Option<Rc<RefCell<NoCompleteMotionGestureInputEventListener>>> = NoCompleteMotionGestureInputEventListener::new(); }
+pub static NoCompleteMotionGestureInputEventListener_instance: crate::JavaStatic<Option<Rc<RefCell<NoCompleteMotionGestureInputEventListener>>>> = crate::JavaStatic::new(|| NoCompleteMotionGestureInputEventListener::new());
 impl CompleteMotionGestureInputEventListenerInterface for NoCompleteMotionGestureInputEventListener {
     fn onCompleteMotionGestureInputEvent(&mut self, mut completeMotionGestureInputEvent: Option<Rc<RefCell<dyn crate::org::allbinary::game::input::CompleteMotionGestureInputEvent::CompleteMotionGestureInputEventDyn>>>) { Self::onCompleteMotionGestureInputEvent(self, completeMotionGestureInputEvent) }
 }

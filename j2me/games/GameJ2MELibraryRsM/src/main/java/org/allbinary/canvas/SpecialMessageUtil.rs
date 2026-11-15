@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct SpecialMessageUtil {
 }
 
-thread_local! { pub static SpecialMessageUtil_SINGLETON: Option<Rc<RefCell<SpecialMessageUtil>>> = SpecialMessageUtil::new(); }
+pub static SpecialMessageUtil_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<SpecialMessageUtil>>>> = crate::JavaStatic::new(|| SpecialMessageUtil::new());
 
 impl SpecialMessageUtil {
 

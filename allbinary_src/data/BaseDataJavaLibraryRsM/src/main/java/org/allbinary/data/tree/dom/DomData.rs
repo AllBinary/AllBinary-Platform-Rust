@@ -28,11 +28,11 @@ macro_rules! jcall {
 pub struct DomData {
 }
 
-thread_local! { pub static DomData_ID: String = String::from("id"); }
-thread_local! { pub static DomData_CHILD: String = String::from("child"); }
-thread_local! { pub static DomData_NAME: String = String::from("name"); }
-thread_local! { pub static DomData_VALUE: String = String::from("value"); }
-thread_local! { pub static DomData_INDEX: String = String::from("index"); }
+pub static DomData_ID: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("id"));
+pub static DomData_CHILD: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("child"));
+pub static DomData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("name"));
+pub static DomData_VALUE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("value"));
+pub static DomData_INDEX: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("index"));
 
 impl DomData {
 

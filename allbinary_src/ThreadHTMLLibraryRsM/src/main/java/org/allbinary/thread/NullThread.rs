@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct NullThread {
 }
 
-thread_local! { pub static NullThread_NULL_THREAD: Option<Rc<RefCell<Thread>>> = Thread::new2(NullRunnable::NullRunnable::getInstance(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()); }
+pub static NullThread_NULL_THREAD: crate::JavaStatic<Option<Rc<RefCell<Thread>>>> = crate::JavaStatic::new(|| Thread::new2(NullRunnable::NullRunnable::getInstance(), { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()));
 
 impl NullThread {
 

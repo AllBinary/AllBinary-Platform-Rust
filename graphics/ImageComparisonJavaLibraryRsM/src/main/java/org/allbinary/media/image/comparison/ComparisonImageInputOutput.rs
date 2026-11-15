@@ -43,7 +43,7 @@ pub struct ComparisonImageInputOutput {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static ComparisonImageInputOutput_ROOT_NAME: String = String::from("_Changed_"); }
+pub static ComparisonImageInputOutput_ROOT_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("_Changed_"));
 impl ImageIOInterface for ComparisonImageInputOutput {
     fn save(&mut self, mut frame: Option<i64>) { Self::save(self, frame) }
 }

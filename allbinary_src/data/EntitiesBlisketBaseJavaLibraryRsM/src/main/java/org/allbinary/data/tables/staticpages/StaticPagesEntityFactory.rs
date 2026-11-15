@@ -33,7 +33,7 @@ pub struct StaticPagesEntityFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static StaticPagesEntityFactory_instance: Option<Rc<RefCell<StaticPagesEntityFactory>>> = StaticPagesEntityFactory::new(); }
+pub static StaticPagesEntityFactory_instance: crate::JavaStatic<Option<Rc<RefCell<StaticPagesEntityFactory>>>> = crate::JavaStatic::new(|| StaticPagesEntityFactory::new());
 
 impl StaticPagesEntityFactory {
 

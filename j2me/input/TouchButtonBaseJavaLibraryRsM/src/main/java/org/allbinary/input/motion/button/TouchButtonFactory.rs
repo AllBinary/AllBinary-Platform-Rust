@@ -35,7 +35,7 @@ pub struct TouchButtonFactory {
     pub saved: bool,
 }
 
-thread_local! { pub static TouchButtonFactory_SINGLETON: Option<Rc<RefCell<TouchButtonFactory>>> = TouchButtonFactory::new(); }
+pub static TouchButtonFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<TouchButtonFactory>>>> = crate::JavaStatic::new(|| TouchButtonFactory::new());
 
 impl TouchButtonFactory {
 

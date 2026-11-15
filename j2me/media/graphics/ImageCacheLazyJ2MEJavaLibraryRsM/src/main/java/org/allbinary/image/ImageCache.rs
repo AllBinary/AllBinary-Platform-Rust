@@ -79,7 +79,7 @@ pub struct ImageCache {
     pub LOAD_IMAGE_FOR_ANIMATION: String,
 }
 
-thread_local! { pub static ImageCache_NULL_IMAGE_CACHE: Option<Rc<RefCell<dyn ImageCacheDyn>>> = ImageCache::new().map(|reference| reference as Rc<RefCell<dyn ImageCacheDyn>>); }
+pub static ImageCache_NULL_IMAGE_CACHE: crate::JavaStatic<Option<Rc<RefCell<dyn ImageCacheDyn>>>> = crate::JavaStatic::new(|| ImageCache::new().map(|reference| reference as Rc<RefCell<dyn ImageCacheDyn>>));
 
 impl ImageCache {
     

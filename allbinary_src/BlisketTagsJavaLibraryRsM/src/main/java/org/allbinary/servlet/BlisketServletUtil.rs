@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct BlisketServletUtil {
 }
 
-thread_local! { pub static BlisketServletUtil_instance: Option<Rc<RefCell<BlisketServletUtil>>> = BlisketServletUtil::new(); }
+pub static BlisketServletUtil_instance: crate::JavaStatic<Option<Rc<RefCell<BlisketServletUtil>>>> = crate::JavaStatic::new(|| BlisketServletUtil::new());
 
 impl BlisketServletUtil {
 

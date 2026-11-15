@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct PickedUpLayerInterfaceFactoryBase {
 }
 
-thread_local! { pub static PickedUpLayerInterfaceFactoryBase_NULL_PICKED_UP_LAYER_FACTORY_BASE: Option<Rc<RefCell<dyn PickedUpLayerInterfaceFactoryBaseDyn>>> = PickedUpLayerInterfaceFactoryBase::new().map(|reference| reference as Rc<RefCell<dyn PickedUpLayerInterfaceFactoryBaseDyn>>); }
+pub static PickedUpLayerInterfaceFactoryBase_NULL_PICKED_UP_LAYER_FACTORY_BASE: crate::JavaStatic<Option<Rc<RefCell<dyn PickedUpLayerInterfaceFactoryBaseDyn>>>> = crate::JavaStatic::new(|| PickedUpLayerInterfaceFactoryBase::new().map(|reference| reference as Rc<RefCell<dyn PickedUpLayerInterfaceFactoryBaseDyn>>));
 impl PickedUpLayerInterfaceFactoryInterface for PickedUpLayerInterfaceFactoryBase {
     fn getPickedUpLayerType(&mut self) -> Option<Rc<RefCell<PickedUpLayerType>>> { Self::getPickedUpLayerType(self) }
     fn getIconLayer(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> { Self::getIconLayer(self) }

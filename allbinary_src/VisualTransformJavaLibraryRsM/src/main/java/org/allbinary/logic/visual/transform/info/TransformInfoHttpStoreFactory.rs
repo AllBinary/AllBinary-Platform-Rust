@@ -34,7 +34,7 @@ macro_rules! jcall {
 pub struct TransformInfoHttpStoreFactory {
 }
 
-thread_local! { pub static TransformInfoHttpStoreFactory_instance: Option<Rc<RefCell<TransformInfoHttpStoreFactory>>> = TransformInfoHttpStoreFactory::new(); }
+pub static TransformInfoHttpStoreFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TransformInfoHttpStoreFactory>>>> = crate::JavaStatic::new(|| TransformInfoHttpStoreFactory::new());
 impl TransformInfoFactoryInterface for TransformInfoHttpStoreFactory {
     fn getInstance(&mut self, mut databaseHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut propertiesHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>, mut pageContext: Option<Rc<RefCell<PageContext>>>) -> Option<Rc<RefCell<dyn TransformInfoInterface>>> { Self::getInstance3(self, databaseHashMap, propertiesHashMap, pageContext) }
 }

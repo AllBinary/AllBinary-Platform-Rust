@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct LicenseUtil {
 }
 
-thread_local! { pub static LicenseUtil_instance: Option<Rc<RefCell<LicenseUtil>>> = LicenseUtil::new(); }
+pub static LicenseUtil_instance: crate::JavaStatic<Option<Rc<RefCell<LicenseUtil>>>> = crate::JavaStatic::new(|| LicenseUtil::new());
 
 impl LicenseUtil {
 

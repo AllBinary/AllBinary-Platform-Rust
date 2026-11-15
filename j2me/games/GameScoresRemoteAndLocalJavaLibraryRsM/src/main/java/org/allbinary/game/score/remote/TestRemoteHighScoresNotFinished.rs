@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct TestRemoteHighScoresNotFinished {
 }
 
-thread_local! { pub static TestRemoteHighScoresNotFinished_PATH: String = String::from("G:\\mnt\\bc\\mydev\\work\\allbinary_src\\licensing\\data\\"); }
+pub static TestRemoteHighScoresNotFinished_PATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("G:\\mnt\\bc\\mydev\\work\\allbinary_src\\licensing\\data\\"));
 
 impl TestRemoteHighScoresNotFinished {
 

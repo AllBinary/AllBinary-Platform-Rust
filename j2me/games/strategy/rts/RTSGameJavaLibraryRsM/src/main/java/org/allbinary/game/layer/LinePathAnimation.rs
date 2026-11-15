@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct LinePathAnimation {
 }
 
-thread_local! { pub static LinePathAnimation_instance: Option<Rc<RefCell<dyn LinePathAnimationDyn>>> = LinePathAnimation::new().map(|reference| reference as Rc<RefCell<dyn LinePathAnimationDyn>>); }
+pub static LinePathAnimation_instance: crate::JavaStatic<Option<Rc<RefCell<dyn LinePathAnimationDyn>>>> = crate::JavaStatic::new(|| LinePathAnimation::new().map(|reference| reference as Rc<RefCell<dyn LinePathAnimationDyn>>));
 
 impl LinePathAnimation {
 

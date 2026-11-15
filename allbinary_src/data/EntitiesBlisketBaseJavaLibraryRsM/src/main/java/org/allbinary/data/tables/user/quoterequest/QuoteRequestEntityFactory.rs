@@ -33,7 +33,7 @@ pub struct QuoteRequestEntityFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static QuoteRequestEntityFactory_instance: Option<Rc<RefCell<QuoteRequestEntityFactory>>> = QuoteRequestEntityFactory::new(); }
+pub static QuoteRequestEntityFactory_instance: crate::JavaStatic<Option<Rc<RefCell<QuoteRequestEntityFactory>>>> = crate::JavaStatic::new(|| QuoteRequestEntityFactory::new());
 
 impl QuoteRequestEntityFactory {
 

@@ -31,7 +31,7 @@ pub struct ScreenListenerHandler {
     pub screenListenerInterface: Option<Rc<RefCell<dyn ScreenListenerInterface>>>,
 }
 
-thread_local! { pub static ScreenListenerHandler_instance: Option<Rc<RefCell<ScreenListenerHandler>>> = ScreenListenerHandler::new(); }
+pub static ScreenListenerHandler_instance: crate::JavaStatic<Option<Rc<RefCell<ScreenListenerHandler>>>> = crate::JavaStatic::new(|| ScreenListenerHandler::new());
 
 impl ScreenListenerHandler {
 

@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct PropertyInitUtil {
 }
 
-thread_local! { pub static PropertyInitUtil_instance: Option<Rc<RefCell<PropertyInitUtil>>> = PropertyInitUtil::new(); }
+pub static PropertyInitUtil_instance: crate::JavaStatic<Option<Rc<RefCell<PropertyInitUtil>>>> = crate::JavaStatic::new(|| PropertyInitUtil::new());
 
 impl PropertyInitUtil {
 

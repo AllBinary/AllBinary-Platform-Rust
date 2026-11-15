@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct AlphaBaseProcessor {
 }
 
-thread_local! { pub static AlphaBaseProcessor_instance: Option<Rc<RefCell<dyn AlphaBaseProcessorDyn>>> = AlphaBaseProcessor::new().map(|reference| reference as Rc<RefCell<dyn AlphaBaseProcessorDyn>>); }
+pub static AlphaBaseProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<dyn AlphaBaseProcessorDyn>>>> = crate::JavaStatic::new(|| AlphaBaseProcessor::new().map(|reference| reference as Rc<RefCell<dyn AlphaBaseProcessorDyn>>));
 
 impl AlphaBaseProcessor {
 

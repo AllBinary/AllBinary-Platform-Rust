@@ -33,7 +33,7 @@ pub struct CustomGPoint {
     pub cz: i32,
 }
 
-thread_local! { pub static CustomGPoint_NULL_CUSTOM_POINT: Option<Rc<RefCell<CustomGPoint>>> = CustomGPoint::new(0, 0, 0); }
+pub static CustomGPoint_NULL_CUSTOM_POINT: crate::JavaStatic<Option<Rc<RefCell<CustomGPoint>>>> = crate::JavaStatic::new(|| CustomGPoint::new(0, 0, 0));
 
 impl CustomGPoint {
     

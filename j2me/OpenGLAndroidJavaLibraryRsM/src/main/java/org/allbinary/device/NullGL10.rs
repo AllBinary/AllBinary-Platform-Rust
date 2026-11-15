@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct NullGL10 {
 }
 
-thread_local! { pub static NullGL10_NULL_GL10: Option<Rc<RefCell<NullGL10>>> = NullGL10::new(); }
+pub static NullGL10_NULL_GL10: crate::JavaStatic<Option<Rc<RefCell<NullGL10>>>> = crate::JavaStatic::new(|| NullGL10::new());
 // impl GL10 for NullGL10 with the methods of the trait
 
 impl NullGL10 {

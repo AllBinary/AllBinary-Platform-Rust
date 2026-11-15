@@ -36,7 +36,7 @@ pub struct HttpFileUploadUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static HttpFileUploadUtil_instance: Option<Rc<RefCell<HttpFileUploadUtil>>> = HttpFileUploadUtil::new(); }
+pub static HttpFileUploadUtil_instance: crate::JavaStatic<Option<Rc<RefCell<HttpFileUploadUtil>>>> = crate::JavaStatic::new(|| HttpFileUploadUtil::new());
 
 impl HttpFileUploadUtil {
 

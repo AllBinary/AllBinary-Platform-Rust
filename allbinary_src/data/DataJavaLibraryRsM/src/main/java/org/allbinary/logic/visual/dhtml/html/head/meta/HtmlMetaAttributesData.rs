@@ -30,7 +30,7 @@ pub struct HtmlMetaAttributesData {
     pub HTTP_EQUIV_VALUE: String,
 }
 
-thread_local! { pub static HtmlMetaAttributesData_instance: Option<Rc<RefCell<HtmlMetaAttributesData>>> = HtmlMetaAttributesData::new(); }
+pub static HtmlMetaAttributesData_instance: crate::JavaStatic<Option<Rc<RefCell<HtmlMetaAttributesData>>>> = crate::JavaStatic::new(|| HtmlMetaAttributesData::new());
 
 impl HtmlMetaAttributesData {
 

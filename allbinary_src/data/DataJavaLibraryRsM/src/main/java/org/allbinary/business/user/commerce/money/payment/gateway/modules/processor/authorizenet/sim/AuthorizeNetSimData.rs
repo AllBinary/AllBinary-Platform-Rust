@@ -28,22 +28,22 @@ macro_rules! jcall {
 pub struct AuthorizeNetSimData {
 }
 
-thread_local! { pub static AuthorizeNetSimData_X_FP_HASH: String = String::from("x_fp_hash"); }
-thread_local! { pub static AuthorizeNetSimData_X_FP_SEQUENCE: String = String::from("x_fp_sequence"); }
-thread_local! { pub static AuthorizeNetSimData_X_FP_TIMESTAMP: String = String::from("x_fp_timestamp"); }
-thread_local! { pub static AuthorizeNetSimData_X_SHOW_FORM: String = String::from("x_show_form"); }
-thread_local! { pub static AuthorizeNetSimData_X_HEADER_HTML_PAYMENT_FORM: String = String::from("x_header_html_payment_form"); }
-thread_local! { pub static AuthorizeNetSimData_X_FOOTER_HTML_PAYMENT_FORM: String = String::from("x_footer_html_payment_form"); }
-thread_local! { pub static AuthorizeNetSimData_X_HEADER_HTML_RECEIPT: String = String::from("x_header_html_receipt"); }
-thread_local! { pub static AuthorizeNetSimData_X_FOOTER_HTML_RECEIPT: String = String::from("x_footer_html_receipt"); }
-thread_local! { pub static AuthorizeNetSimData_X_RECEIPT_LINK_TEXT: String = String::from("x_receipt_link_text"); }
-thread_local! { pub static AuthorizeNetSimData_X_RECEIPT_LINK_URL: String = String::from("x_receipt_link_url"); }
-thread_local! { pub static AuthorizeNetSimData_X_LOGO_URL: String = String::from("x_logo_url"); }
-thread_local! { pub static AuthorizeNetSimData_X_BACKGROUND_URL: String = String::from("x_background_url"); }
-thread_local! { pub static AuthorizeNetSimData_X_COLOR_BACKGROUND: String = String::from("x_color_background"); }
-thread_local! { pub static AuthorizeNetSimData_X_COLOR_LINK: String = String::from("x_color_link"); }
-thread_local! { pub static AuthorizeNetSimData_X_COLOR_TEXT: String = String::from("x_color_text"); }
-thread_local! { pub static AuthorizeNetSimData_X_RELAY_URL: String = String::from("x_relay_url"); }
+pub static AuthorizeNetSimData_X_FP_HASH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_fp_hash"));
+pub static AuthorizeNetSimData_X_FP_SEQUENCE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_fp_sequence"));
+pub static AuthorizeNetSimData_X_FP_TIMESTAMP: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_fp_timestamp"));
+pub static AuthorizeNetSimData_X_SHOW_FORM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_show_form"));
+pub static AuthorizeNetSimData_X_HEADER_HTML_PAYMENT_FORM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_header_html_payment_form"));
+pub static AuthorizeNetSimData_X_FOOTER_HTML_PAYMENT_FORM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_footer_html_payment_form"));
+pub static AuthorizeNetSimData_X_HEADER_HTML_RECEIPT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_header_html_receipt"));
+pub static AuthorizeNetSimData_X_FOOTER_HTML_RECEIPT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_footer_html_receipt"));
+pub static AuthorizeNetSimData_X_RECEIPT_LINK_TEXT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_receipt_link_text"));
+pub static AuthorizeNetSimData_X_RECEIPT_LINK_URL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_receipt_link_url"));
+pub static AuthorizeNetSimData_X_LOGO_URL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_logo_url"));
+pub static AuthorizeNetSimData_X_BACKGROUND_URL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_background_url"));
+pub static AuthorizeNetSimData_X_COLOR_BACKGROUND: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_color_background"));
+pub static AuthorizeNetSimData_X_COLOR_LINK: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_color_link"));
+pub static AuthorizeNetSimData_X_COLOR_TEXT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_color_text"));
+pub static AuthorizeNetSimData_X_RELAY_URL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("x_relay_url"));
 
 impl AuthorizeNetSimData {
 

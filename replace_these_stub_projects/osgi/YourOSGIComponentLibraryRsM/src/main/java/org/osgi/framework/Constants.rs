@@ -17,5 +17,5 @@ macro_rules! jcall {
 pub trait Constants: std::any::Any + crate::java::lang::Object::JavaObjectToString {
 }
 
-thread_local! { pub static Constants_BUNDLE_SYMBOLICNAME: String = { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone(); }
+pub static Constants_BUNDLE_SYMBOLICNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| { let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone());
 

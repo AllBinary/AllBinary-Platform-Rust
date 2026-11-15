@@ -29,8 +29,8 @@ macro_rules! jcall {
 pub struct KeySpecFactory {
 }
 
-thread_local! { pub static KeySpecFactory_DES: String = String::from("DES"); }
-thread_local! { pub static KeySpecFactory_DESEDE: String = String::from("DESede"); }
+pub static KeySpecFactory_DES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DES"));
+pub static KeySpecFactory_DESEDE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DESede"));
 
 impl KeySpecFactory {
 

@@ -31,7 +31,7 @@ pub struct ChangedGameFeatureListener {
     pub base: BaseChangedGameFeatureListener,
 }
 
-thread_local! { pub static ChangedGameFeatureListener_gameFeatureListener: Option<Rc<RefCell<ChangedGameFeatureListener>>> = ChangedGameFeatureListener::new(); }
+pub static ChangedGameFeatureListener_gameFeatureListener: crate::JavaStatic<Option<Rc<RefCell<ChangedGameFeatureListener>>>> = crate::JavaStatic::new(|| ChangedGameFeatureListener::new());
 impl crate::org::allbinary::game::configuration::event::GameFeatureListenerInterface::GameFeatureListenerInterface for ChangedGameFeatureListener {
     fn onGameFeatureChange(&mut self, p1: Option<Rc<RefCell<crate::org::allbinary::game::configuration::event::GameFeatureEvent::GameFeatureEvent>>>) { crate::org::allbinary::game::configuration::event::BaseChangedGameFeatureListener::BaseChangedGameFeatureListener::onGameFeatureChange(crate::org::allbinary::game::configuration::event::BaseChangedGameFeatureListener::BaseChangedGameFeatureListenerDyn::as_BaseChangedGameFeatureListener_mut(self), p1) }
 }

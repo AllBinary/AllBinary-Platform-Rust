@@ -28,11 +28,11 @@ macro_rules! jcall {
 pub struct DisplayInBrowserContraintsData {
 }
 
-thread_local! { pub static DisplayInBrowserContraintsData_NAME: String = String::from("DISPLAYBROWSERCONSTRAINTS_NAME"); }
-thread_local! { pub static DisplayInBrowserContraintsData_FRAMEABLE: String = String::from("DISPLAYBROWSERCONSTRAINTS_FRAMEABLE"); }
-thread_local! { pub static DisplayInBrowserContraintsData_MOUNTABLE: String = String::from("DISPLAYBROWSERCONSTRAINTS_MOUNTABLE"); }
-thread_local! { pub static DisplayInBrowserContraintsData_QUICKFRAMEABLE: String = String::from("DISPLAYBROWSERCONSTRAINTS_QUICKFRAMEABLE"); }
-thread_local! { pub static DisplayInBrowserContraintsData_MOUNTABLELINK: String = String::from("DISPLAYBROWSERCONSTRAINTS_MOUNTABLELINK"); }
+pub static DisplayInBrowserContraintsData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DISPLAYBROWSERCONSTRAINTS_NAME"));
+pub static DisplayInBrowserContraintsData_FRAMEABLE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DISPLAYBROWSERCONSTRAINTS_FRAMEABLE"));
+pub static DisplayInBrowserContraintsData_MOUNTABLE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DISPLAYBROWSERCONSTRAINTS_MOUNTABLE"));
+pub static DisplayInBrowserContraintsData_QUICKFRAMEABLE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DISPLAYBROWSERCONSTRAINTS_QUICKFRAMEABLE"));
+pub static DisplayInBrowserContraintsData_MOUNTABLELINK: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("DISPLAYBROWSERCONSTRAINTS_MOUNTABLELINK"));
 
 impl DisplayInBrowserContraintsData {
 

@@ -34,7 +34,7 @@ pub struct MusicThreadPool {
     pub base: ThreadPool,
 }
 
-thread_local! { pub static MusicThreadPool_THREAD_POOL: Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>> = ThreadPool::new(String::from("Music"), 2, ThreadPool_NORMAL_PRIORITY.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>); }
+pub static MusicThreadPool_THREAD_POOL: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>>> = crate::JavaStatic::new(|| ThreadPool::new(String::from("Music"), 2, ThreadPool_NORMAL_PRIORITY.with(Clone::clone).clone()).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::thread::ThreadPool::ThreadPoolDyn>>));
 
 impl MusicThreadPool {
     

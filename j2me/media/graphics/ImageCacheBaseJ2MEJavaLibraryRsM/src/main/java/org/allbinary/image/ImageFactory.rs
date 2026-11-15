@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct ImageFactory {
 }
 
-thread_local! { pub static ImageFactory_instance: Option<Rc<RefCell<ImageFactory>>> = ImageFactory::new(); }
+pub static ImageFactory_instance: crate::JavaStatic<Option<Rc<RefCell<ImageFactory>>>> = crate::JavaStatic::new(|| ImageFactory::new());
 
 impl ImageFactory {
 

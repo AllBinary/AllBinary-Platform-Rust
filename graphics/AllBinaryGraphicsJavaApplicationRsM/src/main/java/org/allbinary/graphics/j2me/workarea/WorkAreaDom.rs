@@ -36,9 +36,9 @@ pub struct WorkAreaDom {
     pub canvasNodeList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static WorkAreaDom_WORKAREA: String = String::from("workArea"); }
-thread_local! { pub static WorkAreaDom_NAME: String = String::from("name"); }
-thread_local! { pub static WorkAreaDom_FRAMES: String = String::from("frames"); }
+pub static WorkAreaDom_WORKAREA: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("workArea"));
+pub static WorkAreaDom_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("name"));
+pub static WorkAreaDom_FRAMES: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("frames"));
 
 impl WorkAreaDom {
 

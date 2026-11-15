@@ -35,7 +35,7 @@ pub struct InputFeatureFactory {
     pub SINGLE_KEY_PRESS: Option<Rc<RefCell<InputFeature>>>,
 }
 
-thread_local! { pub static InputFeatureFactory_instance: Option<Rc<RefCell<InputFeatureFactory>>> = InputFeatureFactory::new(); }
+pub static InputFeatureFactory_instance: crate::JavaStatic<Option<Rc<RefCell<InputFeatureFactory>>>> = crate::JavaStatic::new(|| InputFeatureFactory::new());
 
 impl InputFeatureFactory {
 

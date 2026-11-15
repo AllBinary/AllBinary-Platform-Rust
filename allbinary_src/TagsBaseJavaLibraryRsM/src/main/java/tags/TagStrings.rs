@@ -29,7 +29,7 @@ pub struct TagStrings {
     pub DO_START_TAG: String,
 }
 
-thread_local! { pub static TagStrings_instance: Option<Rc<RefCell<TagStrings>>> = TagStrings::new(); }
+pub static TagStrings_instance: crate::JavaStatic<Option<Rc<RefCell<TagStrings>>>> = crate::JavaStatic::new(|| TagStrings::new());
 
 impl TagStrings {
 

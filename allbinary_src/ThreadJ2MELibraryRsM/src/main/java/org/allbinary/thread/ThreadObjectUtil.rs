@@ -23,7 +23,7 @@ pub struct ThreadObjectUtil {
     pub NULL_PRIORITY_RUNNABLE: Option<Rc<RefCell<dyn PriorityRunnable>>>,
 }
 
-thread_local! { pub static ThreadObjectUtil_instance: Option<Rc<RefCell<ThreadObjectUtil>>> = ThreadObjectUtil::new(); }
+pub static ThreadObjectUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ThreadObjectUtil>>>> = crate::JavaStatic::new(|| ThreadObjectUtil::new());
 
 impl ThreadObjectUtil {
 

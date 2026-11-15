@@ -36,7 +36,7 @@ pub struct ConsolidateMotionRectangles {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static ConsolidateMotionRectangles_NAME: String = String::from("consolidatedMotionRectangles_"); }
+pub static ConsolidateMotionRectangles_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("consolidatedMotionRectangles_"));
 
 impl ConsolidateMotionRectangles {
     

@@ -58,12 +58,12 @@ pub struct Email {
     pub isDebug: bool,
 }
 
-thread_local! { pub static Email_DEBUG: String = String::from("mail.debug"); }
-thread_local! { pub static Email_SMTP_HOST: String = String::from("mail.smtp.host"); }
-thread_local! { pub static Email_SMTP_PORT: String = String::from("mail.smtp.port"); }
-thread_local! { pub static Email_SMTP_USER: String = String::from("mail.smtp.user"); }
-thread_local! { pub static Email_SMTP_RETURN_ADDRESS: String = String::from("mail.from"); }
-thread_local! { pub static Email_SMTP_LOCAL_HOST: String = String::from("mail.smtp.localhost"); }
+pub static Email_DEBUG: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("mail.debug"));
+pub static Email_SMTP_HOST: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("mail.smtp.host"));
+pub static Email_SMTP_PORT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("mail.smtp.port"));
+pub static Email_SMTP_USER: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("mail.smtp.user"));
+pub static Email_SMTP_RETURN_ADDRESS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("mail.from"));
+pub static Email_SMTP_LOCAL_HOST: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("mail.smtp.localhost"));
 impl EmailInterface for Email {
     fn getDebugInfo(&mut self) -> String { Self::getDebugInfo(self) }
     fn getMimeMessage(&mut self) -> Option<Rc<RefCell<MimeMessage>>> { Self::getMimeMessage(self) }

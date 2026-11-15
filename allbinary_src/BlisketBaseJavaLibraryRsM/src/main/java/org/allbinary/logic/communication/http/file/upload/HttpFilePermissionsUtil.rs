@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct HttpFilePermissionsUtil {
 }
 
-thread_local! { pub static HttpFilePermissionsUtil_instance: Option<Rc<RefCell<HttpFilePermissionsUtil>>> = HttpFilePermissionsUtil::new(); }
+pub static HttpFilePermissionsUtil_instance: crate::JavaStatic<Option<Rc<RefCell<HttpFilePermissionsUtil>>>> = crate::JavaStatic::new(|| HttpFilePermissionsUtil::new());
 
 impl HttpFilePermissionsUtil {
 

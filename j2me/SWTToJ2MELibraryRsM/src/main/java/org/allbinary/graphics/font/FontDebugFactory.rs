@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct FontDebugFactory {
 }
 
-thread_local! { pub static FontDebugFactory_instance: Option<Rc<RefCell<FontDebugFactory>>> = FontDebugFactory::new(); }
+pub static FontDebugFactory_instance: crate::JavaStatic<Option<Rc<RefCell<FontDebugFactory>>>> = crate::JavaStatic::new(|| FontDebugFactory::new());
 
 impl FontDebugFactory {
 

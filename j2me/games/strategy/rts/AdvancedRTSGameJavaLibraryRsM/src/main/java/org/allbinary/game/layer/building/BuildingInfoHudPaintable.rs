@@ -52,7 +52,7 @@ pub struct BuildingInfoHudPaintable {
     pub currentHealth: i32,
 }
 
-thread_local! { pub static BuildingInfoHudPaintable_instance: Option<Rc<RefCell<BuildingInfoHudPaintable>>> = BuildingInfoHudPaintable::new(); }
+pub static BuildingInfoHudPaintable_instance: crate::JavaStatic<Option<Rc<RefCell<BuildingInfoHudPaintable>>>> = crate::JavaStatic::new(|| BuildingInfoHudPaintable::new());
 impl crate::org::allbinary::graphics::paint::InitUpdatePaintableInterface::InitUpdatePaintableInterface for BuildingInfoHudPaintable {
 }
 impl crate::org::allbinary::init::InitInterface::InitInterface for BuildingInfoHudPaintable {

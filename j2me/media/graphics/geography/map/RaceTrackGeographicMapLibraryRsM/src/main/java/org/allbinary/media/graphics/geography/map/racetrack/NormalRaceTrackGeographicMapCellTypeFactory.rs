@@ -30,7 +30,7 @@ pub struct NormalRaceTrackGeographicMapCellTypeFactory {
     pub base: RaceTrackGeographicMapCellTypeFactory,
 }
 
-thread_local! { pub static NormalRaceTrackGeographicMapCellTypeFactory_instanceC: Option<Rc<RefCell<NormalRaceTrackGeographicMapCellTypeFactory>>> = NormalRaceTrackGeographicMapCellTypeFactory::new(); }
+pub static NormalRaceTrackGeographicMapCellTypeFactory_instanceC: crate::JavaStatic<Option<Rc<RefCell<NormalRaceTrackGeographicMapCellTypeFactory>>>> = crate::JavaStatic::new(|| NormalRaceTrackGeographicMapCellTypeFactory::new());
 
 impl NormalRaceTrackGeographicMapCellTypeFactory {
     

@@ -21,7 +21,7 @@ macro_rules! jcall {
 pub struct OpenGLGLUUtils {
 }
 
-thread_local! { pub static OpenGLGLUUtils_instance: Option<Rc<RefCell<OpenGLGLUUtils>>> = OpenGLGLUUtils::new(); }
+pub static OpenGLGLUUtils_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLGLUUtils>>>> = crate::JavaStatic::new(|| OpenGLGLUUtils::new());
 
 impl OpenGLGLUUtils {
 

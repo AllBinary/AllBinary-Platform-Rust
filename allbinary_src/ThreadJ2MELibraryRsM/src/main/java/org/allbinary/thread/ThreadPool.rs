@@ -55,8 +55,8 @@ pub struct ThreadPool {
     pub runningTask: bool,
 }
 
-thread_local! { pub static ThreadPool_ROOT_NAME: String = String::from("-PooledThread-"); }
-thread_local! { pub static ThreadPool_NORMAL_PRIORITY: i32 = unsafe { Thread_NORM_PRIORITY.clone() }.clone(); }
+pub static ThreadPool_ROOT_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("-PooledThread-"));
+pub static ThreadPool_NORMAL_PRIORITY: crate::JavaStatic<i32> = crate::JavaStatic::new(|| unsafe { Thread_NORM_PRIORITY.clone() }.clone());
 
 impl ThreadPool {
 

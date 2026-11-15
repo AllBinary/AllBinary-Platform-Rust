@@ -39,7 +39,7 @@ pub struct RepaintBehavior {
     pub NAME: String,
 }
 
-thread_local! { pub static RepaintBehavior_instance: Option<Rc<RefCell<dyn RepaintBehaviorDyn>>> = RepaintBehavior::new().map(|reference| reference as Rc<RefCell<dyn RepaintBehaviorDyn>>); }
+pub static RepaintBehavior_instance: crate::JavaStatic<Option<Rc<RefCell<dyn RepaintBehaviorDyn>>>> = crate::JavaStatic::new(|| RepaintBehavior::new().map(|reference| reference as Rc<RefCell<dyn RepaintBehaviorDyn>>));
 
 impl RepaintBehavior {
 

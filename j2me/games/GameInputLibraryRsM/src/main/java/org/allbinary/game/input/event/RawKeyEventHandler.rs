@@ -38,9 +38,9 @@ pub struct RawKeyEventHandler {
     pub eventListenerInterfaceList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static RawKeyEventHandler_instance: Option<Rc<RefCell<RawKeyEventHandler>>> = RawKeyEventHandler::new(); }
-thread_local! { pub static RawKeyEventHandler_TOTAL_LISTENERS: String = String::from("Total Listeners: "); }
-thread_local! { pub static RawKeyEventHandler_LISTENER_LABEL: String = String::from(" Listener: "); }
+pub static RawKeyEventHandler_instance: crate::JavaStatic<Option<Rc<RefCell<RawKeyEventHandler>>>> = crate::JavaStatic::new(|| RawKeyEventHandler::new());
+pub static RawKeyEventHandler_TOTAL_LISTENERS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Total Listeners: "));
+pub static RawKeyEventHandler_LISTENER_LABEL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(" Listener: "));
 
 impl RawKeyEventHandler {
     

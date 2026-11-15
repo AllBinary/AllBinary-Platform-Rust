@@ -34,7 +34,7 @@ pub struct AndroidSystemProperties {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static AndroidSystemProperties_SINGLETON: Option<Rc<RefCell<AndroidSystemProperties>>> = AndroidSystemProperties::new(jcall!(ResourceUtil::getInstance()).getContext()); }
+pub static AndroidSystemProperties_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<AndroidSystemProperties>>>> = crate::JavaStatic::new(|| AndroidSystemProperties::new(jcall!(ResourceUtil::getInstance()).getContext()));
 
 impl AndroidSystemProperties {
 

@@ -45,7 +45,7 @@ pub struct ZipFileUtil {
     pub commonStrings: Option<Rc<RefCell<CommonStrings>>>,
 }
 
-thread_local! { pub static ZipFileUtil_instance: Option<Rc<RefCell<ZipFileUtil>>> = ZipFileUtil::new(); }
+pub static ZipFileUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ZipFileUtil>>>> = crate::JavaStatic::new(|| ZipFileUtil::new());
 
 impl ZipFileUtil {
 

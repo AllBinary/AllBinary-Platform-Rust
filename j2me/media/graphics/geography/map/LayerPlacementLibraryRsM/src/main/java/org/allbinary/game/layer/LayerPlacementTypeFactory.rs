@@ -35,7 +35,7 @@ pub struct LayerPlacementTypeFactory {
     pub RIGHT: Option<Rc<RefCell<LayerPlacementType>>>,
 }
 
-thread_local! { pub static LayerPlacementTypeFactory_instance: Option<Rc<RefCell<LayerPlacementTypeFactory>>> = LayerPlacementTypeFactory::new(); }
+pub static LayerPlacementTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<LayerPlacementTypeFactory>>>> = crate::JavaStatic::new(|| LayerPlacementTypeFactory::new());
 
 impl LayerPlacementTypeFactory {
 

@@ -58,7 +58,7 @@ pub struct ImageCopyUtil {
     pub LEADERBOARD: String,
 }
 
-thread_local! { pub static ImageCopyUtil_instance: Option<Rc<RefCell<ImageCopyUtil>>> = ImageCopyUtil::new(); }
+pub static ImageCopyUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImageCopyUtil>>>> = crate::JavaStatic::new(|| ImageCopyUtil::new());
 
 impl ImageCopyUtil {
 

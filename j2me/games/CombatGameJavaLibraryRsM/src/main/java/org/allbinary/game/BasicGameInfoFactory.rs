@@ -19,7 +19,7 @@ pub struct BasicGameInfoFactory {
     pub total: i32,
 }
 
-thread_local! { pub static BasicGameInfoFactory_SINGLETON: Option<Rc<RefCell<BasicGameInfoFactory>>> = BasicGameInfoFactory::new(); }
+pub static BasicGameInfoFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<BasicGameInfoFactory>>>> = crate::JavaStatic::new(|| BasicGameInfoFactory::new());
 
 impl BasicGameInfoFactory {
 

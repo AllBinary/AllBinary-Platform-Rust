@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct RTSGameLayerPositionFinder {
 }
 
-thread_local! { pub static RTSGameLayerPositionFinder_instance: Option<Rc<RefCell<RTSGameLayerPositionFinder>>> = RTSGameLayerPositionFinder::new(); }
+pub static RTSGameLayerPositionFinder_instance: crate::JavaStatic<Option<Rc<RefCell<RTSGameLayerPositionFinder>>>> = crate::JavaStatic::new(|| RTSGameLayerPositionFinder::new());
 impl LayerPositionFinderInterface for RTSGameLayerPositionFinder {
     fn getLayerInterface(&mut self, mut geographicMapCellPosition: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>) -> Option<Rc<RefCell<dyn crate::org::allbinary::layer::AllBinaryLayer::AllBinaryLayerDyn>>> { Self::getLayerInterface(self, geographicMapCellPosition) }
 }

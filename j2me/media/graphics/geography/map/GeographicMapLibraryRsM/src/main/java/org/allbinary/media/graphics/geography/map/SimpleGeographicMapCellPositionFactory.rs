@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct SimpleGeographicMapCellPositionFactory {
 }
 
-thread_local! { pub static SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> = GeographicMapCellPosition::new(-1, -1, -1, -1, -1, -1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>); }
+pub static SimpleGeographicMapCellPositionFactory_NULL_GEOGRAPHIC_MAP_CELL_POSITION: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>>> = crate::JavaStatic::new(|| GeographicMapCellPosition::new(-1, -1, -1, -1, -1, -1).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>));
 impl GeographicMapCellPositionFactoryInterface for SimpleGeographicMapCellPositionFactory {
     fn getInstance(&mut self, mut geographicMapInterface: Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::BasicGeographicMap::BasicGeographicMapDyn>>>, mut i_column: i32, mut i_row: i32, mut columns: i32, mut rows: i32, mut width: i32, mut height: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::media::graphics::geography::map::GeographicMapCellPosition::GeographicMapCellPositionDyn>>> { Self::getInstance(self, geographicMapInterface, i_column, i_row, columns, rows, width, height) }
 }

@@ -32,7 +32,7 @@ pub struct TenderTypeFactory {
     pub ACH: Option<Rc<RefCell<TenderType>>>,
 }
 
-thread_local! { pub static TenderTypeFactory_instance: Option<Rc<RefCell<TenderTypeFactory>>> = TenderTypeFactory::new(); }
+pub static TenderTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TenderTypeFactory>>>> = crate::JavaStatic::new(|| TenderTypeFactory::new());
 
 impl TenderTypeFactory {
 

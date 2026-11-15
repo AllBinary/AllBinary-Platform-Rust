@@ -29,7 +29,7 @@ pub struct CharArrayFactory {
     pub zeroCharArray: Vec<char>,
 }
 
-thread_local! { pub static CharArrayFactory_instance: Option<Rc<RefCell<CharArrayFactory>>> = CharArrayFactory::new(); }
+pub static CharArrayFactory_instance: crate::JavaStatic<Option<Rc<RefCell<CharArrayFactory>>>> = crate::JavaStatic::new(|| CharArrayFactory::new());
 
 impl CharArrayFactory {
 

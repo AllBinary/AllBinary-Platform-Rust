@@ -19,7 +19,7 @@ macro_rules! jcall {
 pub struct NullCommandListener {
 }
 
-thread_local! { pub static NullCommandListener_NULL_COMMAND_LISTENER: Option<Rc<RefCell<dyn NullCommandListenerDyn>>> = NullCommandListener::new().map(|reference| reference as Rc<RefCell<dyn NullCommandListenerDyn>>); }
+pub static NullCommandListener_NULL_COMMAND_LISTENER: crate::JavaStatic<Option<Rc<RefCell<dyn NullCommandListenerDyn>>>> = crate::JavaStatic::new(|| NullCommandListener::new().map(|reference| reference as Rc<RefCell<dyn NullCommandListenerDyn>>));
 impl CommandListener for NullCommandListener {
     fn commandAction(&mut self, mut c: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>, mut d: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Displayable::DisplayableDyn>>>) { Self::commandAction(self, c, d) }
 }

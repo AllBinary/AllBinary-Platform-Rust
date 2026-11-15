@@ -35,7 +35,7 @@ pub struct MyCommandsFactory {
     pub RESUME_COMMAND: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Command::CommandDyn>>>,
 }
 
-thread_local! { pub static MyCommandsFactory_instance: Option<Rc<RefCell<MyCommandsFactory>>> = MyCommandsFactory::new(); }
+pub static MyCommandsFactory_instance: crate::JavaStatic<Option<Rc<RefCell<MyCommandsFactory>>>> = crate::JavaStatic::new(|| MyCommandsFactory::new());
 
 impl MyCommandsFactory {
 

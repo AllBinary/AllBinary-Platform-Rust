@@ -42,7 +42,7 @@ pub struct BufferedWriterUtil {
     pub REMOVING_OLD: String,
 }
 
-thread_local! { pub static BufferedWriterUtil_instance: Option<Rc<RefCell<BufferedWriterUtil>>> = BufferedWriterUtil::new(); }
+pub static BufferedWriterUtil_instance: crate::JavaStatic<Option<Rc<RefCell<BufferedWriterUtil>>>> = crate::JavaStatic::new(|| BufferedWriterUtil::new());
 
 impl BufferedWriterUtil {
 

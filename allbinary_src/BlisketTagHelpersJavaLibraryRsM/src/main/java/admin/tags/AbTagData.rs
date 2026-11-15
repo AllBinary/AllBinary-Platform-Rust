@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct AbTagData {
 }
 
-thread_local! { pub static AbTagData_PARENT: String = String::from("TAG_PARENT"); }
+pub static AbTagData_PARENT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("TAG_PARENT"));
 
 impl AbTagData {
 

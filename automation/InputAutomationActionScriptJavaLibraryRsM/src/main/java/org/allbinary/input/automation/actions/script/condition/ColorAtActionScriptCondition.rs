@@ -58,7 +58,7 @@ pub struct ColorAtActionScriptCondition {
     pub colorRangeInterface: Option<Rc<RefCell<dyn ColorRangeInterface>>>,
 }
 
-thread_local! { pub static ColorAtActionScriptCondition_NAME: String = String::from("If Color At"); }
+pub static ColorAtActionScriptCondition_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("If Color At"));
 impl ColorAtActionScriptConditionInterface for ColorAtActionScriptCondition {
     fn getPoint(&mut self) -> Option<Rc<RefCell<Point>>> { Self::getPoint(self) }
     fn setPoint(&mut self, mut point: Option<Rc<RefCell<Point>>>) { Self::setPoint(self, point) }

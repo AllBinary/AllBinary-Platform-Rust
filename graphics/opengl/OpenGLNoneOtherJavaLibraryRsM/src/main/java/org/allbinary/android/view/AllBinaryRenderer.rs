@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct AllBinaryRenderer {
 }
 
-thread_local! { pub static AllBinaryRenderer_instance: Option<Rc<RefCell<AllBinaryRenderer>>> = AllBinaryRenderer::new(); }
+pub static AllBinaryRenderer_instance: crate::JavaStatic<Option<Rc<RefCell<AllBinaryRenderer>>>> = crate::JavaStatic::new(|| AllBinaryRenderer::new());
 
 impl AllBinaryRenderer {
 

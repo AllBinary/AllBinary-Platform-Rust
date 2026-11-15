@@ -36,7 +36,7 @@ pub struct FormTypeFactory {
     pub VERTICAL_CENTER_FORM: Option<Rc<RefCell<FormType>>>,
 }
 
-thread_local! { pub static FormTypeFactory_instance: Option<Rc<RefCell<FormTypeFactory>>> = FormTypeFactory::new(); }
+pub static FormTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<FormTypeFactory>>>> = crate::JavaStatic::new(|| FormTypeFactory::new());
 
 impl FormTypeFactory {
 

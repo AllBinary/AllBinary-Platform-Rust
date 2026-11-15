@@ -52,9 +52,9 @@ pub struct GenericProfiles {
     pub fileName: String,
 }
 
-thread_local! { pub static GenericProfiles_DEFAULT_PROFILES_PATH: String = String::from("./modules/configs/profiles/"); }
-thread_local! { pub static GenericProfiles_DEFAULT_PROFILE_ACTIONS_PATH: String = format!("{}{}", GenericProfiles_DEFAULT_PROFILES_PATH.with(Clone::clone), String::from("actions/")); }
-thread_local! { pub static GenericProfiles_DEFAULT_FILE: String = format!("{}{}", GenericProfiles_DEFAULT_PROFILES_PATH.with(Clone::clone), String::from("profiles.xml")); }
+pub static GenericProfiles_DEFAULT_PROFILES_PATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("./modules/configs/profiles/"));
+pub static GenericProfiles_DEFAULT_PROFILE_ACTIONS_PATH: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", GenericProfiles_DEFAULT_PROFILES_PATH.with(Clone::clone), String::from("actions/")));
+pub static GenericProfiles_DEFAULT_FILE: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}{}", GenericProfiles_DEFAULT_PROFILES_PATH.with(Clone::clone), String::from("profiles.xml")));
 impl DomNodeInterface for GenericProfiles {
     fn toXmlNode(&mut self, mut document: Option<Rc<RefCell<Document>>>) -> Option<Rc<RefCell<Node>>> { Self::toXmlNode(self, document) }
 }

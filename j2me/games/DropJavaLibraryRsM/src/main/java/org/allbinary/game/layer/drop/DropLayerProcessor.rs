@@ -35,7 +35,7 @@ pub struct DropLayerProcessor {
     pub base: BasicLayerProcessor,
 }
 
-thread_local! { pub static DropLayerProcessor_LAYER_PROCESSOR: Option<Rc<RefCell<dyn crate::org::allbinary::layer::BasicLayerProcessor::BasicLayerProcessorDyn>>> = DropLayerProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::BasicLayerProcessor::BasicLayerProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::BasicLayerProcessor::BasicLayerProcessorDyn>>); }
+pub static DropLayerProcessor_LAYER_PROCESSOR: crate::JavaStatic<Option<Rc<RefCell<dyn crate::org::allbinary::layer::BasicLayerProcessor::BasicLayerProcessorDyn>>>> = crate::JavaStatic::new(|| DropLayerProcessor::new().map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::BasicLayerProcessor::BasicLayerProcessorDyn>>).map(|reference| reference as Rc<RefCell<dyn crate::org::allbinary::layer::BasicLayerProcessor::BasicLayerProcessorDyn>>));
 
 impl DropLayerProcessor {
     

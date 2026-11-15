@@ -28,10 +28,10 @@ macro_rules! jcall {
 pub struct RequestData {
 }
 
-thread_local! { pub static RequestData_REQUEST: String = String::from("REQUESTDATA_REQUEST"); }
-thread_local! { pub static RequestData_PARAMETER: String = String::from("REQUESTDATA_PARAMETER"); }
-thread_local! { pub static RequestData_VIEWS: String = String::from("REQUESTDATA_VIEWS"); }
-thread_local! { pub static RequestData_VISITORS: String = String::from("REQUESTDATA_VISITORS"); }
+pub static RequestData_REQUEST: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("REQUESTDATA_REQUEST"));
+pub static RequestData_PARAMETER: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("REQUESTDATA_PARAMETER"));
+pub static RequestData_VIEWS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("REQUESTDATA_VIEWS"));
+pub static RequestData_VISITORS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("REQUESTDATA_VISITORS"));
 
 impl RequestData {
 

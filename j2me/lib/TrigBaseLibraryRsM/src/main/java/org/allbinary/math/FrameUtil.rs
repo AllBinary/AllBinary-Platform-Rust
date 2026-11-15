@@ -32,7 +32,7 @@ macro_rules! jcall {
 pub struct FrameUtil {
 }
 
-thread_local! { pub static FrameUtil_instance: Option<Rc<RefCell<FrameUtil>>> = FrameUtil::new(); }
+pub static FrameUtil_instance: crate::JavaStatic<Option<Rc<RefCell<FrameUtil>>>> = crate::JavaStatic::new(|| FrameUtil::new());
 
 impl FrameUtil {
 

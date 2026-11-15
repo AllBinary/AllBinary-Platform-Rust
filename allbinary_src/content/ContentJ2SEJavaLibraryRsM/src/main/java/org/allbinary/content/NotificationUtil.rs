@@ -41,7 +41,7 @@ pub struct NotificationUtil {
     pub notificationManager: Option<Rc<RefCell<NotificationManager>>>,
 }
 
-thread_local! { pub static NotificationUtil_SINGLETON: Option<Rc<RefCell<NotificationUtil>>> = NotificationUtil::new(); }
+pub static NotificationUtil_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<NotificationUtil>>>> = crate::JavaStatic::new(|| NotificationUtil::new());
 
 impl NotificationUtil {
 

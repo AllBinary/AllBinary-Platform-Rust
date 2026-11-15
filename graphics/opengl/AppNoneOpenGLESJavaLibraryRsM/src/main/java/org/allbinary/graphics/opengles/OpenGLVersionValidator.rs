@@ -30,7 +30,7 @@ pub struct OpenGLVersionValidator {
     pub EGL_CONTEXT_CLIENT_VERSION_VALUE: i32,
 }
 
-thread_local! { pub static OpenGLVersionValidator_instance: Option<Rc<RefCell<OpenGLVersionValidator>>> = OpenGLVersionValidator::new(); }
+pub static OpenGLVersionValidator_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLVersionValidator>>>> = crate::JavaStatic::new(|| OpenGLVersionValidator::new());
 
 impl OpenGLVersionValidator {
 

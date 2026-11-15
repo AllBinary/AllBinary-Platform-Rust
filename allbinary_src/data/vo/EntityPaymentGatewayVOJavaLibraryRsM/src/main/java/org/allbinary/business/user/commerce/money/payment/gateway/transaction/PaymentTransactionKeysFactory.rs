@@ -110,7 +110,7 @@ pub struct PaymentTransactionKeysFactory {
     pub EXCEPTION7: Option<Rc<RefCell<PaymentTransactionKeys>>>,
 }
 
-thread_local! { pub static PaymentTransactionKeysFactory_instance: Option<Rc<RefCell<PaymentTransactionKeysFactory>>> = PaymentTransactionKeysFactory::new(); }
+pub static PaymentTransactionKeysFactory_instance: crate::JavaStatic<Option<Rc<RefCell<PaymentTransactionKeysFactory>>>> = crate::JavaStatic::new(|| PaymentTransactionKeysFactory::new());
 
 impl PaymentTransactionKeysFactory {
 

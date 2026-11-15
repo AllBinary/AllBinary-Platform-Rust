@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct NullAllBinaryGameCanvas {
 }
 
-thread_local! { pub static NullAllBinaryGameCanvas_NULL_ALLBINARY_GAME_CANVAS: Option<Rc<RefCell<NullAllBinaryGameCanvas>>> = NullAllBinaryGameCanvas::new(); }
+pub static NullAllBinaryGameCanvas_NULL_ALLBINARY_GAME_CANVAS: crate::JavaStatic<Option<Rc<RefCell<NullAllBinaryGameCanvas>>>> = crate::JavaStatic::new(|| NullAllBinaryGameCanvas::new());
 impl AllBinaryGameCanvasInterface for NullAllBinaryGameCanvas {
     fn getLayerManager(&mut self) -> Option<Rc<RefCell<dyn crate::org::allbinary::game::layer::AllBinaryGameLayerManager::AllBinaryGameLayerManagerDyn>>> { Self::getLayerManager(self) }
 }

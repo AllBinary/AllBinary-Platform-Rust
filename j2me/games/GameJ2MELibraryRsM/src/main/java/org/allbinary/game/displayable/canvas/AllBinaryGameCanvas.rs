@@ -263,8 +263,8 @@ pub struct AllBinaryGameCanvas {
     pub YIELD_SLEEP: i64,
 }
 
-thread_local! { pub static AllBinaryGameCanvas_id: i32 = 0; }
-thread_local! { pub static AllBinaryGameCanvas_TYPE: i32 = 2; }
+pub static AllBinaryGameCanvas_id: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0);
+pub static AllBinaryGameCanvas_TYPE: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 2);
 // impl AllBinaryGameCanvasInterface for AllBinaryGameCanvas with the methods of the trait
 // impl GameCanvasRunnableInterface for AllBinaryGameCanvas with the methods of the trait
 impl MenuListener for AllBinaryGameCanvas {

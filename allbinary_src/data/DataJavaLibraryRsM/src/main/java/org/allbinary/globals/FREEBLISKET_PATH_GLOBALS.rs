@@ -42,7 +42,7 @@ pub struct FREEBLISKET_PATH_GLOBALS {
     pub ERRORPAGE: String,
 }
 
-thread_local! { pub static FREEBLISKET_PATH_GLOBALS_instance: Option<Rc<RefCell<FREEBLISKET_PATH_GLOBALS>>> = FREEBLISKET_PATH_GLOBALS::new(); }
+pub static FREEBLISKET_PATH_GLOBALS_instance: crate::JavaStatic<Option<Rc<RefCell<FREEBLISKET_PATH_GLOBALS>>>> = crate::JavaStatic::new(|| FREEBLISKET_PATH_GLOBALS::new());
 
 impl FREEBLISKET_PATH_GLOBALS {
 

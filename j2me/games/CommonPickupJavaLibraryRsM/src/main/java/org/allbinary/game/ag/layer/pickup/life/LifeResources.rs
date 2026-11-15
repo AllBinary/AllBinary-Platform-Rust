@@ -29,7 +29,7 @@ pub struct LifeResources {
     pub RESOURCE: String,
 }
 
-thread_local! { pub static LifeResources_SINGLETON: Option<Rc<RefCell<LifeResources>>> = LifeResources::new(); }
+pub static LifeResources_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<LifeResources>>>> = crate::JavaStatic::new(|| LifeResources::new());
 
 impl LifeResources {
 

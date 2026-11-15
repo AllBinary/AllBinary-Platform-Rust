@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct DataOutputStreamFactory {
 }
 
-thread_local! { pub static DataOutputStreamFactory_instance: Option<Rc<RefCell<DataOutputStreamFactory>>> = DataOutputStreamFactory::new(); }
+pub static DataOutputStreamFactory_instance: crate::JavaStatic<Option<Rc<RefCell<DataOutputStreamFactory>>>> = crate::JavaStatic::new(|| DataOutputStreamFactory::new());
 
 impl DataOutputStreamFactory {
 

@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct OpenGLESImageDraw {
 }
 
-thread_local! { pub static OpenGLESImageDraw_instance: Option<Rc<RefCell<OpenGLESImageDraw>>> = OpenGLESImageDraw::new(); }
+pub static OpenGLESImageDraw_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLESImageDraw>>>> = crate::JavaStatic::new(|| OpenGLESImageDraw::new());
 
 impl OpenGLESImageDraw {
 

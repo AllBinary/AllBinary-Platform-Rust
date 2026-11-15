@@ -23,7 +23,7 @@ pub struct NullDisplayable {
     pub baseGameStatistics: Option<Rc<RefCell<dyn crate::org::allbinary::canvas::BaseGameStatistics::BaseGameStatisticsDyn>>>,
 }
 
-thread_local! { pub static NullDisplayable_SINGLETON: Option<Rc<RefCell<NullDisplayable>>> = NullDisplayable::new(); }
+pub static NullDisplayable_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<NullDisplayable>>>> = crate::JavaStatic::new(|| NullDisplayable::new());
 
 impl NullDisplayable {
     

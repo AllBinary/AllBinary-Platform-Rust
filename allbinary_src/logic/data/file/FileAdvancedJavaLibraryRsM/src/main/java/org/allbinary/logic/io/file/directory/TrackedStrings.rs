@@ -39,7 +39,7 @@ pub struct TrackedStrings {
     pub SEP_BY_NULL_CHAR_INSTEAD_OF_NEW_LINE: String,
 }
 
-thread_local! { pub static TrackedStrings_instance: Option<Rc<RefCell<TrackedStrings>>> = TrackedStrings::new(); }
+pub static TrackedStrings_instance: crate::JavaStatic<Option<Rc<RefCell<TrackedStrings>>>> = crate::JavaStatic::new(|| TrackedStrings::new());
 
 impl TrackedStrings {
 

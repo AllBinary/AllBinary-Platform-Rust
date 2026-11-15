@@ -36,10 +36,10 @@ pub struct Health {
     pub healthListenerInterface: Option<Rc<RefCell<dyn HealthListenerInterface>>>,
 }
 
-thread_local! { pub static Health_NULL_HEALTH: Option<Rc<RefCell<Health>>> = Health::new(0); }
-thread_local! { pub static Health_NAME: String = String::from("Health Resource"); }
-thread_local! { pub static Health_HEALTH_LABEL: String = String::from("Health: "); }
-thread_local! { pub static Health_MAX_HEALTH_LABEL: String = String::from(" Max: "); }
+pub static Health_NULL_HEALTH: crate::JavaStatic<Option<Rc<RefCell<Health>>>> = crate::JavaStatic::new(|| Health::new(0));
+pub static Health_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Health Resource"));
+pub static Health_HEALTH_LABEL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Health: "));
+pub static Health_MAX_HEALTH_LABEL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(" Max: "));
 impl HealthInterface for Health {
     fn isAlive(&mut self) -> bool { Self::isAlive(self) }
     fn damage(&mut self, mut ahealth: i32) { Self::damage(self, ahealth) }

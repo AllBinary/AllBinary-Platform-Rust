@@ -30,7 +30,7 @@ macro_rules! jcall {
 pub struct SystemProperties {
 }
 
-thread_local! { pub static SystemProperties_instance: Option<Rc<RefCell<SystemProperties>>> = SystemProperties::new(); }
+pub static SystemProperties_instance: crate::JavaStatic<Option<Rc<RefCell<SystemProperties>>>> = crate::JavaStatic::new(|| SystemProperties::new());
 
 impl SystemProperties {
 

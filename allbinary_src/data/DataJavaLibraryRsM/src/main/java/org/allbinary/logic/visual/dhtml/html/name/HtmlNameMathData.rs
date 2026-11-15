@@ -33,7 +33,7 @@ pub struct HtmlNameMathData {
     pub MULTIPLY: String,
 }
 
-thread_local! { pub static HtmlNameMathData_instance: Option<Rc<RefCell<HtmlNameMathData>>> = HtmlNameMathData::new(); }
+pub static HtmlNameMathData_instance: crate::JavaStatic<Option<Rc<RefCell<HtmlNameMathData>>>> = crate::JavaStatic::new(|| HtmlNameMathData::new());
 
 impl HtmlNameMathData {
 

@@ -34,7 +34,7 @@ pub struct TerrainEventCircularStaticPool {
     pub EVENT_POOL: Option<Rc<RefCell<AllBinaryEventCircularPool>>>,
 }
 
-thread_local! { pub static TerrainEventCircularStaticPool_instance: Option<Rc<RefCell<TerrainEventCircularStaticPool>>> = TerrainEventCircularStaticPool::new(); }
+pub static TerrainEventCircularStaticPool_instance: crate::JavaStatic<Option<Rc<RefCell<TerrainEventCircularStaticPool>>>> = crate::JavaStatic::new(|| TerrainEventCircularStaticPool::new());
 
 impl TerrainEventCircularStaticPool {
 

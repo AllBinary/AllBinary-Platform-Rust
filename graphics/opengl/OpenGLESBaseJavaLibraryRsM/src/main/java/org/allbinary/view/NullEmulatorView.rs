@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct NullEmulatorView {
 }
 
-thread_local! { pub static NullEmulatorView_NULL_EMULATOR_VIEW: Option<Rc<RefCell<NullEmulatorView>>> = NullEmulatorView::new(); }
+pub static NullEmulatorView_NULL_EMULATOR_VIEW: crate::JavaStatic<Option<Rc<RefCell<NullEmulatorView>>>> = crate::JavaStatic::new(|| NullEmulatorView::new());
 impl EmulatorViewInterface for NullEmulatorView {
     fn setMidlet(&mut self, mut midlet: Option<Rc<RefCell<dyn crate::javax::microedition::midlet::MIDlet::MIDletDyn>>>) { Self::setMidlet(self, midlet) }
     fn onEmulatorInitComplete(&mut self, mut midletActivity: Option<Rc<RefCell<Box<dyn std::any::Any>>>>) { Self::onEmulatorInitComplete(self, midletActivity) }

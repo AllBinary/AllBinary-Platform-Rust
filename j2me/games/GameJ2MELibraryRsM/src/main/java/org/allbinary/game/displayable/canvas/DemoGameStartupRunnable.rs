@@ -36,7 +36,7 @@ pub struct DemoGameStartupRunnable {
     pub demoCanvas: Option<Rc<RefCell<DemoCanvas>>>,
 }
 
-thread_local! { pub static DemoGameStartupRunnable_TYPE: i32 = 4; }
+pub static DemoGameStartupRunnable_TYPE: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 4);
 impl crate::org::allbinary::thread::RunnableInterface::RunnableInterface for DemoGameStartupRunnable {
     fn isRunning(&mut self) -> bool { crate::org::allbinary::thread::ABRunnable::ABRunnable::isRunning(crate::org::allbinary::thread::ABRunnable::ABRunnableDyn::as_ABRunnable_mut(self)) }
     fn setRunning(&mut self, p1: bool) { crate::org::allbinary::thread::ABRunnable::ABRunnable::setRunning(crate::org::allbinary::thread::ABRunnable::ABRunnableDyn::as_ABRunnable_mut(self), p1) }

@@ -30,7 +30,7 @@ pub struct NullABRunnable {
     pub base: ABRunnable,
 }
 
-thread_local! { pub static NullABRunnable_instance: Option<Rc<RefCell<NullABRunnable>>> = NullABRunnable::new(); }
+pub static NullABRunnable_instance: crate::JavaStatic<Option<Rc<RefCell<NullABRunnable>>>> = crate::JavaStatic::new(|| NullABRunnable::new());
 impl crate::org::allbinary::thread::RunnableInterface::RunnableInterface for NullABRunnable {
     fn isRunning(&mut self) -> bool { Self::isRunning(self) }
     fn setRunning(&mut self, p1: bool) { crate::org::allbinary::thread::ABRunnable::ABRunnable::setRunning(crate::org::allbinary::thread::ABRunnable::ABRunnableDyn::as_ABRunnable_mut(self), p1) }

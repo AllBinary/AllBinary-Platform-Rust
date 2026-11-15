@@ -39,7 +39,7 @@ pub struct SimulatedBuildingPropertiesFactory {
     pub base: BuildingPropertiesFactory,
 }
 
-thread_local! { pub static SimulatedBuildingPropertiesFactory_instanceC: Option<Rc<RefCell<SimulatedBuildingPropertiesFactory>>> = SimulatedBuildingPropertiesFactory::new(); }
+pub static SimulatedBuildingPropertiesFactory_instanceC: crate::JavaStatic<Option<Rc<RefCell<SimulatedBuildingPropertiesFactory>>>> = crate::JavaStatic::new(|| SimulatedBuildingPropertiesFactory::new());
 
 impl SimulatedBuildingPropertiesFactory {
 

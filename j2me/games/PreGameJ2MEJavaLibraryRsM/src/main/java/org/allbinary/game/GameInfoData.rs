@@ -34,7 +34,7 @@ pub struct GameInfoData {
     pub SOFTWARE_INFORMATION: String,
 }
 
-thread_local! { pub static GameInfoData_instance: Option<Rc<RefCell<GameInfoData>>> = GameInfoData::new(); }
+pub static GameInfoData_instance: crate::JavaStatic<Option<Rc<RefCell<GameInfoData>>>> = crate::JavaStatic::new(|| GameInfoData::new());
 
 impl GameInfoData {
 

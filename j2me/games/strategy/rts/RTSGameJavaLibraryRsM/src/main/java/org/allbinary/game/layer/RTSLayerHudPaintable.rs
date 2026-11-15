@@ -43,7 +43,7 @@ pub struct RTSLayerHudPaintable {
     pub fontHeight: i32,
 }
 
-thread_local! { pub static RTSLayerHudPaintable_instance: Option<Rc<RefCell<RTSLayerHudPaintable>>> = RTSLayerHudPaintable::new(); }
+pub static RTSLayerHudPaintable_instance: crate::JavaStatic<Option<Rc<RefCell<RTSLayerHudPaintable>>>> = crate::JavaStatic::new(|| RTSLayerHudPaintable::new());
 impl UpdateMyFontInterface for RTSLayerHudPaintable {
     fn updateMeasurement(&mut self, mut graphics: Option<Rc<RefCell<dyn crate::javax::microedition::lcdui::Graphics::GraphicsDyn>>>) { Self::updateMeasurement(self, graphics) }
 }

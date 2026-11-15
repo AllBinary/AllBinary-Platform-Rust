@@ -49,7 +49,7 @@ pub struct BlisketBackupFactory {
     pub directory: Option<Rc<RefCell<Directory>>>,
 }
 
-thread_local! { pub static BlisketBackupFactory_instance: Option<Rc<RefCell<BlisketBackupFactory>>> = BlisketBackupFactory::new(); }
+pub static BlisketBackupFactory_instance: crate::JavaStatic<Option<Rc<RefCell<BlisketBackupFactory>>>> = crate::JavaStatic::new(|| BlisketBackupFactory::new());
 
 impl BlisketBackupFactory {
 

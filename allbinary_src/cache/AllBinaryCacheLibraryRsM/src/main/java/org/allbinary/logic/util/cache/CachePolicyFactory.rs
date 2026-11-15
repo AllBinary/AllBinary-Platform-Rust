@@ -36,7 +36,7 @@ pub struct CachePolicyFactory {
     pub ONE_MINUTE_ONE_HUNDRED_MAX: Option<Rc<RefCell<CachePolicy>>>,
 }
 
-thread_local! { pub static CachePolicyFactory_instance: Option<Rc<RefCell<CachePolicyFactory>>> = CachePolicyFactory::new(); }
+pub static CachePolicyFactory_instance: crate::JavaStatic<Option<Rc<RefCell<CachePolicyFactory>>>> = crate::JavaStatic::new(|| CachePolicyFactory::new());
 
 impl CachePolicyFactory {
 

@@ -31,7 +31,7 @@ pub struct ThreadPoolStrings {
     pub COMPLETE_TASK: String,
 }
 
-thread_local! { pub static ThreadPoolStrings_instance: Option<Rc<RefCell<ThreadPoolStrings>>> = ThreadPoolStrings::new(); }
+pub static ThreadPoolStrings_instance: crate::JavaStatic<Option<Rc<RefCell<ThreadPoolStrings>>>> = crate::JavaStatic::new(|| ThreadPoolStrings::new());
 
 impl ThreadPoolStrings {
 

@@ -28,12 +28,12 @@ macro_rules! jcall {
 pub struct PermissionItemData {
 }
 
-thread_local! { pub static PermissionItemData_WHO: String = String::from("PERMISSIONSITEM_WHO"); }
-thread_local! { pub static PermissionItemData_WHAT: String = String::from("PERMISSIONSITEM_WHAT"); }
-thread_local! { pub static PermissionItemData_TYPE: String = String::from("PERMISSIONSITEM_TYPE"); }
-thread_local! { pub static PermissionItemData_START_TIME: String = String::from("PERMISSIONSITEM_START_TIME"); }
-thread_local! { pub static PermissionItemData_END_TIME: String = String::from("PERMISSIONSITEM_END_TIME"); }
-thread_local! { pub static PermissionItemData_REMOTE_ADDR: String = String::from("PERMISSIONSITEM_REMOTE_ADDR"); }
+pub static PermissionItemData_WHO: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PERMISSIONSITEM_WHO"));
+pub static PermissionItemData_WHAT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PERMISSIONSITEM_WHAT"));
+pub static PermissionItemData_TYPE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PERMISSIONSITEM_TYPE"));
+pub static PermissionItemData_START_TIME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PERMISSIONSITEM_START_TIME"));
+pub static PermissionItemData_END_TIME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PERMISSIONSITEM_END_TIME"));
+pub static PermissionItemData_REMOTE_ADDR: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("PERMISSIONSITEM_REMOTE_ADDR"));
 
 impl PermissionItemData {
 

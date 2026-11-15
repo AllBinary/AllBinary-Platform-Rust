@@ -52,7 +52,7 @@ pub struct SqlStrings {
     pub FIELD_VALUE: String,
 }
 
-thread_local! { pub static SqlStrings_instance: Option<Rc<RefCell<SqlStrings>>> = SqlStrings::new(); }
+pub static SqlStrings_instance: crate::JavaStatic<Option<Rc<RefCell<SqlStrings>>>> = crate::JavaStatic::new(|| SqlStrings::new());
 
 impl SqlStrings {
 

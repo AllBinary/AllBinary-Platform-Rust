@@ -32,7 +32,7 @@ pub struct AlphaProcessor {
     pub base: AlphaBaseProcessor,
 }
 
-thread_local! { pub static AlphaProcessor_instanceC: Option<Rc<RefCell<AlphaProcessor>>> = AlphaProcessor::new(); }
+pub static AlphaProcessor_instanceC: crate::JavaStatic<Option<Rc<RefCell<AlphaProcessor>>>> = crate::JavaStatic::new(|| AlphaProcessor::new());
 
 impl AlphaProcessor {
 

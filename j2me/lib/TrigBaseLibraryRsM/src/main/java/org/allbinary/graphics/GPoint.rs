@@ -37,7 +37,7 @@ pub struct GPoint {
     pub z: i32,
 }
 
-thread_local! { pub static GPoint_POINT_LABEL: String = String::from("Point: "); }
+pub static GPoint_POINT_LABEL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Point: "));
 
 impl GPoint {
     

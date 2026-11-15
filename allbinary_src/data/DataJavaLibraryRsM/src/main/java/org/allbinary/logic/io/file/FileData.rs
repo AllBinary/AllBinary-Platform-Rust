@@ -44,7 +44,7 @@ pub struct FileData {
     pub MINDOWNLOADABLEFILESIZE: i32,
 }
 
-thread_local! { pub static FileData_instance: Option<Rc<RefCell<FileData>>> = FileData::new(); }
+pub static FileData_instance: crate::JavaStatic<Option<Rc<RefCell<FileData>>>> = crate::JavaStatic::new(|| FileData::new());
 
 impl FileData {
 

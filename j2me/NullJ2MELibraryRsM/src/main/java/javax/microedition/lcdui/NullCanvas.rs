@@ -25,7 +25,7 @@ pub struct NullCanvas {
     pub base: Canvas,
 }
 
-thread_local! { pub static NullCanvas_NULL_CANVAS: Option<Rc<RefCell<NullCanvas>>> = NullCanvas::new(); }
+pub static NullCanvas_NULL_CANVAS: crate::JavaStatic<Option<Rc<RefCell<NullCanvas>>>> = crate::JavaStatic::new(|| NullCanvas::new());
 
 impl NullCanvas {
     

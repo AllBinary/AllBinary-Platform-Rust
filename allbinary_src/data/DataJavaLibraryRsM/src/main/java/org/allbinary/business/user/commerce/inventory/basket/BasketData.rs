@@ -28,17 +28,17 @@ macro_rules! jcall {
 pub struct BasketData {
 }
 
-thread_local! { pub static BasketData_BASKET: String = String::from("BASKET"); }
-thread_local! { pub static BasketData_NAME: String = String::from("NAME"); }
-thread_local! { pub static BasketData_BASKETREVIEW: String = String::from("BASKET_REVIEW"); }
-thread_local! { pub static BasketData_TOTALWEIGHT: String = String::from("BASKET_TOTALWEIGTH"); }
-thread_local! { pub static BasketData_ITEMTOTAL: String = String::from("BASKET_ITEMTOTAL"); }
-thread_local! { pub static BasketData_ITEMTOTALINBASKET: String = String::from("BASKET_ITEMTOTALINBASKET"); }
-thread_local! { pub static BasketData_SUBTOTAL: String = String::from("BASKET_SUBTOTAL"); }
-thread_local! { pub static BasketData_ISEMPTY: String = String::from("BASKET_ISEMPTY"); }
-thread_local! { pub static BasketData_INSERT: String = String::from("BASKET_INSERT"); }
-thread_local! { pub static BasketData_DELETE: String = String::from("BASKET_DELETE"); }
-thread_local! { pub static BasketData_ADJUST: String = String::from("BASKET_ADJUST"); }
+pub static BasketData_BASKET: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASKET"));
+pub static BasketData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("NAME"));
+pub static BasketData_BASKETREVIEW: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASKET_REVIEW"));
+pub static BasketData_TOTALWEIGHT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASKET_TOTALWEIGTH"));
+pub static BasketData_ITEMTOTAL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASKET_ITEMTOTAL"));
+pub static BasketData_ITEMTOTALINBASKET: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASKET_ITEMTOTALINBASKET"));
+pub static BasketData_SUBTOTAL: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASKET_SUBTOTAL"));
+pub static BasketData_ISEMPTY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASKET_ISEMPTY"));
+pub static BasketData_INSERT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASKET_INSERT"));
+pub static BasketData_DELETE: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASKET_DELETE"));
+pub static BasketData_ADJUST: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("BASKET_ADJUST"));
 
 impl BasketData {
 

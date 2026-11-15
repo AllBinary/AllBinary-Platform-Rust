@@ -31,7 +31,7 @@ pub struct AdvertisementAreaData {
     pub CONSTRAINTS: String,
 }
 
-thread_local! { pub static AdvertisementAreaData_instance: Option<Rc<RefCell<AdvertisementAreaData>>> = AdvertisementAreaData::new(); }
+pub static AdvertisementAreaData_instance: crate::JavaStatic<Option<Rc<RefCell<AdvertisementAreaData>>>> = crate::JavaStatic::new(|| AdvertisementAreaData::new());
 
 impl AdvertisementAreaData {
 

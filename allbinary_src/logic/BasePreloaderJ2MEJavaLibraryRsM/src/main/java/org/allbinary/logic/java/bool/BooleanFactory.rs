@@ -34,7 +34,7 @@ pub struct BooleanFactory {
     pub NO: String,
 }
 
-thread_local! { pub static BooleanFactory_instance: Option<Rc<RefCell<BooleanFactory>>> = BooleanFactory::new(); }
+pub static BooleanFactory_instance: crate::JavaStatic<Option<Rc<RefCell<BooleanFactory>>>> = crate::JavaStatic::new(|| BooleanFactory::new());
 
 impl BooleanFactory {
 

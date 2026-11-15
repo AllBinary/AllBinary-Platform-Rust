@@ -43,7 +43,7 @@ macro_rules! jcall {
 pub struct AnalogInputBuilder {
 }
 
-thread_local! { pub static AnalogInputBuilder_instance: Option<Rc<RefCell<AnalogInputBuilder>>> = AnalogInputBuilder::new(); }
+pub static AnalogInputBuilder_instance: crate::JavaStatic<Option<Rc<RefCell<AnalogInputBuilder>>>> = crate::JavaStatic::new(|| AnalogInputBuilder::new());
 
 impl AnalogInputBuilder {
 

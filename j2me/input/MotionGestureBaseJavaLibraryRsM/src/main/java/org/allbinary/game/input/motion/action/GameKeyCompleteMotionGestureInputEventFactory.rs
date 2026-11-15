@@ -36,7 +36,7 @@ pub struct GameKeyCompleteMotionGestureInputEventFactory {
     pub eventList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static GameKeyCompleteMotionGestureInputEventFactory_SINGLETON: Option<Rc<RefCell<GameKeyCompleteMotionGestureInputEventFactory>>> = GameKeyCompleteMotionGestureInputEventFactory::new(); }
+pub static GameKeyCompleteMotionGestureInputEventFactory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<GameKeyCompleteMotionGestureInputEventFactory>>>> = crate::JavaStatic::new(|| GameKeyCompleteMotionGestureInputEventFactory::new());
 
 impl GameKeyCompleteMotionGestureInputEventFactory {
 

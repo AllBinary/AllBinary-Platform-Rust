@@ -33,7 +33,7 @@ pub struct BasicUserRoles {
     pub roleVector: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static BasicUserRoles_instance: Option<Rc<RefCell<BasicUserRoles>>> = BasicUserRoles::new(); }
+pub static BasicUserRoles_instance: crate::JavaStatic<Option<Rc<RefCell<BasicUserRoles>>>> = crate::JavaStatic::new(|| BasicUserRoles::new());
 
 impl BasicUserRoles {
 

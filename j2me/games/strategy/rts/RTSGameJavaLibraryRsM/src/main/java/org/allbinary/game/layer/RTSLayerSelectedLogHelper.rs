@@ -46,7 +46,7 @@ pub struct RTSLayerSelectedLogHelper {
     pub TRACKTO_TURNTO: String,
 }
 
-thread_local! { pub static RTSLayerSelectedLogHelper_instanceC: Option<Rc<RefCell<RTSLayerSelectedLogHelper>>> = RTSLayerSelectedLogHelper::new(); }
+pub static RTSLayerSelectedLogHelper_instanceC: crate::JavaStatic<Option<Rc<RefCell<RTSLayerSelectedLogHelper>>>> = crate::JavaStatic::new(|| RTSLayerSelectedLogHelper::new());
 
 impl RTSLayerSelectedLogHelper {
 

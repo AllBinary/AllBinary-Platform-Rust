@@ -32,8 +32,8 @@ macro_rules! jcall {
 pub struct WorkFlowRequestHelperFactory {
 }
 
-thread_local! { pub static WorkFlowRequestHelperFactory_CLASSNAME: String = String::from("admin.taghelpers.WorkFlowHelper"); }
-thread_local! { pub static WorkFlowRequestHelperFactory_FACTORYNAME: String = String::from("WorkFlowHelperFactory"); }
+pub static WorkFlowRequestHelperFactory_CLASSNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("admin.taghelpers.WorkFlowHelper"));
+pub static WorkFlowRequestHelperFactory_FACTORYNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("WorkFlowHelperFactory"));
 // impl TagHelperFactoryInterface for WorkFlowRequestHelperFactory with the methods of the trait
 
 impl WorkFlowRequestHelperFactory {

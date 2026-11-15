@@ -34,7 +34,7 @@ pub struct FeatureResourceInitializationUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static FeatureResourceInitializationUtil_instance: Option<Rc<RefCell<FeatureResourceInitializationUtil>>> = FeatureResourceInitializationUtil::new(); }
+pub static FeatureResourceInitializationUtil_instance: crate::JavaStatic<Option<Rc<RefCell<FeatureResourceInitializationUtil>>>> = crate::JavaStatic::new(|| FeatureResourceInitializationUtil::new());
 
 impl FeatureResourceInitializationUtil {
 

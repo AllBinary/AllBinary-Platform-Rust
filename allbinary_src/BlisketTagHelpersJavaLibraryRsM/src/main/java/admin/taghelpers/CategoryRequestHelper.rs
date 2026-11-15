@@ -64,7 +64,7 @@ pub struct CategoryRequestHelper {
     pub transformInfoInterface: Option<Rc<RefCell<dyn TransformInfoInterface>>>,
 }
 
-thread_local! { pub static CategoryRequestHelper_categoryRequest: String = jcall!(StringMaker::new()).append(String::from("<")).append({ let java_field = jcall!(CategoryData::getInstance()).REQUEST.clone(); java_field }.clone()).append(String::from(">")).toString(); }
+pub static CategoryRequestHelper_categoryRequest: crate::JavaStatic<String> = crate::JavaStatic::new(|| jcall!(StringMaker::new()).append(String::from("<")).append({ let java_field = jcall!(CategoryData::getInstance()).REQUEST.clone(); java_field }.clone()).append(String::from(">")).toString());
 
 impl CategoryRequestHelper {
     

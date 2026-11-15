@@ -19,7 +19,7 @@ pub struct EnableFacesShaderOpenGLProcessor {
     pub base: ObjectThreedOpenGLProcessor,
 }
 
-thread_local! { pub static EnableFacesShaderOpenGLProcessor_instance: Option<Rc<RefCell<EnableFacesShaderOpenGLProcessor>>> = EnableFacesShaderOpenGLProcessor::new(); }
+pub static EnableFacesShaderOpenGLProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<EnableFacesShaderOpenGLProcessor>>>> = crate::JavaStatic::new(|| EnableFacesShaderOpenGLProcessor::new());
 
 impl EnableFacesShaderOpenGLProcessor {
     

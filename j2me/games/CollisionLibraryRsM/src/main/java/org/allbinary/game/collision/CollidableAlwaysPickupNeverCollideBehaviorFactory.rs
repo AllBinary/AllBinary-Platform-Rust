@@ -33,7 +33,7 @@ pub struct CollidableAlwaysPickupNeverCollideBehaviorFactory {
     pub instance: Option<Rc<RefCell<CollidableAlwaysPickupNeverCollideBehavior>>>,
 }
 
-thread_local! { pub static CollidableAlwaysPickupNeverCollideBehaviorFactory_instanceC: Option<Rc<RefCell<CollidableAlwaysPickupNeverCollideBehaviorFactory>>> = CollidableAlwaysPickupNeverCollideBehaviorFactory::new(); }
+pub static CollidableAlwaysPickupNeverCollideBehaviorFactory_instanceC: crate::JavaStatic<Option<Rc<RefCell<CollidableAlwaysPickupNeverCollideBehaviorFactory>>>> = crate::JavaStatic::new(|| CollidableAlwaysPickupNeverCollideBehaviorFactory::new());
 
 impl CollidableAlwaysPickupNeverCollideBehaviorFactory {
 

@@ -33,7 +33,7 @@ pub struct OnDemandResources {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static OnDemandResources_NULL_ON_DEMAND_RESOURCES: Option<Rc<RefCell<OnDemandResources>>> = OnDemandResources::new(); }
+pub static OnDemandResources_NULL_ON_DEMAND_RESOURCES: crate::JavaStatic<Option<Rc<RefCell<OnDemandResources>>>> = crate::JavaStatic::new(|| OnDemandResources::new());
 
 impl OnDemandResources {
 

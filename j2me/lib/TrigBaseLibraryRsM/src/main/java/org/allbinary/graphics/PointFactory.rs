@@ -34,7 +34,7 @@ pub struct PointFactory {
     pub ZERO_ZERO: Option<Rc<RefCell<dyn crate::org::allbinary::graphics::GPoint::GPointDyn>>>,
 }
 
-thread_local! { pub static PointFactory_instance: Option<Rc<RefCell<PointFactory>>> = PointFactory::new(); }
+pub static PointFactory_instance: crate::JavaStatic<Option<Rc<RefCell<PointFactory>>>> = crate::JavaStatic::new(|| PointFactory::new());
 
 impl PointFactory {
 

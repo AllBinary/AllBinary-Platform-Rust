@@ -30,7 +30,7 @@ pub struct AdvertisementData {
     pub DESCRIPTION: String,
 }
 
-thread_local! { pub static AdvertisementData_instance: Option<Rc<RefCell<AdvertisementData>>> = AdvertisementData::new(); }
+pub static AdvertisementData_instance: crate::JavaStatic<Option<Rc<RefCell<AdvertisementData>>>> = crate::JavaStatic::new(|| AdvertisementData::new());
 
 impl AdvertisementData {
 

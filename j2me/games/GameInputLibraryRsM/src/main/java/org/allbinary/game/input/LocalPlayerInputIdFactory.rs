@@ -38,7 +38,7 @@ pub struct LocalPlayerInputIdFactory {
     pub totalDevicesMapped: i32,
 }
 
-thread_local! { pub static LocalPlayerInputIdFactory_instance: Option<Rc<RefCell<LocalPlayerInputIdFactory>>> = LocalPlayerInputIdFactory::new(); }
+pub static LocalPlayerInputIdFactory_instance: crate::JavaStatic<Option<Rc<RefCell<LocalPlayerInputIdFactory>>>> = crate::JavaStatic::new(|| LocalPlayerInputIdFactory::new());
 
 impl LocalPlayerInputIdFactory {
 

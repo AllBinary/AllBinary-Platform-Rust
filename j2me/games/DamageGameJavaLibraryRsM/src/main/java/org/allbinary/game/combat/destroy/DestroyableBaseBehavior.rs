@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct DestroyableBaseBehavior {
 }
 
-thread_local! { pub static DestroyableBaseBehavior_instance: Option<Rc<RefCell<dyn DestroyableBaseBehaviorDyn>>> = DestroyableBaseBehavior::new().map(|reference| reference as Rc<RefCell<dyn DestroyableBaseBehaviorDyn>>); }
+pub static DestroyableBaseBehavior_instance: crate::JavaStatic<Option<Rc<RefCell<dyn DestroyableBaseBehaviorDyn>>>> = crate::JavaStatic::new(|| DestroyableBaseBehavior::new().map(|reference| reference as Rc<RefCell<dyn DestroyableBaseBehaviorDyn>>));
 impl DestroyableInterface for DestroyableBaseBehavior {
     fn isDestroyed(&mut self) -> bool { Self::isDestroyed(self) }
 }

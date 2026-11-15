@@ -39,7 +39,7 @@ macro_rules! jcall {
 pub struct NullClip {
 }
 
-thread_local! { pub static NullClip_NULL_CONTROL: Option<Rc<RefCell<NullJ2SEControl>>> = NullJ2SEControl::new({ let java_field = jcall!(unsafe { crate::javax::sound::sampled::BooleanControl::BooleanControl_Type.clone() }).MUTE.clone(); java_field }.clone()); }
+pub static NullClip_NULL_CONTROL: crate::JavaStatic<Option<Rc<RefCell<NullJ2SEControl>>>> = crate::JavaStatic::new(|| NullJ2SEControl::new({ let java_field = jcall!(unsafe { crate::javax::sound::sampled::BooleanControl::BooleanControl_Type.clone() }).MUTE.clone(); java_field }.clone()));
 // impl Clip for NullClip with the methods of the trait
 
 impl NullClip {

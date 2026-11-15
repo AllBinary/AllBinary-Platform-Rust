@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct AdminConfigurationData {
 }
 
-thread_local! { pub static AdminConfigurationData_CONTEXTNAME: String = String::from("Admin"); }
+pub static AdminConfigurationData_CONTEXTNAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Admin"));
 
 impl AdminConfigurationData {
 

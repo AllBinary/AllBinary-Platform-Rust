@@ -34,7 +34,7 @@ pub struct BillingAddressesEntityFactory {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static BillingAddressesEntityFactory_instance: Option<Rc<RefCell<BillingAddressesEntityFactory>>> = BillingAddressesEntityFactory::new(); }
+pub static BillingAddressesEntityFactory_instance: crate::JavaStatic<Option<Rc<RefCell<BillingAddressesEntityFactory>>>> = crate::JavaStatic::new(|| BillingAddressesEntityFactory::new());
 
 impl BillingAddressesEntityFactory {
 

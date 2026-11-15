@@ -47,7 +47,7 @@ pub struct CompleteMotionGestureInputToGameMotionGestureInput {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static CompleteMotionGestureInputToGameMotionGestureInput_instance: Option<Rc<RefCell<CompleteMotionGestureInputToGameMotionGestureInput>>> = CompleteMotionGestureInputToGameMotionGestureInput::new(); }
+pub static CompleteMotionGestureInputToGameMotionGestureInput_instance: crate::JavaStatic<Option<Rc<RefCell<CompleteMotionGestureInputToGameMotionGestureInput>>>> = crate::JavaStatic::new(|| CompleteMotionGestureInputToGameMotionGestureInput::new());
 
 impl CompleteMotionGestureInputToGameMotionGestureInput {
 

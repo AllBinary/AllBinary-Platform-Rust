@@ -31,7 +31,7 @@ pub struct LockableFeatureFactory {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static LockableFeatureFactory_instance: Option<Rc<RefCell<LockableFeatureFactory>>> = LockableFeatureFactory::new(); }
+pub static LockableFeatureFactory_instance: crate::JavaStatic<Option<Rc<RefCell<LockableFeatureFactory>>>> = crate::JavaStatic::new(|| LockableFeatureFactory::new());
 
 impl LockableFeatureFactory {
 

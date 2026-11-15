@@ -36,7 +36,7 @@ pub struct NullIndexedAnimationFactory {
     pub NULL_ANIMATION: Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>>,
 }
 
-thread_local! { pub static NullIndexedAnimationFactory_NULL_INDEXED_ANIMATION_ARRAY: Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>>> = vec![None; (0) as usize]; }
+pub static NullIndexedAnimationFactory_NULL_INDEXED_ANIMATION_ARRAY: crate::JavaStatic<Vec<Option<Rc<RefCell<dyn crate::org::allbinary::animation::IndexedAnimation::IndexedAnimationDyn>>>>> = crate::JavaStatic::new(|| vec![None; (0) as usize]);
 pub static mut NullIndexedAnimationFactory_NULL_INDEXED_ANIMATION_FACTORY: std::cell::LazyCell<Option<Rc<RefCell<NullIndexedAnimationFactory>>>> = std::cell::LazyCell::new(|| NullIndexedAnimationFactory::new());
 impl AnimationInterfaceFactoryInterface for NullIndexedAnimationFactory {
     fn getInstance(&mut self, mut instanceId: i32) -> Option<Rc<RefCell<dyn crate::org::allbinary::animation::Animation::AnimationDyn>>> { Self::getInstance(self, instanceId) }

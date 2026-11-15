@@ -34,7 +34,7 @@ pub struct GameTickDisplayInfoSingleton {
     pub lastHalfHeight: i32,
 }
 
-thread_local! { pub static GameTickDisplayInfoSingleton_instance: Option<Rc<RefCell<GameTickDisplayInfoSingleton>>> = GameTickDisplayInfoSingleton::new(); }
+pub static GameTickDisplayInfoSingleton_instance: crate::JavaStatic<Option<Rc<RefCell<GameTickDisplayInfoSingleton>>>> = crate::JavaStatic::new(|| GameTickDisplayInfoSingleton::new());
 
 impl GameTickDisplayInfoSingleton {
 

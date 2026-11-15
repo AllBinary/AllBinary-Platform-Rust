@@ -34,7 +34,7 @@ pub struct GameMidletEventHandler {
     pub base: BasicEventHandler,
 }
 
-thread_local! { pub static GameMidletEventHandler_gameKeyEventHandler: Option<Rc<RefCell<GameMidletEventHandler>>> = GameMidletEventHandler::new(); }
+pub static GameMidletEventHandler_gameKeyEventHandler: crate::JavaStatic<Option<Rc<RefCell<GameMidletEventHandler>>>> = crate::JavaStatic::new(|| GameMidletEventHandler::new());
 
 impl GameMidletEventHandler {
     

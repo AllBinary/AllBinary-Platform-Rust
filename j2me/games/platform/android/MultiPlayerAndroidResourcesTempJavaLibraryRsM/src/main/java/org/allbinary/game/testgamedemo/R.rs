@@ -63,8 +63,8 @@ impl attr {
 pub struct drawable {
 }
 
-    thread_local! { pub static R_testgamedemo_icon: i32 = 0x7f020000; }
-    thread_local! { pub static R_testgamedemo_wait_256_by_256: i32 = 0x7f020001; }
+    pub static R_testgamedemo_icon: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f020000);
+    pub static R_testgamedemo_wait_256_by_256: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f020001);
 
 impl drawable {
 
@@ -86,12 +86,12 @@ impl drawable {
 pub struct id {
 }
 
-    thread_local! { pub static R_ad_area_bottom: i32 = 0x7f060002; }
-    thread_local! { pub static R_ad_area_left: i32 = 0x7f060003; }
-    thread_local! { pub static R_ad_area_right: i32 = 0x7f060004; }
-    thread_local! { pub static R_ad_area_top: i32 = 0x7f060001; }
-    thread_local! { pub static R_testgamedemo: i32 = 0x7f060000; }
-    thread_local! { pub static R_testgamedemo_gl: i32 = 0x7f060005; }
+    pub static R_ad_area_bottom: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f060002);
+    pub static R_ad_area_left: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f060003);
+    pub static R_ad_area_right: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f060004);
+    pub static R_ad_area_top: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f060001);
+    pub static R_testgamedemo: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f060000);
+    pub static R_testgamedemo_gl: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f060005);
 
 impl id {
 
@@ -113,9 +113,9 @@ impl id {
 pub struct layout {
 }
 
-    thread_local! { pub static R_testgamedemo_ad_overlay_layout: i32 = 0x7f030000; }
-    thread_local! { pub static R_testgamedemo_gl_layout: i32 = 0x7f030001; }
-    thread_local! { pub static R_testgamedemo_layout: i32 = 0x7f030002; }
+    pub static R_testgamedemo_ad_overlay_layout: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f030000);
+    pub static R_testgamedemo_gl_layout: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f030001);
+    pub static R_testgamedemo_layout: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f030002);
 
 impl layout {
 
@@ -137,50 +137,50 @@ impl layout {
 pub struct raw {
 }
 
-    thread_local! { pub static R_error: i32 = 0x7f040000; }
-    thread_local! { pub static R_licenseinitdata: i32 = 0x7f040001; }
-    thread_local! { pub static R_partner: i32 = 0x7f040002; }
-    thread_local! { pub static R_select: i32 = 0x7f040003; }
-    thread_local! { pub static R_test: i32 = 0x7f040004; }
-    thread_local! { pub static R_testgamedemo_wait_256_by_256: i32 = 0x7f040005; }
-    thread_local! { pub static R_ouya_a: i32 = 0x7f040012; }
-    thread_local! { pub static R_ouya_key: i32 = 0x7f040013; }
-    thread_local! { pub static R_ouya_o: i32 = 0x7f040014; }
-    thread_local! { pub static R_ouya_u: i32 = 0x7f040015; }
-    thread_local! { pub static R_ouya_y: i32 = 0x7f040016; }
-    thread_local! { pub static R_touch_button_128_by_128: i32 = 0x7f040026; }
-    thread_local! { pub static R_touch_button_64_by_64: i32 = 0x7f040027; }
-    thread_local! { pub static R_touch_button_create_128_by_128: i32 = 0x7f040028; }
-    thread_local! { pub static R_touch_button_create_64_by_64: i32 = 0x7f040029; }
-    thread_local! { pub static R_touch_button_down_arrow_128_by_128: i32 = 0x7f04002a; }
-    thread_local! { pub static R_touch_button_down_arrow_64_by_64: i32 = 0x7f04002b; }
-    thread_local! { pub static R_touch_button_generic_action_128_by_128: i32 = 0x7f04002c; }
-    thread_local! { pub static R_touch_button_generic_action_64_by_64: i32 = 0x7f04002d; }
-    thread_local! { pub static R_touch_button_join_128_by_128: i32 = 0x7f04002e; }
-    thread_local! { pub static R_touch_button_join_64_by_64: i32 = 0x7f04002f; }
-    thread_local! { pub static R_touch_button_leave_128_by_128: i32 = 0x7f040030; }
-    thread_local! { pub static R_touch_button_leave_64_by_64: i32 = 0x7f040031; }
-    thread_local! { pub static R_touch_button_login_128_by_128: i32 = 0x7f040032; }
-    thread_local! { pub static R_touch_button_login_64_by_64: i32 = 0x7f040033; }
-    thread_local! { pub static R_touch_button_next_128_by_128: i32 = 0x7f040034; }
-    thread_local! { pub static R_touch_button_next_64_by_64: i32 = 0x7f040035; }
-    thread_local! { pub static R_touch_button_refresh_128_by_128: i32 = 0x7f040036; }
-    thread_local! { pub static R_touch_button_refresh_64_by_64: i32 = 0x7f040037; }
-    thread_local! { pub static R_touch_button_start_128_by_128: i32 = 0x7f040038; }
-    thread_local! { pub static R_touch_button_start_64_by_64: i32 = 0x7f040039; }
-    thread_local! { pub static R_touch_button_add_local_player_128_by_128: i32 = 0x7f040038; }
-    thread_local! { pub static R_touch_button_add_local_player_64_by_64: i32 = 0x7f040039; }
-    thread_local! { pub static R_touch_button_strafe_left_arrow_128_by_128: i32 = 0x7f04003a; }
-    thread_local! { pub static R_touch_button_strafe_left_arrow_64_by_64: i32 = 0x7f04003b; }
-    thread_local! { pub static R_touch_button_strafe_right_arrow_128_by_128: i32 = 0x7f04003c; }
-    thread_local! { pub static R_touch_button_strafe_right_arrow_64_by_64: i32 = 0x7f04003d; }
-    thread_local! { pub static R_touch_button_turn_left_arrow_128_by_128: i32 = 0x7f04003e; }
-    thread_local! { pub static R_touch_button_turn_left_arrow_64_by_64: i32 = 0x7f04003f; }
-    thread_local! { pub static R_touch_button_turn_right_arrow_128_by_128: i32 = 0x7f040040; }
-    thread_local! { pub static R_touch_button_turn_right_arrow_64_by_64: i32 = 0x7f040041; }
-    thread_local! { pub static R_touch_button_up_arrow_128_by_128: i32 = 0x7f040042; }
-    thread_local! { pub static R_touch_button_up_arrow_64_by_64: i32 = 0x7f040043; }
-    thread_local! { pub static R_touch_button_generic_action_arrow_64_by_64: i32 = 0x7f040009; }
+    pub static R_error: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040000);
+    pub static R_licenseinitdata: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040001);
+    pub static R_partner: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040002);
+    pub static R_select: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040003);
+    pub static R_test: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040004);
+    pub static R_testgamedemo_wait_256_by_256: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040005);
+    pub static R_ouya_a: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040012);
+    pub static R_ouya_key: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040013);
+    pub static R_ouya_o: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040014);
+    pub static R_ouya_u: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040015);
+    pub static R_ouya_y: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040016);
+    pub static R_touch_button_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040026);
+    pub static R_touch_button_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040027);
+    pub static R_touch_button_create_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040028);
+    pub static R_touch_button_create_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040029);
+    pub static R_touch_button_down_arrow_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f04002a);
+    pub static R_touch_button_down_arrow_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f04002b);
+    pub static R_touch_button_generic_action_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f04002c);
+    pub static R_touch_button_generic_action_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f04002d);
+    pub static R_touch_button_join_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f04002e);
+    pub static R_touch_button_join_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f04002f);
+    pub static R_touch_button_leave_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040030);
+    pub static R_touch_button_leave_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040031);
+    pub static R_touch_button_login_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040032);
+    pub static R_touch_button_login_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040033);
+    pub static R_touch_button_next_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040034);
+    pub static R_touch_button_next_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040035);
+    pub static R_touch_button_refresh_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040036);
+    pub static R_touch_button_refresh_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040037);
+    pub static R_touch_button_start_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040038);
+    pub static R_touch_button_start_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040039);
+    pub static R_touch_button_add_local_player_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040038);
+    pub static R_touch_button_add_local_player_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040039);
+    pub static R_touch_button_strafe_left_arrow_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f04003a);
+    pub static R_touch_button_strafe_left_arrow_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f04003b);
+    pub static R_touch_button_strafe_right_arrow_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f04003c);
+    pub static R_touch_button_strafe_right_arrow_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f04003d);
+    pub static R_touch_button_turn_left_arrow_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f04003e);
+    pub static R_touch_button_turn_left_arrow_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f04003f);
+    pub static R_touch_button_turn_right_arrow_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040040);
+    pub static R_touch_button_turn_right_arrow_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040041);
+    pub static R_touch_button_up_arrow_128_by_128: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040042);
+    pub static R_touch_button_up_arrow_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040043);
+    pub static R_touch_button_generic_action_arrow_64_by_64: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f040009);
 
 impl raw {
 
@@ -202,8 +202,8 @@ impl raw {
 pub struct string {
 }
 
-    thread_local! { pub static R_progressbar_in_title_string: i32 = 0x7f050001; }
-    thread_local! { pub static R_testgamedemo_app_name: i32 = 0x7f050000; }
+    pub static R_progressbar_in_title_string: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f050001);
+    pub static R_testgamedemo_app_name: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 0x7f050000);
 
 impl string {
 

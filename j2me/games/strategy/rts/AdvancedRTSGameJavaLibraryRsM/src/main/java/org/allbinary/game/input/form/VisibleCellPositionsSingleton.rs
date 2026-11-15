@@ -50,7 +50,7 @@ pub struct VisibleCellPositionsSingleton {
     pub currentIndex: i32,
 }
 
-thread_local! { pub static VisibleCellPositionsSingleton_instance: Option<Rc<RefCell<VisibleCellPositionsSingleton>>> = VisibleCellPositionsSingleton::new(); }
+pub static VisibleCellPositionsSingleton_instance: crate::JavaStatic<Option<Rc<RefCell<VisibleCellPositionsSingleton>>>> = crate::JavaStatic::new(|| VisibleCellPositionsSingleton::new());
 impl BuildingEventListenerInterface for VisibleCellPositionsSingleton {
     fn onBuildingEvent(&mut self, mut event: Option<Rc<RefCell<RTSLayerEvent>>>) { Self::onBuildingEvent(self, event) }
 }

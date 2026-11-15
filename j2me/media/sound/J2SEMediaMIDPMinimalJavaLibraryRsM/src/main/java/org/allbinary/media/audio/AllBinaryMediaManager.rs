@@ -49,8 +49,8 @@ macro_rules! jcall {
 pub struct AllBinaryMediaManager {
 }
 
-thread_local! { pub static AllBinaryMediaManager_THIS: String = String::from("AllBinaryMediaManagerPC"); }
-thread_local! { pub static AllBinaryMediaManager_CREATE_PLAYER: String = String::from("createPlayer"); }
+pub static AllBinaryMediaManager_THIS: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("AllBinaryMediaManagerPC"));
+pub static AllBinaryMediaManager_CREATE_PLAYER: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("createPlayer"));
 
 impl AllBinaryMediaManager {
 

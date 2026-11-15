@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct InventoryData {
 }
 
-thread_local! { pub static InventoryData_INVENTORY: String = String::from("INVENTORY"); }
+pub static InventoryData_INVENTORY: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("INVENTORY"));
 
 impl InventoryData {
 

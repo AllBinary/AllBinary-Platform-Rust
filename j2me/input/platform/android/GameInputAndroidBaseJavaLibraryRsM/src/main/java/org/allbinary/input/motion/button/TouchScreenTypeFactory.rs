@@ -34,7 +34,7 @@ macro_rules! jcall {
 pub struct TouchScreenTypeFactory {
 }
 
-thread_local! { pub static TouchScreenTypeFactory_instance: Option<Rc<RefCell<TouchScreenTypeFactory>>> = TouchScreenTypeFactory::new(); }
+pub static TouchScreenTypeFactory_instance: crate::JavaStatic<Option<Rc<RefCell<TouchScreenTypeFactory>>>> = crate::JavaStatic::new(|| TouchScreenTypeFactory::new());
 
 impl TouchScreenTypeFactory {
 

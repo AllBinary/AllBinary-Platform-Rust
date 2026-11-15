@@ -31,7 +31,7 @@ macro_rules! jcall {
 pub struct ImageCreationUtil {
 }
 
-thread_local! { pub static ImageCreationUtil_instance: Option<Rc<RefCell<ImageCreationUtil>>> = ImageCreationUtil::new(); }
+pub static ImageCreationUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImageCreationUtil>>>> = crate::JavaStatic::new(|| ImageCreationUtil::new());
 
 impl ImageCreationUtil {
 

@@ -32,7 +32,7 @@ pub struct SWTProcessor {
     pub runnable: Option<Rc<RefCell<dyn Runnable>>>,
 }
 
-thread_local! { pub static SWTProcessor_instance: Option<Rc<RefCell<dyn SWTProcessorDyn>>> = SWTProcessor::new().map(|reference| reference as Rc<RefCell<dyn SWTProcessorDyn>>); }
+pub static SWTProcessor_instance: crate::JavaStatic<Option<Rc<RefCell<dyn SWTProcessorDyn>>>> = crate::JavaStatic::new(|| SWTProcessor::new().map(|reference| reference as Rc<RefCell<dyn SWTProcessorDyn>>));
 
 impl SWTProcessor {
 

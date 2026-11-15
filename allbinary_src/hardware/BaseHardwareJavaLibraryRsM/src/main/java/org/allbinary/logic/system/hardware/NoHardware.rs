@@ -33,7 +33,7 @@ macro_rules! jcall {
 pub struct NoHardware {
 }
 
-thread_local! { pub static NoHardware_instance: Option<Rc<RefCell<dyn HardwareInterface>>> = NoHardware::new().map(|reference| reference as Rc<RefCell<dyn HardwareInterface>>).map(|reference| reference as Rc<RefCell<dyn HardwareInterface>>); }
+pub static NoHardware_instance: crate::JavaStatic<Option<Rc<RefCell<dyn HardwareInterface>>>> = crate::JavaStatic::new(|| NoHardware::new().map(|reference| reference as Rc<RefCell<dyn HardwareInterface>>).map(|reference| reference as Rc<RefCell<dyn HardwareInterface>>));
 impl HardwareInterface for NoHardware {
     fn getComponent(&mut self, mut index: i32) -> Option<Rc<RefCell<dyn HardwareComponentInterface>>> { Self::getComponent(self, index) }
     fn toString(&mut self) -> String { Self::toString(self) }

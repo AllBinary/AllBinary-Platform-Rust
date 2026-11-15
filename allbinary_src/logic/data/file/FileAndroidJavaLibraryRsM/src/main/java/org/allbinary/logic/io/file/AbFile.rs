@@ -43,7 +43,7 @@ pub struct AbFile {
     pub file: Option<Rc<RefCell<File>>>,
 }
 
-thread_local! { pub static AbFile_NULL_FILE: Option<Rc<RefCell<AbFile>>> = AbFile::createAbFileFromRawPath({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()); }
+pub static AbFile_NULL_FILE: crate::JavaStatic<Option<Rc<RefCell<AbFile>>>> = crate::JavaStatic::new(|| AbFile::createAbFileFromRawPath({ let java_field = jcall!(StringUtil::getInstance()).EMPTY_STRING.clone(); java_field }.clone()));
 impl AbFileInterface for AbFile {
     fn canRead(&mut self) -> bool { Self::canRead(self) }
     fn canWrite(&mut self) -> bool { Self::canWrite(self) }

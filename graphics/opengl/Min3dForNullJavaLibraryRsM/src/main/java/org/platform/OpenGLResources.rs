@@ -19,7 +19,7 @@ macro_rules! jcall {
 pub struct OpenGLResources {
 }
 
-thread_local! { pub static OpenGLResources_instance: Option<Rc<RefCell<OpenGLResources>>> = OpenGLResources::new(); }
+pub static OpenGLResources_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLResources>>>> = crate::JavaStatic::new(|| OpenGLResources::new());
 
 impl OpenGLResources {
 

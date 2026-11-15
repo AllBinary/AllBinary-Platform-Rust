@@ -34,7 +34,7 @@ pub struct SmallBasicColorCacheFactory {
     pub colorIndex: i32,
 }
 
-thread_local! { pub static SmallBasicColorCacheFactory_instance: Option<Rc<RefCell<SmallBasicColorCacheFactory>>> = SmallBasicColorCacheFactory::new(); }
+pub static SmallBasicColorCacheFactory_instance: crate::JavaStatic<Option<Rc<RefCell<SmallBasicColorCacheFactory>>>> = crate::JavaStatic::new(|| SmallBasicColorCacheFactory::new());
 
 impl SmallBasicColorCacheFactory {
 

@@ -32,7 +32,7 @@ pub struct ThemeData {
     pub PREVIEW_IMAGE_PATH: String,
 }
 
-thread_local! { pub static ThemeData_instance: Option<Rc<RefCell<ThemeData>>> = ThemeData::new(); }
+pub static ThemeData_instance: crate::JavaStatic<Option<Rc<RefCell<ThemeData>>>> = crate::JavaStatic::new(|| ThemeData::new());
 
 impl ThemeData {
 

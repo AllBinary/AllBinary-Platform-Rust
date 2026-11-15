@@ -16,7 +16,7 @@ macro_rules! jcall {
 pub struct OpenGLThreadUtil {
 }
 
-thread_local! { pub static OpenGLThreadUtil_instance: Option<Rc<RefCell<OpenGLThreadUtil>>> = OpenGLThreadUtil::new(); }
+pub static OpenGLThreadUtil_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLThreadUtil>>>> = crate::JavaStatic::new(|| OpenGLThreadUtil::new());
 
 impl OpenGLThreadUtil {
 

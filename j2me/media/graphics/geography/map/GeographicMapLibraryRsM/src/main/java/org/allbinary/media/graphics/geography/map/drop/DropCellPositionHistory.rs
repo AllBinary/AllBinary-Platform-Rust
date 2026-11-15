@@ -36,7 +36,7 @@ pub struct DropCellPositionHistory {
     pub layerList: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static DropCellPositionHistory_SINGLETON: Option<Rc<RefCell<DropCellPositionHistory>>> = DropCellPositionHistory::new(); }
+pub static DropCellPositionHistory_SINGLETON: crate::JavaStatic<Option<Rc<RefCell<DropCellPositionHistory>>>> = crate::JavaStatic::new(|| DropCellPositionHistory::new());
 
 impl DropCellPositionHistory {
 

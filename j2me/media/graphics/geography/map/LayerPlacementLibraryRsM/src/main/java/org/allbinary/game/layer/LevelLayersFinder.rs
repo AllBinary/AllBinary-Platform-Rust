@@ -37,7 +37,7 @@ pub struct LevelLayersFinder {
     pub enumerationUtil: Option<Rc<RefCell<EnumerationUtil>>>,
 }
 
-thread_local! { pub static LevelLayersFinder_instance: Option<Rc<RefCell<LevelLayersFinder>>> = LevelLayersFinder::new(); }
+pub static LevelLayersFinder_instance: crate::JavaStatic<Option<Rc<RefCell<LevelLayersFinder>>>> = crate::JavaStatic::new(|| LevelLayersFinder::new());
 
 impl LevelLayersFinder {
 

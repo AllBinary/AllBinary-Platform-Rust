@@ -50,7 +50,7 @@ pub struct PtsDamageFloaters {
     pub myRandomFactory: Option<Rc<RefCell<MyRandomFactory>>>,
 }
 
-thread_local! { pub static PtsDamageFloaters_basicColorArrayIndexer: Option<Rc<RefCell<BasicColorArrayIndexer>>> = BasicColorArrayIndexer::new(vec![{ let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).YELLOW.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).BLUE.clone(); java_field }.clone()]); }
+pub static PtsDamageFloaters_basicColorArrayIndexer: crate::JavaStatic<Option<Rc<RefCell<BasicColorArrayIndexer>>>> = crate::JavaStatic::new(|| BasicColorArrayIndexer::new(vec![{ let java_field = jcall!(BasicColorFactory::getInstance()).WHITE.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).RED.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).YELLOW.clone(); java_field }.clone(), { let java_field = jcall!(BasicColorFactory::getInstance()).BLUE.clone(); java_field }.clone()]));
 
 impl PtsDamageFloaters {
     

@@ -33,7 +33,7 @@ pub struct GameStatisticsFactory {
     pub stringBuffer: Option<Rc<RefCell<StringMaker>>>,
 }
 
-thread_local! { pub static GameStatisticsFactory_instance: Option<Rc<RefCell<GameStatisticsFactory>>> = GameStatisticsFactory::new(); }
+pub static GameStatisticsFactory_instance: crate::JavaStatic<Option<Rc<RefCell<GameStatisticsFactory>>>> = crate::JavaStatic::new(|| GameStatisticsFactory::new());
 
 impl GameStatisticsFactory {
 

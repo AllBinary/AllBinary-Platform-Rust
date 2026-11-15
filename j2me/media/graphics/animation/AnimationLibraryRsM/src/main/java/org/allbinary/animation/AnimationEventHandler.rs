@@ -30,7 +30,7 @@ pub struct AnimationEventHandler {
     pub base: BasicEventHandler,
 }
 
-thread_local! { pub static AnimationEventHandler_eventHandler: Option<Rc<RefCell<AnimationEventHandler>>> = AnimationEventHandler::new(); }
+pub static AnimationEventHandler_eventHandler: crate::JavaStatic<Option<Rc<RefCell<AnimationEventHandler>>>> = crate::JavaStatic::new(|| AnimationEventHandler::new());
 
 impl AnimationEventHandler {
     

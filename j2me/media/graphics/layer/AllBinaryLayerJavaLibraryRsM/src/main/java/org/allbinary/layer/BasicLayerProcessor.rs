@@ -37,7 +37,7 @@ pub struct BasicLayerProcessor {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static BasicLayerProcessor_NULL_LAYER_PROCESSOR: Option<Rc<RefCell<dyn BasicLayerProcessorDyn>>> = BasicLayerProcessor::new().map(|reference| reference as Rc<RefCell<dyn BasicLayerProcessorDyn>>); }
+pub static BasicLayerProcessor_NULL_LAYER_PROCESSOR: crate::JavaStatic<Option<Rc<RefCell<dyn BasicLayerProcessorDyn>>>> = crate::JavaStatic::new(|| BasicLayerProcessor::new().map(|reference| reference as Rc<RefCell<dyn BasicLayerProcessorDyn>>));
 
 impl BasicLayerProcessor {
 

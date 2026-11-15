@@ -31,7 +31,7 @@ pub struct TransformInfoDataData {
     pub ENCRYPTED_EXTENSION: String,
 }
 
-thread_local! { pub static TransformInfoDataData_instance: Option<Rc<RefCell<TransformInfoDataData>>> = TransformInfoDataData::new(); }
+pub static TransformInfoDataData_instance: crate::JavaStatic<Option<Rc<RefCell<TransformInfoDataData>>>> = crate::JavaStatic::new(|| TransformInfoDataData::new());
 
 impl TransformInfoDataData {
 

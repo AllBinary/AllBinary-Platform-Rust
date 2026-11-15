@@ -38,7 +38,7 @@ pub struct InputRobot {
     pub robot: Option<Rc<RefCell<Robot>>>,
 }
 
-thread_local! { pub static InputRobot_NAME: String = String::from("Java Robot"); }
+pub static InputRobot_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("Java Robot"));
 // impl InputRobotInterface for InputRobot with the methods of the trait
 
 impl InputRobot {

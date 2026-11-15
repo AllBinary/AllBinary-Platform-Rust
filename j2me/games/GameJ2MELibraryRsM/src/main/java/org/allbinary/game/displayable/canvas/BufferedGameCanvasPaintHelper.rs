@@ -46,7 +46,7 @@ pub struct BufferedGameCanvasPaintHelper {
     pub anchor: i32,
 }
 
-thread_local! { pub static BufferedGameCanvasPaintHelper_MAX_IMAGES: i32 = 4; }
+pub static BufferedGameCanvasPaintHelper_MAX_IMAGES: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 4);
 
 impl BufferedGameCanvasPaintHelper {
     

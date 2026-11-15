@@ -37,7 +37,7 @@ pub struct ImageArrayRotationUtil {
     pub TOTAL_ANGLE: String,
 }
 
-thread_local! { pub static ImageArrayRotationUtil_instance: Option<Rc<RefCell<ImageArrayRotationUtil>>> = ImageArrayRotationUtil::new(); }
+pub static ImageArrayRotationUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ImageArrayRotationUtil>>>> = crate::JavaStatic::new(|| ImageArrayRotationUtil::new());
 
 impl ImageArrayRotationUtil {
 

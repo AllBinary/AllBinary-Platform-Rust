@@ -28,14 +28,14 @@ macro_rules! jcall {
 pub struct EmailData {
 }
 
-thread_local! { pub static EmailData_SERVER: String = String::from("EMAIL_SERVER"); }
-thread_local! { pub static EmailData_NAME: String = String::from("EMAIL_NAME"); }
-thread_local! { pub static EmailData_FROM: String = String::from("EMAIL_FROM"); }
-thread_local! { pub static EmailData_TO: String = String::from("EMAIL_TO"); }
-thread_local! { pub static EmailData_CC: String = String::from("EMAIL_CC"); }
-thread_local! { pub static EmailData_BCC: String = String::from("EMAIL_BCC"); }
-thread_local! { pub static EmailData_SUBJECT: String = String::from("EMAIL_SUBJECT"); }
-thread_local! { pub static EmailData_CONTENT: String = String::from("EMAIL_CONTENT"); }
+pub static EmailData_SERVER: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("EMAIL_SERVER"));
+pub static EmailData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("EMAIL_NAME"));
+pub static EmailData_FROM: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("EMAIL_FROM"));
+pub static EmailData_TO: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("EMAIL_TO"));
+pub static EmailData_CC: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("EMAIL_CC"));
+pub static EmailData_BCC: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("EMAIL_BCC"));
+pub static EmailData_SUBJECT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("EMAIL_SUBJECT"));
+pub static EmailData_CONTENT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("EMAIL_CONTENT"));
 
 impl EmailData {
 

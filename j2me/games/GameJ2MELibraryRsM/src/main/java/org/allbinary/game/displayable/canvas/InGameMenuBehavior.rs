@@ -34,7 +34,7 @@ pub struct InGameMenuBehavior {
     pub base: BaseMenuBehavior,
 }
 
-thread_local! { pub static InGameMenuBehavior_instanceC: Option<Rc<RefCell<InGameMenuBehavior>>> = InGameMenuBehavior::new(); }
+pub static InGameMenuBehavior_instanceC: crate::JavaStatic<Option<Rc<RefCell<InGameMenuBehavior>>>> = crate::JavaStatic::new(|| InGameMenuBehavior::new());
 
 impl InGameMenuBehavior {
 

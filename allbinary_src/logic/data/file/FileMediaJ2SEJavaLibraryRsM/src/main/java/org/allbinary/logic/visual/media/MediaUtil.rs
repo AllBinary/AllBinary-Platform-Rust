@@ -31,7 +31,7 @@ pub struct MediaUtil {
     pub logUtil: Option<Rc<RefCell<LogUtil>>>,
 }
 
-thread_local! { pub static MediaUtil_instance: Option<Rc<RefCell<MediaUtil>>> = MediaUtil::new(); }
+pub static MediaUtil_instance: crate::JavaStatic<Option<Rc<RefCell<MediaUtil>>>> = crate::JavaStatic::new(|| MediaUtil::new());
 
 impl MediaUtil {
 

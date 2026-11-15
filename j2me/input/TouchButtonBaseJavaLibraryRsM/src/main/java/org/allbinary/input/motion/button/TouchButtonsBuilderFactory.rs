@@ -29,7 +29,7 @@ macro_rules! jcall {
 pub struct TouchButtonsBuilderFactory {
 }
 
-thread_local! { pub static TouchButtonsBuilderFactory_NO_TOUCH_BUTTON_BUILDER_FACTORY: Option<Rc<RefCell<TouchButtonsBuilderFactory>>> = TouchButtonsBuilderFactory::new(); }
+pub static TouchButtonsBuilderFactory_NO_TOUCH_BUTTON_BUILDER_FACTORY: crate::JavaStatic<Option<Rc<RefCell<TouchButtonsBuilderFactory>>>> = crate::JavaStatic::new(|| TouchButtonsBuilderFactory::new());
 
 impl TouchButtonsBuilderFactory {
 

@@ -34,7 +34,7 @@ pub struct OpenGLImageSpecificFactory {
     pub updating: bool,
 }
 
-thread_local! { pub static OpenGLImageSpecificFactory_instance: Option<Rc<RefCell<OpenGLImageSpecificFactory>>> = OpenGLImageSpecificFactory::new(); }
+pub static OpenGLImageSpecificFactory_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLImageSpecificFactory>>>> = crate::JavaStatic::new(|| OpenGLImageSpecificFactory::new());
 
 impl OpenGLImageSpecificFactory {
 

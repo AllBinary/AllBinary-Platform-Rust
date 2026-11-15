@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct FrictionData {
 }
 
-thread_local! { pub static FrictionData_FRICTION_DENOMINATOR: i32 = 100; }
+pub static FrictionData_FRICTION_DENOMINATOR: crate::JavaStatic<i32> = crate::JavaStatic::new(|| 100);
 
 impl FrictionData {
 

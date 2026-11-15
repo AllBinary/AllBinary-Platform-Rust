@@ -30,7 +30,7 @@ pub struct XslData {
     pub ROOT_IMPORT_URI: String,
 }
 
-thread_local! { pub static XslData_instance: Option<Rc<RefCell<XslData>>> = XslData::new(); }
+pub static XslData_instance: crate::JavaStatic<Option<Rc<RefCell<XslData>>>> = crate::JavaStatic::new(|| XslData::new());
 
 impl XslData {
 

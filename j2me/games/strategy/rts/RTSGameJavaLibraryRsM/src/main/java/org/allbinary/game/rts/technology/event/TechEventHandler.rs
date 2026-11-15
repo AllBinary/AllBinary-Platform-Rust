@@ -33,7 +33,7 @@ pub struct TechEventHandler {
     pub base: BasicEventHandler,
 }
 
-thread_local! { pub static TechEventHandler_eventHandler: Option<Rc<RefCell<TechEventHandler>>> = TechEventHandler::new(); }
+pub static TechEventHandler_eventHandler: crate::JavaStatic<Option<Rc<RefCell<TechEventHandler>>>> = crate::JavaStatic::new(|| TechEventHandler::new());
 
 impl TechEventHandler {
     

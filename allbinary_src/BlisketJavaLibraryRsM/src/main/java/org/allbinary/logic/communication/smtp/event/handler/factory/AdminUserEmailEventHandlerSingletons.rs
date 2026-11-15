@@ -43,7 +43,7 @@ pub struct AdminUserEmailEventHandlerSingletons {
     pub userEmailEventHandlerHashMap: Option<Rc<RefCell<HashMap<crate::JavaObject, crate::JavaObject>>>>,
 }
 
-thread_local! { pub static AdminUserEmailEventHandlerSingletons_instance: Option<Rc<RefCell<AdminUserEmailEventHandlerSingletons>>> = AdminUserEmailEventHandlerSingletons::new(); }
+pub static AdminUserEmailEventHandlerSingletons_instance: crate::JavaStatic<Option<Rc<RefCell<AdminUserEmailEventHandlerSingletons>>>> = crate::JavaStatic::new(|| AdminUserEmailEventHandlerSingletons::new());
 
 impl AdminUserEmailEventHandlerSingletons {
 

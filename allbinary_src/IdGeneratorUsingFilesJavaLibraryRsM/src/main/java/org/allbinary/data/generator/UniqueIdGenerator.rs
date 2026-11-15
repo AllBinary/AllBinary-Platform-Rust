@@ -43,7 +43,7 @@ pub struct UniqueIdGenerator {
     pub id: i64,
 }
 
-thread_local! { pub static UniqueIdGenerator_EXT: String = String::from(".unq"); }
+pub static UniqueIdGenerator_EXT: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from(".unq"));
 impl IdGeneratorInterface for UniqueIdGenerator {
     fn getNext(&mut self) -> String { Self::getNext(self) }
 }

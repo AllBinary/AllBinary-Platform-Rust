@@ -33,8 +33,8 @@ pub struct ExceptionUtil {
     pub NONE: String,
 }
 
-thread_local! { pub static ExceptionUtil_instance: Option<Rc<RefCell<ExceptionUtil>>> = ExceptionUtil::new(); }
-thread_local! { pub static ExceptionUtil_PRETEND_EXCEPTION: String = format!("{}: {:?}", "Exception", (String::from("Not Really An Exception"))); }
+pub static ExceptionUtil_instance: crate::JavaStatic<Option<Rc<RefCell<ExceptionUtil>>>> = crate::JavaStatic::new(|| ExceptionUtil::new());
+pub static ExceptionUtil_PRETEND_EXCEPTION: crate::JavaStatic<String> = crate::JavaStatic::new(|| format!("{}: {:?}", "Exception", (String::from("Not Really An Exception"))));
 
 impl ExceptionUtil {
 

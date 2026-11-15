@@ -39,7 +39,7 @@ pub struct PositionStrings {
     pub DZ_LABEL: String,
 }
 
-thread_local! { pub static PositionStrings_instance: Option<Rc<RefCell<PositionStrings>>> = PositionStrings::new(); }
+pub static PositionStrings_instance: crate::JavaStatic<Option<Rc<RefCell<PositionStrings>>>> = crate::JavaStatic::new(|| PositionStrings::new());
 
 impl PositionStrings {
 

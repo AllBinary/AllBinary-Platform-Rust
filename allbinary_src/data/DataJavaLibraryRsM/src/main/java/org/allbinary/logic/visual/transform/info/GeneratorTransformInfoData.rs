@@ -28,7 +28,7 @@ macro_rules! jcall {
 pub struct GeneratorTransformInfoData {
 }
 
-thread_local! { pub static GeneratorTransformInfoData_NAME: String = String::from("GENERATOR_TRANSFORM_INFO_NAME"); }
+pub static GeneratorTransformInfoData_NAME: crate::JavaStatic<String> = crate::JavaStatic::new(|| String::from("GENERATOR_TRANSFORM_INFO_NAME"));
 
 impl GeneratorTransformInfoData {
 

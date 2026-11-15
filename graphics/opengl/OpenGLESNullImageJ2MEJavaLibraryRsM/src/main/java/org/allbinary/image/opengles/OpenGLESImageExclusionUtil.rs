@@ -32,7 +32,7 @@ pub struct OpenGLESImageExclusionUtil {
     pub list: Option<Rc<RefCell<dyn crate::org::allbinary::util::BasicArrayList::BasicArrayListDyn>>>,
 }
 
-thread_local! { pub static OpenGLESImageExclusionUtil_instance: Option<Rc<RefCell<OpenGLESImageExclusionUtil>>> = OpenGLESImageExclusionUtil::new(); }
+pub static OpenGLESImageExclusionUtil_instance: crate::JavaStatic<Option<Rc<RefCell<OpenGLESImageExclusionUtil>>>> = crate::JavaStatic::new(|| OpenGLESImageExclusionUtil::new());
 
 impl OpenGLESImageExclusionUtil {
 

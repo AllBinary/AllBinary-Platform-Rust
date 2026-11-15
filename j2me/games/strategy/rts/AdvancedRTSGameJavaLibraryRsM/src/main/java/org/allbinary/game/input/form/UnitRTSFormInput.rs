@@ -60,7 +60,7 @@ pub struct UnitRTSFormInput {
     pub newUnitGameNotificationEvent: Option<Rc<RefCell<GameNotificationEvent>>>,
 }
 
-thread_local! { pub static UnitRTSFormInput_DECAL_ID: Option<i32> = jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(23); }
+pub static UnitRTSFormInput_DECAL_ID: crate::JavaStatic<Option<i32>> = crate::JavaStatic::new(|| jcall!(SmallIntegerSingletonFactory::getInstance()).getAt(23));
 
 impl UnitRTSFormInput {
     
